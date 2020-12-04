@@ -13,6 +13,7 @@
 	"activationEvents": [
 		"onCustomEditor:appland.scenarioFile"
 	],
+	"license": "MIT",
 	"main": "./out/extension.js",
 	"contributes": {
 		"customEditors": [
