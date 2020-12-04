@@ -1,4 +1,13 @@
+#diagram-wrapper {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
 #component-diagram {
-  width: 800px;
-  height: 800px;
+  grid-column-start: 1;
+  grid-column-end: 2;
+}
+
+#event-details {
+  grid-column: 3;
 }

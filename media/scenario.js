@@ -10,6 +10,7 @@
 
   const errorContainer = /** @type {HTMLElement} */ (document.querySelector('#errors'));
   const componentDiagramContainer = /** @type {HTMLElement} */ (document.querySelector('#component-diagram'));
+  const infoContainer = /** @type {HTMLElement} */ (document.querySelector('#event-details'));
 
 	/**
 	 * Render the document in the webview.
@@ -27,9 +28,18 @@
 
     // @ts-ignore
     const componentModel = new Appmap.Models.Components(scenarioData);
-    // @ts-ignore
-    const diagram = new Appmap.ComponentDiagram(componentDiagramContainer);
-    diagram.render(componentModel);
+		componentDiagramContainer.innerHTML = '';
+		// @ts-ignore
+    const diagram = new Appmap.ComponentDiagram(componentDiagramContainer, { theme: 'dark' });
+		diagram.render(componentModel);
+		diagram.on('highlight', (ids) => {
+			infoContainer.innerHTML = '';
+			if ( !ids ) {
+				return;
+			}
+			const id = ids[0];
+			infoContainer.innerHTML = `${id}`;
+		})
 	}
 
 	// Handle messages sent from the extension to the webview

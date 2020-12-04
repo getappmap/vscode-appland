@@ -107,9 +107,13 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
 			</head>
 			<body>
         <div id="errors">
-        </div>
-        <div id="component-diagram">
-        </div>
+				</div>
+				<div id="diagram-wrapper">
+					<div id="component-diagram">
+					</div>
+					<div id="event-details">
+					</div>
+				</div>
     
 				<script nonce="${nonce}" src="${scriptD3Uri}"></script>
 				<script nonce="${nonce}" src="${scriptAppMapUri}"></script>
