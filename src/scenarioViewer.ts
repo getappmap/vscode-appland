@@ -109,9 +109,9 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
         <div id="errors">
 				</div>
 				<div id="diagram-wrapper">
-					<div id="component-diagram">
-					</div>
 					<div id="event-details">
+					</div>
+					<div id="component-diagram"
 					</div>
 				</div>
     

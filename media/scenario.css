@@ -4,10 +4,15 @@
 }
 
 #component-diagram {
-  grid-column-start: 1;
-  grid-column-end: 2;
+  grid-column-start: 2;
+  grid-column-end: 3;
 }
 
 #event-details {
-  grid-column: 3;
+  grid-column: 1;
+  width: 200px;
+}
+
+.appmap.appmap--theme-dark {
+  background-color: transparent;
 }

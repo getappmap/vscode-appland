@@ -10,7 +10,7 @@
 
   const errorContainer = /** @type {HTMLElement} */ (document.querySelector('#errors'));
   const componentDiagramContainer = /** @type {HTMLElement} */ (document.querySelector('#component-diagram'));
-  const infoContainer = /** @type {HTMLElement} */ (document.querySelector('#event-details'));
+  const eventDetailsContainer = /** @type {HTMLElement} */ (document.querySelector('#event-details .content'));
 
 	/**
 	 * Render the document in the webview.
@@ -33,12 +33,12 @@
     const diagram = new Appmap.ComponentDiagram(componentDiagramContainer, { theme: 'dark' });
 		diagram.render(componentModel);
 		diagram.on('highlight', (ids) => {
-			infoContainer.innerHTML = '';
+			eventDetailsContainer.innerHTML = '';
 			if ( !ids ) {
 				return;
 			}
 			const id = ids[0];
-			infoContainer.innerHTML = `${id}`;
+			eventDetailsContainer.innerHTML = `Selected element: ${id}`;
 		})
 	}
 
