@@ -1,14 +1,14 @@
-#diagram-wrapper {
+.diagram-content .diagram-wrapper {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
 }
 
-#component-diagram {
+.diagram {
   grid-column-start: 2;
   grid-column-end: 3;
 }
 
-#event-details {
+.selection-details {
   grid-column: 1;
   width: 200px;
 }

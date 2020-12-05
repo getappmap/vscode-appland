@@ -72,10 +72,19 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
     const scriptD3Uri = webview.asWebviewUri(vscode.Uri.file(
       path.join(this.context.extensionPath, 'node_modules', 'd3', 'dist', 'd3.js')
     ));
+    const scriptBootstrapUri = webview.asWebviewUri(vscode.Uri.file(
+      path.join(this.context.extensionPath, 'node_modules', 'bootstrap', 'dist', 'js', 'bootstrap.bundle.js')
+    ));
+    const scriptJQuery = webview.asWebviewUri(vscode.Uri.file(
+      path.join(this.context.extensionPath, 'node_modules', 'jquery', 'dist', 'jquery.js')
+    ));
     const scriptAppMapUri = webview.asWebviewUri(vscode.Uri.file(
       path.join(this.context.extensionPath, 'node_modules', 'd3-appmap', 'dist', 'd3-appmap.js')
     ));
   
+		const styleBootstrapUri = webview.asWebviewUri(vscode.Uri.file(
+			path.join(this.context.extensionPath, 'node_modules', 'bootstrap', 'dist', 'css', 'bootstrap.css')
+		));
 		const styleMainUri = webview.asWebviewUri(vscode.Uri.file(
 			path.join(this.context.extensionPath, 'media', 'scenario.css')
 		));
@@ -100,6 +109,7 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
 
 				<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+				<link href="${styleBootstrapUri}" rel="stylesheet" />
 				<link href="${styleAppMapUri}" rel="stylesheet" />
 				<link href="${styleMainUri}" rel="stylesheet" />
 
@@ -108,14 +118,38 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
 			<body>
         <div id="errors">
 				</div>
-				<div id="diagram-wrapper">
-					<div id="event-details">
+				<ul id="diagram-tabs" class="nav nav-tabs" role="tablist">
+					<li class="nav-item"><a class="nav-link active" id="component-diagram-content-tab" data-toggle="tab" href="#component-diagram-content" role="tab" aria-selected="true">Components</a></li>
+					<li class="nav-item"><a class="nav-link" id="event-diagram-content-tab" data-toggle="tab" href="#event-diagram-content" role="tab">Events</a></li>
+				</ul>
+				<div id="diagram-tab-content" class="tab-content">
+					<div id="component-diagram-content" class="diagram-content tab-pane fade show active" role="tabpanel" aria-labeled-by="component-diagram-content-tab">
+						<div class="diagram-wrapper">
+							<div id="component-details" class="selection-details">
+								<h3>Component details</h3>
+								<div class="content">
+								</div>
+							</div>
+							<div id="component-diagram" class="diagram">
+							</div>
+						</div>
 					</div>
-					<div id="component-diagram"
+					<div id="event-diagram-content" class="diagram-content tab-pane fade" role="tabpanel" aria-labeled-by="event-diagram-content-tab">
+						<div class="diagram-wrapper">
+							<div id="event-details" class="selection-details">
+								<h3>Event details</h3>
+								<div class="content">
+								</div>
+							</div>
+							<div id="event-diagram" class="diagram">
+							</div>
+						</div>
 					</div>
 				</div>
     
 				<script nonce="${nonce}" src="${scriptD3Uri}"></script>
+				<script nonce="${nonce}" src="${scriptJQuery}"></script>
+				<script nonce="${nonce}" src="${scriptBootstrapUri}"></script>
 				<script nonce="${nonce}" src="${scriptAppMapUri}"></script>
 				<script nonce="${nonce}" src="${scriptUri}"></script>
 			</body>

@@ -49,6 +49,9 @@
 		"vscode-test": "^1.4.0"
 	},
 	"dependencies": {
-		"d3-appmap": "^0.3.0"
+		"bootstrap": "^4.5.3",
+		"d3-appmap": "^0.3.0",
+		"jquery": "^3.5.1",
+		"popper": "^1.0.1"
 	}
 }

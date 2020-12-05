@@ -10,7 +10,7 @@
 
   const errorContainer = /** @type {HTMLElement} */ (document.querySelector('#errors'));
   const componentDiagramContainer = /** @type {HTMLElement} */ (document.querySelector('#component-diagram'));
-  const eventDetailsContainer = /** @type {HTMLElement} */ (document.querySelector('#event-details .content'));
+  const eventDetailsContainer = /** @type {HTMLElement} */ (document.querySelector('#component-details .content'));
 
 	/**
 	 * Render the document in the webview.
