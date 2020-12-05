@@ -1,3 +1,8 @@
+body {
+  background-color: transparent;
+  color: white;
+}
+
 .diagram-content .diagram-wrapper {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -6,6 +11,8 @@
 .diagram {
   grid-column-start: 2;
   grid-column-end: 3;
+  border-left: 2px solid #ccd;
+  padding: 4px;
 }
 
 .selection-details {

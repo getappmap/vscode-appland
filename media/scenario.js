@@ -11,12 +11,14 @@
   const errorContainer = /** @type {HTMLElement} */ (document.querySelector('#errors'));
   const componentDiagramContainer = /** @type {HTMLElement} */ (document.querySelector('#component-diagram'));
   const eventDetailsContainer = /** @type {HTMLElement} */ (document.querySelector('#component-details .content'));
+	let scenarioData,
+		componentDiagram,
+		eventDiagram;
 
 	/**
 	 * Render the document in the webview.
 	 */
 	function updateContent(/** @type {string} */ text) {
-		let scenarioData;
 		try {
 			scenarioData = JSON.parse(text);
 		} catch {
@@ -26,11 +28,51 @@
 		}
 		errorContainer.style.display = 'none';
 
+		// TODO: Bug at EventInfo.getLabels (d3-appmap.js:12407) expects labels to exist.
+		// if (codeObj && codeObj.labels.length) {
+		function defaultFunctionLabels(obj) {
+			if (obj.type === 'function') {
+				if ( !obj.labels ) {
+					obj.labels = [];
+				}
+			}
+	
+			if (obj.children) {
+				obj.children.forEach(defaultFunctionLabels)
+			}
+		}
+		scenarioData.classMap.forEach(defaultFunctionLabels);
+
+		buildComponentDiagram();
+	}
+
+	function buildComponentDiagram() {
+		if ( componentDiagram ) {
+			return;
+		}
+
+		function viewSource(repoUrl) {
+			console.log(repoUrl);
+		}
+
+		function contextMenu(componentDiagram){
+			return [
+				(item) => item
+					.text('View source')
+					.selector('g.node.class')
+					.transform(function(e) {
+						return componentDiagram.sourceLocation(e.getAttribute('id'));
+					})
+					.on('execute', viewSource)
+			]
+		}
+
     // @ts-ignore
     const componentModel = new Appmap.Models.Components(scenarioData);
 		componentDiagramContainer.innerHTML = '';
 		// @ts-ignore
-    const diagram = new Appmap.ComponentDiagram(componentDiagramContainer, { theme: 'dark' });
+		const diagram = new Appmap.ComponentDiagram(componentDiagramContainer, { theme: 'dark', contextMenu })
+		componentDiagram = diagram;
 		diagram.render(componentModel);
 		diagram.on('highlight', (ids) => {
 			eventDetailsContainer.innerHTML = '';
@@ -42,6 +84,39 @@
 		})
 	}
 
+	function buildEventDiagram() {
+		if ( eventDiagram ) {
+			return;
+		}
+
+		function aggregateEvents(events, classMap) {
+			const eventInfo = new Appmap.Models.EventInfo(classMap);
+			const callTree = new Appmap.Models.CallTree(events);
+		
+			function buildDisplayName(event) {
+				const separator = event.static ? '.' : '#';
+				return [event.defined_class, separator, event.method_id].join('');				
+			};
+
+			callTree.rootNode.forEach((e) => {
+				e.displayName = eventInfo.getName(e.input) || buildDisplayName(e.input);
+	
+				e.labels = eventInfo.getLabels(e.input);
+			});
+		
+			return callTree;
+		}
+		
+		const callTree = aggregateEvents(scenarioData.events, scenarioData.classMap);
+
+		const diagram = new Appmap.FlowView('#event-diagram', { theme: 'dark' });		
+		eventDiagram = diagram;
+		diagram.setCallTree(callTree);
+		diagram.render();
+	}
+
+	jQuery('#event-diagram-content-tab').on('show.bs.tab', buildEventDiagram);
+	
 	// Handle messages sent from the extension to the webview
 	window.addEventListener('message', event => {
 		const message = event.data; // The json data that the extension sent
