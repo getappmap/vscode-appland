@@ -1,4 +1,5 @@
 // @ts-check
+import { CodeObjectIndex } from './models/codeObjectIndex.js';
 
 // Script run within the webview itself.
 (function () {
@@ -6,13 +7,16 @@
 	// We use this API to post messages back to our extension.
 
 	// @ts-ignore
-  const vscode = acquireVsCodeApi();
+	const vscode = acquireVsCodeApi();
 
-  const errorContainer = /** @type {HTMLElement} */ (document.querySelector('#errors'));
-  const componentDiagramContainer = /** @type {HTMLElement} */ (document.querySelector('#component-diagram'));
-  const eventDetailsContainer = /** @type {HTMLElement} */ (document.querySelector('#component-details .content'));
+	const errorContainer = /** @type {HTMLElement} */ (document.querySelector('#errors'));
+	const componentDiagramContainer = /** @type {HTMLElement} */ (document.querySelector('#component-diagram'));
+	const eventDetailsContainer = /** @type {HTMLElement} */ (document.querySelector('#component-details .content'));
+	const filtersContainer = /** @type {HTMLElement} */ (document.querySelector('#filter-list'));
 	let scenarioData,
 		componentDiagram,
+		callTree,
+		codeObjectIndex,
 		eventDiagram;
 
 	/**
@@ -32,22 +36,44 @@
 		// if (codeObj && codeObj.labels.length) {
 		function defaultFunctionLabels(obj) {
 			if (obj.type === 'function') {
-				if ( !obj.labels ) {
+				if (!obj.labels) {
 					obj.labels = [];
 				}
 			}
-	
+
 			if (obj.children) {
 				obj.children.forEach(defaultFunctionLabels)
 			}
 		}
 		scenarioData.classMap.forEach(defaultFunctionLabels);
 
+		function aggregateEvents(events, classMap) {
+			const eventInfo = new Appmap.Models.EventInfo(classMap);
+			const callTree = new Appmap.Models.CallTree(events);
+
+			function buildDisplayName(event) {
+				const separator = event.static ? '.' : '#';
+				return [event.defined_class, separator, event.method_id].join('');
+			};
+
+			callTree.rootNode.forEach((e) => {
+				e.displayName = eventInfo.getName(e.input) || buildDisplayName(e.input);
+
+				e.labels = eventInfo.getLabels(e.input);
+			});
+
+			return callTree;
+		}
+
+		callTree = aggregateEvents(scenarioData.events, scenarioData.classMap);
+
+		codeObjectIndex = new CodeObjectIndex(scenarioData.classMap);
+
 		buildComponentDiagram();
 	}
 
 	function buildComponentDiagram() {
-		if ( componentDiagram ) {
+		if (componentDiagram) {
 			return;
 		}
 
@@ -55,20 +81,20 @@
 			console.log(repoUrl);
 		}
 
-		function contextMenu(componentDiagram){
+		function contextMenu(componentDiagram) {
 			return [
 				(item) => item
 					.text('View source')
 					.selector('g.node.class')
-					.transform(function(e) {
+					.transform(function (e) {
 						return componentDiagram.sourceLocation(e.getAttribute('id'));
 					})
 					.on('execute', viewSource)
 			]
 		}
 
-    // @ts-ignore
-    const componentModel = new Appmap.Models.Components(scenarioData);
+		// @ts-ignore
+		const componentModel = new Appmap.Models.Components(scenarioData);
 		componentDiagramContainer.innerHTML = '';
 		// @ts-ignore
 		const diagram = new Appmap.ComponentDiagram(componentDiagramContainer, { theme: 'dark', contextMenu })
@@ -76,7 +102,7 @@
 		diagram.render(componentModel);
 		diagram.on('highlight', (ids) => {
 			eventDetailsContainer.innerHTML = '';
-			if ( !ids ) {
+			if (!ids) {
 				return;
 			}
 			const id = ids[0];
@@ -85,38 +111,54 @@
 	}
 
 	function buildEventDiagram() {
-		if ( eventDiagram ) {
+		if (eventDiagram) {
 			return;
 		}
 
-		function aggregateEvents(events, classMap) {
-			const eventInfo = new Appmap.Models.EventInfo(classMap);
-			const callTree = new Appmap.Models.CallTree(events);
-		
-			function buildDisplayName(event) {
-				const separator = event.static ? '.' : '#';
-				return [event.defined_class, separator, event.method_id].join('');				
-			};
-
-			callTree.rootNode.forEach((e) => {
-				e.displayName = eventInfo.getName(e.input) || buildDisplayName(e.input);
-	
-				e.labels = eventInfo.getLabels(e.input);
-			});
-		
-			return callTree;
-		}
-		
-		const callTree = aggregateEvents(scenarioData.events, scenarioData.classMap);
-
-		const diagram = new Appmap.FlowView('#event-diagram', { theme: 'dark' });		
+		const diagram = new Appmap.FlowView('#event-diagram', { theme: 'dark' });
 		eventDiagram = diagram;
 		diagram.setCallTree(callTree);
 		diagram.render();
 	}
 
 	jQuery('#event-diagram-content-tab').on('show.bs.tab', buildEventDiagram);
-	
+	jQuery('#filter-input input[type=text]').autoComplete({
+		resolver: 'custom',
+		events: {
+			search: function (qry, callback) {
+				callback(codeObjectIndex.search(qry));
+			}
+		}
+	}).on('autocomplete.select', function(/** @type Event */ evt, /** @type {string} */ item) {
+		const ele = /** @type HTMLElement */ document.createElement('span');
+		ele.className = 'badge badge-secondary';
+		ele.textContent = item;
+		filtersContainer.innerHTML = '';
+		filtersContainer.appendChild(ele);
+		const inputElement = /** @type HTMLInputElement */ evt.target;
+		inputElement.value = '';
+
+		function extractClassName(name) {
+			const tokens = name.split('::');
+			return tokens.slice(1).join('::');
+		}
+
+		const type = codeObjectIndex.typeOf(item);
+		let filterId;
+		switch ( type ) {
+		case 'function':
+			filterId = extractClassName(codeObjectIndex.classOfFunction(item));
+			break;
+		case 'class':
+			filterId = extractClassName(item);
+			break;
+		case 'package':
+			filterId = item;
+			break;
+		}
+		componentDiagram.focus(filterId);
+	});
+
 	// Handle messages sent from the extension to the webview
 	window.addEventListener('message', event => {
 		const message = event.data; // The json data that the extension sent

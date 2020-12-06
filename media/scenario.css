@@ -20,6 +20,10 @@ body {
   width: 200px;
 }
 
+#filter {
+  margin-bottom: 1rem;
+}
+
 .appmap.appmap--theme-dark {
   background-color: transparent;
 }
