@@ -12,7 +12,7 @@ import { CodeObjectIndex } from './models/codeObjectIndex.js';
 	const errorContainer = /** @type {HTMLElement} */ (document.querySelector('#errors'));
 	const componentDiagramContainer = /** @type {HTMLElement} */ (document.querySelector('#component-diagram'));
 	const eventDetailsContainer = /** @type {HTMLElement} */ (document.querySelector('#component-details .content'));
-	const filtersContainer = /** @type {HTMLElement} */ (document.querySelector('#filter-list'));
+	const filterInput = /** @type {HTMLInputElement} */ (document.querySelector('#filter-input input[type=text]'));
 	let scenarioData,
 		componentDiagram,
 		callTree,
@@ -100,13 +100,23 @@ import { CodeObjectIndex } from './models/codeObjectIndex.js';
 		const diagram = new Appmap.ComponentDiagram(componentDiagramContainer, { theme: 'dark', contextMenu })
 		componentDiagram = diagram;
 		diagram.render(componentModel);
-		diagram.on('highlight', (ids) => {
+		diagram.on('focus', (/** @type {string} */ id) => {
+			if (!id) {
+				filterInput.value = '';
+				return;
+			}
+		});
+		diagram.on('highlight', (/** @type {Array<string>} */ ids) => {
 			eventDetailsContainer.innerHTML = '';
 			if (!ids) {
 				return;
 			}
 			const id = ids[0];
-			eventDetailsContainer.innerHTML = `Selected element: ${id}`;
+			eventDetailsContainer.innerHTML = '';
+
+			d3.select(eventDetailsContainer)
+				.append('h4')
+				.text(id)
 		})
 	}
 
@@ -122,7 +132,7 @@ import { CodeObjectIndex } from './models/codeObjectIndex.js';
 	}
 
 	jQuery('#event-diagram-content-tab').on('show.bs.tab', buildEventDiagram);
-	jQuery('#filter-input input[type=text]').autoComplete({
+	jQuery(filterInput).autoComplete({
 		resolver: 'custom',
 		events: {
 			search: function (qry, callback) {
@@ -130,14 +140,6 @@ import { CodeObjectIndex } from './models/codeObjectIndex.js';
 			}
 		}
 	}).on('autocomplete.select', function(/** @type Event */ evt, /** @type {string} */ item) {
-		const ele = /** @type HTMLElement */ document.createElement('span');
-		ele.className = 'badge badge-secondary';
-		ele.textContent = item;
-		filtersContainer.innerHTML = '';
-		filtersContainer.appendChild(ele);
-		const inputElement = /** @type HTMLInputElement */ evt.target;
-		inputElement.value = '';
-
 		function extractClassName(name) {
 			const tokens = name.split('::');
 			return tokens.slice(1).join('::');

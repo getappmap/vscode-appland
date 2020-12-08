@@ -82,7 +82,7 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
       path.join(this.context.extensionPath, 'node_modules', 'jquery', 'dist', 'jquery.js')
     ));
     const scriptAppMapUri = webview.asWebviewUri(vscode.Uri.file(
-      path.join(this.context.extensionPath, 'node_modules', 'd3-appmap', 'dist', 'd3-appmap.js')
+      path.join(this.context.extensionPath, 'node_modules', '@appland', 'diagrams', 'dist', '@appland', 'diagrams.js')
     ));
   
 		const styleBootstrapUri = webview.asWebviewUri(vscode.Uri.file(
@@ -92,7 +92,7 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
 			path.join(this.context.extensionPath, 'media', 'scenario.css')
 		));
 		const styleAppMapUri = webview.asWebviewUri(vscode.Uri.file(
-      path.join(this.context.extensionPath, 'node_modules', 'd3-appmap', 'dist', 'd3-appmap.css')
+      path.join(this.context.extensionPath, 'node_modules', '@appland', 'diagrams', 'dist', '@appland', 'diagrams.css')
     ));
 
 		// Use a nonce to whitelist which scripts can be run
@@ -126,9 +126,6 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
 					<div id="filter-input">
 						<input type="text" size="80" placeholder="Filter the diagram by package, class or function" autocomplete="off"></input>
 					</div>
-					<div id="filter-list">
-						No active filters
-					</div>
 				</div>
 				<ul id="diagram-tabs" class="nav nav-tabs" role="tablist">
 					<li class="nav-item"><a class="nav-link active" id="component-diagram-content-tab" data-toggle="tab" href="#component-diagram-content" role="tab" aria-selected="true">Components</a></li>
@@ -136,9 +133,6 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
 				</ul>
 				<div id="diagram-tab-content" class="tab-content">
 					<div id="component-diagram-content" class="diagram-content tab-pane fade show active" role="tabpanel" aria-labeled-by="component-diagram-content-tab">
-						<div class="search-diagram">
-							<input type="text" size="80" placeholder="Search diagram" autocomplete="off"></input>
-						</div>
 						<div class="diagram-wrapper">
 							<div id="component-details" class="selection-details">
 								<h3>Component details</h3>
@@ -150,9 +144,6 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
 						</div>
 					</div>
 					<div id="event-diagram-content" class="diagram-content tab-pane fade" role="tabpanel" aria-labeled-by="event-diagram-content-tab">
-						<div class="search-diagram">
-							<input type="text" size="80" placeholder="Search diagram" autocomplete="off"></input>
-						</div>
 						<div class="diagram-wrapper">
 							<div id="event-details" class="selection-details">
 								<h3>Event details</h3>
