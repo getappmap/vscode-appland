@@ -163,7 +163,7 @@ import ClassMap from './models/classMap.js';
 				.call((content) => {
 					content
 						.append('ul')
-						.classed('location', true)
+						.classed('locations detail-list', true)
 						.call((ul) => {
 							ul
 								.selectAll('.location')
@@ -185,16 +185,17 @@ import ClassMap from './models/classMap.js';
 				.call((content) => {
 					content
 						.append('ul')
-						.classed('http-server-request', true)
+						.classed('http-server-requests detail-list', true)
 						.call((ul) => {
 							ul
 								.selectAll('.http-server-request')
-								.data(Array.from(httpServerRequests))
+								.data(Array.from(httpServerRequests).map((e) => e.input), (d) => d.id)
 								.enter()
 								.append('li')
 								.append('a')
 								.attr('href', 'javascript: void(0)')
-								.text((d) => `${d.input.http_server_request.request_method} ${d.input.http_server_request.path_info}`)
+								.attr('data-event-id', d => d.id)
+								.text((d) => `${d.http_server_request.request_method} ${d.http_server_request.path_info}`)
 								;
 						});
 				})
@@ -206,16 +207,17 @@ import ClassMap from './models/classMap.js';
 				.call((content) => {
 					content
 						.append('ul')
-						.classed('sql-query', true)
+						.classed('sql-queries detail-list', true)
 						.call((ul) => {
 							ul
 								.selectAll('.sql-query')
-								.data(sqlQueries)
+								.data(sqlQueries.map((e) => e.input), (d) => d.id)
 								.enter()
 								.append('li')
 								.append('a')
+								.attr('data-event-id', d => d.id)
 								.attr('href', 'javascript: void(0)')
-								.text((d) => d.input.sql_query.sql)
+								.text((_, i) => `Query ${i}`) // d.sql_query.sql
 								;
 						});
 				});
