@@ -78,6 +78,16 @@ class CodeObject {
   }
 
   /**
+   * @param {Function} fn 
+   */
+  visit(fn, stack = []) {
+    stack.push(this);
+    fn(this, stack);
+    this.children.forEach((child) => child.visit(fn, stack));
+    stack.pop();
+  }
+
+  /**
    * @param {Array<String>} tokens 
    * @returns {Array<String>}
    */
@@ -168,9 +178,13 @@ export default class ClassMap {
     }
 
     this.roots = classMap.map((root) => buildCodeObject.bind(this)(root));
+  }
 
-    console.log(Object.keys(this.codeObjectsById))
-    console.log(Object.keys(this.codeObjectsByLocation))
+  /**
+   * @param {Function} fn 
+   */
+  visit(fn) {
+    this.roots.forEach((co) => co.visit(fn));
   }
 
   /**
@@ -191,10 +205,10 @@ export default class ClassMap {
 
   /**
    * @param {String} location
-   * @returns {Array<string>}
+   * @returns {Array<CodeObject>}
    */
   codeObjectsAtLocation(location) {
-    return this.codeObjectsByLocation[location];
+    return this.codeObjectsByLocation[location] || [];
   }
 }
 

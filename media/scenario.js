@@ -126,6 +126,29 @@ import ClassMap from './models/classMap.js';
 			const codeObject = codeObjects[0];
 			eventDetailsContainer.innerHTML = '';
 
+			const httpServerRequests = /** @type {Set<CallNode>} */ new Set();
+			const invocationEvents = /** @type {Array<CallNode>} */ new Array();
+			const sqlQueries = /** @type {Array<CallNode>} */ [];
+			callTree.rootNode.forEach((/** @type {CallNode} */ node, /** @type {Array<CallNode>} */ stack) => {
+				const location = [ node.input.path, node.input.lineno ].filter(n => n).join(':');
+				const types = /** @type {Array<CodeObject>} */ classMap.codeObjectsAtLocation(location);
+				if ( types.length === 0 ) {
+					return;
+				}
+				const type = types[0];
+				if ( type.classOf === codeObject.classOf ) {
+					invocationEvents.push(node);
+					stack.filter((node) => node.input.http_server_request).forEach(httpServerRequests.add.bind(httpServerRequests))
+				}
+			});
+			invocationEvents.forEach((/** @type {CallNode} */ node) => {
+				node.forEach((/** @type {CallNode} */ child) => {
+					if ( child.input.sql_query ) {
+						sqlQueries.push(child);
+					}
+				});
+			});
+
 			d3.select(eventDetailsContainer)
 				.append('h4')
 				.text(id);
@@ -151,6 +174,48 @@ import ClassMap from './models/classMap.js';
 								.attr('href', 'javascript: void(0)')
 								.on('click', openSourceLocation)
 								.text((d) => d)
+								;
+						});
+				})
+				.call((content) => {
+					content
+						.append('h5')
+						.text('HTTP server requests');	
+				})
+				.call((content) => {
+					content
+						.append('ul')
+						.classed('http-server-request', true)
+						.call((ul) => {
+							ul
+								.selectAll('.http-server-request')
+								.data(Array.from(httpServerRequests))
+								.enter()
+								.append('li')
+								.append('a')
+								.attr('href', 'javascript: void(0)')
+								.text((d) => `${d.input.http_server_request.request_method} ${d.input.http_server_request.path_info}`)
+								;
+						});
+				})
+				.call((content) => {
+					content
+						.append('h5')
+						.text('SQL queries');	
+				})
+				.call((content) => {
+					content
+						.append('ul')
+						.classed('sql-query', true)
+						.call((ul) => {
+							ul
+								.selectAll('.sql-query')
+								.data(sqlQueries)
+								.enter()
+								.append('li')
+								.append('a')
+								.attr('href', 'javascript: void(0)')
+								.text((d) => d.input.sql_query.sql)
 								;
 						});
 				});
