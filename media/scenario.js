@@ -112,12 +112,42 @@ import ClassMap from './models/classMap.js';
 				return;
 			}
 			const id = ids[0];
+			// TODO: Doing fuzzy match here, because ids from the component diagram aren't currently fully qualified.
+			// const codeObject = classMap.codeObjectFromId(id);
+			const codeObjects = classMap.search(id);
+			if ( codeObjects.length === 0 ) {
+				return false;
+			}
+
+			const codeObject = codeObjects[0];
 			eventDetailsContainer.innerHTML = '';
 
 			d3.select(eventDetailsContainer)
 				.append('h4')
-				.text(id)
-		})
+				.text(id);
+			d3.select(eventDetailsContainer)
+				.append('div')
+				.classed('content', true)
+				.call((content) => {
+					content
+						.append('h5')
+						.text('Locations');	
+				})
+				.call((content) => {
+					content
+						.append('ul')
+						.classed('location', true)
+						.call((ul) => {
+							ul
+								.selectAll('.location')
+								.data(codeObject.locations)
+								.enter()
+								.append('li')
+								.text((d) => d)
+								;
+						});
+				});
+		});
 	}
 
 	function buildEventDiagram() {
@@ -150,6 +180,7 @@ import ClassMap from './models/classMap.js';
 			filterId = codeObject.classOf;
 			break;			
 		}
+		componentDiagram.clearFocus();
 		componentDiagram.focus(filterId);
 	});
 

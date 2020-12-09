@@ -1,7 +1,7 @@
 // @ts-check
 
 class CodeObject {
-  constructor(/** @type {Object<name: string, type: string, location: string, static: boolean>} */ data, /** @type {CodeObject } */ parent) {
+  constructor(/** @type {Object<name: string, type: string, location: string, static: boolean>} */ data, /** @type {CodeObject} */ parent) {
     this.data = data;
     this.parent = parent;
     this.children = [];
