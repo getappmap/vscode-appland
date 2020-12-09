@@ -254,7 +254,6 @@ import ClassMap from './models/classMap.js';
 			filterId = codeObject.classOf;
 			break;			
 		}
-		componentDiagram.clearFocus();
 		componentDiagram.focus(filterId);
 	});
 

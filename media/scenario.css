@@ -41,7 +41,7 @@ a {
   background-color: transparent;
 }
 
-.search-diagram input, #filter-input input {
+#filter-input input {
   background-color: transparent;
   border-radius: .5rem;
   border: 1px solid #343742;
@@ -50,11 +50,7 @@ a {
   width: 100%;
 }
 
-.search-diagram {
-  margin-top: 1rem;
-}
-
-#filter-input input:focus, .search-diagram input:focus {
+#filter-input input:focus {
   outline: none;
 }
 
@@ -88,16 +84,6 @@ a {
 
 .dropdown-item {
   color: #E1E2E2;
-}
-
-.badge-secondary {
-  color: #E1E2E2;
-  background-color: #6c757d;
-  font-size: .9rem;
-  font-weight: 400;
-  padding: .5rem;
-  margin-top: .5rem;
-  border-radius: .5rem;
 }
 
 .dropdown-item.active {
