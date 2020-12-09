@@ -1,5 +1,5 @@
 // @ts-check
-import { CodeObjectIndex } from './models/codeObjectIndex.js';
+import ClassMap from './models/classMap.js';
 
 // Script run within the webview itself.
 (function () {
@@ -16,7 +16,7 @@ import { CodeObjectIndex } from './models/codeObjectIndex.js';
 	let scenarioData,
 		componentDiagram,
 		callTree,
-		codeObjectIndex,
+		classMap,
 		eventDiagram;
 
 	/**
@@ -25,7 +25,7 @@ import { CodeObjectIndex } from './models/codeObjectIndex.js';
 	function updateContent(/** @type {string} */ text) {
 		try {
 			scenarioData = JSON.parse(text);
-		} catch {
+		} catch (e) {
 			errorContainer.innerText = 'Error: Document is not valid json';
 			errorContainer.style.display = '';
 			return;
@@ -67,7 +67,7 @@ import { CodeObjectIndex } from './models/codeObjectIndex.js';
 
 		callTree = aggregateEvents(scenarioData.events, scenarioData.classMap);
 
-		codeObjectIndex = new CodeObjectIndex(scenarioData.classMap);
+		classMap = new ClassMap(scenarioData.classMap);
 
 		buildComponentDiagram();
 	}
@@ -136,27 +136,19 @@ import { CodeObjectIndex } from './models/codeObjectIndex.js';
 		resolver: 'custom',
 		events: {
 			search: function (qry, callback) {
-				callback(codeObjectIndex.search(qry));
+				callback(classMap.search(qry).map((co) => co.id));
 			}
 		}
 	}).on('autocomplete.select', function(/** @type Event */ evt, /** @type {string} */ item) {
-		function extractClassName(name) {
-			const tokens = name.split('::');
-			return tokens.slice(1).join('::');
-		}
-
-		const type = codeObjectIndex.typeOf(item);
+		const codeObject = classMap.codeObjectFromId(item);
 		let filterId;
-		switch ( type ) {
-		case 'function':
-			filterId = extractClassName(codeObjectIndex.classOfFunction(item));
-			break;
-		case 'class':
-			filterId = extractClassName(item);
-			break;
+		switch ( codeObject.type ) {
 		case 'package':
-			filterId = item;
+			filterId = codeObject.packageOf;
 			break;
+		default:
+			filterId = codeObject.classOf;
+			break;			
 		}
 		componentDiagram.focus(filterId);
 	});

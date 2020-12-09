@@ -34,7 +34,8 @@
 		"compile": "tsc -p ./",
 		"lint": "eslint .",
 		"pretest": "yarn run lint",
-		"test": "node ./test/runTest.js",
+		"test": "node ./test/runTest.js && node ./tape/**-test.js",
+		"tape": "node ./tape/**-test.js",
 		"watch": "tsc -w -p ./"
 	},
 	"devDependencies": {
@@ -46,7 +47,8 @@
 		"glob": "^7.1.6",
 		"mocha": "^8.1.3",
 		"typescript": "^4.0.2",
-		"vscode-test": "^1.4.0"
+		"vscode-test": "^1.4.0",
+		"tape": "^5.0.1"
 	},
 	"dependencies": {
 		"@appland/diagrams": "^0.4.0",
