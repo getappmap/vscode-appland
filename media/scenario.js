@@ -72,6 +72,10 @@ import ClassMap from './models/classMap.js';
 		buildComponentDiagram();
 	}
 
+	function openSourceLocation(path) {
+		vscode.postMessage({ command: 'viewSource', text: path });
+	}
+
 	function buildComponentDiagram() {
 		if (componentDiagram) {
 			return;
@@ -143,6 +147,9 @@ import ClassMap from './models/classMap.js';
 								.data(codeObject.locations)
 								.enter()
 								.append('li')
+								.append('a')
+								.attr('href', 'javascript: void(0)')
+								.on('click', openSourceLocation)
 								.text((d) => d)
 								;
 						});

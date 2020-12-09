@@ -57,6 +57,19 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
 		webviewPanel.onDidDispose(() => {
 			changeDocumentSubscription.dispose();
 		});
+		// Handle messages from the webview
+		webviewPanel.webview.onDidReceiveMessage((message) => {
+			switch (message.command) {
+					case 'viewSource':
+					// TODO: workspace is deprecated, because there can now be multiple workspaces.
+					// In this case, prompt the user for the workspace to use as the base.
+					// TODO: don't join to the workspace if the message.text is an absolute URL.
+					const rootPath = vscode.workspace.rootPath;
+					let uri = vscode.Uri.file(`${rootPath}/${message.text}`);
+					vscode.commands.executeCommand('vscode.open', uri, vscode.ViewColumn.Beside);
+					return;
+			}
+		});
 
 		updateWebview();
 	}
