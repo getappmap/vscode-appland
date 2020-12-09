@@ -59,15 +59,31 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
 		});
 		// Handle messages from the webview
 		webviewPanel.webview.onDidReceiveMessage((message) => {
+			function openFile(uri: vscode.Uri) {
+				vscode.commands.executeCommand('vscode.open', uri, vscode.ViewColumn.Beside)
+			}
+
 			switch (message.command) {
-					case 'viewSource':
-					// TODO: workspace is deprecated, because there can now be multiple workspaces.
-					// In this case, prompt the user for the workspace to use as the base.
-					// TODO: don't join to the workspace if the message.text is an absolute URL.
-					const rootPath = vscode.workspace.rootPath;
-					let uri = vscode.Uri.file(`${rootPath}/${message.text}`);
-					vscode.commands.executeCommand('vscode.open', uri, vscode.ViewColumn.Beside);
-					return;
+				case 'viewSource':
+					vscode.workspace.findFiles(message.text).then((uris) => {
+						if (uris.length === 0) {
+							return;
+						} else if (uris.length === 1) {
+							openFile(uris[0]);
+						} else {
+							const options: vscode.QuickPickOptions = {
+								canPickMany: false,
+								placeHolder: 'Choose file to open'
+							};
+							vscode.window.showQuickPick(uris.map(uri => uri.toString()), options).then((fileName) => {
+								if ( !fileName ) {
+									return false;
+								}
+								openFile(vscode.Uri.parse(fileName));
+							});
+						}
+					});
+					break;
 			}
 		});
 
@@ -81,23 +97,23 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
 		// Local path to script and css for the webview
 		const scriptUri = webview.asWebviewUri(vscode.Uri.file(
 			path.join(this.context.extensionPath, 'media', 'scenario.js')
-    ));
-    const scriptD3Uri = webview.asWebviewUri(vscode.Uri.file(
-      path.join(this.context.extensionPath, 'node_modules', 'd3', 'dist', 'd3.js')
-    ));
-    const scriptBootstrapUri = webview.asWebviewUri(vscode.Uri.file(
-      path.join(this.context.extensionPath, 'node_modules', 'bootstrap', 'dist', 'js', 'bootstrap.bundle.js')
-    ));
-    const scriptBootstrapAutocompleteUri = webview.asWebviewUri(vscode.Uri.file(
-      path.join(this.context.extensionPath, 'node_modules', 'bootstrap-autocomplete', 'dist', 'latest', 'bootstrap-autocomplete.js')
-    ));
-    const scriptJQuery = webview.asWebviewUri(vscode.Uri.file(
-      path.join(this.context.extensionPath, 'node_modules', 'jquery', 'dist', 'jquery.js')
-    ));
-    const scriptAppMapUri = webview.asWebviewUri(vscode.Uri.file(
-      path.join(this.context.extensionPath, 'node_modules', '@appland', 'diagrams', 'dist', '@appland', 'diagrams.js')
-    ));
-  
+		));
+		const scriptD3Uri = webview.asWebviewUri(vscode.Uri.file(
+			path.join(this.context.extensionPath, 'node_modules', 'd3', 'dist', 'd3.js')
+		));
+		const scriptBootstrapUri = webview.asWebviewUri(vscode.Uri.file(
+			path.join(this.context.extensionPath, 'node_modules', 'bootstrap', 'dist', 'js', 'bootstrap.bundle.js')
+		));
+		const scriptBootstrapAutocompleteUri = webview.asWebviewUri(vscode.Uri.file(
+			path.join(this.context.extensionPath, 'node_modules', 'bootstrap-autocomplete', 'dist', 'latest', 'bootstrap-autocomplete.js')
+		));
+		const scriptJQuery = webview.asWebviewUri(vscode.Uri.file(
+			path.join(this.context.extensionPath, 'node_modules', 'jquery', 'dist', 'jquery.js')
+		));
+		const scriptAppMapUri = webview.asWebviewUri(vscode.Uri.file(
+			path.join(this.context.extensionPath, 'node_modules', '@appland', 'diagrams', 'dist', '@appland', 'diagrams.js')
+		));
+
 		const styleBootstrapUri = webview.asWebviewUri(vscode.Uri.file(
 			path.join(this.context.extensionPath, 'node_modules', 'bootstrap', 'dist', 'css', 'bootstrap.css')
 		));
@@ -105,8 +121,8 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
 			path.join(this.context.extensionPath, 'media', 'scenario.css')
 		));
 		const styleAppMapUri = webview.asWebviewUri(vscode.Uri.file(
-      path.join(this.context.extensionPath, 'node_modules', '@appland', 'diagrams', 'dist', '@appland', 'diagrams.css')
-    ));
+			path.join(this.context.extensionPath, 'node_modules', '@appland', 'diagrams', 'dist', '@appland', 'diagrams.css')
+		));
 
 		// Use a nonce to whitelist which scripts can be run
 		const nonce = getNonce();
