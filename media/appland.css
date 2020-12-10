@@ -10,14 +10,25 @@
 
 */
 /* Imports */
-/* From scenario.css */
+html {
+  width: 100vw;
+  height: 100vh; }
+
 body {
   background-color: transparent;
   color: #808b98;
-  padding: 0; }
+  padding: 0;
+  height: 100%;
+  overflow: hidden; }
 
 a {
-  color: #4362b1; }
+  color: #4362b1;
+  transition: all 0.3s ease; }
+  a:hover {
+    text-decoration: none;
+    color: #6e88c8; }
+  a:focus {
+    outline: none; }
 
 #appland {
   display: grid;
@@ -25,8 +36,9 @@ a {
   grid-template-columns: 100%;
   row-gap: 2rem;
   padding: 0;
+  height: 100%;
   width: 100vw;
-  height: 100vh; }
+  overflow: hidden; }
 
 /* Filters */
 #filter {
@@ -93,7 +105,7 @@ a {
   grid-column: 1;
   width: 100%;
   min-width: 250px;
-  margin-right: 1rem;
+  margin: 0;
   word-break: break-all;
   padding: 1.5rem 2rem; }
   .selection-details h3 {
@@ -101,7 +113,8 @@ a {
     color: #808b98; }
 
 .appmap.appmap--theme-dark {
-  background-color: transparent; }
+  background-color: transparent;
+  overflow: hidden; }
 
 /* Left sidebar */
 .detail-list {
