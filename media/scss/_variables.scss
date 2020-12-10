@@ -1,0 +1,54 @@
+$gray1: #010306;
+$black: #010306;
+$gray2: #242C41; //#171e2f;
+$gray3: #343742;
+$gray4: #808b98;
+$gray5: #E1E2E2;
+$gray6: #EAEAEA;
+$hotpink: #FF07AA;
+$dullpink: #7b4669;
+$royal: #9C2FBA;
+$blue: #4362b1;
+$lightblue: #768ecb;
+$teal: #6FDDD6;
+$yellow: #EBDF90;
+$appland-text: $gray4;
+$deep-purple: rgba(17,1,38,1);
+$white: lighten($appland-text,35); // aaaalmost pure white. softened a bit.
+$appland-gradient-1: linear-gradient(90deg, rgba(0,1,104,1) 0%, rgba(197,12,228,1) 48%, rgba(255,7,170,1) 100%);
+$appland-gradient-2: linear-gradient(90deg, rgba(255,7,170,1) 0%, rgba(156,47,186,1) 100%);
+$appland-gradient-3: linear-gradient(0deg, rgba(156,47,186,1) 0%, rgba(255,7,170,1) 100%);
+$appland-gradient-4: linear-gradient(90deg, rgba(255,7,170,1) 0%, rgba(156,47,186,1) 50%, rgba(67,98,177,1) 100%);
+$deep-purple-gradient: linear-gradient(180deg, rgba(17,1,38,1) 37%, rgba(110,14,114,1) 110%); //linear-gradient(180deg, rgba(17,1,38,1) 37%, rgba(110,14,114,1) 100%);
+$alert-danger: #CD1414;
+
+// Alerts
+$success: linear-gradient(90deg, rgba(113,149,41,1) 0%, rgba(143,196,19,1) 100%);
+$danger: linear-gradient(90deg, rgba(222,25,50,1) 0%, rgba(196,19,92,1) 100%);
+$general: linear-gradient(90deg, rgba(67,98,177,1) 0%, rgba(84,10,159,1) 100%);
+
+$col-int: #f92672;
+$col-string: #a6e22e;
+$col-bool: #66d9ef;
+$col-float: #fd971f;
+$col-object: #ae81ff;
+
+$appland-code: $white;
+$appmap-labels: $white;
+$appmap-bg: $gray1;
+$form-border: $gray2;
+$scrollHeight: calc(100% - 65px); // a magic number that compensates for header and footer in forcing scrollbars
+
+$box-shadow: 0px -13px 13px 13px rgba(0, 0, 0, 0.41);
+$box-shadow-min: 0px 0px 20px 0px rgba(0, 0, 0, 0.2);
+$text-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.2);
+$border-radius: .5rem;
+$border-radius-big: .5rem;
+$max-width: 1440px;
+$transition: all 0.3s ease;
+$row-height: 3rem;
+
+$appland-text-font-family: 'IBM Plex Sans', sans-serif;
+$fa-font-path: "/webfonts";
+
+$overlay: rgba($blue, .5);
