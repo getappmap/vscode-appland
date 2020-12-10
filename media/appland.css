@@ -1,0 +1,116 @@
+/*
+                       _                     _
+     /\               | |                   | |
+    /  \   _ __  _ __ | |     __ _ _ __   __| |
+   / /\ \ | '_ \| '_ \| |    / _` | '_ \ / _` |
+  / ____ \| |_) | |_) | |___| (_| | | | | (_| |
+ /_/    \_\ .__/| .__/|______\__,_|_| |_|\__,_|
+          | |   | |
+          |_|   |_|
+
+*/
+/* Imports */
+/* From scenario.css */
+body {
+  background-color: transparent;
+  color: #808b98;
+  padding: 0; }
+
+a {
+  color: #4362b1; }
+
+#appland {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  grid-template-columns: 100%;
+  row-gap: 2rem;
+  padding: 0;
+  width: 100vw;
+  height: 100vh; }
+
+/* Filters */
+#filter {
+  padding: 2rem; }
+
+#filter-input input {
+  background-color: transparent;
+  border-radius: .5rem;
+  border: 1px solid #343742;
+  padding: .25rem .5rem;
+  color: #808b98;
+  width: 100%; }
+  #filter-input input:focus {
+    outline: none; }
+
+.dropdown-menu {
+  background-color: #343742;
+  color: #E1E2E2; }
+  .dropdown-menu .dropdown-item {
+    color: #E1E2E2; }
+    .dropdown-menu .dropdown-item.active {
+      background-color: #4362b1;
+      color: #E1E2E2; }
+
+/* Tabs */
+.nav-tabs {
+  border-bottom: 1px solid #343742;
+  padding: 0 2rem; }
+  .nav-tabs .nav-link {
+    color: #808b98; }
+    .nav-tabs .nav-link:hover {
+      border-color: transparent;
+      color: #ccd; }
+    .nav-tabs .nav-link:focus {
+      outline: none; }
+    .nav-tabs .nav-link.active {
+      background-color: #4362b1;
+      border-color: #4362b1;
+      color: #E1E2E2; }
+
+/* Diagram */
+#diagram {
+  display: grid;
+  grid-template-rows: auto 1fr; }
+
+#diagram-tab-content {
+  height: 100%; }
+  #diagram-tab-content div#component-diagram-content {
+    height: 100%; }
+
+.diagram-content .diagram-wrapper {
+  display: grid;
+  grid-template-columns: 25% 75%;
+  height: 100%; }
+
+.diagram {
+  grid-column-start: 2;
+  grid-column-end: 3;
+  border-left: 1px solid #343742;
+  width: 100%;
+  overflow: scroll; }
+
+.selection-details {
+  grid-column: 1;
+  width: 100%;
+  min-width: 250px;
+  margin-right: 1rem;
+  word-break: break-all;
+  padding: 1.5rem 2rem; }
+  .selection-details h3 {
+    font-size: 1.5rem;
+    color: #808b98; }
+
+.appmap.appmap--theme-dark {
+  background-color: transparent; }
+
+/* Left sidebar */
+.detail-list {
+  list-style-type: none;
+  padding: 0; }
+  .detail-list li {
+    border-bottom: 1px solid #343742;
+    padding: .25rem 0; }
+    .detail-list li:first-of-type {
+      border-top: 1px solid #343742; }
+    .detail-list li h5 {
+      margin-top: 2rem; }
