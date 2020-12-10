@@ -51,9 +51,11 @@
 		"tape": "^5.0.1"
 	},
 	"dependencies": {
-		"@appland/diagrams": "^0.4.0",
+		"@appland/diagrams": "^0.4.2",
+		"@appland/models": "^0.3.0",
 		"bootstrap": "^4.5.3",
 		"bootstrap-autocomplete": "^2.3.7",
+		"d3": "^6.3.1",
 		"jquery": "^3.5.1",
 		"popper": "^1.0.1"
 	}

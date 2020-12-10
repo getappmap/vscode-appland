@@ -1,5 +1,4 @@
 // @ts-check
-import ClassMap from './models/classMap.js';
 
 // Script run within the webview itself.
 (function () {
@@ -67,7 +66,7 @@ import ClassMap from './models/classMap.js';
 
 		callTree = aggregateEvents(scenarioData.events, scenarioData.classMap);
 
-		classMap = new ClassMap(scenarioData.classMap);
+		classMap = new Appmap.Models.ClassMap(scenarioData.classMap);
 
 		buildComponentDiagram();
 	}
