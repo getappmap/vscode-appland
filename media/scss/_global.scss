@@ -1,5 +1,4 @@
 // Global
-
 html {
   width: 100vw;
   height: 100vh;
@@ -94,10 +93,8 @@ a {
 
 #diagram-tab-content {
   height: 100%;
-  //border: 2px solid pink;
   div#component-diagram-content {
     height: 100%;
-    //border: 2px solid purple;
   }
 }
 
@@ -121,23 +118,37 @@ a {
   min-width: 250px;
   margin: 0;
   word-break: break-all;
-  padding: 1.5rem 2rem;
+  padding: 0;
   h3 {
-    font-size: 1.5rem;
-    color: $appland-text;
+    font-size: 1.2rem;
+    color: $white;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid $gray3;
+  }
+  .content {
+    padding: 0 2rem;
+    h4 {
+      margin-bottom: 1rem;
+      color: $white;
+    }
+    .content {
+      padding: 0;
+    }
   }
 }
 
 .appmap.appmap--theme-dark {
   background-color: transparent;
   overflow: hidden;
-  //width: 100vw;
 }
 
 /* Left sidebar */
 .detail-list {
   list-style-type: none;
   padding: 0;
+  margin-bottom: 2.5rem;
   li {
     border-bottom: 1px solid $gray3;
     padding: .25rem 0;

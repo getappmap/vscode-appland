@@ -107,10 +107,21 @@ a {
   min-width: 250px;
   margin: 0;
   word-break: break-all;
-  padding: 1.5rem 2rem; }
+  padding: 0; }
   .selection-details h3 {
-    font-size: 1.5rem;
-    color: #808b98; }
+    font-size: 1.2rem;
+    color: #e3e5e8;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid #343742; }
+  .selection-details .content {
+    padding: 0 2rem; }
+    .selection-details .content h4 {
+      margin-bottom: 1rem;
+      color: #e3e5e8; }
+    .selection-details .content .content {
+      padding: 0; }
 
 .appmap.appmap--theme-dark {
   background-color: transparent;
@@ -119,7 +130,8 @@ a {
 /* Left sidebar */
 .detail-list {
   list-style-type: none;
-  padding: 0; }
+  padding: 0;
+  margin-bottom: 2.5rem; }
   .detail-list li {
     border-bottom: 1px solid #343742;
     padding: .25rem 0; }
