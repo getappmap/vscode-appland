@@ -3,7 +3,7 @@
 	"name": "appmap",
 	"displayName": "AppMap",
 	"description": "Show AppMap diagram for context object",
-	"version": "0.0.1",
+	"version": "0.1.0",
 	"engines": {
 		"vscode": "^1.51.0"
 	},
@@ -51,9 +51,11 @@
 		"tape": "^5.0.1"
 	},
 	"dependencies": {
-		"@appland/diagrams": "^0.4.0",
+		"@appland/diagrams": "^0.5.0",
+		"@appland/models": "^0.3.0",
 		"bootstrap": "^4.5.3",
 		"bootstrap-autocomplete": "^2.3.7",
+		"d3": "^5.16.0",
 		"jquery": "^3.5.1",
 		"popper": "^1.0.1"
 	}
