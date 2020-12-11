@@ -66,7 +66,7 @@
 
 		callTree = aggregateEvents(scenarioData.events, scenarioData.classMap);
 
-		classMap = new Appmap.Models.ClassMap(scenarioData.classMap);
+		classMap = new Models.ClassMap(scenarioData.classMap);
 
 		buildComponentDiagram();
 	}
@@ -87,17 +87,27 @@
 		function contextMenu(componentDiagram) {
 			return [
 				(item) => item
-					.text('View source')
-					.selector('g.node.class')
-					.transform(function (e) {
-						return componentDiagram.sourceLocation(e.getAttribute('id'));
+					.text('Expand')
+					.selector('g.node')
+					.transform((e) => e.getAttribute('id'))
+					.condition((id) => componentDiagram.hasPackage(id))
+					.on('execute', (id) => componentDiagram.expand(id)),
+				(item) => item
+					.text('Collapse')
+					.selector('g.node')
+					.transform((e) => e.getAttribute('id'))
+					.condition((id) => !componentDiagram.hasPackage(id))
+					.on('execute', (id) => componentDiagram.collapse(id)),
+				(item) => item
+					.text('Reset view')
+					.on('execute', () => {
+						componentDiagram.render(componentDiagram.initialModel);
 					})
-					.on('execute', viewSource)
-			]
+			];
 		}
 
 		// @ts-ignore
-		const componentModel = new Appmap.Models.Components(scenarioData);
+		const componentModel = new Models.Components(scenarioData);
 		componentDiagramContainer.innerHTML = '';
 		// @ts-ignore
 		const diagram = new Appmap.ComponentDiagram(componentDiagramContainer, { theme: 'dark', contextMenu })
@@ -118,7 +128,7 @@
 			// TODO: Doing fuzzy match here, because ids from the component diagram aren't currently fully qualified.
 			// const codeObject = classMap.codeObjectFromId(id);
 			const codeObjects = classMap.search(id);
-			if ( codeObjects.length === 0 ) {
+			if (codeObjects.length === 0) {
 				return false;
 			}
 
@@ -127,22 +137,22 @@
 
 			const httpServerRequests = /** @type {Set<CallNode>} */ new Set();
 			const invocationEvents = /** @type {Array<CallNode>} */ new Array();
-			const sqlQueries = /** @type {Array<CallNode>} */ [];
+			const sqlQueries = /** @type {Array<CallNode>} */[];
 			callTree.rootNode.forEach((/** @type {CallNode} */ node, /** @type {Array<CallNode>} */ stack) => {
-				const location = [ node.input.path, node.input.lineno ].filter(n => n).join(':');
+				const location = [node.input.path, node.input.lineno].filter(n => n).join(':');
 				const types = /** @type {Array<CodeObject>} */ classMap.codeObjectsAtLocation(location);
-				if ( types.length === 0 ) {
+				if (types.length === 0) {
 					return;
 				}
 				const type = types[0];
-				if ( type.classOf === codeObject.classOf ) {
+				if (type.classOf === codeObject.classOf) {
 					invocationEvents.push(node);
 					stack.filter((node) => node.input.http_server_request).forEach(httpServerRequests.add.bind(httpServerRequests))
 				}
 			});
 			invocationEvents.forEach((/** @type {CallNode} */ node) => {
 				node.forEach((/** @type {CallNode} */ child) => {
-					if ( child.input.sql_query ) {
+					if (child.input.sql_query) {
 						sqlQueries.push(child);
 					}
 				});
@@ -157,7 +167,7 @@
 				.call((content) => {
 					content
 						.append('h5')
-						.text('Locations');	
+						.text('Locations');
 				})
 				.call((content) => {
 					content
@@ -179,7 +189,7 @@
 				.call((content) => {
 					content
 						.append('h5')
-						.text('HTTP server requests');	
+						.text('HTTP server requests');
 				})
 				.call((content) => {
 					content
@@ -201,7 +211,7 @@
 				.call((content) => {
 					content
 						.append('h5')
-						.text('SQL queries');	
+						.text('SQL queries');
 				})
 				.call((content) => {
 					content
@@ -242,16 +252,16 @@
 				callback(classMap.search(qry).map((co) => co.id));
 			}
 		}
-	}).on('autocomplete.select', function(/** @type Event */ evt, /** @type {string} */ item) {
+	}).on('autocomplete.select', function (/** @type Event */ evt, /** @type {string} */ item) {
 		const codeObject = classMap.codeObjectFromId(item);
 		let filterId;
-		switch ( codeObject.type ) {
-		case 'package':
-			filterId = codeObject.packageOf;
-			break;
-		default:
-			filterId = codeObject.classOf;
-			break;			
+		switch (codeObject.type) {
+			case 'package':
+				filterId = codeObject.packageOf;
+				break;
+			default:
+				filterId = codeObject.classOf;
+				break;
 		}
 		componentDiagram.focus(filterId);
 	});

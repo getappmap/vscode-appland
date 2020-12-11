@@ -113,6 +113,9 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
 		const scriptAppMapUri = webview.asWebviewUri(vscode.Uri.file(
 			path.join(this.context.extensionPath, 'node_modules', '@appland', 'diagrams', 'dist', '@appland', 'diagrams.js')
 		));
+		const scriptModelsUri = webview.asWebviewUri(vscode.Uri.file(
+			path.join(this.context.extensionPath, 'node_modules', '@appland', 'models', 'dist', 'index.js')
+		));
 
 		const styleBootstrapUri = webview.asWebviewUri(vscode.Uri.file(
 			path.join(this.context.extensionPath, 'node_modules', 'bootstrap', 'dist', 'css', 'bootstrap.css')
@@ -195,6 +198,7 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
 				<script nonce="${nonce}" src="${scriptJQuery}"></script>
 				<script nonce="${nonce}" src="${scriptBootstrapUri}"></script>
 				<script nonce="${nonce}" src="${scriptBootstrapAutocompleteUri}"></script>
+				<script nonce="${nonce}" src="${scriptModelsUri}"></script>
 				<script nonce="${nonce}" src="${scriptAppMapUri}"></script>
 				<script nonce="${nonce}" type="module" src="${scriptUri}"></script>
 			</body>
