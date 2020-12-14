@@ -1,6 +1,7 @@
 // @ts-check
 
-import CodeObjectDetails from './ui/codeObjectDetails.js'
+import ClassDetails from './ui/classDetails.js';
+import FunctionDetails from './ui/functionDetails.js';
 
 // Script run within the webview itself.
 (function () {
@@ -135,9 +136,23 @@ import CodeObjectDetails from './ui/codeObjectDetails.js'
 			}
 
 			const codeObject = codeObjects[0];
-			const cod = new CodeObjectDetails(eventDetailsContainer, { classMap, events: callTree })
-			cod.on('openFile', openSourceLocation);
-			cod.render(codeObject);
+
+			if ( codeObject.type === 'class' ) {
+				const appmap = { classMap, events: callTree };
+
+				const cod = new ClassDetails(eventDetailsContainer, appmap)
+				cod.on('openFile', openSourceLocation);
+				cod.on('selectFunction', (fn) => {
+					const fnDetails = new FunctionDetails(eventDetailsContainer, appmap)
+					fnDetails.on('openSourceLocation', (path) => {
+						const tokens = path.split(':', 2);
+						// TODO: Open file at location tokens[1]
+						openSourceLocation(tokens[0]);
+					});
+					fnDetails.render(fn);
+				});
+				cod.render(codeObject);	
+			}
 		});
 	}
 
