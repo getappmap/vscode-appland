@@ -187,7 +187,6 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
 							<div id="component-diagram-content" class="diagram-content tab-pane fade show active" role="tabpanel" aria-labeled-by="component-diagram-content-tab">
 								<div class="diagram-wrapper">
 									<div id="component-details" class="selection-details">
-										<h3>Component details</h3>
 										<div class="content">
 										</div>
 									</div>
@@ -198,7 +197,6 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
 							<div id="event-diagram-content" class="diagram-content tab-pane fade" role="tabpanel" aria-labeled-by="event-diagram-content-tab">
 								<div class="diagram-wrapper">
 									<div id="event-details" class="selection-details">
-										<h3>Event details</h3>
 										<div class="content">
 										</div>
 									</div>

@@ -1,7 +1,7 @@
 export default class CodeObjectDetails extends Models.EventSource {
   /**
    * @param {any} container 
-   * @param {Object<classMap,events>} appmap 
+   * @param {Object<ClassMap,events>} appmap 
    */
   constructor(container, appmap) {
     super();
@@ -53,5 +53,14 @@ export default class CodeObjectDetails extends Models.EventSource {
             ;
         });
     }
+  }
+
+  codeObjectForEvent(event) {
+    const location = [event.path, event.lineno].filter(n => n).join(':');
+    const types = /** @type {Array<CodeObject>} */ this.classMap.codeObjectsAtLocation(location);
+    if (types.length === 0) {
+      return;
+    }
+    return types[0];
   }
 }

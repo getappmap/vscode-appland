@@ -9,12 +9,11 @@ export default class ClassDetails extends CodeObjectDetails {
     const invocationEvents = /** @type {Array<CallNode>} */ new Array();
     const sqlQueries = /** @type {Array<CallNode>} */[];
     this.rootNode.forEach((/** @type {CallNode} */ node, /** @type {Array<CallNode>} */ stack) => {
-      const location = [node.input.path, node.input.lineno].filter(n => n).join(':');
-      const types = /** @type {Array<CodeObject>} */ this.classMap.codeObjectsAtLocation(location);
-      if (types.length === 0) {
+      const type = this.codeObjectForEvent(node.input);
+      if ( !type ) {
         return;
       }
-      const type = types[0];
+
       if (type.classOf === cls.classOf) {
         invocationEvents.push(node);
         stack.filter((node) => node.input.http_server_request).forEach(httpServerRequests.add.bind(httpServerRequests))
@@ -33,7 +32,7 @@ export default class ClassDetails extends CodeObjectDetails {
 
     d3.select(this.container)
       .append('h4')
-      .text(cls.name);
+      .text(`Class ${cls.name}`);
     const content = d3.select(this.container)
       .append('div')
       .classed('content', true)
