@@ -51,8 +51,8 @@
 		"tape": "^5.0.1"
 	},
 	"dependencies": {
-		"@appland/diagrams": "^0.5.0",
-		"@appland/models": "^0.3.0",
+		"@appland/diagrams": "github:applandinc/diagrams-js#master",
+		"@appland/models": "github:applandinc/models-js#master",
 		"bootstrap": "^4.5.3",
 		"bootstrap-autocomplete": "^2.3.7",
 		"d3": "^5.16.0",

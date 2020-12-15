@@ -141,14 +141,10 @@ import FunctionDetails from './ui/functionDetails.js';
 				const appmap = { classMap, events: callTree };
 
 				const cod = new ClassDetails(eventDetailsContainer, appmap)
-				cod.on('openFile', openSourceLocation);
+				cod.on('openSourceLocation', openSourceLocation);
 				cod.on('selectFunction', (fn) => {
 					const fnDetails = new FunctionDetails(eventDetailsContainer, appmap)
-					fnDetails.on('openSourceLocation', (path) => {
-						const tokens = path.split(':', 2);
-						// TODO: Open file at location tokens[1]
-						openSourceLocation(tokens[0]);
-					});
+					fnDetails.on('openSourceLocation', openSourceLocation);
 					fnDetails.render(fn);
 				});
 				cod.render(codeObject);	

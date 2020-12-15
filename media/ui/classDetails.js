@@ -57,7 +57,7 @@ export default class ClassDetails extends CodeObjectDetails {
             .on('click', (fn) => {
               this.emit('selectFunction', fn)
             })
-            .text((d) => d.name)
+            .text((d) => [ d.static ? '.' : '#', d.name ].join(''))
             ;
         });
     }
