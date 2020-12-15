@@ -57,32 +57,50 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
 		webviewPanel.onDidDispose(() => {
 			changeDocumentSubscription.dispose();
 		});
-		// Handle messages from the webview
-		webviewPanel.webview.onDidReceiveMessage((message) => {
-			function openFile(uri: vscode.Uri) {
-				vscode.commands.executeCommand('vscode.open', uri, vscode.ViewColumn.Beside)
+
+		function openFile(uri: vscode.Uri, lineNumber: number) {
+			const showOptions = {
+				viewColumn: vscode.ViewColumn.Beside,
+				selection: new vscode.Range(new vscode.Position(lineNumber - 1, 0), new vscode.Position(lineNumber - 1, 0))
+			}
+			vscode.commands.executeCommand('vscode.open', uri, showOptions)
+		}
+
+		function viewSource(location: string) {
+			const tokens = location.split(':', 2);
+			const path = tokens[0];
+			const lineNumberStr = tokens[1];
+			let lineNumber = 1;
+			if ( lineNumberStr ) {
+				lineNumber = Number.parseInt(lineNumberStr, 10);
 			}
 
+			vscode.workspace.findFiles(path).then((uris) => {
+				if (uris.length === 0) {
+					return;
+				} else if (uris.length === 1) {
+					openFile(uris[0], lineNumber);
+				} else {
+					const options: vscode.QuickPickOptions = {
+						canPickMany: false,
+						placeHolder: 'Choose file to open'
+					};
+					vscode.window.showQuickPick(uris.map(uri => uri.toString()), options).then((fileName) => {
+						if ( !fileName ) {
+							return false;
+						}
+						openFile(vscode.Uri.parse(fileName), lineNumber);
+					});
+				}
+			});
+
+		}
+
+		// Handle messages from the webview
+		webviewPanel.webview.onDidReceiveMessage((message) => {
 			switch (message.command) {
 				case 'viewSource':
-					vscode.workspace.findFiles(message.text).then((uris) => {
-						if (uris.length === 0) {
-							return;
-						} else if (uris.length === 1) {
-							openFile(uris[0]);
-						} else {
-							const options: vscode.QuickPickOptions = {
-								canPickMany: false,
-								placeHolder: 'Choose file to open'
-							};
-							vscode.window.showQuickPick(uris.map(uri => uri.toString()), options).then((fileName) => {
-								if ( !fileName ) {
-									return false;
-								}
-								openFile(vscode.Uri.parse(fileName));
-							});
-						}
-					});
+					viewSource(message.text);
 					break;
 			}
 		});

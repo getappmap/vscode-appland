@@ -1,5 +1,8 @@
 // @ts-check
 
+import ClassDetails from './ui/classDetails.js';
+import FunctionDetails from './ui/functionDetails.js';
+
 // Script run within the webview itself.
 (function () {
 	// Get a reference to the VS Code webview api.
@@ -133,103 +136,19 @@
 			}
 
 			const codeObject = codeObjects[0];
-			eventDetailsContainer.innerHTML = '';
 
-			const httpServerRequests = /** @type {Set<CallNode>} */ new Set();
-			const invocationEvents = /** @type {Array<CallNode>} */ new Array();
-			const sqlQueries = /** @type {Array<CallNode>} */[];
-			callTree.rootNode.forEach((/** @type {CallNode} */ node, /** @type {Array<CallNode>} */ stack) => {
-				const location = [node.input.path, node.input.lineno].filter(n => n).join(':');
-				const types = /** @type {Array<CodeObject>} */ classMap.codeObjectsAtLocation(location);
-				if (types.length === 0) {
-					return;
-				}
-				const type = types[0];
-				if (type.classOf === codeObject.classOf) {
-					invocationEvents.push(node);
-					stack.filter((node) => node.input.http_server_request).forEach(httpServerRequests.add.bind(httpServerRequests))
-				}
-			});
-			invocationEvents.forEach((/** @type {CallNode} */ node) => {
-				node.forEach((/** @type {CallNode} */ child) => {
-					if (child.input.sql_query) {
-						sqlQueries.push(child);
-					}
-				});
-			});
+			if ( codeObject.type === 'class' ) {
+				const appmap = { classMap, events: callTree };
 
-			d3.select(eventDetailsContainer)
-				.append('h4')
-				.text(id);
-			d3.select(eventDetailsContainer)
-				.append('div')
-				.classed('content', true)
-				.call((content) => {
-					content
-						.append('h5')
-						.text('Locations');
-				})
-				.call((content) => {
-					content
-						.append('ul')
-						.classed('locations detail-list', true)
-						.call((ul) => {
-							ul
-								.selectAll('.location')
-								.data(codeObject.locations)
-								.enter()
-								.append('li')
-								.append('a')
-								.attr('href', 'javascript: void(0)')
-								.on('click', openSourceLocation)
-								.text((d) => d)
-								;
-						});
-				})
-				.call((content) => {
-					content
-						.append('h5')
-						.text('HTTP server requests');
-				})
-				.call((content) => {
-					content
-						.append('ul')
-						.classed('http-server-requests detail-list', true)
-						.call((ul) => {
-							ul
-								.selectAll('.http-server-request')
-								.data(Array.from(httpServerRequests).map((e) => e.input), (d) => d.id)
-								.enter()
-								.append('li')
-								.append('a')
-								.attr('href', 'javascript: void(0)')
-								.attr('data-event-id', d => d.id)
-								.text((d) => `${d.http_server_request.request_method} ${d.http_server_request.path_info}`)
-								;
-						});
-				})
-				.call((content) => {
-					content
-						.append('h5')
-						.text('SQL queries');
-				})
-				.call((content) => {
-					content
-						.append('ul')
-						.classed('sql-queries detail-list', true)
-						.call((ul) => {
-							ul
-								.selectAll('.sql-query')
-								.data(sqlQueries.map((e) => e.input), (d) => d.id)
-								.enter()
-								.append('li')
-								.append('a')
-								.attr('data-event-id', d => d.id)
-								.attr('href', 'javascript: void(0)')
-								.text((_, i) => `Query ${i}`) // d.sql_query.sql
-								;
-						});
+				const cod = new ClassDetails(eventDetailsContainer, appmap)
+				cod.on('openSourceLocation', openSourceLocation);
+				cod.on('selectFunction', (fn) => {
+					const fnDetails = new FunctionDetails(eventDetailsContainer, appmap)
+					fnDetails.on('openSourceLocation', openSourceLocation);
+					fnDetails.render(fn);
 				});
+				cod.render(codeObject);	
+			}
 		});
 	}
 
