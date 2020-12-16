@@ -163,7 +163,7 @@ import FunctionDetails from './ui/functionDetails.js';
 		diagram.render();
 	}
 
-	jQuery('#event-diagram-content-tab').on('show.bs.tab', buildEventDiagram);
+	jQuery('#event-diagram-content-tab').on('shown.bs.tab', buildEventDiagram);
 	jQuery(filterInput).autoComplete({
 		resolver: 'custom',
 		events: {
