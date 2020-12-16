@@ -17,6 +17,7 @@ import FunctionDetails from './ui/functionDetails.js';
 	const filterInput = /** @type {HTMLInputElement} */ (document.querySelector('#filter-input input[type=text]'));
 	let scenarioData,
 		componentDiagram,
+		selectedCallNode,
 		callTree,
 		classMap,
 		eventDiagram;
@@ -78,13 +79,29 @@ import FunctionDetails from './ui/functionDetails.js';
 		vscode.postMessage({ command: 'viewSource', text: path });
 	}
 
+	function openCallNode(callNode) {
+		jQuery('#event-diagram-content-tab').tab('show');
+		selectedCallNode = callNode;
+	}
+
+	function displayClassDetails(cls) {
+		const appmap = { classMap, events: callTree };
+
+		const cod = new ClassDetails(eventDetailsContainer, appmap)
+		cod.on('openSourceLocation', openSourceLocation);
+		cod.on('selectFunction', (fn) => {
+			const fnDetails = new FunctionDetails(eventDetailsContainer, appmap)
+			fnDetails.on('openSourceLocation', openSourceLocation);
+			fnDetails.on('selectCallNode', openCallNode);
+			fnDetails.on('selectClass', displayClassDetails);
+			fnDetails.render(fn);
+		});
+		cod.render(cls);	
+	}
+
 	function buildComponentDiagram() {
 		if (componentDiagram) {
 			return;
-		}
-
-		function viewSource(repoUrl) {
-			console.log(repoUrl);
 		}
 
 		function contextMenu(componentDiagram) {
@@ -138,16 +155,7 @@ import FunctionDetails from './ui/functionDetails.js';
 			const codeObject = codeObjects[0];
 
 			if ( codeObject.type === 'class' ) {
-				const appmap = { classMap, events: callTree };
-
-				const cod = new ClassDetails(eventDetailsContainer, appmap)
-				cod.on('openSourceLocation', openSourceLocation);
-				cod.on('selectFunction', (fn) => {
-					const fnDetails = new FunctionDetails(eventDetailsContainer, appmap)
-					fnDetails.on('openSourceLocation', openSourceLocation);
-					fnDetails.render(fn);
-				});
-				cod.render(codeObject);	
+				displayClassDetails(codeObject);
 			}
 		});
 	}
@@ -163,7 +171,19 @@ import FunctionDetails from './ui/functionDetails.js';
 		diagram.render();
 	}
 
-	jQuery('#event-diagram-content-tab').on('shown.bs.tab', buildEventDiagram);
+	function selectCallNode() {
+		if ( selectedCallNode ) {
+			// This has to wait until the tab is visible, or the pan-to-node viewport calculations won't work.
+			callTree.selectedEvent = selectedCallNode;
+			selectedCallNode = null;
+		}
+	}
+
+	jQuery('#event-diagram-content-tab').on('shown.bs.tab', () => {
+		buildEventDiagram();
+		selectCallNode();
+	});
+
 	jQuery(filterInput).autoComplete({
 		resolver: 'custom',
 		events: {
