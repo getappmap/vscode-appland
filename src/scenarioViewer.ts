@@ -139,7 +139,7 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
 			path.join(this.context.extensionPath, 'node_modules', 'bootstrap', 'dist', 'css', 'bootstrap.css')
 		));
 		const styleMainUri = webview.asWebviewUri(vscode.Uri.file(
-			path.join(this.context.extensionPath, 'media', 'appland.css')
+			path.join(this.context.extensionPath, 'out', 'extension.css')
 		));
 		const styleAppMapUri = webview.asWebviewUri(vscode.Uri.file(
 			path.join(this.context.extensionPath, 'node_modules', '@appland', 'diagrams', 'dist', '@appland', 'diagrams.css')
