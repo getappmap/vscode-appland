@@ -26,11 +26,12 @@ a {
 
 #appland {
   display: grid;
-  grid-template-rows: auto 1fr;
-  grid-template-columns: 100%;
+  grid-template-rows: 100%;
+  grid-template-columns: 25% 75%;
   row-gap: 2rem;
+  column-gap: 0;
   padding: 0;
-  height: 100%;
+  height: 100vh;
   width: 100vw;
   overflow: hidden;
 }
@@ -89,6 +90,7 @@ a {
 #diagram {
   display: grid;
   grid-template-rows: auto 1fr;
+  //width: 100vw;
 }
 
 #diagram-tab-content {
@@ -99,23 +101,23 @@ a {
 }
 
 .diagram-content .diagram-wrapper {
-  display: grid;
-  grid-template-columns: 25% 75%;
   height: 100%;
+  .diagram {
+    height: 100%;
+  }
 }
 
 .diagram {
   grid-column-start: 2;
   grid-column-end: 3;
-  border-left: 1px solid $gray3;
   width: 100%;
   overflow: scroll;
 }
 
 .selection-details {
   grid-column: 1;
-  width: 100%;
-  min-width: 250px;
+  // width: 100%;
+  // min-width: 250px;
   margin: 0;
   word-break: break-all;
   padding: 0;
@@ -128,13 +130,26 @@ a {
     border-bottom: 1px solid $gray3;
   }
   .content {
-    padding: 0 2rem;
+    padding: 0;
     h4 {
       margin-bottom: 1rem;
       color: $white;
+      padding: 0 1rem;
     }
+
     .content {
       padding: 0;
+      h5 {
+        padding: 0 1rem;
+      }
+      li {
+        padding: .4rem 1rem;
+        transition: $transition;
+        &:hover {
+          background-color: $blue;
+          a { color: $white; }
+        }
+      }
     }
   }
 }
@@ -145,6 +160,12 @@ a {
 }
 
 /* Left sidebar */
+.sidebar {
+  border-right: 2px solid $gray3;
+  padding-top: 1.5rem;
+  overflow: scroll;
+}
+
 .detail-list {
   list-style-type: none;
   padding: 0;
