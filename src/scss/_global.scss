@@ -38,10 +38,10 @@ a {
 
 .block-heading {
   background-color: $gray1;
-  padding: 1rem;
+  padding: .5rem 1rem;
   text-transform: uppercase;
   color: $appland-text;
-  font-size: 1.1rem;
+  font-size: 1rem;
   margin: 0;
 }
 
@@ -100,6 +100,7 @@ a {
     text-transform: uppercase;
     color: $appland-text;
     background-color: $gray1;
+    font-size: 1rem;
     &:hover {
       border-color: transparent;
       color: #ccd;
