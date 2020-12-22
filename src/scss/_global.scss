@@ -83,11 +83,23 @@ a {
 }
 
 /* Tabs */
+
+.tabs-wrap {
+  width: 100%;
+  overflow: hidden;
+}
+
 .nav-tabs {
   border-bottom: 1px solid $gray3;
-  padding: 0 2rem;
+  padding: 0;
+  .nav-item {
+    width: 50%;
+  }
   .nav-link {
     color: $gray4;
+    border-radius: 0;
+    text-transform: uppercase;
+    color: $appland-text;
     &:hover {
       border-color: transparent;
       color: #ccd;
@@ -96,9 +108,9 @@ a {
       outline: none;
     }
     &.active {
-      background-color: $blue;
-      border-color:$blue;
-      color: $gray5;
+      background-color: $gray1;
+      border: 0;
+      color: $appland-text;
     }
   }
 }
