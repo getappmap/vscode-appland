@@ -172,6 +172,7 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
 				<div id="appland">
 					<div class="sidebar">
 						<div id="component-details" class="selection-details">
+							<h3 class="block-heading">Component details</h3>
 							<div class="content">
 							</div>
 						</div>
@@ -179,7 +180,7 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
 					<div id="diagram">
 						<div id="errors"></div>
 						<div id="filter">
-							<h5>Filters</h5>
+							<h5 class="block-heading">Filters</h5>
 							<div id="filter-input">
 								<input type="text" size="80" placeholder="Filter the diagram by package, class or function" autocomplete="off"></input>
 							</div>
