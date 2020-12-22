@@ -42,7 +42,7 @@ a {
   text-transform: uppercase;
   color: $appland-text;
   font-size: 1.1rem;
-
+  margin: 0;
 }
 
 /* Filters */
@@ -50,13 +50,12 @@ a {
   padding: 0 0 1.5rem 0;
   display: flex;
   flex-direction: column;
-  margin-bottom: 1rem;
 }
 
 #filter-input {
   width: 96%;
   margin: 0 auto;
-  margin-top: 1rem;
+  margin-top: 1.5rem;
   input {
     background-color: transparent;
     border-radius: .5rem;
@@ -90,7 +89,7 @@ a {
 }
 
 .nav-tabs {
-  border-bottom: 1px solid $gray3;
+  border-bottom: 0;
   padding: 0;
   .nav-item {
     width: 50%;
@@ -100,6 +99,7 @@ a {
     border-radius: 0;
     text-transform: uppercase;
     color: $appland-text;
+    background-color: $gray1;
     &:hover {
       border-color: transparent;
       color: #ccd;
@@ -108,9 +108,9 @@ a {
       outline: none;
     }
     &.active {
-      background-color: $gray1;
+      background-color: $blue;
       border: 0;
-      color: $appland-text;
+      color: $white;
     }
   }
 }
@@ -147,23 +147,28 @@ a {
   margin: 0;
   word-break: break-all;
   padding: 0;
-  // h3 {
-  //   font-size: 1.2rem;
-  //   text-transform: uppercase;
-  //   margin-bottom: 1rem;
-  // }
   .content {
     padding: 0;
+    margin-top: 1rem;
     h4 {
       margin-bottom: 1rem;
       color: $white;
       padding: 0 1rem;
+    }
+    //back links
+    h5 {
+      padding: 0 1rem;
+      margin-bottom: 1rem;
+      a {
+        font-size: 1.5rem;
+      }
     }
 
     .content {
       padding: 0;
       h5 {
         padding: 0 1rem;
+        margin-bottom: .5rem;
       }
       li {
         padding: .4rem 1rem;
