@@ -24,8 +24,8 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
 	 */
 	public async resolveCustomTextEditor(
 		document: vscode.TextDocument,
-		webviewPanel: vscode.WebviewPanel,
-		_token: vscode.CancellationToken
+		webviewPanel: vscode.WebviewPanel
+		/* _token: vscode.CancellationToken */
 	): Promise<void> {
 		// Setup initial content for the webview
 		webviewPanel.webview.options = {
@@ -170,37 +170,41 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
 			</head>
 			<body>
 				<div id="appland">
-					<div id="errors">
-					</div>
-					<div id="filter">
-						<h5>Filters</h5>
-						<div id="filter-input">
-							<input type="text" size="80" placeholder="Filter the diagram by package, class or function" autocomplete="off"></input>
+					<div class="sidebar">
+						<div id="component-details" class="selection-details">
+							<h3 class="block-heading">Component details</h3>
+							<div class="content">
+							</div>
 						</div>
 					</div>
 					<div id="diagram">
-						<ul id="diagram-tabs" class="nav nav-tabs" role="tablist">
-							<li class="nav-item"><a class="nav-link active" id="component-diagram-content-tab" data-toggle="tab" href="#component-diagram-content" role="tab" aria-selected="true">Components</a></li>
-							<li class="nav-item"><a class="nav-link" id="event-diagram-content-tab" data-toggle="tab" href="#event-diagram-content" role="tab">Events</a></li>
-						</ul>
-						<div id="diagram-tab-content" class="tab-content">
-							<div id="component-diagram-content" class="diagram-content tab-pane fade show active" role="tabpanel" aria-labeled-by="component-diagram-content-tab">
-								<div class="diagram-wrapper">
-									<div id="component-details" class="selection-details">
-										<div class="content">
+						<div id="errors"></div>
+						<div id="filter">
+							<h5 class="block-heading">Filters</h5>
+							<div id="filter-input">
+								<input type="text" size="80" placeholder="Filter the diagram by package, class or function" autocomplete="off"></input>
+							</div>
+						</div>
+						<div class="tabs-wrap">
+							<ul id="diagram-tabs" class="nav nav-tabs" role="tablist">
+								<li class="nav-item"><a class="nav-link active" id="component-diagram-content-tab" data-toggle="tab" href="#component-diagram-content" role="tab" aria-selected="true">Components</a></li>
+								<li class="nav-item"><a class="nav-link" id="event-diagram-content-tab" data-toggle="tab" href="#event-diagram-content" role="tab">Events</a></li>
+							</ul>
+							<div id="diagram-tab-content" class="tab-content">
+								<div id="component-diagram-content" class="diagram-content tab-pane fade show active" role="tabpanel" aria-labeled-by="component-diagram-content-tab">
+									<div class="diagram-wrapper">
+										<div id="component-diagram" class="diagram">
 										</div>
-									</div>
-									<div id="component-diagram" class="diagram">
 									</div>
 								</div>
-							</div>
-							<div id="event-diagram-content" class="diagram-content tab-pane fade" role="tabpanel" aria-labeled-by="event-diagram-content-tab">
-								<div class="diagram-wrapper">
-									<div id="event-details" class="selection-details">
-										<div class="content">
+								<div id="event-diagram-content" class="diagram-content tab-pane fade" role="tabpanel" aria-labeled-by="event-diagram-content-tab">
+									<div class="diagram-wrapper">
+										<div id="event-details" class="selection-details">
+											<div class="content">
+											</div>
 										</div>
-									</div>
-									<div id="event-diagram" class="diagram">
+										<div id="event-diagram" class="diagram">
+										</div>
 									</div>
 								</div>
 							</div>
@@ -223,7 +227,7 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
 	/**
 	 * Try to get a current document as json text.
 	 */
-	private getDocumentAsJson(document: vscode.TextDocument): any {
+	private getDocumentAsJson(document: vscode.TextDocument): object {
 		const text = document.getText();
 		if (text.trim().length === 0) {
 			return {};
