@@ -24,8 +24,8 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
 	 */
 	public async resolveCustomTextEditor(
 		document: vscode.TextDocument,
-		webviewPanel: vscode.WebviewPanel,
-		_token: vscode.CancellationToken
+		webviewPanel: vscode.WebviewPanel
+		/* _token: vscode.CancellationToken */
 	): Promise<void> {
 		// Setup initial content for the webview
 		webviewPanel.webview.options = {
@@ -227,7 +227,7 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
 	/**
 	 * Try to get a current document as json text.
 	 */
-	private getDocumentAsJson(document: vscode.TextDocument): any {
+	private getDocumentAsJson(document: vscode.TextDocument): object {
 		const text = document.getText();
 		if (text.trim().length === 0) {
 			return {};
