@@ -1,4 +1,3 @@
-import { terser } from 'rollup-plugin-terser';
 import resolve from '@rollup/plugin-node-resolve';
 import scss from 'rollup-plugin-scss';
 import sucrase from '@rollup/plugin-sucrase';
@@ -19,7 +18,6 @@ export default {
     sucrase({
       exclude: ["node_modules/**"],
       transforms: ["typescript"],
-    }),
-    terser(),
+    })
   ],
 };
