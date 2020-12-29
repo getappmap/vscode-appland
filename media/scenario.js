@@ -223,6 +223,8 @@ import FunctionDetails from './ui/functionDetails.js';
 		}
 	});
 
+	vscode.postMessage({ command: 'ready' });
+
 	// Webviews are normally torn down when not visible and re-created when they become visible again.
 	// State lets us save information across these re-loads
 	const state = vscode.getState();

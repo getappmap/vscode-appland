@@ -27,18 +27,31 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
 		webviewPanel: vscode.WebviewPanel
 		/* _token: vscode.CancellationToken */
 	): Promise<void> {
-		// Setup initial content for the webview
-		webviewPanel.webview.options = {
-			enableScripts: true,
-		};
-		webviewPanel.webview.html = this.getHtmlForWebview(webviewPanel.webview);
-
 		function updateWebview() {
 			webviewPanel.webview.postMessage({
 				type: 'update',
 				text: document.getText(),
 			});
 		}
+
+		// Handle messages from the webview.
+		// Note: this has to be set before setting the HTML to avoid a race.
+		webviewPanel.webview.onDidReceiveMessage((message) => {
+			switch (message.command) {
+				case 'viewSource':
+					viewSource(message.text);
+					break;
+				case 'ready':
+					updateWebview();
+					break;
+			}
+		});
+
+		// Setup initial content for the webview
+		webviewPanel.webview.options = {
+			enableScripts: true,
+		};
+		webviewPanel.webview.html = this.getHtmlForWebview(webviewPanel.webview);
 
 		// Hook up event handlers so that we can synchronize the webview with the text document.
 		//
@@ -96,16 +109,6 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
 
 		}
 
-		// Handle messages from the webview
-		webviewPanel.webview.onDidReceiveMessage((message) => {
-			switch (message.command) {
-				case 'viewSource':
-					viewSource(message.text);
-					break;
-			}
-		});
-
-		updateWebview();
 	}
 
 	/**
