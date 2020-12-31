@@ -1,9 +1,13 @@
 {
 	"publisher": "appland",
-	"name": "appmap",
-	"displayName": "AppMap",
-	"description": "Show AppMap diagram for context object",
+	"name": "appland",
+	"displayName": "AppLand",
+	"description": "AppLand code analysis and visualization",
 	"version": "0.1.0",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/applandinc/vscode-appland"
+	},
 	"engines": {
 		"vscode": "^1.51.0"
 	},
@@ -36,7 +40,8 @@
 		"test": "node ./test/runTest.js && node ./tape/**-test.js",
 		"tape": "node ./tape/**-test.js",
 		"compile": "rollup -c rollup.config.js -m",
-		"watch": "rollup -c rollup.config.js --watch -m"
+		"watch": "rollup -c rollup.config.js --watch -m",
+		"package": "vsce package"
 	},
 	"devDependencies": {
 		"@rollup/plugin-eslint": "^8.0.1",
@@ -60,7 +65,8 @@
 		"tape": "^5.0.1",
 		"tslib": "^2.0.3",
 		"typescript": "^4.1.3",
-		"vscode-test": "^1.4.0"
+		"vscode-test": "^1.4.0",
+		"vsce": "^1.83.0"
 	},
 	"dependencies": {
 		"@appland/diagrams": "github:applandinc/diagrams-js#master",
