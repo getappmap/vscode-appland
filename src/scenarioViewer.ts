@@ -7,13 +7,13 @@ import { getNonce } from './util';
  */
 export class ScenarioProvider implements vscode.CustomTextEditorProvider {
 
-	public static register(context: vscode.ExtensionContext): vscode.Disposable {
+	public static register(context: vscode.ExtensionContext): void {
 		const provider = new ScenarioProvider(context);
 		const providerRegistration = vscode.window.registerCustomEditorProvider(ScenarioProvider.viewType, provider);
-		return providerRegistration;
+		context.subscriptions.push(providerRegistration);
 	}
 
-	private static readonly viewType = 'appland.scenarioFile';
+	private static readonly viewType = 'appland.appMapFile';
 
 	constructor(
 		private readonly context: vscode.ExtensionContext
@@ -230,7 +230,7 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
 	/**
 	 * Try to get a current document as json text.
 	 */
-	private getDocumentAsJson(document: vscode.TextDocument): object {
+	private getDocumentAsJson(document: vscode.TextDocument) {
 		const text = document.getText();
 		if (text.trim().length === 0) {
 			return {};

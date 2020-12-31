@@ -15,15 +15,15 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCustomEditor:appland.scenarioFile"
+		"*"
 	],
 	"license": "MIT",
 	"main": "./out/extension.js",
 	"contributes": {
 		"customEditors": [
 			{
-				"viewType": "appland.scenarioFile",
-				"displayName": "AppLand Scenario",
+				"viewType": "appland.appMapFile",
+				"displayName": "AppMap file",
 				"selector": [
 					{
 						"filenamePattern": "*.appmap.json"
@@ -31,7 +31,13 @@
 				],
 				"priority": "default"
 			}
-		]
+		],
+		"commands": [
+      {
+        "command": "appland.openMostRecentlyModifiedAppMap",
+        "title": "AppLand: Open most recently modified AppMap file"
+      }
+    ]
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",

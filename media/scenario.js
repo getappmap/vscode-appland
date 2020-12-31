@@ -57,9 +57,9 @@ import FunctionDetails from './ui/functionDetails.js';
 			function buildDisplayName(event) {
 				const separator = event.static ? '.' : '#';
 				return [event.defined_class, separator, event.method_id].join('');
-			};
+			}
 
-			callTree.rootNode.forEach((e) => {
+			callTree.dataStore.rootEvent.forEach((e) => {
 				e.displayName = eventInfo.getName(e.input) || buildDisplayName(e.input);
 
 				e.labels = eventInfo.getLabels(e.input);
