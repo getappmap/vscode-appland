@@ -2,6 +2,14 @@
 
 import ClassDetails from './ui/classDetails.js';
 import FunctionDetails from './ui/functionDetails.js';
+import { ComponentDiagram, FlowView } from '@appland/diagrams';
+import { CallTree, EventInfo, Components, ClassMap } from '@appland/models';
+
+import 'bootstrap';
+import 'bootstrap-autocomplete';
+
+import '@appland/diagrams/dist/@appland/diagrams.css';
+import '../src/scss/appland.scss';
 
 // Script run within the webview itself.
 (function () {
@@ -51,15 +59,15 @@ import FunctionDetails from './ui/functionDetails.js';
 		scenarioData.classMap.forEach(defaultFunctionLabels);
 
 		function aggregateEvents(events, classMap) {
-			const eventInfo = new Appmap.Models.EventInfo(classMap);
-			const callTree = new Appmap.Models.CallTree(events);
+			const eventInfo = new EventInfo(classMap);
+			const callTree = new CallTree(events);
 
 			function buildDisplayName(event) {
 				const separator = event.static ? '.' : '#';
 				return [event.defined_class, separator, event.method_id].join('');
-			}
-
-			callTree.dataStore.rootEvent.forEach((e) => {
+			};
+			
+			callTree.rootEvent.forEach((e) => {
 				e.displayName = eventInfo.getName(e.input) || buildDisplayName(e.input);
 
 				e.labels = eventInfo.getLabels(e.input);
@@ -70,7 +78,7 @@ import FunctionDetails from './ui/functionDetails.js';
 
 		callTree = aggregateEvents(scenarioData.events, scenarioData.classMap);
 
-		classMap = new Models.ClassMap(scenarioData.classMap);
+		classMap = new ClassMap(scenarioData.classMap);
 
 		buildComponentDiagram();
 	}
@@ -127,10 +135,10 @@ import FunctionDetails from './ui/functionDetails.js';
 		}
 
 		// @ts-ignore
-		const componentModel = new Models.Components(scenarioData);
+		const componentModel = new Components(scenarioData);
 		componentDiagramContainer.innerHTML = '';
 		// @ts-ignore
-		const diagram = new Appmap.ComponentDiagram(componentDiagramContainer, { theme: 'dark', contextMenu })
+		const diagram = new ComponentDiagram(componentDiagramContainer, { theme: 'dark', contextMenu })
 		componentDiagram = diagram;
 		diagram.render(componentModel);
 		diagram.on('focus', (/** @type {string} */ id) => {
@@ -165,7 +173,7 @@ import FunctionDetails from './ui/functionDetails.js';
 			return;
 		}
 
-		const diagram = new Appmap.FlowView('#event-diagram', { theme: 'dark' });
+		const diagram = new FlowView('#event-diagram', { theme: 'dark' });
 		eventDiagram = diagram;
 		diagram.setCallTree(callTree);
 		diagram.render();

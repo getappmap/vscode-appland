@@ -117,35 +117,7 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
 	private getHtmlForWebview(webview: vscode.Webview): string {
 		// Local path to script and css for the webview
 		const scriptUri = webview.asWebviewUri(vscode.Uri.file(
-			path.join(this.context.extensionPath, 'media', 'scenario.js')
-		));
-		const scriptD3Uri = webview.asWebviewUri(vscode.Uri.file(
-			path.join(this.context.extensionPath, 'node_modules', 'd3', 'dist', 'd3.js')
-		));
-		const scriptBootstrapUri = webview.asWebviewUri(vscode.Uri.file(
-			path.join(this.context.extensionPath, 'node_modules', 'bootstrap', 'dist', 'js', 'bootstrap.bundle.js')
-		));
-		const scriptBootstrapAutocompleteUri = webview.asWebviewUri(vscode.Uri.file(
-			path.join(this.context.extensionPath, 'node_modules', 'bootstrap-autocomplete', 'dist', 'latest', 'bootstrap-autocomplete.js')
-		));
-		const scriptJQuery = webview.asWebviewUri(vscode.Uri.file(
-			path.join(this.context.extensionPath, 'node_modules', 'jquery', 'dist', 'jquery.js')
-		));
-		const scriptAppMapUri = webview.asWebviewUri(vscode.Uri.file(
-			path.join(this.context.extensionPath, 'node_modules', '@appland', 'diagrams', 'dist', '@appland', 'diagrams.js')
-		));
-		const scriptModelsUri = webview.asWebviewUri(vscode.Uri.file(
-			path.join(this.context.extensionPath, 'node_modules', '@appland', 'models', 'dist', 'index.js')
-		));
-
-		const styleBootstrapUri = webview.asWebviewUri(vscode.Uri.file(
-			path.join(this.context.extensionPath, 'node_modules', 'bootstrap', 'dist', 'css', 'bootstrap.css')
-		));
-		const styleMainUri = webview.asWebviewUri(vscode.Uri.file(
-			path.join(this.context.extensionPath, 'out', 'extension.css')
-		));
-		const styleAppMapUri = webview.asWebviewUri(vscode.Uri.file(
-			path.join(this.context.extensionPath, 'node_modules', '@appland', 'diagrams', 'dist', '@appland', 'diagrams.css')
+			path.join(this.context.extensionPath, 'out', 'scenario.js')
 		));
 
 		// Use a nonce to whitelist which scripts can be run
@@ -161,13 +133,9 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
 				Use a content security policy to only allow loading images from https or from our extension directory,
 				and only allow scripts that have a specific nonce.
 				-->
-				<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src ${webview.cspSource} 'self' data: ; style-src ${webview.cspSource}; script-src 'nonce-${nonce}';">
+				<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src ${webview.cspSource} 'self' data: ; style-src 'unsafe-inline' ${webview.cspSource}; script-src 'nonce-${nonce}';">
 
 				<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-				<link href="${styleBootstrapUri}" rel="stylesheet" />
-				<link href="${styleAppMapUri}" rel="stylesheet" />
-				<link href="${styleMainUri}" rel="stylesheet" />
 
 				<title>AppLand Scenario</title>
 			</head>
@@ -213,24 +181,15 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
 							</div>
 						</div>
 					</div>
-					
 				</div>
-        
-    
-				<script nonce="${nonce}" src="${scriptD3Uri}"></script>
-				<script nonce="${nonce}" src="${scriptJQuery}"></script>
-				<script nonce="${nonce}" src="${scriptBootstrapUri}"></script>
-				<script nonce="${nonce}" src="${scriptBootstrapAutocompleteUri}"></script>
-				<script nonce="${nonce}" src="${scriptModelsUri}"></script>
-				<script nonce="${nonce}" src="${scriptAppMapUri}"></script>
-				<script nonce="${nonce}" type="module" src="${scriptUri}"></script>
+				<script nonce="${nonce}" src="${scriptUri}"></script>
 			</body>
 			</html>`;
 	}
 	/**
 	 * Try to get a current document as json text.
 	 */
-	private getDocumentAsJson(document: vscode.TextDocument) {
+	private getDocumentAsJson(document: vscode.TextDocument): Record<string, unknown> {
 		const text = document.getText();
 		if (text.trim().length === 0) {
 			return {};

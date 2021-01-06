@@ -1,4 +1,5 @@
 import CodeObjectDetails from "./codeObjectDetails.js";
+import * as d3 from 'd3';
 
 export default class ClassDetails extends CodeObjectDetails {
   render(cls) {
@@ -8,7 +9,7 @@ export default class ClassDetails extends CodeObjectDetails {
     const httpServerRequests = /** @type {Set<CallNode>} */ new Set();
     const invocationEvents = /** @type {Array<CallNode>} */ new Array();
     const sqlQueries = /** @type {Array<CallNode>} */[];
-    this.rootNode.forEach((/** @type {CallNode} */ node, /** @type {Array<CallNode>} */ stack) => {
+    this.rootEvent.forEach((/** @type {CallNode} */ node, /** @type {Array<CallNode>} */ stack) => {
       const type = this.codeObjectForEvent(node.input);
       if ( !type ) {
         return;
