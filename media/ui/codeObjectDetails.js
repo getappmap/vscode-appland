@@ -16,7 +16,7 @@ export default class CodeObjectDetails extends Models.EventSource {
   }
 
   get rootNode() {
-    return this.appmap.events.rootNode;
+    return this.appmap.events.dataStore.rootEvent;
   }
 
   render() {

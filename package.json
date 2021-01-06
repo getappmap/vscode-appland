@@ -33,11 +33,11 @@
 			}
 		],
 		"commands": [
-      {
-        "command": "appland.openMostRecentlyModifiedAppMap",
-        "title": "AppLand: Open most recently modified AppMap file"
-      }
-    ]
+			{
+				"command": "appland.openMostRecentlyModifiedAppMap",
+				"title": "AppLand: Open most recently modified AppMap file"
+			}
+		]
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
