@@ -1,4 +1,6 @@
-export default class CodeObjectDetails extends Models.EventSource {
+import { EventSource } from '@appland/models';
+
+export default class CodeObjectDetails extends EventSource {
   /**
    * @param {any} container 
    * @param {Object<ClassMap,events>} appmap 
@@ -15,8 +17,8 @@ export default class CodeObjectDetails extends Models.EventSource {
     return this.appmap.classMap;
   }
 
-  get rootNode() {
-    return this.appmap.events.dataStore.rootEvent;
+  get rootEvent() {
+    return this.appmap.events.rootEvent;
   }
 
   render() {
