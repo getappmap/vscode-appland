@@ -9,6 +9,7 @@ export default {
     file: 'out/extension.js',
     format: 'cjs'
   },
+  external: [ 'vscode' ],
   plugins: [
     resolve(),
     scss(),
