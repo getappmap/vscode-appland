@@ -1,3 +1,5 @@
+import Models from '@appland/models';
+
 export default class CodeObjectDetails extends Models.EventSource {
   /**
    * @param {any} container 
