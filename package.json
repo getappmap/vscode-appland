@@ -43,8 +43,7 @@
 		"vscode:prepublish": "npm run compile",
 		"lint": "eslint . --ext .ts",
 		"pretest": "npm run lint",
-		"test": "node ./test/runTest.js && node ./tape/**-test.js",
-		"tape": "node ./tape/**-test.js",
+		"test": "node ./test/runTest.js",
 		"compile": "rollup -c rollup.config.js -m",
 		"watch": "rollup -c rollup.config.js --watch -m",
 		"package": "vsce package"
@@ -68,7 +67,6 @@
 		"rollup-plugin-scss": "^2.6.1",
 		"rollup-pluginutils": "^2.8.2",
 		"sucrase": "^3.16.0",
-		"tape": "^5.0.1",
 		"tslib": "^2.0.3",
 		"typescript": "^4.1.3",
 		"vscode-test": "^1.4.0",
