@@ -1,0 +1,36 @@
+language: node_js
+os: linux
+dist: xenial
+node_js: [ 14 ]
+
+install:
+- |
+  if [ $TRAVIS_OS_NAME == "linux" ]; then
+    export DISPLAY=':99.0'
+    /usr/bin/Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+  fi
+- npm install
+
+script:
+- npm test
+
+before_deploy:
+- npx vsce package
+
+deploy:
+- provider: releases
+  api_key:
+    secure: "O2DxCobO9+s6eUX9BZo8dyAZCB4+/otp5dNBD/lqmLMhSZ+pcCwltW0Tqm912YQYHzEtUM/4lmgV42IIPTQ1U3ajd0paDiaMwy8lbwe3j6YY4pN6/SOY9QT7w/RV2FwDj+p6hCNRk1WdrmzqWzX3O4reblStxx+5BSm812G3rFZkIN5AC0x3NvsBuZMQSm1BR5+gl//9mGkosTC1TI4lh9BRDpqjeGbko0Xx3MG67vH/T30/2ZKjJP7WJC9oddS5JBUbqZnzucZtFs/5oifbZNnGco1G2bXUIfy7lf9/gfh8KCegyh9C75Q3Dyr+5g0m1UNuHdt7Ba7qCIybTIdFIfKJ42za4AYUZdDQGATGijBXCFG7CxZpDxenxYWVHDMIUylt+9EYgfim1fZNbOzPH5KAsSpPJSbtixOa4rWc/w4h6Aee+CdUDM28JtKOtuBnj8cMR5TJdHcC7cX4aDTX791ePJv2OKNpALEfvqSG0TSjj+I43LUQVw824+DQGSDyihBRjpz7i1WA9yDZLlCJ9/De8bT62vybnV/BHgT7aRIUcRS2TtIR+tp1Yj5w5MxatdTe/6wNtVOXv4ty3xJ2FOCNVE8FgLYmpMobQ7iCcXwRCi1ZvzLTLmTBYyxuNb0ZO2v0lkaxfsydd9uwCiNNSIM+4a+Ym81s4qns4qRWKZ0="
+  file_glob: true
+  file: "*.vsix"
+  skip_cleanup: true
+  on:
+    tags: true
+    condition: $TRAVIS_OS_NAME = linux
+- provider: script
+  script: npx vsce publish -p $VS_TOKEN
+  skip_cleanup: true
+  on:
+    branch: master
+    tags: true
+    condition: $TRAVIS_OS_NAME = linux
