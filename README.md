@@ -134,5 +134,3 @@ AppLand has other solutions which help you profile and automatically diagram sof
 # About AppLand
 
 How AppLand technology works: [appland.org](https://appland.org).
-
-
