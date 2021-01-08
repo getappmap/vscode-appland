@@ -6,7 +6,7 @@ export default class FunctionDetails extends CodeObjectDetails {
     super.render();
 
     const callEvents = /** @type {Array<CallNode>} */ new Array();
-    this.rootNode.forEach((/** @type {CallNode} */ node, /** @type {Array<CallNode>} */ stack) => {
+    this.rootEvent.forEach((/** @type {CallNode} */ node, /** @type {Array<CallNode>} */ stack) => {
       if ( stack.length <= 1 ) {
         return;
       }
