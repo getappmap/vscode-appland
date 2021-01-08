@@ -13,11 +13,11 @@ Each interactive diagram links directly to the source code, and the information 
 
 ## Summary of features
 
-- Component diagrams akin to the C4 model’s level 3 diagrams
-- Execution trace diagrams akin to the C4 model’s level 4 diagrams
+- Component diagrams akin to UML class diagrams
+- Execution trace diagrams that visualize code and data flows
 - List of Webservices generated automatically from test cases
 - List of SQL queries generated automatically from test cases
-- Search for class, package or route
+- Search for class, package or function
 - Code linkage of the diagram to the source code it relates to
 
 # Getting Started
@@ -31,7 +31,7 @@ AppLand records behavior of running code as [AppMaps](https://github.com/appland
 - [for Ruby](./doc/README-RUBY.md)
 - [for Java](./doc/README-JAVA.md)
 
-### TL&DR; version:
+### Quickstart instructions
 
 1. Install through [VS Code extensions](https://marketplace.visualstudio.com/items?itemName=AppLandInc.appland)
 2. To generate AppMap files, an AppMap client must be installed and configured for your project. If it's not already, you can find the language client for your project along with setup instructions on GitHub:
