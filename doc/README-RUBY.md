@@ -9,7 +9,7 @@ Install the extension with the `Install` button in the Marketplace.
 
 The client is required for recording AppMaps when running tests in VS Code.
 
-Follow the `Installation and Configuration` sections in [github.com/applandinc/appmap-ruby](github.com/applandinc/appmap-ruby#installation).
+Follow the `Installation` and `Configuration` sections in [github.com/applandinc/appmap-ruby](github.com/applandinc/appmap-ruby#installation).
 
 ## Recording an AppMap
 
@@ -17,7 +17,7 @@ When the client is installed and configured for your application, add `APPMAP=tr
 
 The following sections provide detailed instructions for recording AppMaps from RSpec, Minitest, and Cucumber test cases.
 
-#### RSpec
+### RSpec
  - Install the extension `vscode-run-rspec-file` from [the Marketplace](https://marketplace.visualstudio.com/items?itemName=Thadeu.vscode-run-rspec-file).
  - Open Workspace Settings
   
@@ -33,21 +33,14 @@ The following sections provide detailed instructions for recording AppMaps from 
 
 Alternatively, you can generate AppMaps from tests manually from the command line. See instructions in [https://github.com/applandinc/appmap-ruby](https://github.com/applandinc/appmap-ruby#rspec)
 
-#### Minitest
+### Minitest
 
 See instructions in [https://github.com/applandinc/appmap-ruby/blob/master/README.md](https://github.com/applandinc/appmap-ruby/blob/master/README.md#minitest)
 
-#### Cucumber
+### Cucumber
 
 See instructions in [https://github.com/applandinc/appmap-ruby/blob/master/README.md](https://github.com/applandinc/appmap-ruby/blob/master/README.md#cucumber)
 
-
-## Opening an AppMap diagram
-
-### Open most recently modified AppMap
-Use AppLand extension command `AppLand: Open most recently modified AppMap` to open the AppMap file that has most recently changed. When you have run a single test, this will be the AppMap for that test.
-
-![Open most recently modified AppMap](./media/007.png "Open most recently modified AppMap")
 
 ## Location of AppMaps in the file tree navigator
 
@@ -55,4 +48,4 @@ For Ruby apps, the files will be created in a  `tmp/appmap/[test_framework]` dir
 
 ## Using the AppMap diagram
 
-Please follow the instructions in [README.md](../README.md#using-the-appmap-diagram "README").
+Please go back to the instructions in [README.md](../README.md#using-the-appmap-diagram "README").
