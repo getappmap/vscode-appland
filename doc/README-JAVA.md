@@ -38,14 +38,14 @@ You can use the `Java Test Runner` extension to record AppMaps from your JUnit t
 
 ![Java Test Runner Configuration](./media/005.png "Java Test Runner Configuration")
 
-Run your JUnit test and the AppMap JSON file will be generated.. You can start them from the Test Explorer:
+Run your JUnit test and the AppMap JSON file will be generated. You can start them from the Test Explorer:
 
 ![Java Test Explorer](./media/006.png "Java Test Explorer")
 
 
 ## Location of AppMaps in the file tree navigator
 
-For Java apps, the files will be created in the workspace folder unless you configured the working directory differently in the Java Test Runner settings.
+For Java apps, the files will be created in the workspace folder unless you configure the working directory differently in the Java Test Runner settings.
 
 
 ## Using the AppMap diagram
