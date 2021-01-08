@@ -8,8 +8,14 @@ const vscode = require('vscode');
 suite('Extension Test Suite', () => {
 	vscode.window.showInformationMessage('Start all tests.');
 
-	test('Sample test', () => {
-		assert.equal(-1, [1, 2, 3].indexOf(5));
-		assert.equal(-1, [1, 2, 3].indexOf(0));
-	});
+	test('Opens an AppMap file', (done) => {
+		vscode.workspace.findFiles('**/*.appmap.json')
+			.then((uris) => {
+				const appMapFile = uris[0];
+				vscode.commands.executeCommand('vscode.open', appMapFile)
+					.then(done, (err) => {
+						done(new Error(err));
+					})
+			});
+	}).timeout(0);
 });

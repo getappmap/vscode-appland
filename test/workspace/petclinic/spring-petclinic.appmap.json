@@ -1,0 +1,1702 @@
+{
+  "events": [
+    {
+      "id": 1,
+      "path": "src/main/java/javax/servlet/http/HttpServlet.java",
+      "event": "call",
+      "lineno": 736,
+      "static": false,
+      "message": [
+        {
+          "kind": "req",
+          "name": "id",
+          "class": "java.lang.String",
+          "value": "",
+          "object_id": 1751239723
+        },
+        {
+          "kind": "req",
+          "name": "name",
+          "class": "java.lang.String",
+          "value": "Test",
+          "object_id": 246298048
+        },
+        {
+          "kind": "req",
+          "name": "birthDate",
+          "class": "java.lang.String",
+          "value": "2015-09-09",
+          "object_id": 813074514
+        },
+        {
+          "kind": "req",
+          "name": "type",
+          "class": "java.lang.String",
+          "value": "lizard",
+          "object_id": 328787968
+        },
+        {
+          "kind": "req",
+          "name": "ownerId",
+          "class": "java.lang.String",
+          "value": "9",
+          "object_id": 1971220172
+        }
+      ],
+      "method_id": "service",
+      "thread_id": 372,
+      "defined_class": "javax.servlet.http.HttpServlet",
+      "http_server_request": {
+        "protocol": "HTTP/1.1",
+        "path_info": "/owners/9/pets/new",
+        "request_method": "POST",
+        "normalized_path_info": "/owners/:ownerId/pets/new",
+        "client_normalized_path_info": "/owners/:ownerId/pets/new"
+      }
+    },
+    {
+      "id": 2,
+      "path": "src/main/java/org/springframework/samples/petclinic/owner/PetController.java",
+      "event": "call",
+      "lineno": 50,
+      "static": false,
+      "receiver": {
+        "class": "org.springframework.samples.petclinic.owner.PetController",
+        "value": "org.springframework.samples.petclinic.owner.PetController@7a48e6e2",
+        "object_id": 2051598050
+      },
+      "method_id": "populatePetTypes",
+      "thread_id": 372,
+      "defined_class": "org.springframework.samples.petclinic.owner.PetController"
+    },
+    {
+      "id": 3,
+      "path": "src/main/java/com/zaxxer/hikari/pool/ProxyConnection.java",
+      "event": "call",
+      "lineno": 337,
+      "static": false,
+      "method_id": "prepareStatement",
+      "sql_query": {
+        "sql": "select pettype0_.id as id1_3_, pettype0_.name as name2_3_ from types pettype0_ order by pettype0_.name",
+        "normalized": true,
+        "database_type": "H2",
+        "normalized_sql": "select pettype0_.id as id1_3_, pettype0_.name as name2_3_ from types pettype0_ order by pettype0_.name"
+      },
+      "thread_id": 372,
+      "defined_class": "com.zaxxer.hikari.pool.ProxyConnection"
+    },
+    {
+      "id": 4,
+      "path": "src/main/java/com/zaxxer/hikari/pool/ProxyConnection.java",
+      "event": "return",
+      "lineno": 337,
+      "static": false,
+      "method_id": "prepareStatement",
+      "parent_id": 3,
+      "thread_id": 372,
+      "defined_class": "com.zaxxer.hikari.pool.ProxyConnection"
+    },
+    {
+      "id": 5,
+      "path": "src/main/java/org/springframework/samples/petclinic/owner/PetController.java",
+      "event": "return",
+      "lineno": 50,
+      "static": false,
+      "method_id": "populatePetTypes",
+      "parent_id": 2,
+      "thread_id": 372,
+      "return_value": {
+        "class": "java.util.ArrayList",
+        "value": "[bird, cat, dog, hamster, lizard, snake]",
+        "object_id": 1931486624
+      },
+      "defined_class": "org.springframework.samples.petclinic.owner.PetController"
+    },
+    {
+      "id": 6,
+      "path": "src/main/java/org/springframework/samples/petclinic/owner/PetController.java",
+      "event": "call",
+      "lineno": 55,
+      "static": false,
+      "receiver": {
+        "class": "org.springframework.samples.petclinic.owner.PetController",
+        "value": "org.springframework.samples.petclinic.owner.PetController@7a48e6e2",
+        "object_id": 2051598050
+      },
+      "method_id": "findOwner",
+      "thread_id": 372,
+      "parameters": [
+        {
+          "kind": "req",
+          "name": "ownerId",
+          "class": "java.lang.Integer",
+          "value": "9",
+          "object_id": 1337418474
+        }
+      ],
+      "defined_class": "org.springframework.samples.petclinic.owner.PetController"
+    },
+    {
+      "id": 7,
+      "path": "src/main/java/com/zaxxer/hikari/pool/ProxyConnection.java",
+      "event": "call",
+      "lineno": 337,
+      "static": false,
+      "method_id": "prepareStatement",
+      "sql_query": {
+        "sql": "select owner0_.id as id1_0_0_, pets1_.id as id1_1_1_, owner0_.first_name as first_na2_0_0_, owner0_.last_name as last_nam3_0_0_, owner0_.address as address4_0_0_, owner0_.city as city5_0_0_, owner0_.telephone as telephon6_0_0_, pets1_.name as name2_1_1_, pets1_.birth_date as birth_da3_1_1_, pets1_.owner_id as owner_id4_1_1_, pets1_.type_id as type_id5_1_1_, pets1_.owner_id as owner_id4_1_0__, pets1_.id as id1_1_0__ from owners owner0_ left outer join pets pets1_ on owner0_.id=pets1_.owner_id where owner0_.id=?",
+        "normalized": true,
+        "database_type": "H2",
+        "normalized_sql": "select owner0_.id as id1_0_0_, pets1_.id as id1_1_1_, owner0_.first_name as first_na2_0_0_, owner0_.last_name as last_nam3_0_0_, owner0_.address as address4_0_0_, owner0_.city as city5_0_0_, owner0_.telephone as telephon6_0_0_, pets1_.name as name2_1_1_, pets1_.birth_date as birth_da3_1_1_, pets1_.owner_id as owner_id4_1_1_, pets1_.type_id as type_id5_1_1_, pets1_.owner_id as owner_id4_1_0__, pets1_.id as id1_1_0__ from owners owner0_ left outer join pets pets1_ on owner0_.id=pets1_.owner_id where owner0_.id=?"
+      },
+      "thread_id": 372,
+      "defined_class": "com.zaxxer.hikari.pool.ProxyConnection"
+    },
+    {
+      "id": 8,
+      "path": "src/main/java/com/zaxxer/hikari/pool/ProxyConnection.java",
+      "event": "return",
+      "lineno": 337,
+      "static": false,
+      "method_id": "prepareStatement",
+      "parent_id": 7,
+      "thread_id": 372,
+      "defined_class": "com.zaxxer.hikari.pool.ProxyConnection"
+    },
+    {
+      "id": 9,
+      "path": "src/main/java/com/zaxxer/hikari/pool/ProxyConnection.java",
+      "event": "call",
+      "lineno": 337,
+      "static": false,
+      "method_id": "prepareStatement",
+      "sql_query": {
+        "sql": "select pettype0_.id as id1_3_0_, pettype0_.name as name2_3_0_ from types pettype0_ where pettype0_.id=?",
+        "normalized": true,
+        "database_type": "H2",
+        "normalized_sql": "select pettype0_.id as id1_3_0_, pettype0_.name as name2_3_0_ from types pettype0_ where pettype0_.id=?"
+      },
+      "thread_id": 372,
+      "defined_class": "com.zaxxer.hikari.pool.ProxyConnection"
+    },
+    {
+      "id": 10,
+      "path": "src/main/java/com/zaxxer/hikari/pool/ProxyConnection.java",
+      "event": "return",
+      "lineno": 337,
+      "static": false,
+      "method_id": "prepareStatement",
+      "parent_id": 9,
+      "thread_id": 372,
+      "defined_class": "com.zaxxer.hikari.pool.ProxyConnection"
+    },
+    {
+      "id": 11,
+      "path": "src/main/java/org/springframework/samples/petclinic/owner/PetController.java",
+      "event": "return",
+      "lineno": 55,
+      "static": false,
+      "method_id": "findOwner",
+      "parent_id": 6,
+      "thread_id": 372,
+      "return_value": {
+        "class": "org.springframework.samples.petclinic.owner.Owner",
+        "value": "[Owner@3931a0d id = 9, new = false, lastName = 'Schroeder', firstName = 'David', address = '2749 Blackhawk Trail', city = 'Madison', telephone = '6085559435']",
+        "object_id": 59972109
+      },
+      "defined_class": "org.springframework.samples.petclinic.owner.PetController"
+    },
+    {
+      "id": 12,
+      "path": "src/main/java/org/springframework/samples/petclinic/owner/PetController.java",
+      "event": "call",
+      "lineno": 60,
+      "static": false,
+      "receiver": {
+        "class": "org.springframework.samples.petclinic.owner.PetController",
+        "value": "org.springframework.samples.petclinic.owner.PetController@7a48e6e2",
+        "object_id": 2051598050
+      },
+      "method_id": "initOwnerBinder",
+      "thread_id": 372,
+      "parameters": [
+        {
+          "kind": "req",
+          "name": "dataBinder",
+          "class": "org.springframework.web.servlet.mvc.method.annotation.ExtendedServletRequestDataBinder",
+          "value": "org.springframework.web.servlet.mvc.method.annotation.ExtendedServletRequestDataBinder@43e0bd7c",
+          "object_id": 1138802044
+        }
+      ],
+      "defined_class": "org.springframework.samples.petclinic.owner.PetController"
+    },
+    {
+      "id": 13,
+      "path": "src/main/java/org/springframework/samples/petclinic/owner/PetController.java",
+      "event": "return",
+      "lineno": 60,
+      "static": false,
+      "method_id": "initOwnerBinder",
+      "parent_id": 12,
+      "thread_id": 372,
+      "defined_class": "org.springframework.samples.petclinic.owner.PetController"
+    },
+    {
+      "id": 14,
+      "path": "src/main/java/org/springframework/samples/petclinic/owner/PetController.java",
+      "event": "call",
+      "lineno": 65,
+      "static": false,
+      "receiver": {
+        "class": "org.springframework.samples.petclinic.owner.PetController",
+        "value": "org.springframework.samples.petclinic.owner.PetController@7a48e6e2",
+        "object_id": 2051598050
+      },
+      "method_id": "initPetBinder",
+      "thread_id": 372,
+      "parameters": [
+        {
+          "kind": "req",
+          "name": "dataBinder",
+          "class": "org.springframework.web.servlet.mvc.method.annotation.ExtendedServletRequestDataBinder",
+          "value": "org.springframework.web.servlet.mvc.method.annotation.ExtendedServletRequestDataBinder@7b71d87b",
+          "object_id": 2071058555
+        }
+      ],
+      "defined_class": "org.springframework.samples.petclinic.owner.PetController"
+    },
+    {
+      "id": 15,
+      "path": "src/main/java/org/springframework/samples/petclinic/owner/PetValidator.java",
+      "event": "call",
+      "lineno": 61,
+      "static": false,
+      "receiver": {
+        "class": "org.springframework.samples.petclinic.owner.PetValidator",
+        "value": "org.springframework.samples.petclinic.owner.PetValidator@484ff884",
+        "object_id": 1213200516
+      },
+      "method_id": "supports",
+      "thread_id": 372,
+      "parameters": [
+        {
+          "kind": "req",
+          "name": "clazz",
+          "class": "java.lang.Class",
+          "value": "class org.springframework.samples.petclinic.owner.Pet",
+          "object_id": 682910755
+        }
+      ],
+      "defined_class": "org.springframework.samples.petclinic.owner.PetValidator"
+    },
+    {
+      "id": 16,
+      "path": "src/main/java/org/springframework/samples/petclinic/owner/PetValidator.java",
+      "event": "return",
+      "lineno": 61,
+      "static": false,
+      "method_id": "supports",
+      "parent_id": 15,
+      "thread_id": 372,
+      "return_value": {
+        "class": "java.lang.Boolean",
+        "value": "true",
+        "object_id": 1342971021
+      },
+      "defined_class": "org.springframework.samples.petclinic.owner.PetValidator"
+    },
+    {
+      "id": 17,
+      "path": "src/main/java/org/springframework/samples/petclinic/owner/PetController.java",
+      "event": "return",
+      "lineno": 65,
+      "static": false,
+      "method_id": "initPetBinder",
+      "parent_id": 14,
+      "thread_id": 372,
+      "defined_class": "org.springframework.samples.petclinic.owner.PetController"
+    },
+    {
+      "id": 18,
+      "path": "src/main/java/org/springframework/samples/petclinic/owner/Pet.java",
+      "event": "call",
+      "lineno": 71,
+      "static": false,
+      "receiver": {
+        "class": "org.springframework.samples.petclinic.owner.Pet",
+        "object_id": 559231460
+      },
+      "method_id": "getBirthDate",
+      "thread_id": 372,
+      "defined_class": "org.springframework.samples.petclinic.owner.Pet"
+    },
+    {
+      "id": 19,
+      "path": "src/main/java/org/springframework/samples/petclinic/owner/Pet.java",
+      "event": "return",
+      "lineno": 71,
+      "static": false,
+      "method_id": "getBirthDate",
+      "parent_id": 18,
+      "thread_id": 372,
+      "defined_class": "org.springframework.samples.petclinic.owner.Pet"
+    },
+    {
+      "id": 20,
+      "path": "src/main/java/org/springframework/samples/petclinic/owner/Pet.java",
+      "event": "call",
+      "lineno": 67,
+      "static": false,
+      "receiver": {
+        "class": "org.springframework.samples.petclinic.owner.Pet",
+        "object_id": 559231460
+      },
+      "method_id": "setBirthDate",
+      "thread_id": 372,
+      "parameters": [
+        {
+          "kind": "req",
+          "name": "birthDate",
+          "class": "java.time.LocalDate",
+          "value": "2015-09-09",
+          "object_id": 1867894268
+        }
+      ],
+      "defined_class": "org.springframework.samples.petclinic.owner.Pet"
+    },
+    {
+      "id": 21,
+      "path": "src/main/java/org/springframework/samples/petclinic/owner/Pet.java",
+      "event": "return",
+      "lineno": 67,
+      "static": false,
+      "method_id": "setBirthDate",
+      "parent_id": 20,
+      "thread_id": 372,
+      "defined_class": "org.springframework.samples.petclinic.owner.Pet"
+    },
+    {
+      "id": 22,
+      "path": "src/main/java/org/springframework/samples/petclinic/model/BaseEntity.java",
+      "event": "call",
+      "lineno": 40,
+      "static": false,
+      "receiver": {
+        "class": "org.springframework.samples.petclinic.owner.Pet",
+        "object_id": 559231460
+      },
+      "method_id": "getId",
+      "thread_id": 372,
+      "defined_class": "org.springframework.samples.petclinic.model.BaseEntity"
+    },
+    {
+      "id": 23,
+      "path": "src/main/java/org/springframework/samples/petclinic/model/BaseEntity.java",
+      "event": "return",
+      "lineno": 40,
+      "static": false,
+      "method_id": "getId",
+      "parent_id": 22,
+      "thread_id": 372,
+      "defined_class": "org.springframework.samples.petclinic.model.BaseEntity"
+    },
+    {
+      "id": 24,
+      "path": "src/main/java/org/springframework/samples/petclinic/model/BaseEntity.java",
+      "event": "call",
+      "lineno": 44,
+      "static": false,
+      "receiver": {
+        "class": "org.springframework.samples.petclinic.owner.Pet",
+        "object_id": 559231460
+      },
+      "method_id": "setId",
+      "thread_id": 372,
+      "parameters": [
+        {
+          "kind": "req",
+          "name": "id",
+          "class": "java.lang.Integer",
+          "object_id": 0
+        }
+      ],
+      "defined_class": "org.springframework.samples.petclinic.model.BaseEntity"
+    },
+    {
+      "id": 25,
+      "path": "src/main/java/org/springframework/samples/petclinic/model/BaseEntity.java",
+      "event": "return",
+      "lineno": 44,
+      "static": false,
+      "method_id": "setId",
+      "parent_id": 24,
+      "thread_id": 372,
+      "defined_class": "org.springframework.samples.petclinic.model.BaseEntity"
+    },
+    {
+      "id": 26,
+      "path": "src/main/java/org/springframework/samples/petclinic/model/NamedEntity.java",
+      "event": "call",
+      "lineno": 35,
+      "static": false,
+      "receiver": {
+        "class": "org.springframework.samples.petclinic.owner.Pet",
+        "object_id": 559231460
+      },
+      "method_id": "getName",
+      "thread_id": 372,
+      "defined_class": "org.springframework.samples.petclinic.model.NamedEntity"
+    },
+    {
+      "id": 27,
+      "path": "src/main/java/org/springframework/samples/petclinic/model/NamedEntity.java",
+      "event": "return",
+      "lineno": 35,
+      "static": false,
+      "method_id": "getName",
+      "parent_id": 26,
+      "thread_id": 372,
+      "defined_class": "org.springframework.samples.petclinic.model.NamedEntity"
+    },
+    {
+      "id": 28,
+      "path": "src/main/java/org/springframework/samples/petclinic/model/NamedEntity.java",
+      "event": "call",
+      "lineno": 39,
+      "static": false,
+      "receiver": {
+        "class": "org.springframework.samples.petclinic.owner.Pet",
+        "value": "Test",
+        "object_id": 559231460
+      },
+      "method_id": "setName",
+      "thread_id": 372,
+      "parameters": [
+        {
+          "kind": "req",
+          "name": "name",
+          "class": "java.lang.String",
+          "value": "Test",
+          "object_id": 246298048
+        }
+      ],
+      "defined_class": "org.springframework.samples.petclinic.model.NamedEntity"
+    },
+    {
+      "id": 29,
+      "path": "src/main/java/org/springframework/samples/petclinic/model/NamedEntity.java",
+      "event": "return",
+      "lineno": 39,
+      "static": false,
+      "method_id": "setName",
+      "parent_id": 28,
+      "thread_id": 372,
+      "defined_class": "org.springframework.samples.petclinic.model.NamedEntity"
+    },
+    {
+      "id": 30,
+      "path": "src/main/java/org/springframework/samples/petclinic/owner/Pet.java",
+      "event": "call",
+      "lineno": 75,
+      "static": false,
+      "receiver": {
+        "class": "org.springframework.samples.petclinic.owner.Pet",
+        "value": "Test",
+        "object_id": 559231460
+      },
+      "method_id": "getType",
+      "thread_id": 372,
+      "defined_class": "org.springframework.samples.petclinic.owner.Pet"
+    },
+    {
+      "id": 31,
+      "path": "src/main/java/org/springframework/samples/petclinic/owner/Pet.java",
+      "event": "return",
+      "lineno": 75,
+      "static": false,
+      "method_id": "getType",
+      "parent_id": 30,
+      "thread_id": 372,
+      "defined_class": "org.springframework.samples.petclinic.owner.Pet"
+    },
+    {
+      "id": 32,
+      "path": "src/main/java/org/springframework/samples/petclinic/owner/PetTypeFormatter.java",
+      "event": "call",
+      "lineno": 36,
+      "static": false,
+      "receiver": {
+        "class": "org.springframework.samples.petclinic.owner.PetTypeFormatter",
+        "value": "org.springframework.samples.petclinic.owner.PetTypeFormatter@72a85671",
+        "object_id": 1923634801
+      },
+      "method_id": "parse",
+      "thread_id": 372,
+      "parameters": [
+        {
+          "kind": "req",
+          "class": "java.lang.String",
+          "value": "lizard",
+          "object_id": 328787968
+        },
+        {
+          "kind": "req",
+          "class": "java.util.Locale",
+          "value": "en_US",
+          "object_id": 977722291
+        }
+      ],
+      "defined_class": "org.springframework.samples.petclinic.owner.PetTypeFormatter"
+    },
+    {
+      "id": 33,
+      "path": "src/main/java/org/springframework/samples/petclinic/owner/PetTypeFormatter.java",
+      "event": "call",
+      "lineno": 53,
+      "static": false,
+      "receiver": {
+        "class": "org.springframework.samples.petclinic.owner.PetTypeFormatter",
+        "value": "org.springframework.samples.petclinic.owner.PetTypeFormatter@72a85671",
+        "object_id": 1923634801
+      },
+      "method_id": "parse",
+      "thread_id": 372,
+      "parameters": [
+        {
+          "kind": "req",
+          "name": "text",
+          "class": "java.lang.String",
+          "value": "lizard",
+          "object_id": 328787968
+        },
+        {
+          "kind": "req",
+          "name": "locale",
+          "class": "java.util.Locale",
+          "value": "en_US",
+          "object_id": 977722291
+        }
+      ],
+      "defined_class": "org.springframework.samples.petclinic.owner.PetTypeFormatter"
+    },
+    {
+      "id": 34,
+      "path": "src/main/java/com/zaxxer/hikari/pool/ProxyConnection.java",
+      "event": "call",
+      "lineno": 337,
+      "static": false,
+      "method_id": "prepareStatement",
+      "sql_query": {
+        "sql": "select pettype0_.id as id1_3_, pettype0_.name as name2_3_ from types pettype0_ order by pettype0_.name",
+        "normalized": true,
+        "database_type": "H2",
+        "normalized_sql": "select pettype0_.id as id1_3_, pettype0_.name as name2_3_ from types pettype0_ order by pettype0_.name"
+      },
+      "thread_id": 372,
+      "defined_class": "com.zaxxer.hikari.pool.ProxyConnection"
+    },
+    {
+      "id": 35,
+      "path": "src/main/java/com/zaxxer/hikari/pool/ProxyConnection.java",
+      "event": "return",
+      "lineno": 337,
+      "static": false,
+      "method_id": "prepareStatement",
+      "parent_id": 34,
+      "thread_id": 372,
+      "defined_class": "com.zaxxer.hikari.pool.ProxyConnection"
+    },
+    {
+      "id": 36,
+      "path": "src/main/java/org/springframework/samples/petclinic/model/NamedEntity.java",
+      "event": "call",
+      "lineno": 35,
+      "static": false,
+      "receiver": {
+        "class": "org.springframework.samples.petclinic.owner.PetType",
+        "value": "bird",
+        "object_id": 283239283
+      },
+      "method_id": "getName",
+      "thread_id": 372,
+      "defined_class": "org.springframework.samples.petclinic.model.NamedEntity"
+    },
+    {
+      "id": 37,
+      "path": "src/main/java/org/springframework/samples/petclinic/model/NamedEntity.java",
+      "event": "return",
+      "lineno": 35,
+      "static": false,
+      "method_id": "getName",
+      "parent_id": 36,
+      "thread_id": 372,
+      "return_value": {
+        "class": "java.lang.String",
+        "value": "bird",
+        "object_id": 1519779031
+      },
+      "defined_class": "org.springframework.samples.petclinic.model.NamedEntity"
+    },
+    {
+      "id": 38,
+      "path": "src/main/java/org/springframework/samples/petclinic/model/NamedEntity.java",
+      "event": "call",
+      "lineno": 35,
+      "static": false,
+      "receiver": {
+        "class": "org.springframework.samples.petclinic.owner.PetType",
+        "value": "cat",
+        "object_id": 997527665
+      },
+      "method_id": "getName",
+      "thread_id": 372,
+      "defined_class": "org.springframework.samples.petclinic.model.NamedEntity"
+    },
+    {
+      "id": 39,
+      "path": "src/main/java/org/springframework/samples/petclinic/model/NamedEntity.java",
+      "event": "return",
+      "lineno": 35,
+      "static": false,
+      "method_id": "getName",
+      "parent_id": 38,
+      "thread_id": 372,
+      "return_value": {
+        "class": "java.lang.String",
+        "value": "cat",
+        "object_id": 1388438558
+      },
+      "defined_class": "org.springframework.samples.petclinic.model.NamedEntity"
+    },
+    {
+      "id": 40,
+      "path": "src/main/java/org/springframework/samples/petclinic/model/NamedEntity.java",
+      "event": "call",
+      "lineno": 35,
+      "static": false,
+      "receiver": {
+        "class": "org.springframework.samples.petclinic.owner.PetType",
+        "value": "dog",
+        "object_id": 156769570
+      },
+      "method_id": "getName",
+      "thread_id": 372,
+      "defined_class": "org.springframework.samples.petclinic.model.NamedEntity"
+    },
+    {
+      "id": 41,
+      "path": "src/main/java/org/springframework/samples/petclinic/model/NamedEntity.java",
+      "event": "return",
+      "lineno": 35,
+      "static": false,
+      "method_id": "getName",
+      "parent_id": 40,
+      "thread_id": 372,
+      "return_value": {
+        "class": "java.lang.String",
+        "value": "dog",
+        "object_id": 1652872657
+      },
+      "defined_class": "org.springframework.samples.petclinic.model.NamedEntity"
+    },
+    {
+      "id": 42,
+      "path": "src/main/java/org/springframework/samples/petclinic/model/NamedEntity.java",
+      "event": "call",
+      "lineno": 35,
+      "static": false,
+      "receiver": {
+        "class": "org.springframework.samples.petclinic.owner.PetType",
+        "value": "hamster",
+        "object_id": 616819396
+      },
+      "method_id": "getName",
+      "thread_id": 372,
+      "defined_class": "org.springframework.samples.petclinic.model.NamedEntity"
+    },
+    {
+      "id": 43,
+      "path": "src/main/java/org/springframework/samples/petclinic/model/NamedEntity.java",
+      "event": "return",
+      "lineno": 35,
+      "static": false,
+      "method_id": "getName",
+      "parent_id": 42,
+      "thread_id": 372,
+      "return_value": {
+        "class": "java.lang.String",
+        "value": "hamster",
+        "object_id": 1585238560
+      },
+      "defined_class": "org.springframework.samples.petclinic.model.NamedEntity"
+    },
+    {
+      "id": 44,
+      "path": "src/main/java/org/springframework/samples/petclinic/model/NamedEntity.java",
+      "event": "call",
+      "lineno": 35,
+      "static": false,
+      "receiver": {
+        "class": "org.springframework.samples.petclinic.owner.PetType",
+        "value": "lizard",
+        "object_id": 1000763220
+      },
+      "method_id": "getName",
+      "thread_id": 372,
+      "defined_class": "org.springframework.samples.petclinic.model.NamedEntity"
+    },
+    {
+      "id": 45,
+      "path": "src/main/java/org/springframework/samples/petclinic/model/NamedEntity.java",
+      "event": "return",
+      "lineno": 35,
+      "static": false,
+      "method_id": "getName",
+      "parent_id": 44,
+      "thread_id": 372,
+      "return_value": {
+        "class": "java.lang.String",
+        "value": "lizard",
+        "object_id": 737865340
+      },
+      "defined_class": "org.springframework.samples.petclinic.model.NamedEntity"
+    },
+    {
+      "id": 46,
+      "path": "src/main/java/org/springframework/samples/petclinic/owner/PetTypeFormatter.java",
+      "event": "return",
+      "lineno": 53,
+      "static": false,
+      "method_id": "parse",
+      "parent_id": 33,
+      "thread_id": 372,
+      "return_value": {
+        "class": "org.springframework.samples.petclinic.owner.PetType",
+        "value": "lizard",
+        "object_id": 1000763220
+      },
+      "defined_class": "org.springframework.samples.petclinic.owner.PetTypeFormatter"
+    },
+    {
+      "id": 47,
+      "path": "src/main/java/org/springframework/samples/petclinic/owner/PetTypeFormatter.java",
+      "event": "return",
+      "lineno": 36,
+      "static": false,
+      "method_id": "parse",
+      "parent_id": 32,
+      "thread_id": 372,
+      "return_value": {
+        "class": "org.springframework.samples.petclinic.owner.PetType",
+        "value": "lizard",
+        "object_id": 1000763220
+      },
+      "defined_class": "org.springframework.samples.petclinic.owner.PetTypeFormatter"
+    },
+    {
+      "id": 48,
+      "path": "src/main/java/org/springframework/samples/petclinic/owner/Pet.java",
+      "event": "call",
+      "lineno": 79,
+      "static": false,
+      "receiver": {
+        "class": "org.springframework.samples.petclinic.owner.Pet",
+        "value": "Test",
+        "object_id": 559231460
+      },
+      "method_id": "setType",
+      "thread_id": 372,
+      "parameters": [
+        {
+          "kind": "req",
+          "name": "type",
+          "class": "org.springframework.samples.petclinic.owner.PetType",
+          "value": "lizard",
+          "object_id": 1000763220
+        }
+      ],
+      "defined_class": "org.springframework.samples.petclinic.owner.Pet"
+    },
+    {
+      "id": 49,
+      "path": "src/main/java/org/springframework/samples/petclinic/owner/Pet.java",
+      "event": "return",
+      "lineno": 79,
+      "static": false,
+      "method_id": "setType",
+      "parent_id": 48,
+      "thread_id": 372,
+      "defined_class": "org.springframework.samples.petclinic.owner.Pet"
+    },
+    {
+      "id": 50,
+      "path": "src/main/java/org/springframework/samples/petclinic/owner/PetValidator.java",
+      "event": "call",
+      "lineno": 38,
+      "static": false,
+      "receiver": {
+        "class": "org.springframework.samples.petclinic.owner.PetValidator",
+        "value": "org.springframework.samples.petclinic.owner.PetValidator@484ff884",
+        "object_id": 1213200516
+      },
+      "method_id": "validate",
+      "thread_id": 372,
+      "parameters": [
+        {
+          "kind": "req",
+          "name": "obj",
+          "class": "org.springframework.samples.petclinic.owner.Pet",
+          "value": "Test",
+          "object_id": 559231460
+        },
+        {
+          "kind": "req",
+          "name": "errors",
+          "class": "org.springframework.validation.BeanPropertyBindingResult",
+          "value": "org.springframework.validation.BeanPropertyBindingResult: 0 errors",
+          "object_id": 1992691209
+        }
+      ],
+      "defined_class": "org.springframework.samples.petclinic.owner.PetValidator"
+    },
+    {
+      "id": 51,
+      "path": "src/main/java/org/springframework/samples/petclinic/model/NamedEntity.java",
+      "event": "call",
+      "lineno": 35,
+      "static": false,
+      "receiver": {
+        "class": "org.springframework.samples.petclinic.owner.Pet",
+        "value": "Test",
+        "object_id": 559231460
+      },
+      "method_id": "getName",
+      "thread_id": 372,
+      "defined_class": "org.springframework.samples.petclinic.model.NamedEntity"
+    },
+    {
+      "id": 52,
+      "path": "src/main/java/org/springframework/samples/petclinic/model/NamedEntity.java",
+      "event": "return",
+      "lineno": 35,
+      "static": false,
+      "method_id": "getName",
+      "parent_id": 51,
+      "thread_id": 372,
+      "return_value": {
+        "class": "java.lang.String",
+        "value": "Test",
+        "object_id": 246298048
+      },
+      "defined_class": "org.springframework.samples.petclinic.model.NamedEntity"
+    },
+    {
+      "id": 53,
+      "path": "src/main/java/org/springframework/samples/petclinic/model/BaseEntity.java",
+      "event": "call",
+      "lineno": 48,
+      "static": false,
+      "receiver": {
+        "class": "org.springframework.samples.petclinic.owner.Pet",
+        "value": "Test",
+        "object_id": 559231460
+      },
+      "method_id": "isNew",
+      "thread_id": 372,
+      "defined_class": "org.springframework.samples.petclinic.model.BaseEntity"
+    },
+    {
+      "id": 54,
+      "path": "src/main/java/org/springframework/samples/petclinic/model/BaseEntity.java",
+      "event": "return",
+      "lineno": 48,
+      "static": false,
+      "method_id": "isNew",
+      "parent_id": 53,
+      "thread_id": 372,
+      "return_value": {
+        "class": "java.lang.Boolean",
+        "value": "true",
+        "object_id": 841512797
+      },
+      "defined_class": "org.springframework.samples.petclinic.model.BaseEntity"
+    },
+    {
+      "id": 55,
+      "path": "src/main/java/org/springframework/samples/petclinic/owner/Pet.java",
+      "event": "call",
+      "lineno": 75,
+      "static": false,
+      "receiver": {
+        "class": "org.springframework.samples.petclinic.owner.Pet",
+        "value": "Test",
+        "object_id": 559231460
+      },
+      "method_id": "getType",
+      "thread_id": 372,
+      "defined_class": "org.springframework.samples.petclinic.owner.Pet"
+    },
+    {
+      "id": 56,
+      "path": "src/main/java/org/springframework/samples/petclinic/owner/Pet.java",
+      "event": "return",
+      "lineno": 75,
+      "static": false,
+      "method_id": "getType",
+      "parent_id": 55,
+      "thread_id": 372,
+      "return_value": {
+        "class": "org.springframework.samples.petclinic.owner.PetType",
+        "value": "lizard",
+        "object_id": 1000763220
+      },
+      "defined_class": "org.springframework.samples.petclinic.owner.Pet"
+    },
+    {
+      "id": 57,
+      "path": "src/main/java/org/springframework/samples/petclinic/owner/Pet.java",
+      "event": "call",
+      "lineno": 71,
+      "static": false,
+      "receiver": {
+        "class": "org.springframework.samples.petclinic.owner.Pet",
+        "value": "Test",
+        "object_id": 559231460
+      },
+      "method_id": "getBirthDate",
+      "thread_id": 372,
+      "defined_class": "org.springframework.samples.petclinic.owner.Pet"
+    },
+    {
+      "id": 58,
+      "path": "src/main/java/org/springframework/samples/petclinic/owner/Pet.java",
+      "event": "return",
+      "lineno": 71,
+      "static": false,
+      "method_id": "getBirthDate",
+      "parent_id": 57,
+      "thread_id": 372,
+      "return_value": {
+        "class": "java.time.LocalDate",
+        "value": "2015-09-09",
+        "object_id": 1867894268
+      },
+      "defined_class": "org.springframework.samples.petclinic.owner.Pet"
+    },
+    {
+      "id": 59,
+      "path": "src/main/java/org/springframework/samples/petclinic/owner/PetValidator.java",
+      "event": "return",
+      "lineno": 38,
+      "static": false,
+      "method_id": "validate",
+      "parent_id": 50,
+      "thread_id": 372,
+      "defined_class": "org.springframework.samples.petclinic.owner.PetValidator"
+    },
+    {
+      "id": 60,
+      "path": "src/main/java/org/springframework/samples/petclinic/owner/PetController.java",
+      "event": "call",
+      "lineno": 78,
+      "static": false,
+      "receiver": {
+        "class": "org.springframework.samples.petclinic.owner.PetController",
+        "value": "org.springframework.samples.petclinic.owner.PetController@7a48e6e2",
+        "object_id": 2051598050
+      },
+      "method_id": "processCreationForm",
+      "thread_id": 372,
+      "parameters": [
+        {
+          "kind": "req",
+          "name": "owner",
+          "class": "org.springframework.samples.petclinic.owner.Owner",
+          "value": "[Owner@3931a0d id = 9, new = false, lastName = 'Schroeder', firstName = 'David', address = '2749 Blackhawk Trail', city = 'Madison', telephone = '6085559435']",
+          "object_id": 59972109
+        },
+        {
+          "kind": "req",
+          "name": "pet",
+          "class": "org.springframework.samples.petclinic.owner.Pet",
+          "value": "Test",
+          "object_id": 559231460
+        },
+        {
+          "kind": "req",
+          "name": "result",
+          "class": "org.springframework.validation.BeanPropertyBindingResult",
+          "value": "org.springframework.validation.BeanPropertyBindingResult: 0 errors",
+          "object_id": 1992691209
+        },
+        {
+          "kind": "req",
+          "name": "model",
+          "class": "org.springframework.validation.support.BindingAwareModelMap",
+          "value": "{types=[bird, cat, dog, hamster, lizard, snake], owner=[Owner@3931a0d id = 9, new = false, lastName = 'Schroeder', firstName = 'David', address = '2749 Blackhawk Trail', city = 'Madison', telephone = '6085559435'], org.springframework.validation.BindingResult.owner=org.springframework.validation.BeanPropertyBindingResult: 0 errors, pet=Test, org.springframework.validation.BindingResult.pet=org.springframework.validation.BeanPropertyBindingResult: 0 errors}",
+          "object_id": 175988458
+        }
+      ],
+      "defined_class": "org.springframework.samples.petclinic.owner.PetController"
+    },
+    {
+      "id": 61,
+      "path": "src/main/java/org/springframework/samples/petclinic/model/NamedEntity.java",
+      "event": "call",
+      "lineno": 35,
+      "static": false,
+      "receiver": {
+        "class": "org.springframework.samples.petclinic.owner.Pet",
+        "value": "Test",
+        "object_id": 559231460
+      },
+      "method_id": "getName",
+      "thread_id": 372,
+      "defined_class": "org.springframework.samples.petclinic.model.NamedEntity"
+    },
+    {
+      "id": 62,
+      "path": "src/main/java/org/springframework/samples/petclinic/model/NamedEntity.java",
+      "event": "return",
+      "lineno": 35,
+      "static": false,
+      "method_id": "getName",
+      "parent_id": 61,
+      "thread_id": 372,
+      "return_value": {
+        "class": "java.lang.String",
+        "value": "Test",
+        "object_id": 246298048
+      },
+      "defined_class": "org.springframework.samples.petclinic.model.NamedEntity"
+    },
+    {
+      "id": 63,
+      "path": "src/main/java/org/springframework/samples/petclinic/model/BaseEntity.java",
+      "event": "call",
+      "lineno": 48,
+      "static": false,
+      "receiver": {
+        "class": "org.springframework.samples.petclinic.owner.Pet",
+        "value": "Test",
+        "object_id": 559231460
+      },
+      "method_id": "isNew",
+      "thread_id": 372,
+      "defined_class": "org.springframework.samples.petclinic.model.BaseEntity"
+    },
+    {
+      "id": 64,
+      "path": "src/main/java/org/springframework/samples/petclinic/model/BaseEntity.java",
+      "event": "return",
+      "lineno": 48,
+      "static": false,
+      "method_id": "isNew",
+      "parent_id": 63,
+      "thread_id": 372,
+      "return_value": {
+        "class": "java.lang.Boolean",
+        "value": "true",
+        "object_id": 1988679895
+      },
+      "defined_class": "org.springframework.samples.petclinic.model.BaseEntity"
+    },
+    {
+      "id": 65,
+      "path": "src/main/java/org/springframework/samples/petclinic/model/NamedEntity.java",
+      "event": "call",
+      "lineno": 35,
+      "static": false,
+      "receiver": {
+        "class": "org.springframework.samples.petclinic.owner.Pet",
+        "value": "Test",
+        "object_id": 559231460
+      },
+      "method_id": "getName",
+      "thread_id": 372,
+      "defined_class": "org.springframework.samples.petclinic.model.NamedEntity"
+    },
+    {
+      "id": 66,
+      "path": "src/main/java/org/springframework/samples/petclinic/model/NamedEntity.java",
+      "event": "return",
+      "lineno": 35,
+      "static": false,
+      "method_id": "getName",
+      "parent_id": 65,
+      "thread_id": 372,
+      "return_value": {
+        "class": "java.lang.String",
+        "value": "Test",
+        "object_id": 246298048
+      },
+      "defined_class": "org.springframework.samples.petclinic.model.NamedEntity"
+    },
+    {
+      "id": 67,
+      "path": "src/main/java/org/springframework/samples/petclinic/owner/Owner.java",
+      "event": "call",
+      "lineno": 128,
+      "static": false,
+      "receiver": {
+        "class": "org.springframework.samples.petclinic.owner.Owner",
+        "value": "[Owner@3931a0d id = 9, new = false, lastName = 'Schroeder', firstName = 'David', address = '2749 Blackhawk Trail', city = 'Madison', telephone = '6085559435']",
+        "object_id": 59972109
+      },
+      "method_id": "getPet",
+      "thread_id": 372,
+      "parameters": [
+        {
+          "kind": "req",
+          "name": "name",
+          "class": "java.lang.String",
+          "value": "Test",
+          "object_id": 246298048
+        },
+        {
+          "kind": "req",
+          "name": "ignoreNew",
+          "class": "java.lang.Boolean",
+          "value": "true",
+          "object_id": 813180489
+        }
+      ],
+      "defined_class": "org.springframework.samples.petclinic.owner.Owner"
+    },
+    {
+      "id": 68,
+      "path": "src/main/java/org/springframework/samples/petclinic/model/BaseEntity.java",
+      "event": "call",
+      "lineno": 48,
+      "static": false,
+      "receiver": {
+        "class": "org.springframework.samples.petclinic.owner.Pet",
+        "value": "Freddy",
+        "object_id": 2029303978
+      },
+      "method_id": "isNew",
+      "thread_id": 372,
+      "defined_class": "org.springframework.samples.petclinic.model.BaseEntity"
+    },
+    {
+      "id": 69,
+      "path": "src/main/java/org/springframework/samples/petclinic/model/BaseEntity.java",
+      "event": "return",
+      "lineno": 48,
+      "static": false,
+      "method_id": "isNew",
+      "parent_id": 68,
+      "thread_id": 372,
+      "return_value": {
+        "class": "java.lang.Boolean",
+        "value": "false",
+        "object_id": 1092300164
+      },
+      "defined_class": "org.springframework.samples.petclinic.model.BaseEntity"
+    },
+    {
+      "id": 70,
+      "path": "src/main/java/org/springframework/samples/petclinic/model/NamedEntity.java",
+      "event": "call",
+      "lineno": 35,
+      "static": false,
+      "receiver": {
+        "class": "org.springframework.samples.petclinic.owner.Pet",
+        "value": "Freddy",
+        "object_id": 2029303978
+      },
+      "method_id": "getName",
+      "thread_id": 372,
+      "defined_class": "org.springframework.samples.petclinic.model.NamedEntity"
+    },
+    {
+      "id": 71,
+      "path": "src/main/java/org/springframework/samples/petclinic/model/NamedEntity.java",
+      "event": "return",
+      "lineno": 35,
+      "static": false,
+      "method_id": "getName",
+      "parent_id": 70,
+      "thread_id": 372,
+      "return_value": {
+        "class": "java.lang.String",
+        "value": "Freddy",
+        "object_id": 561099075
+      },
+      "defined_class": "org.springframework.samples.petclinic.model.NamedEntity"
+    },
+    {
+      "id": 72,
+      "path": "src/main/java/org/springframework/samples/petclinic/owner/Owner.java",
+      "event": "return",
+      "lineno": 128,
+      "static": false,
+      "method_id": "getPet",
+      "parent_id": 67,
+      "thread_id": 372,
+      "defined_class": "org.springframework.samples.petclinic.owner.Owner"
+    },
+    {
+      "id": 73,
+      "path": "src/main/java/org/springframework/samples/petclinic/owner/Owner.java",
+      "event": "call",
+      "lineno": 107,
+      "static": false,
+      "receiver": {
+        "class": "org.springframework.samples.petclinic.owner.Owner",
+        "value": "[Owner@3931a0d id = 9, new = false, lastName = 'Schroeder', firstName = 'David', address = '2749 Blackhawk Trail', city = 'Madison', telephone = '6085559435']",
+        "object_id": 59972109
+      },
+      "method_id": "addPet",
+      "thread_id": 372,
+      "parameters": [
+        {
+          "kind": "req",
+          "name": "pet",
+          "class": "org.springframework.samples.petclinic.owner.Pet",
+          "value": "Test",
+          "object_id": 559231460
+        }
+      ],
+      "defined_class": "org.springframework.samples.petclinic.owner.Owner"
+    },
+    {
+      "id": 74,
+      "path": "src/main/java/org/springframework/samples/petclinic/model/BaseEntity.java",
+      "event": "call",
+      "lineno": 48,
+      "static": false,
+      "receiver": {
+        "class": "org.springframework.samples.petclinic.owner.Pet",
+        "value": "Test",
+        "object_id": 559231460
+      },
+      "method_id": "isNew",
+      "thread_id": 372,
+      "defined_class": "org.springframework.samples.petclinic.model.BaseEntity"
+    },
+    {
+      "id": 75,
+      "path": "src/main/java/org/springframework/samples/petclinic/model/BaseEntity.java",
+      "event": "return",
+      "lineno": 48,
+      "static": false,
+      "method_id": "isNew",
+      "parent_id": 74,
+      "thread_id": 372,
+      "return_value": {
+        "class": "java.lang.Boolean",
+        "value": "true",
+        "object_id": 286235610
+      },
+      "defined_class": "org.springframework.samples.petclinic.model.BaseEntity"
+    },
+    {
+      "id": 76,
+      "path": "src/main/java/org/springframework/samples/petclinic/owner/Owner.java",
+      "event": "return",
+      "lineno": 107,
+      "static": false,
+      "method_id": "addPet",
+      "parent_id": 73,
+      "thread_id": 372,
+      "defined_class": "org.springframework.samples.petclinic.owner.Owner"
+    },
+    {
+      "id": 77,
+      "path": "src/main/java/org/springframework/samples/petclinic/model/BaseEntity.java",
+      "event": "call",
+      "lineno": 40,
+      "static": false,
+      "receiver": {
+        "class": "org.springframework.samples.petclinic.owner.Pet",
+        "value": "Test",
+        "object_id": 559231460
+      },
+      "method_id": "getId",
+      "thread_id": 372,
+      "defined_class": "org.springframework.samples.petclinic.model.BaseEntity"
+    },
+    {
+      "id": 78,
+      "path": "src/main/java/org/springframework/samples/petclinic/model/BaseEntity.java",
+      "event": "return",
+      "lineno": 40,
+      "static": false,
+      "method_id": "getId",
+      "parent_id": 77,
+      "thread_id": 372,
+      "defined_class": "org.springframework.samples.petclinic.model.BaseEntity"
+    },
+    {
+      "id": 79,
+      "path": "src/main/java/com/zaxxer/hikari/pool/ProxyConnection.java",
+      "event": "call",
+      "lineno": 344,
+      "static": false,
+      "method_id": "prepareStatement",
+      "sql_query": {
+        "sql": "insert into pets (id, name, birth_date, owner_id, type_id) values (null, ?, ?, ?, ?)",
+        "normalized": true,
+        "database_type": "H2",
+        "normalized_sql": "insert into pets (id, name, birth_date, owner_id, type_id) values ($1, ?, ?, ?, ?)"
+      },
+      "thread_id": 372,
+      "defined_class": "com.zaxxer.hikari.pool.ProxyConnection"
+    },
+    {
+      "id": 80,
+      "path": "src/main/java/com/zaxxer/hikari/pool/ProxyConnection.java",
+      "event": "return",
+      "lineno": 344,
+      "static": false,
+      "method_id": "prepareStatement",
+      "parent_id": 79,
+      "thread_id": 372,
+      "defined_class": "com.zaxxer.hikari.pool.ProxyConnection"
+    },
+    {
+      "id": 81,
+      "path": "src/main/java/org/springframework/samples/petclinic/owner/PetController.java",
+      "event": "return",
+      "lineno": 78,
+      "static": false,
+      "method_id": "processCreationForm",
+      "parent_id": 60,
+      "thread_id": 372,
+      "return_value": {
+        "class": "java.lang.String",
+        "value": "redirect:/owners/{ownerId}",
+        "object_id": 727998028
+      },
+      "defined_class": "org.springframework.samples.petclinic.owner.PetController"
+    },
+    {
+      "id": 82,
+      "path": "src/main/java/javax/servlet/http/HttpServlet.java",
+      "event": "return",
+      "lineno": 736,
+      "static": false,
+      "method_id": "service",
+      "parent_id": 1,
+      "thread_id": 372,
+      "defined_class": "javax.servlet.http.HttpServlet",
+      "http_server_response": {
+        "status": 302
+      }
+    }
+  ],
+  "version": "1.2",
+  "classMap": [
+    {
+      "name": "org",
+      "type": "package",
+      "children": [
+        {
+          "name": "springframework",
+          "type": "package",
+          "children": [
+            {
+              "name": "samples",
+              "type": "package",
+              "children": [
+                {
+                  "name": "petclinic",
+                  "type": "package",
+                  "children": [
+                    {
+                      "name": "model",
+                      "type": "package",
+                      "children": [
+                        {
+                          "name": "NamedEntity",
+                          "type": "class",
+                          "static": false,
+                          "children": [
+                            {
+                              "name": "getName",
+                              "type": "function",
+                              "static": false,
+                              "location": "src/main/java/org/springframework/samples/petclinic/model/NamedEntity.java:35"
+                            },
+                            {
+                              "name": "setName",
+                              "type": "function",
+                              "static": false,
+                              "location": "src/main/java/org/springframework/samples/petclinic/model/NamedEntity.java:39"
+                            }
+                          ],
+                          "location": "src/main/java/org/springframework/samples/petclinic/model/NamedEntity.java"
+                        },
+                        {
+                          "name": "BaseEntity",
+                          "type": "class",
+                          "static": false,
+                          "children": [
+                            {
+                              "name": "setId",
+                              "type": "function",
+                              "static": false,
+                              "location": "src/main/java/org/springframework/samples/petclinic/model/BaseEntity.java:44"
+                            },
+                            {
+                              "name": "isNew",
+                              "type": "function",
+                              "static": false,
+                              "location": "src/main/java/org/springframework/samples/petclinic/model/BaseEntity.java:48"
+                            },
+                            {
+                              "name": "getId",
+                              "type": "function",
+                              "static": false,
+                              "location": "src/main/java/org/springframework/samples/petclinic/model/BaseEntity.java:40"
+                            }
+                          ],
+                          "location": "src/main/java/org/springframework/samples/petclinic/model/BaseEntity.java"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "owner",
+                      "type": "package",
+                      "children": [
+                        {
+                          "name": "Pet",
+                          "type": "class",
+                          "static": false,
+                          "children": [
+                            {
+                              "name": "getBirthDate",
+                              "type": "function",
+                              "static": false,
+                              "location": "src/main/java/org/springframework/samples/petclinic/owner/Pet.java:71"
+                            },
+                            {
+                              "name": "setType",
+                              "type": "function",
+                              "static": false,
+                              "location": "src/main/java/org/springframework/samples/petclinic/owner/Pet.java:79"
+                            },
+                            {
+                              "name": "getType",
+                              "type": "function",
+                              "static": false,
+                              "location": "src/main/java/org/springframework/samples/petclinic/owner/Pet.java:75"
+                            },
+                            {
+                              "name": "setBirthDate",
+                              "type": "function",
+                              "static": false,
+                              "location": "src/main/java/org/springframework/samples/petclinic/owner/Pet.java:67"
+                            }
+                          ],
+                          "location": "src/main/java/org/springframework/samples/petclinic/owner/Pet.java"
+                        },
+                        {
+                          "name": "PetController",
+                          "type": "class",
+                          "static": false,
+                          "children": [
+                            {
+                              "name": "initPetBinder",
+                              "type": "function",
+                              "static": false,
+                              "location": "src/main/java/org/springframework/samples/petclinic/owner/PetController.java:65"
+                            },
+                            {
+                              "name": "initOwnerBinder",
+                              "type": "function",
+                              "static": false,
+                              "location": "src/main/java/org/springframework/samples/petclinic/owner/PetController.java:60"
+                            },
+                            {
+                              "name": "processCreationForm",
+                              "type": "function",
+                              "static": false,
+                              "location": "src/main/java/org/springframework/samples/petclinic/owner/PetController.java:78"
+                            },
+                            {
+                              "name": "findOwner",
+                              "type": "function",
+                              "static": false,
+                              "location": "src/main/java/org/springframework/samples/petclinic/owner/PetController.java:55"
+                            },
+                            {
+                              "name": "populatePetTypes",
+                              "type": "function",
+                              "static": false,
+                              "location": "src/main/java/org/springframework/samples/petclinic/owner/PetController.java:50"
+                            }
+                          ],
+                          "location": "src/main/java/org/springframework/samples/petclinic/owner/PetController.java"
+                        },
+                        {
+                          "name": "Owner",
+                          "type": "class",
+                          "static": false,
+                          "children": [
+                            {
+                              "name": "getPet",
+                              "type": "function",
+                              "static": false,
+                              "location": "src/main/java/org/springframework/samples/petclinic/owner/Owner.java:128"
+                            },
+                            {
+                              "name": "addPet",
+                              "type": "function",
+                              "static": false,
+                              "location": "src/main/java/org/springframework/samples/petclinic/owner/Owner.java:107"
+                            }
+                          ],
+                          "location": "src/main/java/org/springframework/samples/petclinic/owner/Owner.java"
+                        },
+                        {
+                          "name": "PetTypeFormatter",
+                          "type": "class",
+                          "static": false,
+                          "children": [
+                            {
+                              "name": "parse",
+                              "type": "function",
+                              "static": false,
+                              "location": "src/main/java/org/springframework/samples/petclinic/owner/PetTypeFormatter.java:53"
+                            },
+                            {
+                              "name": "parse",
+                              "type": "function",
+                              "static": false,
+                              "location": "src/main/java/org/springframework/samples/petclinic/owner/PetTypeFormatter.java:36"
+                            }
+                          ],
+                          "location": "src/main/java/org/springframework/samples/petclinic/owner/PetTypeFormatter.java"
+                        },
+                        {
+                          "name": "PetValidator",
+                          "type": "class",
+                          "static": false,
+                          "children": [
+                            {
+                              "name": "supports",
+                              "type": "function",
+                              "static": false,
+                              "location": "src/main/java/org/springframework/samples/petclinic/owner/PetValidator.java:61"
+                            },
+                            {
+                              "name": "validate",
+                              "type": "function",
+                              "static": false,
+                              "location": "src/main/java/org/springframework/samples/petclinic/owner/PetValidator.java:38"
+                            }
+                          ],
+                          "location": "src/main/java/org/springframework/samples/petclinic/owner/PetValidator.java"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "com",
+      "type": "package",
+      "children": [
+        {
+          "name": "zaxxer",
+          "type": "package",
+          "children": [
+            {
+              "name": "hikari",
+              "type": "package",
+              "children": [
+                {
+                  "name": "pool",
+                  "type": "package",
+                  "children": [
+                    {
+                      "name": "ProxyConnection",
+                      "type": "class",
+                      "static": false,
+                      "children": [
+                        {
+                          "name": "prepareStatement",
+                          "type": "function",
+                          "static": false,
+                          "location": "src/main/java/com/zaxxer/hikari/pool/ProxyConnection.java:337"
+                        },
+                        {
+                          "name": "prepareStatement",
+                          "type": "function",
+                          "static": false,
+                          "location": "src/main/java/com/zaxxer/hikari/pool/ProxyConnection.java:344"
+                        }
+                      ],
+                      "location": "src/main/java/com/zaxxer/hikari/pool/ProxyConnection.java"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "javax",
+      "type": "package",
+      "children": [
+        {
+          "name": "servlet",
+          "type": "package",
+          "children": [
+            {
+              "name": "http",
+              "type": "package",
+              "children": [
+                {
+                  "name": "HttpServlet",
+                  "type": "class",
+                  "static": false,
+                  "children": [
+                    {
+                      "name": "service",
+                      "type": "function",
+                      "static": false,
+                      "location": "src/main/java/javax/servlet/http/HttpServlet.java:736"
+                    }
+                  ],
+                  "location": "src/main/java/javax/servlet/http/HttpServlet.java"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "app": "spring-petclinic",
+    "git": {
+      "branch": "appland",
+      "commit": "ae061d7ffbd9a59d3147fefebabe956bc9831b71",
+      "repository": "https://github.com/land-of-apps/spring-petclinic.git"
+    },
+    "client": {
+      "url": "https://github.com/appland/appmap-java",
+      "name": "appmap-java"
+    },
+    "language": {
+      "name": "java",
+      "engine": "OpenJDK 64-Bit Server VM",
+      "version": "25.242-b08"
+    },
+    "recorder": {
+      "name": "remote_recording"
+    },
+    "framework": {},
+    "recording": {}
+  }
+}
