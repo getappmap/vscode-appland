@@ -26,26 +26,20 @@ AppLand records behavior of running code as [AppMaps](https://github.com/appland
 
 ![Getting started steps](./doc/media/000.png "Getting started steps")
 
-## TL&DR; version
+## Installation and setup
 
-Install through [VS Code extensions](https://marketplace.visualstudio.com/items?itemName=AppLandInc.appland)
-
-To generate AppMap files, an AppMap client must be installed and configured for your project. If it's not already, you can find the language client for your project along with setup instructions on GitHub:
-
-- [AppMap client for Ruby](https://github.com/applandinc/appmap-ruby)
-- [AppMap client for Java](https://github.com/applandinc/appmap-java)
-
-Open an `*.appmap.json` file in Visual Studio Code to view diagrams of the recording.
-
-This extension adds the following commands:
-- `AppLand: Open most recently modified AppMap file`
-
-
-## Detailed Setup Instructions
 - [for Ruby](./doc/README-RUBY.md)
 - [for Java](./doc/README-JAVA.md)
 
+### TL&DR; version:
 
+1. Install through [VS Code extensions](https://marketplace.visualstudio.com/items?itemName=AppLandInc.appland)
+2. To generate AppMap files, an AppMap client must be installed and configured for your project. If it's not already, you can find the language client for your project along with setup instructions on GitHub:
+    - [AppMap client for Ruby](https://github.com/applandinc/appmap-ruby)
+    - [AppMap client for Java](https://github.com/applandinc/appmap-java)
+3. Open an `*.appmap.json` file in Visual Studio Code to view diagrams of the recording.
+4. This extension adds the following commands:
+    - `AppLand: Open most recently modified AppMap file`
 
 ## Using the AppMap diagram
 
