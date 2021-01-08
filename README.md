@@ -9,7 +9,7 @@ AppLand is a self-contained Visual Code extension that automatically records and
 
 Each interactive diagram links directly to the source code, and the information is easy to share.
 
-![Component diagram](./doc/media/001.png "Component diagram")
+![AppLand diagrams](./doc/media/002.gif "AppLand diagrams")
 
 ## Summary of features
 
