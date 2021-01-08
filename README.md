@@ -9,7 +9,7 @@ AppLand is a self-contained Visual Code extension that automatically records and
 
 Each interactive diagram links directly to the source code, and the information is easy to share.
 
-![Component diagram](./media/001.png "Component diagram")
+![Component diagram](./doc/media/001.png "Component diagram")
 
 ## Summary of features
 
@@ -24,7 +24,7 @@ Each interactive diagram links directly to the source code, and the information 
 
 AppLand records behavior of running code as [AppMaps](https://github.com/applandinc/appmap) during test execution and visualizes them in interactive diagrams.
 
-![Getting started steps](./media/000.png "Getting started steps")
+![Getting started steps](./doc/media/000.png "Getting started steps")
 
 ## TL&DR; version
 
@@ -41,109 +41,23 @@ This extension adds the following commands:
 - `AppLand: Open most recently modified AppMap file`
 
 
-## Installation
-
-Install the extension with the `Install` button in the Marketplace.
-
-## Initial setup of the client
-
-The client is required for recording AppMaps when running tests in VS Code.
-
-### Ruby
-
-Follow the `Installation and Configuration` sections in [github.com/applandinc/appmap-ruby](github.com/applandinc/appmap-ruby#installation).
-
-### Java
-
-Download the most recent `appmap.jar` from [https://github.com/applandinc/appmap-java/releases](https://github.com/applandinc/appmap-java/releases). 
-
-Then follow the `Configuration chapter` in [github.com/applandinc/appmap-java](github.com/applandinc/appmap-java#configuration).
-
-## Recording an AppMap
-
-### Ruby
-
-When the client is installed and configured for your application, add `APPMAP=true` to your test environment and run a test. The client will record a new AppMap file that you will view and interact with in the IDE. The Ruby client saves AppMap files with the `.appmap.json` extension in the project folder `tmp/appmap/[rspec|minitest|cucumber]`.
-
-The following sections provide detailed instructions for recording AppMaps from RSpec, Minitest, and Cucumber test cases.
-
-#### RSpec
- - Install the extension `vscode-run-rspec-file` from [the Marketplace](https://marketplace.visualstudio.com/items?itemName=Thadeu.vscode-run-rspec-file).
- - Open Workspace Settings
-  
-![Workspace settings](./media/002.png "Workspace settings")
-
- - Prepend `env APPMAP=true` to the RSpec command
-
-![env APPMAP=TRUE](./media/003.png "env APPMAP=TRUE")
-
- - Now when you run an RSpec test, the AppMap JSON file will be generated.
-
-![Run RSpec test](./media/004.png "Run RSpec test")
-
-Alternatively, you can generate AppMaps from tests manually from the command line. See instructions in [https://github.com/applandinc/appmap-ruby](https://github.com/applandinc/appmap-ruby#rspec)
-
-#### Minitest
-
-See instructions in [https://github.com/applandinc/appmap-ruby/blob/master/README.md](https://github.com/applandinc/appmap-ruby/blob/master/README.md#minitest)
-
-#### Cucumber
-
-See instructions in [https://github.com/applandinc/appmap-ruby/blob/master/README.md](https://github.com/applandinc/appmap-ruby/blob/master/README.md#cucumber)
+## Detailed Setup Instructions
+- [for Ruby](./doc/README-RUBY.md)
+- [for Java](./doc/README-JAVA.md)
 
 
-
-### Java
-
-The Java client is run as a Java agent and must be started along with the JVM. This is typically done by passing the `-javaagent` argument to your JVM, for example
-
-`java -javaagent:$HOME/appmap.jar <java command arguments>`
-
-
-#### Debug information for links to source files
-
-AppMap diagrams feature links to original source code. In order for the links to work, please make sure to compile your source code with the debug information enabled.
-
-#### Maven, Maven Surefire, and Gradle
-
-The `appmap-java` project on GitHub has [instructions for running the `appmap.jar` Java agent within the Maven, Surefire, or Gradle](https://github.com/applandinc/appmap-java/blob/master/README.md#other-examples).
-
-
-#### JUnit
-You can use the `Java Test Runner` extension to record AppMaps from your JUnit tests.
-
-- Install the Java Test Runner extension from [the Marketplace](https://marketplace.visualstudio.com/items?itemName=vscjava.vscode-java-test).
-
-- Open the workspace settings json file and add the `-javaagent` parameter to the `vmArgs` section, replace `${HOME}` with your home directory or where you saved the file:
- `"vmArgs": [ "-Xmx512M", "-javaagent:${HOME}/appmap.jar" ],`
- See detailed instructions for the Java Test Runner configuration [here](https://github.com/Microsoft/vscode-java-test/wiki/Run-with-Configuration).
-
-
-![Java Test Runner Configuration](./media/005.png "Java Test Runner Configuration")
-
-- Run your JUnit test and the AppMap JSON file will be generated.. You can start them from the Test Explorer:
-
-![Java Test Explorer](./media/006.png "Java Test Explorer")
-
-
-## Opening an AppMap diagram
-### Open most recently modified AppMap
-Use AppLand extension command `AppLand: Open most recently modified AppMap` to open the AppMap file that has most recently changed. When you have run a single test, this will be the AppMap for that test.
-
-![Open most recently modified AppMap](./media/007.png "Open most recently modified AppMap")
-
-### Opening an AppMap from the file tree navigator
-
-Alternatively, open any generated AppMap file directly from the file tree navigator:
-1. Locate an `.appmap.json` file in your project folder. 
-    1. For Ruby apps, the files will be created in a  `tmp/appmap/[test_framework]` directory
-    1. For Java apps, the files will be created in the workspace folder unless configured differently in the Java Test Runner settings
-1. Open the file. A new AppLand viewer window will open. 
 
 ## Using the AppMap diagram
+
+Use AppLand extension command `AppLand: Open most recently modified AppMap` to open the AppMap file that has most recently changed. When you have run a single test, this will be the AppMap for that test.
+
+![Open most recently modified AppMap](./doc/media/007.png "Open most recently modified AppMap")
+
+Alternatively, open any generated AppMap file directly from the file tree navigator.
+
 Depending on the test run and functionality covered, you should see a viewer with a diagram similar to this one:
 
-![Component diagram](./media/001.png "Component diagram")
+![Component diagram](./doc/media/001.png "Component diagram")
 
 ### Details
 The “Details” panel on the left hand side will be used when you click on something, such as a package or class. 
@@ -162,7 +76,7 @@ Clicking on the event will open the Events view.
 
 Each node (box) in the Events view represents a specific HTTP server request, function call, or SQL query which occurred in the test case. You can think of it like having the data from a debugger, but you can jump to any location in the call graph. The Events view flows from left to right and top to bottom as the program moves forward in time. 
 
-![Interactive diagrams](./media/001.gif "Interactive diagrams")
+![Interactive diagrams](./doc/media/001.gif "Interactive diagrams")
 
 ### Interacting with the diagrams
 
@@ -222,10 +136,7 @@ AppLand has other solutions which help you profile and automatically diagram sof
 
 # About AppLand
 
-## Details about how AppLand technology works
-Please see documentation posted on [appland.org](https://appland.org).
-
-## Support 
+How AppLand technology works: [appland.org](https://appland.org).
 
 ### Contact us
 Let us know by joining the discussion on [Discord](https://discord.com/invite/N9VUap6) or submit your issue on [GitHub](https://github.com/applandinc/vscode-appland). 
@@ -239,4 +150,3 @@ Let us know by joining the discussion on [Discord](https://discord.com/invite/N9
 #### Supported languages and frameworks
  - Ruby: MiniTest, RSpec and Cucumber test frameworks
  - Java: JUnit framework
-
