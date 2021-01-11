@@ -104,7 +104,7 @@ Generated AppMap files can be viewed by others with the AppLand extension. So, o
 ### Share AppMap files in the SaaS [https://app.land](https://app.land) sandbox
 [App.Land](https://app.land) is a free sandbox that can be rapidly used as an AppMap repository and as a collaboration and sharing tool for your team. 
 
-1. [Sign-up](https://app.land) to app.land , create an account for your organization and invite others to join
+1. [Sign-up](https://app.land) for app.land, create an account for your organization and invite others to join
 1. [Follow these instructions](https://app.land/setup/cli) to install CLI tools and upload your AppMaps to the server
 2. Open and share your AppMaps (called scenarios in the app.land UI) from the UI. You can make the shareable links private - accessible for members of your organization only, or public.
 
