@@ -13,7 +13,7 @@ Each interactive diagram links directly to the source code, and the information 
 
 ## Summary of features
 
-- Component diagrams akin to UML class diagrams
+- UML-inspired Component diagrams that display key application components and how they are interrelated during execution 
 - Execution trace diagrams that visualize code and data flows
 - List of Webservices generated automatically from test cases
 - List of SQL queries generated automatically from test cases
