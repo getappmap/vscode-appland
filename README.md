@@ -51,7 +51,11 @@ Alternatively, open any generated AppMap file directly from the file tree naviga
 
 Depending on the test run and functionality covered, you should see a viewer with a diagram similar to this one:
 
+<<<<<<< HEAD
 ![Component diagram](./doc/media/001.gif "Component diagram")
+=======
+![Component diagram](./doc/media/001.png "Component diagram")
+>>>>>>> 2a4b1dbb3d528d4e463f55a436a42521b945c1aa
 
 ### Details
 The “Details” panel on the left hand side will be used when you click on something, such as a package or class. 
@@ -70,6 +74,10 @@ Clicking on the event will open the Events view.
 
 Each node (box) in the Events view represents a specific HTTP server request, function call, or SQL query which occurred in the test case. You can think of it like having the data from a debugger, but you can jump to any location in the call graph. The Events view flows from left to right and top to bottom as the program moves forward in time. 
 
+<<<<<<< HEAD
+=======
+![Interactive diagrams](./doc/media/001.gif "Interactive diagrams")
+>>>>>>> 2a4b1dbb3d528d4e463f55a436a42521b945c1aa
 
 ### Interacting with the diagrams
 
