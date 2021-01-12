@@ -24,25 +24,26 @@ Each interactive diagram links directly to the source code, and the information 
 Join us on [Discord](https://discord.com/invite/N9VUap6) or [GitHub](https://github.com/applandinc/vscode-appland). 
 
 
-# Getting Started
+# Getting started
 
 AppLand records behavior of running code as [AppMaps](https://github.com/applandinc/appmap) during test execution and visualizes them in interactive diagrams.
 
 ![Getting started steps](./doc/media/000.png "Getting started steps")
 
-## Installation and setup
 
-- [Setup instructions for Ruby projects](./doc/README-RUBY.md)
-- [Setup instructions for Java projects](./doc/README-JAVA.md)
-
-
-### Alternative quickstart instructions
+## Quickstart instructions
 
 1. Install through [VS Code extensions](https://marketplace.visualstudio.com/items?itemName=AppLandInc.appland)
 2. To generate AppMap files, an AppMap client must be installed and configured for your project. If it's not already, you can find the language client for your project along with setup instructions on GitHub:
     - [AppMap client for Ruby](https://github.com/applandinc/appmap-ruby)
     - [AppMap client for Java](https://github.com/applandinc/appmap-java)
 3. Open an `*.appmap.json` file in Visual Studio Code to view diagrams of the recording.
+
+
+### Additional details
+
+- [Instructions for Ruby projects](./doc/README-RUBY.md)
+- [Instructions for Java projects](./doc/README-JAVA.md)
 
 
 ### Supported languages and frameworks
