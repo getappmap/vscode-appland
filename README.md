@@ -6,7 +6,6 @@ AppLand for Visual Studio Code is a self-contained extension that automatically 
 - Conduct code and design reviews using live and accurate data
 - Troubleshoot hard-to-understand bugs with visuals 
 
-
 Each interactive diagram links directly to the source code, and the information is easy to share.
 
 ![AppLand diagrams](./doc/media/002.gif "AppLand diagrams")
@@ -19,6 +18,11 @@ Each interactive diagram links directly to the source code, and the information 
 - List of SQL queries generated automatically from test cases
 - Search for class, package or function
 - Code linkage of the diagram to the source code it relates to
+
+## Contact us
+
+Join us on [Discord](https://discord.com/invite/N9VUap6) or [GitHub](https://github.com/applandinc/vscode-appland). 
+
 
 # Getting Started
 
@@ -130,5 +134,4 @@ AppLand has other solutions which help you profile and automatically diagram sof
 
 How AppLand technology works: [appland.org](https://appland.org).
 
-### Contact us
-Let us know by joining the discussion on [Discord](https://discord.com/invite/N9VUap6) or submit your issue on [GitHub](https://github.com/applandinc/vscode-appland). 
+
