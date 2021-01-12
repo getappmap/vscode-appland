@@ -1,6 +1,6 @@
 # AppLand for Visual Studio Code
 
-AppLand is a self-contained Visual Code extension that automatically records and diagrams software behavior by executing test cases.  Now you can walk through automatically generated white-board style diagrams right in your IDE without any effort.  AppLand helps developers 
+AppLand for Visual Studio Code is a self-contained extension that automatically records and diagrams software behavior by executing test cases.  Now you can walk through automatically generated white-board style diagrams right in your IDE without any effort.  AppLand helps developers 
 
 - Onboard to code architecture, with no extra work for the team 
 - Conduct code and design reviews using live and accurate data
@@ -28,8 +28,8 @@ AppLand records behavior of running code as [AppMaps](https://github.com/appland
 
 ## Installation and setup
 
-- [for Ruby](./doc/README-RUBY.md)
-- [for Java](./doc/README-JAVA.md)
+- [setup instructions for Ruby projects](./doc/README-RUBY.md)
+- [setup instructions for Java projects](./doc/README-JAVA.md)
 
 ### Quickstart instructions
 
@@ -38,8 +38,7 @@ AppLand records behavior of running code as [AppMaps](https://github.com/appland
     - [AppMap client for Ruby](https://github.com/applandinc/appmap-ruby)
     - [AppMap client for Java](https://github.com/applandinc/appmap-java)
 3. Open an `*.appmap.json` file in Visual Studio Code to view diagrams of the recording.
-4. This extension adds the following commands:
-    - `AppLand: Open most recently modified AppMap file`
+
 
 ## Using the AppMap diagram
 
