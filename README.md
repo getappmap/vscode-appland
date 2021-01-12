@@ -28,10 +28,10 @@ AppLand records behavior of running code as [AppMaps](https://github.com/appland
 
 ## Installation and setup
 
-- [setup instructions for Ruby projects](./doc/README-RUBY.md)
-- [setup instructions for Java projects](./doc/README-JAVA.md)
+- [Setup instructions for Ruby projects](./doc/README-RUBY.md)
+- [Setup instructions for Java projects](./doc/README-JAVA.md)
 
-### Quickstart instructions
+### Alternative quickstart instructions
 
 1. Install through [VS Code extensions](https://marketplace.visualstudio.com/items?itemName=AppLandInc.appland)
 2. To generate AppMap files, an AppMap client must be installed and configured for your project. If it's not already, you can find the language client for your project along with setup instructions on GitHub:
