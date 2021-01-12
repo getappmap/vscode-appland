@@ -132,13 +132,3 @@ How AppLand technology works: [appland.org](https://appland.org).
 
 ### Contact us
 Let us know by joining the discussion on [Discord](https://discord.com/invite/N9VUap6) or submit your issue on [GitHub](https://github.com/applandinc/vscode-appland). 
-
-### Supported platforms
-
-#### VS Code Requirements
- - AppLand for VS Code has been tested on macOS and Windows
- - Requires VS Code 1.50 and newer
-
-#### Supported languages and frameworks
- - Ruby: MiniTest, RSpec and Cucumber test frameworks
- - Java: JUnit framework
