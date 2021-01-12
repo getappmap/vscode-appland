@@ -1,15 +1,10 @@
 # Instructions for Ruby projects
 
-
-## Installation
-
-Install the extension with the `Install` button in the Marketplace.
-
 ## Initial setup of the client
 
 The client is required for recording AppMaps when running tests in VS Code.
 
-Follow the `Installation` and `Configuration` sections in [github.com/applandinc/appmap-ruby](github.com/applandinc/appmap-ruby#installation).
+Follow the `Installation` and `Configuration` sections in [github.com/applandinc/appmap-ruby](https://github.com/applandinc/appmap-ruby#installation).
 
 ## Recording an AppMap
 

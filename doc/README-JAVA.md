@@ -1,16 +1,11 @@
 # Instructions for Java Projects
 
-
-## Installation
-
-Install the extension with the `Install` button in the Marketplace.
-
 ## Initial setup of the client
 
 The client is required for recording AppMaps when running tests in VS Code.
 
 1. Download the most recent `appmap.jar` from [https://github.com/applandinc/appmap-java/releases](https://github.com/applandinc/appmap-java/releases). 
-2. Then follow the `Configuration chapter` in [github.com/applandinc/appmap-java](github.com/applandinc/appmap-java#configuration).
+2. Then follow the `Configuration chapter` in [github.com/applandinc/appmap-java](https://github.com/applandinc/appmap-java#configuration).
 
 ## Recording an AppMap
 
