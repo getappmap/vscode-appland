@@ -35,6 +35,7 @@ AppLand records behavior of running code as [AppMaps](https://github.com/appland
 - [Setup instructions for Ruby projects](./doc/README-RUBY.md)
 - [Setup instructions for Java projects](./doc/README-JAVA.md)
 
+
 ### Alternative quickstart instructions
 
 1. Install through [VS Code extensions](https://marketplace.visualstudio.com/items?itemName=AppLandInc.appland)
@@ -42,6 +43,11 @@ AppLand records behavior of running code as [AppMaps](https://github.com/appland
     - [AppMap client for Ruby](https://github.com/applandinc/appmap-ruby)
     - [AppMap client for Java](https://github.com/applandinc/appmap-java)
 3. Open an `*.appmap.json` file in Visual Studio Code to view diagrams of the recording.
+
+
+### Supported languages and frameworks
+ - Ruby: MiniTest, RSpec and Cucumber test frameworks
+ - Java: JUnit framework
 
 
 ## Using the AppMap diagram
