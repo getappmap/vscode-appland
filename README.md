@@ -40,12 +40,6 @@ AppLand records behavior of running code as [AppMaps](https://github.com/appland
 3. Open an `*.appmap.json` file in Visual Studio Code to view diagrams of the recording.
 
 
-### Additional details
-
-- [Instructions for Ruby projects](./doc/README-RUBY.md)
-- [Instructions for Java projects](./doc/README-JAVA.md)
-
-
 ### Supported languages and frameworks
  - Ruby: MiniTest, RSpec and Cucumber test frameworks
  - Java: JUnit framework
