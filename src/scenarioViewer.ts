@@ -1,4 +1,4 @@
-import * as path from 'path';
+import { isAbsolute, join } from 'path';
 import * as vscode from 'vscode';
 import { getNonce } from './util';
 
@@ -88,7 +88,23 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
 				lineNumber = Number.parseInt(lineNumberStr, 10);
 			}
 
-			vscode.workspace.findFiles(path).then((uris) => {
+			let searchPath;
+			if ( vscode.workspace.workspaceFolders ) {
+				for ( let i = 0; !searchPath && i < vscode.workspace.workspaceFolders?.length; ++i ) {
+					const folder = vscode.workspace.workspaceFolders[i];
+					// findFiles is not tolerant of absolute paths, even if the absolute path matches the
+					// path of the file in the workspace.
+					if ( folder.uri.scheme === 'file' && path.startsWith(folder.uri.path) ) {
+						searchPath = path.slice(folder.uri.path.length + 1);
+					}
+				}
+			}
+			searchPath ||= path;
+			if ( !isAbsolute(path) ) {
+				searchPath = join('**', path);
+			}
+
+			vscode.workspace.findFiles(searchPath).then((uris) => {
 				if (uris.length === 0) {
 					return;
 				} else if (uris.length === 1) {
@@ -117,7 +133,7 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
 	private getHtmlForWebview(webview: vscode.Webview): string {
 		// Local path to script and css for the webview
 		const scriptUri = webview.asWebviewUri(vscode.Uri.file(
-			path.join(this.context.extensionPath, 'out', 'app.js')
+			join(this.context.extensionPath, 'out', 'app.js')
 		));
 
 		// Use a nonce to whitelist which scripts can be run
