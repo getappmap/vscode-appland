@@ -134,5 +134,3 @@ AppLand has other solutions which help you profile and automatically diagram sof
 # About AppMap
 
 How AppMap technology works: [appland.org](https://appland.org).
-
-
