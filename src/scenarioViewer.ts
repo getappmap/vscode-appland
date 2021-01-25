@@ -13,7 +13,7 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
 		context.subscriptions.push(providerRegistration);
 	}
 
-	private static readonly viewType = 'appland.appMapFile';
+	private static readonly viewType = 'appmap.appMapFile';
 
 	constructor(
 		private readonly context: vscode.ExtensionContext

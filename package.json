@@ -1,8 +1,8 @@
 {
 	"publisher": "AppLandInc",
-	"name": "appland",
-	"displayName": "AppLand",
-	"description": "AppLand code analysis and visualization",
+	"name": "appmap",
+	"displayName": "AppMap",
+	"description": "Perfect your knowledge of how your applications work with insights about code and architecture that other tools miss. Interact with beautiful diagrams that visualize end-to-end code and data flows, discover dynamic relationships between classes, HTTP requests/responses and database operations.",
 	"version": "0.2.1",
 	"repository": {
 		"type": "git",
@@ -23,7 +23,7 @@
 	"contributes": {
 		"customEditors": [
 			{
-				"viewType": "appland.appMapFile",
+				"viewType": "appmap.appMapFile",
 				"displayName": "AppMap file",
 				"selector": [
 					{
@@ -35,8 +35,8 @@
 		],
 		"commands": [
 			{
-				"command": "appland.openMostRecentlyModifiedAppMap",
-				"title": "AppLand: Open most recently modified AppMap file"
+				"command": "appmap.openMostRecentlyModifiedAppMap",
+				"title": "AppMap: Open most recently modified AppMap file"
 			}
 		]
 	},
