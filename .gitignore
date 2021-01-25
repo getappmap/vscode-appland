@@ -3,4 +3,4 @@ node_modules
 .vscode-test
 *.vsix
 *.codekit3
-
+.DS_Store

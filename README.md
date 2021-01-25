@@ -8,7 +8,7 @@ AppMap for Visual Studio Code is a self-contained extension that automatically r
 
 Each interactive diagram links directly to the source code, and the information is easy to share.
 
-![AppMap diagrams](./doc/media/002.gif "AppMap diagrams")
+![AppMap diagrams](https://vscode-appmap.s3.us-east-2.amazonaws.com/media/002.gif?versionId=Jb9nm1hI8fs5ABMh3gCEnZbEBH3gCInK "AppMap diagrams")
 
 ## Summary of features
 
@@ -21,14 +21,14 @@ Each interactive diagram links directly to the source code, and the information 
 
 ## Contact us
 
-Join us on [Discord](https://discord.com/invite/N9VUap6) or [GitHub](https://github.com/applandinc/vscode-appland). 
+Join us on [Discord](https://discord.com/invite/N9VUap6) or [GitHub](https://github.com/applandinc/vscode-appland).
 
 
 # Getting started
 
 AppMap records behavior of running code as [AppMap files](https://github.com/applandinc/appmap) during test execution and visualizes them in interactive diagrams.
 
-![Getting started steps](./doc/media/000.png "Getting started steps")
+![Getting started steps](https://vscode-appmap.s3.us-east-2.amazonaws.com/media/000.png?versionId=y5LuihUNDinpNHrf4z.e2rrQ32ciypHS "Getting started steps")
 
 
 ## Quickstart instructions
@@ -49,13 +49,13 @@ AppMap records behavior of running code as [AppMap files](https://github.com/app
 
 Use AppMap extension command `AppMap: Open most recently modified AppMap` to open the AppMap file that has most recently changed. When you have run a single test, this will be the AppMap for that test.
 
-![Open most recently modified AppMap](./doc/media/007.png "Open most recently modified AppMap")
+![Open most recently modified AppMap](https://vscode-appmap.s3.us-east-2.amazonaws.com/media/007.png?versionId=Hg_1V6llABAf_u4oYHcvhkGDUPVOpdcB "Open most recently modified AppMap")
 
 Alternatively, open any generated `.appmap.json` file directly from the file tree navigator.
 
 Depending on the test run and functionality covered, you should see a viewer with a diagram similar to this one:
 
-![Dependency Map](./doc/media/001.gif "Dependency Map")
+![Dependency Map](https://vscode-appmap.s3.us-east-2.amazonaws.com/media/001.gif?versionId=J6uZff4L5KC7ORD1V1dYq90dDArjo.7r "Dependency Map")
 
 ### Details
 The “Details” panel on the left hand side will be used when you click on something, such as a package or class. 
