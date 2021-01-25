@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { default as plugin, VsCodeExtension } from '@appland/components'; // eslint-disable-line import/no-named-default
+import { default as plugin, VVsCodeExtension } from '@appland/appmap'; // eslint-disable-line import/no-named-default
 
 Vue.use(plugin);
 
@@ -7,7 +7,7 @@ const vscode = window.acquireVsCodeApi();
 
 const app = new Vue({
   el: '#app',
-  render: (h) => h(VsCodeExtension, { ref: 'ui' }),
+  render: (h) => h(VVsCodeExtension, { ref: 'ui' }),
   methods: {
     loadData(text) {
       this.$refs.ui.loadData(text);

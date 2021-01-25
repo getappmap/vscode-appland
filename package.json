@@ -83,12 +83,9 @@
 		"webpack-cli": "^4.3.1"
 	},
 	"dependencies": {
-		"@appland/components": "^0.1.4",
-		"@appland/diagrams": "^0.5.6",
-		"@appland/models": "^0.6.1",
+		"@appland/appmap": "^0.1.1",
 		"bootstrap": "^4.5.3",
 		"bootstrap-autocomplete": "^2.3.7",
-		"d3": "^5.16.0",
 		"jquery": "^3.5.1",
 		"popper.js": "^1.16.1",
 		"vue": "^2.6.12",
