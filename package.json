@@ -11,15 +11,25 @@
 	"engines": {
 		"vscode": "^1.51.0"
 	},
-	"categories": [
-		"Other"
-	],
 	"activationEvents": [
 		"*"
 	],
 	"icon": "images/logo.png",
 	"license": "MIT",
 	"main": "./out/extension.js",
+	"categories": [
+		"Visualization",
+		"Debuggers",
+		"Linters",
+		"Other"
+	],
+	"keywords": [
+		"diagram",
+		"dependency map",
+		"uml",
+		"trace",
+		"webservice"
+	],
 	"contributes": {
 		"customEditors": [
 			{
