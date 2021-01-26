@@ -13,7 +13,7 @@ import { maxHeaderSize } from 'http';
 export class DatabaseUpdater {
 
   public static register(context: vscode.ExtensionContext): void {
-    const showAppMapCountId = 'appland.showAppMapCount';
+    const showAppMapCountId = 'appmap.showAppMapCount';
     context.subscriptions.push(vscode.commands.registerCommand(showAppMapCountId, () => {
       vscode.window.showInformationMessage(`Number of AppMaps: ${updater.appMapCount}`);
     }));
@@ -24,7 +24,7 @@ export class DatabaseUpdater {
     const updater = new DatabaseUpdater(statusBarItem)
     updater.initialize(context);
 
-    const command = 'appland.openMostRecentlyModifiedAppMap';
+    const command = 'appmap.openMostRecentlyModifiedAppMap';
     const commandHandler = () => {
       if (!updater.lastModifiedAppMap) {
         return;

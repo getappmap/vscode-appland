@@ -31,11 +31,11 @@ You can use the `Java Test Runner` extension to record AppMaps from your JUnit t
     - `"vmArgs": [ "-Xmx512M", "-javaagent:${HOME}/appmap.jar" ],`
     - See detailed instructions for the Java Test Runner configuration [here](https://github.com/Microsoft/vscode-java-test/wiki/Run-with-Configuration).
 
-![Java Test Runner Configuration](./media/005.png "Java Test Runner Configuration")
+![Java Test Runner Configuration](https://vscode-appmap.s3.us-east-2.amazonaws.com/media/005.png?versionId=yBvzm0XKlb5QdXnHTCI8YKTozjI_dtb5 "Java Test Runner Configuration")
 
 Run your JUnit test and the AppMap JSON file will be generated. You can start them from the Test Explorer:
 
-![Java Test Explorer](./media/006.png "Java Test Explorer")
+![Java Test Explorer](https://vscode-appmap.s3.us-east-2.amazonaws.com/media/006.png?versionId=ujpckKP34dou4TklX3d9j_XkWv_5axs1 "Java Test Explorer")
 
 
 ## Location of AppMaps in the file tree navigator
