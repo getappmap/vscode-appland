@@ -1,5 +1,4 @@
 # AppMap for Visual Studio Code
-
 AppMap for Visual Studio Code is a self-contained extension that automatically records and diagrams software behavior by executing test cases.  Now you can walk through automatically generated white-board style diagrams right in your IDE without any effort.  AppMap helps developers 
 
 - Onboard to code architecture, with no extra work for the team 
@@ -23,27 +22,46 @@ Each interactive diagram links directly to the source code, and the information 
 
 Join us on [Discord](https://discord.com/invite/N9VUap6) or [GitHub](https://github.com/applandinc/vscode-appland).
 
-
 # Getting started
 
 AppMap records behavior of running code as [AppMap files](https://github.com/applandinc/appmap) during test execution and visualizes them in interactive diagrams.
 
 ![Getting started steps](https://vscode-appmap.s3.us-east-2.amazonaws.com/media/000.png "Getting started steps")
 
+Here's how to get going:
 
-## Quickstart instructions
-
-1. Install through [VS Code extensions](https://marketplace.visualstudio.com/items?itemName=AppLandInc.appmap)
-2. To generate AppMap files, an AppMap client must be installed and configured for your project. If it's not already, you can find the language client for your project along with setup instructions on GitHub:
-    - [AppMap client for Ruby](https://github.com/applandinc/appmap-ruby)
-    - [AppMap client for Java](https://github.com/applandinc/appmap-java)
-3. Open an `*.appmap.json` file in Visual Studio Code to view diagrams of the recording.
+## 1. Install the [AppMap for VS Code extension](https://marketplace.visualstudio.com/items?itemName=appland.appmap)
 
 
-### Supported languages and frameworks
- - Ruby: MiniTest, RSpec and Cucumber test frameworks
- - Java: JUnit framework
+## 2. Install the AppMap client for your language
 
+To generate AppMap files, an AppMap client must be installed and configured for your project. 
+
+### Ruby
+
+The `appmap` Ruby gem is on GitHub at [https://github.com/applandinc/appmap-ruby](https://github.com/applandinc/appmap-ruby).
+
+[View installation instructions for `appmap-ruby`](https://github.com/applandinc/appmap-ruby/blob/master/README.md#installation)
+
+![AppMap extension for VSCode - quick and easy setup](https://vscode-appmap.s3.us-east-2.amazonaws.com/media/AppMap+extension+for+VSCode+-+quick+and+easy+setup.gif)
+
+**Supported languages and frameworks**
+
+Ruby on Rails, MiniTest, RSpec, Cucumber, and more.
+
+### Java
+
+The `appmap` Java agent is on GitHub at [https://github.com/applandinc/appmap-java](https://github.com/applandinc/appmap-java).
+
+[View installation instructions for `appmap-java`](https://github.com/applandinc/appmap-java/blob/master/README.md)
+
+**Supported languages and frameworks**
+
+Spring, JUnit, TestNG, and more.
+
+## 3. Open an `*.appmap.json` file
+
+Open an AppMap file in Visual Studio Code to view diagrams of the recording.
 
 ## Using the AppMap diagrams
 
