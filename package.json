@@ -18,10 +18,7 @@
 	"license": "MIT",
 	"main": "./out/extension.js",
 	"categories": [
-		"Visualization",
-		"Debuggers",
-		"Linters",
-		"Other"
+		"Visualization"
 	],
 	"keywords": [
 		"diagram",
