@@ -3,7 +3,7 @@
 	"name": "appmap",
 	"displayName": "AppMap",
 	"description": "Perfect your knowledge of how your applications work with insights about code and architecture that other tools miss. Interact with beautiful diagrams that visualize end-to-end code and data flows, discover dynamic relationships between classes, HTTP requests/responses and database operations.",
-	"version": "0.3.1",
+	"version": "0.3.2",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/applandinc/vscode-appland"
@@ -90,7 +90,7 @@
 		"webpack-cli": "^4.3.1"
 	},
 	"dependencies": {
-		"@appland/appmap": "^0.2.2",
+		"@appland/appmap": "^0.2.5",
 		"bootstrap": "^4.5.3",
 		"bootstrap-autocomplete": "^2.3.7",
 		"jquery": "^3.5.1",
