@@ -1,14 +1,15 @@
 module.exports = {
-  verifyConditions: ['semantic-release-vsce', '@semantic-release/github'],
-  prepare: {
-    path: 'semantic-release-vsce',
-    packageVsix: true,
-  },
-  publish: [
+  plugins: [
+    '@semantic-release/commit-analyzer',
+    '@semantic-release/release-notes-generator',
+    '@semantic-release/changelog',
+    '@semantic-release/git',
+    [
+      {
+        path: '@semantic-release/github',
+        assets: '*.vsix',
+      },
+    ],
     'semantic-release-vsce',
-    {
-      path: '@semantic-release/github',
-      assets: '*.vsix',
-    },
   ],
 };
