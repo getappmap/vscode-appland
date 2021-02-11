@@ -9,7 +9,7 @@
 		"url": "https://github.com/applandinc/vscode-appland"
 	},
 	"engines": {
-		"vscode": "^1.51.0"
+		"vscode": "^1.52.0"
 	},
 	"activationEvents": [
 		"*"
