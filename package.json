@@ -3,7 +3,7 @@
 	"name": "appmap",
 	"displayName": "AppMap",
 	"description": "Perfect your knowledge of how your applications work with insights about code and architecture that other tools miss. Interact with beautiful diagrams that visualize end-to-end code and data flows, discover dynamic relationships between classes, HTTP requests/responses and database operations.",
-	"version": "0.3.2",
+	"version": "0.3.3-rc1",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/applandinc/vscode-appland"
@@ -56,10 +56,17 @@
 		"watch": "webpack --watch --mode=development",
 		"package": "vsce package"
 	},
+	"husky": {
+		"hooks": {
+			"commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+		}
+	},
 	"devDependencies": {
 		"@babel/core": "^7.12.10",
 		"@babel/preset-env": "^7.12.11",
 		"@babel/preset-typescript": "^7.12.7",
+		"@commitlint/cli": "^11.0.0",
+		"@commitlint/config-conventional": "^11.0.0",
 		"@types/glob": "^7.1.3",
 		"@types/mocha": "^8.2.0",
 		"@types/node": "^12.19.12",
@@ -74,9 +81,12 @@
 		"eslint-plugin-import": "^2.22.1",
 		"glob": "^7.1.6",
 		"html-loader": "^1.3.2",
+		"husky": "^4",
 		"mocha": "^8.1.3",
 		"sass": "^1.32.2",
 		"sass-loader": "^10.1.0",
+		"semantic-release": "^17.3.8",
+		"semantic-release-vsce": "^3.1.3",
 		"style-loader": "^2.0.0",
 		"tape": "^5.1.1",
 		"ts-loader": "^8.0.14",
