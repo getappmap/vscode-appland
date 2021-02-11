@@ -1,10 +1,4 @@
-# Change Log
-
-All notable changes to the "appmap" extension will be documented in this file.
-
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
-
-## [0.3.2]
+## 0.3.2
 
 - "View source" from the context menu should now work in all cases
 - Routes in the dependency map will now favor the normalized path if available
@@ -15,7 +9,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 - Links from a class to a query now go to the expected destination
 - Details for query events no longer use the raw SQL as the title
 
-## [0.3.1]
+## 0.3.1
 - Upgrade `@appland/appmap` to `v0.2.2`
 - Rename 'component diagram' to 'dependency map'
 - Rename 'flow view' to 'trace'
@@ -26,13 +20,13 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
   out of the visible space.
 - HTTP server responses are now visible in the event details panel
 
-## [0.2.1]
+## 0.2.1
 - Update documentation
 
-## [0.2.0]
+## 0.2.0
 - Allow 'view source code' from events, functions and classes
 - Improved compatability with VS Code theme
 - Reduced file size of extension
 
-## [0.1.0]
+## 0.1.0
 - Initial release
