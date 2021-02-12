@@ -277,6 +277,16 @@ Additional information about AppMaps and their benefits is in the AppMap for VSC
 # Share your AppMaps with us!
 Thank you for your interest in AppMaps! We would love to see the AppMaps of your applications in our AppMap gallery in Discord. [Join us](https://discord.com/invite/N9VUap6) and our diverse community in Discord today.
 
+
+# Reference configuration
+If you are not successful making the application mapping work as described in this tutorial, compare your configuration with a pre-configured version of the application in the `appland` branch of the ifme github repository managed by AppLand. 
+
+Github: [https://github.com/land-of-apps/ifme/tree/appland](https://github.com/land-of-apps/ifme/tree/appland)
+
+```sh-session
+% git clone -b appland git@github.com:land-of-apps/ifme
+```
+
 Your AppLand team.
 
 
