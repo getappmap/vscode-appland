@@ -1,9 +1,9 @@
-# AppMap Tutorial: Mapping a Ruby on Rails Application in Minutes
+# AppMap Tutorial: Mapping a Ruby Application in VS Code
 
-This tutorial will walk you through appmapping of a popular opensource application `ifme` implemented in Ruby on Rails.
+This tutorial will walk you through appmapping of a popular opensource application `ifme` implemented in Ruby on Rails with the AppMap extension in Visual Studio Code.
 
 ### Prerequisites
- - Basic familiarity with git, VSCode studio, Ruby on Rails
+ - Basic familiarity with git, VSCode studio, Ruby on Rails and postgres
  - git, Ruby (2.6, 2.7) and postgres installed in your environment (macOS, Windows+WSL, Linux)
 
 ### Structure
@@ -249,21 +249,21 @@ Randomized with seed 65463
 Coverage report generated for RSpec to /Users/funny/path/ifme/coverage. 697 / 3881 LOC (17.96%) covered.
 ```
 
-_Et voilà!_ Your first appmap of ifme has just been recorded.
+_Et voilà!_ Your first AppMap of ifme has just been recorded.
 
-# Working with appmaps
-Now that your appmap recorder works, let's open your new AppMap in the IDE.
+# Working with AppMaps
+Now that your AppMap recorder works, let's open your new AppMap file in the IDE.
 
 ## Open an AppMap file
 
-Press `CTRL|COMMAND SHIFT P` in the IDE, then type `AppMap` in the search box and select the `AppMap: Open most recently modified AppMap file` action from the list. This will open a new AppMap viewer with the AppMap file that you have just recorded.
+Press `CTRL|COMMAND SHIFT P` in the IDE, then type `AppMap` in the search box and select the `AppMap: Open most recently modified AppMap file` action from the list. This opens the new AppMap file that you have just recorded in the interactive AppMap viewer.
 
 Alternatively, you can find the recorded AppMap files in the `/tmp/appmap/rspec` folder of the `ifme` project.
 
 _{image: 103.png, a screenshot of the VSCode with the appmap}_
 
 
-## Interact with the appmap diagrams
+## Interact with the AppMap diagrams
 
 Explore the `Dependency map`. Click on any component and edge in the map, expand/collapse packages and HTTP endpoints, investigate their details in the left navigation bar.
 
