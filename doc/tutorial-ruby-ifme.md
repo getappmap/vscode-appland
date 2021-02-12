@@ -4,7 +4,7 @@ This tutorial will walk you through appmapping of a popular opensource applicati
 
 ### Prerequisites: 
  - Basic familiarity with git, VSCode studio, Ruby on Rails
- - git, Ruby (2.6, 2.7) & Rails (5.x, 6.x) and postgres installed in your environment (macOS, Windows+WSL, Linux)
+ - git, Ruby (2.6, 2.7) and postgres installed in your environment (macOS, Windows+WSL, Linux)
 
 ### Structure
 
