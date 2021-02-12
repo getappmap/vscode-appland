@@ -121,8 +121,7 @@ Here are some tips:
 
 ### Share AppMap files for viewing in VSCode
 
-Generated AppMap files can be viewed by others with the AppMap extension. So, one option for sharing is to simply send the `appmap.json` file to your colleague. Another option is use of a git repository for sharing the `appmap.json` files with the members of your team.
-
+Generated AppMap files can be viewed by others with the AppMap extension. So, one option for sharing is to simply send the `appmap.json` file to your colleague.
 
 ### Share AppMap files in the SaaS [https://app.land](https://app.land) sandbox
 [App.Land](https://app.land) is a free sandbox that can be rapidly used as an AppMap repository and as a collaboration and sharing tool for your team. 
