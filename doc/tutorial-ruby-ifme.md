@@ -41,7 +41,7 @@ Resolving deltas: 100% (23303/23303), done.
 
 Start VSCode and open the folder with the ifme repository.
 
-(image: 101.png, a screenshot of the VSCode with the ifme folde opened)
+_{image: 101.png, a screenshot of the VSCode with the ifme folder open}_
 
 
 ### Build ifme
@@ -227,6 +227,10 @@ Let us find and run a specific test as ifme has many available:
           .to change(Moment, :count).by(1)
       end
 ```
+
+_{image: 102.png, a screenshot of the VSCode with the rspec test in the editor}_
+
+
 Open your terminal window and run the test:
 
 ```sh-session
@@ -253,6 +257,9 @@ Now that your appmap recorder works, let's open your first appmap in the IDE.
 ## Open an AppMap file
 
 Press `CTRL|COMMAND SHIFT P` in the IDE, then type `AppMap` in the search box and select the `AppMap: Open most recently modified AppMap file` action from the list. This will open a new AppMap viewer with the AppMap file that you have just recorded.
+
+_{image: 103.gif, a screenshot of the VSCode with the appmap}_
+
 
 ## Interact with the appmap diagrams
 
