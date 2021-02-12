@@ -10,21 +10,21 @@ This tutorial will walk you through appmapping of a popular opensource applicati
 
 This tutorial is split into three sections:
 - Install the VSCode studio with the AppMap extension 
-- Build and runn the `ifme` application
-- Setup, recording and use of appmaps recorded from ifme tests
+- Build and run the `ifme` application
+- Setup, record and open AppMaps recorded from ifme tests
 
 
 # Install VSCode & the AppMap extension 
 1. Install the official build of Visual Studio Code - [visit official site](https://code.visualstudio.com/)
 2. Install AppMap for VSCode from the marketplace - [AppMap in Marketplace](https://marketplace.visualstudio.com/items?itemName=appland.appmap)
 
-Alternatively, start the VSCode after installation, open the Extensions tab and search for "AppMap" in the extension list. Install the AppMap extension from the list.
+Alternatively, start the VSCode after installation, open the Extensions tab and search for "AppMap" in the extensions list. Install the AppMap extension from the list.
 
 # Build and run ifme
 
 ## Clone the ifme repository
 
-Let's make a local copy of the ifme repository from AppLand's copy of ifme on github. In your working folder, clone the repo:
+Let's make a local copy of the `ifme` repository from AppLand's clone of `ifme` on github. In your working folder, clone the repo:
 
 ```sh-session
 % git clone -b master git@github.com:land-of-apps/ifme
@@ -39,21 +39,21 @@ Resolving deltas: 100% (23303/23303), done.
 
 ## Open the ifme project in VSCode
 
-Start VSCode and open the folder with the ifme repository.
+Start VSCode and open the folder with the `ifme` project.
 
 _{image: 101.png, a screenshot of the VSCode with the ifme folder open}_
 
 
 ### Build ifme
 
-It is a good practice to first build and run applications before we start mapping them. It is easier to catch setup and build problems specific to the applications this way.
+It is a good practice to build and run applications before mapping them. It is easier to catch setup and build problems specific to the applications this way.
 
 
-ifme installation instructions are linked from the `README.md` file in the `ifme` folder. You can preview the README.md directly in VSCode (with the help of one of the Markdown extensions), or open the instructions in [ifme wiki](https://github.com/ifmeorg/ifme/wiki/Installation).
+The `ifme` installation instructions are linked from the `README.md` file in the `ifme` folder. You can preview the `README.md` file in VSCode (with the help of one of the Markdown extensions), or open the instructions in [ifme wiki](https://github.com/ifmeorg/ifme/wiki/Installation).
 
 These are the required steps:
 
-1. If your ruby version is different from 2.6.6, edit the `.ruby-version` and `Gemfile` files in the ifme folder and change the ruby version to your installed version in both files, i.e. to `2.7.2`
+1. If your ruby version is different from 2.6.6, edit the `.ruby-version` and `Gemfile` files in the ifme root folder and change the ruby version to your installed version in both files, i.e. to `2.7.2`
 2. open terminal in VSCode (`CTRL ~`) or your favorite terminal application and go to the ifme directory. Then run
 ```sh-session
 % bundle install
@@ -66,7 +66,7 @@ If you see errors installing the `puma` gem, try:
 % bundle install
 ```
 
-3. Initialize the test environment and database. Make sure that your local postgres instance is running before starting the database setup
+3. Initialize the test environment and database. Make sure that your local postgres instance is running before starting the database setup.
 ```sh-session
 % bin/rake setup_workspace
 % bin/rake db:setup db:test:prepare
@@ -83,18 +83,18 @@ Start the app with
 % bin/start_app
 ```
 
-After a few moments, the application will start and the logs in the console will stop scrolling. You may spot a message in the logs that the application has been started on 0.0.0.0:3000 in the log. 
+After a few moments, the application will start and the logs in the console will eventually stop scrolling. You may spot a message in the logs that the application has been started on 0.0.0.0:3000. 
 
-Let's open this web page in the web browser now: [http://localhost:3000](http://localhost:3000)
+Let's open the running ifme application in the web browser: [http://localhost:3000](http://localhost:3000)
 
-If everything went as expected, you should see the ifme home page. If not, please consult the [ifme wiki](https://github.com/ifmeorg/ifme/wiki/Installation).
+If everything works as expected, you should see the ifme home page. If not, please consult the [ifme wiki](https://github.com/ifmeorg/ifme/wiki/Installation).
 
 ### Stop ifme
-Shut the application before running the tests with `CTRL C` in the terminal window.
+Shut the application down before running the tests. Press `CTRL C` in the terminal window.
 
 # Setup AppMaps
 
-The AppMap ruby gem and configuration file are required for recording dynamic traces - appmaps - of the application, let us set them both up in this step. Additional detailed instruction are available in [appmap-ruby github](https://github.com/applandinc/appmap-ruby/blob/master/README.md).
+The AppMap ruby gem and configuration file are required for recording dynamic traces - AppMaps - of the application, let us set them both up now. Additional detailed instruction are available in [appmap-ruby github](https://github.com/applandinc/appmap-ruby/blob/master/README.md).
 
 You can preview and follow the steps in this video as well:
 
@@ -103,7 +103,7 @@ You can preview and follow the steps in this video as well:
 
 ## Setup the appmap gem
 
-Add `gem 'appmap'` to beginning of the ifme `Gemfile`. We recommend that you add the `appmap` gem to the `:development, :test` group. The ifme Gemfile content should look like this:
+Add `gem 'appmap'` to beginning of the ifme `Gemfile`. We recommend that you add the `appmap` gem to the `:development, :test` group. After the updates, the ifme Gemfile content should look like this:
 
 ```ruby
 # frozen_string_literal: true
@@ -172,7 +172,7 @@ packages:
 - path: app/uploaders
 ```
 
-The format of the file is explained in a great detail in the [appmap-ruby documentation](https://github.com/applandinc/appmap-ruby/blob/master/README.md). In our example, all classes in the packages listed above will be recorded. appmap.yml can be fine tuned to include/exclude individual packages, classes or even methods, as described in the detailed documentation mentioned above.
+The format of the file is explained in great depth in the [appmap-ruby documentation](https://github.com/applandinc/appmap-ruby/blob/master/README.md). In our example, all classes in the packages listed above will be recorded. appmap.yml can be fine tuned to include/exclude individual packages, classes or even methods, as described in the detailed documentation mentioned above.
 
 ## Configure RSpec tests
 
@@ -208,7 +208,7 @@ Warden.test_mode!
 
 ## Run tests, record appmaps
 
-The AppMap setup is now complete and the application is ready for recording when RSpec tests are run. The recorder will be activated when tests are run and the env variable APPMAP is set to true, the following command will run and create AppMaps for all RSpec tests:
+The AppMap setup is now complete and the application is ready for recording when RSpec tests are run. The recorder will be activated when tests are run and the env variable APPMAP is set to true. This command will run and create AppMaps for all RSpec tests:
 
 ```sh-session
 # APPMAP=true bundle exec rspec
@@ -252,29 +252,32 @@ Coverage report generated for RSpec to /Users/funny/path/ifme/coverage. 697 / 38
 _Et voilà!_ Your first appmap of ifme has just been recorded.
 
 # Working with appmaps
-Now that your appmap recorder works, let's open your first appmap in the IDE.
+Now that your appmap recorder works, let's open your new AppMap in the IDE.
 
 ## Open an AppMap file
 
 Press `CTRL|COMMAND SHIFT P` in the IDE, then type `AppMap` in the search box and select the `AppMap: Open most recently modified AppMap file` action from the list. This will open a new AppMap viewer with the AppMap file that you have just recorded.
 
-_{image: 103.gif, a screenshot of the VSCode with the appmap}_
+Alternatively, you can find the recorded AppMap files in the `/tmp/appmap/rspec` folder of the `ifme` project.
+
+_{image: 103.png, a screenshot of the VSCode with the appmap}_
 
 
 ## Interact with the appmap diagrams
 
-Explore the `Dependency map`. Click on any component and edge in the map, expand/collapse packages and HTTP endpoints, investigate their details in the left bar.
+Explore the `Dependency map`. Click on any component and edge in the map, expand/collapse packages and HTTP endpoints, investigate their details in the left navigation bar.
 
-Switch to the `Trace`, see how the code and data flows in the ifme application.
+Switch to the `Trace` view to see how the code and data flows in the application.
 
 <a href="https://www.loom.com/share/327f17cf25de499e9254bde366137306"> <p>Watch the Master your code with AppMap video</p> <img style="max-width:300px;" src="https://cdn.loom.com/sessions/thumbnails/327f17cf25de499e9254bde366137306-with-play.gif"> </a> 
 
-See additional information about AppMaps and their benefits in the AppMap for VSCode [online documentation](https://github.com/applandinc/vscode-appland/blob/master/README.md).
+Additional information about AppMaps and their benefits is in the AppMap for VSCode [online documentation](https://github.com/applandinc/vscode-appland/blob/master/README.md).
 
 
 # Share your AppMaps with us!
-Thank you for your interested in AppMaps! We would love to see the AppMaps of your application in our AppMap gallery in Discord. [Join us](https://discord.com/invite/N9VUap6) and our vibrant community in Discord today.
+Thank you for your interest in AppMaps! We would love to see the AppMaps of your applications in our AppMap gallery in Discord. [Join us](https://discord.com/invite/N9VUap6) and our diverse community in Discord today.
 
+Your AppLand team.
 
 
 
