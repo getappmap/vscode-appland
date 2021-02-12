@@ -1,3 +1,10 @@
+# [0.4.0](https://github.com/applandinc/vscode-appland/compare/v0.3.2...v0.4.0) (2021-02-12)
+
+
+### Features
+
+* update @appland/appmap to v1.0.1 ([f0ac6f3](https://github.com/applandinc/vscode-appland/commit/f0ac6f3b4646fb29c0cddcde59713881d5365f5a))
+
 ## 0.3.2
 
 - "View source" from the context menu should now work in all cases
