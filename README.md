@@ -1,5 +1,5 @@
 # AppMap for Visual Studio Code
-AppMap for Visual Studio Code is a self-contained extension that automatically records and diagrams software behavior by executing test cases.  Now you can walk through automatically generated white-board style diagrams right in your IDE without any effort.  AppMap helps developers 
+AppMap for Visual Studio Code is a standalone extension that automatically records and diagrams software behavior by executing test cases.  Now you can walk through automatically generated white-board style diagrams right in your IDE without any effort.  AppMap helps developers 
 
 - Onboard to code architecture, with no extra work for the team 
 - Conduct code and design reviews using live and accurate data
@@ -98,6 +98,7 @@ Each node (box) in the Trace view represents a specific HTTP server request, fun
 
 The diagrams are fully interactive; they aren’t static pictures like UML. You can:
 - Expand and collapse packages.
+- Click on edges to view detailed information about dependencies between components.
 - Click on classes to view detailed information about that class.
 - List the functions of a class which are used by the test case.
 - Explore callers and callees.
@@ -122,7 +123,6 @@ Here are some tips:
 
 Generated AppMap files can be viewed by others with the AppMap extension. So, one option for sharing is to simply send the `appmap.json` file to your colleague.
 
-
 ### Share AppMap files in the SaaS [https://app.land](https://app.land) sandbox
 [App.Land](https://app.land) is a free sandbox that can be rapidly used as an AppMap repository and as a collaboration and sharing tool for your team. 
 
@@ -145,9 +145,20 @@ Then re-run the tests to record new AppMap files with the updated configuration.
 
 Simply share your `appmap.yml` configuration file with others. Use of a git repository is recommended for tracking and sharing updates among members of your team. 
 
-### What if I don’t have test cases?
+# Troubleshooting
+
+## What if I don’t have test cases?
 
 AppLand has other solutions which help you profile and automatically diagram software through dynamic analysis, without relying on test cases.  We have also hosted analytics solutions to analyze code architecture over entire codebases and across multiple releases.  To learn more about these solutions go to [AppLand.com](https://appland.com/) or [contact us](http://info@app.land).
+
+## Q & A
+
+Please visit the [AppMap wiki](https://github.com/applandinc/vscode-appland/wiki) in GitHub.
+
+## Contact us for assistance
+
+Join us on [Discord](https://discord.com/invite/N9VUap6) or [GitHub](https://github.com/applandinc/vscode-appland).
+
 
 # About AppMap
 
