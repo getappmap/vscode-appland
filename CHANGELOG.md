@@ -1,3 +1,10 @@
+## [0.4.1](https://github.com/applandinc/vscode-appland/compare/v0.4.0...v0.4.1) (2021-02-18)
+
+
+### Bug Fixes
+
+* reverting package-lock.js to master version ([dc2ea81](https://github.com/applandinc/vscode-appland/commit/dc2ea819c4cb8ec756b5c5f673ef6cade4812275))
+
 # [0.4.0](https://github.com/applandinc/vscode-appland/compare/v0.3.2...v0.4.0) (2021-02-12)
 
 
