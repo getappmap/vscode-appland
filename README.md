@@ -1,5 +1,5 @@
 # AppMap for Visual Studio Code
-AppMap for Visual Studio Code is a standalone extension that automatically records and diagrams software behavior by executing test cases.  Now you can walk through automatically generated white-board style diagrams right in your IDE without any effort.  AppMap helps developers 
+Generate accurate application code architecture visuals in under 2 minutes from start to finish with AppMap.  AppMap automatically records software behavior from executing functional test cases.  Now you can have automatically generated white-board style diagrams right in your IDE without any effort. AppMap helps developers 
 
 - Onboard to code architecture, with no extra work for the team 
 - Conduct code and design reviews using live and accurate data
