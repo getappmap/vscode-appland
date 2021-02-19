@@ -4,7 +4,7 @@ Generate accurate software design diagrams with AppMap. In less than 2 minutes y
 
 - Onboard to code architecture, with no extra work for the team 
 - Conduct code and design reviews using live and accurate data
-- Troubleshoot hard-to-understand bugs with visuals 
+- Troubleshoot hard-to-understand bugs using a "top-down" approach
 
 Each interactive diagram links directly to the source code, and the information is easy to share.
 
