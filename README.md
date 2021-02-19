@@ -94,6 +94,10 @@ This will open the Trace view.
 
 Each node (box) in the Trace view represents a specific HTTP server request, function call, or SQL query which occurred in the test case. You can think of it like having the data from a debugger, but you can jump to any location in the call graph. The Trace view flows from left to right and top to bottom as the program moves forward in time. 
 
+Trace sub-graphs can be expanded and collapsed for easier navigation. 
+
+![Trace navigation](https://vscode-appmap.s3.us-east-2.amazonaws.com/media/003.gif "Trace navigation")
+
 
 ### Interacting with the diagrams
 
@@ -106,6 +110,8 @@ The diagrams are fully interactive; they aren’t static pictures like UML. You 
 - View variable names and values at any point in the code flow, clicking on a variable in the Trace view
 - View SQL queries.
 - Open source code right to the line of any particular function, by clicking on “View source"
+
+<a href="https://www.loom.com/share/327f17cf25de499e9254bde366137306"><p>Watch demonstration video</p><img style="max-width:300px;" src="https://cdn.loom.com/sessions/thumbnails/327f17cf25de499e9254bde366137306-with-play.gif"></a>
 
 ## Sharing
 
