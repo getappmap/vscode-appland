@@ -1,3 +1,10 @@
+## [0.5.1](https://github.com/applandinc/vscode-appland/compare/v0.5.0...v0.5.1) (2021-02-19)
+
+
+### Bug Fixes
+
+* add additional videos to the README ([#133](https://github.com/applandinc/vscode-appland/issues/133)) ([a2445dd](https://github.com/applandinc/vscode-appland/commit/a2445dd22a92ab0b295931c69016ce728fb4a08e))
+
 # [0.5.0](https://github.com/applandinc/vscode-appland/compare/v0.4.1...v0.5.0) (2021-02-19)
 
 
