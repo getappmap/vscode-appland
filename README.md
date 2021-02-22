@@ -31,12 +31,26 @@ AppMap records behavior of running code as [AppMap files](https://github.com/app
 
 Here's how to get going:
 
-## 1. Install the [AppMap for VS Code extension](https://marketplace.visualstudio.com/items?itemName=appland.appmap)
+## 1. Install the AppMap for VS Code extension
+This extension is officially listed on the [VSCode Marketplace](https://marketplace.visualstudio.com/items?itemName=appland..appmap).
 
 
 ## 2. Install the AppMap client for your language
 
-To generate AppMap files, an AppMap client must be installed and configured for your project. 
+To generate AppMap files, an AppMap client must be installed and configured for your project.
+- [Python](#python)
+- [Ruby](#ruby)
+- [Java](#java)
+
+### Python
+
+The `appmap` module is on GitHub at [https://github.com/applandinc/appmap-python](https://github.com/applandinc/appmap-python).
+
+[View setup instructions for `appmap-python`](https://github.com/applandinc/appmap-python/blob/master/README.md#about)
+
+**Supported languages and frameworks**
+
+Python 3.5 and newer, Django, Pytest, and more.
 
 ### Ruby
 
@@ -111,7 +125,7 @@ The diagrams are fully interactive; they aren’t static pictures like UML. You 
 - View SQL queries.
 - Open source code right to the line of any particular function, by clicking on “View source"
 
-<a href="https://www.loom.com/share/327f17cf25de499e9254bde366137306"><p>Watch demonstration video</p><img style="max-width:300px;" src="https://cdn.loom.com/sessions/thumbnails/327f17cf25de499e9254bde366137306-with-play.gif"></a>
+<a href="https://www.loom.com/share/327f17cf25de499e9254bde366137306"><p>Watch demonstration video</p><img src="https://cdn.loom.com/sessions/thumbnails/327f17cf25de499e9254bde366137306-with-play.gif"></a>
 
 ## Sharing
 
