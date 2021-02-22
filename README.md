@@ -111,7 +111,7 @@ The diagrams are fully interactive; they aren’t static pictures like UML. You 
 - View SQL queries.
 - Open source code right to the line of any particular function, by clicking on “View source"
 
-<a href="https://www.loom.com/share/327f17cf25de499e9254bde366137306"><p>Watch demonstration video</p><img style="max-width:300px;" src="https://cdn.loom.com/sessions/thumbnails/327f17cf25de499e9254bde366137306-with-play.gif"></a>
+<a href="https://www.loom.com/share/327f17cf25de499e9254bde366137306"><p>Watch demonstration video</p><img  src="https://cdn.loom.com/sessions/thumbnails/327f17cf25de499e9254bde366137306-with-play.gif"></a>
 
 ## Sharing
 
