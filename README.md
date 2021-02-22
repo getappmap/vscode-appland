@@ -46,7 +46,7 @@ To generate AppMap files, an AppMap client must be installed and configured for 
 
 The `appmap` module is on GitHub at [https://github.com/applandinc/appmap-python](https://github.com/applandinc/appmap-python).
 
-[View setup instructions for `appmap-python`](https://github.com/applandinc/appmap-python/blob/master/README.md#about)
+[View setup instructions for `appmap-python`](https://github.com/applandinc/appmap-python/blob/master/README.md#installation)
 
 **Supported languages and frameworks**
 
