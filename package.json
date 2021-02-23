@@ -1,106 +1,106 @@
 {
-	"publisher": "appland",
-	"name": "appmap",
-	"displayName": "AppMap",
-	"description": "Autogenerate software design diagrams with AppMap",
-	"version": "0.5.1",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/applandinc/vscode-appland"
-	},
-	"engines": {
-		"vscode": "^1.52.0"
-	},
-	"activationEvents": [
-		"*"
-	],
-	"icon": "images/logo.png",
-	"license": "MIT",
-	"main": "./out/extension.js",
-	"categories": [
-		"Visualization"
-	],
-	"keywords": [
-		"diagram",
-		"dependency map",
-		"uml",
-		"trace",
-		"webservice"
-	],
-	"contributes": {
-		"customEditors": [
-			{
-				"viewType": "appmap.appMapFile",
-				"displayName": "AppMap file",
-				"selector": [
-					{
-						"filenamePattern": "*.appmap.json"
-					}
-				],
-				"priority": "default"
-			}
-		],
-		"commands": [
-			{
-				"command": "appmap.openMostRecentlyModifiedAppMap",
-				"title": "AppMap: Open most recently modified AppMap file"
-			}
-		]
-	},
-	"scripts": {
-		"vscode:prepublish": "npm run compile",
-		"lint": "eslint . --ext .ts",
-		"pretest": "npm run lint",
-		"test": "node ./test/runTest.js",
-		"compile": "webpack --mode=production",
-		"watch": "webpack --watch --mode=development",
-		"package": "vsce package"
-	},
-	"devDependencies": {
-		"@babel/core": "^7.12.10",
-		"@babel/preset-env": "^7.12.11",
-		"@babel/preset-typescript": "^7.12.7",
-		"@semantic-release/changelog": "^5.0.1",
-		"@semantic-release/git": "^9.0.0",
-		"@types/glob": "^7.1.3",
-		"@types/mocha": "^8.2.0",
-		"@types/node": "^12.19.12",
-		"@types/vscode": "^1.52.0",
-		"@typescript-eslint/eslint-plugin": "^4.12.0",
-		"@typescript-eslint/parser": "^4.12.0",
-		"@vue/cli-plugin-babel": "^4.5.10",
-		"babel-loader": "^8.2.2",
-		"css-loader": "^5.0.1",
-		"eslint": "^7.17.0",
-		"eslint-config-airbnb-base": "^14.2.1",
-		"eslint-plugin-import": "^2.22.1",
-		"glob": "^7.1.6",
-		"html-loader": "^1.3.2",
-		"mocha": "^8.1.3",
-		"sass": "^1.32.2",
-		"sass-loader": "^10.1.0",
-		"semantic-release": "^17.3.8",
-		"semantic-release-vsce": "^3.1.3",
-		"style-loader": "^2.0.0",
-		"tape": "^5.1.1",
-		"ts-loader": "^8.0.14",
-		"tslib": "^2.1.0",
-		"typescript": "^4.1.3",
-		"vsce": "^1.83.0",
-		"vscode-test": "^1.4.0",
-		"vue-loader": "^15.9.6",
-		"vue-style-loader": "^4.1.2",
-		"webpack": "^5.12.1",
-		"webpack-cli": "^4.3.1"
-	},
-	"dependencies": {
-		"@appland/appmap": "^1.1.1",
-		"bootstrap": "^4.5.3",
-		"bootstrap-autocomplete": "^2.3.7",
-		"jquery": "^3.5.1",
-		"popper.js": "^1.16.1",
-		"vue": "^2.6.12",
-		"vue-template-compiler": "^2.6.12",
-		"vuex": "^3.6.0"
-	}
+  "publisher": "appland",
+  "name": "appmap",
+  "displayName": "AppMap",
+  "description": "Autogenerate software design diagrams with AppMap",
+  "version": "0.5.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/applandinc/vscode-appland"
+  },
+  "engines": {
+    "vscode": "^1.52.0"
+  },
+  "activationEvents": [
+    "*"
+  ],
+  "icon": "images/logo.png",
+  "license": "MIT",
+  "main": "./out/extension.js",
+  "categories": [
+    "Visualization"
+  ],
+  "keywords": [
+    "diagram",
+    "dependency map",
+    "uml",
+    "trace",
+    "webservice"
+  ],
+  "contributes": {
+    "customEditors": [
+      {
+        "viewType": "appmap.appMapFile",
+        "displayName": "AppMap file",
+        "selector": [
+          {
+            "filenamePattern": "*.appmap.json"
+          }
+        ],
+        "priority": "default"
+      }
+    ],
+    "commands": [
+      {
+        "command": "appmap.openMostRecentlyModifiedAppMap",
+        "title": "AppMap: Open most recently modified AppMap file"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "lint": "eslint . --ext .ts",
+    "pretest": "npm run lint",
+    "test": "node ./test/runTest.js",
+    "compile": "webpack --mode=production",
+    "watch": "webpack --watch --mode=development",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.10",
+    "@babel/preset-env": "^7.12.11",
+    "@babel/preset-typescript": "^7.12.7",
+    "@semantic-release/changelog": "^5.0.1",
+    "@semantic-release/git": "^9.0.0",
+    "@types/glob": "^7.1.3",
+    "@types/mocha": "^8.2.0",
+    "@types/node": "^12.19.12",
+    "@types/vscode": "^1.52.0",
+    "@typescript-eslint/eslint-plugin": "^4.12.0",
+    "@typescript-eslint/parser": "^4.12.0",
+    "@vue/cli-plugin-babel": "^4.5.10",
+    "babel-loader": "^8.2.2",
+    "css-loader": "^5.0.1",
+    "eslint": "^7.17.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1",
+    "glob": "^7.1.6",
+    "html-loader": "^1.3.2",
+    "mocha": "^8.1.3",
+    "sass": "^1.32.2",
+    "sass-loader": "^10.1.0",
+    "semantic-release": "^17.3.8",
+    "semantic-release-vsce": "^3.1.3",
+    "style-loader": "^2.0.0",
+    "tape": "^5.1.1",
+    "ts-loader": "^8.0.14",
+    "tslib": "^2.1.0",
+    "typescript": "^4.1.3",
+    "vsce": "^1.83.0",
+    "vscode-test": "^1.4.0",
+    "vue-loader": "^15.9.6",
+    "vue-style-loader": "^4.1.2",
+    "webpack": "^5.12.1",
+    "webpack-cli": "^4.3.1"
+  },
+  "dependencies": {
+    "@appland/appmap": "^1.1.2",
+    "bootstrap": "^4.5.3",
+    "bootstrap-autocomplete": "^2.3.7",
+    "jquery": "^3.5.1",
+    "popper.js": "^1.16.1",
+    "vue": "^2.6.12",
+    "vue-template-compiler": "^2.6.12",
+    "vuex": "^3.6.0"
+  }
 }
