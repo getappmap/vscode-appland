@@ -32,7 +32,7 @@ AppMap records behavior of running code as [AppMap files](https://github.com/app
 Here's how to get going:
 
 ## 1. Install the AppMap for VS Code extension
-This extension is officially listed on the [VSCode Marketplace](https://marketplace.visualstudio.com/items?itemName=appland..appmap).
+This extension is officially listed on the [VSCode Marketplace](https://marketplace.visualstudio.com/items?itemName=appland.appmap).
 
 
 ## 2. Install the AppMap client for your language
