@@ -137,7 +137,7 @@ Here are some tips:
 - There are many great tools for recording and sharing screen videos. To mention a few:
     - [Loom](https://www.loom.com/), a favorite tool in many teams
     - [ScreenToGif](https://www.screentogif.com), a simple yet powerful OSS screen recorder
-    - The Marketplace [lists extensions for screen recording](https://marketplace.visualstudio.com/search?term=screen%20recorder&target=VSCode&category=All%20categories&sortBy=Relevance)
+    - The Marketplace [lists extensions for screen recording.](https://marketplace.visualstudio.com/search?term=screen%20recorder&target=VSCode&category=All%20categories&sortBy=Relevance)
 
 
 ### Share AppMap files for viewing in VSCode
