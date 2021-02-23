@@ -62,7 +62,7 @@ The `appmap` Ruby gem is on GitHub at [https://github.com/applandinc/appmap-ruby
 
 **Supported languages and frameworks**
 
-Ruby on Rails, MiniTest, RSpec, Cucumber, and more.
+Ruby on Rails, Minitest, RSpec, Cucumber, and more.
 
 ### Java
 
