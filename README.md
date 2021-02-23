@@ -140,7 +140,7 @@ Here are some tips:
     - The Marketplace [lists extensions for screen recording.](https://marketplace.visualstudio.com/search?term=screen%20recorder&target=VSCode&category=All%20categories&sortBy=Relevance)
 
 
-### Share AppMap files for viewing in VSCode
+### Share AppMap files for viewing in VS Code
 
 Generated AppMap files can be viewed by others with the AppMap extension. So, one option for sharing is to simply send the `appmap.json` file to your colleague.
 
