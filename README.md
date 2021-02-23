@@ -50,7 +50,7 @@ The `appmap` module is on GitHub at [https://github.com/applandinc/appmap-python
 
 **Supported languages and frameworks**
 
-Python 3.5 and newer, Django, Pytest, and more.
+Python 3.5 and newer, Django, pytest, and more.
 
 ### Ruby
 
