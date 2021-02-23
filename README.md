@@ -17,7 +17,7 @@ Each interactive diagram links directly to the source code, and the information 
 - List of Webservices generated automatically from test cases
 - List of SQL queries generated automatically from test cases
 - Search for class, package or function
-- Code linkage of the diagram to the source code it relates to.
+- Code linkage of the diagram to the source code it relates to
 
 ## Contact us
 
