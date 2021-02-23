@@ -3,7 +3,7 @@
   "name": "appmap",
   "displayName": "AppMap",
   "description": "Autogenerate software design diagrams with AppMap",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/applandinc/vscode-appland"
