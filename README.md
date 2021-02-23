@@ -1,6 +1,6 @@
 # AppMap for Visual Studio Code
 
-Generate accurate software design diagrams with AppMap. In less than 2 minutes you can go from installing this extension to viewing diagrams in your IDE, because AppMap creates diagrams automatically by executing functional test cases. AppMap helps you:
+Get accurate software design diagrams drawn automatically in your IDE. In less than 2 minutes you can go from installing this extension to viewing diagrams in your IDE, because AppMap creates diagrams automatically by executing functional test cases. AppMap helps you:
 
 - Onboard to code architecture, with no extra work for the team 
 - Conduct code and design reviews using live and accurate data
