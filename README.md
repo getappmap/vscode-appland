@@ -116,14 +116,14 @@ Trace sub-graphs can be expanded and collapsed for easier navigation.
 ### Interacting with the diagrams
 
 The diagrams are fully interactive; they aren’t static pictures like UML. You can:
-- Expand and collapse packages.
-- Click on edges to view detailed information about dependencies between components.
-- Click on classes to view detailed information about that class.
-- List the functions of a class which are used by the test case.
-- Explore callers and callees.
+- Expand and collapse packages
+- Click on edges to view detailed information about dependencies between components
+- Click on classes to view detailed information about that class
+- List the functions of a class which are used by the test case
+- Explore callers and callees
 - View variable names and values at any point in the code flow, clicking on a variable in the Trace view
-- View SQL queries.
-- Open source code right to the line of any particular function, by clicking on “View source"
+- View SQL queries
+- Open source code right to the line of any particular function, by clicking on “View source".
 
 <a href="https://www.loom.com/share/327f17cf25de499e9254bde366137306"><p>Watch demonstration video</p><img src="https://cdn.loom.com/sessions/thumbnails/327f17cf25de499e9254bde366137306-with-play.gif"></a>
 
