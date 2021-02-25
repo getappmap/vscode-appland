@@ -1,6 +1,6 @@
 # AppMap Tutorial: Mapping a Python Application in Visual Studio Code
 
-This tutorial will walk you through AppMapping of an open source application `chipy.org` implemented in Python and Dango. You will map this application with the [AppMap for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=appland.appmap).
+This tutorial will walk you through the process of AppMapping an open source application `chipy.org` implemented in Python and Dango. You will map this application with the [AppMap for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=appland.appmap).
 
 ### Prerequisites
  - Basic familiarity with git, Visual Studio Code, Python and Django
@@ -9,7 +9,7 @@ This tutorial will walk you through AppMapping of an open source application `ch
 ### Structure
 
 This tutorial is split into three sections:
-- Install the Visual Studio Code and the AppMap extension 
+- Install Visual Studio Code and the AppMap extension 
 - Setup and build the `chipy.org` application in a Docker image
 - Setup, record and open AppMaps recorded from `chipy.org` tests
 
@@ -77,11 +77,11 @@ If you have encountered any problems during these steps, please consult the [ins
 
 # Setup AppMaps
 
-The `appmap` Python module and the `appmap.yml` configuration file are required for recording AppMaps from tests.
+The `appmap` Python package and the `appmap.yml` configuration file are required for recording AppMaps from tests.
 
 ## Configure appmap.yml
 
-The `appmap` module configuration is stored in an `appmap.yml` file in the root directory of Python projects. Create a new file called `appmap.yml` in the root folder of the `chipy.org` folder, and copy/paste these configuration lines in it. The file lists all modules and classes that will be recorded, in this example all objects in the `chipy_org` package:
+The `appmap` package configuration is stored in an `appmap.yml` file in the root directory of Python projects. Create a new file called `appmap.yml` in the root folder of the `chipy.org` folder, and copy/paste these configuration lines in it. The file lists all packages and classes that will be recorded, in this example all objects in the `chipy_org` package:
 
 ```yaml
 name: chipy.org
@@ -92,14 +92,14 @@ packages:
 
 The format of `appmap.yml` is documented in the [appmap-python documentation](https://github.com/applandinc/appmap-python/blob/master/README.md). `appmap.yml` can be fine tuned to include/exclude individual packages, classes and methods.
 
-## Install the appmap module in the Docker image
+## Install the appmap package in the Docker image
 
 1. Open shell in the running Docker image
 ```shell
 % make shell
 ```
 
-2. Install the `appmap` Python module
+2. Install the `appmap` Python package
 ```shell
 # pip install appmap
 ```
@@ -110,7 +110,7 @@ The format of `appmap.yml` is documented in the [appmap-python documentation](ht
 Before proceeding, please check that
 - the chicopy.org application has been successfully built and running in a Docker container
 - the chicopy.org tests ran successfully
-- the `appmap` Python module has been successfully installed in the running Docker image
+- the `appmap` Python package has been successfully installed in the running Docker image
 - you have Visual Studio Code running with the chipy.org project folder open
 
 ## Run tests, record AppMaps
