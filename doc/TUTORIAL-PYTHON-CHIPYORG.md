@@ -81,7 +81,7 @@ The `appmap` Python package and the `appmap.yml` configuration file are required
 
 ## Configure appmap.yml
 
-The `appmap` package configuration is stored in an `appmap.yml` file in the root directory of Python projects. Create a new file called `appmap.yml` in the root folder of the `chipy.org` folder, and copy/paste these configuration lines in it. The file lists all packages and classes that will be recorded, in this example all objects in the `chipy_org` package:
+The `appmap` package configuration is stored in an `appmap.yml` file in the root directory of Python projects. Create a new file called `appmap.yml` in the root folder of the `chipy.org` folder, and copy/paste these configuration lines in it. The file lists all modules and classes that will be recorded, in this example all objects in the `chipy_org` module:
 
 ```yaml
 name: chipy.org
@@ -90,7 +90,7 @@ packages:
 - path: chipy_org
 ```
 
-The format of `appmap.yml` is documented in the [appmap-python documentation](https://github.com/applandinc/appmap-python/blob/master/README.md). `appmap.yml` can be fine tuned to include/exclude individual packages, classes and methods.
+The format of `appmap.yml` is documented in the [appmap-python documentation](https://github.com/applandinc/appmap-python/blob/master/README.md). `appmap.yml` can be fine tuned to include/exclude individual modules, classes and methods.
 
 ## Install the appmap package in the Docker image
 
@@ -110,7 +110,7 @@ The format of `appmap.yml` is documented in the [appmap-python documentation](ht
 Before proceeding, please check that
 - the chicopy.org application has been successfully built and running in a Docker container
 - the chicopy.org tests ran successfully
-- the `appmap` Python package has been successfully installed in the running Docker image
+- the `appmap` Python package has been successfully installed and configured in the running Docker image
 - you have Visual Studio Code running with the chipy.org project folder open
 
 ## Run tests, record AppMaps
@@ -146,7 +146,7 @@ Navigate to the `tmp/appmap/pytest` folder in the file explorer and press  `CTRL
 
 ![AppMap details](https://vscode-appmap.s3.us-east-2.amazonaws.com/media/chipyorg-appmap-details.png)
 
-2. Explore the `Dependency map`. Click on any component and edge in the map, expand/collapse packages and HTTP endpoints, investigate their details in the left hand navigation bar
+2. Explore the `Dependency map`. Click on any component and edge in the map, expand/collapse modules and HTTP endpoints, investigate their details in the left hand navigation bar
 
 3. Switch to the `Trace` view to see how the code and data flows in the application
 
