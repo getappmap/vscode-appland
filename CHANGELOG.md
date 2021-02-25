@@ -1,3 +1,10 @@
+## [0.6.1](https://github.com/applandinc/vscode-appland/compare/v0.6.0...v0.6.1) (2021-02-25)
+
+
+### Bug Fixes
+
+* documentation improvements ([ea791fa](https://github.com/applandinc/vscode-appland/commit/ea791fa849e8e62fa564b3b51b031b1dca4ae34f))
+
 # [0.6.0](https://github.com/applandinc/vscode-appland/compare/v0.5.1...v0.6.0) (2021-02-23)
 
 
