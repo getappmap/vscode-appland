@@ -12,7 +12,7 @@ Each interactive diagram links directly to the source code, and the information 
 
 ## Summary of features
 
-- UML-inspired Depenency Map that displays key application components and how they are interrelated during execution 
+- UML-inspired Dependency Map that displays key application components and how they are interrelated during execution 
 - Execution Trace diagrams that visualize code and data flows
 - List of Webservices generated automatically from test cases
 - List of SQL queries generated automatically from test cases
