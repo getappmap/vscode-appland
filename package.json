@@ -45,7 +45,47 @@
         "command": "appmap.openMostRecentlyModifiedAppMap",
         "title": "AppMap: Open most recently modified AppMap file"
       }
-    ]
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "appmap",
+          "title": "AppMap",
+          "icon": "images/logo.svg"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "appmap.views.welcome",
+        "contents": "[Sign in to AppLand](command:appmap.appland.signIn \"Open app.land\")"
+      }
+    ],
+    "views": {
+      "appmap": [
+        {
+          "id": "appmap.views.welcome",
+          "name": "Welcome",
+          "contextualTitle": "AppMap",
+          "visibility": "visible",
+          "icon": "images/logo.svg"
+        },
+        {
+          "id": "appmap.views.files",
+          "name": "AppMaps",
+          "contextualTitle": "AppMap",
+          "visibility": "visible",
+          "icon": "images/logo.svg"
+        },
+        {
+          "id": "appmap.views.changes",
+          "name": "Changes",
+          "contextualTitle": "AppMap",
+          "visibility": "visible",
+          "icon": "images/logo.svg"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
