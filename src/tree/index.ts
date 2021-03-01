@@ -1,9 +1,20 @@
 import * as vscode from 'vscode';
+import AppMapDescriptorFile from '../appmapDescriptorFile';
+import AppMapDescriptorRemote from '../appmapDescriptorRemote';
 import { AppMapTreeDataProvider } from './appmap/AppMapTreeDataProvider';
+import { ChangeTreeDataProvider } from './appmap/ChangeTreeDataProvider';
 
-export default function registerTrees(): void {
+export default function registerTrees(
+  localAppMaps: Promise<AppMapDescriptorFile[]>,
+  remoteAppMaps: Promise<AppMapDescriptorRemote[]> | null
+): void {
   vscode.window.registerTreeDataProvider(
     'appmap.views.files',
-    new AppMapTreeDataProvider()
+    new AppMapTreeDataProvider(localAppMaps)
+  );
+
+  vscode.window.registerTreeDataProvider(
+    'appmap.views.changes',
+    new ChangeTreeDataProvider(remoteAppMaps)
   );
 }

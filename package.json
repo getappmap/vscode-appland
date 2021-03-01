@@ -135,9 +135,11 @@
   },
   "dependencies": {
     "@appland/appmap": "^1.4.0",
+    "bent": "^7.3.12",
     "bootstrap": "^4.5.3",
     "bootstrap-autocomplete": "^2.3.7",
     "jquery": "^3.5.1",
+    "js-yaml": "^4.0.0",
     "popper.js": "^1.16.1",
     "vue": "^2.6.12",
     "vue-template-compiler": "^2.6.12",
