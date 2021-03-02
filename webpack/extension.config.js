@@ -1,6 +1,5 @@
 /* eslint-disable */
 const path = require('path');
-const { ProvidePlugin } = require('webpack');
 
 module.exports = {
   target: 'node',
@@ -8,7 +7,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, '../out'),
     filename: 'extension.js',
-    libraryTarget: 'commonjs2',
+    libraryTarget: 'commonjs',
     devtoolModuleFilenameTemplate: '../[resource-path]',
   },
   devtool: 'source-map',
@@ -17,25 +16,18 @@ module.exports = {
   },
   resolve: {
     extensions: ['.ts', '.js'],
+    alias: {
+      '@appland/appmap': path.resolve(
+        './node_modules/@appland/appmap/dist/appmap.node.js'
+      ),
+    },
   },
-  plugins: [
-    new ProvidePlugin({
-      Vue: 'vue',
-    }),
-  ],
   module: {
     rules: [
       {
         test: /\.ts$/,
         exclude: /node_modules/,
-        use: [
-          {
-            loader: 'ts-loader',
-            options: {
-              compilerOptions: {},
-            },
-          },
-        ],
+        use: ['ts-loader'],
       },
     ],
   },

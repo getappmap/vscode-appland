@@ -2,8 +2,8 @@ import * as vscode from 'vscode';
 import { Dirent, promises as fs } from 'fs';
 import { join } from 'path';
 import AppMapDescriptor from './appmapDescriptor';
-// @ts-ignore
 import { buildAppMap, AppMap } from '@appland/appmap';
+import { debug } from 'console';
 
 export default class AppMapDescriptorFile implements AppMapDescriptor {
   public resourceUri: vscode.Uri;
@@ -32,14 +32,16 @@ export default class AppMapDescriptorFile implements AppMapDescriptor {
     await Promise.all(
       files.map(async (file) => {
         if (file.isDirectory() && recursive) {
-          const descriptors = await this.findInDirectory(file.toString());
+          const descriptors = await this.findInDirectory(join(dir, file.name));
           descriptors.forEach((d) => result.push(d));
         } else if (file.name.match(/\.appmap\.json$/)) {
           try {
             const uri = vscode.Uri.file(join(dir, file.name));
             result.push(await this.fromResource(uri));
           } catch (e) {
-            console.error(e);
+            if (!(e instanceof SyntaxError)) {
+              debugger;
+            }
           }
         }
       })

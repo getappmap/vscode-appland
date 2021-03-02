@@ -71,8 +71,15 @@
           "icon": "images/logo.svg"
         },
         {
-          "id": "appmap.views.files",
-          "name": "AppMaps",
+          "id": "appmap.views.local",
+          "name": "AppMaps: Local",
+          "contextualTitle": "AppMap",
+          "visibility": "visible",
+          "icon": "images/logo.svg"
+        },
+        {
+          "id": "appmap.views.remote",
+          "name": "AppMaps: AppLand",
           "contextualTitle": "AppMap",
           "visibility": "visible",
           "icon": "images/logo.svg"

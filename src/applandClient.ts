@@ -1,10 +1,9 @@
 import * as vscode from 'vscode';
 import { constants as fsConstants, promises as fs } from 'fs';
 import { join } from 'path';
-import yaml from 'js-yaml';
+import * as yaml from 'js-yaml';
 import AppLandClientConfig from './applandClientConfig';
 import AppMapDescriptorRemote from './appmapDescriptorRemote';
-// @ts-ignore
 import { buildAppMap, AppMap } from '@appland/appmap';
 
 export class Mapset {
@@ -50,9 +49,10 @@ export default class AppLandClient {
     try {
       await fs.access(appmapYml, fsConstants.R_OK);
       const buf = await fs.readFile(appmapYml);
-      const appmap = yaml.load(buf);
+      const appmap = yaml.load(buf.toString());
       return appmap.name;
     } catch (e) {
+      debugger;
       // TODO.
       // Recursively search for an appmap.yml instead of giving up
     }
@@ -62,45 +62,43 @@ export default class AppLandClient {
   }
 
   public async getMapsets(applicationId: string): Promise<Mapset[]> {
-    const params = JSON.stringify({ app: applicationId });
     const mapsets = await this.config.makeRequest(
       '/api/mapsets',
-      params,
+      { app: applicationId },
       200,
       'json'
     );
-    return mapsets.map((m: Record<string, unknown>) => new Mapset(m));
+    return (await mapsets.json()).map(
+      (m: Record<string, unknown>) => new Mapset(m)
+    );
   }
 
   public async getAppMaps(mapsetId: number): Promise<AppMapDescriptorRemote[]> {
-    const params = JSON.stringify({ mapsets: [mapsetId] });
     const appmaps = await this.config.makeRequest(
       '/api/scenarios',
-      params,
+      { mapsets: [mapsetId] },
       200,
       'json'
     );
 
-    return appmaps.map((d: Record<string, unknown>) => {
-      const { apiUrl } = this.config;
+    return (await appmaps.json()).map((d: Record<string, unknown>) => {
       const { scenario_uuid: uuid } = d;
-      const scenarioUri = vscode.Uri.parse(`${apiUrl}/api/scenarios/${uuid}`);
       return new AppMapDescriptorRemote(
         this,
-        scenarioUri,
+        uuid as string,
         d.metadata as Record<string, unknown>
       );
     });
   }
 
-  public async getAppMap(descriptor: AppMapDescriptorRemote): Promise<AppMap> {
-    const appmapJson = await this.config.makeRequest(
-      descriptor.resourceUri.path,
-      200,
-      'json'
-    );
+  public async getAppMapRaw(resourceUri: vscode.Uri): Promise<string> {
+    const response = await this.config.makeRequest(resourceUri.path, 'string');
+    return await response.text();
+  }
 
-    return buildAppMap(appmapJson)
+  public async getAppMap(descriptor: AppMapDescriptorRemote): Promise<AppMap> {
+    const data = await this.getAppMapRaw(descriptor.resourceUri);
+    return buildAppMap(data)
       .normalize()
       .build();
   }

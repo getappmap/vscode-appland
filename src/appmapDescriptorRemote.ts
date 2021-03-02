@@ -1,6 +1,5 @@
 import * as vscode from 'vscode';
 import AppMapDescriptor from './appmapDescriptor';
-// @ts-ignore
 import { AppMap } from '@appland/appmap';
 import AppLandClient from './applandClient';
 
@@ -11,11 +10,11 @@ export default class AppMapDescriptorRemote implements AppMapDescriptor {
 
   constructor(
     api: AppLandClient,
-    resourceUri: vscode.Uri,
+    uuid: string,
     metadata?: Record<string, unknown>
   ) {
     this.api = api;
-    this.resourceUri = resourceUri;
+    this.resourceUri = vscode.Uri.parse(`appmap:/api/scenarios/${uuid}`);
     this.metadata = metadata;
   }
 

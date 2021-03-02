@@ -5,6 +5,7 @@ import AppMapDescriptorRemote from './appmapDescriptorRemote';
 import { DatabaseUpdater } from './databaseUpdater';
 import { ScenarioProvider } from './scenarioViewer';
 import registerTrees from './tree';
+import AppLandRemoteTextDocumentProvider from './applandRemoteTextDocumentContentProvider';
 
 export async function activate(
   context: vscode.ExtensionContext
@@ -15,6 +16,10 @@ export async function activate(
 
   const localAppMaps = AppMapDescriptorFile.allInWorkspace();
   const api = await AppLandClient.fromEnvironment();
+  vscode.workspace.registerTextDocumentContentProvider(
+    'appmap',
+    new AppLandRemoteTextDocumentProvider(api)
+  );
 
   let applicationId = '';
   const { workspaceFolders } = vscode.workspace;

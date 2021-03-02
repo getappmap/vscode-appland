@@ -9,8 +9,13 @@ export default function registerTrees(
   remoteAppMaps: Promise<AppMapDescriptorRemote[]> | null
 ): void {
   vscode.window.registerTreeDataProvider(
-    'appmap.views.files',
+    'appmap.views.local',
     new AppMapTreeDataProvider(localAppMaps)
+  );
+
+  vscode.window.registerTreeDataProvider(
+    'appmap.views.remote',
+    new AppMapTreeDataProvider(remoteAppMaps)
   );
 
   vscode.window.registerTreeDataProvider(

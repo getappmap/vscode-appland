@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-// @ts-ignore
 import { AppMap } from '@appland/appmap';
 
 export default interface AppMapDescriptor {
