@@ -20,6 +20,6 @@ export default function registerTrees(
 
   vscode.window.registerTreeDataProvider(
     'appmap.views.changes',
-    new ChangeTreeDataProvider(remoteAppMaps)
+    new ChangeTreeDataProvider(remoteAppMaps, localAppMaps)
   );
 }

@@ -92,7 +92,10 @@ export default class AppLandClient {
   }
 
   public async getAppMapRaw(resourceUri: vscode.Uri): Promise<string> {
-    const response = await this.config.makeRequest(resourceUri.path, 'string');
+    const response = await this.config.makeRequest(
+      `/api/scenarios/${resourceUri.path}`,
+      'string'
+    );
     return await response.text();
   }
 

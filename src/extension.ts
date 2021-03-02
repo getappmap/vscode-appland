@@ -37,7 +37,7 @@ export async function activate(
   const mainBranch = mapsets
     .sort(
       (a: Mapset, b: Mapset) =>
-        (a.createdAt?.getTime() || 0) - (b.createdAt?.getTime() || 0)
+        (b.createdAt?.getTime() || 0) - (a.createdAt?.getTime() || 0)
     )
     .find((m: Mapset) => m.branch === 'master' || m.branch === 'master');
   let remoteAppMaps: Promise<AppMapDescriptorRemote[]> | null = null;

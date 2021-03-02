@@ -14,7 +14,7 @@ export default class AppMapDescriptorRemote implements AppMapDescriptor {
     metadata?: Record<string, unknown>
   ) {
     this.api = api;
-    this.resourceUri = vscode.Uri.parse(`appmap:/api/scenarios/${uuid}`);
+    this.resourceUri = vscode.Uri.parse(`appmap:${uuid}`);
     this.metadata = metadata;
   }
 
