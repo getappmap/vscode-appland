@@ -1,6 +1,6 @@
 # AppMap Tutorial: Mapping a Python Application in Visual Studio Code
 
-This tutorial will walk you through the process of AppMapping an open source application `chipy.org` implemented in Python and Dango. You will map this application with the [AppMap for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=appland.appmap).
+This tutorial will walk you through the process of AppMapping an open source application `chipy.org` implemented in Python and Django. You will map this application with the [AppMap for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=appland.appmap).
 
 ### Prerequisites
  - Basic familiarity with git, Visual Studio Code, Python and Django
@@ -138,13 +138,12 @@ Navigate to the `tmp/appmap/pytest` folder in the file explorer and press  `CTRL
 
 3. Type `rsvp` in the search box and pick any of the .appmap.json files from the results. An AppMap viewer now opens.
 
-![AppMaps in a folder](https://vscode-appmap.s3.us-east-2.amazonaws.com/media/chipyorg-appmaps.png)
+![AppMaps in action](https://vscode-appmap.s3.us-east-2.amazonaws.com/media/chipy.gif)
+
 
 ## Interact with the AppMap diagrams
 
 1. Hide the file explorer by clicking on its icon in the left hand icon bar.
-
-![AppMap details](https://vscode-appmap.s3.us-east-2.amazonaws.com/media/chipyorg-appmap-details.png)
 
 2. Explore the `Dependency map`. Click on any component and edge in the map, expand/collapse modules and HTTP endpoints, investigate their details in the left hand navigation bar
 
