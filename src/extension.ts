@@ -40,9 +40,11 @@ export async function activate(
         (b.createdAt?.getTime() || 0) - (a.createdAt?.getTime() || 0)
     )
     .find((m: Mapset) => m.branch === 'master' || m.branch === 'master');
-  let remoteAppMaps: Promise<AppMapDescriptorRemote[]> | null = null;
+  let remoteAppMaps: Promise<AppMapDescriptorRemote[]>;
   if (mainBranch) {
     remoteAppMaps = api.getAppMaps(mainBranch.id);
+  } else {
+    remoteAppMaps = Promise.resolve([]);
   }
 
   registerTrees(localAppMaps, remoteAppMaps);

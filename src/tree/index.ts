@@ -6,7 +6,7 @@ import { ChangeTreeDataProvider } from './appmap/ChangeTreeDataProvider';
 
 export default function registerTrees(
   localAppMaps: Promise<AppMapDescriptorFile[]>,
-  remoteAppMaps: Promise<AppMapDescriptorRemote[]> | null
+  remoteAppMaps: Promise<AppMapDescriptorRemote[]>
 ): void {
   vscode.window.registerTreeDataProvider(
     'appmap.views.local',
