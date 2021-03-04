@@ -177,7 +177,7 @@ Join us on [Discord](https://discord.com/invite/N9VUap6) or [GitHub](https://git
 
 AppLand has other solutions which help you profile and automatically diagram software through dynamic analysis, without relying on test cases. Please see the documentation of the AppMap clients for details about remote recording:
 - Instructions [for Ruby applications](https://github.com/applandinc/appmap-ruby/blob/master/README.md#remote-recording)
-- Instructions [for Java applications](https://github.com/applandinc/appmap-java/blob/master/README.md##remote-recording)
+- Instructions [for Java applications](https://github.com/applandinc/appmap-java#http-recording-controls)
 - _Instructions for Python applications are coming soon_
 
 
