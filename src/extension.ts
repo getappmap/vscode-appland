@@ -39,7 +39,7 @@ export async function activate(
       (a: Mapset, b: Mapset) =>
         (b.createdAt?.getTime() || 0) - (a.createdAt?.getTime() || 0)
     )
-    .find((m: Mapset) => m.branch === 'master' || m.branch === 'master');
+    .find((m: Mapset) => m.branch === 'master' || m.branch === 'main');
   let remoteAppMaps: Promise<AppMapDescriptorRemote[]>;
   if (mainBranch) {
     remoteAppMaps = api.getAppMaps(mainBranch.id);
