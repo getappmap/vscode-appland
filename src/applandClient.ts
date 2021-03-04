@@ -65,8 +65,7 @@ export default class AppLandClient {
     const mapsets = await this.config.makeRequest(
       '/api/mapsets',
       { app: applicationId },
-      200,
-      'json'
+      200
     );
     return (await mapsets.json()).map(
       (m: Record<string, unknown>) => new Mapset(m)
@@ -77,8 +76,7 @@ export default class AppLandClient {
     const appmaps = await this.config.makeRequest(
       '/api/scenarios',
       { mapsets: [mapsetId] },
-      200,
-      'json'
+      200
     );
 
     return (await appmaps.json()).map((d: Record<string, unknown>) => {
@@ -93,8 +91,7 @@ export default class AppLandClient {
 
   public async getAppMapRaw(resourceUri: vscode.Uri): Promise<string> {
     const response = await this.config.makeRequest(
-      `/api/scenarios/${resourceUri.path}`,
-      'string'
+      `/api/scenarios/${resourceUri.path}`
     );
     return await response.text();
   }
