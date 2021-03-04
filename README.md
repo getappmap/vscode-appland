@@ -17,11 +17,10 @@ Each interactive diagram links directly to the source code, and the information 
 
 - UML-inspired Dependency Map that displays key application components and how they are interrelated during execution 
 - Execution Trace diagrams that visualize code and data flows
-- List of Webservices generated automatically from exeduted code
+- List of Web services generated automatically from executed code
 - List of SQL queries generated automatically from executed code
-- Search for class, package or function
-- Code linkage of the diagram to the source code it relates to
-
+- Code linkage of the diagram to the source code
+- Filtering by class, package or function
 
 # Getting started
 
@@ -33,7 +32,6 @@ Here's how to get going:
 
 ## 1. Install the AppMap for VS Code extension
 This extension is officially listed on the [VSCode Marketplace](https://marketplace.visualstudio.com/items?itemName=appland.appmap).
-
 
 ## 2. Install the AppMap client for your language
 
