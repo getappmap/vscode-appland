@@ -1,3 +1,10 @@
+## [0.8.1](https://github.com/applandinc/vscode-appland/compare/v0.8.0...v0.8.1) (2021-03-05)
+
+
+### Bug Fixes
+
+* update docs for positioning, arrow keys in trace ([#146](https://github.com/applandinc/vscode-appland/issues/146)) ([cb7e690](https://github.com/applandinc/vscode-appland/commit/cb7e690a030d7f0340c07258b4cc4c9ccba01374))
+
 # [0.8.0](https://github.com/applandinc/vscode-appland/compare/v0.7.0...v0.8.0) (2021-03-05)
 
 
