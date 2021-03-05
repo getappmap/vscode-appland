@@ -2,7 +2,7 @@
   "publisher": "appland",
   "name": "appmap",
   "displayName": "AppMap",
-  "description": "Autogenerate software design diagrams with AppMap",
+  "description": "Interactive dependency maps for Ruby, Python and Java",
   "version": "0.8.0",
   "repository": {
     "type": "git",
