@@ -1,6 +1,6 @@
 # AppMap for Visual Studio Code
 
-Get accurate software design diagrams drawn automatically in your IDE. In less than 2 minutes you can go from installing this extension to viewing diagrams in your IDE, because AppMap creates diagrams automatically when your code is executed. AppMap helps you:
+Navigate your code more efficiently with interactive, accurate software architecture diagrams right in your IDE.  In less than two minutes you can go from installing this extension to exploring maps of your code's architecture.  AppMap helps you:
 
 - Onboard to code architecture, with no extra work for the team 
 - Conduct code and design reviews using live and accurate data
@@ -9,7 +9,6 @@ Get accurate software design diagrams drawn automatically in your IDE. In less t
 Each interactive diagram links directly to the source code, and the information is easy to share.
 
 **Join us on [Discord](https://discord.com/invite/N9VUap6) or [GitHub](https://github.com/applandinc/vscode-appland).**
-
 
 ![AppMap diagrams](https://vscode-appmap.s3.us-east-2.amazonaws.com/media/002.gif "AppMap diagrams")
 
@@ -106,10 +105,9 @@ This will open the Trace view.
 
 Each node (box) in the Trace view represents a specific HTTP server request, function call, or SQL query which occurred in the executed code. You can think of it like having the data from a debugger, but you can jump to any location in the call graph. The Trace view flows from left to right and top to bottom as the program moves forward in time. 
 
-Trace sub-graphs can be expanded and collapsed for easier navigation. 
+Trace sub-graphs can be expanded and collapsed for easier navigation. Use the arrows keys ←↓↑→ to move between nodes.
 
 ![Trace navigation](https://vscode-appmap.s3.us-east-2.amazonaws.com/media/003.gif "Trace navigation")
-
 
 ### Interacting with the diagrams
 
@@ -138,7 +136,6 @@ Here are some tips:
     - [LICEcap](https://www.cockos.com/licecap/), an OSS screen gif recorder for macOS
     - The Marketplace [lists extensions for screen recording](https://marketplace.visualstudio.com/search?term=screen%20recorder&target=VSCode&category=All%20categories&sortBy=Relevance)
 
-
 ### Share AppMap files for viewing in VSCode
 
 Generated AppMap files can be viewed by others with the AppMap extension. So, one option for sharing is to simply send the `appmap.json` file to your colleague.
@@ -149,8 +146,6 @@ Generated AppMap files can be viewed by others with the AppMap extension. So, on
 1. [Sign-up](https://app.land) for app.land, create an account for your organization and invite others to join
 1. [Follow these instructions](https://app.land/setup/cli) to install CLI tools and upload your AppMap files to the server
 2. Open and share your AppMaps from the UI. You can make the shareable links private - accessible for members of your organization only, or public.
-
-
 
 ## Advanced configuration
 
@@ -186,8 +181,6 @@ AppLand has other solutions which help you profile and automatically diagram sof
 ## Q & A
 
 Please visit the [AppMap wiki](https://github.com/applandinc/vscode-appland/wiki) in GitHub.
-
-
 
 # About AppMap
 
