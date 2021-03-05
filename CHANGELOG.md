@@ -1,3 +1,10 @@
+# [0.8.0](https://github.com/applandinc/vscode-appland/compare/v0.7.0...v0.8.0) (2021-03-05)
+
+
+### Features
+
+* update @appland/appmap to v1.4.0 ([c7d9a7f](https://github.com/applandinc/vscode-appland/commit/c7d9a7fc294729f4b852e1020ecbe633f50c874f))
+
 # [0.7.0](https://github.com/applandinc/vscode-appland/compare/v0.6.1...v0.7.0) (2021-02-25)
 
 
