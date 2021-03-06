@@ -2,7 +2,7 @@
   "publisher": "appland",
   "name": "appmap",
   "displayName": "AppMap",
-  "description": "Interactive dependency maps for Ruby, Python and Java",
+  "description": "Interactive maps and architecture analysis help you write better Ruby, Python and Java code",
   "version": "0.8.1",
   "repository": {
     "type": "git",
@@ -22,10 +22,19 @@
   ],
   "keywords": [
     "diagram",
-    "dependency map",
+    "architecture",
+    "software design",
+    "code analysis",
     "uml",
+    "map",
     "trace",
-    "webservice"
+    "technical debt",
+    "security",
+    "visualization",
+    "diff",
+    "ruby",
+    "python",
+    "java"
   ],
   "contributes": {
     "customEditors": [
