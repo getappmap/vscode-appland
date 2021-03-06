@@ -1,3 +1,10 @@
+## [0.8.2](https://github.com/applandinc/vscode-appland/compare/v0.8.1...v0.8.2) (2021-03-06)
+
+
+### Bug Fixes
+
+* updated description and keywords ([3e0a1f3](https://github.com/applandinc/vscode-appland/commit/3e0a1f305d0ba6390be0740e5d672d98c7dea6e2))
+
 ## [0.8.1](https://github.com/applandinc/vscode-appland/compare/v0.8.0...v0.8.1) (2021-03-05)
 
 
