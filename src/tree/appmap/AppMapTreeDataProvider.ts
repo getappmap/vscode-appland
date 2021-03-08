@@ -26,7 +26,7 @@ export class AppMapTreeDataProvider
           command: {
             title: 'open',
             command: 'vscode.openWith',
-            arguments: [d.resourceUri, 'appmap.appMapFile'],
+            arguments: [d.resourceUri, 'appmap.views.appMapFile'],
           },
         }))
         .sort((a, b) => a.label.localeCompare(b.label));

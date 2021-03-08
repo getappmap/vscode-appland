@@ -30,7 +30,7 @@
   "contributes": {
     "customEditors": [
       {
-        "viewType": "appmap.appMapFile",
+        "viewType": "appmap.views.appMapFile",
         "displayName": "AppMap file",
         "selector": [
           {

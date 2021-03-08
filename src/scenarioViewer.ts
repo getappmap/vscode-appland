@@ -13,7 +13,7 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
 		context.subscriptions.push(providerRegistration);
 	}
 
-	private static readonly viewType = 'appmap.appMapFile';
+	private static readonly viewType = 'appmap.views.appMapFile';
 
 	constructor(
 		private readonly context: vscode.ExtensionContext
@@ -122,9 +122,7 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
 					});
 				}
 			});
-
 		}
-
 	}
 
 	/**
