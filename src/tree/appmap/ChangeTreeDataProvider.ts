@@ -87,7 +87,7 @@ class AppMapDifference {
       tooltip: name,
       command: {
         title: 'open',
-        command: 'vscode.diff',
+        command: 'appmap.diff',
         arguments: [this.base.resourceUri, this.working.resourceUri],
       },
     };

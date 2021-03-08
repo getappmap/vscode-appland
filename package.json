@@ -44,6 +44,10 @@
       {
         "command": "appmap.openMostRecentlyModifiedAppMap",
         "title": "AppMap: Open most recently modified AppMap file"
+      },
+      {
+        "command": "appmap.diff",
+        "title": "AppMap: Compare AppMaps"
       }
     ],
     "viewsContainers": {

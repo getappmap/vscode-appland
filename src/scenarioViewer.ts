@@ -159,6 +159,9 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
 				<div id="app">
 				</div>
 				<script nonce="${nonce}" src="${scriptUri}"></script>
+				<script type="text/javascript" nonce="${nonce}">
+					AppLandWeb.mountApp();
+				</script>
 			</body>
 			</html>`;
 	}

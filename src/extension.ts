@@ -4,6 +4,7 @@ import AppMapDescriptorFile from './appmapDescriptorFile';
 import AppMapDescriptorRemote from './appmapDescriptorRemote';
 import { DatabaseUpdater } from './databaseUpdater';
 import { ScenarioProvider } from './scenarioViewer';
+import registerDiff from './diffViewer';
 import registerTrees from './tree';
 import AppLandRemoteTextDocumentProvider from './applandRemoteTextDocumentContentProvider';
 
@@ -13,6 +14,7 @@ export async function activate(
   // Register our custom editor providers
   ScenarioProvider.register(context);
   DatabaseUpdater.register(context);
+  registerDiff(context);
 
   const localAppMaps = AppMapDescriptorFile.allInWorkspace();
   const api = await AppLandClient.fromEnvironment();
