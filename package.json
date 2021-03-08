@@ -38,6 +38,11 @@
           }
         ],
         "priority": "default"
+      },
+      {
+        "viewType": "appmap.views.diff",
+        "displayName": "AppMap compare",
+        "priority": "default"
       }
     ],
     "commands": [

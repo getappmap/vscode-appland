@@ -5,12 +5,13 @@ import { join } from 'path';
 export default function activate(context: vscode.ExtensionContext): void {
   const cmd = vscode.commands.registerCommand(
     'appmap.diff',
-    (baseUri: vscode.Uri, workingUri: vscode.Uri) => {
+    async (baseUri: vscode.Uri, workingUri: vscode.Uri) => {
+      console.log(baseUri, workingUri);
       const panel = vscode.window.createWebviewPanel(
         'appmap.views.diff',
         'AppMap Diff',
         vscode.ViewColumn.One,
-        {}
+        { enableScripts: true }
       );
 
       const nonce = getNonce();
@@ -18,20 +19,11 @@ export default function activate(context: vscode.ExtensionContext): void {
         vscode.Uri.file(join(context.extensionPath, 'out', 'app.js'))
       );
 
-      console.log(panel.webview.cspSource);
-
       panel.webview.html = `
         <!DOCTYPE html>
         <html lang="en">
         <head>
           <meta charset="UTF-8">
-
-          <!--
-          Use a content security policy to only allow loading images from https or from our extension directory,
-          and only allow scripts that have a specific nonce.
-          -->
-          <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src ${panel.webview.cspSource} 'self' data: ; style-src 'unsafe-inline' ${panel.webview.cspSource}; script-src 'nonce-${nonce}';">
-
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
           <title>AppLand Scenario</title>
@@ -45,6 +37,15 @@ export default function activate(context: vscode.ExtensionContext): void {
           </script>
         </body>
         </html>`;
+
+      const base = await vscode.workspace.openTextDocument(baseUri);
+      const working = await vscode.workspace.openTextDocument(workingUri);
+
+      panel.webview.postMessage({
+        type: 'update',
+        base: base.getText(),
+        working: working.getText(),
+      });
     }
   );
   context.subscriptions.push(cmd);
