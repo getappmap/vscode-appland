@@ -123,6 +123,25 @@ The AppMap setup is now complete and the application can be recorded when `pytes
 # APPMAP=true pytest
 ```
 
+2. Alternatively, run and record individual tests
+
+```shell
+# APPMAP=true pytest chipy_org/apps/job_board/tests/test_views.py -k test_approved_job_posts_visible
+
+==========test session starts ============
+platform linux -- Python 3.8.6, pytest-5.4.1, py-1.10.0, pluggy-0.13.1 -- /usr/local/bin/python
+cachedir: /home/app/.pytest_cache
+django: settings: chipy_org.settings_test (from ini)
+rootdir: /site/proj, inifile: pytest.ini
+plugins: appmap-0.5.0, django-3.9.0
+collected 9 items / 8 deselected / 1 selected
+
+chipy_org/apps/job_board/tests/test_views.py::test_approved_job_posts_visible
+PASSED          [100%]
+===========1 passed, 8 deselected in 0.42s ============
+```
+
+
 The test suite will be run and AppMap files recorded from tests will be created in the `tmp/appmap/pytest` folder of the project.
 
 
@@ -133,12 +152,12 @@ Now that you have the AppMaps recorded, let's open them in the Visual Studio Cod
 
 1. The recorded AppMap files are in the `tmp/appmap/pytest` folder of the `chipy.org` project.
 
-2. Let's open AppMaps that cover the rsvp functionality of the application.
-Navigate to the `tmp/appmap/pytest` folder in the file explorer and press  `CTRL|COMMAND SHIFT P` 
+2. Let's open an AppMap that covers job postings on the site - only approved job posts can be visible.
+Navigate to the `tmp/appmap/pytest` folder in the file explorer and press  `CTRL|COMMAND P` 
 
-3. Type `rsvp` in the search box and pick any of the .appmap.json files from the results. An AppMap viewer now opens.
+1. Type `approved` in the search box and pick the .appmap.json file. An AppMap viewer now opens.
 
-![AppMaps in action](https://vscode-appmap.s3.us-east-2.amazonaws.com/media/chipy.gif)
+![AppMaps in action](https://vscode-appmap.s3.us-east-2.amazonaws.com/media/chipy.2.gif)
 
 
 ## Interact with the AppMap diagrams
