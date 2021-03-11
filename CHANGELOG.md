@@ -1,3 +1,10 @@
+## [0.8.4](https://github.com/applandinc/vscode-appland/compare/v0.8.3...v0.8.4) (2021-03-11)
+
+
+### Bug Fixes
+
+* adding support@ email to documentation ([b888dcd](https://github.com/applandinc/vscode-appland/commit/b888dcdd6c8a688b588154a4eb0fa9d1c7b60a8b))
+
 ## [0.8.3](https://github.com/applandinc/vscode-appland/compare/v0.8.2...v0.8.3) (2021-03-11)
 
 
