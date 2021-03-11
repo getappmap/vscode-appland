@@ -8,7 +8,7 @@ Navigate your code more efficiently with interactive, accurate software architec
 
 Each interactive diagram links directly to the source code, and the information is easy to share.
 
-**Join us on [Discord](https://discord.com/invite/N9VUap6) or [GitHub](https://github.com/applandinc/vscode-appland).**
+**Join us on [Discord](https://discord.com/invite/N9VUap6), [GitHub](https://github.com/applandinc/vscode-appland) or contact us on [support@app.land](mailto:support@app.land).**
 
 ![AppMap diagrams](https://vscode-appmap.s3.us-east-2.amazonaws.com/media/002.gif "AppMap diagrams")
 
@@ -170,7 +170,7 @@ Simply share your `appmap.yml` configuration file with others. Use of a git repo
 
 ## Contact us for assistance
 
-Join us on [Discord](https://discord.com/invite/N9VUap6) or [GitHub](https://github.com/applandinc/vscode-appland).
+Join us on [Discord](https://discord.com/invite/N9VUap6), [GitHub](https://github.com/applandinc/vscode-appland) or send email to [support@app.land](mailto:support@app.land).
 
 ## What if I don’t have test cases?
 
