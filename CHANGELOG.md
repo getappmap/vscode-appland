@@ -1,3 +1,10 @@
+## [0.8.3](https://github.com/applandinc/vscode-appland/compare/v0.8.2...v0.8.3) (2021-03-11)
+
+
+### Bug Fixes
+
+* sharing instructions, setup videos ([8273f34](https://github.com/applandinc/vscode-appland/commit/8273f343388f50f77b5c53c926fff68b0de0e3ef))
+
 ## [0.8.2](https://github.com/applandinc/vscode-appland/compare/v0.8.1...v0.8.2) (2021-03-06)
 
 
