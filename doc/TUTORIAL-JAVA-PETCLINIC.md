@@ -117,9 +117,6 @@ Navigate to the `tmp` folder in the file explorer and press  `CTRL|COMMAND P` to
 
 3. Type `ShowOwner` (single word) in the search box and pick the .appmap.json file. An AppMap viewer now opens.
    
-4. Right-click on the packages in the AppMap and expand them to see individual classes.
-
-5. Click on the `Pet` class (or any other class) and click on the `View source` button in the nav bar to open its source file.
 
 ![Show Owner AppMap](https://vscode-appmap.s3.us-east-2.amazonaws.com/media/petclinic-appmap.png)
 
@@ -128,6 +125,10 @@ Please note that database operations are not recorded by the AppMap agent for th
 ## Interact with the AppMap diagrams
 
 1. Hide the file explorer by clicking on its icon in the left hand icon bar.
+
+1. Right-click on the packages in the AppMap and expand them to see individual classes.
+
+1. Click on the `Pet` class (or any other class) and click on the `View source` button in the nav bar to open its source file.
 
 2. Explore the `Dependency map`. Click on any component and edge in the map, expand/collapse packages and HTTP endpoints, investigate their details in the left hand navigation bar
 
