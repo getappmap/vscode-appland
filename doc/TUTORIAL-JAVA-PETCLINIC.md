@@ -119,9 +119,11 @@ Navigate to the `tmp` folder in the file explorer and press  `CTRL|COMMAND P` to
    
 4. Right-click on the packages in the AppMap and expand them to see individual classes.
 
+5. Click on the `Pet` class (or any other class) and click on the `View source` button in the nav bar to open its source file.
+
 ![Show Owner AppMap](https://vscode-appmap.s3.us-east-2.amazonaws.com/media/petclinic-appmap.png)
 
-4. Please note that database operations are not recorded by the AppMap agent for this simple application with in-memory database. View the demonstration video below and join our [Discord server](https://discord.com/invite/N9VUap6) for examples of complete Java appmaps that include database operations.
+Please note that database operations are not recorded by the AppMap agent for this simple application with in-memory database. View the demonstration video below and join our [Discord server](https://discord.com/invite/N9VUap6) for examples of complete Java appmaps that include database operations.
 
 ## Interact with the AppMap diagrams
 
