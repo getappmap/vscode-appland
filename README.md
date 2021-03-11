@@ -45,6 +45,8 @@ The `appmap` package is on GitHub at [https://github.com/applandinc/appmap-pytho
 
 [View installation instructions for `appmap-python`](https://github.com/applandinc/appmap-python/blob/master/README.md#installation) and a [step-by-step tutorial](https://github.com/applandinc/vscode-appland/blob/master/doc/TUTORIAL-PYTHON-CHIPYORG.md).
 
+<a href="https://www.loom.com/share/d21f040d4ab94f519375a5159d778e42"> <p>Visualize the architecture of your Python app, in VS Code, in 2 ¹/₂ minutes - Watch Video</p> <img src="https://cdn.loom.com/sessions/thumbnails/d21f040d4ab94f519375a5159d778e42-with-play.gif"> </a>
+
 **Supported languages and frameworks**
 
 Python 3.5 and newer, Django, pytest, and more.
@@ -55,7 +57,7 @@ The `appmap` Ruby gem is on GitHub at [https://github.com/applandinc/appmap-ruby
 
 [View installation instructions for `appmap-ruby`](https://github.com/applandinc/appmap-ruby/blob/master/README.md#installation)
 
-![AppMap extension for VSCode - quick and easy setup](https://vscode-appmap.s3.us-east-2.amazonaws.com/media/AppMap+extension+for+VSCode+-+quick+and+easy+setup.gif)
+<a href="https://www.loom.com/share/78ab32a312ff4b85aa8827a37f1cb655"> <p>Visualize the architecture of your Ruby app, in VS Code, in 2 ¹/₂ minutes - Watch Video</p> <img src="https://cdn.loom.com/sessions/thumbnails/78ab32a312ff4b85aa8827a37f1cb655-with-play.gif"> </a>
 
 **Supported languages and frameworks**
 
@@ -125,6 +127,19 @@ The diagrams are fully interactive; they aren’t static pictures like UML. You 
 
 ## Sharing
 
+### Share AppMap files in the SaaS sandbox
+[App.Land](https://app.land/login) is a free single user sandbox that can be instantly used as an AppMap repository and as a collaboration and sharing tool for your team. 
+
+1. [Sign-up](https://app.land/login) for App.Land, create an account for your organization
+1. [Follow these instructions](https://app.land/setup/cli) to install CLI tools and upload your AppMap files to the App.Land server
+2. Open and share your AppMaps from the App.Land UI. You can make the shareable links public for sharing with other members of your team.
+
+To share your AppMaps with your team more directly and privately, [contact us](https://appland.com/company/contact-us) about team and enteprise App.Land accounts or go to [AppLand.com](https://appland.com/).
+
+### Share AppMap files for viewing in VSCode
+
+Generated AppMap files can be viewed by others with the AppMap extension. So, one option for sharing is to simply send the `appmap.json` file to your colleague.
+
 ### Record and share videos and screenshots
 
 The easiest way to share the diagrams with a wider audience is via screencasts, recorded screen videos and screenshots. 
@@ -135,17 +150,6 @@ Here are some tips:
     - [ScreenToGif](https://www.screentogif.com), a simple yet powerful OSS screen recorder for Windows
     - [LICEcap](https://www.cockos.com/licecap/), an OSS screen gif recorder for macOS
     - The Marketplace [lists extensions for screen recording](https://marketplace.visualstudio.com/search?term=screen%20recorder&target=VSCode&category=All%20categories&sortBy=Relevance)
-
-### Share AppMap files for viewing in VSCode
-
-Generated AppMap files can be viewed by others with the AppMap extension. So, one option for sharing is to simply send the `appmap.json` file to your colleague.
-
-### Share AppMap files in the SaaS [https://app.land](https://app.land) sandbox
-[App.Land](https://app.land) is a free sandbox that can be rapidly used as an AppMap repository and as a collaboration and sharing tool for your team. 
-
-1. [Sign-up](https://app.land) for app.land, create an account for your organization and invite others to join
-1. [Follow these instructions](https://app.land/setup/cli) to install CLI tools and upload your AppMap files to the server
-2. Open and share your AppMaps from the UI. You can make the shareable links private - accessible for members of your organization only, or public.
 
 ## Advanced configuration
 
