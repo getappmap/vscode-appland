@@ -11,17 +11,18 @@ import { maxHeaderSize } from 'http';
  * Keeps the AppMap database up-to-date.
  */
 export class DatabaseUpdater {
-
   public static register(context: vscode.ExtensionContext): void {
     const showAppMapCountId = 'appmap.showAppMapCount';
-    context.subscriptions.push(vscode.commands.registerCommand(showAppMapCountId, () => {
-      vscode.window.showInformationMessage(`Number of AppMaps: ${updater.appMapCount}`);
-    }));
+    context.subscriptions.push(
+      vscode.commands.registerCommand(showAppMapCountId, () => {
+        vscode.window.showInformationMessage(`Number of AppMaps: ${updater.appMapCount}`);
+      })
+    );
 
     const statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
     statusBarItem.command = showAppMapCountId;
     context.subscriptions.push(statusBarItem);
-    const updater = new DatabaseUpdater(statusBarItem)
+    const updater = new DatabaseUpdater(statusBarItem);
     updater.initialize(context);
 
     const command = 'appmap.openMostRecentlyModifiedAppMap';
@@ -47,12 +48,12 @@ export class DatabaseUpdater {
 
   initialize(context: vscode.ExtensionContext): void {
     const appmapFolders = ['tmp/appmap', 'tmp/appmap/rspec', 'tmp/appmap/minitest'];
-    const folders = vscode.workspace.workspaceFolders
+    const folders = vscode.workspace.workspaceFolders;
     if (folders) {
       folders.forEach((wsFolder) => {
         appmapFolders.forEach((folder) => {
           const appmapPattern = new vscode.RelativePattern(wsFolder, `${folder}/*.appmap.json`);
-          const watcher = vscode.workspace.createFileSystemWatcher(appmapPattern)
+          const watcher = vscode.workspace.createFileSystemWatcher(appmapPattern);
           watcher.onDidChange(this.onChange.bind(this));
           watcher.onDidCreate(this.onCreate.bind(this));
           watcher.onDidDelete(this.onDelete.bind(this));
@@ -61,10 +62,9 @@ export class DatabaseUpdater {
       });
     }
 
-    vscode.workspace.findFiles('**/*.appmap.json')
-      .then((uris) => {
-        uris.forEach(this.addUri.bind(this));
-      });
+    vscode.workspace.findFiles('**/*.appmap.json').then((uris) => {
+      uris.forEach(this.addUri.bind(this));
+    });
 
     this.statusBarItem.show();
   }

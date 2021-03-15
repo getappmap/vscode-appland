@@ -1,37 +1,42 @@
 import * as vscode from 'vscode';
-import AppMapDescriptor from '../../appmapDescriptor';
+import AppMapCollection from '../../appmapCollection';
 
 const LABEL_NO_NAME = 'Untitled AppMap';
-export class AppMapTreeDataProvider
-  implements vscode.TreeDataProvider<vscode.TreeItem> {
-  private appmapDescriptors: Promise<AppMapDescriptor[]> | null;
+export class AppMapTreeDataProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
+  private appmaps: AppMapCollection;
+  private _onDidChangeTreeData: vscode.EventEmitter<
+    vscode.TreeItem | undefined | null | void
+  > = new vscode.EventEmitter<vscode.TreeItem | undefined | null | void>();
+  public readonly onDidChangeTreeData: vscode.Event<vscode.TreeItem | undefined | null | void> = this
+    ._onDidChangeTreeData.event;
 
-  constructor(appmapDescriptors: Promise<AppMapDescriptor[]> | null) {
-    this.appmapDescriptors = appmapDescriptors;
+  constructor(appmaps: AppMapCollection) {
+    this.appmaps = appmaps;
+    this.appmaps.onUpdated(() => this._onDidChangeTreeData.fire());
   }
+
   public getTreeItem(element: vscode.TreeItem): vscode.TreeItem {
     return element;
   }
 
   public getChildren(): Thenable<vscode.TreeItem[]> {
-    if (!this.appmapDescriptors) {
+    if (!this.appmaps) {
       return Promise.resolve([]);
     }
 
-    return this.appmapDescriptors.then((descriptors) => {
-      const listItems = descriptors
-        .map((d) => ({
-          label: (d.metadata?.name as string) || LABEL_NO_NAME,
-          tooltip: (d.metadata?.name as string) || LABEL_NO_NAME,
-          command: {
-            title: 'open',
-            command: 'vscode.openWith',
-            arguments: [d.resourceUri, 'appmap.views.appMapFile'],
-          },
-        }))
-        .sort((a, b) => a.label.localeCompare(b.label));
+    const listItems = this.appmaps
+      .appmapDescriptors()
+      .map((d) => ({
+        label: (d.metadata?.name as string) || LABEL_NO_NAME,
+        tooltip: (d.metadata?.name as string) || LABEL_NO_NAME,
+        command: {
+          title: 'open',
+          command: 'vscode.openWith',
+          arguments: [d.resourceUri, 'appmap.views.appMapFile'],
+        },
+      }))
+      .sort((a, b) => a.label.localeCompare(b.label));
 
-      return Promise.resolve(listItems);
-    });
+    return Promise.resolve(listItems);
   }
 }

@@ -3,7 +3,7 @@
   "name": "appmap",
   "displayName": "AppMap",
   "description": "Interactive dependency maps for Ruby, Python and Java",
-  "version": "0.8.1",
+  "version": "0.9.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/applandinc/vscode-appland"
@@ -150,7 +150,6 @@
     "webpack-cli": "^4.3.1"
   },
   "dependencies": {
-    "@appland/appmap": "^1.4.0",
     "bent": "^7.3.12",
     "bootstrap": "^4.5.3",
     "bootstrap-autocomplete": "^2.3.7",

@@ -42,9 +42,7 @@ export default class AppLandClient {
     return new AppLandClient(config);
   }
 
-  public async getApplication(
-    workspace: vscode.WorkspaceFolder
-  ): Promise<string> {
+  public async getApplication(workspace: vscode.WorkspaceFolder): Promise<string> {
     const appmapYml = join(workspace.uri.fsPath, 'appmap.yml');
     try {
       await fs.access(appmapYml, fsConstants.R_OK);
@@ -62,22 +60,12 @@ export default class AppLandClient {
   }
 
   public async getMapsets(applicationId: string): Promise<Mapset[]> {
-    const mapsets = await this.config.makeRequest(
-      '/api/mapsets',
-      { app: applicationId },
-      200
-    );
-    return (await mapsets.json()).map(
-      (m: Record<string, unknown>) => new Mapset(m)
-    );
+    const mapsets = await this.config.makeRequest('/api/mapsets', { app: applicationId }, 200);
+    return (await mapsets.json()).map((m: Record<string, unknown>) => new Mapset(m));
   }
 
   public async getAppMaps(mapsetId: number): Promise<AppMapDescriptorRemote[]> {
-    const appmaps = await this.config.makeRequest(
-      '/api/scenarios',
-      { mapsets: [mapsetId] },
-      200
-    );
+    const appmaps = await this.config.makeRequest('/api/scenarios', { mapsets: [mapsetId] }, 200);
 
     return (await appmaps.json()).map((d: Record<string, unknown>) => {
       const { scenario_uuid: uuid } = d;
@@ -98,8 +86,6 @@ export default class AppLandClient {
 
   public async getAppMap(descriptor: AppMapDescriptorRemote): Promise<AppMap> {
     const data = await this.getAppMapRaw(descriptor.resourceUri);
-    return buildAppMap(data)
-      .normalize()
-      .build();
+    return buildAppMap(data).normalize().build();
   }
 }

@@ -1,53 +1,20 @@
 import * as vscode from 'vscode';
-import { Dirent, promises as fs } from 'fs';
-import { join } from 'path';
+import { promises as fs } from 'fs';
 import AppMapDescriptor from './appmapDescriptor';
 import { buildAppMap, AppMap } from '@appland/appmap';
-import { debug } from 'console';
+import { notEmpty } from './util';
 
 export default class AppMapDescriptorFile implements AppMapDescriptor {
   public resourceUri: vscode.Uri;
   public metadata?: Record<string, unknown>;
+  private _onAppMapsUpdated: vscode.EventEmitter<AppMapDescriptorFile[]> = new vscode.EventEmitter<
+    AppMapDescriptorFile[]
+  >();
+  public readonly onAppMapsUpdated: vscode.Event<AppMapDescriptorFile[]> = this._onAppMapsUpdated.event;
 
-  constructor(resourceUri: vscode.Uri, metadata?: Record<string, unknown>) {
+  constructor(resourceUri: vscode.Uri, metadata: Record<string, unknown>) {
     this.resourceUri = resourceUri;
     this.metadata = metadata;
-  }
-
-  public static async fromResource(
-    resourceUri: vscode.Uri
-  ): Promise<AppMapDescriptorFile> {
-    const buf = await fs.readFile(resourceUri.fsPath);
-    const appmapJson = JSON.parse(buf.toString());
-    return new AppMapDescriptorFile(resourceUri, appmapJson.metadata);
-  }
-
-  public static async findInDirectory(
-    dir: string,
-    recursive = true
-  ): Promise<AppMapDescriptorFile[]> {
-    const result: AppMapDescriptorFile[] = [];
-    const files: Dirent[] = await fs.readdir(dir, { withFileTypes: true });
-
-    await Promise.all(
-      files.map(async (file) => {
-        if (file.isDirectory() && recursive) {
-          const descriptors = await this.findInDirectory(join(dir, file.name));
-          descriptors.forEach((d) => result.push(d));
-        } else if (file.name.match(/\.appmap\.json$/)) {
-          try {
-            const uri = vscode.Uri.file(join(dir, file.name));
-            result.push(await this.fromResource(uri));
-          } catch (e) {
-            if (!(e instanceof SyntaxError)) {
-              debugger;
-            }
-          }
-        }
-      })
-    );
-
-    return result;
   }
 
   public static async allInWorkspace(): Promise<AppMapDescriptorFile[]> {
@@ -57,12 +24,41 @@ export default class AppMapDescriptorFile implements AppMapDescriptor {
     }
 
     const listItemPromises = workspaceFolders.flatMap(async (dir) => {
-      return await this.findInDirectory(dir.uri.fsPath);
+      const appmapPattern = new vscode.RelativePattern(dir, `**/*.appmap.json`);
+      const files = await vscode.workspace.findFiles(appmapPattern);
+      return (
+        await Promise.all(
+          files.map(async (uri) => {
+            try {
+              const buf = await fs.readFile(uri.fsPath);
+              const appmapJson = JSON.parse(buf.toString());
+              return new AppMapDescriptorFile(uri, appmapJson.metadata);
+            } catch (e) {
+              console.error(e);
+              console.trace();
+            }
+          })
+        )
+      ).filter(notEmpty);
     });
 
-    return Promise.all(listItemPromises).then((listItems) =>
-      Promise.resolve(listItems.flat())
-    );
+    return Promise.all(listItemPromises).then((listItems) => Promise.resolve(listItems.flat()));
+  }
+
+  public static watchWorkspaces(): void {
+    vscode.workspace.workspaceFolders?.forEach((dir) => {
+      const appmapPattern = new vscode.RelativePattern(dir, `**/*.appmap.json`);
+      const watcher = vscode.workspace.createFileSystemWatcher(appmapPattern);
+      watcher.onDidChange((e) => {
+        console.log(e);
+      });
+      watcher.onDidCreate((e) => {
+        console.log(e);
+      });
+      watcher.onDidDelete((e) => {
+        console.log(e);
+      });
+    });
   }
 
   public async loadAppMap(): Promise<AppMap> {

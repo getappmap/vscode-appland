@@ -8,11 +8,7 @@ export default class AppMapDescriptorRemote implements AppMapDescriptor {
   public metadata?: Record<string, unknown>;
   private api: AppLandClient;
 
-  constructor(
-    api: AppLandClient,
-    uuid: string,
-    metadata?: Record<string, unknown>
-  ) {
+  constructor(api: AppLandClient, uuid: string, metadata?: Record<string, unknown>) {
     this.api = api;
     this.resourceUri = vscode.Uri.parse(`appmap:${uuid}.appmap.json`);
     this.metadata = metadata;

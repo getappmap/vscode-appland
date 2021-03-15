@@ -1,13 +1,9 @@
 import * as vscode from 'vscode';
 import AppMapDescriptor from '../../appmapDescriptor';
-import { canonicalize } from '@appland/appmap';
-import * as yaml from 'js-yaml';
-import { diffLines } from 'diff';
-import { extend } from 'vue/types/umd';
+import { notEmpty } from '../../util';
+import AppMapCollection from '../../appmapCollection';
 
-async function buildLookupTable(
-  descriptors: AppMapDescriptor[]
-): Promise<Map<string, AppMapDescriptor>> {
+async function buildLookupTable(descriptors: AppMapDescriptor[]): Promise<Map<string, AppMapDescriptor>> {
   const lookup = new Map();
   descriptors.forEach((d) => {
     if (!d.metadata?.name || !d.metadata?.fingerprints) {
@@ -19,23 +15,12 @@ async function buildLookupTable(
   return lookup;
 }
 
-async function canonicalizeAppMap(
-  algorithm: string,
-  descriptor: AppMapDescriptor
-): Promise<string> {
-  const canonicalForm = canonicalize(algorithm, await descriptor.loadAppMap());
-  return yaml.dump(canonicalForm) as string;
-}
 class AppMapDifference {
   public algorithm: string;
   public base: AppMapDescriptor | null;
   public working: AppMapDescriptor | null;
 
-  constructor(
-    algo: string,
-    base: AppMapDescriptor | null,
-    working: AppMapDescriptor | null
-  ) {
+  constructor(algo: string, base: AppMapDescriptor | null, working: AppMapDescriptor | null) {
     this.algorithm = algo;
     this.base = base;
     this.working = working;
@@ -94,21 +79,22 @@ class AppMapDifference {
   }
 }
 
-function notEmpty<TValue>(value: TValue | null | undefined): value is TValue {
-  return value !== null && value !== undefined;
-}
+export class ChangeTreeDataProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
+  private _onDidChangeTreeData: vscode.EventEmitter<
+    vscode.TreeItem | undefined | null | void
+  > = new vscode.EventEmitter<vscode.TreeItem | undefined | null | void>();
+  public readonly onDidChangeTreeData: vscode.Event<vscode.TreeItem | undefined | null | void> = this
+    ._onDidChangeTreeData.event;
 
-export class ChangeTreeDataProvider
-  implements vscode.TreeDataProvider<vscode.TreeItem> {
-  private promiseBaseDescriptors: Promise<AppMapDescriptor[]>;
-  private promiseWorkingDescriptors: Promise<AppMapDescriptor[]>;
+  private baseAppMaps: AppMapCollection;
+  private workingAppMaps: AppMapCollection;
 
-  constructor(
-    baseDescriptors: Promise<AppMapDescriptor[]>,
-    workingDescriptors: Promise<AppMapDescriptor[]>
-  ) {
-    this.promiseBaseDescriptors = baseDescriptors;
-    this.promiseWorkingDescriptors = workingDescriptors;
+  constructor(baseAppMaps: AppMapCollection, workingAppMaps: AppMapCollection) {
+    this.baseAppMaps = baseAppMaps;
+    this.workingAppMaps = workingAppMaps;
+
+    baseAppMaps.onUpdated(() => this._onDidChangeTreeData.fire());
+    workingAppMaps.onUpdated(() => this._onDidChangeTreeData.fire());
   }
 
   public getTreeItem(element: vscode.TreeItem): vscode.TreeItem {
@@ -116,8 +102,8 @@ export class ChangeTreeDataProvider
   }
 
   public async findChangeSet(algorithm: string): Promise<vscode.TreeItem[]> {
-    const baseDescriptors = await this.promiseBaseDescriptors;
-    const workingDescriptors = await this.promiseWorkingDescriptors;
+    const baseDescriptors = this.baseAppMaps.appmapDescriptors();
+    const workingDescriptors = this.workingAppMaps.appmapDescriptors();
 
     const result: vscode.TreeItem[] = [];
     const baseLookup = await buildLookupTable(baseDescriptors);
@@ -150,8 +136,7 @@ export class ChangeTreeDataProvider
           (fingerprint) => fingerprint.canonicalization_algorithm === algorithm
         );
 
-        const fingerprints: Record<string, string>[] = working.metadata
-          .fingerprints as Record<string, string>[];
+        const fingerprints: Record<string, string>[] = working.metadata.fingerprints as Record<string, string>[];
         const workingFingerprint = fingerprints.find(
           (fingerprint) => fingerprint.canonicalization_algorithm === algorithm
         );
