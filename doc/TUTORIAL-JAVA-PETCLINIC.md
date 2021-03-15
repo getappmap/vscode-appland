@@ -4,14 +4,14 @@ This tutorial will walk you through the process of AppMapping an open source `Sp
 
 ### Prerequisites
 
- - Basic familiarity with git, Visual Studio Code and Java
- - Java 8 or newer and git installed in your environment (macOS, Windows, Linux)
+ - Basic familiarity with git, Docker, Visual Studio Code and Java
+ - Java 8 or newer, Docker and git installed in your environment (macOS, Windows, Linux)
 
 ### Structure
 
 This tutorial is split into three sections:
 - Install Visual Studio Code and the AppMap extension 
-- Setup and build the `Spring-PetClinic` application locally
+- Setup and build the `Spring-Framework-PetClinic` application locally
 - Setup, record and open AppMaps recorded from tests
 
 
@@ -23,56 +23,62 @@ Alternatively, install and start Visual Studio Code, open the Extensions tab and
 
 # Build the Spring PetClinic Sample Application
 
-The [Spring PetClinic Sample Application project](https://github.com/land-of-apps/spring-petclinic/tree/main) comes with detailed setup instructions. The setup steps are described in this guide for your convenience.
+The [Spring Framework PetClinic](https://github.com/spring-petclinic/spring-framework-petclinic) sample application comes with detailed setup instructions. The setup steps are covered in this guide for your convenience.
 
 ## Clone the repository
 
-Start with a local clone of the `PetClinic` repository. In your working folder, clone the repo:
+Start with a local clone of the `Spring-Framwork-PetClinic` repository. In your working folder, clone the repo:
 
 ```shell
-git clone -b main --single-branch git@github.com:land-of-apps/spring-petclinic.git
+git clone https://github.com/spring-petclinic/spring-framework-petclinic
+cd spring-framework-petclinic
 ```
+
+## Install and start a MySQL Docker image
+
+To mimic a real-life application and to record realistic AppMaps with database operations, this tutorial runs the PetClinic application with the MySQL backend. The fastest way to install and setup a MySQL instance is using a Docker image:
+
+```shell
+docker run -e MYSQL_USER=petclinic -e MYSQL_PASSWORD=petclinic -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=petclinic -p 3306:3306 mysql:5.7.8
+```
+
 
 ## Open the PetClinic project in Visual Studio Code
 
-Start Visual Studio Code and open the folder with the `PetClinic` repository. You should see the `pom.xml`, `readme.md` and other files in the root folder.
+Start Visual Studio Code and open the folder with the `Spring-Framework-PetClinic` repository. You should see the `pom.xml`, `readme.md` and other files in the root folder.
 
 ![Spring-PetClinic project in Visual Studio Code](https://vscode-appmap.s3.us-east-2.amazonaws.com/media/petclinic-project.png)
 
 ### Build the application
 
-It is a good practice to setup and run applications before mapping them as it is easier to catch setup and build problems specific to the applications and their dependencies this way.
+It is a good practice to setup and run applications before mapping them as it is easier to catch problems specific to the applications and their dependencies this way.
 
-To build and run the application:
+To build and run the PetClinic application:
 
-1. Navigate to the project root folder and run the following command that will build the application and run its tests:
+1. In the project root folder, run the following command that will build the application, run tests and start it:
+
 ```shell
-./mvnw package
+./mvnw jetty:run-war -P MySQL
 ```
 
-2. Start the application with   
-```shell
-./mvnw spring-boot:run
-```
+2. After a few moments, the application will be running. You can open its web interface on [http://localhost:8080](http://localhost:8080)
 
-3. After a few moments, the application will be running. You can open its web interface on [http://localhost:8080](http://localhost:8080).
+3. Shut down the running application with `CTRL-C`
 
-2. Shut down the running application with `CTRL-C`
-
-If you have encountered any problems during these steps, please contact us on [Discord](https://discord.com/invite/N9VUap6).
+If you have encountered any problems during these steps, please contact us on [Discord](https://discord.com/invite/N9VUap6) or [support@app.land](mailto:support@app.land).
 
 # Setup AppMaps
 
-In this demo, the AppMap Maven plugin is used for recording AppMaps in running JUnit tests. The Maven plugin does not need any explicit installation steps but it requires the `appmap.yml` configuration file for its function.
+In this demo, the AppMap Maven plugin is used for recording AppMaps in running JUnit tests. The Maven plugin requires the `appmap.yml` configuration file for its function.
 
 ## Configure appmap.yml
 
-The AppMap Maven plugin configuration is stored in the `appmap.yml` file in the root directory of Java projects. 
+The AppMap configuration is stored in the `appmap.yml` file in the root directory of the project. 
 
-1. Create a new file called `appmap.yml` in the root folder of the `Spring-PetClinic` project, and copy/paste this configuration in it: 
+1. Create a new file called `appmap.yml` in the root folder of the `Spring-Framework-PetClinic` project, and copy/paste this configuration in it: 
    
 ```yaml
-name: spring-petclinic
+name: spring-framework-petclinic
 packages:
 - path: org.springframework.samples.petclinic
 ```
@@ -85,9 +91,9 @@ The format of `appmap.yml` is documented in the [appmap-java documentation](http
 # Record and interact with AppMaps
 
 Before proceeding, please check that
-- the `Spring-PetClinic` application has been successfully built
+- the `Spring-Framework-PetClinic` application has been successfully built, started and shut down
 - The `appmap.yml` exists in the root folder of the project and is properly configured
-- you have Visual Studio Code running with the `Spring-PetClinic` project folder open
+- you have Visual Studio Code running with the `Spring-Framework-PetClinic` project folder open
 
 ## Run tests, record AppMaps
 
@@ -98,52 +104,67 @@ The AppMap setup is now complete and the application can be recorded when `JUnit
 1. In the shell, run:
 
 ```shell
-./mvnw com.appland:appmap-maven-plugin:prepare-agent test
+./mvnw com.appland:appmap-maven-plugin:prepare-agent -P MySQL test
 ```
 
-The test suite will be run and AppMap files recorded from tests will be created in the `tmp` folder of the project.
+This command runs the `test` phase with the `MySQL` application profile and activates the `prepare-agent` goal of the AppMap plugin that starts the AppMap recording agent during tests. The test suite will now be run and AppMap files will be recorded in the `tmp` folder of the project.
 
 ![AppMap files in the tmp folder](https://vscode-appmap.s3.us-east-2.amazonaws.com/media/petclinic-appmaps.png)
 
-# Working with AppMaps in Visual Studio Code
-Now that you have the AppMaps recorded, let's open them in the Visual Studio Code.
-
 ## Open an AppMap file
+
+Now that you have the AppMaps recorded, let's open them in the Visual Studio Code.
 
 1. The recorded AppMap files are in the `tmp` folder of the project.
 
-2. Let's open an AppMap that covers showing a pet owner's information.
+2. Let's open an AppMap that shows how the Create pet form works.
 Navigate to the `tmp` folder in the file explorer and press  `CTRL|COMMAND P` to find a file by its name
 
-3. Type `ShowOwner` (single word) in the search box and pick the .appmap.json file. An AppMap viewer now opens.
+3. Type `Pet Creation Success` (three words) in the search box and pick the top `.appmap.json` file in the results. An AppMap viewer now opens.
    
-
-![Show Owner AppMap](https://vscode-appmap.s3.us-east-2.amazonaws.com/media/petclinic-appmap.png)
-
-Please note that database operations are not recorded by the AppMap agent for this simple application with in-memory database. View the demonstration video below and join our [Discord server](https://discord.com/invite/N9VUap6) for examples of complete Java appmaps that include database operations.
-
-## Interact with the AppMap diagrams
-
 1. Hide the file explorer by clicking on its icon in the left hand icon bar.
+
+### Interact with the AppMap
 
 1. Right-click on the packages in the AppMap and expand them to see individual classes.
 
-1. Click on the `Pet` class (or any other class) and click on the `View source` button in the nav bar to open its source file.
+3. Click on the `PetValidator` class (or any other class) and click on the `View source` button in the nav bar to open its source file.
 
-2. Explore the `Dependency map`. Click on any component and edge in the map, expand/collapse packages and HTTP endpoints, investigate their details in the left hand navigation bar
+4. Explore the `Dependency map`. Click on any component and edge in the map, expand/collapse packages and HTTP endpoints, investigate their details in the left hand navigation bar
 
-3. Switch to the `Trace` view to see how the code and data flows in the application
+5. Switch to the `Trace` view to see how the code and data flows in the application
 
-4. To see how AppMaps can be used for fast mastering of new-to-you code
-<a href="https://www.loom.com/share/327f17cf25de499e9254bde366137306"> watch this demonstration video<img src="https://cdn.loom.com/sessions/thumbnails/327f17cf25de499e9254bde366137306-with-play.gif"></a> 
 
-5. Additional information about AppMaps and their benefits can be found in the AppMap for Visual Studio Code [online documentation](https://github.com/applandinc/vscode-appland/blob/master/README.md)
+![Create Pet AppMap](https://vscode-appmap.s3.us-east-2.amazonaws.com/media/petclinic-appmap-create-pet.png)
 
-6. Explore not only the previously recorded AppMaps but see how code modifications change the way the application runs. Modify the code, re-run the tests with the AppMap recording enabled and observe the changes in the dependencies and flows
 
-7. AppMap your application. Follow the steps outlined in this tutorial and map your application in minutes
+### Inspect database operations
 
-8. Tell your friends and colleagues. AppMaps are a fun way to learn how code works but they are also great for sharing your software designs with others
+The `Spring-Framework-PetClinic` application offers a rather simple set of tests that don't cover both Web Service requests and database operations in a single test case, unlike typical Spring applications. To inspect database operations in this example, open a different AppMap:
+
+1. Press  `CTRL|COMMAND P` to find a file by its name
+
+2. Type `Add Visit for Pet` in the search box and pick the top `.appmap.json` file. An AppMap viewer now opens. The picture below shows the Dependency Map with all packages expanded.
+3. Click on the database icon in the map and explore the SQL commands in the map and in the Trace.
+
+![Add Visit for a Pet AppMap](https://vscode-appmap.s3.us-east-2.amazonaws.com/media/petclinic-appmap-jdbc.png)
+
+
+# Learn more about interactive AppMap diagrams
+
+
+1. To see how AppMaps can be used for fast mastering of new-to-you code
+<a href="https://www.loom.com/share/327f17cf25de499e9254bde366137306"> watch this demonstration video
+
+<img src="https://cdn.loom.com/sessions/thumbnails/327f17cf25de499e9254bde366137306-with-play.gif"></a> 
+
+2. Additional information about AppMaps and their benefits can be found in the AppMap for Visual Studio Code [online documentation](https://github.com/applandinc/vscode-appland/blob/master/README.md)
+
+1. Explore not only the previously recorded AppMaps but see how code modifications change the way the application runs. Modify the code, re-run the tests with the AppMap recording enabled and observe the changes in the dependencies and flows
+
+1. AppMap your application. Follow the steps outlined in this tutorial and map your application in minutes
+
+1. Tell your friends and colleagues. AppMaps are a fun way to learn how code works but they are also great for sharing your software designs with others
 
 ## Share your AppMaps with us!
 We would love to see the AppMaps of your application in the Gallery in Discord. [Join us](https://discord.com/invite/N9VUap6) and our diverse community and share your AppMaps there!
