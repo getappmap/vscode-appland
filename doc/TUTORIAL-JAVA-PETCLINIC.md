@@ -1,6 +1,6 @@
 # AppMap Tutorial: Mapping a Java Application in Visual Studio Code
 
-This tutorial will walk you through the process of AppMapping an open source `Spring PetClinic Sample Application` implemented in Java and Spring Boot. You will map this application with the [AppMap for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=appland.appmap).
+This tutorial will walk you through the process of AppMapping an open source `Spring Framework PetClinic Sample Application` implemented in Java and Spring Boot. You will map this application with the [AppMap for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=appland.appmap).
 
 ### Prerequisites
 
