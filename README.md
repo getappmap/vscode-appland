@@ -67,7 +67,12 @@ Ruby on Rails, Minitest, RSpec, Cucumber, and more.
 
 The `appmap` Java agent is on GitHub at [https://github.com/applandinc/appmap-java](https://github.com/applandinc/appmap-java).
 
-[View installation instructions for `appmap-java`](https://github.com/applandinc/appmap-java/blob/master/README.md)
+[View installation instructions for `appmap-java`](https://github.com/applandinc/appmap-java/blob/master/README.md) and a [step-by-step tutorial](https://github.com/applandinc/vscode-appland/blob/master/doc/TUTORIAL-JAVA-PETCLINIC.md).
+
+<a href="https://www.loom.com/share/ccb9f9794f5241f5b6b67579282a288b">
+    <p>Visualize the architecture of your Java app, in VS Code, in 2 ¹/₂ minutes - Watch Video</p>
+    <img src="https://cdn.loom.com/sessions/thumbnails/ccb9f9794f5241f5b6b67579282a288b-with-play.gif">
+</a>
 
 **Supported languages and frameworks**
 
