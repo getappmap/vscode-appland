@@ -1,3 +1,10 @@
+## [0.8.5](https://github.com/applandinc/vscode-appland/compare/v0.8.4...v0.8.5) (2021-03-18)
+
+
+### Bug Fixes
+
+* adding java video and tutorial to docs ([b6684ed](https://github.com/applandinc/vscode-appland/commit/b6684edaf5de541be5fba2ceda5bf8ba523c4b67))
+
 ## [0.8.4](https://github.com/applandinc/vscode-appland/compare/v0.8.3...v0.8.4) (2021-03-11)
 
 
