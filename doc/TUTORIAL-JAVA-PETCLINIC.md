@@ -30,7 +30,7 @@ The [Spring PetClinic Sample Application project](https://github.com/land-of-app
 Start with a local clone of the `PetClinic` repository. In your working folder, clone the repo:
 
 ```shell
-git clone -b main --single-branch git@github.com:land-of-apps/spring-petclinic.git
+git clone -b main https://github.com/land-of-apps/spring-petclinic.git
 ```
 
 ## Open the PetClinic project in Visual Studio Code
@@ -101,7 +101,7 @@ The AppMap setup is now complete and the application can be recorded when `JUnit
 ./mvnw com.appland:appmap-maven-plugin:prepare-agent test
 ```
 
-The test suite will be run and AppMap files recorded from tests will be created in the `tmp` folder of the project.
+The test suite will be run and AppMap files recorded from tests will be created in the `target/appmap` folder of the project.
 
 ![AppMap files in the tmp folder](https://vscode-appmap.s3.us-east-2.amazonaws.com/media/petclinic-appmaps.png)
 
@@ -110,13 +110,10 @@ Now that you have the AppMaps recorded, let's open them in the Visual Studio Cod
 
 ## Open an AppMap file
 
-1. The recorded AppMap files are in the `tmp` folder of the project.
+1. The recorded AppMap files are in the `target/appmap` folder of the project.
 
-2. Let's open an AppMap that covers showing a pet owner's information.
-Navigate to the `tmp` folder in the file explorer and press  `CTRL|COMMAND P` to find a file by its name
-
-3. Type `ShowOwner` (single word) in the search box and pick the .appmap.json file. An AppMap viewer now opens.
-   
+2. Let's open an AppMap with a good code coverage. Navigate to the `target/appmap` folder in the file explorer
+   and open any of the `.appmap.json` files with the word `Controller` in its name.
 
 ![Show Owner AppMap](https://vscode-appmap.s3.us-east-2.amazonaws.com/media/petclinic-appmap.png)
 
