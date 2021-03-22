@@ -7,13 +7,16 @@ This tutorial will walk you through the process of AppMapping an open source app
  - git and Docker installed in your environment (macOS, Windows+WSL, Linux)
 
 ### Structure
-
 This tutorial is split into three sections:
 - Install Visual Studio Code and the AppMap extension 
 - Setup and build the `chipy.org` application in a Docker image
 - Setup, record and open AppMaps recorded from `chipy.org` tests
 
-
+### Walk-through video
+<a href="https://www.loom.com/share/d21f040d4ab94f519375a5159d778e42">
+    <p>Watch Walk-through Video</p>
+    <img src="https://cdn.loom.com/sessions/thumbnails/d21f040d4ab94f519375a5159d778e42-with-play.gif">
+  </a>
 # Install Visual Studio Code & the AppMap extension 
 1. Install the official build of Visual Studio Code - [visit the Visual Studio Code site](https://code.visualstudio.com/)
 2. Install AppMap for Visual Studio Code from the marketplace - [visit AppMap in the Marketplace](https://marketplace.visualstudio.com/items?itemName=appland.appmap)
@@ -29,7 +32,7 @@ The [Chicago Python User Group Website project](https://github.com/chicagopython
 Start with a local clone of the `chipy.org` repository. In your working folder, clone the repo:
 
 ```shell
-% git clone https://github.com/chicagopython/chipy.org.git
+git clone https://github.com/chicagopython/chipy.org.git
 ```
 
 ## Open the chipy.org project in Visual Studio Code
@@ -50,17 +53,17 @@ To build and run the application:
 
 1. Navigate to the chipy.org folder and run the setup command
 ```shell
-% make setup_env
+make setup_env
 ```
 
 2. Start the application with   
 ```shell
-% make up
+make up
 ```
 
 3. Migrate the database
 ```shell
-% make migrate
+make migrate
 ```
 
 - optionally, run `make superuser` to create a superuser if you plan to try the superuser support in the app
@@ -70,7 +73,7 @@ To build and run the application:
 5. Run tests
 
 ```shell
-% make test
+make test
 ```
 
 If you have encountered any problems during these steps, please consult the [installation guide](https://github.com/chicagopython/chipy.org#installation) or contact us on [Discord](https://discord.com/invite/N9VUap6).
@@ -96,12 +99,12 @@ The format of `appmap.yml` is documented in the [appmap-python documentation](ht
 
 1. Open shell in the running Docker image
 ```shell
-% make shell
+make shell
 ```
 
 2. Install the `appmap` Python package
 ```shell
-# pip install appmap
+pip install appmap
 ```
 
 
@@ -120,13 +123,13 @@ The AppMap setup is now complete and the application can be recorded when `pytes
 1. In the running Docker image shell, run
 
 ```shell
-# APPMAP=true pytest
+APPMAP=true pytest
 ```
 
 2. Alternatively, run and record individual tests
 
 ```shell
-# APPMAP=true pytest chipy_org/apps/job_board/tests/test_views.py -k test_approved_job_posts_visible
+APPMAP=true pytest chipy_org/apps/job_board/tests/test_views.py -k test_approved_job_posts_visible
 
 ==========test session starts ============
 platform linux -- Python 3.8.6, pytest-5.4.1, py-1.10.0, pluggy-0.13.1 -- /usr/local/bin/python
