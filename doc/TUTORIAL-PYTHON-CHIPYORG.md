@@ -13,13 +13,13 @@ This tutorial is split into three sections:
 - Setup, record and open AppMaps recorded from `chipy.org` tests
 
 ### Walk-through video
-    
-# Install Visual Studio Code & the AppMap extension 
 
 <a href="https://www.loom.com/share/d21f040d4ab94f519375a5159d778e42">
     <p>Watch Walk-through Video</p>
     <img src="https://cdn.loom.com/sessions/thumbnails/d21f040d4ab94f519375a5159d778e42-with-play.gif"/>
 </a>
+
+# Install Visual Studio Code & the AppMap extension 
 
 1. Install the official build of Visual Studio Code - [visit the Visual Studio Code site](https://code.visualstudio.com/)
 2. Install AppMap for Visual Studio Code from the marketplace - [visit AppMap in the Marketplace](https://marketplace.visualstudio.com/items?itemName=appland.appmap)
