@@ -74,7 +74,7 @@ The AppMap Maven plugin configuration is stored in the `appmap.yml` file in the 
 ```yaml
 name: spring-petclinic
 packages:
-- path: org.springframework.samples.petclinic
+  - path: org.springframework.samples.petclinic
 ```
 The file lists all packages and classes that will be recorded in AppMaps, in this example all code objects in the `org.springframework.samples.petclinic` package.
 
