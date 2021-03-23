@@ -67,16 +67,26 @@ Ruby on Rails, Minitest, RSpec, Cucumber, and more.
 
 The `appmap` Java agent is on GitHub at [https://github.com/applandinc/appmap-java](https://github.com/applandinc/appmap-java).
 
-[View installation instructions for `appmap-java`](https://github.com/applandinc/appmap-java/blob/master/README.md) and a [step-by-step tutorial](https://github.com/applandinc/vscode-appland/blob/master/doc/TUTORIAL-JAVA-PETCLINIC.md).
+For Maven projects, we recommend using the [AppMap Maven plugin](https://github.com/applandinc/appmap-maven-plugin#quickstart), see the [step-by-step tutorial](https://github.com/applandinc/vscode-appland/blob/master/doc/TUTORIAL-JAVA-PETCLINIC.md).
 
-<a href="https://www.loom.com/share/ccb9f9794f5241f5b6b67579282a288b">
+For other than Maven projects, [view installation instructions for `appmap-java`](https://github.com/applandinc/appmap-java/blob/master/README.md).
+
+<a href="https://www.loom.com/share/a8c14479b9ea419585420babcfb452ab">
     <p>Visualize the architecture of your Java app, in VS Code, in 2 ¹/₂ minutes - Watch Video</p>
-    <img src="https://cdn.loom.com/sessions/thumbnails/ccb9f9794f5241f5b6b67579282a288b-with-play.gif">
+    <img src="https://cdn.loom.com/sessions/thumbnails/a8c14479b9ea419585420babcfb452ab-with-play.gif">
 </a>
 
 **Supported languages and frameworks**
 
 Spring, JUnit, TestNG, and more.
+
+#### Enable searching for AppMap files in the target folder
+
+The Maven `appmap` plugin saves `.appmap.json` AppMap files in the `target/appmap` folder of the project. This folder is usually included in the `.gitignore` file and excluded from file search in the default Visual Studio Code configuration. To enable searching for AppMap files by their name and extension, update the search settings:
+1. `CTRL|⌘ P`, then type `Preferences: Open Settings (UI)` and pick the matching item from the results
+2. Enter `use ignore` in the search field and unselect the `Search: Use Ignore Files` checkbox.
+
+
 
 ## 3. Open an `*.appmap.json` file
 
@@ -136,8 +146,8 @@ The diagrams are fully interactive; they aren’t static pictures like UML. You 
 [App.Land](https://app.land/login) is a free single user sandbox that can be instantly used as an AppMap repository and as a collaboration and sharing tool for your team. 
 
 1. [Sign-up](https://app.land/login) for App.Land, create an account for your organization
-1. [Follow these instructions](https://app.land/setup/cli) to install CLI tools and upload your AppMap files to the App.Land server
-2. Open and share your AppMaps from the App.Land UI. You can make the shareable links public for sharing with other members of your team.
+2. [Follow these instructions](https://app.land/setup/cli) to install CLI tools and upload your AppMap files to the App.Land server
+3. Open and share your AppMaps from the App.Land UI. You can make the shareable links public for sharing with other members of your team.
 
 To share your AppMaps with your team more directly and privately, [contact us](https://appland.com/company/contact-us) about team and enteprise App.Land accounts or go to [AppLand.com](https://appland.com/).
 
