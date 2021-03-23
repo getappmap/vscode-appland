@@ -1,3 +1,10 @@
+## [0.8.6](https://github.com/applandinc/vscode-appland/compare/v0.8.5...v0.8.6) (2021-03-23)
+
+
+### Bug Fixes
+
+* doc and video update for recent agent changes ([eaef258](https://github.com/applandinc/vscode-appland/commit/eaef2581ecc1c34c1a9e38409818824acd046efa))
+
 ## [0.8.5](https://github.com/applandinc/vscode-appland/compare/v0.8.4...v0.8.5) (2021-03-18)
 
 
