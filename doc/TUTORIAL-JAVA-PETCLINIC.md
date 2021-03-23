@@ -9,10 +9,11 @@ This tutorial will walk you through the process of AppMapping an open source `Sp
 
 ### Structure
 
-This tutorial is split into three sections:
+This tutorial is split into four sections:
 - Install Visual Studio Code and the AppMap extension 
 - Setup and build the `Spring-PetClinic` application locally
-- Setup, record and open AppMaps recorded from tests
+- Setup AppMap recording
+- Record and open AppMaps recorded from tests.
 
 
 # Install Visual Studio Code & the AppMap extension 
@@ -63,11 +64,11 @@ If you have encountered any problems during these steps, please contact us on [D
 
 # Setup AppMaps
 
-In this demo, the AppMap Maven plugin is used for recording AppMaps in running JUnit tests. The Maven plugin does not need any explicit installation steps but it requires the `appmap.yml` configuration file for its function.
+In this demo, the AppMap Maven plugin and the AppMap agent are used for recording AppMaps in running JUnit tests. The agent requires the `appmap.yml` configuration file for its function.
 
 ## Configure appmap.yml
 
-The AppMap Maven plugin configuration is stored in the `appmap.yml` file in the root directory of Java projects. 
+The AppMap agent configuration is stored in the `appmap.yml` file in the root directory of Java projects. 
 
 1. Create a new file called `appmap.yml` in the root folder of the `Spring-PetClinic` project, and copy/paste this configuration in it: 
    
@@ -82,23 +83,55 @@ The file lists all packages and classes that will be recorded in AppMaps, in thi
 
 The format of `appmap.yml` is documented in the [appmap-java documentation](https://github.com/applandinc/appmap-java/blob/master/README.md). `appmap.yml` can be fine tuned to include/exclude individual packages, classes and methods.
 
+## Add the AppMap plugin to pom.xml
+
+Now add the AppMap plugin to the `pom.xml` file:
+
+1. Open `pom.xml` in the Visual Studio Code editor
+2. Navigate to the `build` section
+3. Add the `appmap-maven-plugin` configuration to `plugins` in the `build` section:
+
+```xml
+      <!-- the plugin element goes to build/plugins -->
+      <!-- AppMap agent, default parameters -->
+      <plugin>
+          <groupId>com.appland</groupId>
+          <artifactId>appmap-maven-plugin</artifactId>
+          <executions>
+              <execution>
+                  <phase>process-test-classes</phase>
+                  <goals>
+                      <goal>prepare-agent</goal>
+                  </goals>
+              </execution>
+          </executions>
+      </plugin>
+```
+
+![AppMap plugin configuration in pom.xml](https://vscode-appmap.s3.us-east-2.amazonaws.com/media/petclinic-pom.png)
+
+The `appmap-maven-plugin` will activate the AppMap agent when the tests are run in the `process-test-classes` phase.
+Please see the [appmap-maven-plugin documentation](https://github.com/applandinc/appmap-maven-plugin/blob/master/README.md) for additional details.
+
 # Record and interact with AppMaps
 
 Before proceeding, please check that
-- the `Spring-PetClinic` application has been successfully built
+- The `Spring-PetClinic` application has been successfully built
 - The `appmap.yml` exists in the root folder of the project and is properly configured
-- you have Visual Studio Code running with the `Spring-PetClinic` project folder open
+- The `appmap-maven-plugin` is configured in `pom.xml`
+- You have Visual Studio Code running with the `Spring-PetClinic` project folder open.
+
 
 ## Run tests, record AppMaps
 
 ### Run tests
 
-The AppMap setup is now complete and the application can be recorded when `JUnit` tests are run with the Maven `appmap` plugin.
+The AppMap setup is now complete and the application can be recorded when tests are run.
 
 1. In the shell, run:
 
 ```shell
-./mvnw com.appland:appmap-maven-plugin:prepare-agent test
+./mvnw test
 ```
 
 The test suite will be run and AppMap files recorded from tests will be created in the `target/appmap` folder of the project.
@@ -112,12 +145,12 @@ Now that you have the AppMaps recorded, let's open them in the Visual Studio Cod
 
 1. The recorded AppMap files are in the `target/appmap` folder of the project.
 
-2. Let's open an AppMap with a good code coverage. Navigate to the `target/appmap` folder in the file explorer
+2. Let's open an AppMap with good code coverage. Navigate to the `target/appmap` folder in the file explorer
    and open any of the `.appmap.json` files with the word `Controller` in its name.
 
 ![Show Owner AppMap](https://vscode-appmap.s3.us-east-2.amazonaws.com/media/petclinic-appmap.png)
 
-Please note that database operations are not recorded by the AppMap agent for this simple application with in-memory database. View the demonstration video below and join our [Discord server](https://discord.com/invite/N9VUap6) for examples of complete Java appmaps that include database operations.
+Please note that the tests of this application do not provide great coverage of database operations. View the demonstration video below and join our [Discord server](https://discord.com/invite/N9VUap6) for good examples of complete Java appmaps.
 
 ## Interact with the AppMap diagrams
 
