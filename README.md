@@ -203,4 +203,10 @@ Please visit the [AppMap wiki](https://github.com/applandinc/vscode-appland/wiki
 
 # About AppMap
 
-How AppMap technology works: [appland.org](https://appland.org).
+- Learn how AppMap technology works: [appland.org](https://appland.org).
+- [Blog](https://dev.to/appland)
+
+**Twitter**
+- [AppMap Ruby](https://twitter.com/appmapruby)
+- [AppMap Python](https://twitter.com/appmappython)
+- [AppMap Java](https://twitter.com/appmapjava)
