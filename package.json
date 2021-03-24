@@ -14,7 +14,7 @@
   "activationEvents": [
     "*"
   ],
-  "icon": "images/logo.png",
+  "icon": "images/logo.jpg",
   "license": "MIT",
   "main": "./out/extension.js",
   "categories": [
