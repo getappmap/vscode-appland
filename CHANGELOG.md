@@ -1,3 +1,10 @@
+## [0.9.1](https://github.com/applandinc/vscode-appland/compare/v0.9.0...v0.9.1) (2021-03-24)
+
+
+### Bug Fixes
+
+* revert bundled logo ([d9a9e69](https://github.com/applandinc/vscode-appland/commit/d9a9e69f33515377fba947a7acdcc9e187d001e0))
+
 # [0.9.0](https://github.com/applandinc/vscode-appland/compare/v0.8.6...v0.9.0) (2021-03-24)
 
 
