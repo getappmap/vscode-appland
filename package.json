@@ -9,7 +9,7 @@
     "url": "https://github.com/applandinc/vscode-appland"
   },
   "engines": {
-    "vscode": "^1.52.0"
+    "vscode": "1.49.0"
   },
   "activationEvents": [
     "*"
@@ -74,7 +74,7 @@
     "@types/glob": "^7.1.3",
     "@types/mocha": "^8.2.0",
     "@types/node": "^12.19.12",
-    "@types/vscode": "^1.52.0",
+    "@types/vscode": "1.49.0",
     "@typescript-eslint/eslint-plugin": "^4.12.0",
     "@typescript-eslint/parser": "^4.12.0",
     "@vue/cli-plugin-babel": "^4.5.10",
