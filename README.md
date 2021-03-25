@@ -204,7 +204,7 @@ Please visit the [AppMap wiki](https://github.com/applandinc/vscode-appland/wiki
 # About AppMap
 
 - Learn how AppMap technology works: [appland.org](https://appland.org).
-- [Blog](https://appland.com/blog/)
+- [Blog](https://dev.to/appland)
 
 **Twitter**
 - [AppMap Ruby](https://twitter.com/appmapruby)
