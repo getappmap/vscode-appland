@@ -83,7 +83,7 @@ Spring, JUnit, TestNG, and more.
 #### Enable searching for AppMap files in the target folder
 
 The Maven `appmap` plugin saves `.appmap.json` AppMap files in the `target/appmap` folder of the project. This folder is usually included in the `.gitignore` file and excluded from file search in the default Visual Studio Code configuration. To enable searching for AppMap files by their name and extension, update the search settings:
-1. `CTRL|⌘ P`, then type `Preferences: Open Settings (UI)` and pick the matching item from the results
+1. `SHIFT CTRL|⌘ P`, then type `Preferences: Open Settings (UI)` and pick the matching item from the results
 2. Enter `use ignore` in the search field and unselect the `Search: Use Ignore Files` checkbox.
 
 
