@@ -38,6 +38,9 @@ const app = new Vue({
         },
       });
     },
+    showInstructions() {
+      this.$refs.ui.showInstructions();
+    },
   },
   mounted() {
     vscode.postMessage({ command: 'ready' });
@@ -92,14 +95,24 @@ window.addEventListener('error', (event) => {
 
 window.addEventListener('message', (event) => {
   const message = event.data;
-  if (message.type === 'update') {
-    const { text } = message;
-    app.loadData(text);
 
-    // Then persist state information.
-    // This state is returned in the call to `vscode.getState` below when a webview is reloaded.
-    vscode.setState({ text });
+  /* eslint-disable no-case-declarations */
+  switch (message.type) {
+    case 'update':
+      const { text } = message;
+      app.loadData(text);
+
+      // Then persist state information.
+      // This state is returned in the call to `vscode.getState` below when a webview is reloaded.
+      vscode.setState({ text });
+      break;
+    case 'showInstructions':
+      app.showInstructions();
+      break;
+    default:
+      break;
   }
+  /* eslint-enable no-case-declarations */
 });
 
 // Webviews are normally torn down when not visible and re-created when they become visible again.
