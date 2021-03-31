@@ -96,15 +96,16 @@ window.addEventListener('error', (event) => {
 window.addEventListener('message', (event) => {
   const message = event.data;
 
-  /* eslint-disable no-case-declarations */
   switch (message.type) {
     case 'update':
-      const { text } = message;
-      app.loadData(text);
+      {
+        const { text } = message;
+        app.loadData(text);
 
-      // Then persist state information.
-      // This state is returned in the call to `vscode.getState` below when a webview is reloaded.
-      vscode.setState({ text });
+        // Then persist state information.
+        // This state is returned in the call to `vscode.getState` below when a webview is reloaded.
+        vscode.setState({ text });
+      }
       break;
     case 'showInstructions':
       app.showInstructions();
@@ -112,7 +113,6 @@ window.addEventListener('message', (event) => {
     default:
       break;
   }
-  /* eslint-enable no-case-declarations */
 });
 
 // Webviews are normally torn down when not visible and re-created when they become visible again.
