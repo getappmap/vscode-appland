@@ -10,6 +10,15 @@ Each interactive diagram links directly to the source code, and the information 
 
 **Join us on [Discord](https://discord.com/invite/N9VUap6), [GitHub](https://github.com/applandinc/vscode-appland) or contact us on [support@app.land](mailto:support@app.land).**
 
+
+<img alt="Visual Studio Marketplace Version" src="https://img.shields.io/visual-studio-marketplace/v/appland.appmap">
+<img alt="Visual Studio Marketplace Rating (Stars)" src="https://img.shields.io/visual-studio-marketplace/stars/appland.appmap">
+<img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/applandinc/vscode-appland?style=social">
+<img alt="Discord" src="https://img.shields.io/discord/766016904056930325">
+
+---
+
+
 ![AppMap diagrams](https://vscode-appmap.s3.us-east-2.amazonaws.com/media/002.gif "AppMap diagrams")
 
 ## Summary of features
