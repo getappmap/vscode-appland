@@ -1,6 +1,7 @@
 import { isAbsolute, join } from 'path';
 import * as vscode from 'vscode';
-import { getNonce } from './util';
+import Telemetry from './telemetry';
+import { getNonce, getStringRecords } from './util';
 
 /**
  * Provider for AppLand scenario files.
@@ -43,6 +44,15 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
 					break;
 				case 'ready':
 					updateWebview();
+					break;
+				case 'metadata':
+					Telemetry.reportLoadAppMap(message.metadata);
+					break;
+				case 'performAction':
+					Telemetry.reportAction(message.action, getStringRecords(message.data, `appmap.${message.action}`));
+					break;
+				case 'reportError':
+					Telemetry.reportWebviewError(message.error);
 					break;
 			}
 		});
