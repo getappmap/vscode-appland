@@ -1,6 +1,7 @@
 import { isAbsolute, join } from 'path';
 import * as vscode from 'vscode';
-import { getNonce } from './util';
+import Telemetry from './telemetry';
+import { getNonce, getStringRecords } from './util';
 
 /**
  * Provider for AppLand scenario files.
@@ -27,11 +28,19 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
 		webviewPanel: vscode.WebviewPanel
 		/* _token: vscode.CancellationToken */
 	): Promise<void> {
-		function updateWebview() {
+		const updateWebview = () => {
 			webviewPanel.webview.postMessage({
 				type: 'update',
 				text: document.getText(),
 			});
+			// show AppMap instructions on first open
+			const storeKey = 'APPMAP_INSTRUCTIONS_VIEWED';
+			if (!this.context.globalState.get(storeKey)) {
+				webviewPanel.webview.postMessage({
+					type: 'showInstructions',
+				});
+				this.context.globalState.update(storeKey, true);
+			}
 		}
 
 		// Handle messages from the webview.
@@ -43,6 +52,15 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
 					break;
 				case 'ready':
 					updateWebview();
+					break;
+				case 'metadata':
+					Telemetry.reportLoadAppMap(message.metadata);
+					break;
+				case 'performAction':
+					Telemetry.reportAction(message.action, getStringRecords(message.data, `appmap.${message.action}`));
+					break;
+				case 'reportError':
+					Telemetry.reportWebviewError(message.error);
 					break;
 			}
 		});
@@ -57,7 +75,7 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
 		//
 		// The text document acts as our model, so we have to sync change in the document to our
 		// editor and sync changes in the editor back to the document.
-		// 
+		//
 		// Remember that a single text document can also be shared between multiple custom
 		// editors (this happens for example when you split a custom editor)
 		const changeDocumentSubscription = vscode.workspace.onDidChangeTextDocument(e => {
@@ -124,7 +142,6 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
 			});
 
 		}
-
 	}
 
 	/**

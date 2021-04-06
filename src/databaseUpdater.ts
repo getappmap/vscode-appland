@@ -11,17 +11,23 @@ import { maxHeaderSize } from 'http';
  * Keeps the AppMap database up-to-date.
  */
 export class DatabaseUpdater {
-
   public static register(context: vscode.ExtensionContext): void {
     const showAppMapCountId = 'appmap.showAppMapCount';
-    context.subscriptions.push(vscode.commands.registerCommand(showAppMapCountId, () => {
-      vscode.window.showInformationMessage(`Number of AppMaps: ${updater.appMapCount}`);
-    }));
+    context.subscriptions.push(
+      vscode.commands.registerCommand(showAppMapCountId, () => {
+        vscode.window.showInformationMessage(
+          `Number of AppMaps: ${updater.appMapCount}`
+        );
+      })
+    );
 
-    const statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
+    const statusBarItem = vscode.window.createStatusBarItem(
+      vscode.StatusBarAlignment.Right,
+      100
+    );
     statusBarItem.command = showAppMapCountId;
     context.subscriptions.push(statusBarItem);
-    const updater = new DatabaseUpdater(statusBarItem)
+    const updater = new DatabaseUpdater(statusBarItem);
     updater.initialize(context);
 
     const command = 'appmap.openMostRecentlyModifiedAppMap';
@@ -33,7 +39,9 @@ export class DatabaseUpdater {
       vscode.commands.executeCommand('vscode.open', updater.lastModifiedAppMap);
     };
 
-    context.subscriptions.push(vscode.commands.registerCommand(command, commandHandler));
+    context.subscriptions.push(
+      vscode.commands.registerCommand(command, commandHandler)
+    );
   }
 
   private _appMapCount: number;
@@ -46,13 +54,22 @@ export class DatabaseUpdater {
   }
 
   initialize(context: vscode.ExtensionContext): void {
-    const appmapFolders = ['tmp/appmap', 'tmp/appmap/rspec', 'tmp/appmap/minitest'];
-    const folders = vscode.workspace.workspaceFolders
+    const appmapFolders = [
+      'tmp/appmap',
+      'tmp/appmap/rspec',
+      'tmp/appmap/minitest',
+    ];
+    const folders = vscode.workspace.workspaceFolders;
     if (folders) {
       folders.forEach((wsFolder) => {
         appmapFolders.forEach((folder) => {
-          const appmapPattern = new vscode.RelativePattern(wsFolder, `${folder}/*.appmap.json`);
-          const watcher = vscode.workspace.createFileSystemWatcher(appmapPattern)
+          const appmapPattern = new vscode.RelativePattern(
+            wsFolder,
+            `${folder}/*.appmap.json`
+          );
+          const watcher = vscode.workspace.createFileSystemWatcher(
+            appmapPattern
+          );
           watcher.onDidChange(this.onChange.bind(this));
           watcher.onDidCreate(this.onCreate.bind(this));
           watcher.onDidDelete(this.onDelete.bind(this));
@@ -61,10 +78,9 @@ export class DatabaseUpdater {
       });
     }
 
-    vscode.workspace.findFiles('**/*.appmap.json')
-      .then((uris) => {
-        uris.forEach(this.addUri.bind(this));
-      });
+    vscode.workspace.findFiles('**/*.appmap.json').then((uris) => {
+      uris.forEach(this.addUri.bind(this));
+    });
 
     this.statusBarItem.show();
   }
@@ -96,8 +112,6 @@ export class DatabaseUpdater {
 
   private trackModifiedFile(uri: vscode.Uri) {
     // Don't track or open the "Inventory" file.
-    console.log(uri.path);
-    console.log(uri.fsPath);
     if (uri.path.match(/\/Inventory\.appmap\.json/)) {
       return;
     }
@@ -107,11 +121,9 @@ export class DatabaseUpdater {
 
   private removeUri(uri: vscode.Uri) {
     this.appMapCount -= 1;
-    console.log(uri);
   }
 
   private addUri(uri: vscode.Uri) {
-    console.log(uri);
     this.appMapCount += 1;
     /*
     readFile(uri.path, (err, data) => {
