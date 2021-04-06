@@ -38,6 +38,9 @@ const app = new Vue({
         },
       });
     },
+    showInstructions() {
+      this.$refs.ui.showInstructions();
+    },
   },
   mounted() {
     vscode.postMessage({ command: 'ready' });
@@ -92,13 +95,23 @@ window.addEventListener('error', (event) => {
 
 window.addEventListener('message', (event) => {
   const message = event.data;
-  if (message.type === 'update') {
-    const { text } = message;
-    app.loadData(text);
 
-    // Then persist state information.
-    // This state is returned in the call to `vscode.getState` below when a webview is reloaded.
-    vscode.setState({ text });
+  switch (message.type) {
+    case 'update':
+      {
+        const { text } = message;
+        app.loadData(text);
+
+        // Then persist state information.
+        // This state is returned in the call to `vscode.getState` below when a webview is reloaded.
+        vscode.setState({ text });
+      }
+      break;
+    case 'showInstructions':
+      app.showInstructions();
+      break;
+    default:
+      break;
   }
 });
 
