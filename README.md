@@ -1,3 +1,8 @@
+![Visual Studio Marketplace Version](https://img.shields.io/visual-studio-marketplace/v/appland.appmap)
+![GitHub Repo stars](https://img.shields.io/github/stars/applandinc/vscode-appland?style=social)
+![Discord](https://img.shields.io/discord/766016904056930325)
+![Twitter](https://img.shields.io/twitter/follow/landofapps?style=social)
+
 # AppMap for Visual Studio Code
 
 Navigate your code more efficiently with interactive, accurate software architecture diagrams right in your IDE.  In less than two minutes you can go from installing this extension to exploring maps of your code's architecture.  AppMap helps you:
@@ -10,13 +15,6 @@ Each interactive diagram links directly to the source code, and the information 
 
 **Join us on [Discord](https://discord.com/invite/N9VUap6), [GitHub](https://github.com/applandinc/vscode-appland) or contact us on [support@app.land](mailto:support@app.land).**
 
-
-<img alt="Visual Studio Marketplace Version" src="https://img.shields.io/visual-studio-marketplace/v/appland.appmap">
-<img alt="Visual Studio Marketplace Rating (Stars)" src="https://img.shields.io/visual-studio-marketplace/stars/appland.appmap">
-<img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/applandinc/vscode-appland?style=social">
-<img alt="Discord" src="https://img.shields.io/discord/766016904056930325">
-
----
 
 
 ![AppMap diagrams](https://vscode-appmap.s3.us-east-2.amazonaws.com/media/002.gif "AppMap diagrams")
