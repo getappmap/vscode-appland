@@ -1,3 +1,16 @@
+# [0.10.0](https://github.com/applandinc/vscode-appland/compare/v0.9.1...v0.10.0) (2021-04-06)
+
+
+### Bug Fixes
+
+* AppMap instructions are now shown upon first opening the extension ([#164](https://github.com/applandinc/vscode-appland/issues/164)) ([4de99a6](https://github.com/applandinc/vscode-appland/commit/4de99a6793f2b2ae525866d0c63328de8898e85b))
+* Upgrade @appland/appmap to v1.12 ([54cd392](https://github.com/applandinc/vscode-appland/commit/54cd392f37bbc67a85551e55a4d534c43a78bed1))
+
+
+### Features
+
+* Report anonymous usage metadata and webview exceptions ([#167](https://github.com/applandinc/vscode-appland/issues/167)) ([b519176](https://github.com/applandinc/vscode-appland/commit/b519176ecd4c0f34bc7a9806b17d5149d746c191))
+
 ## [0.9.1](https://github.com/applandinc/vscode-appland/compare/v0.9.0...v0.9.1) (2021-03-24)
 
 

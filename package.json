@@ -3,7 +3,7 @@
   "name": "appmap",
   "displayName": "AppMap",
   "description": "Interactive maps and architecture analysis help you write better Ruby, Python and Java code",
-  "version": "0.9.1",
+  "version": "0.10.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/applandinc/vscode-appland"
