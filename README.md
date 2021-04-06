@@ -1,8 +1,12 @@
 [![Version](https://img.shields.io/visual-studio-marketplace/v/appland.appmap)](https://marketplace.visualstudio.com/items?itemName=appland.appmap) [![Avg Stars](https://img.shields.io/visual-studio-marketplace/stars/appland.appmap)](https://marketplace.visualstudio.com/items?itemName=appland.appmap)  [![GitHub Stars](https://img.shields.io/github/stars/applandinc/vscode-appland?style=social)](https://marketplace.visualstudio.com/items?itemName=appland.appmap) [![Discord](https://img.shields.io/discord/766016904056930325)](https://discord.com/invite/N9VUap6)
 
+
 # AppMap for Visual Studio Code
 
 Navigate your code more efficiently with interactive, accurate software architecture diagrams right in your IDE.  In less than two minutes you can go from installing this extension to exploring maps of your code's architecture.
+
+![AppMap](images/interactive-code-editor.svg)
+
 
  AppMap helps you:
 
@@ -10,6 +14,8 @@ Navigate your code more efficiently with interactive, accurate software architec
 - Onboard to code architecture, with no extra work for the team 
 - Troubleshoot hard-to-understand bugs using a "top-down" approach
 - Auto-document your design and code so you do not have to write and share it manually ever again.
+
+
 
 **See [dev.to/appland](https://dev.to/appland) for popular articles about AppMap use cases and tutorials.**
 Join us on [Discord](https://discord.com/invite/N9VUap6), [GitHub](https://github.com/applandinc/vscode-appland) or contact us on [support@app.land](mailto:support@app.land).
@@ -93,8 +99,7 @@ Spring, JUnit, TestNG, and more.
 
 The Maven `appmap` plugin saves `.appmap.json` AppMap files in the `target/appmap` folder of the project. This folder is usually included in the `.gitignore` file and excluded from file search in the default Visual Studio Code configuration. To enable searching for AppMap files by their name and extension, update the search settings:
 1. `SHIFT CTRL|⌘ P`, then type `Preferences: Open Settings (UI)` and pick the matching item from the results
-2. Enter `use ignore` in the search field and unselect the `Search: Use Ignore Files` checkbox.
-
+2. Enter `use ignore` in the search field and unselect the `Search: Use Ignore Files` checkbox.    
 
 
 ## 3. Open an `*.appmap.json` file
