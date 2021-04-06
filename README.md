@@ -1,29 +1,38 @@
+[![Version](https://img.shields.io/visual-studio-marketplace/v/appland.appmap)](https://marketplace.visualstudio.com/items?itemName=appland.appmap) [![Avg Stars](https://img.shields.io/visual-studio-marketplace/stars/appland.appmap)](https://marketplace.visualstudio.com/items?itemName=appland.appmap)  [![GitHub Stars](https://img.shields.io/github/stars/applandinc/vscode-appland?style=social)](https://marketplace.visualstudio.com/items?itemName=appland.appmap) [![Discord](https://img.shields.io/discord/766016904056930325)](https://discord.com/invite/N9VUap6)
+
 # AppMap for Visual Studio Code
 
-Navigate your code more efficiently with interactive, accurate software architecture diagrams right in your IDE.  In less than two minutes you can go from installing this extension to exploring maps of your code's architecture.  AppMap helps you:
+Navigate your code more efficiently with interactive, accurate software architecture diagrams right in your IDE.  In less than two minutes you can go from installing this extension to exploring maps of your code's architecture.
 
+ AppMap helps you:
+
+- [Ace your code and design reviews](https://appland.com/solutions/ace-your-code-review) using live and accurate data
 - Onboard to code architecture, with no extra work for the team 
-- Conduct code and design reviews using live and accurate data
-- Troubleshoot hard-to-understand bugs using a "top-down" approach.
+- Troubleshoot hard-to-understand bugs using a "top-down" approach
+- Auto-document your design and code so you do not have to write and share it manually ever again.
 
-Each interactive diagram links directly to the source code, and the information is easy to share.
-
-**Join us on [Discord](https://discord.com/invite/N9VUap6), [GitHub](https://github.com/applandinc/vscode-appland) or contact us on [support@app.land](mailto:support@app.land).**
+**See [dev.to/appland](https://dev.to/appland) for popular articles about AppMap use cases and tutorials.**
+Join us on [Discord](https://discord.com/invite/N9VUap6), [GitHub](https://github.com/applandinc/vscode-appland) or contact us on [support@app.land](mailto:support@app.land).
 
 ![AppMap diagrams](https://vscode-appmap.s3.us-east-2.amazonaws.com/media/002.gif "AppMap diagrams")
 
 ## Summary of features
 
 - UML-inspired Dependency Map that displays key application components and how they are interrelated during execution 
-- Execution Trace diagrams that visualize code and data flows
-- List of Web services generated automatically from executed code
+- Execution Trace diagrams that visualize code and data flows:
+  - Web service endpoints
+  - Function calls
+  - SQL commands
+  - REST calls
+  - Semantic code labels
 - List of SQL queries generated automatically from executed code
+- List of Web services generated automatically from executed code
 - Code linkage of the diagram to the source code
-- Filtering by class, package or function
+- Filtering by class, package, function or label
 
 # Getting started
 
-AppMap records behavior of running code as [AppMap files](https://github.com/applandinc/appmap) during code execution and visualizes them in interactive diagrams.
+AppMap records behavior of running code as [AppMap files](https://github.com/applandinc/appmap) during code execution and visualizes them in interactive diagrams and component catalogs.
 
 ![Getting started steps](https://vscode-appmap.s3.us-east-2.amazonaws.com/media/000.png "Getting started steps")
 
