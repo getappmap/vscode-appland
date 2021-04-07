@@ -1,3 +1,10 @@
+## [0.10.1](https://github.com/applandinc/vscode-appland/compare/v0.10.0...v0.10.1) (2021-04-07)
+
+
+### Bug Fixes
+
+* Update instrumentation key ([147a94a](https://github.com/applandinc/vscode-appland/commit/147a94ae9c8d1b56bb76878f256f71bae628d4ee))
+
 # [0.10.0](https://github.com/applandinc/vscode-appland/compare/v0.9.1...v0.10.0) (2021-04-06)
 
 
