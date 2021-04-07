@@ -11,11 +11,11 @@ const EXTENSION_VERSION = `${version}`;
 // hypens and base64 encoded without padding.
 // key.split('-').map((x) => x.toString('base64').replace(/=*/, ''))
 const INSTRUMENTATION_KEY = [
-  'OTE5Y2Q5M2Y',
-  'NWE0YQ',
-  'NDAyOA',
-  'OTEyOQ',
-  'ODEzZjI3ZjlhNTFi',
+  'NTBjMWE1YzI',
+  'NDliNA',
+  'NDkxMw',
+  'YjdjYw',
+  'ODZhNzhkNDA3NDVm',
 ]
   .map((x) => Buffer.from(x, 'base64').toString('utf8'))
   .join('-');
