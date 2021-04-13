@@ -53,6 +53,14 @@
       {
         "command": "appmap.openMostRecentlyModifiedAppMap",
         "title": "AppMap: Open most recently modified AppMap file"
+      },
+      {
+        "command": "appmap.getAppmapState",
+        "title": "AppMap: Copy current AppMap state to clipboard"
+      },
+      {
+        "command": "appmap.setAppmapState",
+        "title": "AppMap: Set AppMap state from serialized string"
       }
     ]
   },
@@ -103,7 +111,7 @@
     "webpack-cli": "^4.3.1"
   },
   "dependencies": {
-    "@appland/appmap": "1.12.0",
+    "@appland/appmap": "1.13.0",
     "bootstrap": "^4.5.3",
     "bootstrap-autocomplete": "^2.3.7",
     "jquery": "^3.5.1",

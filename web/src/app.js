@@ -41,6 +41,12 @@ const app = new Vue({
     showInstructions() {
       this.$refs.ui.showInstructions();
     },
+    getState() {
+      return this.$refs.ui.getState();
+    },
+    setState(state) {
+      this.$refs.ui.setState(state);
+    },
   },
   mounted() {
     vscode.postMessage({ command: 'ready' });
@@ -109,6 +115,15 @@ window.addEventListener('message', (event) => {
       break;
     case 'showInstructions':
       app.showInstructions();
+      break;
+    case 'requestAppmapState':
+      vscode.postMessage({
+        command: 'appmapStateResult',
+        state: app.getState(),
+      });
+      break;
+    case 'setAppmapState':
+      app.setState(message.state);
       break;
     default:
       break;
