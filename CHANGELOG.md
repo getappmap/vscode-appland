@@ -1,3 +1,10 @@
+## [0.11.1](https://github.com/applandinc/vscode-appland/compare/v0.11.0...v0.11.1) (2021-04-22)
+
+
+### Bug Fixes
+
+* Remove command state subscriptions when initializing new views ([cb1ef33](https://github.com/applandinc/vscode-appland/commit/cb1ef334b9126d2f73b9f0b9a0162395ee194827))
+
 # [0.11.0](https://github.com/applandinc/vscode-appland/compare/v0.10.1...v0.11.0) (2021-04-22)
 
 
