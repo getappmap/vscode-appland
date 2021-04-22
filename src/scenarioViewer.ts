@@ -145,28 +145,6 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
 				}
 			});
 		}
-
-    // register editor commands to get/set AppMap view state
-    this.context.subscriptions.push(
-      vscode.commands.registerCommand('appmap.getAppmapState', () => {
-        webviewPanel.webview.postMessage({
-          type: 'requestAppmapState',
-        });
-      })
-    );
-    this.context.subscriptions.push(
-      vscode.commands.registerCommand('appmap.setAppmapState', async () => {
-        const state = await vscode.window.showInputBox({
-          placeHolder: 'AppMap state serialized string'
-        });
-        if (state) {
-          webviewPanel.webview.postMessage({
-            type: 'setAppmapState',
-            state: state
-          });
-        }
-      })
-    );
 	}
 
 	/**
