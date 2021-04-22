@@ -1,3 +1,11 @@
+# [0.11.0](https://github.com/applandinc/vscode-appland/compare/v0.10.1...v0.11.0) (2021-04-22)
+
+
+### Features
+
+* Add commands to read and write AppMap state ([21fd561](https://github.com/applandinc/vscode-appland/commit/21fd561ba50fc262c9fd1cc5658ef61a7010fbb5))
+* Upgrade @appland/appmap to v2.2.0 ([b7a7e09](https://github.com/applandinc/vscode-appland/commit/b7a7e09cc378e52ccc7d58b07ff91fb599eeca81))
+
 ## [0.10.1](https://github.com/applandinc/vscode-appland/compare/v0.10.0...v0.10.1) (2021-04-07)
 
 
