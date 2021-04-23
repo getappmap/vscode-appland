@@ -61,6 +61,16 @@
       {
         "command": "appmap.setAppmapState",
         "title": "AppMap: Set AppMap state from serialized string"
+      },
+      {
+        "command": "appmap.findByName",
+        "title": "AppMap: Find an AppMap by name",
+        "icon": "$(search-view-icon)"
+      },
+      {
+        "command": "appmap.applyFilter",
+        "title": "AppMap: Filter all AppMaps by name",
+        "icon": "$(extensions-filter)"
       }
     ],
     "viewsContainers": {
@@ -72,7 +82,23 @@
         }
       ]
     },
-    "viewsWelcome": [],
+    "viewsWelcome": [
+      {
+        "view": "appmap.views.local",
+        "contents": "No AppMaps found.\n[Learn more](https://appland.com/docs)",
+        "when": "appmap.initialized && !appmap.hasData"
+      },
+      {
+        "view": "appmap.views.local",
+        "contents": "Loading...",
+        "when": "!appmap.initialized"
+      },
+      {
+        "view": "appmap.views.local",
+        "contents": "Filter matched 0 results.\n[Apply a new filter](command:appmap.applyFilter)",
+        "when": "appmap.initialized && appmap.hasData && appmap.numResults == 0"
+      }
+    ],
     "views": {
       "appmap": [
         {
@@ -81,6 +107,20 @@
           "contextualTitle": "AppMap",
           "visibility": "visible",
           "icon": "images/logo.svg"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "appmap.applyFilter",
+          "when": "view == appmap.views.local && appmap.hasData",
+          "group": "navigation@1"
+        },
+        {
+          "command": "appmap.findByName",
+          "when": "view == appmap.views.local && appmap.hasData",
+          "group": "navigation@0"
         }
       ]
     }

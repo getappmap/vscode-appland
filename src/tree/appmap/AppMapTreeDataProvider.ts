@@ -7,8 +7,9 @@ export class AppMapTreeDataProvider implements vscode.TreeDataProvider<vscode.Tr
   private _onDidChangeTreeData: vscode.EventEmitter<
     vscode.TreeItem | undefined | null | void
   > = new vscode.EventEmitter<vscode.TreeItem | undefined | null | void>();
-  public readonly onDidChangeTreeData: vscode.Event<vscode.TreeItem | undefined | null | void> = this
-    ._onDidChangeTreeData.event;
+  public readonly onDidChangeTreeData: vscode.Event<
+    vscode.TreeItem | undefined | null | void
+  > = this._onDidChangeTreeData.event;
 
   constructor(appmaps: AppMapCollection) {
     this.appmaps = appmaps;
@@ -17,6 +18,10 @@ export class AppMapTreeDataProvider implements vscode.TreeDataProvider<vscode.Tr
 
   public getTreeItem(element: vscode.TreeItem): vscode.TreeItem {
     return element;
+  }
+
+  public getParent(): Thenable<vscode.TreeItem | null> {
+    return Promise.resolve(null);
   }
 
   public getChildren(): Thenable<vscode.TreeItem[]> {

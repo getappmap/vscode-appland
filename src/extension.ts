@@ -4,6 +4,7 @@ import { ScenarioProvider } from './scenarioViewer';
 import Telemetry from './telemetry';
 import registerTrees from './tree';
 import AppMapCollectionFile from './appmapCollectionFile';
+import { notEmpty } from './util';
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
   const localAppMaps = new AppMapCollectionFile();
@@ -13,5 +14,38 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   DatabaseUpdater.register(context);
 
   localAppMaps.initialize();
-  registerTrees(localAppMaps);
+  const { localTree } = registerTrees(localAppMaps);
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand('appmap.applyFilter', async () => {
+      const filter = await vscode.window.showInputBox({
+        placeHolder: 'Enter a case sensitive partial match or press enter to filter nothing',
+      });
+
+      localAppMaps.setFilter(filter || '');
+      localTree.reveal(localAppMaps.appmapDescriptors[0], { select: false });
+    })
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand('appmap.findByName', async () => {
+      const items = localAppMaps
+        .allDescriptors()
+        .map((d) => d.metadata?.name as string)
+        .filter(notEmpty)
+        .sort();
+
+      const name = await vscode.window.showQuickPick(items, {});
+      if (!name) {
+        return;
+      }
+
+      const descriptor = localAppMaps.findByName(name);
+      if (!descriptor) {
+        return;
+      }
+
+      vscode.commands.executeCommand('vscode.open', descriptor.resourceUri);
+    })
+  );
 }
