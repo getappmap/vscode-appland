@@ -106,7 +106,11 @@ export default class AppMapCollectionFile implements AppMapCollection {
   }
 
   public filterDescriptor(appmapDescriptor: AppMapDescriptor, filter: string): boolean {
-    const name = appmapDescriptor.metadata?.name as string;
+    const name = appmapDescriptor.metadata?.name as string | undefined;
+    if (!name) {
+      return false;
+    }
+
     return name.includes(filter);
   }
 

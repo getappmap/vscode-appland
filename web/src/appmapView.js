@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import { VVsCodeExtension } from '@appland/appmap'; // eslint-disable-line import/no-named-default
+import patchNotesHtml from '../static/html/patch_notes.html';
 
 export default function mountApp() {
   const startTime = new Date();
@@ -44,6 +45,9 @@ export default function mountApp() {
       },
       setState(state) {
         this.$refs.ui.setState(state);
+      },
+      displayUpdateNotification(version) {
+        this.$refs.ui.showVersionNotification(`v${version}`, patchNotesHtml);
       },
     },
     mounted() {
@@ -93,6 +97,15 @@ export default function mountApp() {
     vscode.postMessage({ command: 'performAction', action: 'show_instructions' });
   });
 
+  app.$on('notificationOpen', () => {
+    vscode.postMessage({ command: 'performAction', action: 'view_patch_notes' });
+  });
+
+  app.$on('notificationClose', () => {
+    vscode.postMessage({ command: 'performAction', action: 'dismiss_patch_notes' });
+    vscode.postMessage({ command: 'closeUpdateNotification' });
+  });
+
   window.addEventListener('error', (event) => {
     vscode.postMessage({
       command: 'reportError',
@@ -129,6 +142,13 @@ export default function mountApp() {
       case 'setAppmapState':
         app.setState(message.state);
         break;
+      case 'displayUpdateNotification':
+        app.displayUpdateNotification(message.version);
+      case 'openUrl':
+        vscode.postMessage({
+          command: 'appmapOpenUrl',
+          url: message.url,
+        });
       default:
         break;
     }

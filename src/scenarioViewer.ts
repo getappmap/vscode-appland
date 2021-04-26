@@ -2,6 +2,7 @@ import { isAbsolute, join } from 'path';
 import * as vscode from 'vscode';
 import Telemetry from './telemetry';
 import { getNonce, getStringRecords } from './util';
+import { version, releaseKey } from '../package.json';
 
 /**
  * Provider for AppLand scenario files.
@@ -15,6 +16,8 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
   }
 
   private static readonly viewType = 'appmap.views.appMapFile';
+  private static readonly storeInstructionsKey = 'APPMAP_INSTRUCTIONS_VIEWED';
+  private static readonly storeReleaseKey = 'APPMAP_RELEASE_KEY';
 
   constructor(
     private readonly context: vscode.ExtensionContext
@@ -33,13 +36,21 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
         type: 'update',
         text: document.getText(),
       });
+
       // show AppMap instructions on first open
-      const storeKey = 'APPMAP_INSTRUCTIONS_VIEWED';
-      if (!this.context.globalState.get(storeKey)) {
+      if (!this.context.globalState.get(ScenarioProvider.storeInstructionsKey)) {
         webviewPanel.webview.postMessage({
           type: 'showInstructions',
         });
-        this.context.globalState.update(storeKey, true);
+        this.context.globalState.update(ScenarioProvider.storeInstructionsKey, true);
+      }
+
+      const lastReleaseKey = this.context.globalState.get(ScenarioProvider.storeReleaseKey);
+      if (lastReleaseKey !== releaseKey) {
+        webviewPanel.webview.postMessage({
+          type: 'displayUpdateNotification',
+          version
+        });
       }
     }
 
@@ -65,6 +76,12 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
           break;
         case 'reportError':
           Telemetry.reportWebviewError(message.error);
+          break;
+        case 'closeUpdateNotification':
+          this.context.globalState.update(ScenarioProvider.storeReleaseKey, releaseKey);
+          break;
+        case 'appmapOpenUrl':
+          vscode.env.openExternal(message.url);
           break;
       }
     });
@@ -164,13 +181,6 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
       <html lang="en">
       <head>
         <meta charset="UTF-8">
-
-        <!--
-        Use a content security policy to only allow loading images from https or from our extension directory,
-        and only allow scripts that have a specific nonce.
-        -->
-        <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src ${webview.cspSource} 'self' data: ; style-src 'unsafe-inline' ${webview.cspSource}; script-src 'nonce-${nonce}';">
-
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         <title>AppLand Scenario</title>

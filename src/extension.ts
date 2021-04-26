@@ -19,7 +19,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   context.subscriptions.push(
     vscode.commands.registerCommand('appmap.applyFilter', async () => {
       const filter = await vscode.window.showInputBox({
-        placeHolder: 'Enter a case sensitive partial match or press enter to filter nothing',
+        placeHolder:
+          'Enter a case sensitive partial match or leave this input empty to clear an existing filter',
       });
 
       localAppMaps.setFilter(filter || '');
