@@ -111,7 +111,7 @@
     "webpack-cli": "^4.3.1"
   },
   "dependencies": {
-    "@appland/appmap": "2.2.0",
+    "@appland/appmap": "2.3.2",
     "bootstrap": "^4.5.3",
     "bootstrap-autocomplete": "^2.3.7",
     "jquery": "^3.5.1",

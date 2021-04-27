@@ -1,7 +1,11 @@
 import { isAbsolute, join } from 'path';
 import * as vscode from 'vscode';
+import { version } from '../package.json';
 import Telemetry from './telemetry';
 import { getNonce, getStringRecords } from './util';
+
+const instructionsStoreKey = 'APPMAP_INSTRUCTIONS_VIEWED';
+const notificationStoreKey = 'APPMAP_EXTENSION_VERSION';
 
 /**
  * Provider for AppLand scenario files.
@@ -34,12 +38,19 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
 				text: document.getText(),
 			});
 			// show AppMap instructions on first open
-			const storeKey = 'APPMAP_INSTRUCTIONS_VIEWED';
-			if (!this.context.globalState.get(storeKey)) {
+			if (!this.context.globalState.get(instructionsStoreKey)) {
 				webviewPanel.webview.postMessage({
 					type: 'showInstructions',
 				});
-				this.context.globalState.update(storeKey, true);
+				this.context.globalState.update(instructionsStoreKey, true);
+			}
+			// show new version notification
+			const lastVersion = this.context.globalState.get(notificationStoreKey);
+			if (!lastVersion || lastVersion !== version) {
+				webviewPanel.webview.postMessage({
+					type: 'showNotification',
+					version: version,
+				});
 			}
 		}
 
@@ -56,6 +67,9 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
 				case 'appmapStateResult':
 					vscode.env.clipboard.writeText(message.state);
 					vscode.window.setStatusBarMessage('AppMap state was copied to clipboard', 5000);
+					break;
+				case 'notificationClose':
+					this.context.globalState.update(notificationStoreKey, version);
 					break;
 				case 'metadata':
 					Telemetry.reportLoadAppMap(message.metadata);

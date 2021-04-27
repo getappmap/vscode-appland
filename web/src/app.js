@@ -47,6 +47,9 @@ const app = new Vue({
     setState(state) {
       this.$refs.ui.setState(state);
     },
+    showNotification(version, versionText = '') {
+      this.$refs.ui.showVersionNotification(version, versionText);
+    },
   },
   mounted() {
     vscode.postMessage({ command: 'ready' });
@@ -89,6 +92,12 @@ app.$on('showInstructions', () => {
   vscode.postMessage({ command: 'performAction', action: 'show_instructions' });
 });
 
+app.$on('notificationClose', () => {
+  vscode.postMessage({
+    command: 'notificationClose',
+  });
+});
+
 window.addEventListener('error', (event) => {
   vscode.postMessage({
     command: 'reportError',
@@ -115,6 +124,9 @@ window.addEventListener('message', (event) => {
       break;
     case 'showInstructions':
       app.showInstructions();
+      break;
+    case 'showNotification':
+      app.showNotification(message.version, message.versionText);
       break;
     case 'requestAppmapState':
       vscode.postMessage({
