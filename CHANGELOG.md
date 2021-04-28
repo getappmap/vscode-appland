@@ -1,3 +1,13 @@
+# [0.12.0](https://github.com/applandinc/vscode-appland/compare/v0.11.1...v0.12.0) (2021-04-28)
+
+
+### Features
+
+* Add AppMap to the sidebar ([a650bb7](https://github.com/applandinc/vscode-appland/commit/a650bb7071df0c8b8d5d867d922a514cedfc3322))
+* Display patch notes in the AppMap viewer ([323ade6](https://github.com/applandinc/vscode-appland/commit/323ade664781a15e75b77c75465e3645c6153c85))
+* filter and search AppMaps ([91a8f5e](https://github.com/applandinc/vscode-appland/commit/91a8f5e593018c0c8944f8dd49758d0d42e30357))
+* update @appland/appmap to v2.3.4 ([c8f9ace](https://github.com/applandinc/vscode-appland/commit/c8f9ace4288046aafdf80065a04182bbf114fabe))
+
 ## [0.11.1](https://github.com/applandinc/vscode-appland/compare/v0.11.0...v0.11.1) (2021-04-22)
 
 
