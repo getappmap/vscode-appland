@@ -39,7 +39,7 @@
   "contributes": {
     "customEditors": [
       {
-        "viewType": "appmap.appMapFile",
+        "viewType": "appmap.views.appMapFile",
         "displayName": "AppMap file",
         "selector": [
           {
@@ -62,7 +62,28 @@
         "command": "appmap.setAppmapState",
         "title": "AppMap: Set AppMap state from serialized string"
       }
-    ]
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "appmap",
+          "title": "AppMap",
+          "icon": "images/logo.svg"
+        }
+      ]
+    },
+    "viewsWelcome": [],
+    "views": {
+      "appmap": [
+        {
+          "id": "appmap.views.local",
+          "name": "Local files",
+          "contextualTitle": "AppMap",
+          "visibility": "visible",
+          "icon": "images/logo.svg"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
@@ -91,6 +112,7 @@
     "eslint": "^7.17.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-prettier": "^3.4.0",
     "glob": "^7.1.6",
     "html-loader": "^1.3.2",
     "mocha": "^8.1.3",
@@ -112,9 +134,12 @@
   },
   "dependencies": {
     "@appland/appmap": "2.2.0",
+    "bent": "^7.3.12",
     "bootstrap": "^4.5.3",
     "bootstrap-autocomplete": "^2.3.7",
+    "diff": "^5.0.0",
     "jquery": "^3.5.1",
+    "js-yaml": "^4.0.0",
     "popper.js": "^1.16.1",
     "vscode-extension-telemetry": "^0.1.7",
     "vue": "^2.6.12",
