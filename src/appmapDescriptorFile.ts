@@ -10,7 +10,8 @@ export default class AppMapDescriptorFile implements AppMapDescriptor {
   private _onAppMapsUpdated: vscode.EventEmitter<AppMapDescriptorFile[]> = new vscode.EventEmitter<
     AppMapDescriptorFile[]
   >();
-  public readonly onAppMapsUpdated: vscode.Event<AppMapDescriptorFile[]> = this._onAppMapsUpdated.event;
+  public readonly onAppMapsUpdated: vscode.Event<AppMapDescriptorFile[]> = this._onAppMapsUpdated
+    .event;
 
   constructor(resourceUri: vscode.Uri, metadata: Record<string, unknown>) {
     this.resourceUri = resourceUri;

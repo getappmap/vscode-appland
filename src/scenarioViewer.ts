@@ -8,10 +8,12 @@ import { version, releaseKey } from '../package.json';
  * Provider for AppLand scenario files.
  */
 export class ScenarioProvider implements vscode.CustomTextEditorProvider {
-
   public static register(context: vscode.ExtensionContext): void {
     const provider = new ScenarioProvider(context);
-    const providerRegistration = vscode.window.registerCustomEditorProvider(ScenarioProvider.viewType, provider);
+    const providerRegistration = vscode.window.registerCustomEditorProvider(
+      ScenarioProvider.viewType,
+      provider
+    );
     context.subscriptions.push(providerRegistration);
   }
 
@@ -19,9 +21,7 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
   private static readonly storeInstructionsKey = 'APPMAP_INSTRUCTIONS_VIEWED';
   private static readonly storeReleaseKey = 'APPMAP_RELEASE_KEY';
 
-  constructor(
-    private readonly context: vscode.ExtensionContext
-  ) { }
+  constructor(private readonly context: vscode.ExtensionContext) {}
 
   /**
    * Called when our custom editor is opened.
@@ -49,10 +49,10 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
       if (lastReleaseKey !== releaseKey) {
         webviewPanel.webview.postMessage({
           type: 'displayUpdateNotification',
-          version
+          version,
         });
       }
-    }
+    };
 
     // Handle messages from the webview.
     // Note: this has to be set before setting the HTML to avoid a race.
@@ -72,7 +72,10 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
           Telemetry.reportLoadAppMap(message.metadata);
           break;
         case 'performAction':
-          Telemetry.reportAction(message.action, getStringRecords(message.data, `appmap.${message.action}`));
+          Telemetry.reportAction(
+            message.action,
+            getStringRecords(message.data, `appmap.${message.action}`)
+          );
           break;
         case 'reportError':
           Telemetry.reportWebviewError(message.error);
@@ -99,7 +102,7 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
     //
     // Remember that a single text document can also be shared between multiple custom
     // editors (this happens for example when you split a custom editor)
-    const changeDocumentSubscription = vscode.workspace.onDidChangeTextDocument(e => {
+    const changeDocumentSubscription = vscode.workspace.onDidChangeTextDocument((e) => {
       if (e.document.uri.toString() === document.uri.toString()) {
         updateWebview();
       }
@@ -113,9 +116,12 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
     function openFile(uri: vscode.Uri, lineNumber: number) {
       const showOptions = {
         viewColumn: vscode.ViewColumn.Beside,
-        selection: new vscode.Range(new vscode.Position(lineNumber - 1, 0), new vscode.Position(lineNumber - 1, 0))
-      }
-      vscode.commands.executeCommand('vscode.open', uri, showOptions)
+        selection: new vscode.Range(
+          new vscode.Position(lineNumber - 1, 0),
+          new vscode.Position(lineNumber - 1, 0)
+        ),
+      };
+      vscode.commands.executeCommand('vscode.open', uri, showOptions);
     }
 
     function viewSource(location: string) {
@@ -123,23 +129,23 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
       const path = tokens[0];
       const lineNumberStr = tokens[1];
       let lineNumber = 1;
-      if ( lineNumberStr ) {
+      if (lineNumberStr) {
         lineNumber = Number.parseInt(lineNumberStr, 10);
       }
 
       let searchPath;
-      if ( vscode.workspace.workspaceFolders ) {
-        for ( let i = 0; !searchPath && i < vscode.workspace.workspaceFolders?.length; ++i ) {
+      if (vscode.workspace.workspaceFolders) {
+        for (let i = 0; !searchPath && i < vscode.workspace.workspaceFolders?.length; ++i) {
           const folder = vscode.workspace.workspaceFolders[i];
           // findFiles is not tolerant of absolute paths, even if the absolute path matches the
           // path of the file in the workspace.
-          if ( folder.uri.scheme === 'file' && path.startsWith(folder.uri.path) ) {
+          if (folder.uri.scheme === 'file' && path.startsWith(folder.uri.path)) {
             searchPath = path.slice(folder.uri.path.length + 1);
           }
         }
       }
-      searchPath ||= path;
-      if ( !isAbsolute(path) ) {
+      searchPath = searchPath || path;
+      if (!isAbsolute(path)) {
         searchPath = join('**', path);
       }
 
@@ -151,14 +157,19 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
         } else {
           const options: vscode.QuickPickOptions = {
             canPickMany: false,
-            placeHolder: 'Choose file to open'
+            placeHolder: 'Choose file to open',
           };
-          vscode.window.showQuickPick(uris.map(uri => uri.toString()), options).then((fileName) => {
-            if ( !fileName ) {
-              return false;
-            }
-            openFile(vscode.Uri.parse(fileName), lineNumber);
-          });
+          vscode.window
+            .showQuickPick(
+              uris.map((uri) => uri.toString()),
+              options
+            )
+            .then((fileName) => {
+              if (!fileName) {
+                return false;
+              }
+              openFile(vscode.Uri.parse(fileName), lineNumber);
+            });
         }
       });
     }
@@ -169,14 +180,14 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
    */
   private getHtmlForWebview(webview: vscode.Webview): string {
     // Local path to script and css for the webview
-    const scriptUri = webview.asWebviewUri(vscode.Uri.file(
-      join(this.context.extensionPath, 'out', 'app.js')
-    ));
+    const scriptUri = webview.asWebviewUri(
+      vscode.Uri.file(join(this.context.extensionPath, 'out', 'app.js'))
+    );
 
     // Use a nonce to whitelist which scripts can be run
     const nonce = getNonce();
 
-    return /* html */`
+    return /* html */ `
       <!DOCTYPE html>
       <html lang="en">
       <head>
@@ -197,15 +208,15 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
   }
 
   private getDocumentAsJson(document: vscode.TextDocument): Record<string, unknown> {
-		const text = document.getText();
-		if (text.trim().length === 0) {
-			return {};
-		}
+    const text = document.getText();
+    if (text.trim().length === 0) {
+      return {};
+    }
 
-		try {
-			return JSON.parse(text);
-		} catch {
-			throw new Error('Could not get document as json. Content is not valid json');
-		}
-	}
+    try {
+      return JSON.parse(text);
+    } catch {
+      throw new Error('Could not get document as json. Content is not valid json');
+    }
+  }
 }

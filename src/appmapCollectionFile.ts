@@ -114,7 +114,7 @@ export default class AppMapCollectionFile implements AppMapCollection {
     return name.includes(filter);
   }
 
-  public findByName(name: String): AppMapDescriptor | undefined {
+  public findByName(name: string): AppMapDescriptor | undefined {
     return Object.values(this.descriptors).find((d) => d.metadata?.name === name);
   }
 
