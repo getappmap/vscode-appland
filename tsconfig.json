@@ -1,13 +1,14 @@
 {
   "compilerOptions": {
+    "lib": ["ES2019"],
     "module": "commonjs",
     "moduleResolution": "node",
-    "target": "es2019",
-    "lib": ["ES2019"],
+    "noImplicitAny": false,
     "outDir": "out",
+    "resolveJsonModule": true,
     "sourceMap": true,
     "strict": true,
-    "resolveJsonModule": true
+    "target": "es2019"
   },
-  "exclude": ["node_modules", ".vscode-test"]
+  "exclude": ["node_modules", ".vscode-test", "web"]
 }

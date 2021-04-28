@@ -1,0 +1,213 @@
+<html>
+  <head>
+    <style type="text/css">
+      @font-face {
+        font-family: 'IBM Plex Sans regular';
+        src: local('IBM Plex Sans'), url(../fonts/IBMPlexSans-Regular.ttf) format('truetype');
+      }
+      @font-face {
+        font-family: 'IBM Plex Sans semi-bold';
+        src: local('IBM Plex Sans'), url(../fonts/IBMPlexSans-SemiBold.ttf) format('truetype');
+      }
+      html,
+      body {
+        margin: 0;
+      }
+
+      body {
+        color: #242c41;
+        overflow: auto;
+        font-family: 'IBM Plex Sans regular', sans-serif;
+        font-size: 0.9rem;
+      }
+
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+
+      ::-webkit-scrollbar-button {
+        width: 0px;
+        height: 0px;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: #808b98;
+        border: 0;
+        border-radius: 50px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover,
+      ::-webkit-scrollbar-thumb:active {
+        background: #e1e2e2;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: #343742;
+        border: 0;
+        border-radius: 50px;
+      }
+
+      ::-webkit-scrollbar-corner {
+        background: transparent;
+      }
+
+      ul {
+        margin: 0.5rem 0;
+        padding-left: 1rem;
+      }
+
+      ul li:not(:last-child) {
+        margin-bottom: 0.5rem;
+      }
+
+      .item-desc {
+        margin-top: 0;
+      }
+
+      h2,
+      h3,
+      h4 {
+        margin-bottom: 0.25rem;
+        font-family: 'IBM Plex Sans semi-bold', sans-serif;
+      }
+
+      b {
+        font-family: 'IBM Plex Sans semi-bold', sans-serif;
+      }
+
+      .accent {
+        color: #ff07aa;
+      }
+
+      .patch-notes {
+        padding: 1rem;
+      }
+
+      header {
+        background-color: #010306;
+        border-bottom: #ff07aa solid 1px;
+        padding: 1rem;
+        display: flex;
+        justify-content: space-between;
+        vertical-align: middle;
+      }
+
+      .logo {
+        width: 128px;
+        margin: auto 0;
+      }
+
+      .social {
+        vertical-align: middle;
+        max-width: 32px;
+        margin: 0 0.5rem;
+        padding: 0.25rem;
+        border-radius: 4px;
+        transition: background-color 0.3s ease;
+      }
+
+      a {
+        text-decoration: none;
+      }
+
+      .social:hover {
+        background-color: #ff07aa;
+        color: #fff;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <a href="https://appland.com" class="logo">
+        <img src="../media/appland-logo-sharp.svg" />
+      </a>
+
+      <div>
+        <a href="https://discord.com/invite/N9VUap6">
+          <img src="../media/discord-link.svg" class="social" />
+        </a>
+        <a href="https://twitter.com/landofapps">
+          <img src="../media/twitter-link.svg" class="social" />
+        </a>
+        <a href="https://github.com/applandinc">
+          <img src="../media/github-link.svg" class="social" />
+        </a>
+      </div>
+    </header>
+
+    <div class="patch-notes">
+      <h2 class="accent">New in this release</h2>
+      <h3>Features</h3>
+      <ul>
+        <li>
+          <b>AppMap side-bar panel</b>
+          <p class="item-desc">
+            Find all your AppMaps in a single view. The AppMap panel displays a flat list of every
+            AppMap in the workspace. AppMaps are sorted alphabetically by name.
+          </p>
+        </li>
+        <li>
+          <b>Command: Find an AppMap by name</b>
+          <p class="item-desc">
+            Search by name to locate and open a single AppMap in your current workspace.
+          </p>
+        </li>
+        <li>
+          <b>Command: Filter all AppMaps by name</b>
+          <p class="item-desc">
+            Filter all the AppMaps in your current workspace. Results appear in the AppMap panel.
+          </p>
+        </li>
+        <li>
+          <b>Command: Focus on local files view</b>
+          <p class="item-desc">
+            Opens the AppMap panel. This is the same as clicking the AppMap logo in the side-bar.
+          </p>
+        </li>
+        <li>
+          <b>Event preview</b>
+          <p class="item-desc">
+            Click the eye icon within an event list item to preview the event in the Trace view. The
+            view will shift focus to the event, without changing the active selection.
+          </p>
+        </li>
+      </ul>
+      <h3>Bug fixes</h3>
+      <ul>
+        <li>
+          HTTP response status codes are now properly displayed in the Trace view for Python
+          applications
+        </li>
+        <li>
+          Fixed an issue that would result in some lesser-used SQL keywords to disappear.
+        </li>
+      </ul>
+    </div>
+
+    <script text="application/json">
+      function openUrl(url) {
+        window.parent.postMessage({ type: 'openUrl', url }, '*');
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        if (window.parent === window) {
+          return;
+        }
+
+        const links = [...document.querySelectorAll('a[href]')];
+        links.forEach((element) => {
+          const { value: url } = element.attributes.href;
+          if (url) {
+            element.addEventListener('click', (event) => {
+              openUrl(url);
+              event.preventDefault();
+            });
+            element.attributes.href.value = '#';
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

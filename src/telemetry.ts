@@ -10,22 +10,12 @@ const EXTENSION_VERSION = `${version}`;
 // obfuscation to mitigate key scraping bots on GitHub. The key is split on
 // hypens and base64 encoded without padding.
 // key.split('-').map((x) => x.toString('base64').replace(/=*/, ''))
-const INSTRUMENTATION_KEY = [
-  'NTBjMWE1YzI',
-  'NDliNA',
-  'NDkxMw',
-  'YjdjYw',
-  'ODZhNzhkNDA3NDVm',
-]
+const INSTRUMENTATION_KEY = ['NTBjMWE1YzI', 'NDliNA', 'NDkxMw', 'YjdjYw', 'ODZhNzhkNDA3NDVm']
   .map((x) => Buffer.from(x, 'base64').toString('utf8'))
   .join('-');
 
 class AppMapTelemetry {
-  private reporter = new TelemetryReporter(
-    EXTENSION_ID,
-    EXTENSION_VERSION,
-    INSTRUMENTATION_KEY
-  );
+  private reporter = new TelemetryReporter(EXTENSION_ID, EXTENSION_VERSION, INSTRUMENTATION_KEY);
 
   register(context: vscode.ExtensionContext) {
     context.subscriptions.push(this.reporter);

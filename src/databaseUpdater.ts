@@ -15,16 +15,11 @@ export class DatabaseUpdater {
     const showAppMapCountId = 'appmap.showAppMapCount';
     context.subscriptions.push(
       vscode.commands.registerCommand(showAppMapCountId, () => {
-        vscode.window.showInformationMessage(
-          `Number of AppMaps: ${updater.appMapCount}`
-        );
+        vscode.window.showInformationMessage(`Number of AppMaps: ${updater.appMapCount}`);
       })
     );
 
-    const statusBarItem = vscode.window.createStatusBarItem(
-      vscode.StatusBarAlignment.Right,
-      100
-    );
+    const statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
     statusBarItem.command = showAppMapCountId;
     context.subscriptions.push(statusBarItem);
     const updater = new DatabaseUpdater(statusBarItem);
@@ -39,9 +34,7 @@ export class DatabaseUpdater {
       vscode.commands.executeCommand('vscode.open', updater.lastModifiedAppMap);
     };
 
-    context.subscriptions.push(
-      vscode.commands.registerCommand(command, commandHandler)
-    );
+    context.subscriptions.push(vscode.commands.registerCommand(command, commandHandler));
   }
 
   private _appMapCount: number;
@@ -54,22 +47,13 @@ export class DatabaseUpdater {
   }
 
   initialize(context: vscode.ExtensionContext): void {
-    const appmapFolders = [
-      'tmp/appmap',
-      'tmp/appmap/rspec',
-      'tmp/appmap/minitest',
-    ];
+    const appmapFolders = ['tmp/appmap', 'tmp/appmap/rspec', 'tmp/appmap/minitest'];
     const folders = vscode.workspace.workspaceFolders;
     if (folders) {
       folders.forEach((wsFolder) => {
         appmapFolders.forEach((folder) => {
-          const appmapPattern = new vscode.RelativePattern(
-            wsFolder,
-            `${folder}/*.appmap.json`
-          );
-          const watcher = vscode.workspace.createFileSystemWatcher(
-            appmapPattern
-          );
+          const appmapPattern = new vscode.RelativePattern(wsFolder, `${folder}/*.appmap.json`);
+          const watcher = vscode.workspace.createFileSystemWatcher(appmapPattern);
           watcher.onDidChange(this.onChange.bind(this));
           watcher.onDidCreate(this.onCreate.bind(this));
           watcher.onDidDelete(this.onDelete.bind(this));

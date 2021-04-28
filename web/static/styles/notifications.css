@@ -1,0 +1,72 @@
+@font-face {
+  font-family: "IBM Plex Sans regular";
+  src: local("IBM Plex Sans"), url(../fonts/IBMPlexSans-Regular.ttf) format("truetype");
+}
+@font-face {
+  font-family: "IBM Plex Sans semi-bold";
+  src: local("IBM Plex Sans"), url(../fonts/IBMPlexSans-SemiBold.ttf) format("truetype");
+}
+body {
+  color: #242C41;
+  overflow: auto;
+  padding: 1em;
+  font-family: "IBM Plex Sans regular", sans-serif;
+  font-size: 0.9rem;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-button {
+  width: 0px;
+  height: 0px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #808b98;
+  border: 0;
+  border-radius: 50px;
+}
+
+::-webkit-scrollbar-thumb:hover,
+::-webkit-scrollbar-thumb:active {
+  background: #e1e2e2;
+}
+
+::-webkit-scrollbar-track {
+  background: #343742;
+  border: 0;
+  border-radius: 50px;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+ul {
+  margin: 0.5rem 0;
+  padding-left: 1rem;
+}
+
+ul li:not(:last-child) {
+  margin-bottom: 0.5rem;
+}
+
+.item-desc {
+  margin-top: 0;
+}
+
+h2, h3, h4 {
+  margin-bottom: 0.25rem;
+  font-family: "IBM Plex Sans semi-bold", sans-serif;
+}
+
+b {
+  font-family: "IBM Plex Sans semi-bold", sans-serif;
+}
+
+.accent {
+  color: #FF07AA;
+}
