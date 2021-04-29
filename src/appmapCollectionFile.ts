@@ -69,7 +69,7 @@ export default class AppMapCollectionFile implements AppMapCollection {
     const files = await Promise.all(
       workspaceFolders.map(async (dir) => {
         const appmapPattern = new vscode.RelativePattern(dir, '**/*.appmap.json');
-        return await vscode.workspace.findFiles(appmapPattern);
+        return await vscode.workspace.findFiles(appmapPattern, '**/node_modules/**/*.appmap.json');
       })
     );
 
