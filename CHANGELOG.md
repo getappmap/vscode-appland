@@ -1,3 +1,10 @@
+## [0.12.1](https://github.com/applandinc/vscode-appland/compare/v0.12.0...v0.12.1) (2021-04-30)
+
+
+### Bug Fixes
+
+* The AppMap panel will no longer display AppMaps within node_modules ([e4a5a06](https://github.com/applandinc/vscode-appland/commit/e4a5a0659f6cdc3a01ba7f60be75b559e0749ef4))
+
 # [0.12.0](https://github.com/applandinc/vscode-appland/compare/v0.11.1...v0.12.0) (2021-04-28)
 
 
