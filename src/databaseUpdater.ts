@@ -103,11 +103,11 @@ export class DatabaseUpdater {
     this.lastModifiedAppMap = uri;
   }
 
-  private removeUri(uri: vscode.Uri) {
+  private removeUri() {
     this.appMapCount -= 1;
   }
 
-  private addUri(uri: vscode.Uri) {
+  private addUri() {
     this.appMapCount += 1;
     /*
     readFile(uri.path, (err, data) => {

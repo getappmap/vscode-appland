@@ -55,10 +55,13 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
       }
     };
 
-		if (vscode.env.isNewAppInstall && !this.context.globalState.get(ScenarioProvider.storeTelemetryInstallKey)) {
-			Telemetry.reportAction('install', undefined);
-			this.context.globalState.update(ScenarioProvider.storeTelemetryInstallKey, true);
-		}
+    if (
+      vscode.env.isNewAppInstall &&
+      !this.context.globalState.get(ScenarioProvider.storeTelemetryInstallKey)
+    ) {
+      Telemetry.reportAction('install', undefined);
+      this.context.globalState.update(ScenarioProvider.storeTelemetryInstallKey, true);
+    }
 
     // Handle messages from the webview.
     // Note: this has to be set before setting the HTML to avoid a race.
