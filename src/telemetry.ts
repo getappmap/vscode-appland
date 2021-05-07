@@ -124,6 +124,10 @@ class AppMapTelemetry {
       'appmap.webview.error.stack': error.stack,
     });
   }
+
+  reportOpenUri(uri: vscode.Uri) {
+    this.reporter.sendTelemetryEvent('open_uri', { uri: uri.toString() });
+  }
 }
 
 const Telemetry = new AppMapTelemetry();

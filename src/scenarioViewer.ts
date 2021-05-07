@@ -85,6 +85,7 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
           break;
         case 'appmapOpenUrl':
           vscode.env.openExternal(message.url);
+          Telemetry.reportOpenUri(message.url);
           break;
       }
     });
