@@ -8,7 +8,15 @@ export default function mountApp() {
 
   const app = new Vue({
     el: '#app',
-    render: (h) => h(VVsCodeExtension, { ref: 'ui' }),
+    // eslint-disable-next-line arrow-body-style
+    render: (h) => {
+      return h(VVsCodeExtension, {
+        ref: 'ui',
+        props: {
+          appMapUploadable: true,
+        },
+      });
+    },
     methods: {
       async loadData(text) {
         const appmapData = JSON.parse(text);
@@ -62,6 +70,11 @@ export default function mountApp() {
 
   app.$on('clearSelection', () => {
     vscode.postMessage({ command: 'performAction', action: 'clear_selection' });
+  });
+
+  app.$on('uploadAppmap', () => {
+    vscode.postMessage({ command: 'uploadAppmap' });
+    vscode.postMessage({ command: 'performAction', action: 'upload_appmap' });
   });
 
   app.$on('stateChanged', (stateKey) => {
@@ -126,7 +139,8 @@ export default function mountApp() {
           app.loadData(text);
 
           // Then persist state information.
-          // This state is returned in the call to `vscode.getState` below when a webview is reloaded.
+          // This state is returned in the call to `vscode.getState`
+          // below when a webview is reloaded.
           vscode.setState({ text });
         }
         break;
@@ -144,11 +158,13 @@ export default function mountApp() {
         break;
       case 'displayUpdateNotification':
         app.displayUpdateNotification(message.version);
+        break;
       case 'openUrl':
         vscode.postMessage({
           command: 'appmapOpenUrl',
           url: message.url,
         });
+        break;
       default:
         break;
     }
