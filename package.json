@@ -108,6 +108,11 @@
           "type": "string",
           "default": "",
           "description": "Path for remote recordings"
+        },
+        "appMap.applandUrl": {
+          "type": "string",
+          "default": "https://app.land",
+          "description": "URL of an AppLand cloud instance for AppMap storage"
         }
       }
     },
