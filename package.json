@@ -13,7 +13,7 @@
     "vscode": "^1.52.0"
   },
   "activationEvents": [
-    "*"
+    "onStartupFinished"
   ],
   "icon": "images/logo.png",
   "license": "MIT",
