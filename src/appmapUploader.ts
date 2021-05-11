@@ -15,9 +15,9 @@ export class AppmapUploader {
         token: string;
       };
 
-      const confirm_uri = this.getConfirmUri(response.id, response.token);
+      const confirmUri = this.getConfirmUri(response.id, response.token);
 
-      vscode.env.openExternal(confirm_uri);
+      vscode.env.openExternal(confirmUri);
 
       vscode.window.showInformationMessage(`Uploaded ${appMapFile.fileName}`);
     } catch (e) {
@@ -26,10 +26,10 @@ export class AppmapUploader {
   }
 
   private static getUri(): vscode.Uri {
-    const config_url: string = vscode.workspace
+    const configUrl: string = vscode.workspace
       .getConfiguration('appMap')
       .get('appLandURL') as string;
-    return vscode.Uri.parse(config_url);
+    return vscode.Uri.parse(configUrl);
   }
 
   private static getConfirmUri(id: number, token: string): vscode.Uri {
