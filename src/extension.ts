@@ -4,7 +4,14 @@ import { ScenarioProvider } from './scenarioViewer';
 import Telemetry from './telemetry';
 import registerTrees from './tree';
 import AppMapCollectionFile from './appmapCollectionFile';
+import RemoteRecording from './remoteRecording';
 import { notEmpty } from './util';
+
+async function getBaseUrl(): Promise<string | undefined> {
+  return await vscode.window.showInputBox({
+    placeHolder: 'URL of remote recording server, eg "http://localhost:3000"',
+  });
+}
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
   const localAppMaps = new AppMapCollectionFile();
@@ -51,4 +58,62 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   );
 
   Telemetry.reportStartUp();
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand('appmap.startRemoteRecording', async () => {
+      const baseURL = (await getBaseUrl()) || '';
+
+      if (baseURL === '') {
+        return;
+      }
+
+      try {
+        RemoteRecording.start(baseURL);
+        vscode.window.showInformationMessage(`Recording started at "${baseURL}"`);
+      } catch (e) {
+        vscode.window.showErrorMessage(`Start recording failed: ${e.name}: ${e.message}`);
+      }
+    })
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand('appmap.getRemoteRecordingStatus', async () => {
+      const baseURL = (await getBaseUrl()) || '';
+
+      if (baseURL === '') {
+        return;
+      }
+
+      try {
+        const recordingStatus = (await RemoteRecording.getStatus(baseURL)) ? 'enabled' : 'disabled';
+        vscode.window.showInformationMessage(
+          `Recording status at "${baseURL}": ${recordingStatus}`
+        );
+      } catch (e) {
+        vscode.window.showErrorMessage(`Recording status failed: ${e.name}: ${e.message}`);
+      }
+    })
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand('appmap.stopRemoteRecording', async () => {
+      const baseURL = (await getBaseUrl()) || '';
+
+      if (baseURL === '') {
+        return;
+      }
+
+      try {
+        const appmap = await RemoteRecording.stop(baseURL);
+        const document = await vscode.workspace.openTextDocument({
+          language: undefined,
+          content: JSON.stringify(appmap),
+        });
+        vscode.window.showTextDocument(document);
+        vscode.window.showInformationMessage(`Recording stopped at "${baseURL}"`);
+      } catch (e) {
+        vscode.window.showErrorMessage(`Stop recording failed: ${e.name}: ${e.message}`);
+      }
+    })
+  );
 }
