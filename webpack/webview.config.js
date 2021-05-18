@@ -1,5 +1,8 @@
 /* eslint-disable */
 const path = require('path');
+const TerserPlugin = require('terser-webpack-plugin');
+
+const isProduction = process.env.NODE_ENV === 'production';
 
 module.exports = {
   entry: './web/src/app.js',
@@ -15,8 +18,6 @@ module.exports = {
     alias: {
       vue: path.resolve('./node_modules/vue'),
       vuex: path.resolve('./node_modules/vuex'),
-      '@appland/models': path.resolve('./node_modules/@appland/models'),
-      '@appland/diagrams': path.resolve('./node_modules/@appland/diagrams'),
     },
     fallback: {
       crypto: 'crypto-js',
@@ -29,9 +30,7 @@ module.exports = {
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
-          options: {
-            presets: ['@babel/preset-env', '@vue/cli-plugin-babel/preset'],
-          },
+          options: {},
         },
       },
       {
@@ -51,5 +50,9 @@ module.exports = {
         ],
       },
     ],
+  },
+  optimization: {
+    minimize: isProduction,
+    minimizer: [new TerserPlugin()],
   },
 };

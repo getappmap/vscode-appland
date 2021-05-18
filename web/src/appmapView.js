@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { VVsCodeExtension } from '@appland/appmap'; // eslint-disable-line import/no-named-default
+import { VVsCodeExtension } from '@appland/components'; // eslint-disable-line import/no-named-default
 import patchNotesHtml from '../static/html/patch_notes.html';
 
 export default function mountApp() {
