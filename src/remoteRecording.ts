@@ -10,7 +10,7 @@ export default class RemoteRecording {
   }
   static async start(): Promise<void> {
     const baseURL = (await this.getBaseUrl()) || '';
-    const request = bent(baseURL, 'POST', 'json', 200);
+    const request = bent(baseURL, 'POST', 'string', 200);
 
     try {
       await request(this.RECORDING_URI);
