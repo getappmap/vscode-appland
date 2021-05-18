@@ -1,5 +1,8 @@
 /* eslint-disable */
 const path = require('path');
+const TerserPlugin = require('terser-webpack-plugin');
+
+const isProduction = process.env.NODE_ENV === 'production';
 
 module.exports = {
   target: 'node',
@@ -16,11 +19,7 @@ module.exports = {
   },
   resolve: {
     extensions: ['.ts', '.js'],
-    alias: {
-      '@appland/appmap': path.resolve(
-        './node_modules/@appland/appmap/dist/appmap.node.js'
-      ),
-    },
+    alias: {},
   },
   module: {
     rules: [
@@ -30,5 +29,9 @@ module.exports = {
         use: ['ts-loader'],
       },
     ],
+  },
+  optimization: {
+    minimize: isProduction,
+    minimizer: [new TerserPlugin()],
   },
 };
