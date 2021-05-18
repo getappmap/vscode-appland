@@ -5,12 +5,12 @@ export default class RemoteRecording {
   private static readonly RECORDING_URI = '/_appmap/record';
   private static async getBaseUrl(): Promise<string | undefined> {
     return await vscode.window.showInputBox({
-      placeHolder: 'URL of remote recording server, eg "localhost:3000"'
+      placeHolder: 'URL of remote recording server, eg "http://localhost:3000"',
     });
   }
   static async start(): Promise<void> {
-    const baseURL = await this.getBaseUrl();
-    const request = bent('http://' + baseURL, 'POST', 'json', 200);
+    const baseURL = (await this.getBaseUrl()) || '';
+    const request = bent(baseURL, 'POST', 'json', 200);
 
     try {
       await request(this.RECORDING_URI);
@@ -20,8 +20,8 @@ export default class RemoteRecording {
     }
   }
   static async getStatus(): Promise<void> {
-    const baseURL = await this.getBaseUrl();
-    const request = bent('http://' + baseURL, 'GET', 'json', 200);
+    const baseURL = (await this.getBaseUrl()) || '';
+    const request = bent(baseURL, 'GET', 'json', 200);
 
     try {
       const response = (await request(this.RECORDING_URI)) as {
@@ -34,8 +34,8 @@ export default class RemoteRecording {
     }
   }
   static async stop(): Promise<void> {
-    const baseURL = await this.getBaseUrl();
-    const request = bent('http://' + baseURL, 'DELETE', 'json', 200);
+    const baseURL = (await this.getBaseUrl()) || '';
+    const request = bent(baseURL, 'DELETE', 'json', 200);
 
     try {
       const response = (await request(this.RECORDING_URI)) as string;
