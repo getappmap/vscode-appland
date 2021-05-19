@@ -1,3 +1,17 @@
+# [0.13.0](https://github.com/applandinc/vscode-appland/compare/v0.12.1...v0.13.0) (2021-05-19)
+
+
+### Bug Fixes
+
+* Initialize after startup has completed ([5abe7d4](https://github.com/applandinc/vscode-appland/commit/5abe7d4611efd2e8f45e12ac09f25aa21b900370))
+
+
+### Features
+
+* Report AppMap agent references and project language/framework on initialize ([a11feca](https://github.com/applandinc/vscode-appland/commit/a11feca72db940ca750a3cee5a9ca9078109b463))
+* Send telemetry event after extension installation ([8024b63](https://github.com/applandinc/vscode-appland/commit/8024b633749463543ed0bb23fecd4308b77c99a8))
+* Send telemetry event upon opening a URL from the AppMap view ([505c87a](https://github.com/applandinc/vscode-appland/commit/505c87a7ae86ee0d2cd5905f267236c6d56cfdfd))
+
 ## [0.12.1](https://github.com/applandinc/vscode-appland/compare/v0.12.0...v0.12.1) (2021-04-30)
 
 
