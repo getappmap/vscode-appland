@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 # [0.13.0](https://github.com/applandinc/vscode-appland/compare/v0.12.1...v0.13.0) (2021-05-20)
+=======
+# [0.13.0](https://github.com/applandinc/vscode-appland/compare/v0.12.1...v0.13.0) (2021-05-19)
+>>>>>>> chore(release): 0.13.0 [skip ci]
 
 
 ### Bug Fixes
