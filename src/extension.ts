@@ -49,4 +49,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
       vscode.commands.executeCommand('vscode.open', descriptor.resourceUri);
     })
   );
+
+  Telemetry.reportStartUp();
 }

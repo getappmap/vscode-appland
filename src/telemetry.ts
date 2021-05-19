@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import TelemetryReporter from 'vscode-extension-telemetry';
 import { version, publisher, name } from '../package.json';
 import { getStringRecords } from './util';
+import { basename } from 'path';
 
 const EXTENSION_ID = `${publisher}.${name}`;
 const EXTENSION_VERSION = `${version}`;
@@ -16,9 +17,71 @@ const INSTRUMENTATION_KEY = ['NTBjMWE1YzI', 'NDliNA', 'NDkxMw', 'YjdjYw', 'ODZhN
 
 class AppMapTelemetry {
   private reporter = new TelemetryReporter(EXTENSION_ID, EXTENSION_VERSION, INSTRUMENTATION_KEY);
+  private readonly referenceInfo = {
+    'pom.xml': {
+      language: 'java',
+      framework: 'maven',
+    },
+    'build.gradle': {
+      language: 'java',
+      framework: 'gradle',
+    },
+    'Gemfile.lock': {
+      language: 'ruby',
+    },
+    'pyproject.toml': {
+      language: 'python',
+    },
+    'requirements.txt': {
+      language: 'python',
+    },
+  };
 
   register(context: vscode.ExtensionContext) {
     context.subscriptions.push(this.reporter);
+  }
+
+  async reportStartUp() {
+    const languages: string[] = [];
+    const frameworks: string[] = [];
+    const referenceSources = Object.keys(this.referenceInfo);
+    const filesContainingReferences = (
+      await Promise.all(
+        referenceSources.flatMap(async (fileName) => {
+          const files = await vscode.workspace.findFiles(`**/${fileName}`);
+          return files.filter(async (uri) => {
+            const textDocument = await vscode.workspace.openTextDocument(uri);
+
+            // TODO:
+            // This needs to be a little bit smarter.
+            return textDocument.getText().includes('appmap');
+          });
+        })
+      )
+    ).flat();
+
+    filesContainingReferences
+      .map((uri) => {
+        const fileBaseName = basename(uri.fsPath);
+        return this.referenceInfo[fileBaseName] as Record<string, string>;
+      })
+      .forEach((m) => {
+        if (m.language) {
+          languages.push(m.language);
+        }
+
+        if (m.framework) {
+          // TODO:
+          // This needs to be a little bit smarter. Check for supported frameworks (rails, django, etc).
+          frameworks.push(m.framework);
+        }
+      });
+
+    this.reporter.sendTelemetryEvent('initialize', {
+      references: String(filesContainingReferences.length > 0),
+      languages: languages.join(','),
+      frameworks: frameworks.join(','),
+    });
   }
 
   reportLoadAppMap(metadata: Record<string, any>) {
@@ -60,6 +123,10 @@ class AppMapTelemetry {
       'appmap.webview.error.message': error.message,
       'appmap.webview.error.stack': error.stack,
     });
+  }
+
+  reportOpenUri(uri: vscode.Uri) {
+    this.reporter.sendTelemetryEvent('open_uri', { uri: uri.toString() });
   }
 }
 

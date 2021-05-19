@@ -77,12 +77,12 @@ export class DatabaseUpdater {
   onCreate(uri: vscode.Uri): void {
     console.log(`created: ${uri}`);
     this.trackModifiedFile(uri);
-    this.addUri(uri);
+    this.addUri();
   }
 
   onDelete(uri: vscode.Uri): void {
     console.log(`deleted: ${uri}`);
-    this.removeUri(uri);
+    this.removeUri();
   }
 
   get appMapCount(): number {
@@ -103,11 +103,11 @@ export class DatabaseUpdater {
     this.lastModifiedAppMap = uri;
   }
 
-  private removeUri(uri: vscode.Uri) {
+  private removeUri() {
     this.appMapCount -= 1;
   }
 
-  private addUri(uri: vscode.Uri) {
+  private addUri() {
     this.appMapCount += 1;
     /*
     readFile(uri.path, (err, data) => {
