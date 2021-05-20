@@ -9,6 +9,7 @@
     "type": "git",
     "url": "https://github.com/applandinc/vscode-appland"
   },
+  "qna": "https://appland.com/docs/faq.html",
   "engines": {
     "vscode": "^1.55.0"
   },
