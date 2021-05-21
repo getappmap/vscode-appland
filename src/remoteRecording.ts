@@ -17,9 +17,9 @@ export default class RemoteRecording {
     return response.enabled;
   }
 
-  static async stop(baseURL: string): Promise<string> {
+  static async stop(baseURL: string): Promise<JSON> {
     const request = bent(baseURL, 'DELETE', 'json', 200);
 
-    return (await request(this.RECORDING_URI)) as string;
+    return (await request(this.RECORDING_URI)) as JSON;
   }
 }

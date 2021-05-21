@@ -1,4 +1,6 @@
 import * as vscode from 'vscode';
+import * as fs from 'fs';
+import * as path from 'path';
 import { DatabaseUpdater } from './databaseUpdater';
 import { ScenarioProvider } from './scenarioViewer';
 import Telemetry from './telemetry';
@@ -103,13 +105,32 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         return;
       }
 
+      const appmapName = await vscode.window.showInputBox({
+        placeHolder: 'AppMap name',
+      });
+
+      if (!appmapName) {
+        return;
+      }
+
       try {
         const appmap = await RemoteRecording.stop(baseURL);
-        const document = await vscode.workspace.openTextDocument({
-          language: undefined,
-          content: JSON.stringify(appmap),
+        appmap['metadata']['name'] = appmapName;
+
+        let folder: string;
+        if (!vscode.workspace.workspaceFolders) {
+          folder = vscode.workspace.rootPath as string;
+        } else {
+          folder = vscode.workspace.workspaceFolders[0].uri.fsPath;
+        }
+
+        const filePath = path.join(folder, `recording_${+new Date()}.appmap.json`);
+        fs.writeFileSync(filePath, JSON.stringify(appmap), 'utf8');
+
+        vscode.workspace.openTextDocument(filePath).then((doc) => {
+          vscode.window.showTextDocument(doc);
         });
-        vscode.window.showTextDocument(document);
+
         vscode.window.showInformationMessage(`Recording stopped at "${baseURL}"`);
       } catch (e) {
         vscode.window.showErrorMessage(`Stop recording failed: ${e.name}: ${e.message}`);
