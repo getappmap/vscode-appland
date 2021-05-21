@@ -1,3 +1,5 @@
+import * as fs from 'fs';
+
 export function getNonce(): string {
   let text = '';
   const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -26,4 +28,13 @@ export function getStringRecords(
 
 export function notEmpty<TValue>(value: TValue | null | undefined): value is TValue {
   return value !== null && value !== undefined;
+}
+
+export function isFileExists(filename: string): boolean {
+  try {
+    fs.accessSync(filename, fs.constants.R_OK | fs.constants.W_OK);
+    return true;
+  } catch (e) {
+    return false;
+  }
 }

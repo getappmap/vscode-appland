@@ -7,7 +7,7 @@ import Telemetry from './telemetry';
 import registerTrees from './tree';
 import AppMapCollectionFile from './appmapCollectionFile';
 import RemoteRecording from './remoteRecording';
-import { notEmpty } from './util';
+import { notEmpty, isFileExists } from './util';
 
 async function getBaseUrl(): Promise<string | undefined> {
   return await vscode.window.showInputBox({
@@ -61,17 +61,31 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
   Telemetry.reportStartUp();
 
+  let remoteURL;
+  const statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
+  statusBarItem.command = 'appmap.stopRemoteRecording';
+  statusBarItem.tooltip = 'Click to stop remote recording';
+
   context.subscriptions.push(
     vscode.commands.registerCommand('appmap.startRemoteRecording', async () => {
-      const baseURL = (await getBaseUrl()) || '';
+      if (remoteURL) {
+        vscode.window.showErrorMessage(`Remote recording is already running on ${remoteURL}`);
+        return;
+      }
 
-      if (baseURL === '') {
+      remoteURL = (await getBaseUrl()) || '';
+
+      if (remoteURL === '') {
         return;
       }
 
       try {
-        RemoteRecording.start(baseURL);
-        vscode.window.showInformationMessage(`Recording started at "${baseURL}"`);
+        RemoteRecording.start(remoteURL);
+
+        statusBarItem.text = `$(record) Remote recording is running on ${remoteURL}`;
+        statusBarItem.show();
+
+        vscode.window.showInformationMessage(`Recording started at "${remoteURL}"`);
       } catch (e) {
         vscode.window.showErrorMessage(`Start recording failed: ${e.name}: ${e.message}`);
       }
@@ -80,16 +94,17 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
   context.subscriptions.push(
     vscode.commands.registerCommand('appmap.getRemoteRecordingStatus', async () => {
-      const baseURL = (await getBaseUrl()) || '';
-
-      if (baseURL === '') {
+      if (!remoteURL) {
+        vscode.window.showErrorMessage('Remote recording is not running');
         return;
       }
 
       try {
-        const recordingStatus = (await RemoteRecording.getStatus(baseURL)) ? 'enabled' : 'disabled';
+        const recordingStatus = (await RemoteRecording.getStatus(remoteURL))
+          ? 'enabled'
+          : 'disabled';
         vscode.window.showInformationMessage(
-          `Recording status at "${baseURL}": ${recordingStatus}`
+          `Recording status at "${remoteURL}": ${recordingStatus}`
         );
       } catch (e) {
         vscode.window.showErrorMessage(`Recording status failed: ${e.name}: ${e.message}`);
@@ -99,9 +114,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
   context.subscriptions.push(
     vscode.commands.registerCommand('appmap.stopRemoteRecording', async () => {
-      const baseURL = (await getBaseUrl()) || '';
-
-      if (baseURL === '') {
+      if (!remoteURL) {
+        vscode.window.showErrorMessage('Remote recording is not running');
         return;
       }
 
@@ -114,8 +128,10 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
       }
 
       try {
-        const appmap = await RemoteRecording.stop(baseURL);
+        const appmap = await RemoteRecording.stop(remoteURL);
         appmap['metadata']['name'] = appmapName;
+
+        statusBarItem.hide();
 
         let folder: string;
         if (!vscode.workspace.workspaceFolders) {
@@ -124,14 +140,25 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
           folder = vscode.workspace.workspaceFolders[0].uri.fsPath;
         }
 
-        const filePath = path.join(folder, `recording_${+new Date()}.appmap.json`);
+        const fileName = path.join(folder, appmapName.replace(/[^a-zA-Z0-9]/g, '_'));
+        const fileExt = '.appmap.json';
+        let checkFileName = fileName;
+        let i = 0;
+
+        while (isFileExists(checkFileName + fileExt)) {
+          i++;
+          checkFileName = `${fileName}(${i})`;
+        }
+
+        const filePath = checkFileName + fileExt;
         fs.writeFileSync(filePath, JSON.stringify(appmap), 'utf8');
 
-        vscode.workspace.openTextDocument(filePath).then((doc) => {
-          vscode.window.showTextDocument(doc);
-        });
+        const uri = vscode.Uri.file(filePath);
+        await vscode.commands.executeCommand('vscode.openWith', uri, 'appmap.views.appMapFile');
 
-        vscode.window.showInformationMessage(`Recording stopped at "${baseURL}"`);
+        vscode.window.showInformationMessage(`Recording stopped at "${remoteURL}"`);
+
+        remoteURL = null;
       } catch (e) {
         vscode.window.showErrorMessage(`Stop recording failed: ${e.name}: ${e.message}`);
       }

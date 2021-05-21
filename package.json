@@ -76,7 +76,8 @@
       },
       {
         "command": "appmap.startRemoteRecording",
-        "title": "AppMap: Start remote recording"
+        "title": "AppMap: Start remote recording",
+        "icon": "$(record)"
       },
       {
         "command": "appmap.getRemoteRecordingStatus",
@@ -129,10 +130,15 @@
         {
           "command": "appmap.applyFilter",
           "when": "view == appmap.views.local && appmap.hasData",
-          "group": "navigation@1"
+          "group": "navigation@2"
         },
         {
           "command": "appmap.findByName",
+          "when": "view == appmap.views.local && appmap.hasData",
+          "group": "navigation@1"
+        },
+        {
+          "command": "appmap.startRemoteRecording",
           "when": "view == appmap.views.local && appmap.hasData",
           "group": "navigation@0"
         }
