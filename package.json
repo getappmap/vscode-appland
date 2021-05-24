@@ -85,7 +85,8 @@
       },
       {
         "command": "appmap.stopRemoteRecording",
-        "title": "AppMap: Stop remote recording"
+        "title": "AppMap: Stop remote recording",
+        "icon": "$(stop-circle)"
       }
     ],
     "viewsContainers": {
@@ -139,7 +140,12 @@
         },
         {
           "command": "appmap.startRemoteRecording",
-          "when": "view == appmap.views.local && appmap.hasData",
+          "when": "view == appmap.views.local && !appmap.recordingIsRunning",
+          "group": "navigation@0"
+        },
+        {
+          "command": "appmap.stopRemoteRecording",
+          "when": "view == appmap.views.local && appmap.recordingIsRunning",
           "group": "navigation@0"
         }
       ]

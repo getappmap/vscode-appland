@@ -80,14 +80,17 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
       }
 
       try {
-        RemoteRecording.start(remoteURL);
+        await RemoteRecording.start(remoteURL);
 
         statusBarItem.text = `$(record) Remote recording is running on ${remoteURL}`;
         statusBarItem.show();
 
         vscode.window.showInformationMessage(`Recording started at "${remoteURL}"`);
+
+        vscode.commands.executeCommand('setContext', 'appmap.recordingIsRunning', true);
       } catch (e) {
         vscode.window.showErrorMessage(`Start recording failed: ${e.name}: ${e.message}`);
+        remoteURL = null;
       }
     })
   );
@@ -157,6 +160,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         await vscode.commands.executeCommand('vscode.openWith', uri, 'appmap.views.appMapFile');
 
         vscode.window.showInformationMessage(`Recording stopped at "${remoteURL}"`);
+
+        vscode.commands.executeCommand('setContext', 'appmap.recordingIsRunning', false);
 
         remoteURL = null;
       } catch (e) {
