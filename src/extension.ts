@@ -9,11 +9,25 @@ import AppMapCollectionFile from './appmapCollectionFile';
 import RemoteRecording from './remoteRecording';
 import { notEmpty, isFileExists } from './util';
 
-async function getBaseUrl(): Promise<string | undefined> {
-  return await vscode.window.showInputBox({
-    placeHolder: 'URL of remote recording server, eg "http://localhost:3000"',
+async function getBaseUrl(recentUrls: Array<string>): Promise<string | undefined> {
+  const quickPick = vscode.window.createQuickPick();
+  const items: vscode.QuickPickItem[] = [];
+
+  recentUrls.forEach((url) => {
+    items.push({ label: url });
+  });
+
+  return new Promise((resolve) => {
+    quickPick.items = items;
+    quickPick.show();
+    quickPick.onDidAccept(() => {
+      resolve(quickPick.selectedItems[0]?.label || quickPick.value);
+      quickPick.hide();
+    });
   });
 }
+
+const recentRemoteUrlsKey = 'APPMAP_RECENT_REMOTE_URLS';
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
   const localAppMaps = new AppMapCollectionFile();
@@ -73,7 +87,9 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         return;
       }
 
-      remoteURL = (await getBaseUrl()) || '';
+      const recentUrls: Array<string> = context.workspaceState.get(recentRemoteUrlsKey) || [];
+
+      remoteURL = (await getBaseUrl(recentUrls)) || '';
 
       if (remoteURL === '') {
         return;
@@ -91,6 +107,13 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
       } catch (e) {
         vscode.window.showErrorMessage(`Start recording failed: ${e.name}: ${e.message}`);
         remoteURL = null;
+      }
+
+      if (remoteURL) {
+        if (!recentUrls.includes(remoteURL)) {
+          recentUrls.unshift(remoteURL);
+        }
+        context.workspaceState.update(recentRemoteUrlsKey, recentUrls);
       }
     })
   );
