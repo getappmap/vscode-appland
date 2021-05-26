@@ -78,7 +78,7 @@
     "configuration": {
       "title": "AppMap",
       "properties": {
-        "appMap.appLandURL": {
+        "appMap.serverURL": {
           "type": "string",
           "default": "https://app.land",
           "description": "URL of AppLand Server for AppMaps uploading"

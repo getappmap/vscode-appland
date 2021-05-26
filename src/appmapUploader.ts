@@ -28,7 +28,7 @@ export class AppmapUploader {
   private static getUri(): vscode.Uri {
     const configUrl: string = vscode.workspace
       .getConfiguration('appMap')
-      .get('appLandURL') as string;
+      .get('serverURL') as string;
     return vscode.Uri.parse(configUrl);
   }
 
