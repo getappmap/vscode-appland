@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import * as bent from 'bent';
+import Telemetry from './telemetry';
 
 export class AppmapUploader {
   public static async upload(appMapFile: vscode.TextDocument): Promise<void> {
@@ -20,6 +21,7 @@ export class AppmapUploader {
       vscode.env.openExternal(confirmUri);
 
       vscode.window.showInformationMessage(`Uploaded ${appMapFile.fileName}`);
+      Telemetry.reportAction('upload', {});
     } catch (e) {
       vscode.window.showErrorMessage(`Upload failed: ${e.name}: ${e.message}`);
     }

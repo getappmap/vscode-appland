@@ -74,7 +74,6 @@ export default function mountApp() {
 
   app.$on('uploadAppmap', () => {
     vscode.postMessage({ command: 'uploadAppmap' });
-    vscode.postMessage({ command: 'performAction', action: 'upload_appmap' });
   });
 
   app.$on('stateChanged', (stateKey) => {

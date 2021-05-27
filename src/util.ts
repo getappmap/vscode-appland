@@ -11,7 +11,7 @@ export function getNonce(): string {
 // getStringRecords({ a: 'hello', b: [object Object] }, 'myApp') ->
 // { 'myApp.a': 'hello' }
 export function getStringRecords(
-  obj: Record<string, unknown>,
+  obj: Record<string, unknown> = {},
   keyPrefix?: string
 ): Record<string, string> {
   const base = keyPrefix ? `${keyPrefix}.` : '';
