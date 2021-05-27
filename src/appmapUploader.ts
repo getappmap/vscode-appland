@@ -3,12 +3,26 @@ import * as bent from 'bent';
 import Telemetry from './telemetry';
 
 export class AppmapUploader {
+  static uploadConfirmed = false;
+
   public static async upload(appMapFile: vscode.TextDocument): Promise<void> {
     const post = bent(this.getUri().toString(), 'POST', 'json', 201, {
       'X-Requested-With': 'VSCodeUploader',
     });
 
     try {
+      if (!this.uploadConfirmed) {
+        const confirmation = await vscode.window.showInformationMessage(
+          'You are about to upload this AppMap to the AppMap cloud. Would you like to continue?',
+          ...['Yes', 'No']
+        );
+        if (confirmation === 'Yes') {
+          this.uploadConfirmed = true;
+        } else {
+          return;
+        }
+      }
+
       const response = (await post('api/appmaps/create_upload', {
         data: appMapFile.getText(),
       })) as {
