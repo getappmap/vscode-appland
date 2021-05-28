@@ -95,6 +95,16 @@
         "when": "appmap.recordingIsRunning"
       }
     ],
+    "configuration": {
+      "title": "AppMap",
+      "properties": {
+        "appMap.recordingOutputDirectory": {
+          "type": "string",
+          "default": "",
+          "description": "Path for remote recordings"
+        }
+      }
+    },
     "viewsContainers": {
       "activitybar": [
         {

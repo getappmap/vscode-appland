@@ -92,12 +92,7 @@ export default class RemoteRecording {
       const appmap = await RemoteRecordingClient.stop(url);
       appmap['metadata']['name'] = appmapName;
 
-      let folder: string;
-      if (!vscode.workspace.workspaceFolders) {
-        folder = vscode.workspace.rootPath as string;
-      } else {
-        folder = vscode.workspace.workspaceFolders[0].uri.fsPath;
-      }
+      const folder = this.getFolder();
 
       const fileName = path.join(folder, appmapName.replace(/[^a-zA-Z0-9]/g, '_'));
       const fileExt = '.appmap.json';
@@ -119,6 +114,53 @@ export default class RemoteRecording {
     } catch (e) {
       vscode.window.showErrorMessage(`Failed to stop recording: ${e.name}: ${e.message}`);
     }
+  }
+
+  private getFolder(): string {
+    let basePath: string;
+    let folder: string;
+
+    if (!vscode.workspace.workspaceFolders) {
+      basePath = vscode.workspace.rootPath as string;
+    } else {
+      basePath = vscode.workspace.workspaceFolders[0].uri.fsPath;
+    }
+    basePath += '/';
+
+    const userDefinedPath = vscode.workspace
+      .getConfiguration('appMap')
+      .get('recordingOutputDirectory') as string;
+
+    if (userDefinedPath && this.pathExists(basePath + userDefinedPath)) {
+      folder = basePath + userDefinedPath;
+    } else if (this.pathExists(basePath + 'build/appmap')) {
+      folder = basePath + 'build/appmap/recordings';
+      if (!this.pathExists(folder)) {
+        fs.mkdirSync(folder);
+      }
+    } else if (this.pathExists(basePath + 'target/appmap')) {
+      folder = basePath + 'target/appmap/recordings';
+      if (!this.pathExists(folder)) {
+        fs.mkdirSync(folder);
+      }
+    } else {
+      folder = basePath + 'tmp/appmap/recordings';
+      if (!this.pathExists(folder)) {
+        fs.mkdirSync(folder, { recursive: true });
+      }
+    }
+
+    return folder;
+  }
+
+  private pathExists(p: string): boolean {
+    try {
+      fs.accessSync(p, fs.constants.R_OK | fs.constants.W_OK);
+    } catch (err) {
+      return false;
+    }
+
+    return true;
   }
 
   public async commandStop(): Promise<void> {
