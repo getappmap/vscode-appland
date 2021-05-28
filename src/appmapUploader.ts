@@ -2,19 +2,14 @@ import * as vscode from 'vscode';
 import * as bent from 'bent';
 import Telemetry from './telemetry';
 
+const DEFAULT_APPLAND_SERVER = 'https://app.land';
+
 export class AppmapUploader {
   static uploadConfirmed = false;
 
   public static async upload(appMapFile: vscode.TextDocument): Promise<void> {
-    const uri = this.getUri();
-
-    if (!uri.authority) {
-      vscode.window.showErrorMessage(`URL of AppLand Server is empty`);
-      return;
-    }
-
     try {
-      const post = bent(uri.toString(), 'POST', 'json', 201, {
+      const post = bent(this.getUri().toString(), 'POST', 'json', 201, {
         'X-Requested-With': 'VSCodeUploader',
       });
 
@@ -49,9 +44,9 @@ export class AppmapUploader {
   }
 
   private static getUri(): vscode.Uri {
-    const configUrl: string = vscode.workspace
-      .getConfiguration('appMap')
-      .get('serverURL') as string;
+    const configUrl: string =
+      (vscode.workspace.getConfiguration('appMap').get('serverURL') as string) ||
+      DEFAULT_APPLAND_SERVER;
     return vscode.Uri.parse(configUrl);
   }
 
