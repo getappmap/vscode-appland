@@ -6,11 +6,18 @@ export class AppmapUploader {
   static uploadConfirmed = false;
 
   public static async upload(appMapFile: vscode.TextDocument): Promise<void> {
-    const post = bent(this.getUri().toString(), 'POST', 'json', 201, {
-      'X-Requested-With': 'VSCodeUploader',
-    });
+    const uri = this.getUri();
+
+    if (!uri.authority) {
+      vscode.window.showErrorMessage(`URL of AppLand Server is empty`);
+      return;
+    }
 
     try {
+      const post = bent(uri.toString(), 'POST', 'json', 201, {
+        'X-Requested-With': 'VSCodeUploader',
+      });
+
       if (!this.uploadConfirmed) {
         const confirmation = await vscode.window.showInformationMessage(
           'You are about to upload this AppMap to the AppMap cloud. Would you like to continue?',
