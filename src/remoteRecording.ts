@@ -59,7 +59,21 @@ export default class RemoteRecording {
     }
 
     try {
-      await RemoteRecordingClient.start(recordingUrl);
+      const statusCode = await RemoteRecordingClient.start(recordingUrl);
+
+      if (statusCode === 409) {
+        const stopRecordingText = 'Stop recording';
+        const confirmation = await vscode.window.showInformationMessage(
+          `Recording is already running on ${recordingUrl}.`,
+          stopRecordingText
+        );
+
+        if (confirmation === stopRecordingText) {
+          this.stop(recordingUrl);
+        }
+
+        return;
+      }
 
       this.statusBar.text = `$(circle-record) Recording is running on ${recordingUrl}`;
       this.statusBar.show();
@@ -67,7 +81,7 @@ export default class RemoteRecording {
       vscode.window.showInformationMessage(`Recording has started at ${recordingUrl}.`);
       this.onBeginRecording(recordingUrl);
     } catch (e) {
-      vscode.window.showErrorMessage(`Failed to start recording: ${e.name}: ${e.message}`);
+      vscode.window.showErrorMessage(`The endpoint does not support AppMap recording`);
       return;
     }
 
@@ -89,7 +103,17 @@ export default class RemoteRecording {
     }
 
     try {
-      const appmap = await RemoteRecordingClient.stop(url);
+      const stopResult = (await RemoteRecordingClient.stop(url)) as {
+        statusCode;
+        body;
+      };
+
+      if (stopResult.statusCode === 404) {
+        vscode.window.showInformationMessage(`No recording was running on ${url}.`);
+        return;
+      }
+
+      const appmap = stopResult.body;
       appmap['metadata']['name'] = appmapName;
 
       const folder = this.getFolder();

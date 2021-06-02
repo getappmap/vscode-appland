@@ -3,9 +3,12 @@ import * as bent from 'bent';
 export default class RemoteRecordingClient {
   private static readonly RECORDING_URI = '/_appmap/record';
 
-  static async start(baseURL: string): Promise<void> {
-    const request = bent(baseURL, 'POST', 'string', 200);
-    await request(this.RECORDING_URI);
+  static async start(baseURL: string): Promise<number> {
+    const getStream = bent(baseURL, 'POST', 200, 409);
+    const stream = (await getStream(this.RECORDING_URI)) as {
+      statusCode: number;
+    };
+    return stream.statusCode;
   }
 
   static async getStatus(baseURL: string): Promise<boolean> {
@@ -17,9 +20,16 @@ export default class RemoteRecordingClient {
     return response.enabled;
   }
 
-  static async stop(baseURL: string): Promise<JSON> {
-    const request = bent(baseURL, 'DELETE', 'json', 200);
+  static async stop(baseURL: string): Promise<unknown> {
+    const getStream = bent(baseURL, 'DELETE', 200, 404);
+    const stream = (await getStream(this.RECORDING_URI)) as {
+      statusCode: number;
+      json;
+    };
 
-    return (await request(this.RECORDING_URI)) as JSON;
+    return {
+      statusCode: stream.statusCode,
+      body: await stream.json(),
+    };
   }
 }
