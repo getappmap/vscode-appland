@@ -88,18 +88,19 @@ export default class RemoteRecording {
     this.addRecentUrl(recordingUrl);
   }
 
-  private async stop(url: string): Promise<void> {
+  private async stop(url: string): Promise<boolean> {
+    let isSuccessful = false;
     if (!url) {
       // We'll consider this a valid case - no error is thrown.
-      return;
+      return isSuccessful;
     }
 
     const appmapName = await vscode.window.showInputBox({
       placeHolder: 'Enter a name for this AppMap',
     });
 
-    if (!appmapName) {
-      return;
+    if (!appmapName || appmapName === '') {
+      return isSuccessful;
     }
 
     try {
@@ -110,7 +111,7 @@ export default class RemoteRecording {
 
       if (stopResult.statusCode === 404) {
         vscode.window.showInformationMessage(`No recording was running on ${url}.`);
-        return;
+        return isSuccessful;
       }
 
       const appmap = stopResult.body;
@@ -135,9 +136,12 @@ export default class RemoteRecording {
       await vscode.commands.executeCommand('vscode.openWith', uri, 'appmap.views.appMapFile');
 
       vscode.window.showInformationMessage(`Recording successfully stopped at ${url}.`);
+      isSuccessful = true;
     } catch (e) {
       vscode.window.showErrorMessage(`Failed to stop recording: ${e.name}: ${e.message}`);
     }
+
+    return isSuccessful;
   }
 
   private getFolder(): string {
@@ -210,10 +214,11 @@ export default class RemoteRecording {
       return;
     }
 
-    this.stop(this.activeRecordingUrl);
-    this.statusBar.hide();
-    this.activeRecordingUrl = null;
-    vscode.commands.executeCommand('setContext', 'appmap.recordingIsRunning', false);
+    if (await this.stop(this.activeRecordingUrl)) {
+      this.statusBar.hide();
+      this.activeRecordingUrl = null;
+      vscode.commands.executeCommand('setContext', 'appmap.recordingIsRunning', false);
+    }
   }
 
   public async commandStatus(): Promise<void> {
