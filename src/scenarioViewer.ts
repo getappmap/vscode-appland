@@ -55,10 +55,7 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
       }
     };
 
-    if (
-      vscode.env.isNewAppInstall &&
-      !this.context.globalState.get(ScenarioProvider.storeTelemetryInstallKey)
-    ) {
+    if (!this.context.globalState.get(ScenarioProvider.storeTelemetryInstallKey)) {
       Telemetry.reportAction('install', undefined);
       this.context.globalState.update(ScenarioProvider.storeTelemetryInstallKey, true);
     }
