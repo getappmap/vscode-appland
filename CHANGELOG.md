@@ -1,3 +1,16 @@
+# [0.14.0](https://github.com/applandinc/vscode-appland/compare/v0.13.0...v0.14.0) (2021-06-07)
+
+
+### Bug Fixes
+
+* Don't rely on isNewAppInstall for new installations ([#202](https://github.com/applandinc/vscode-appland/issues/202)) ([c29aaca](https://github.com/applandinc/vscode-appland/commit/c29aaca4db67cf00d07f38de67d5be011997713f))
+* Send event counts as metrics instead of event properties ([#200](https://github.com/applandinc/vscode-appland/issues/200)) ([d521b3a](https://github.com/applandinc/vscode-appland/commit/d521b3a66f3c1e83fa0ee8c6e193039cb06ff533))
+
+
+### Features
+
+* Add remote recording commands and interface ([#183](https://github.com/applandinc/vscode-appland/issues/183)) ([c5615a7](https://github.com/applandinc/vscode-appland/commit/c5615a7d071ce6548fa3a4b892417824961162bc))
+
 # [0.13.0](https://github.com/applandinc/vscode-appland/compare/v0.12.1...v0.13.0) (2021-05-20)
 
 
