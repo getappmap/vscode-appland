@@ -16,11 +16,7 @@ module.exports = {
   },
   resolve: {
     extensions: ['.ts', '.js'],
-    alias: {
-      '@appland/appmap': path.resolve(
-        './node_modules/@appland/appmap/dist/appmap.node.js'
-      ),
-    },
+    alias: {},
   },
   module: {
     rules: [

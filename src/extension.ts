@@ -4,6 +4,7 @@ import { ScenarioProvider } from './scenarioViewer';
 import Telemetry from './telemetry';
 import registerTrees from './tree';
 import AppMapCollectionFile from './appmapCollectionFile';
+import RemoteRecording from './remoteRecording';
 import { notEmpty } from './util';
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
@@ -12,6 +13,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   Telemetry.register(context);
   ScenarioProvider.register(context);
   DatabaseUpdater.register(context);
+  RemoteRecording.register(context);
 
   localAppMaps.initialize();
   const { localTree } = registerTrees(localAppMaps);

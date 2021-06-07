@@ -15,8 +15,6 @@ module.exports = {
     alias: {
       vue: path.resolve('./node_modules/vue'),
       vuex: path.resolve('./node_modules/vuex'),
-      '@appland/models': path.resolve('./node_modules/@appland/models'),
-      '@appland/diagrams': path.resolve('./node_modules/@appland/diagrams'),
     },
     fallback: {
       crypto: 'crypto-js',
@@ -29,9 +27,7 @@ module.exports = {
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
-          options: {
-            presets: ['@babel/preset-env', '@vue/cli-plugin-babel/preset'],
-          },
+          options: {},
         },
       },
       {
