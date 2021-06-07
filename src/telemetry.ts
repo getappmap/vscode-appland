@@ -89,9 +89,6 @@ class AppMapTelemetry {
       ...getStringRecords(metadata.language || {}, 'appmap.language'),
       ...getStringRecords(metadata.client || {}, 'appmap.client'),
       ...getStringRecords(metadata.frameworks || {}, 'appmap.frameworks'),
-      'appmap.num_events': metadata.numEvents.toString(),
-      'appmap.num_http_events': metadata.numHttpEvents.toString(),
-      'appmap.num_sql_events': metadata.numSqlEvents.toString(),
     } as Record<string, string>;
 
     if (Array.isArray(metadata?.frameworks)) {
@@ -109,7 +106,12 @@ class AppMapTelemetry {
       //                                    github.com/myorg/myrepo
     }
 
-    const metrics = { 'appmap.load_time': metadata.loadTime };
+    const metrics = {
+      'appmap.load_time': metadata.loadTime,
+      'appmap.num_events': metadata.numEvents,
+      'appmap.num_http_events': metadata.numHttpEvents,
+      'appmap.num_sql_events': metadata.numSqlEvents,
+    };
 
     this.reporter.sendTelemetryEvent('open', data, metrics);
   }

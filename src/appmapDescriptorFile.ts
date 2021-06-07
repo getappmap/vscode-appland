@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { promises as fs } from 'fs';
 import AppMapDescriptor from './appmapDescriptor';
-import { buildAppMap, AppMap } from '@appland/appmap';
+import { buildAppMap, AppMap } from '@appland/models';
 
 export default class AppMapDescriptorFile implements AppMapDescriptor {
   public resourceUri: vscode.Uri;
