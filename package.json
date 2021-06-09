@@ -3,7 +3,7 @@
   "name": "appmap",
   "displayName": "AppMap",
   "description": "Interactive maps and architecture analysis help you write better Ruby, Python and Java code",
-  "version": "0.14.0",
+  "version": "0.14.1",
   "releaseKey": "0.14.0",
   "repository": {
     "type": "git",
