@@ -3,23 +3,23 @@
 
 
 "@appland/components@^1.1.5":
-  version "1.1.5"
-  resolved "https://registry.yarnpkg.com/@appland/components/-/components-1.1.5.tgz#406244c21b5c44a5222c6d42e726849d2b0268ca"
-  integrity sha512-eT5ti2UCfQr1XkoWkK6XcUf3Kel0b3G0gyiW/vXm3wtLvxMwZolcn24ZQGrtYRY8ZAOYMSLhHXIGIrwd9PB4IQ==
+  version "1.1.6"
+  resolved "https://registry.yarnpkg.com/@appland/components/-/components-1.1.6.tgz#e67c6fc11b5c8aac215fc7e6c659de707462baf8"
+  integrity sha512-iAUpnyGTlHDjd72HyENIdOeYTG4TlVpo+hB0mDbHqth+tKm5tND9JifDWsKH6rqd7A8IUvvRbtRj25L0eXZJZg==
   dependencies:
-    "@appland/diagrams" "1.0.3"
-    "@appland/models" "1.0.5"
+    "@appland/diagrams" "^1.0.4"
+    "@appland/models" "^1.0.6"
     highlight.js "^10.7.2"
     sql-formatter "^2.3.3"
     vue "^2.6.11"
     vuex "^3.6.0"
 
-"@appland/diagrams@1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@appland/diagrams/-/diagrams-1.0.3.tgz#478fe02d67a17a3a2d7d758626ae1674a695ea8a"
-  integrity sha512-BN3tk8/CVVVkBxaOD7Tidylmsc+h6CvRwEAlMDqhBjySKa3j2DDZx0VBnhEl2b0sOpd92iNQJbBL++9+aWcIcQ==
+"@appland/diagrams@^1.0.4":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@appland/diagrams/-/diagrams-1.0.4.tgz#482c880f378bb1b06402dd91a4a1bca0fe47a4a5"
+  integrity sha512-iVIUqhlogCeBPX4UYmBLUL3L+AkZvsHAOWs9oE1nkoNcFQ9w+TH4iE92Au4imSu0G4es7jCu5jpudcXFrWtmiQ==
   dependencies:
-    "@appland/models" "1.0.3"
+    "@appland/models" "1.0.5"
     "@rollup/plugin-node-resolve" "^13.0.0"
     "@rollup/plugin-replace" "^2.4.2"
     d3-flame-graph "^4.0.6"
@@ -32,20 +32,20 @@
     deepmerge "^4.2.2"
     sql-formatter "^4.0.2"
 
-"@appland/models@1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@appland/models/-/models-1.0.3.tgz#3724ba28c4ed7cf66686a98eff59c362a43ea09d"
-  integrity sha512-r3fpSM4BLOGcQssXKkXUKQdsqJ370by6df0hLtZmLHuasiovM/S4RpJER0Ey0SdrS/RAh4jpKV5TWeEBJyIDaw==
+"@appland/models@1.0.5":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@appland/models/-/models-1.0.5.tgz#0295959c1fa88fa967c5483f19fb7f0a5f9907ef"
+  integrity sha512-SOw4MDMB8EOj/uSLt86orQPXA6T3NxHxa+kbEp3EhvqDRzjUxXZSMN+BR6EHG01+3xeMsX39OMFDVNKeOs+ZwQ==
   dependencies:
     "@rollup/plugin-alias" "^3.1.2"
     cross-env "^7.0.3"
     crypto-js "^4.0.0"
     sqlite-parser "^1.0.1"
 
-"@appland/models@1.0.5", "@appland/models@^1.0.4":
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/@appland/models/-/models-1.0.5.tgz#0295959c1fa88fa967c5483f19fb7f0a5f9907ef"
-  integrity sha512-SOw4MDMB8EOj/uSLt86orQPXA6T3NxHxa+kbEp3EhvqDRzjUxXZSMN+BR6EHG01+3xeMsX39OMFDVNKeOs+ZwQ==
+"@appland/models@^1.0.4", "@appland/models@^1.0.6":
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@appland/models/-/models-1.0.6.tgz#a3ce8a0063125b9bed8cb71e396067e2853151c9"
+  integrity sha512-54FvtaoZyJOIzeS8SxY1UXkYfDa/gGwZcynEWT+KLT9hkAjGsr9pIhgJCvZ1EJpUmiXYoH6sxYl8SvGlNuG5Xw==
   dependencies:
     "@rollup/plugin-alias" "^3.1.2"
     cross-env "^7.0.3"
@@ -1509,9 +1509,9 @@
   integrity sha512-Lwh0lzzqT5Pqh6z61P3c3P5nm6fzQK/MMHl9UKeneAeInVflBSz1O2EkX6gM6xfJd7FBXBY5purtLx7fUiZ7Hw==
 
 "@types/node@*":
-  version "15.12.0"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-15.12.0.tgz#6a459d261450a300e6865faeddb5af01c3389bb3"
-  integrity sha512-+aHJvoCsVhO2ZCuT4o5JtcPrCPyDE3+1nvbDprYes+pPkEsbjH7AGUCNtjMOXS0fqH14t+B7yLzaqSz92FPWyw==
+  version "15.12.2"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-15.12.2.tgz#1f2b42c4be7156ff4a6f914b2fb03d05fa84e38d"
+  integrity sha512-zjQ69G564OCIWIOHSXyQEEDpdpGl+G348RAKY0XXy9Z5kU9Vzv1GMNnkar/ZJ8dzXB3COzD9Mo9NtRZ4xfgUww==
 
 "@types/node@^12.19.12":
   version "12.20.14"
@@ -5203,9 +5203,9 @@ he@1.2.0, he@^1.1.0, he@^1.2.0:
   integrity sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw==
 
 highlight.js@^10.7.2:
-  version "10.7.2"
-  resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-10.7.2.tgz#89319b861edc66c48854ed1e6da21ea89f847360"
-  integrity sha512-oFLl873u4usRM9K63j4ME9u3etNF0PLiJhSQ8rdfuL51Wn3zkD6drf9ZW0dOzjnZI22YYG24z30JcmfCZjMgYg==
+  version "10.7.3"
+  resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-10.7.3.tgz#697272e3991356e40c3cac566a74eef681756531"
+  integrity sha512-tzcUFauisWKNHaRkN4Wjl/ZA07gENAjFl3J/c480dprkGTg5EQstgaNFqBfUqCq54kZRIEcreTsAgF/m2quD7A==
 
 hmac-drbg@^1.0.1:
   version "1.0.1"
@@ -9773,7 +9773,12 @@ vue-template-es2015-compiler@^1.9.0:
   resolved "https://registry.yarnpkg.com/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.9.1.tgz#1ee3bc9a16ecbf5118be334bb15f9c46f82f5825"
   integrity sha512-4gDntzrifFnCEvyoO8PqyJDmguXgVPxKiIxrBKjIowvL9l+N66196+72XVYR8BBf1Uv1Fgt3bGevJ+sEmxfZzw==
 
-vue@^2.6.11, vue@^2.6.12:
+vue@^2.6.11:
+  version "2.6.14"
+  resolved "https://registry.yarnpkg.com/vue/-/vue-2.6.14.tgz#e51aa5250250d569a3fbad3a8a5a687d6036e235"
+  integrity sha512-x2284lgYvjOMj3Za7kqzRcUSxBboHqtgRE2zlos1qWaOye5yUmHn42LB1250NJBLRwEcdrB0JRwyPTEPhfQjiQ==
+
+vue@^2.6.12:
   version "2.6.13"
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.6.13.tgz#94b2c1b31fddf1dfcc34f28ec848ba8f01ea4c5b"
   integrity sha512-O+pAdJkce1ooYS1XyoQtpBQr9An+Oys3w39rkqxukVO3ZD1ilYJkWBGoRuadiQEm2LLJnCL2utV4TMSf52ubjw==
