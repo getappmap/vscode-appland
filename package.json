@@ -226,6 +226,7 @@
     "bootstrap": "^4.5.3",
     "bootstrap-autocomplete": "^2.3.7",
     "diff": "^5.0.0",
+    "glob-to-regexp": "^0.4.1",
     "jquery": "^3.5.1",
     "js-yaml": "^4.0.0",
     "popper.js": "^1.16.1",

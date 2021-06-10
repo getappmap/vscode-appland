@@ -6,6 +6,7 @@ import registerTrees from './tree';
 import AppMapCollectionFile from './appmapCollectionFile';
 import RemoteRecording from './remoteRecording';
 import { notEmpty } from './util';
+import { getDirectoryLanguage } from './telemetry/properties/project';
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
   const localAppMaps = new AppMapCollectionFile();
@@ -51,6 +52,10 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
       vscode.commands.executeCommand('vscode.open', descriptor.resourceUri);
     })
   );
+
+  vscode.workspace.workspaceFolders?.forEach((wsFolder) => {
+    console.log(getDirectoryLanguage(wsFolder.uri.fsPath));
+  });
 
   Telemetry.reportStartUp();
 }
