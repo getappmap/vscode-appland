@@ -11,7 +11,7 @@ module.exports = {
   },
   devtool: 'source-map',
   resolve: {
-    extensions: ['.js'],
+    extensions: ['.js', '.mjs'],
     alias: {
       vue: path.resolve('./node_modules/vue'),
       vuex: path.resolve('./node_modules/vuex'),

@@ -171,7 +171,9 @@
     "vscode:prepublish": "npm run compile",
     "lint": "eslint . --ext .ts",
     "pretest": "npm run lint",
-    "test": "node ./test/runTest.js",
+    "test:server": "node ./test/runTest.js",
+    "test:client": "mocha web/test/*.test.mjs",
+    "test": "yarn run test:server && yarn run test:client",
     "compile": "webpack --mode=production",
     "watch": "webpack --watch --mode=development",
     "package": "vsce package"
@@ -220,8 +222,8 @@
     "webpack-cli": "^4.3.1"
   },
   "dependencies": {
-    "@appland/components": "^1.1.5",
-    "@appland/models": "^1.0.4",
+    "@appland/components": "^1.1.6",
+    "@appland/models": "^1.0.6",
     "bent": "^7.3.12",
     "bootstrap": "^4.5.3",
     "bootstrap-autocomplete": "^2.3.7",
