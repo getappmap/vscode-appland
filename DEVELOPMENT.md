@@ -29,3 +29,16 @@ To build a `vsix` file, run the `package` script.
 ```sh
 $ npm run package
 ```
+
+## Adding AppMap CLI support for a new language
+
+1. Make sure the language is defined in the `LANGUAGES` array in
+   [`src/languageResolver.ts`](src/languageResolver.ts).
+2. Add an instance of the agent to `LANGUAGE_AGENTS` in
+   [`src/languageResolver.ts`](src/languageResolver.ts).
+3. Verify the `readonly` property `language` of the `AppMapAgent` implementation contains the same
+   value as the `id` field as the language definition in the `LANGUAGES` array in
+   [`src/languageResolver.ts`](src/languageResolver.ts). This creates a link between the agent and
+   the language.
+4. Define a version constraint in [`package.json`](package.json) under the `appmapDependencies`
+   property. The agent will not be installed without it.

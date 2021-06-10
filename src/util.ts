@@ -1,4 +1,7 @@
 import * as fs from 'fs';
+import { execFile, ExecFileOptions } from 'child_process';
+import * as vscode from 'vscode';
+import { rejects } from 'assert';
 
 export function getNonce(): string {
   let text = '';
@@ -37,4 +40,46 @@ export function isFileExists(filename: string): boolean {
   } catch (e) {
     return false;
   }
+}
+
+/**
+ * Exec a process
+ * If options.output is true, the stdout/stderr will be written to the output window.
+ */
+export async function exec(
+  file: string,
+  args: ReadonlyArray<string> | null | undefined,
+  options?:
+    | ({ encoding?: string | null; output?: boolean | null } & ExecFileOptions)
+    | undefined
+    | null
+): Promise<{ exitCode: number; stdout: string; stderr: string }> {
+  return new Promise((resolve, reject) => {
+    const childProcess = execFile(file, args, options);
+    let stdout = '';
+    let stderr = '';
+    let outputChannel: vscode.OutputChannel | undefined;
+
+    if (options?.output) {
+      outputChannel = vscode.window.createOutputChannel('AppMap');
+    }
+
+    childProcess.stdout?.on('data', (data) => {
+      outputChannel?.append(data);
+      stdout += data;
+    });
+
+    childProcess.stderr?.on('data', (data) => {
+      outputChannel?.append(data);
+      stderr += data;
+    });
+
+    childProcess.on('close', (exitCode) => {
+      resolve({ exitCode, stdout, stderr });
+    });
+
+    childProcess.on('error', (e) => {
+      reject(e);
+    });
+  });
 }
