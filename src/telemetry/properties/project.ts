@@ -1,5 +1,9 @@
 import { PathLike, promises as fs } from 'fs';
 import { extname, join } from 'path';
+import * as vscode from 'vscode';
+import { PROPERTIES } from '../definitions';
+import LanguageConfigurationRuby from '../languageConfigurationRuby';
+import TelemetryDataProvider, { TelemetryContext } from '../telemetryDataProvider';
 import GitProperties from './versionControlGit';
 
 const LANGUAGES = [
@@ -212,8 +216,23 @@ export async function getDirectoryLanguage(dir: PathLike): Promise<string> {
   return bestFitLanguage;
 }
 
+export async function doesConfigExist(): Promise<boolean> {
+  const appmaps = await vscode.workspace.findFiles('**/appmap.yml');
+  return appmaps.length > 0;
+}
+
 export async function getProjectProperties(dir: PathLike): Promise<Record<string, string>> {
-  return {
+  const config = new LanguageConfigurationRuby();
+  const agentVersionLocal = await config.getAppMapAgentVersionLocal();
+  const agentVersionGlobal = await config.getAppMapAgentVersionGlobal();
+
+  const props = {
+    'appmap.project.agent_version_global': agentVersionGlobal,
+    'appmap.project.agent_version_project': agentVersionLocal,
+    'appmap.project.is_config_present': String(await doesConfigExist()),
     'appmap.project.language': await getDirectoryLanguage(dir),
   };
+
+  console.log(props);
+  return props;
 }
