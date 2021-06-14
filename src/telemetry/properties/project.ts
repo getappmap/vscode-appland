@@ -1,9 +1,7 @@
 import { PathLike, promises as fs } from 'fs';
 import { extname, join } from 'path';
 import * as vscode from 'vscode';
-import { PROPERTIES } from '../definitions';
-import LanguageConfigurationRuby from '../languageConfigurationRuby';
-import TelemetryDataProvider, { TelemetryContext } from '../telemetryDataProvider';
+import TelemetryDataProvider from '../telemetryDataProvider';
 import GitProperties from './versionControlGit';
 
 const LANGUAGES = [
@@ -236,3 +234,32 @@ export async function getProjectProperties(dir: PathLike): Promise<Record<string
   console.log(props);
   return props;
 }
+
+export const providerAgentVersionGlobal = new TelemetryDataProvider({
+  id: 'appmap.project.agent_version_global',
+  async value(context) {
+    return await context.project?.getAppMapAgentVersionGlobal();
+  },
+});
+
+export const providerAgentVersionProject = new TelemetryDataProvider({
+  id: 'appmap.project.agent_version_project',
+  async value(context) {
+    return await context.project?.getAppMapAgentVersionLocal();
+  },
+});
+
+export const providerIsConfigPresent = new TelemetryDataProvider({
+  id: 'appmap.project.is_config_present',
+  async value() {
+    return String(await doesConfigExist());
+  },
+});
+
+export const providerLanguage = new TelemetryDataProvider({
+  id: 'appmap.project.language',
+  performCaching: true,
+  value(context) {
+    return getDirectoryLanguage(context.rootDirectory);
+  },
+});

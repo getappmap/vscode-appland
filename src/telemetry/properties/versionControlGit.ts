@@ -29,11 +29,8 @@ async function getIgnoreGlobs() {
 export default class GitProperties implements VersionControlProperties {
   private ignoreRegex: Array<RegExp> | undefined;
 
-  public async initialize() {
+  public async initialize(): Promise<void> {
     this.ignoreRegex = await getIgnoreGlobs();
-    this.ignoreRegex.forEach((re) => {
-      console.log(re);
-    });
   }
 
   public isIgnored(path: PathLike): boolean {
