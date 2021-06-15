@@ -6,6 +6,7 @@ import registerTrees from './tree';
 import AppMapCollectionFile from './appmapCollectionFile';
 import RemoteRecording from './remoteRecording';
 import { notEmpty } from './util';
+import { getVersionControlProperties } from './telemetry/properties/version_control';
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
   const localAppMaps = new AppMapCollectionFile();
@@ -53,4 +54,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   );
 
   Telemetry.reportStartUp();
+
+  // TODO: remove temporary global function
+  global['getVersionControlProperties'] = getVersionControlProperties;
 }
