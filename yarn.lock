@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@appland/components@^1.1.5":
-  version "1.1.6"
-  resolved "https://registry.yarnpkg.com/@appland/components/-/components-1.1.6.tgz#e67c6fc11b5c8aac215fc7e6c659de707462baf8"
-  integrity sha512-iAUpnyGTlHDjd72HyENIdOeYTG4TlVpo+hB0mDbHqth+tKm5tND9JifDWsKH6rqd7A8IUvvRbtRj25L0eXZJZg==
+"@appland/components@^1.1.8":
+  version "1.1.8"
+  resolved "https://registry.yarnpkg.com/@appland/components/-/components-1.1.8.tgz#03fd2c6b8300ef8e544de807d9cd2a8b2ac23cfc"
+  integrity sha512-tTAOAWVdyq8pBRrc3AXs+bstJ2fCIaoSJl/WQIGBo3N8hw6gTxOXvRjE1iURo9XL4Jeyhz05QnWK9MknizcVLQ==
   dependencies:
     "@appland/diagrams" "^1.0.4"
     "@appland/models" "^1.0.6"
@@ -42,7 +42,7 @@
     crypto-js "^4.0.0"
     sqlite-parser "^1.0.1"
 
-"@appland/models@^1.0.4", "@appland/models@^1.0.6":
+"@appland/models@^1.0.6":
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/@appland/models/-/models-1.0.6.tgz#a3ce8a0063125b9bed8cb71e396067e2853151c9"
   integrity sha512-54FvtaoZyJOIzeS8SxY1UXkYfDa/gGwZcynEWT+KLT9hkAjGsr9pIhgJCvZ1EJpUmiXYoH6sxYl8SvGlNuG5Xw==

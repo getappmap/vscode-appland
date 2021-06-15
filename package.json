@@ -220,7 +220,7 @@
     "webpack-cli": "^4.3.1"
   },
   "dependencies": {
-    "@appland/components": "^1.1.6",
+    "@appland/components": "^1.1.8",
     "@appland/models": "^1.0.6",
     "bent": "^7.3.12",
     "bootstrap": "^4.5.3",
