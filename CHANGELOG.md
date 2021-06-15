@@ -1,3 +1,10 @@
+## [0.14.2](https://github.com/applandinc/vscode-appland/compare/v0.14.1...v0.14.2) (2021-06-15)
+
+
+### Bug Fixes
+
+* Upgrade @appland/components to v1.1.8 ([ec39e09](https://github.com/applandinc/vscode-appland/commit/ec39e099eed1392d75f6e5fef9c95ca9c6aa5615))
+
 ## [0.14.1](https://github.com/applandinc/vscode-appland/compare/v0.14.0...v0.14.1) (2021-06-09)
 
 
