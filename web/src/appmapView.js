@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import { VVsCodeExtension } from '@appland/components'; // eslint-disable-line import/no-named-default
 import patchNotesHtml from '../static/html/patch_notes.html';
+import '@appland/diagrams/dist/style.css';
 
 export default function mountApp() {
   const startTime = new Date();
