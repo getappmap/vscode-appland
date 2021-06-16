@@ -1,3 +1,10 @@
+## [0.14.3](https://github.com/applandinc/vscode-appland/compare/v0.14.2...v0.14.3) (2021-06-16)
+
+
+### Bug Fixes
+
+* Bundle diagram styling ([e525c2e](https://github.com/applandinc/vscode-appland/commit/e525c2e967c37be6359c2cecdadd192187be7494))
+
 ## [0.14.2](https://github.com/applandinc/vscode-appland/compare/v0.14.1...v0.14.2) (2021-06-15)
 
 
