@@ -18,6 +18,8 @@ async function getGitRepoAPI(file: Uri): Promise<Repository | null | undefined> 
     if (extension !== undefined) {
       const gitExtension = extension.isActive ? extension.exports : await extension.activate();
 
+      console.log(file.fsPath);
+
       return gitExtension.getAPI(1).getRepository(file);
     }
   } catch {

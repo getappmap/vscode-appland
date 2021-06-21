@@ -8,6 +8,7 @@ export function run(testsRoot: string, cb: (error: any, failures?: number) => vo
   const mocha = new Mocha({
     ui: 'tdd',
     color: true,
+    timeout: 4000,
   });
 
   glob('**/**.test.js', { cwd: testsRoot }, (err, files) => {
