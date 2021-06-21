@@ -170,8 +170,10 @@
   "scripts": {
     "vscode:prepublish": "npm run compile",
     "lint": "eslint . --ext .ts",
-    "pretest": "npm run lint",
-    "test:server": "node ./test/runTest.js",
+    "pretest": "yarn run lint",
+    "test:server:compile": "tsc -p ./",
+    "test:server:run": "node ./out/test/runTest.js",
+    "test:server": "yarn run test:server:compile && yarn run test:server:run",
     "test:client": "mocha web/test/*.test.mjs",
     "test": "yarn run test:server && yarn run test:client",
     "compile": "webpack --mode=production",
