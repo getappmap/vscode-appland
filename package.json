@@ -117,7 +117,7 @@
     "viewsWelcome": [
       {
         "view": "appmap.views.local",
-        "contents": "No AppMaps found.\n[Learn more](https://appland.com/docs)",
+        "contents": "Welcome to AppMap\nThis panel will be the home for all of your AppMaps. You dont have any AppMaps created yet, but dont worry, the guides below will get you up and running in no time!\nAfter you’re set up, see the other guides we’ve provided to learn how to master all that AppMap has to offer.",
         "when": "appmap.initialized && !appmap.hasData"
       },
       {
