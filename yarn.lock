@@ -2,24 +2,24 @@
 # yarn lockfile v1
 
 
-"@appland/components@^1.1.11":
-  version "1.1.11"
-  resolved "https://registry.yarnpkg.com/@appland/components/-/components-1.1.11.tgz#d9a1598cd6e2393a8ec0d6a5a867824d6c147e5e"
-  integrity sha512-C4sFcrhmKHECwYbDINz/BGbGm2V1jEjtYkrcRl93g0bCIhj3yAhV3QhlpUvMtGhP3tM01O5k6vxRSFWTH2QFrw==
+"@appland/components@^1.2.1":
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@appland/components/-/components-1.2.1.tgz#d653c1312fbe4b7c64519ee5e2e518790c249315"
+  integrity sha512-BlW6ELkHaL7V06J/zJFmsz76gFt9BqhTgG4fvhkbF0l/zJu015fRxYl+V/P9wL61mNdLki1YOHhu1fCSyzBdlA==
   dependencies:
-    "@appland/diagrams" "^1.1.1"
-    "@appland/models" "^1.1.0"
+    "@appland/diagrams" "^1.2.1"
+    "@appland/models" "^1.2.0"
     highlight.js "^10.7.2"
     sql-formatter "^2.3.3"
     vue "^2.6.11"
     vuex "^3.6.0"
 
-"@appland/diagrams@^1.1.1":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@appland/diagrams/-/diagrams-1.1.1.tgz#888d7850eeb5cbcd76ea412b1edbd290b927d011"
-  integrity sha512-RXuVvMneAfSiWVdaVqECGObRqAAy4oQFU4Oh/lXiU6Mu4BXwslomrwU8PXFl3qfbFRCtkBRPrAL82WPQOv9mPg==
+"@appland/diagrams@^1.2.1":
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@appland/diagrams/-/diagrams-1.2.1.tgz#114e3e139fa3a7dbbd3d6d1ddfe2d128aff21080"
+  integrity sha512-avK7JtokQvkSQM4D6Ifn3WOpASX3lEgcZGcg8jnJKU6GIZ1jIEfk95jT2RyH3GV7uVJleSetPS0b41lzvxb9uQ==
   dependencies:
-    "@appland/models" "1.1.0"
+    "@appland/models" "^1.2.0"
     "@rollup/plugin-node-resolve" "^13.0.0"
     "@rollup/plugin-replace" "^2.4.2"
     d3-flame-graph "^4.0.6"
@@ -32,28 +32,10 @@
     deepmerge "^4.2.2"
     sql-formatter "^4.0.2"
 
-"@appland/diagrams@^1.1.2":
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/@appland/diagrams/-/diagrams-1.1.2.tgz#4e6caaaf159eb00aadc5eae09f4c71e0ad1a6014"
-  integrity sha512-Hhi1D7lG3+m7GhCQ2RFP8B8Rgx/A58Ofyk/nEWwDI2G4odiwJviiAmJHMJmJbTGPMoKvqoapxRTHyhxNTYiZig==
-  dependencies:
-    "@appland/models" "^1.1.0"
-    "@rollup/plugin-node-resolve" "^13.0.0"
-    "@rollup/plugin-replace" "^2.4.2"
-    d3-flame-graph "^4.0.6"
-    d3-hierarchy "^1.1.9"
-    d3-interpolate "^1.4.0"
-    d3-selection "^1.4.2"
-    d3-shape "^1.3.7"
-    d3-zoom "^1.8.3"
-    dagre "^0.8.5"
-    deepmerge "^4.2.2"
-    sql-formatter "^4.0.2"
-
-"@appland/models@1.1.0", "@appland/models@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@appland/models/-/models-1.1.0.tgz#fad1971e74602a7b8b7653ee21723ecba6da0882"
-  integrity sha512-sXR7kaCC8gM8Wi6AotPpgeKqCwJW4786SPc/oU3mEeo26OyNnGEtoTvq4JishsgTSVlZicd/4w3+lX/6CqPkfw==
+"@appland/models@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@appland/models/-/models-1.2.0.tgz#7e1dbcdc986531759d63333e47167f81ed6e4259"
+  integrity sha512-MybHgsnSZMSljHSruQSGsnZvdzDkSjnl0kFmCzgB+yOUNSUdBoXUYCkpZODNLvuEw8eVHQTbFfRBi1UgsvFAPQ==
   dependencies:
     "@rollup/plugin-alias" "^3.1.2"
     cross-env "^7.0.3"
@@ -9768,10 +9750,10 @@ vue-style-loader@^4.1.0, vue-style-loader@^4.1.2:
     hash-sum "^1.0.2"
     loader-utils "^1.0.2"
 
-vue-template-compiler@^2.6.12:
-  version "2.6.13"
-  resolved "https://registry.yarnpkg.com/vue-template-compiler/-/vue-template-compiler-2.6.13.tgz#a735b8974e013ce829e7f77e08e4ee5aecbd3005"
-  integrity sha512-latKAqpUjCkovB8XppW5gnZbSdYQzkf8pavsMBZYZrQcG6lAnj0EH4Ty7jMwAwFw5Cf4mybKBHlp1UTjnLPOWw==
+vue-template-compiler@^2.6.14:
+  version "2.6.14"
+  resolved "https://registry.yarnpkg.com/vue-template-compiler/-/vue-template-compiler-2.6.14.tgz#a2f0e7d985670d42c9c9ee0d044fed7690f4f763"
+  integrity sha512-ODQS1SyMbjKoO1JBJZojSw6FE4qnh9rIpUZn2EUT86FKizx9uH5z6uXiIrm4/Nb/gwxTi/o17ZDEGWAXHvtC7g==
   dependencies:
     de-indent "^1.0.2"
     he "^1.1.0"
@@ -9781,15 +9763,10 @@ vue-template-es2015-compiler@^1.9.0:
   resolved "https://registry.yarnpkg.com/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.9.1.tgz#1ee3bc9a16ecbf5118be334bb15f9c46f82f5825"
   integrity sha512-4gDntzrifFnCEvyoO8PqyJDmguXgVPxKiIxrBKjIowvL9l+N66196+72XVYR8BBf1Uv1Fgt3bGevJ+sEmxfZzw==
 
-vue@^2.6.11:
+vue@^2.6.11, vue@^2.6.14:
   version "2.6.14"
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.6.14.tgz#e51aa5250250d569a3fbad3a8a5a687d6036e235"
   integrity sha512-x2284lgYvjOMj3Za7kqzRcUSxBboHqtgRE2zlos1qWaOye5yUmHn42LB1250NJBLRwEcdrB0JRwyPTEPhfQjiQ==
-
-vue@^2.6.12:
-  version "2.6.13"
-  resolved "https://registry.yarnpkg.com/vue/-/vue-2.6.13.tgz#94b2c1b31fddf1dfcc34f28ec848ba8f01ea4c5b"
-  integrity sha512-O+pAdJkce1ooYS1XyoQtpBQr9An+Oys3w39rkqxukVO3ZD1ilYJkWBGoRuadiQEm2LLJnCL2utV4TMSf52ubjw==
 
 vuex@^3.6.0:
   version "3.6.2"
