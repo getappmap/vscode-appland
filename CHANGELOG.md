@@ -1,3 +1,11 @@
+## [0.14.4](https://github.com/applandinc/vscode-appland/compare/v0.14.3...v0.14.4) (2021-06-23)
+
+
+### Bug Fixes
+
+* Upgrade dependencies ([ff05077](https://github.com/applandinc/vscode-appland/commit/ff050778940b5c9bc0b8b959df1230de992e3bf8))
+* Upgrade dependencies ([83b21a1](https://github.com/applandinc/vscode-appland/commit/83b21a134f0f2cf3a12b1116b8e88701460935fc))
+
 ## [0.14.3](https://github.com/applandinc/vscode-appland/compare/v0.14.2...v0.14.3) (2021-06-16)
 
 
