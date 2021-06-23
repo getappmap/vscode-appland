@@ -174,7 +174,8 @@
     "test": "node ./test/runTest.js",
     "compile": "webpack --mode=production",
     "watch": "webpack --watch --mode=development",
-    "package": "vsce package"
+    "package": "vsce package",
+    "semantic-release": "semantic-release"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
