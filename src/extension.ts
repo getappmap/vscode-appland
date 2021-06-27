@@ -16,7 +16,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   RemoteRecording.register(context);
 
   localAppMaps.initialize();
-  const { localTree } = registerTrees(localAppMaps);
+  const { localTree } = registerTrees(context, localAppMaps);
 
   context.subscriptions.push(
     vscode.commands.registerCommand('appmap.applyFilter', async () => {
