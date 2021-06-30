@@ -139,6 +139,16 @@
           "contextualTitle": "AppMap",
           "visibility": "visible",
           "icon": "images/logo.svg"
+        },
+        {
+          "id": "appmap.views.usingAppmaps",
+          "name": "Using AppMaps",
+          "visibility": "collapsed"
+        },
+        {
+          "id": "appmap.views.masteringAppmaps",
+          "name": "Mastering AppMaps",
+          "visibility": "collapsed"
         }
       ]
     },
