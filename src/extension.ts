@@ -6,6 +6,7 @@ import registerTrees from './tree';
 import AppMapCollectionFile from './appmapCollectionFile';
 import RemoteRecording from './remoteRecording';
 import { notEmpty } from './util';
+import ProjectWatcher from './projectWatcher';
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
   const localAppMaps = new AppMapCollectionFile();
@@ -52,5 +53,12 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     })
   );
 
-  Telemetry.reportStartUp();
+  vscode.workspace.workspaceFolders?.forEach((workspaceFolder) => {
+    const watcher = new ProjectWatcher(workspaceFolder.uri.fsPath);
+    watcher.initialize();
+  });
+
+  // TODO.
+  // Report the extension has initialized.
+  // Telemetry.reportStartUp();
 }

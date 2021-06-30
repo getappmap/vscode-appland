@@ -2,7 +2,10 @@ import * as vscode from 'vscode';
 import TelemetryReporter from 'vscode-extension-telemetry';
 import { version, publisher, name } from '../package.json';
 import { getStringRecords } from './util';
-import { basename } from 'path';
+import { PathLike } from 'fs';
+import TelemetryResolver from './telemetry/telemetryResolver';
+import { Properties, Metrics } from './telemetry/index';
+import TelemetryDataProvider from './telemetry/telemetryDataProvider';
 
 const EXTENSION_ID = `${publisher}.${name}`;
 const EXTENSION_VERSION = `${version}`;
@@ -15,122 +18,103 @@ const INSTRUMENTATION_KEY = ['NTBjMWE1YzI', 'NDliNA', 'NDkxMw', 'YjdjYw', 'ODZhN
   .map((x) => Buffer.from(x, 'base64').toString('utf8'))
   .join('-');
 
-class AppMapTelemetry {
-  private reporter = new TelemetryReporter(EXTENSION_ID, EXTENSION_VERSION, INSTRUMENTATION_KEY);
-  private readonly referenceInfo = {
-    'pom.xml': {
-      language: 'java',
-      framework: 'maven',
-    },
-    'build.gradle': {
-      language: 'java',
-      framework: 'gradle',
-    },
-    'Gemfile.lock': {
-      language: 'ruby',
-    },
-    'pyproject.toml': {
-      language: 'python',
-    },
-    'requirements.txt': {
-      language: 'python',
-    },
-  };
+interface Event {
+  readonly eventName: string;
+  properties?: Array<TelemetryDataProvider<string>>;
+  metrics?: Array<TelemetryDataProvider<number>>;
+}
 
-  register(context: vscode.ExtensionContext) {
+/**
+ * An event is a uniquely identified collection of telemetry data. Events of the same `eventName` will often contain the
+ * same properties and metrics. This map binds properties and metrics together under a common event.
+ */
+export const Events: { [key: string]: Event } = {
+  PROJECT_OPEN: {
+    eventName: 'project:open',
+    properties: [
+      Properties.Project.AGENT_VERSION_GLOBAL,
+      Properties.Project.AGENT_VERSION_PROJECT,
+      Properties.Project.IS_CONFIG_PRESENT,
+      Properties.Project.LANGUAGE,
+    ],
+    // metrics: [Metrics.Project.EXAMPLE],
+  },
+  UPDATE_PROJECT_CONFIG: {
+    eventName: 'project/config:update',
+  },
+};
+
+/**
+ * The primary interface for sending telemetry data.
+ */
+export default class Telemetry {
+  private static reporter = new TelemetryReporter(
+    EXTENSION_ID,
+    EXTENSION_VERSION,
+    INSTRUMENTATION_KEY
+  );
+
+  static register(context: vscode.ExtensionContext): void {
     context.subscriptions.push(this.reporter);
   }
 
-  async reportStartUp() {
-    const languages: string[] = [];
-    const frameworks: string[] = [];
-    const referenceSources = Object.keys(this.referenceInfo);
-    const filesContainingReferences = (
-      await Promise.all(
-        referenceSources.flatMap(async (fileName) => {
-          const files = await vscode.workspace.findFiles(`**/${fileName}`);
-          return files.filter(async (uri) => {
-            const textDocument = await vscode.workspace.openTextDocument(uri);
+  private static async performSendEvent(
+    event: Event,
+    rootDirectory: PathLike,
+    relatedFile?: PathLike
+  ): Promise<void> {
+    const telemetry = new TelemetryResolver(rootDirectory, relatedFile);
+    let properties: Record<string, string> | undefined;
+    let metrics: Record<string, number> | undefined;
 
-            // TODO:
-            // This needs to be a little bit smarter.
-            return textDocument.getText().includes('appmap');
-          });
-        })
-      )
-    ).flat();
-
-    filesContainingReferences
-      .map((uri) => {
-        const fileBaseName = basename(uri.fsPath);
-        return this.referenceInfo[fileBaseName] as Record<string, string>;
-      })
-      .forEach((m) => {
-        if (m.language) {
-          languages.push(m.language);
-        }
-
-        if (m.framework) {
-          // TODO:
-          // This needs to be a little bit smarter. Check for supported frameworks (rails, django, etc).
-          frameworks.push(m.framework);
-        }
-      });
-
-    this.reporter.sendTelemetryEvent('initialize', {
-      references: String(filesContainingReferences.length > 0),
-      languages: languages.join(','),
-      frameworks: frameworks.join(','),
-    });
-  }
-
-  reportLoadAppMap(metadata: Record<string, any>) {
-    const data = {
-      ...getStringRecords(metadata.language || {}, 'appmap.language'),
-      ...getStringRecords(metadata.client || {}, 'appmap.client'),
-      ...getStringRecords(metadata.frameworks || {}, 'appmap.frameworks'),
-    } as Record<string, string>;
-
-    if (Array.isArray(metadata?.frameworks)) {
-      metadata.frameworks.forEach((framework) => {
-        data[`appmap.frameworks.${framework.name}`] = framework.version;
-      });
+    if (event.properties) {
+      properties = await telemetry.resolve(...event.properties);
     }
 
-    if (metadata?.git?.url) {
-      data['appmap.git'] = String(metadata.git.url)
-        .replace(/.*(@|:\/\/)/, '') // Drop basic authentication and/or protocols
-        .replace(/\/?\.git$/, '') //   Drop git extensions
-        .replace(/:/gm, '/'); //       Make any remaining scope pathlike
-      //                               i.e. github.com:myorg/myrepo ->
-      //                                    github.com/myorg/myrepo
+    if (event.metrics) {
+      metrics = await telemetry.resolve(...event.metrics);
     }
 
-    const metrics = {
-      'appmap.load_time': metadata.loadTime,
-      'appmap.num_events': metadata.numEvents,
-      'appmap.num_http_events': metadata.numHttpEvents,
-      'appmap.num_sql_events': metadata.numSqlEvents,
-    };
-
-    this.reporter.sendTelemetryEvent('open', data, metrics);
+    this.reporter.sendTelemetryEvent(event.eventName, properties, metrics);
   }
 
-  reportAction(action: string, data: Record<string, string> | undefined) {
+  static async sendEvent(event: Event): Promise<void> {
+    const { workspaceFolders } = vscode.workspace;
+    if (!workspaceFolders) {
+      return;
+    }
+
+    if (!workspaceFolders.length) {
+      return;
+    }
+
+    return await this.performSendEvent(event, workspaceFolders[0].uri.fsPath);
+  }
+
+  static async sendProjectEvent(event: Event, workspace: vscode.WorkspaceFolder): Promise<void> {
+    return await this.performSendEvent(event, workspace.uri.fsPath);
+  }
+
+  static async sendProjectFileEvent(
+    event: Event,
+    workspace: vscode.WorkspaceFolder,
+    relatedFile: PathLike
+  ): Promise<void> {
+    return await this.performSendEvent(event, workspace.uri.fsPath, relatedFile);
+  }
+
+  static reportAction(action: string, data: Record<string, string> | undefined): void {
     this.reporter.sendTelemetryEvent(action, data);
   }
 
-  reportWebviewError(error: Record<string, string>) {
+  static reportWebviewError(error: Record<string, string>): void {
     this.reporter.sendTelemetryErrorEvent('webview_error', {
       'appmap.webview.error.message': error.message,
       'appmap.webview.error.stack': error.stack,
     });
   }
 
-  reportOpenUri(uri: vscode.Uri) {
+  static reportOpenUri(uri: vscode.Uri): void {
     this.reporter.sendTelemetryEvent('open_uri', { uri: uri.toString() });
   }
 }
-
-const Telemetry = new AppMapTelemetry();
-export default Telemetry;

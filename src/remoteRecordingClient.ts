@@ -1,4 +1,4 @@
-import * as bent from 'bent';
+import bent from 'bent';
 
 export default class RemoteRecordingClient {
   private static readonly RECORDING_URI = '/_appmap/record';
