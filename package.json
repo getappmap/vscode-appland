@@ -81,7 +81,7 @@
         "appMap.serverURL": {
           "type": "string",
           "default": "https://app.land",
-          "description": "URL of AppLand Server for AppMaps uploading"
+          "description": "URL of AppMap Cloud for AppMaps uploading"
         }
       }
     },
