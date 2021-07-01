@@ -15,7 +15,7 @@ export class AppmapUploader {
 
       if (!this.uploadConfirmed) {
         const confirmation = await vscode.window.showInformationMessage(
-          'You are about to upload this AppMap to the AppMap cloud. Would you like to continue?',
+          'You are about to upload this AppMap to the AppMap Cloud. Would you like to continue?',
           ...['Yes', 'No']
         );
         if (confirmation === 'Yes') {
