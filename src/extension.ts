@@ -7,6 +7,7 @@ import AppMapCollectionFile from './appmapCollectionFile';
 import RemoteRecording from './remoteRecording';
 import { notEmpty } from './util';
 import ProjectWatcher from './projectWatcher';
+import Milestone, { createMilestones, MilestoneMap } from './milestones';
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
   const localAppMaps = new AppMapCollectionFile();
@@ -17,7 +18,14 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   RemoteRecording.register(context);
 
   localAppMaps.initialize();
-  const { localTree } = registerTrees(context, localAppMaps);
+
+  const projects = (vscode.workspace.workspaceFolders || []).map((workspaceFolder) => {
+    const project = new ProjectWatcher(context, workspaceFolder);
+    project.initialize();
+    return project;
+  });
+
+  const { localTree } = registerTrees(context, localAppMaps, projects);
 
   context.subscriptions.push(
     vscode.commands.registerCommand('appmap.applyFilter', async () => {
@@ -52,11 +60,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
       vscode.commands.executeCommand('vscode.open', descriptor.resourceUri);
     })
   );
-
-  vscode.workspace.workspaceFolders?.forEach((workspaceFolder) => {
-    const watcher = new ProjectWatcher(workspaceFolder.uri.fsPath);
-    watcher.initialize();
-  });
 
   // TODO.
   // Report the extension has initialized.

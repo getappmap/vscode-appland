@@ -3,7 +3,7 @@ import TelemetryReporter from 'vscode-extension-telemetry';
 import { version, publisher, name } from '../package.json';
 import { getStringRecords } from './util';
 import { PathLike } from 'fs';
-import TelemetryResolver from './telemetry/telemetryResolver';
+import TelemetryResolver, { EventContext } from './telemetry/telemetryResolver';
 import { Properties, Metrics } from './telemetry/index';
 import TelemetryDataProvider from './telemetry/telemetryDataProvider';
 
@@ -29,6 +29,10 @@ interface Event {
  * same properties and metrics. This map binds properties and metrics together under a common event.
  */
 export const Events: { [key: string]: Event } = {
+  DEBUG_EXCEPTION: {
+    eventName: 'debug/exception',
+    properties: [Properties.Debug.EXCEPTION],
+  },
   PROJECT_OPEN: {
     eventName: 'project:open',
     properties: [
@@ -39,8 +43,21 @@ export const Events: { [key: string]: Event } = {
     ],
     // metrics: [Metrics.Project.EXAMPLE],
   },
-  UPDATE_PROJECT_CONFIG: {
-    eventName: 'project/config:update',
+  PROJECT_CLIENT_AGENT_ADD: {
+    eventName: 'project/client_agent:add',
+    properties: [Properties.Project.AGENT_VERSION_PROJECT, Properties.Project.LANGUAGE],
+  },
+  PROJECT_CLIENT_AGENT_REMOVE: {
+    eventName: 'project/client_agent:remove',
+    properties: [],
+  },
+  PROJECT_CONFIG_WRITE: {
+    eventName: 'project/config:write',
+    properties: [],
+  },
+  MILESTONE_CHANGE_STATE: {
+    eventName: 'milestone:change_state',
+    properties: [Properties.Milestones.ID, Properties.Milestones.STATE],
   },
 };
 
@@ -58,12 +75,8 @@ export default class Telemetry {
     context.subscriptions.push(this.reporter);
   }
 
-  private static async performSendEvent(
-    event: Event,
-    rootDirectory: PathLike,
-    relatedFile?: PathLike
-  ): Promise<void> {
-    const telemetry = new TelemetryResolver(rootDirectory, relatedFile);
+  static async sendEvent(event: Event, eventContext: EventContext): Promise<void> {
+    const telemetry = new TelemetryResolver(eventContext);
     let properties: Record<string, string> | undefined;
     let metrics: Record<string, number> | undefined;
 
@@ -76,31 +89,6 @@ export default class Telemetry {
     }
 
     this.reporter.sendTelemetryEvent(event.eventName, properties, metrics);
-  }
-
-  static async sendEvent(event: Event): Promise<void> {
-    const { workspaceFolders } = vscode.workspace;
-    if (!workspaceFolders) {
-      return;
-    }
-
-    if (!workspaceFolders.length) {
-      return;
-    }
-
-    return await this.performSendEvent(event, workspaceFolders[0].uri.fsPath);
-  }
-
-  static async sendProjectEvent(event: Event, workspace: vscode.WorkspaceFolder): Promise<void> {
-    return await this.performSendEvent(event, workspace.uri.fsPath);
-  }
-
-  static async sendProjectFileEvent(
-    event: Event,
-    workspace: vscode.WorkspaceFolder,
-    relatedFile: PathLike
-  ): Promise<void> {
-    return await this.performSendEvent(event, workspace.uri.fsPath, relatedFile);
   }
 
   static reportAction(action: string, data: Record<string, string> | undefined): void {

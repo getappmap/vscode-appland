@@ -1,23 +1,24 @@
-import { PathLike } from 'fs';
-import Cli, { StatusResponse } from '../agent/appMapAgent';
+import AppMapAgent, { StatusResponse } from '../agent/appMapAgent';
 import LanguageResolver from '../languageResolver';
+import { EventContext } from './telemetryResolver';
 
 /**
  * Provides access to information about the current project.
  */
 export default class TelemetryContext {
-  public readonly rootDirectory: PathLike;
-  public readonly language: string;
-  public readonly filePath?: PathLike | undefined;
+  public readonly language?: string;
+  public readonly event: EventContext;
 
-  private readonly agent?: Cli;
+  private readonly agent?: AppMapAgent;
   private statusResponse?: StatusResponse;
 
-  constructor(rootDirectory: PathLike, language: string, filePath?: PathLike | undefined) {
-    this.rootDirectory = rootDirectory;
-    this.filePath = filePath;
+  constructor(eventContext: EventContext, language?: string) {
+    this.event = eventContext;
     this.language = language;
-    this.agent = LanguageResolver.getAgentForLanguage(language);
+
+    if (this.event.rootDirectory && language) {
+      this.agent = LanguageResolver.getAgentForLanguage(language);
+    }
   }
 
   /**
@@ -25,9 +26,9 @@ export default class TelemetryContext {
    * context will use a cached value.
    */
   public async getStatus(): Promise<StatusResponse | undefined> {
-    if (!this.statusResponse && this.agent) {
+    if (!this.statusResponse && this.agent && this.event.rootDirectory) {
       // Cache the response for this context - we don't want to continuously exec if we can avoid it.
-      this.statusResponse = await this.agent.status(this.rootDirectory);
+      this.statusResponse = await this.agent.status(this.event.rootDirectory);
     }
 
     return this.statusResponse;

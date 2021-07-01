@@ -1,11 +1,17 @@
 import * as vscode from 'vscode';
 import { PathLike } from 'fs';
+import { join } from 'path';
 import AppMapAgent, { StatusResponse } from './agent/appMapAgent';
 import LanguageResolver from './languageResolver';
-
-function unreachable(msg: string | undefined): never {
-  throw new Error(`Unreachable: ${msg}`);
-}
+import { createMilestones, MilestoneMap, MilestoneType } from './milestones';
+import Telemetry, { Events } from './telemetry';
+import {
+  flagWorkspaceRecordedAppMap,
+  hasWorkspaceFolderOpenedAppMap,
+  hasWorkspaceFolderRecordedAppMap,
+  unreachable,
+} from './util';
+import glob from 'glob';
 
 function resolveFullyQualifiedKey(key: string, obj: Record<string, unknown>): unknown {
   const tokens = key.split(/\./);
@@ -74,16 +80,210 @@ class ObjectKeyDiff {
   }
 }
 
+interface ProjectWatcherState {
+  onEnter?(project: ProjectWatcher): void;
+  onExit?(project: ProjectWatcher): void;
+  tick(
+    project: ProjectWatcher,
+    agent: AppMapAgent,
+    lastStatus?: StatusResponse
+  ): Promise<StatusResponse | undefined>;
+}
+
+const State = {
+  WAIT_FOR_AGENT_INSTALL: new (class implements ProjectWatcherState {
+    onEnter(project: ProjectWatcher) {
+      project.milestones.INSTALL_AGENT.setState('incomplete');
+    }
+    onExit(project: ProjectWatcher) {
+      project.milestones.INSTALL_AGENT.setState('complete');
+    }
+    async tick(project: ProjectWatcher, agent: AppMapAgent): Promise<StatusResponse | undefined> {
+      const isInstalled = await agent.isInstalled(project.rootDirectory);
+      if (!isInstalled) {
+        return undefined;
+      }
+
+      const initialStatus = await agent.status(project.rootDirectory);
+      const { config } = initialStatus.properties;
+      if (config.present) {
+        project.milestones.CREATE_CONFIGURATION.setState(config.valid ? 'complete' : 'error');
+      }
+
+      project.setState(State.WATCH_PROJECT_STATUS);
+      return initialStatus;
+    }
+  })(),
+  WATCH_PROJECT_STATUS: new (class implements ProjectWatcherState {
+    private appmapWatcher?: vscode.FileSystemWatcher;
+
+    onEnter(project: ProjectWatcher) {
+      if (project.appmapExists()) {
+        return;
+      }
+
+      this.appmapWatcher = vscode.workspace.createFileSystemWatcher(
+        '**/*.appmap.json',
+        false,
+        true,
+        true
+      );
+
+      this.appmapWatcher.onDidCreate((uri) => {
+        if (uri.fsPath.startsWith(project.rootDirectory as string)) {
+          flagWorkspaceRecordedAppMap(project.context, project.workspaceFolder);
+          project.forceNextTick();
+
+          this.appmapWatcher?.dispose();
+          this.appmapWatcher = undefined;
+        }
+      });
+    }
+
+    onExit(project: ProjectWatcher) {
+      Telemetry.sendEvent(Events.PROJECT_CLIENT_AGENT_REMOVE, {
+        rootDirectory: project.rootDirectory,
+      });
+
+      this.appmapWatcher?.dispose();
+      this.appmapWatcher = undefined;
+    }
+
+    async tick(
+      project: ProjectWatcher,
+      agent: AppMapAgent,
+      lastStatus?: StatusResponse
+    ): Promise<StatusResponse | undefined> {
+      const isInstalled = await agent.isInstalled(project.rootDirectory);
+      if (!isInstalled) {
+        project.setState(State.WAIT_FOR_AGENT_INSTALL);
+        return;
+      }
+
+      const status = await agent.status(project.rootDirectory);
+      if (!status) {
+        project.setState(State.WAIT_FOR_AGENT_INSTALL);
+        return;
+      }
+
+      // Begin comparing the results of this status report to the last good status report. We want to react to properties
+      // which have changed between the two.
+      const diff = new ObjectKeyDiff(
+        lastStatus as Record<string, unknown> | undefined,
+        (status as unknown) as Record<string, unknown>
+      );
+
+      diff
+        .on('properties.config.present', (isPresent) => {
+          // Send a telemetry event.
+          Telemetry.sendEvent(Events.PROJECT_CONFIG_WRITE, {
+            rootDirectory: project.rootDirectory,
+          });
+
+          if (!isPresent) {
+            project.milestones.CREATE_CONFIGURATION.setState('incomplete');
+          }
+        })
+        .on('properties.config.valid', (isValid) => {
+          if (isValid) {
+            project.milestones.CREATE_CONFIGURATION.setState('complete');
+          } else if (status.properties.config.present) {
+            project.milestones.CREATE_CONFIGURATION.setState('error');
+          }
+        });
+
+      if (await project.appmapExists()) {
+        project.milestones.RECORD_APPMAP.setState('complete');
+      }
+
+      if (project.appmapOpened()) {
+        project.milestones.VIEW_APPMAP.setState('complete');
+      }
+
+      return status;
+    }
+  })(),
+};
+
 export default class ProjectWatcher {
   private readonly frequencyMs: number;
-  private readonly rootDirectory: PathLike;
+  public readonly workspaceFolder: vscode.WorkspaceFolder;
+  public readonly milestones: MilestoneMap;
+  public readonly context: vscode.ExtensionContext;
   private agent?: AppMapAgent;
   private nextStatusTimer?: NodeJS.Timeout;
   private lastStatus?: StatusResponse;
+  private currentState: ProjectWatcherState;
+  private _appmapExists?: boolean;
+  private _appmapOpened?: boolean;
 
-  constructor(rootDirectory: PathLike, frequencyMs = 6000) {
-    this.rootDirectory = rootDirectory;
+  constructor(
+    context: vscode.ExtensionContext,
+    workspaceFolder: vscode.WorkspaceFolder,
+    frequencyMs = 6000
+  ) {
+    this.context = context;
+    this.workspaceFolder = workspaceFolder;
     this.frequencyMs = frequencyMs;
+    this.milestones = createMilestones(this);
+    this.currentState = State.WAIT_FOR_AGENT_INSTALL;
+  }
+
+  get rootDirectory(): PathLike {
+    return this.workspaceFolder.uri.fsPath;
+  }
+
+  setState(state: ProjectWatcherState) {
+    if (this.currentState.onExit) {
+      this.currentState.onExit(this);
+    }
+
+    this.currentState = state;
+
+    if (this.currentState.onEnter) {
+      this.currentState.onEnter(this);
+    }
+  }
+
+  async performMilestoneAction(id: MilestoneType): Promise<void> {
+    if (!this.agent) {
+      return;
+    }
+
+    switch (id) {
+      case 'INSTALL_AGENT':
+        await this.agent.install(this.rootDirectory);
+        this.forceNextTick();
+        break;
+
+      case 'CREATE_CONFIGURATION':
+        await this.agent.init(this.rootDirectory);
+        this.forceNextTick();
+        break;
+
+      default:
+      // Do nothing
+    }
+  }
+
+  appmapExists(): boolean {
+    if (this._appmapExists) {
+      return true;
+    }
+
+    this._appmapExists = hasWorkspaceFolderRecordedAppMap(this.context, this.workspaceFolder);
+
+    return this._appmapExists;
+  }
+
+  appmapOpened(): boolean {
+    if (this._appmapOpened) {
+      return true;
+    }
+
+    this._appmapOpened = hasWorkspaceFolderOpenedAppMap(this.context, this.workspaceFolder);
+
+    return this._appmapOpened;
   }
 
   /**
@@ -100,21 +300,8 @@ export default class ProjectWatcher {
       throw new Error('no agent was found for this project type');
     }
 
-    const installAction = await this.agent.install(this.rootDirectory);
-    if (installAction === 'installed') {
-      // TODO.
-      // Send a telemetry event.
-      // Progress milestones.
-    }
-
-    // Run an initital query of the project status to determine whether or not we need to initialize the project.
-    const initialStatus = await this.agent.status(this.rootDirectory);
-    if (!initialStatus.properties.config.present) {
-      await this.agent.init(this.rootDirectory);
-    }
-
-    // Begin the main loop.
-    this.queueTick(initialStatus);
+    // Begin the main loop
+    this.tick();
   }
 
   /**
@@ -129,50 +316,17 @@ export default class ProjectWatcher {
       unreachable('tick was called outside of the main tick loop');
     }
 
-    const status = await this.agent.status(this.rootDirectory);
-    if (!status) {
-      // We'll assume that this is an itermittent failure case. After all, the command had to have succeeded previously
-      // in order to get this far. Re-queue the tick and try again later.
-      this.queueTick();
-      return;
-    }
-
-    // Begin comparing the results of this status report to the last good status report. We want to react to properties
-    // which have changed between the two.
-    const diff = new ObjectKeyDiff(
-      this.lastStatus as Record<string, unknown> | undefined,
-      (status as unknown) as Record<string, unknown>
-    );
-
-    diff
-      .on('properties.config.present', () => {
-        // Send a telemetry event.
-      })
-      .on('properties.config.valid', (value) => {
-        // Send a telemetry event.
-      })
-      .on('properties.project.agentVersionProject', (newVal, oldVal) => {
-        if (newVal === 'none') {
-          // User has removed the dependency.
-          // Send a telemetry event.
-        } else if (oldVal === 'none') {
-          // User has added the dependency.
-          // Send a telemetry event.
-        } else {
-          // User has changed the dependency version.
-          // Send a telemetry event.
-        }
-      });
+    const status = await this.currentState.tick(this, this.agent, this.lastStatus);
 
     // Queue up the next tick to poll the status again at a later time.
-    this.queueTick(status);
+    this.queueNextTick(status);
   }
 
   /**
    * Begin a timer to execute `tick`, the status polling logic.
    * @param currentStatus The current status held by the caller, to be used in the next tick as the previous status.
    */
-  private queueTick(currentStatus?: StatusResponse): void {
+  private queueNextTick(currentStatus?: StatusResponse): void {
     if (currentStatus) {
       this.lastStatus = currentStatus;
     }
@@ -181,5 +335,14 @@ export default class ProjectWatcher {
       this.nextStatusTimer = undefined;
       this.tick();
     }, this.frequencyMs);
+  }
+
+  public forceNextTick(): void {
+    if (this.nextStatusTimer) {
+      clearTimeout(this.nextStatusTimer);
+      this.nextStatusTimer = undefined;
+    }
+
+    this.tick();
   }
 }

@@ -3,10 +3,13 @@ import AppMapCollection from '../appmapCollection';
 import { AppMapTreeDataProvider } from './appmap/AppMapTreeDataProvider';
 import { LinkTreeDataProvider } from './linkTreeDataProvider';
 import Links from './links';
+import { MilestoneTreeDataProvider } from './milestoneTreeDataProvider';
+import ProjectWatcher from '../projectWatcher';
 
 export default function registerTrees(
   context: vscode.ExtensionContext,
-  localAppMaps: AppMapCollection
+  localAppMaps: AppMapCollection,
+  projects: readonly ProjectWatcher[]
 ): Record<string, vscode.TreeView<vscode.TreeItem>> {
   const localTreeProvider = new AppMapTreeDataProvider(localAppMaps);
   const localTree = vscode.window.createTreeView('appmap.views.local', {
@@ -25,5 +28,12 @@ export default function registerTrees(
     treeDataProvider: masteringAppmapsTreeProvider,
   });
 
-  return { localTree, usingAppmaps, masteringAppmaps };
+  const milestoneTreeProvider = new MilestoneTreeDataProvider(context, projects);
+  const milestoneTree = vscode.window.createTreeView('appmap.views.milestones', {
+    treeDataProvider: milestoneTreeProvider,
+  });
+
+  MilestoneTreeDataProvider.DEMO_HACK(context);
+
+  return { localTree, usingAppmaps, masteringAppmaps, milestoneTree };
 }

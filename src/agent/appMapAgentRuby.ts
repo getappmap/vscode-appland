@@ -1,14 +1,24 @@
 import { PathLike, promises as fs } from 'fs';
 import { join } from 'path';
 import { exec } from '../util';
-import AppMapAgent, { FilesResponse, StatusResponse, InstallResult } from './appMapAgent';
+import AppMapAgent, {
+  FilesResponse,
+  StatusResponse,
+  InstallResult,
+  InitResponse,
+} from './appMapAgent';
 
 export default class AppMapAgentRuby implements AppMapAgent {
   readonly language = 'ruby';
 
-  async install(path: PathLike): Promise<InstallResult> {
+  async isInstalled(path: PathLike): Promise<boolean> {
     const process = await exec('bundle', ['info', 'appmap'], { cwd: path as string });
-    if (process.exitCode === 0) {
+    return process.exitCode === 0;
+  }
+
+  async install(path: PathLike): Promise<InstallResult> {
+    const isInstalled = await this.isInstalled(path);
+    if (isInstalled) {
       // Already installed.
       //
       // TODO.
@@ -36,8 +46,14 @@ export default class AppMapAgentRuby implements AppMapAgent {
     return 'installed';
   }
 
-  async init(path: PathLike): Promise<void> {
-    await exec('bundle', ['exec', 'appmap-agent-init'], { cwd: path as string });
+  async init(path: PathLike): Promise<InitResponse> {
+    const { stdout } = await exec('bundle', ['exec', 'appmap-agent-init'], { cwd: path as string });
+    const response = JSON.parse(stdout) as InitResponse;
+    const { filename, contents } = response.configuration;
+
+    await fs.writeFile(join(path as string, filename), contents);
+
+    return response;
   }
 
   async files(path: PathLike): Promise<FilesResponse> {

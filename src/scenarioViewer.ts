@@ -1,7 +1,12 @@
 import { isAbsolute, join } from 'path';
 import * as vscode from 'vscode';
 import Telemetry from './telemetry';
-import { getNonce, getStringRecords } from './util';
+import {
+  flagWorkspaceOpenedAppMap,
+  getNonce,
+  getStringRecords,
+  workspaceFolderForDocument,
+} from './util';
 import { version, releaseKey } from '../package.json';
 
 /**
@@ -21,6 +26,7 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
   private static readonly storeInstructionsKey = 'APPMAP_INSTRUCTIONS_VIEWED';
   private static readonly storeReleaseKey = 'APPMAP_RELEASE_KEY';
   private static readonly storeTelemetryInstallKey = 'APPMAP_TELEMETRY_INSTALL';
+  public static readonly APPMAP_OPENED = 'APPMAP_OPENED';
 
   constructor(private readonly context: vscode.ExtensionContext) {}
 
@@ -37,6 +43,11 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
         type: 'update',
         text: document.getText(),
       });
+
+      const workspaceFolder = workspaceFolderForDocument(document);
+      if (workspaceFolder) {
+        flagWorkspaceOpenedAppMap(this.context, workspaceFolder);
+      }
 
       // show AppMap instructions on first open
       if (!this.context.globalState.get(ScenarioProvider.storeInstructionsKey)) {

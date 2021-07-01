@@ -43,6 +43,13 @@ export interface FilesResponse {
   readonly appmapDirectory: Array<PathLike>;
 }
 
+export interface InitResponse {
+  readonly configuration: {
+    filename: string;
+    contents: string;
+  };
+}
+
 export type InstallResult = 'none' | 'upgraded' | 'installed';
 
 export default interface AppMapAgent {
@@ -52,6 +59,7 @@ export default interface AppMapAgent {
    */
   readonly language: string;
 
+  isInstalled(path: PathLike): Promise<boolean>;
   /**
    * Install the agent CLI using the latest version.
    */
@@ -60,7 +68,7 @@ export default interface AppMapAgent {
   /**
    * Execute the AppMap CLI init command.
    */
-  init(path: PathLike): Promise<void>;
+  init(path: PathLike): Promise<InitResponse>;
 
   /**
    * Execute the AppMap CLI files command.
