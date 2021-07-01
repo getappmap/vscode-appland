@@ -3,6 +3,7 @@ import AppMapCollection from '../appmapCollection';
 import { AppMapTreeDataProvider } from './appmap/AppMapTreeDataProvider';
 import { LinkTreeDataProvider } from './linkTreeDataProvider';
 import Links from './links';
+import { QuickStartTreeDataProvider } from './quickstart/quickstartTreeDataProvider';
 
 export default function registerTrees(
   context: vscode.ExtensionContext,
@@ -15,6 +16,13 @@ export default function registerTrees(
 
   LinkTreeDataProvider.registerCommands(context);
 
+  const quickstartTreeProvider = new QuickStartTreeDataProvider(context);
+  const quickstart = vscode.window.createTreeView('appmap.views.quickstart', {
+    treeDataProvider: quickstartTreeProvider,
+  });
+
+  quickstartTreeProvider.setState('INSTALL_EXTENSION', 'complete');
+
   const usingAppmapsTreeProvider = new LinkTreeDataProvider(context, Links.UsingAppMaps);
   const usingAppmaps = vscode.window.createTreeView('appmap.views.usingAppmaps', {
     treeDataProvider: usingAppmapsTreeProvider,
@@ -25,5 +33,5 @@ export default function registerTrees(
     treeDataProvider: masteringAppmapsTreeProvider,
   });
 
-  return { localTree, usingAppmaps, masteringAppmaps };
+  return { localTree, quickstart, usingAppmaps, masteringAppmaps };
 }
