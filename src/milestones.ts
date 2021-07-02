@@ -1,6 +1,4 @@
-import { PathLike } from 'fs';
 import * as vscode from 'vscode';
-import AppMapAgent from './agent/appMapAgent';
 import ProjectWatcher from './projectWatcher';
 import Telemetry, { Events } from './telemetry';
 
@@ -22,7 +20,7 @@ const MILESTONES = Object.freeze({
     state: 'incomplete' as CompletionState,
   },
   RECORD_APPMAP: {
-    label: 'Recording AppMaps',
+    label: 'Record AppMaps',
     state: 'incomplete' as CompletionState,
   },
   VIEW_APPMAP: {
