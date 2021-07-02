@@ -42,7 +42,7 @@ export const Properties = {
       id: 'appmap.project.agent_version',
       async value(context: TelemetryContext) {
         const status = await context.getStatus();
-        return status?.properties.project.agentVersionProject || 'none';
+        return status?.properties.project.agentVersion || 'none';
       },
     }),
     IS_CONFIG_PRESENT: new TelemetryDataProvider({

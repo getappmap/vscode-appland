@@ -7,8 +7,7 @@ export interface ConfigMetadata {
 }
 
 export interface ProjectMetadata {
-  readonly agentVersionGlobal: string;
-  readonly agentVersionProject: string;
+  readonly agentVersion: string;
   readonly language: string;
   readonly remoteRecordingCapable?: boolean;
   readonly integrationTests?: boolean;
