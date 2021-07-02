@@ -104,10 +104,17 @@ const State = {
         return undefined;
       }
 
-      const initialStatus = await agent.status(project.rootDirectory);
-      const { config } = initialStatus.properties;
-      if (config.present) {
-        project.milestones.CREATE_CONFIGURATION.setState(config.valid ? 'complete' : 'error');
+      let initialStatus: StatusResponse | undefined;
+      try {
+        initialStatus = await agent.status(project.rootDirectory);
+        const { config } = initialStatus.properties;
+        if (config.present) {
+          project.milestones.CREATE_CONFIGURATION.setState(config.valid ? 'complete' : 'error');
+        }
+      } catch (e) {
+        // It's likely the user has an incompatible version of the agent. An upgrade will need to be performed.
+        project.milestones.INSTALL_AGENT.setState('error');
+        return undefined;
       }
 
       project.setState(State.WATCH_PROJECT_STATUS);
@@ -320,6 +327,8 @@ export default class ProjectWatcher {
    * Logic for the main status polling loop. This method is called continuously at a frequency set by `frequencyMs`.
    */
   private async tick(): Promise<void> {
+    let status: StatusResponse | undefined;
+
     try {
       if (!this.agent) {
         unreachable('attempted to tick with no available agent');
@@ -329,12 +338,11 @@ export default class ProjectWatcher {
         unreachable('tick was called outside of the main tick loop');
       }
 
-      const status = await this.currentState.tick(this, this.agent, this.lastStatus);
-
-      // Queue up the next tick to poll the status again at a later time.
-      this.queueNextTick(status);
+      status = await this.currentState.tick(this, this.agent, this.lastStatus);
     } catch (exception) {
       Telemetry.sendEvent(Events.DEBUG_EXCEPTION, { exception });
+    } finally {
+      this.queueNextTick(status);
     }
   }
 

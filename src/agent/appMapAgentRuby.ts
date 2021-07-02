@@ -10,6 +10,9 @@ import AppMapAgent, {
 
 export default class AppMapAgentRuby implements AppMapAgent {
   readonly language = 'ruby';
+  private static readonly REGEX_GEM_DECLARATION = /^\s*gem\s+/m;
+  private static readonly REGEX_GEM_DEPENDENCY = /^\s*gem\s+['|"]appmap['|"].*$/m;
+  private static readonly GEM_DEPENDENCY = "\ngem 'appmap', :groups => [:development, :test]";
 
   async isInstalled(path: PathLike): Promise<boolean> {
     const process = await exec('bundle', ['info', 'appmap'], { cwd: path as string });
@@ -17,23 +20,27 @@ export default class AppMapAgentRuby implements AppMapAgent {
   }
 
   async install(path: PathLike): Promise<InstallResult> {
-    const isInstalled = await this.isInstalled(path);
-    if (isInstalled) {
-      // Already installed.
-      //
-      // TODO.
-      // Consider upgrading.
-      return 'none';
-    }
-
     const gemfilePath = join(path as string, 'Gemfile');
-    const gemfile = String(await fs.readFile(gemfilePath));
-    const index = gemfile.search(/^\s*gem\s+/m);
+    let gemfile = String(await fs.readFile(gemfilePath));
+    const index = gemfile.search(AppMapAgentRuby.REGEX_GEM_DECLARATION);
 
     if (index !== -1) {
-      const chars = gemfile.split('');
-      chars.splice(index, 0, "\ngem 'appmap', :groups => [:development, :test]\n");
-      await fs.writeFile(gemfilePath, chars.join(''));
+      const gemExists = gemfile.search(AppMapAgentRuby.REGEX_GEM_DEPENDENCY) !== -1;
+
+      if (gemExists) {
+        // Replace the existing gem declaration entirely
+        gemfile = gemfile.replace(
+          AppMapAgentRuby.REGEX_GEM_DEPENDENCY,
+          AppMapAgentRuby.GEM_DEPENDENCY
+        );
+      } else {
+        // Insert a new gem declaration
+        const chars = gemfile.split('');
+        chars.splice(index, 0, `${AppMapAgentRuby.GEM_DEPENDENCY}\n`);
+        gemfile = chars.join('');
+      }
+
+      await fs.writeFile(gemfilePath, gemfile);
     } else {
       await fs.writeFile(
         gemfilePath,
@@ -41,7 +48,11 @@ export default class AppMapAgentRuby implements AppMapAgent {
       );
     }
 
-    await exec('bundle', ['install'], { cwd: path as string, output: true });
+    if (await this.isInstalled(path)) {
+      await exec('bundle', ['update', 'appmap'], { cwd: path as string, output: true });
+    } else {
+      await exec('bundle', ['install'], { cwd: path as string, output: true });
+    }
 
     return 'installed';
   }
