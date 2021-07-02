@@ -62,6 +62,7 @@ export async function exec(
 
     if (options?.output) {
       outputChannel = vscode.window.createOutputChannel('AppMap');
+      outputChannel.show();
     }
 
     childProcess.stdout?.on('data', (data) => {
@@ -85,9 +86,7 @@ export async function exec(
 }
 
 export function unreachable(msg: string | undefined): never {
-  const exception = new Error(`Unreachable: ${msg}`);
-  Telemetry.sendEvent(Events.DEBUG_EXCEPTION, { exception });
-  throw exception;
+  throw new Error(`Unreachable: ${msg}`);
 }
 
 export function workspaceFolderForDocument(
