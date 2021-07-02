@@ -14,6 +14,7 @@ async function getIgnoreGlobs() {
         return fs.readFile(uri.fsPath).then((buf) =>
           buf
             .toString()
+            .replace(/#.*$/gm, '')
             .split(/^/gm)
             .map((line) => line.trim())
             .filter((line) => line !== '')
@@ -23,7 +24,7 @@ async function getIgnoreGlobs() {
     )
   )
     .flat()
-    .map((glob) => globToRegExp(glob));
+    .map((glob) => globToRegExp(glob, { flags: 'g' }));
 }
 
 export default class GitProperties implements VersionControlProperties {
@@ -31,13 +32,15 @@ export default class GitProperties implements VersionControlProperties {
 
   public async initialize(): Promise<void> {
     this.ignoreRegex = await getIgnoreGlobs();
+    console.log(this.ignoreRegex);
   }
 
   public isIgnored(path: PathLike): boolean {
     if (!this.ignoreRegex) {
       return false;
     }
-
-    return this.ignoreRegex.some((re) => re.test(path as string));
+    const result = this.ignoreRegex.some((re) => re.test(path as string));
+    // console.log(`${path as string} is ${result ? 'ignored' : 'not ignored'}`);
+    return result;
   }
 }
