@@ -21,9 +21,10 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
     const projects = (vscode.workspace.workspaceFolders || []).map((workspaceFolder) => {
       const project = new ProjectWatcher(context, workspaceFolder);
-      project.initialize();
       return project;
     });
+
+    await Promise.all(projects.map(async (project) => await project.initialize()));
 
     const { localTree } = registerTrees(context, localAppMaps, projects);
 
@@ -60,10 +61,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         vscode.commands.executeCommand('vscode.open', descriptor.resourceUri);
       })
     );
-
-    // TODO.
-    // Report the extension has initialized.
-    // Telemetry.reportStartUp();
   } catch (exception) {
     Telemetry.sendEvent(Events.DEBUG_EXCEPTION, { exception });
   }
