@@ -308,18 +308,22 @@ export default class ProjectWatcher {
    * Logic for the main status polling loop. This method is called continuously at a frequency set by `frequencyMs`.
    */
   private async tick(): Promise<void> {
-    if (!this.agent) {
-      unreachable('attempted to tick with no available agent');
+    try {
+      if (!this.agent) {
+        unreachable('attempted to tick with no available agent');
+      }
+
+      if (this.nextStatusTimer) {
+        unreachable('tick was called outside of the main tick loop');
+      }
+
+      const status = await this.currentState.tick(this, this.agent, this.lastStatus);
+
+      // Queue up the next tick to poll the status again at a later time.
+      this.queueNextTick(status);
+    } catch (exception) {
+      Telemetry.sendEvent(Events.DEBUG_EXCEPTION, { exception });
     }
-
-    if (this.nextStatusTimer) {
-      unreachable('tick was called outside of the main tick loop');
-    }
-
-    const status = await this.currentState.tick(this, this.agent, this.lastStatus);
-
-    // Queue up the next tick to poll the status again at a later time.
-    this.queueNextTick(status);
   }
 
   /**
