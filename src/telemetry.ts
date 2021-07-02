@@ -70,9 +70,14 @@ export default class Telemetry {
     EXTENSION_VERSION,
     INSTRUMENTATION_KEY
   );
+  private static debugChannel?: vscode.OutputChannel;
 
   static register(context: vscode.ExtensionContext): void {
     context.subscriptions.push(this.reporter);
+
+    if (process.env.APPMAP_TELEMETRY_DEBUG) {
+      this.debugChannel = vscode.window.createOutputChannel('AppMap: Telemetry');
+    }
   }
 
   static async sendEvent(event: Event, eventContext: EventContext): Promise<void> {
@@ -87,6 +92,18 @@ export default class Telemetry {
     if (event.metrics) {
       metrics = await telemetry.resolve(...event.metrics);
     }
+
+    this.debugChannel?.appendLine(
+      JSON.stringify(
+        {
+          event: `${EXTENSION_ID}/${event.eventName}`,
+          properties,
+          metrics,
+        },
+        null,
+        2
+      )
+    );
 
     this.reporter.sendTelemetryEvent(event.eventName, properties, metrics);
   }
