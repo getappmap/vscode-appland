@@ -41,22 +41,34 @@ export const Properties = {
     AGENT_VERSION: new TelemetryDataProvider({
       id: 'appmap.project.agent_version',
       async value(context: TelemetryContext) {
-        const status = await context.getStatus();
-        return status?.properties.project.agentVersion || 'none';
+        try {
+          const status = await context.getStatus();
+          return status?.properties.project.agentVersion || 'none';
+        } catch {
+          return 'none';
+        }
       },
     }),
     IS_CONFIG_PRESENT: new TelemetryDataProvider({
       id: 'appmap.project.is_config_present',
       async value(context: TelemetryContext) {
-        const status = await context.getStatus();
-        return String(status?.properties.config.present || false);
+        try {
+          const status = await context.getStatus();
+          return String(status?.properties.config.present || false);
+        } catch {
+          return 'none';
+        }
       },
     }),
     LANGUAGE: new TelemetryDataProvider({
       id: 'appmap.project.language',
       async value(context: TelemetryContext) {
-        const status = await context.getStatus();
-        return status?.properties.project.language || context.language || 'unknown';
+        try {
+          const status = await context.getStatus();
+          return status?.properties.project.language || context.language || 'unknown';
+        } catch {
+          return context.language || 'none';
+        }
       },
     }),
     LANGUAGE_DISTRIBUTION: new TelemetryDataProvider({
