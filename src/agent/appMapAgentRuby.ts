@@ -28,7 +28,7 @@ export default class AppMapAgentRuby implements AppMapAgent {
 
     const gemfilePath = join(path as string, 'Gemfile');
     const gemfile = String(await fs.readFile(gemfilePath));
-    const index = gemfile.search(/^\s*gem\s*/m);
+    const index = gemfile.search(/^\s*gem\s+/m);
 
     if (index !== -1) {
       const chars = gemfile.split('');
