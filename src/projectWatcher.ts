@@ -295,9 +295,21 @@ export default class ProjectWatcher {
       throw new Error('initialization has already occurred');
     }
 
+    Telemetry.sendEvent(Events.PROJECT_OPEN, { rootDirectory: this.rootDirectory });
+
     this.agent = await LanguageResolver.getAgent(this.rootDirectory);
     if (!this.agent) {
-      throw new Error('no agent was found for this project type');
+      const languageDistribution = await LanguageResolver.getLanguageDistribution(
+        this.rootDirectory
+      );
+      const language = await LanguageResolver.getLanguage(this.rootDirectory);
+      throw new Error(
+        `no agent was found for this project type (${language}):\n${JSON.stringify(
+          languageDistribution,
+          null,
+          2
+        )}`
+      );
     }
 
     // Begin the main loop

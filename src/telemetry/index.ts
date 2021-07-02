@@ -1,3 +1,4 @@
+import LanguageResolver from '../languageResolver';
 import TelemetryContext from './telemetryContext';
 import TelemetryDataProvider from './telemetryDataProvider';
 
@@ -37,15 +38,8 @@ export const Properties = {
     }),
   },
   Project: {
-    AGENT_VERSION_GLOBAL: new TelemetryDataProvider({
-      id: 'appmap.project.agent_version_global',
-      async value(context: TelemetryContext) {
-        const status = await context.getStatus();
-        return status?.properties.project.agentVersionGlobal || 'none';
-      },
-    }),
-    AGENT_VERSION_PROJECT: new TelemetryDataProvider({
-      id: 'appmap.project.agent_version_project',
+    AGENT_VERSION: new TelemetryDataProvider({
+      id: 'appmap.project.agent_version',
       async value(context: TelemetryContext) {
         const status = await context.getStatus();
         return status?.properties.project.agentVersionProject || 'none';
@@ -63,6 +57,18 @@ export const Properties = {
       async value(context: TelemetryContext) {
         const status = await context.getStatus();
         return status?.properties.project.language || context.language || 'unknown';
+      },
+    }),
+    LANGUAGE_DISTRIBUTION: new TelemetryDataProvider({
+      id: 'appmap.project.language_distribution',
+      async value(context: TelemetryContext) {
+        const { rootDirectory } = context.event;
+        if (!rootDirectory) {
+          throw new Error('root directory must be provided');
+        }
+
+        const languageDistribution = await LanguageResolver.getLanguageDistribution(rootDirectory);
+        return JSON.stringify(languageDistribution);
       },
     }),
   },

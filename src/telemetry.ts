@@ -36,16 +36,16 @@ export const Events: { [key: string]: Event } = {
   PROJECT_OPEN: {
     eventName: 'project:open',
     properties: [
-      Properties.Project.AGENT_VERSION_GLOBAL,
-      Properties.Project.AGENT_VERSION_PROJECT,
+      Properties.Project.AGENT_VERSION,
       Properties.Project.IS_CONFIG_PRESENT,
       Properties.Project.LANGUAGE,
+      Properties.Project.LANGUAGE_DISTRIBUTION,
     ],
     // metrics: [Metrics.Project.EXAMPLE],
   },
   PROJECT_CLIENT_AGENT_ADD: {
     eventName: 'project/client_agent:add',
-    properties: [Properties.Project.AGENT_VERSION_PROJECT, Properties.Project.LANGUAGE],
+    properties: [Properties.Project.AGENT_VERSION, Properties.Project.LANGUAGE],
   },
   PROJECT_CLIENT_AGENT_REMOVE: {
     eventName: 'project/client_agent:remove',
