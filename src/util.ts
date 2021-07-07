@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import { execFile, ExecFileOptions } from 'child_process';
 import * as vscode from 'vscode';
-import { rejects } from 'assert';
+import Telemetry, { Events } from './telemetry';
 
 export function getNonce(): string {
   let text = '';
@@ -62,6 +62,7 @@ export async function exec(
 
     if (options?.output) {
       outputChannel = vscode.window.createOutputChannel('AppMap');
+      outputChannel.show();
     }
 
     childProcess.stdout?.on('data', (data) => {
@@ -82,4 +83,83 @@ export async function exec(
       reject(e);
     });
   });
+}
+
+export function unreachable(msg: string | undefined): never {
+  throw new Error(`Unreachable: ${msg}`);
+}
+
+export function workspaceFolderForDocument(
+  document: vscode.TextDocument
+): vscode.WorkspaceFolder | undefined {
+  const { workspaceFolders } = vscode.workspace;
+  if (!workspaceFolders) {
+    return undefined;
+  }
+
+  let bestMatch;
+  let bestMatchLength = 0;
+  workspaceFolders.forEach((workspaceFolder) => {
+    const { length } = workspaceFolder.name;
+    if (bestMatchLength > length) {
+      // The best match matches more characters than this directory has available.
+      // This folder will never be a best match. Skip.
+      return;
+    }
+
+    if (document.uri.fsPath.startsWith(workspaceFolder.uri.fsPath)) {
+      bestMatch = workspaceFolder;
+      bestMatchLength = length;
+    }
+  });
+
+  return bestMatch;
+}
+
+const WORKSPACE_OPENED_APPMAP_KEY = 'appmap.applandinc.workspaces_opened_appmap';
+export function hasWorkspaceFolderOpenedAppMap(
+  context: vscode.ExtensionContext,
+  workspaceFolder: vscode.WorkspaceFolder
+): boolean {
+  const appmapsOpen = new Set<string>(context.globalState.get(WORKSPACE_OPENED_APPMAP_KEY) || []);
+  return appmapsOpen.has(workspaceFolder.uri.fsPath);
+}
+
+export function flagWorkspaceOpenedAppMap(
+  context: vscode.ExtensionContext,
+  workspaceFolder: vscode.WorkspaceFolder
+): void {
+  const appmapsOpen = new Set<string>(context.globalState.get(WORKSPACE_OPENED_APPMAP_KEY) || []);
+  appmapsOpen.add(workspaceFolder.uri.fsPath);
+  context.globalState.update(WORKSPACE_OPENED_APPMAP_KEY, [...appmapsOpen]);
+}
+
+const WORKSPACE_RECORDED_APPMAP_KEY = 'appmap.applandinc.workspace_recorded_appmap';
+export function hasWorkspaceFolderRecordedAppMap(
+  context: vscode.ExtensionContext,
+  workspaceFolder: vscode.WorkspaceFolder
+): boolean {
+  const appmapsOpen = new Set<string>(context.globalState.get(WORKSPACE_RECORDED_APPMAP_KEY) || []);
+  return appmapsOpen.has(workspaceFolder.uri.fsPath);
+}
+
+export function flagWorkspaceRecordedAppMap(
+  context: vscode.ExtensionContext,
+  workspaceFolder: vscode.WorkspaceFolder
+): void {
+  const appmapsOpen = new Set<string>(context.globalState.get(WORKSPACE_RECORDED_APPMAP_KEY) || []);
+  appmapsOpen.add(workspaceFolder.uri.fsPath);
+  context.globalState.update(WORKSPACE_RECORDED_APPMAP_KEY, [...appmapsOpen]);
+}
+
+// Resolve promises serially, one at a time.
+export async function chainPromises(
+  onResolve: (unknown) => void,
+  ...promises: Promise<unknown>[]
+): Promise<unknown> {
+  const promise = promises.shift();
+  if (promise) {
+    onResolve(await promise);
+    return chainPromises(onResolve, ...promises);
+  }
 }

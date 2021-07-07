@@ -7,8 +7,7 @@ export interface ConfigMetadata {
 }
 
 export interface ProjectMetadata {
-  readonly agentVersionGlobal: string;
-  readonly agentVersionProject: string;
+  readonly agentVersion: string;
   readonly language: string;
   readonly remoteRecordingCapable?: boolean;
   readonly integrationTests?: boolean;
@@ -20,9 +19,14 @@ export interface StatusProperties {
 }
 
 export interface StatusCommand {
-  readonly workingDirectory?: PathLike;
-  readonly directory?: PathLike;
-  readonly command: string;
+  readonly program: string;
+  readonly args?: string[];
+  readonly environment?: NodeJS.ProcessEnv;
+}
+
+export interface StatusTestCommand {
+  readonly framework: string;
+  readonly command: StatusCommand;
 }
 
 export interface StatusEndpoints {
@@ -31,7 +35,8 @@ export interface StatusEndpoints {
 }
 
 export interface StatusResponse {
-  readonly commands: Array<StatusCommand>;
+  readonly start_command: StatusCommand; // TODO: this should be camelCased
+  readonly test_commands: readonly StatusTestCommand[]; // TODO: this should be camelCased
   readonly endpoints: StatusEndpoints;
   readonly properties: StatusProperties;
 }
@@ -43,6 +48,13 @@ export interface FilesResponse {
   readonly appmapDirectory: Array<PathLike>;
 }
 
+export interface InitResponse {
+  readonly configuration: {
+    filename: string;
+    contents: string;
+  };
+}
+
 export type InstallResult = 'none' | 'upgraded' | 'installed';
 
 export default interface AppMapAgent {
@@ -52,6 +64,7 @@ export default interface AppMapAgent {
    */
   readonly language: string;
 
+  isInstalled(path: PathLike): Promise<boolean>;
   /**
    * Install the agent CLI using the latest version.
    */
@@ -60,7 +73,7 @@ export default interface AppMapAgent {
   /**
    * Execute the AppMap CLI init command.
    */
-  init(path: PathLike): Promise<void>;
+  init(path: PathLike): Promise<InitResponse>;
 
   /**
    * Execute the AppMap CLI files command.
@@ -71,4 +84,9 @@ export default interface AppMapAgent {
    * Execute the AppMap CLI status command.
    */
   status(path: PathLike): Promise<StatusResponse>;
+
+  /**
+   * Execute tests as reported from the status command.
+   */
+  test(path: PathLike): Promise<void>;
 }

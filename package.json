@@ -141,6 +141,11 @@
           "icon": "images/logo.svg"
         },
         {
+          "id": "appmap.views.milestones",
+          "name": "quickstart",
+          "visibility": "visible"
+        },
+        {
           "id": "appmap.views.usingAppmaps",
           "name": "Using AppMaps",
           "visibility": "collapsed"

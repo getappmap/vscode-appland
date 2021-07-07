@@ -185,9 +185,17 @@ const LANGUAGE_AGENTS = [new AppMapAgentRuby()].reduce((memo, agent) => {
  * Provides language identification APIs.
  */
 export default class LanguageResolver {
-  private static readonly CACHE = {};
+  private static readonly LANGUAGE_DISTRIBUTION_CACHE = {};
+  private static readonly LANGUAGE_CACHE = {};
 
-  private static async identifyLanguage(rootDirectory: PathLike): Promise<string> {
+  public static async getLanguageDistribution(
+    rootDirectory: PathLike
+  ): Promise<Record<string, number>> {
+    const cachedValue = this.LANGUAGE_DISTRIBUTION_CACHE[rootDirectory as string];
+    if (cachedValue) {
+      return cachedValue;
+    }
+
     const directories = [rootDirectory];
     const extensions: Record<string, number> = {};
     const gitProperties = new GitProperties();
@@ -218,12 +226,32 @@ export default class LanguageResolver {
       });
     }
 
+    const languages = Object.entries(extensions).reduce((memo, [ext, count]) => {
+      const language = LANGUAGE_EXTENSIONS[ext];
+      memo[language] = memo[language] + count || count;
+      return memo;
+    }, {} as Record<string, number>);
+
+    const totalFiles = Object.values(languages).reduce((a, b) => a + b);
+    if (totalFiles > 0) {
+      Object.keys(languages).forEach((key) => {
+        languages[key] /= totalFiles;
+      });
+    }
+
+    this.LANGUAGE_DISTRIBUTION_CACHE[rootDirectory as string] = languages;
+
+    return languages;
+  }
+
+  private static async identifyLanguage(rootDirectory: PathLike): Promise<string> {
+    const languages = await this.getLanguageDistribution(rootDirectory);
     let bestFitLanguage = UNKNOWN_LANGUAGE;
     let maxCount = 0;
 
-    Object.entries(extensions).forEach(([lang, count]) => {
+    Object.entries(languages).forEach(([lang, count]) => {
       if (count > maxCount) {
-        bestFitLanguage = LANGUAGE_EXTENSIONS[lang];
+        bestFitLanguage = lang;
         maxCount = count;
       }
     });
@@ -237,11 +265,11 @@ export default class LanguageResolver {
    * the lifetime of the extension.
    */
   public static async getLanguage(rootDirectory: PathLike): Promise<string> {
-    let language = this.CACHE[rootDirectory as string];
+    let language = this.LANGUAGE_CACHE[rootDirectory as string];
 
     if (!language) {
       language = await this.identifyLanguage(rootDirectory);
-      this.CACHE[rootDirectory as string] = language;
+      this.LANGUAGE_CACHE[rootDirectory as string] = language;
     }
 
     return language;

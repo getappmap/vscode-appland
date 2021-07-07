@@ -42,3 +42,12 @@ $ npm run package
    the language.
 4. Define a version constraint in [`package.json`](package.json) under the `appmapDependencies`
    property. The agent will not be installed without it.
+
+## Running in development with a local version of `@appland/components`
+
+1. From the `applandinc/appmap-js` directory, `cd` into `packages/components`
+2. Run `yarn link $VSCODE_APPLAND_PATH` where `$VSCODE_APPLAND_PATH` is the path to this project's
+   directory
+3. You may need to install `highlight.js`: `yarn add highlight.js`
+4. `yarn run compile` or `yarn run watch` to compile scripts
+5. Press `F5` from Visual Studio Code to run the development extension

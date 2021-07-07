@@ -1,7 +1,9 @@
 import { PathLike } from 'fs';
+import * as vscode from 'vscode';
 import TelemetryDataProvider from './telemetryDataProvider';
 import TelemetryContext from './telemetryContext';
 import LanguageResolver from '../languageResolver';
+import Milestone from '../milestones';
 
 /**
  * The main interface for requesting telemetry data. A new instance of this class should be created for each unique
@@ -28,13 +30,22 @@ import LanguageResolver from '../languageResolver';
  * }
  * ```
  */
-export default class TelemetryResolver {
-  private rootDir: PathLike;
-  private filePath?: PathLike | undefined;
 
-  constructor(rootDir: PathLike, filePath?: PathLike | undefined) {
-    this.rootDir = rootDir;
-    this.filePath = filePath;
+/**
+ * EventContext contains data that may be provided from the event sender.
+ */
+export interface EventContext {
+  rootDirectory?: PathLike;
+  milestone?: Milestone;
+  file?: PathLike;
+  exception?: Error;
+}
+
+export default class TelemetryResolver {
+  private eventContext: EventContext;
+
+  constructor(eventContext: EventContext) {
+    this.eventContext = eventContext;
   }
 
   /**
@@ -44,8 +55,13 @@ export default class TelemetryResolver {
   public async resolve<T>(
     ...providers: Array<TelemetryDataProvider<T>>
   ): Promise<Record<string, T>> {
-    const language = await LanguageResolver.getLanguage(this.rootDir);
-    const context = new TelemetryContext(this.rootDir, language, this.filePath);
+    const { rootDirectory } = this.eventContext;
+    let language: string | undefined;
+    if (rootDirectory) {
+      language = await LanguageResolver.getLanguage(rootDirectory);
+    }
+
+    const context = new TelemetryContext(this.eventContext, language);
     const entries = await Promise.all(
       providers.map(async (provider) => [provider.id, await provider.getValue(context)])
     );

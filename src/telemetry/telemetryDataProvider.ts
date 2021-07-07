@@ -37,7 +37,7 @@ export default class TelemetryDataProvider<T> {
    */
   async getValue(context: TelemetryContext): Promise<T> {
     if (this.performCaching) {
-      const cachedValue = TelemetryDataCache.getValue<T>(this.id, context.rootDirectory);
+      const cachedValue = TelemetryDataCache.getValue<T>(this.id, context.event.rootDirectory);
       if (cachedValue !== undefined) {
         return Promise.resolve(cachedValue);
       }
@@ -46,7 +46,7 @@ export default class TelemetryDataProvider<T> {
     const newValue = await this.valueCallback(context);
 
     if (this.performCaching) {
-      TelemetryDataCache.setValue(this.id, context.rootDirectory, newValue);
+      TelemetryDataCache.setValue(this.id, context.event.rootDirectory, newValue);
     }
 
     return newValue;
