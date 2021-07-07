@@ -78,4 +78,9 @@ export default interface AppMapAgent {
    * Execute the AppMap CLI status command.
    */
   status(path: PathLike): Promise<StatusResponse>;
+
+  /**
+   * Execute tests as reported from the status command.
+   */
+  test(path: PathLike): Promise<void>;
 }

@@ -217,6 +217,7 @@ export default class ProjectWatcher {
   public readonly workspaceFolder: vscode.WorkspaceFolder;
   public readonly milestones: MilestoneMap;
   public readonly context: vscode.ExtensionContext;
+  private _language?: string;
   private agent?: AppMapAgent;
   private nextStatusTimer?: NodeJS.Timeout;
   private lastStatus?: StatusResponse;
@@ -253,8 +254,8 @@ export default class ProjectWatcher {
   }
 
   async performMilestoneAction(id: MilestoneType): Promise<void> {
-    if (!this.agent) {
-      return;
+    if (!this.language || !this.agent) {
+      throw new Error(`unsupported project type ${this.language ? `(${this.language})` : ''}`);
     }
 
     switch (id) {
@@ -266,6 +267,10 @@ export default class ProjectWatcher {
       case 'CREATE_CONFIGURATION':
         await this.agent.init(this.rootDirectory);
         this.forceNextTick();
+        break;
+
+      case 'RECORD_APPMAP':
+        await this.agent.test(this.rootDirectory);
         break;
 
       default:
@@ -304,14 +309,13 @@ export default class ProjectWatcher {
 
     Telemetry.sendEvent(Events.PROJECT_OPEN, { rootDirectory: this.rootDirectory });
 
-    this.agent = await LanguageResolver.getAgent(this.rootDirectory);
+    this.language = await LanguageResolver.getLanguage(this.rootDirectory);
     if (!this.agent) {
       const languageDistribution = await LanguageResolver.getLanguageDistribution(
         this.rootDirectory
       );
-      const language = await LanguageResolver.getLanguage(this.rootDirectory);
       throw new Error(
-        `no agent was found for this project type (${language}):\n${JSON.stringify(
+        `no agent was found for this project type (${this.language}):\n${JSON.stringify(
           languageDistribution,
           null,
           2
@@ -368,5 +372,14 @@ export default class ProjectWatcher {
     }
 
     this.tick();
+  }
+
+  set language(language: string | undefined) {
+    this._language = language;
+    this.agent = language ? LanguageResolver.getAgentForLanguage(language) : undefined;
+  }
+
+  get language(): string | undefined {
+    return this._language;
   }
 }

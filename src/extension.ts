@@ -7,6 +7,7 @@ import AppMapCollectionFile from './appmapCollectionFile';
 import RemoteRecording from './remoteRecording';
 import { notEmpty } from './util';
 import ProjectWatcher from './projectWatcher';
+import QuickstartWebview from './quickstartWebview';
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
   try {
@@ -23,6 +24,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
       const project = new ProjectWatcher(context, workspaceFolder);
       return project;
     });
+
+    QuickstartWebview.register(context, projects);
 
     await Promise.all(projects.map(async (project) => await project.initialize()));
 

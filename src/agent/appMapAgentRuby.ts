@@ -49,16 +49,37 @@ export default class AppMapAgentRuby implements AppMapAgent {
     }
 
     if (await this.isInstalled(path)) {
-      await exec('bundle', ['update', 'appmap'], { cwd: path as string, output: true });
+      const { stderr, exitCode } = await exec('bundle', ['update', 'appmap'], {
+        cwd: path as string,
+        output: true,
+      });
+
+      if (exitCode !== 0) {
+        throw new Error(stderr);
+      }
     } else {
-      await exec('bundle', ['install'], { cwd: path as string, output: true });
+      const { stderr, exitCode } = await exec('bundle', ['install'], {
+        cwd: path as string,
+        output: true,
+      });
+
+      if (exitCode !== 0) {
+        throw new Error(stderr);
+      }
     }
 
     return 'installed';
   }
 
   async init(path: PathLike): Promise<InitResponse> {
-    const { stdout } = await exec('bundle', ['exec', 'appmap-agent-init'], { cwd: path as string });
+    const { stdout, stderr, exitCode } = await exec('bundle', ['exec', 'appmap-agent-init'], {
+      cwd: path as string,
+    });
+
+    if (exitCode !== 0) {
+      throw new Error(stderr);
+    }
+
     const response = JSON.parse(stdout) as InitResponse;
     const { filename, contents } = response.configuration;
 
@@ -75,9 +96,21 @@ export default class AppMapAgentRuby implements AppMapAgent {
   }
 
   async status(path: PathLike): Promise<StatusResponse> {
-    const { stdout } = await exec('bundle', ['exec', 'appmap-agent-status'], {
+    const { stdout, stderr, exitCode } = await exec('bundle', ['exec', 'appmap-agent-status'], {
       cwd: path as string,
     });
+
+    if (exitCode !== 0) {
+      throw new Error(stderr);
+    }
+
     return JSON.parse(stdout);
+  }
+
+  async test(path: PathLike): Promise<void> {
+    // const status = await this.status(path);
+    // const { stdout, stderr, exitCode } = await exec('bundle', ['exec', 'appmap-agent-status'], {
+    //   cwd: path as string,
+    // });
   }
 }
