@@ -19,9 +19,14 @@ export interface StatusProperties {
 }
 
 export interface StatusCommand {
-  readonly workingDirectory?: PathLike;
-  readonly directory?: PathLike;
-  readonly command: string;
+  readonly program: string;
+  readonly args?: string[];
+  readonly environment?: NodeJS.ProcessEnv;
+}
+
+export interface StatusTestCommand {
+  readonly framework: string;
+  readonly command: StatusCommand;
 }
 
 export interface StatusEndpoints {
@@ -30,7 +35,8 @@ export interface StatusEndpoints {
 }
 
 export interface StatusResponse {
-  readonly commands: Array<StatusCommand>;
+  readonly start_command: StatusCommand; // TODO: this should be camelCased
+  readonly test_commands: readonly StatusTestCommand[]; // TODO: this should be camelCased
   readonly endpoints: StatusEndpoints;
   readonly properties: StatusProperties;
 }

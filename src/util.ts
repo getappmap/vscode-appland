@@ -151,3 +151,15 @@ export function flagWorkspaceRecordedAppMap(
   appmapsOpen.add(workspaceFolder.uri.fsPath);
   context.globalState.update(WORKSPACE_RECORDED_APPMAP_KEY, [...appmapsOpen]);
 }
+
+// Resolve promises serially, one at a time.
+export async function chainPromises(
+  onResolve: (unknown) => void,
+  ...promises: Promise<unknown>[]
+): Promise<unknown> {
+  const promise = promises.shift();
+  if (promise) {
+    onResolve(await promise);
+    return chainPromises(onResolve, ...promises);
+  }
+}

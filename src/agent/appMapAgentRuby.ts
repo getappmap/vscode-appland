@@ -1,6 +1,6 @@
 import { PathLike, promises as fs } from 'fs';
 import { join } from 'path';
-import { exec } from '../util';
+import { chainPromises, exec } from '../util';
 import AppMapAgent, {
   FilesResponse,
   StatusResponse,
@@ -108,9 +108,25 @@ export default class AppMapAgentRuby implements AppMapAgent {
   }
 
   async test(path: PathLike): Promise<void> {
-    // const status = await this.status(path);
-    // const { stdout, stderr, exitCode } = await exec('bundle', ['exec', 'appmap-agent-status'], {
-    //   cwd: path as string,
-    // });
+    const status = await this.status(path);
+
+    await chainPromises(
+      ({ stderr, exitCode }) => {
+        if (exitCode !== 0) {
+          throw new Error(stderr);
+        }
+      },
+      ...status.test_commands.map(
+        async ({ command }) =>
+          await exec(command.program, command.args, {
+            cwd: path as string,
+            output: true,
+            env: {
+              ...process.env,
+              ...command.environment,
+            },
+          })
+      )
+    );
   }
 }

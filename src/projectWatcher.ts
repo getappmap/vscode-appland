@@ -241,7 +241,7 @@ export default class ProjectWatcher {
     return this.workspaceFolder.uri.fsPath;
   }
 
-  setState(state: ProjectWatcherState) {
+  setState(state: ProjectWatcherState): void {
     if (this.currentState.onExit) {
       this.currentState.onExit(this);
     }
