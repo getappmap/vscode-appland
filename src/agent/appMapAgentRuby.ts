@@ -10,9 +10,9 @@ import AppMapAgent, {
 
 export default class AppMapAgentRuby implements AppMapAgent {
   readonly language = 'ruby';
-  private static readonly REGEX_GEM_DECLARATION = /^\s*gem\s+/m;
+  private static readonly REGEX_GEM_DECLARATION = /(?!\s)(?:gem|group|require)\s/m;
   private static readonly REGEX_GEM_DEPENDENCY = /^\s*gem\s+['|"]appmap['|"].*$/m;
-  private static readonly GEM_DEPENDENCY = "\ngem 'appmap', :groups => [:development, :test]";
+  private static readonly GEM_DEPENDENCY = "gem 'appmap', :groups => [:development, :test]";
 
   async isInstalled(path: PathLike): Promise<boolean> {
     const process = await exec('bundle', ['info', 'appmap'], { cwd: path as string });
@@ -31,12 +31,12 @@ export default class AppMapAgentRuby implements AppMapAgent {
         // Replace the existing gem declaration entirely
         gemfile = gemfile.replace(
           AppMapAgentRuby.REGEX_GEM_DEPENDENCY,
-          AppMapAgentRuby.GEM_DEPENDENCY
+          `\n${AppMapAgentRuby.GEM_DEPENDENCY}`
         );
       } else {
         // Insert a new gem declaration
         const chars = gemfile.split('');
-        chars.splice(index, 0, `${AppMapAgentRuby.GEM_DEPENDENCY}\n`);
+        chars.splice(index, 0, `${AppMapAgentRuby.GEM_DEPENDENCY}\n\n`);
         gemfile = chars.join('');
       }
 
