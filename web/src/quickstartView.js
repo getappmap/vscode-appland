@@ -16,27 +16,49 @@ export default function mountApp() {
   vscode.postMessage({ command: 'ready' });
   messages
     .on('init', (event) => {
-      const { language: detectedLanguage, completedSteps } = event;
       const app = new Vue({
         el: '#app',
-        render: (h) =>
-          h(VQuickstart, {
+        render(h) {
+          return h(VQuickstart, {
             ref: 'ui',
             props: {
-              completedSteps,
-              language: detectedLanguage,
+              stepsState: this.stepsState,
+              appmapYmlSnippet: this.appmapYmlSnippet,
+              testFrameworks: this.testFrameworks,
+              language: this.language,
+              installSnippets: this.installSnippets,
               async onAction(language, step) {
                 const milestone = STEPS[step];
                 if (!milestone) {
-                  return true;
+                  return;
                 }
 
                 await messages.rpc('milestoneAction', { language, milestone });
-                return true;
               },
             },
-          }),
+          });
+        },
+        data() {
+          return {
+            stepsState: event.stepsState,
+            appmapYmlSnippet: event.appmapYmlSnippet,
+            testFrameworks: event.testFrameworks,
+            language: event.language,
+            installSnippets: {
+              ruby: "gem 'appmap', :groups => [:development, :test]",
+            },
+          };
+        },
       });
+
+      messages
+        .on('milestoneUpdate', ({ state, index }) => {
+          app.$set(app.stepsState, index, state);
+        })
+        .on('agentInfo', ({ newAppmapYmlSnippet, newTestFrameworks }) => {
+          app.appmapYmlSnippet = newAppmapYmlSnippet;
+          app.testFrameworks = newTestFrameworks;
+        });
     })
     .on(undefined, (event) => {
       throw new Error(`unhandled message type: ${event.type}`);

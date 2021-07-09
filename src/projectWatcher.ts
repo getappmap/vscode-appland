@@ -374,6 +374,15 @@ export default class ProjectWatcher {
     this.tick();
   }
 
+  get testFrameworks(): readonly string[] {
+    return this.lastStatus?.test_commands?.map((command) => command.framework) || [];
+  }
+
+  async appmapYml(): Promise<string | undefined> {
+    const response = await this.agent?.init(this.rootDirectory);
+    return response?.configuration.contents;
+  }
+
   set language(language: string | undefined) {
     this._language = language;
     this.agent = language ? LanguageResolver.getAgentForLanguage(language) : undefined;

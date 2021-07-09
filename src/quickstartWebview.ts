@@ -39,9 +39,9 @@ export default class QuickstartWebview {
                 panel.webview.postMessage({
                   type: 'init',
                   language: project.language,
-                  completedSteps: Object.values(project.milestones)
-                    .map((m, i) => (m.state === 'complete' ? i + 1 : null))
-                    .filter(Boolean),
+                  testFrameworks: project.testFrameworks,
+                  appmapYmlSnippet: await project.appmapYml(),
+                  stepsState: Object.values(project.milestones).map((m) => m.state),
                 });
               }
               break;
@@ -69,6 +69,23 @@ export default class QuickstartWebview {
 
             default:
               break;
+          }
+        });
+
+        // Listen for state changes on each milestone
+        Object.values(project.milestones).forEach(({ onChangeState }, index) => {
+          onChangeState(({ id, state }) => {
+            panel.webview.postMessage({ type: 'milestoneUpdate', id, state, index });
+          });
+        });
+
+        project.milestones.INSTALL_AGENT.onChangeState(async ({ state }) => {
+          if (state === 'complete') {
+            panel.webview.postMessage({
+              type: 'agentInfo',
+              testFrameworks: project.testFrameworks,
+              appmapYmlSnippet: await project.appmapYml(),
+            });
           }
         });
       })
