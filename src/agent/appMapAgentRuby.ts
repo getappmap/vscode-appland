@@ -80,12 +80,7 @@ export default class AppMapAgentRuby implements AppMapAgent {
       throw new Error(stderr);
     }
 
-    const response = JSON.parse(stdout) as InitResponse;
-    const { filename, contents } = response.configuration;
-
-    await fs.writeFile(join(path as string, filename), contents);
-
-    return response;
+    return JSON.parse(stdout);
   }
 
   async files(path: PathLike): Promise<FilesResponse> {

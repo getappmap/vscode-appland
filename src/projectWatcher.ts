@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
-import { PathLike } from 'fs';
-import { join } from 'path';
+import { promises as fs, PathLike } from 'fs';
+import path from 'path';
 import AppMapAgent, { StatusResponse } from './agent/appMapAgent';
 import LanguageResolver from './languageResolver';
 import { createMilestones, MilestoneMap, MilestoneType } from './milestones';
@@ -11,7 +11,6 @@ import {
   hasWorkspaceFolderRecordedAppMap,
   unreachable,
 } from './util';
-import glob from 'glob';
 
 function resolveFullyQualifiedKey(key: string, obj: Record<string, unknown>): unknown {
   const tokens = key.split(/\./);
@@ -213,10 +212,10 @@ const State = {
 };
 
 export default class ProjectWatcher {
-  private readonly frequencyMs: number;
   public readonly workspaceFolder: vscode.WorkspaceFolder;
   public readonly milestones: MilestoneMap;
   public readonly context: vscode.ExtensionContext;
+  private readonly frequencyMs: number;
   private _language?: string;
   private agent?: AppMapAgent;
   private nextStatusTimer?: NodeJS.Timeout;
@@ -265,8 +264,12 @@ export default class ProjectWatcher {
         break;
 
       case 'CREATE_CONFIGURATION':
-        await this.agent.init(this.rootDirectory);
-        this.forceNextTick();
+        {
+          const response = await this.agent.init(this.rootDirectory);
+          const { filename, contents } = response.configuration;
+          await fs.writeFile(path.join(this.rootDirectory as string, filename), contents);
+          this.forceNextTick();
+        }
         break;
 
       case 'RECORD_APPMAP':
