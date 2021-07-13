@@ -1,5 +1,6 @@
 import { PathLike, promises as fs } from 'fs';
 import { join } from 'path';
+import semver from 'semver';
 import { chainPromises, exec } from '../util';
 import AppMapAgent, {
   FilesResponse,
@@ -7,16 +8,25 @@ import AppMapAgent, {
   InstallResult,
   InitResponse,
 } from './appMapAgent';
+import { agents as agentVersions } from '../../package.json';
 
 export default class AppMapAgentRuby implements AppMapAgent {
   readonly language = 'ruby';
   private static readonly REGEX_GEM_DECLARATION = /(?!\s)(?:gem|group|require)\s/m;
   private static readonly REGEX_GEM_DEPENDENCY = /^\s*gem\s+['|"]appmap['|"].*$/m;
+  private static readonly REGEX_GEM_VERSION = /appmap\s+\((\d+\.\d+\.\d+)\)/;
   private static readonly GEM_DEPENDENCY = "gem 'appmap', :groups => [:development, :test]";
 
   async isInstalled(path: PathLike): Promise<boolean> {
-    const process = await exec('bundle', ['info', 'appmap'], { cwd: path as string });
-    return process.exitCode === 0;
+    const { stdout, exitCode } = await exec('bundle', ['info', 'appmap'], { cwd: path as string });
+    if (exitCode !== 0) {
+      return false;
+    }
+
+    const match = stdout.match(AppMapAgentRuby.REGEX_GEM_VERSION);
+    const version = match ? match[1] : undefined;
+
+    return version && semver.satisfies(version, agentVersions[this.language]);
   }
 
   async install(path: PathLike): Promise<InstallResult> {
@@ -48,7 +58,9 @@ export default class AppMapAgentRuby implements AppMapAgent {
       );
     }
 
-    if (await this.isInstalled(path)) {
+    const { exitCode } = await exec('bundle', ['info', 'appmap'], { cwd: path as string });
+    if (exitCode === 0) {
+      // The gem is already present. Make sure it's up to date.
       const { stderr, exitCode } = await exec('bundle', ['update', 'appmap'], {
         cwd: path as string,
         output: true,
@@ -58,6 +70,7 @@ export default class AppMapAgentRuby implements AppMapAgent {
         throw new Error(stderr);
       }
     } else {
+      // The gem is not present. Install it.
       const { stderr, exitCode } = await exec('bundle', ['install'], {
         cwd: path as string,
         output: true,
