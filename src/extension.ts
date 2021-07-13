@@ -66,5 +66,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     );
   } catch (exception) {
     Telemetry.sendEvent(Events.DEBUG_EXCEPTION, { exception });
+    throw exception;
   }
 }
