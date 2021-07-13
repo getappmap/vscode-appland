@@ -5,6 +5,8 @@ import svgComplete from '../../web/static/media/tree/complete.svg';
 import svgIncomplete from '../../web/static/media/tree/incomplete.svg';
 import svgError from '../../web/static/media/tree/error.svg';
 import Telemetry, { Events } from '../telemetry';
+import QuickstartWebview from '../quickstartWebview';
+import Milestone from '../milestones';
 
 const Icons = {
   complete: path.join(__dirname, svgComplete),
@@ -34,11 +36,15 @@ export class MilestoneTreeDataProvider implements vscode.TreeDataProvider<vscode
     });
   }
 
-  static DEMO_HACK(context: vscode.ExtensionContext): void {
+  static registerCommands(context: vscode.ExtensionContext): void {
     context.subscriptions.push(
-      vscode.commands.registerCommand('appmap.clickMilestone', (milestone) => {
+      vscode.commands.registerCommand('appmap.clickMilestone', (milestone: Milestone) => {
         try {
-          milestone.project.performMilestoneAction(milestone.id);
+          const { milestones } = milestone.project;
+          const milestoneIndex =
+            Object.values(milestones).findIndex((m: Milestone) => m.id === milestone.id) + 1;
+
+          vscode.commands.executeCommand(QuickstartWebview.command, milestoneIndex);
         } catch (exception) {
           Telemetry.sendEvent(Events.DEBUG_EXCEPTION, { exception });
         }

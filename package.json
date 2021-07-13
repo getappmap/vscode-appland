@@ -96,6 +96,10 @@
         "title": "AppMap: Stop the active remote recording",
         "icon": "images/record_stop.svg",
         "when": "appmap.recordingIsRunning"
+      },
+      {
+        "command": "appmap.openQuickstart",
+        "title": "AppMap: Quickstart"
       }
     ],
     "configuration": {
@@ -250,6 +254,7 @@
     "bootstrap-autocomplete": "^2.3.7",
     "diff": "^5.0.0",
     "glob-to-regexp": "^0.4.1",
+    "highlight.js": "^11.0.1",
     "jquery": "^3.5.1",
     "js-yaml": "^4.0.0",
     "popper.js": "^1.16.1",

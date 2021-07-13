@@ -13,7 +13,6 @@ export default function mountApp() {
   const vscode = window.acquireVsCodeApi();
   const messages = new MessagePublisher(vscode);
 
-  vscode.postMessage({ command: 'ready' });
   messages
     .on('init', (event) => {
       const app = new Vue({
@@ -24,7 +23,9 @@ export default function mountApp() {
             props: {
               stepsState: this.stepsState,
               appmapYmlSnippet: this.appmapYmlSnippet,
+              appmapsProgress: this.appmapsProgress,
               testFrameworks: this.testFrameworks,
+              initialStep: this.initialStep,
               language: this.language,
               installSnippets: this.installSnippets,
               async onAction(language, step) {
@@ -43,12 +44,22 @@ export default function mountApp() {
             stepsState: event.stepsState,
             appmapYmlSnippet: event.appmapYmlSnippet,
             testFrameworks: event.testFrameworks,
+            initialStep: event.initialStep,
+            appmapsProgress: 0,
             language: event.language,
             installSnippets: {
               ruby: "gem 'appmap', :groups => [:development, :test]",
             },
           };
         },
+      });
+
+      app.$on('viewAppmapYml', () => {
+        vscode.postMessage({ command: 'openFile', file: 'appmap.yml' });
+      });
+
+      app.$on('openLocalAppmaps', () => {
+        vscode.postMessage({ command: 'focus' });
       });
 
       messages
@@ -58,9 +69,22 @@ export default function mountApp() {
         .on('agentInfo', ({ newAppmapYmlSnippet, newTestFrameworks }) => {
           app.appmapYmlSnippet = newAppmapYmlSnippet;
           app.testFrameworks = newTestFrameworks;
+        })
+        .on('appmapCount', ({ count }) => {
+          app.appmapsProgress = count;
+        })
+        .on('milestoneSnapshot', ({ state }) => {
+          app.stepsState = state;
+        })
+        .on('changeMilestone', ({ milestoneIndex }) => {
+          app.$refs.ui.currentStep = milestoneIndex;
         });
+
+      vscode.postMessage({ command: 'postInitialize' });
     })
     .on(undefined, (event) => {
       throw new Error(`unhandled message type: ${event.type}`);
     });
+
+  vscode.postMessage({ command: 'preInitialize' });
 }

@@ -89,6 +89,12 @@ interface ProjectWatcherState {
   ): Promise<StatusResponse | undefined>;
 }
 
+/**
+ * ProjectWatcher state definitions.
+ * - `onEnter`: Called when this state becomes the current state.
+ * - `onExit`: Called just before changing to another state.
+ * - `tick`: Called every time the ProjectWatcher is ticked.
+ */
 const State = {
   WAIT_FOR_AGENT_INSTALL: new (class implements ProjectWatcherState {
     onEnter(project: ProjectWatcher) {
@@ -121,28 +127,23 @@ const State = {
     }
   })(),
   WATCH_PROJECT_STATUS: new (class implements ProjectWatcherState {
-    private appmapWatcher?: vscode.FileSystemWatcher;
+    private appmapCreatedListener?: vscode.Disposable;
+
+    cleanupListener() {
+      this.appmapCreatedListener?.dispose();
+      this.appmapCreatedListener = undefined;
+    }
 
     onEnter(project: ProjectWatcher) {
       if (project.appmapExists()) {
         return;
       }
 
-      this.appmapWatcher = vscode.workspace.createFileSystemWatcher(
-        '**/*.appmap.json',
-        false,
-        true,
-        true
-      );
+      this.appmapCreatedListener = project.onAppMapCreated(() => {
+        project.milestones.RECORD_APPMAP.setState('complete');
+        project.forceNextTick();
 
-      this.appmapWatcher.onDidCreate((uri) => {
-        if (uri.fsPath.startsWith(project.rootDirectory as string)) {
-          flagWorkspaceRecordedAppMap(project.context, project.workspaceFolder);
-          project.forceNextTick();
-
-          this.appmapWatcher?.dispose();
-          this.appmapWatcher = undefined;
-        }
+        this.cleanupListener();
       });
     }
 
@@ -151,8 +152,7 @@ const State = {
         rootDirectory: project.rootDirectory,
       });
 
-      this.appmapWatcher?.dispose();
-      this.appmapWatcher = undefined;
+      this.cleanupListener();
     }
 
     async tick(
@@ -211,11 +211,19 @@ const State = {
   })(),
 };
 
+/**
+ * Maintains milestones and project state.
+ */
 export default class ProjectWatcher {
+  // onAppMapCreated is emitted when a new AppMap is created within the project directory.
+  private readonly onAppMapCreatedEmitter = new vscode.EventEmitter<vscode.Uri>();
+  public readonly onAppMapCreated = this.onAppMapCreatedEmitter.event;
+
   public readonly workspaceFolder: vscode.WorkspaceFolder;
   public readonly milestones: MilestoneMap;
   public readonly context: vscode.ExtensionContext;
   private readonly frequencyMs: number;
+  private readonly appmapWatcher: vscode.FileSystemWatcher;
   private _language?: string;
   private agent?: AppMapAgent;
   private nextStatusTimer?: NodeJS.Timeout;
@@ -227,6 +235,7 @@ export default class ProjectWatcher {
   constructor(
     context: vscode.ExtensionContext,
     workspaceFolder: vscode.WorkspaceFolder,
+    appmapWatcher: vscode.FileSystemWatcher,
     frequencyMs = 6000
   ) {
     this.context = context;
@@ -234,12 +243,23 @@ export default class ProjectWatcher {
     this.frequencyMs = frequencyMs;
     this.milestones = createMilestones(this);
     this.currentState = State.WAIT_FOR_AGENT_INSTALL;
+    this.appmapWatcher = appmapWatcher;
+
+    appmapWatcher.onDidCreate((uri) => {
+      if (uri.fsPath.startsWith(this.rootDirectory as string)) {
+        this.onAppMapCreatedEmitter.fire(uri);
+      }
+    });
   }
 
   get rootDirectory(): PathLike {
     return this.workspaceFolder.uri.fsPath;
   }
 
+  /**
+   * Basic state machine implementation. This method changes the current state, first exiting the current state then
+   * entering the new state.
+   */
   setState(state: ProjectWatcherState): void {
     if (this.currentState.onExit) {
       this.currentState.onExit(this);
@@ -281,6 +301,9 @@ export default class ProjectWatcher {
     }
   }
 
+  /**
+   * Utility getter. Returns true if the user has previously recorded an AppMap in this project directory.
+   */
   appmapExists(): boolean {
     if (this._appmapExists) {
       return true;
@@ -291,6 +314,9 @@ export default class ProjectWatcher {
     return this._appmapExists;
   }
 
+  /**
+   * Utility getter. Returns true if the user has previously opened an AppMap from within this project directory.
+   */
   appmapOpened(): boolean {
     if (this._appmapOpened) {
       return true;
@@ -377,15 +403,29 @@ export default class ProjectWatcher {
     this.tick();
   }
 
+  /**
+   * @returns An array of test framework identifiers (e.g. `rspec`, `mocha`, etc.) that are used by the project.
+   */
   get testFrameworks(): readonly string[] {
     return this.lastStatus?.test_commands?.map((command) => command.framework) || [];
   }
 
   async appmapYml(): Promise<string | undefined> {
-    const response = await this.agent?.init(this.rootDirectory);
-    return response?.configuration.contents;
+    if (await this.agent?.isInstalled(this.rootDirectory)) {
+      try {
+        const response = await this.agent?.init(this.rootDirectory);
+        return response?.configuration.contents;
+      } catch {
+        this.milestones.INSTALL_AGENT.setState('error');
+      }
+    }
+
+    return undefined;
   }
 
+  /**
+   * Changes the language, and thus the agent, used by the project. This is an action permitted by the frontend UI.
+   */
   set language(language: string | undefined) {
     this._language = language;
     this.agent = language ? LanguageResolver.getAgentForLanguage(language) : undefined;

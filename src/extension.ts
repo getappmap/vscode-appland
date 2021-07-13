@@ -20,8 +20,16 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
     localAppMaps.initialize();
 
+    const appmapWatcher = vscode.workspace.createFileSystemWatcher(
+      '**/*.appmap.json',
+      false,
+      true,
+      true
+    );
+    context.subscriptions.push(appmapWatcher);
+
     const projects = (vscode.workspace.workspaceFolders || []).map((workspaceFolder) => {
-      const project = new ProjectWatcher(context, workspaceFolder);
+      const project = new ProjectWatcher(context, workspaceFolder, appmapWatcher);
       return project;
     });
 
