@@ -124,7 +124,7 @@
     "viewsWelcome": [
       {
         "view": "appmap.views.local",
-        "contents": "No AppMaps found.\n[Learn more](https://appland.com/docs)",
+        "contents": "No AppMaps found.\n[Open Quickstart](command:appmap.openQuickstart)",
         "when": "appmap.initialized && !appmap.hasData"
       },
       {
