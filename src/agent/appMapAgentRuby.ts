@@ -6,9 +6,10 @@ import AppMapAgent, {
   StatusResponse,
   InstallResult,
   InitResponse,
+  AppMapAgentBase,
 } from './appMapAgent';
 
-export default class AppMapAgentRuby implements AppMapAgent {
+export default class AppMapAgentRuby extends AppMapAgentBase implements AppMapAgent {
   readonly language = 'ruby';
   private static readonly REGEX_GEM_DECLARATION = /(?!\s)(?:gem|group|require)\s/m;
   private static readonly REGEX_GEM_DEPENDENCY = /^\s*gem\s+['|"]appmap['|"].*$/m;
@@ -80,12 +81,7 @@ export default class AppMapAgentRuby implements AppMapAgent {
       throw new Error(stderr);
     }
 
-    const response = JSON.parse(stdout) as InitResponse;
-    const { filename, contents } = response.configuration;
-
-    await fs.writeFile(join(path as string, filename), contents);
-
-    return response;
+    return this.writeConfig(path, stdout);
   }
 
   async files(path: PathLike): Promise<FilesResponse> {

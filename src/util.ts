@@ -42,6 +42,18 @@ export function isFileExists(filename: string): boolean {
   }
 }
 
+export interface AgentExecOptions extends ExecFileOptions {
+  encoding?: string | null;
+  output?: boolean | null;
+  debug?: boolean | false;
+}
+
+export interface AgentExecReturn {
+  exitCode: number;
+  stdout: string;
+  stderr: string;
+}
+
 /**
  * Exec a process
  * If options.output is true, the stdout/stderr will be written to the output window.
@@ -50,10 +62,10 @@ export async function exec(
   file: string,
   args: ReadonlyArray<string> | null | undefined,
   options?:
-    | ({ encoding?: string | null; output?: boolean | null } & ExecFileOptions)
+    | AgentExecOptions
     | undefined
     | null
-): Promise<{ exitCode: number; stdout: string; stderr: string }> {
+): Promise<AgentExecReturn> {
   return new Promise((resolve, reject) => {
     const childProcess = execFile(file, args, options);
     let stdout = '';

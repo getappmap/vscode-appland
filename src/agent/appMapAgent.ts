@@ -1,4 +1,5 @@
-import { PathLike } from 'fs';
+import { PathLike, promises as fs } from 'fs';
+import { join } from 'path';
 
 export interface ConfigMetadata {
   readonly app?: string;
@@ -89,4 +90,16 @@ export default interface AppMapAgent {
    * Execute tests as reported from the status command.
    */
   test(path: PathLike): Promise<void>;
+}
+
+export abstract class AppMapAgentBase {
+  protected async writeConfig(path: PathLike, config: string): Promise<InitResponse> {
+    const response = JSON.parse(config) as InitResponse;
+    const { filename, contents } = response.configuration;
+    
+    console.log(`writing config file ${filename}`);
+    await fs.writeFile(join(path as string, filename), contents);
+
+    return response;
+  }
 }
