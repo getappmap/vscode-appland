@@ -66,9 +66,9 @@ export default function mountApp() {
         .on('milestoneUpdate', ({ state, index }) => {
           app.$set(app.stepsState, index, state);
         })
-        .on('agentInfo', ({ newAppmapYmlSnippet, newTestFrameworks }) => {
-          app.appmapYmlSnippet = newAppmapYmlSnippet;
-          app.testFrameworks = newTestFrameworks;
+        .on('agentInfo', ({ appmapYmlSnippet, testFrameworks }) => {
+          app.appmapYmlSnippet = appmapYmlSnippet;
+          app.testFrameworks = testFrameworks;
         })
         .on('appmapCount', ({ count }) => {
           app.appmapsProgress = count;
