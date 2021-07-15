@@ -1,15 +1,15 @@
 import * as vscode from 'vscode';
 import { promises as fs } from 'fs';
-import AppMapDescriptor from './appmapDescriptor';
+import AppMapLoader, { AppMapDescriptor } from './appmapLoader';
 import { buildAppMap, AppMap } from '@appland/models';
 
-export default class AppMapDescriptorFile implements AppMapDescriptor {
+export default class AppMapLoaderFile implements AppMapLoader {
   public resourceUri: vscode.Uri;
-  public metadata?: Record<string, unknown>;
+  public descriptor: AppMapDescriptor;
 
-  constructor(resourceUri: vscode.Uri, metadata: Record<string, unknown>) {
+  constructor(resourceUri: vscode.Uri, descriptor: AppMapDescriptor) {
     this.resourceUri = resourceUri;
-    this.metadata = metadata;
+    this.descriptor = descriptor;
   }
 
   public async loadAppMap(): Promise<AppMap> {

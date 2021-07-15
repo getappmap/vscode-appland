@@ -22,6 +22,7 @@ export default function mountApp() {
             ref: 'ui',
             props: {
               steps: this.steps,
+              appmaps: this.appmaps,
               appmapYmlSnippet: this.appmapYmlSnippet,
               appmapsProgress: this.appmapsProgress,
               testFrameworks: this.testFrameworks,
@@ -42,6 +43,7 @@ export default function mountApp() {
         data() {
           return {
             steps: event.steps,
+            appmaps: event.appmaps,
             appmapYmlSnippet: event.appmapYmlSnippet,
             testFrameworks: event.testFrameworks,
             initialStep: event.initialStep,
@@ -62,6 +64,10 @@ export default function mountApp() {
         vscode.postMessage({ command: 'focus' });
       });
 
+      app.$on('openAppmap', (file) => {
+        vscode.postMessage({ command: 'openFile', file });
+      });
+
       messages
         .on('milestoneUpdate', ({ state, index }) => {
           app.$set(app.steps, index, { ...app.steps[index], state });
@@ -70,8 +76,9 @@ export default function mountApp() {
           app.appmapYmlSnippet = appmapYmlSnippet;
           app.testFrameworks = testFrameworks;
         })
-        .on('appmapCount', ({ count }) => {
-          app.appmapsProgress = count;
+        .on('appmapSnapshot', ({ appmaps }) => {
+          app.appmapsProgress = appmaps?.length || 0;
+          app.appmaps = appmaps;
         })
         .on('milestoneSnapshot', ({ steps }) => {
           app.steps = steps;

@@ -37,7 +37,7 @@ export default function registerTrees(
 
   context.subscriptions.push(
     vscode.commands.registerCommand('appmap.focus', () => {
-      localTree.reveal(localAppMaps.appmapDescriptors[0], { select: false });
+      localTree.reveal(localAppMaps.appMaps[0], { select: false });
     })
   );
 

@@ -33,7 +33,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
       return project;
     });
 
-    QuickstartWebview.register(context, projects);
+    QuickstartWebview.register(context, projects, localAppMaps);
 
     await Promise.all(projects.map(async (project) => await project.initialize()));
 
@@ -47,15 +47,15 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         });
 
         localAppMaps.setFilter(filter || '');
-        localTree.reveal(localAppMaps.appmapDescriptors[0], { select: false });
+        localTree.reveal(localAppMaps.appMaps[0], { select: false });
       })
     );
 
     context.subscriptions.push(
       vscode.commands.registerCommand('appmap.findByName', async () => {
         const items = localAppMaps
-          .allDescriptors()
-          .map((d) => d.metadata?.name as string)
+          .allAppMaps()
+          .map((loader) => loader.descriptor.metadata?.name as string)
           .filter(notEmpty)
           .sort();
 
@@ -64,12 +64,12 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
           return;
         }
 
-        const descriptor = localAppMaps.findByName(name);
-        if (!descriptor) {
+        const loader = localAppMaps.findByName(name);
+        if (!loader) {
           return;
         }
 
-        vscode.commands.executeCommand('vscode.open', descriptor.resourceUri);
+        vscode.commands.executeCommand('vscode.open', loader.descriptor.resourceUri);
       })
     );
   } catch (exception) {

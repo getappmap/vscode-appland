@@ -1,7 +1,30 @@
+import { PathLike } from 'fs';
 import path from 'path';
 import * as vscode from 'vscode';
+import AppMapCollectionFile from './appmapCollectionFile';
 import ProjectWatcher from './projectWatcher';
 import { getNonce } from './util';
+
+interface AppMapListItem {
+  path: PathLike;
+  name?: string;
+  requests?: number;
+  sqlQueries?: number;
+  functions?: number;
+}
+
+function listAppMaps(
+  appmaps: AppMapCollectionFile,
+  workspaceFolder: vscode.WorkspaceFolder
+): AppMapListItem[] {
+  return appmaps.allAppMapsForWorkspaceFolder(workspaceFolder).map(({ descriptor }) => ({
+    path: descriptor.resourceUri.fsPath,
+    name: descriptor.metadata?.name as string,
+    requests: descriptor.numRequests,
+    sqlQueries: descriptor.numQueries,
+    functions: descriptor.numFunctions,
+  }));
+}
 
 export default class QuickstartWebview {
   public static readonly viewType = 'appmap.views.quickstart';
@@ -12,7 +35,8 @@ export default class QuickstartWebview {
 
   public static register(
     context: vscode.ExtensionContext,
-    projects: readonly ProjectWatcher[]
+    projects: readonly ProjectWatcher[],
+    appmaps: AppMapCollectionFile
   ): void {
     const project = projects[0];
     if (!project) {
@@ -61,11 +85,16 @@ export default class QuickstartWebview {
 
         panel.webview.html = getWebviewContent(panel.webview, context);
 
-        let appmapCount = 0;
         const eventListener = project.onAppMapCreated(() => {
-          appmapCount += 1;
-          panel.webview.postMessage({ type: 'appmapCount', count: appmapCount });
+          // TODO.
+          // This could be made a lot more efficient by only sending the list item that's new, not the entire snapshot.
+          // This also won't be triggered if AppMaps are deleted (BUG).
+          panel.webview.postMessage({
+            type: 'appmapSnapshot',
+            appmaps: listAppMaps(appmaps, project.workspaceFolder),
+          });
         });
+
         panel.onDidDispose(() => {
           eventListener.dispose();
         });
@@ -81,6 +110,7 @@ export default class QuickstartWebview {
                   testFrameworks: project.testFrameworks,
                   initialStep: milestoneIndex,
                   appmapYmlSnippet: await project.appmapYml(),
+                  appmaps: listAppMaps(appmaps, project.workspaceFolder),
                   steps: Object.values(project.milestones).map((m) => ({
                     state: m.state,
                     errors: [],
@@ -140,10 +170,14 @@ export default class QuickstartWebview {
             case 'openFile':
               {
                 const { file } = message;
-                vscode.commands.executeCommand(
-                  'vscode.open',
-                  vscode.Uri.file(path.join(project.rootDirectory as string, file))
-                );
+                let filePath = file;
+
+                if (!path.isAbsolute(file)) {
+                  // If the file is not absolute, it's relative to the workspace folder
+                  filePath = path.join(project.rootDirectory as string, file);
+                }
+
+                vscode.commands.executeCommand('vscode.open', vscode.Uri.file(filePath));
               }
               break;
 
