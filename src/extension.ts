@@ -37,7 +37,11 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
     await Promise.all(projects.map(async (project) => await project.initialize()));
 
-    const { localTree } = registerTrees(context, localAppMaps, projects);
+    const { localTree, usingAppmaps, masteringAppmaps, milestoneTree } = registerTrees(
+      context,
+      localAppMaps,
+      projects
+    );
 
     context.subscriptions.push(
       vscode.commands.registerCommand('appmap.applyFilter', async () => {
@@ -72,6 +76,15 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         vscode.commands.executeCommand('vscode.open', loader.descriptor.resourceUri);
       })
     );
+
+    if (projects.length == 1) {
+      //if a single-project workspace is open
+      // Open the quickstart UI
+      //vscode.commands.executeCommand(QuickstartWebview.command, 1);
+      const installAgentMilestone = projects[0].milestones['INSTALL_AGENT'];
+      vscode.commands.executeCommand('appmap.clickMilestone', installAgentMilestone);
+      milestoneTree.reveal(installAgentMilestone, { focus: false });
+    }
   } catch (exception) {
     Telemetry.sendEvent(Events.DEBUG_EXCEPTION, { exception });
     throw exception;
