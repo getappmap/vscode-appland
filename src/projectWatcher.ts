@@ -272,7 +272,7 @@ export default class ProjectWatcher {
     }
   }
 
-  async performMilestoneAction(id: MilestoneType): Promise<void> {
+  async performMilestoneAction(id: MilestoneType, data?: Record<string, unknown>): Promise<void> {
     if (!this.language || !this.agent) {
       throw new Error(`unsupported project type ${this.language ? `(${this.language})` : ''}`);
     }
@@ -293,7 +293,7 @@ export default class ProjectWatcher {
         break;
 
       case 'RECORD_APPMAP':
-        await this.agent.test(this.rootDirectory);
+        await this.agent.test(this.rootDirectory, data?.command as string);
         break;
 
       default:

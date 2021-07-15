@@ -119,14 +119,14 @@ export default class QuickstartWebview {
             case 'milestoneAction':
               {
                 // The webview is requesting a milestone action be performed
-                const { milestone, language } = message.data;
+                const { milestone, language, data } = message.data;
 
                 try {
                   if (language !== project.language) {
                     project.language = language;
                   }
 
-                  await projects[0].performMilestoneAction(milestone);
+                  await projects[0].performMilestoneAction(milestone, data);
                   panel.webview.postMessage({ type: message.command });
                 } catch (e) {
                   panel.webview.postMessage({

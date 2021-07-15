@@ -88,5 +88,5 @@ export default interface AppMapAgent {
   /**
    * Execute tests as reported from the status command.
    */
-  test(path: PathLike): Promise<void>;
+  test(path: PathLike, command: string): Promise<void>;
 }

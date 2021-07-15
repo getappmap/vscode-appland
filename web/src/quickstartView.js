@@ -28,13 +28,13 @@ export default function mountApp() {
               initialStep: this.initialStep,
               language: this.language,
               installSnippets: this.installSnippets,
-              async onAction(language, step) {
+              async onAction(language, step, data) {
                 const milestone = STEPS[step];
                 if (!milestone) {
                   return;
                 }
 
-                await messages.rpc('milestoneAction', { language, milestone });
+                await messages.rpc('milestoneAction', { language, milestone, data });
               },
             },
           });
