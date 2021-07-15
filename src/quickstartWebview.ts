@@ -81,7 +81,10 @@ export default class QuickstartWebview {
                   testFrameworks: project.testFrameworks,
                   initialStep: milestoneIndex,
                   appmapYmlSnippet: await project.appmapYml(),
-                  stepsState: Object.values(project.milestones).map((m) => m.state),
+                  steps: Object.values(project.milestones).map((m) => ({
+                    state: m.state,
+                    errors: [],
+                  })),
                 });
               }
               break;
@@ -106,7 +109,10 @@ export default class QuickstartWebview {
 
               panel.webview.postMessage({
                 type: 'milestoneSnapshot',
-                state: Object.values(project.milestones).map((m) => m.state),
+                steps: Object.values(project.milestones).map((m) => ({
+                  state: m.state,
+                  errors: [],
+                })),
               });
               break;
 

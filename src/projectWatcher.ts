@@ -406,8 +406,29 @@ export default class ProjectWatcher {
   /**
    * @returns An array of test framework identifiers (e.g. `rspec`, `mocha`, etc.) that are used by the project.
    */
-  get testFrameworks(): readonly string[] {
-    return this.lastStatus?.test_commands?.map((command) => command.framework) || [];
+  get testFrameworks(): Record<string, string> {
+    return (
+      this.lastStatus?.test_commands?.reduce((obj, test) => {
+        const tokens: string[] = [];
+
+        if (test.command.environment) {
+          Object.entries(test.command.environment).forEach(([key, value]) => {
+            if (value !== undefined) {
+              tokens.push(`${key}=${value}`);
+            }
+          });
+        }
+
+        tokens.push(test.command.program);
+
+        if (test.command.args) {
+          tokens.push(...test.command.args);
+        }
+
+        obj[test.framework] = tokens.join(' ');
+        return obj;
+      }, {}) || {}
+    );
   }
 
   async appmapYml(): Promise<string | undefined> {

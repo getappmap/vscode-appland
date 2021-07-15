@@ -21,7 +21,7 @@ export default function mountApp() {
           return h(VQuickstart, {
             ref: 'ui',
             props: {
-              stepsState: this.stepsState,
+              steps: this.steps,
               appmapYmlSnippet: this.appmapYmlSnippet,
               appmapsProgress: this.appmapsProgress,
               testFrameworks: this.testFrameworks,
@@ -41,7 +41,7 @@ export default function mountApp() {
         },
         data() {
           return {
-            stepsState: event.stepsState,
+            steps: event.steps,
             appmapYmlSnippet: event.appmapYmlSnippet,
             testFrameworks: event.testFrameworks,
             initialStep: event.initialStep,
