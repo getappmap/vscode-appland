@@ -64,7 +64,7 @@ export default function mountApp() {
 
       messages
         .on('milestoneUpdate', ({ state, index }) => {
-          app.$set(app.stepsState, index, state);
+          app.$set(app.steps, index, { ...app.steps[index], state });
         })
         .on('agentInfo', ({ appmapYmlSnippet, testFrameworks }) => {
           app.appmapYmlSnippet = appmapYmlSnippet;
@@ -73,8 +73,8 @@ export default function mountApp() {
         .on('appmapCount', ({ count }) => {
           app.appmapsProgress = count;
         })
-        .on('milestoneSnapshot', ({ state }) => {
-          app.stepsState = state;
+        .on('milestoneSnapshot', ({ steps }) => {
+          app.steps = steps;
         })
         .on('changeMilestone', ({ milestoneIndex }) => {
           app.$refs.ui.currentStep = milestoneIndex;
