@@ -131,8 +131,8 @@ export default class QuickstartWebview {
                 if (state === 'complete') {
                   panel.webview.postMessage({
                     type: 'agentInfo',
-                    testFrameworks: project.testFrameworks,
                     appmapYmlSnippet: await project.appmapYml(),
+                    testFrameworks: project.testFrameworks,
                   });
                 }
               });
