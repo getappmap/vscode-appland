@@ -64,3 +64,13 @@ so:
 $ rm .yarn/releases/yarn-berry.js .yarnrc.yml
 $ yarn run package
 ```
+
+## Deleting uninstalled extensions from the filesystem
+
+After uninstallation, VSCode leaves the extensions folders on the filesystem which can cause weird
+problems, especially when re-installing an older version. To completely erase old extensions and
+their code, delete the appland.appmap.* folders in:
+
+- Windows: `%USERPROFILE%\.vscode\extensions`
+- Mac: `~/.vscode/extensions`
+- Linux: `~/.vscode/extensions`
