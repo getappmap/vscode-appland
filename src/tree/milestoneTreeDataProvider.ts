@@ -56,6 +56,10 @@ export class MilestoneTreeDataProvider implements vscode.TreeDataProvider<vscode
     return element;
   }
 
+  public getParent(): Thenable<vscode.TreeItem | null> {
+    return Promise.resolve(null);
+  }
+
   public getChildren(): Thenable<vscode.TreeItem[]> {
     const project = this.projects[0];
     if (!project) {
