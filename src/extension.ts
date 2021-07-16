@@ -77,8 +77,10 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
       })
     );
 
-    if (projects.length == 1) {
-      // only open the quickstart if a single-project workspace is open
+    const storeQuickstartKey = 'APPMAP_QUICKSTART_VIEWED';
+    if (!context.globalState.get(storeQuickstartKey) && projects.length == 1) {
+      // only open the quickstart for the first time and a single-project workspace is open
+      context.globalState.update(storeQuickstartKey, true);
       // open the quickstart WebView, step INSTALL_AGENT
       const installAgentMilestone = projects[0].milestones['INSTALL_AGENT'];
       vscode.commands.executeCommand('appmap.clickMilestone', installAgentMilestone);
