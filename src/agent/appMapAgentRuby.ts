@@ -18,17 +18,22 @@ export default class AppMapAgentRuby implements AppMapAgent {
   private static readonly GEM_DEPENDENCY = "gem 'appmap', :groups => [:development, :test]";
 
   async isInstalled(path: PathLike): Promise<boolean> {
-    const { stdout, exitCode } = await execFile('bundle', ['info', 'appmap'], {
-      cwd: path as string,
-    });
-    if (exitCode !== 0) {
+    try {
+      const { stdout, exitCode } = await execFile('bundle', ['info', 'appmap'], {
+        cwd: path as string,
+      });
+
+      if (exitCode !== 0) {
+        return false;
+      }
+
+      const match = stdout.match(AppMapAgentRuby.REGEX_GEM_VERSION);
+      const version = match ? match[1] : undefined;
+
+      return version && semver.satisfies(version, agentVersions[this.language]);
+    } catch (e) {
       return false;
     }
-
-    const match = stdout.match(AppMapAgentRuby.REGEX_GEM_VERSION);
-    const version = match ? match[1] : undefined;
-
-    return version && semver.satisfies(version, agentVersions[this.language]);
   }
 
   async install(path: PathLike): Promise<InstallResult> {
@@ -60,27 +65,37 @@ export default class AppMapAgentRuby implements AppMapAgent {
       );
     }
 
-    const { exitCode } = await execFile('bundle', ['info', 'appmap'], { cwd: path as string });
-    if (exitCode === 0) {
-      // The gem is already present. Make sure it's up to date.
-      const { stderr, exitCode } = await execFile('bundle', ['update', 'appmap'], {
-        cwd: path as string,
-        output: true,
-      });
+    let error;
 
-      if (exitCode !== 0) {
-        throw new Error(stderr);
-      }
-    } else {
-      // The gem is not present. Install it.
-      const { stderr, exitCode } = await execFile('bundle', ['install'], {
-        cwd: path as string,
-        output: true,
-      });
+    try {
+      const { exitCode } = await execFile('bundle', ['info', 'appmap'], { cwd: path as string });
+      if (exitCode === 0) {
+        // The gem is already present. Make sure it's up to date.
+        const { stderr, exitCode } = await execFile('bundle', ['update', 'appmap'], {
+          cwd: path as string,
+          output: true,
+        });
 
-      if (exitCode !== 0) {
-        throw new Error(stderr);
+        if (exitCode !== 0) {
+          error = stderr;
+        }
+      } else {
+        // The gem is not present. Install it.
+        const { stderr, exitCode } = await execFile('bundle', ['install'], {
+          cwd: path as string,
+          output: true,
+        });
+
+        if (exitCode !== 0) {
+          error = stderr;
+        }
       }
+    } catch (e) {
+      throw new Error(e);
+    }
+
+    if (error) {
+      throw new Error(error);
     }
 
     return 'installed';
@@ -117,12 +132,14 @@ export default class AppMapAgentRuby implements AppMapAgent {
     return JSON.parse(stdout);
   }
 
-  async test(path: PathLike, command: string): Promise<void> {
-    await exec(command, {
-      cwd: path as string,
-      output: true,
-      userCanTerminate: true,
-      progressMessage: 'Recording tests...',
+  async test(path: PathLike, command: Array<string>): Promise<void> {
+    return await command.forEach(async (row) => {
+      await exec(row, {
+        cwd: path as string,
+        output: true,
+        userCanTerminate: true,
+        progressMessage: 'Recording tests...',
+      });
     });
   }
 }

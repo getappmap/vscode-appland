@@ -160,8 +160,14 @@ export default class QuickstartWebview {
                   panel.webview.postMessage({ type: message.command });
                 } catch (e) {
                   panel.webview.postMessage({
-                    type: message.command,
-                    error: e.message,
+                    type: 'milestoneError',
+                    index: Object.keys(project.milestones).indexOf(milestone),
+                    errors: [
+                      {
+                        code: 'ERROR',
+                        message: e.message,
+                      },
+                    ],
                   });
                 }
               }

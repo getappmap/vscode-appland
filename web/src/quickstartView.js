@@ -85,6 +85,12 @@ export default function mountApp() {
         })
         .on('changeMilestone', ({ milestoneIndex }) => {
           app.$refs.ui.currentStep = milestoneIndex;
+        })
+        .on('milestoneError', ({ index, errors }) => {
+          app.$set(app.steps, index, {
+            state: 'error',
+            errors,
+          });
         });
 
       vscode.postMessage({ command: 'postInitialize' });

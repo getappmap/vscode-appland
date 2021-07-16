@@ -293,7 +293,7 @@ export default class ProjectWatcher {
         break;
 
       case 'RECORD_APPMAP':
-        await this.agent.test(this.rootDirectory, data?.command as string);
+        await this.agent.test(this.rootDirectory, data?.command as Array<string>);
         break;
 
       default:

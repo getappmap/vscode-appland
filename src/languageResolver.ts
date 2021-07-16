@@ -232,7 +232,7 @@ export default class LanguageResolver {
       return memo;
     }, {} as Record<string, number>);
 
-    const totalFiles = Object.values(languages).reduce((a, b) => a + b);
+    const totalFiles = Object.values(languages).reduce((a, b) => a + b, 0);
     if (totalFiles > 0) {
       Object.keys(languages).forEach((key) => {
         languages[key] /= totalFiles;
