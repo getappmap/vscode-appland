@@ -78,11 +78,11 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     );
 
     if (projects.length == 1) {
-      //if a single-project workspace is open
-      // Open the quickstart UI
-      //vscode.commands.executeCommand(QuickstartWebview.command, 1);
+      // only open the quickstart if a single-project workspace is open
+      // open the quickstart WebView, step INSTALL_AGENT
       const installAgentMilestone = projects[0].milestones['INSTALL_AGENT'];
       vscode.commands.executeCommand('appmap.clickMilestone', installAgentMilestone);
+      // open the quickstart side view
       milestoneTree.reveal(installAgentMilestone, { focus: false });
     }
   } catch (exception) {
