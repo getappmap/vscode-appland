@@ -20,12 +20,14 @@ export class LinkTreeDataProvider implements vscode.TreeDataProvider<vscode.Tree
   public readonly onDidChangeTreeData: vscode.Event<
     vscode.TreeItem | undefined | null | void
   > = this._onDidChangeTreeData.event;
+  private static readonly VISITED_LINKS = 'VISITED_LINKS';
 
   constructor(context: vscode.ExtensionContext, linkDefinitions: LinkDefinitions) {
     this.context = context;
     this.linkDefinitions = { ...linkDefinitions };
 
-    const visitedLinks = (context.globalState.get('VISITED_LINKS') || []) as Array<string>;
+    const visitedLinks = (context.globalState.get(LinkTreeDataProvider.VISITED_LINKS) ||
+      []) as Array<string>;
     visitedLinks.forEach((linkId) => {
       const linkDefinition = this.linkDefinitions[linkId];
       if (linkDefinition) {
@@ -41,10 +43,11 @@ export class LinkTreeDataProvider implements vscode.TreeDataProvider<vscode.Tree
         async (url: vscode.Uri, linkId: string, updateCallback: () => void) => {
           vscode.env.openExternal(url);
 
-          const visitedLinks = (context.globalState.get('VISITED_LINKS') || []) as Array<string>;
+          const visitedLinks = (context.globalState.get(LinkTreeDataProvider.VISITED_LINKS) ||
+            []) as Array<string>;
           if (!visitedLinks.includes(linkId)) {
             visitedLinks.push(linkId);
-            context.globalState.update('VISITED_LINKS', visitedLinks);
+            context.globalState.update(LinkTreeDataProvider.VISITED_LINKS, visitedLinks);
           }
 
           updateCallback();
@@ -58,7 +61,8 @@ export class LinkTreeDataProvider implements vscode.TreeDataProvider<vscode.Tree
   }
 
   public getChildren(): Thenable<vscode.TreeItem[]> {
-    const visitedLinks = (this.context.globalState.get('VISITED_LINKS') || []) as Array<string>;
+    const visitedLinks = (this.context.globalState.get(LinkTreeDataProvider.VISITED_LINKS) ||
+      []) as Array<string>;
 
     const items = Object.entries(this.linkDefinitions).map(([id, item]) => {
       const treeItem = new vscode.TreeItem(item.label);
@@ -85,5 +89,9 @@ export class LinkTreeDataProvider implements vscode.TreeDataProvider<vscode.Tree
 
   private onUpdate() {
     this._onDidChangeTreeData.fire();
+  }
+
+  public static resetState(context: vscode.ExtensionContext): void {
+    context.globalState.update(LinkTreeDataProvider.VISITED_LINKS, null);
   }
 }

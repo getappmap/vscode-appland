@@ -7,7 +7,6 @@ import {
   ExecOptions as ProcessExecOptions,
 } from 'child_process';
 import * as vscode from 'vscode';
-import Telemetry, { Events } from './telemetry';
 
 export function getNonce(): string {
   let text = '';
@@ -231,4 +230,15 @@ export async function chainPromises(
     onResolve(await promise);
     return chainPromises(onResolve, ...promises);
   }
+}
+
+export const QUICKSTART_SEEN = 'QUICKSTART_SEEN';
+
+export function getQuickstartSeen(context: vscode.ExtensionContext): boolean {
+  const seen = context.globalState.get(QUICKSTART_SEEN) == true;
+  return seen;
+}
+
+export function setQuickstartSeen(context: vscode.ExtensionContext, seen: boolean): void {
+  context.globalState.update(QUICKSTART_SEEN, seen);
 }
