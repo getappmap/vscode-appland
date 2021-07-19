@@ -5,7 +5,8 @@ import Telemetry, { Events } from './telemetry';
 import registerTrees from './tree';
 import AppMapCollectionFile from './appmapCollectionFile';
 import RemoteRecording from './remoteRecording';
-import { notEmpty } from './util';
+import { getQuickstartSeen, notEmpty, setQuickstartSeen } from './util';
+import { registerUtilityCommands } from './registerUtilityCommands';
 import ProjectWatcher from './projectWatcher';
 import QuickstartWebview from './quickstartWebview';
 
@@ -77,15 +78,16 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
       })
     );
 
-    const storeQuickstartKey = 'APPMAP_QUICKSTART_VIEWED';
-    if (!context.globalState.get(storeQuickstartKey) && projects.length == 1) {
+    registerUtilityCommands(context);
+
+    if (!getQuickstartSeen(context) && projects.length == 1) {
       // only open the quickstart for the first time and a single-project workspace is open
-      context.globalState.update(storeQuickstartKey, true);
       // open the quickstart WebView, step INSTALL_AGENT
       const installAgentMilestone = projects[0].milestones['INSTALL_AGENT'];
       vscode.commands.executeCommand('appmap.clickMilestone', installAgentMilestone);
       // open the quickstart side view
       milestoneTree.reveal(installAgentMilestone, { focus: false });
+      setQuickstartSeen(context, true);
     }
   } catch (exception) {
     Telemetry.sendEvent(Events.DEBUG_EXCEPTION, { exception });

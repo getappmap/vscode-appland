@@ -23,9 +23,9 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
   }
 
   private static readonly viewType = 'appmap.views.appMapFile';
-  private static readonly storeInstructionsKey = 'APPMAP_INSTRUCTIONS_VIEWED';
-  private static readonly storeReleaseKey = 'APPMAP_RELEASE_KEY';
-  private static readonly storeTelemetryInstallKey = 'APPMAP_TELEMETRY_INSTALL';
+  private static readonly INSTRUCTIONS_VIEWED = 'APPMAP_INSTRUCTIONS_VIEWED';
+  private static readonly RELEASE_KEY = 'APPMAP_RELEASE_KEY';
+  private static readonly TELEMETRY_INSTALL = 'APPMAP_TELEMETRY_INSTALL';
   public static readonly APPMAP_OPENED = 'APPMAP_OPENED';
 
   constructor(private readonly context: vscode.ExtensionContext) {}
@@ -50,14 +50,14 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
       }
 
       // show AppMap instructions on first open
-      if (!this.context.globalState.get(ScenarioProvider.storeInstructionsKey)) {
+      if (!this.context.globalState.get(ScenarioProvider.INSTRUCTIONS_VIEWED)) {
         webviewPanel.webview.postMessage({
           type: 'showInstructions',
         });
-        this.context.globalState.update(ScenarioProvider.storeInstructionsKey, true);
+        this.context.globalState.update(ScenarioProvider.INSTRUCTIONS_VIEWED, true);
       }
 
-      const lastReleaseKey = this.context.globalState.get(ScenarioProvider.storeReleaseKey);
+      const lastReleaseKey = this.context.globalState.get(ScenarioProvider.RELEASE_KEY);
       if (lastReleaseKey !== releaseKey) {
         webviewPanel.webview.postMessage({
           type: 'displayUpdateNotification',
@@ -66,9 +66,9 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
       }
     };
 
-    if (!this.context.globalState.get(ScenarioProvider.storeTelemetryInstallKey)) {
+    if (!this.context.globalState.get(ScenarioProvider.TELEMETRY_INSTALL)) {
       Telemetry.reportAction('install', undefined);
-      this.context.globalState.update(ScenarioProvider.storeTelemetryInstallKey, true);
+      this.context.globalState.update(ScenarioProvider.TELEMETRY_INSTALL, true);
     }
 
     // Handle messages from the webview.
@@ -99,7 +99,7 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
           Telemetry.reportWebviewError(message.error);
           break;
         case 'closeUpdateNotification':
-          this.context.globalState.update(ScenarioProvider.storeReleaseKey, releaseKey);
+          this.context.globalState.update(ScenarioProvider.RELEASE_KEY, releaseKey);
           break;
         case 'appmapOpenUrl':
           vscode.env.openExternal(message.url);
@@ -237,5 +237,12 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
     } catch {
       throw new Error('Could not get document as json. Content is not valid json');
     }
+  }
+
+  //forget usage state set by this class
+  public static resetState(context: vscode.ExtensionContext): void {
+    context.globalState.update(ScenarioProvider.INSTRUCTIONS_VIEWED, null);
+    context.globalState.update(ScenarioProvider.RELEASE_KEY, null);
+    context.globalState.update(ScenarioProvider.APPMAP_OPENED, null);
   }
 }

@@ -6,7 +6,7 @@ import RemoteRecordingClient from './remoteRecordingClient';
 import { isFileExists } from './util';
 
 export default class RemoteRecording {
-  private static readonly storeRecentRemoteUrlsKey = 'APPMAP_RECENT_REMOTE_URLS';
+  private static readonly RECENT_REMOTE_URLS = 'APPMAP_RECENT_REMOTE_URLS';
   private readonly statusBar: vscode.StatusBarItem;
   private readonly context: vscode.ExtensionContext;
   private activeRecordingUrl: string | null;
@@ -20,7 +20,7 @@ export default class RemoteRecording {
   }
 
   get recentUrls(): string[] {
-    return this.context.workspaceState.get(RemoteRecording.storeRecentRemoteUrlsKey) || [];
+    return this.context.workspaceState.get(RemoteRecording.RECENT_REMOTE_URLS) || [];
   }
 
   addRecentUrl(url: string): void {
@@ -33,10 +33,7 @@ export default class RemoteRecording {
       return;
     }
 
-    this.context.workspaceState.update(RemoteRecording.storeRecentRemoteUrlsKey, [
-      ...recentUrls,
-      url,
-    ]);
+    this.context.workspaceState.update(RemoteRecording.RECENT_REMOTE_URLS, [...recentUrls, url]);
   }
 
   private onBeginRecording(recordingUrl: string): void {
@@ -304,5 +301,9 @@ export default class RemoteRecording {
         await remoteRecording.commandStopCurrent();
       })
     );
+  }
+
+  public static resetState(context: vscode.ExtensionContext): void {
+    context.workspaceState.update(RemoteRecording.RECENT_REMOTE_URLS, null);
   }
 }

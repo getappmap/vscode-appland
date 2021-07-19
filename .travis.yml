@@ -12,7 +12,12 @@ install:
   - yarn
 
 script:
-  - yarn test
+- yarn pretest
+# Setting these two variables get rid of warnings from vscode about
+# being unable to connect to the bus
+- export DBUS_SYSTEM_BUS_ADDRESS='unix:path=/var/run/dbus/system_bus_socket'
+- export DBUS_SESSION_BUS_ADDRESS='unix:path=/var/run/dbus/system_bus_socket'
+- yarn test
 
 deploy:
   - provider: script

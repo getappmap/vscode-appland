@@ -15,7 +15,7 @@ async function main(): Promise<void> {
     await runTests({
       extensionDevelopmentPath,
       extensionTestsPath,
-      launchArgs: ['--disable-extensions'],
+      launchArgs: ['--disable-extensions', '--disable-gpu'],
       version: 'insiders',
     });
   } catch (err) {
