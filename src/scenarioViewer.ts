@@ -7,7 +7,7 @@ import {
   getStringRecords,
   workspaceFolderForDocument,
 } from './util';
-import { version, releaseKey } from '../package.json';
+import { version } from '../package.json';
 
 /**
  * Provider for AppLand scenario files.
@@ -57,8 +57,10 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
         this.context.globalState.update(ScenarioProvider.INSTRUCTIONS_VIEWED, true);
       }
 
-      const lastReleaseKey = this.context.globalState.get(ScenarioProvider.RELEASE_KEY);
-      if (lastReleaseKey !== releaseKey) {
+      const lastVersion = this.context.globalState.get(ScenarioProvider.RELEASE_KEY);
+      if (!lastVersion) {
+        this.context.globalState.update(ScenarioProvider.RELEASE_KEY, version);
+      } else if (lastVersion !== version) {
         webviewPanel.webview.postMessage({
           type: 'displayUpdateNotification',
           version,
@@ -99,7 +101,7 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
           Telemetry.reportWebviewError(message.error);
           break;
         case 'closeUpdateNotification':
-          this.context.globalState.update(ScenarioProvider.RELEASE_KEY, releaseKey);
+          this.context.globalState.update(ScenarioProvider.RELEASE_KEY, version);
           break;
         case 'appmapOpenUrl':
           vscode.env.openExternal(message.url);
