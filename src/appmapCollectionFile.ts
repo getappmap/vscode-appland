@@ -84,28 +84,29 @@ export default class AppMapCollectionFile implements AppMapCollection {
 
   async initialize(): Promise<void> {
     const { workspaceFolders } = vscode.workspace;
-    if (!workspaceFolders) {
-      return;
-    }
-
-    const files = await Promise.all(
-      workspaceFolders.map(async (dir) => {
-        const appmapPattern = new vscode.RelativePattern(dir, '**/*.appmap.json');
-        return await vscode.workspace.findFiles(appmapPattern, '**/node_modules/**/*.appmap.json');
-      })
-    );
-
-    await Promise.all(
-      files
-        .flat()
-        .filter((uri) => AppMapCollectionFile.validateUri(uri))
-        .map(async (uri) => {
-          const metadata = await AppMapCollectionFile.collectAppMapDescriptor(uri);
-          if (metadata) {
-            this.loaders[uri.fsPath] = new AppMapDescriptorFile(uri, metadata);
-          }
+    if (workspaceFolders) {
+      const files = await Promise.all(
+        workspaceFolders.map(async (dir) => {
+          const appmapPattern = new vscode.RelativePattern(dir, '**/*.appmap.json');
+          return await vscode.workspace.findFiles(
+            appmapPattern,
+            '**/node_modules/**/*.appmap.json'
+          );
         })
-    );
+      );
+
+      await Promise.all(
+        files
+          .flat()
+          .filter((uri) => AppMapCollectionFile.validateUri(uri))
+          .map(async (uri) => {
+            const metadata = await AppMapCollectionFile.collectAppMapDescriptor(uri);
+            if (metadata) {
+              this.loaders[uri.fsPath] = new AppMapDescriptorFile(uri, metadata);
+            }
+          })
+      );
+    }
 
     this.setFilter('');
 
