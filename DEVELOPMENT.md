@@ -5,19 +5,19 @@
 Open the project in Visual Studio Code. Make sure node modules are up to date.
 
 ```sh
-$ npm i
+$ yarn
 ```
 
 Build the extension bundles.
 
 ```sh
-$ npm run compile
+$ yarn run compile
 ```
 
 _Alternatively,_ continuously re-compile the extension any time the code changes.
 
 ```sh
-$ npm run watch
+$ yarn run watch
 ```
 
 Launch the extension in debug mode by pressing F5.
@@ -27,7 +27,7 @@ Launch the extension in debug mode by pressing F5.
 To build a `vsix` file, run the `package` script.
 
 ```sh
-$ npm run package
+$ yarn run package
 ```
 
 ## Adding AppMap CLI support for a new language
@@ -45,9 +45,41 @@ $ npm run package
 
 ## Running in development with a local version of `@appland/components`
 
-1. From the `applandinc/appmap-js` directory, `cd` into `packages/components`
-2. Run `yarn link $VSCODE_APPLAND_PATH` where `$VSCODE_APPLAND_PATH` is the path to this project's
-   directory
-3. You may need to install `highlight.js`: `yarn add highlight.js`
-4. `yarn run compile` or `yarn run watch` to compile scripts
-5. Press `F5` from Visual Studio Code to run the development extension
+Where `$APPMAP_JS_PATH` is the path to a clone of
+[`applandinc/appmap-js`](https://github.com/applandinc/appmap-js):
+
+```sh
+$ yarn link --all $APPMAP_JS_PATH
+```
+
+Note that this command will add a `resolutions` property to your `package.json` containing paths
+local to your filesystem. Take care not to commit this change.
+
+## Packaging (interim solution)
+
+The `vscode` packaging appears to be incompatible with yarn v2. You can downgrade to yarn v1 like
+so:
+
+```sh
+$ rm .yarn/releases/yarn-berry.js .yarnrc.yml
+$ yarn run package
+```
+
+## Deleting uninstalled extensions from the filesystem
+
+After uninstallation, VSCode leaves the extensions folders on the filesystem which can cause weird
+problems, especially when re-installing an older version. To completely erase old extensions and
+their code, delete the appland.appmap.* folders in:
+
+- Windows: `%USERPROFILE%\.vscode\extensions`
+- Mac: `~/.vscode/extensions`
+- Linux: `~/.vscode/extensions`
+
+## Resetting saved workspace and global states
+
+The extension uses `vscode.ExtensionContext.workspaceState` and `vscode.ExtensionContext.globalState`
+for storage of the state of user's activities. To erase the saved state, run this command in VSCode:
+`AppMap: Reset Usage State`
+
+This command is implemented in `src/utils.ts` `registerUtilityCommands()`. If you are adding new
+stored states, please update this function to reset the new stored states. 

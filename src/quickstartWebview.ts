@@ -1,15 +1,42 @@
+import { PathLike } from 'fs';
 import path from 'path';
 import * as vscode from 'vscode';
+import AppMapCollectionFile from './appmapCollectionFile';
 import ProjectWatcher from './projectWatcher';
 import { getNonce } from './util';
+
+interface AppMapListItem {
+  path: PathLike;
+  name?: string;
+  requests?: number;
+  sqlQueries?: number;
+  functions?: number;
+}
+
+function listAppMaps(
+  appmaps: AppMapCollectionFile,
+  workspaceFolder: vscode.WorkspaceFolder
+): AppMapListItem[] {
+  return appmaps.allAppMapsForWorkspaceFolder(workspaceFolder).map(({ descriptor }) => ({
+    path: descriptor.resourceUri.fsPath,
+    name: descriptor.metadata?.name as string,
+    requests: descriptor.numRequests,
+    sqlQueries: descriptor.numQueries,
+    functions: descriptor.numFunctions,
+  }));
+}
 
 export default class QuickstartWebview {
   public static readonly viewType = 'appmap.views.quickstart';
   public static readonly command = 'appmap.openQuickstart';
 
+  // Keyed by project root directory
+  private static readonly openWebviews = new Map<string, vscode.WebviewPanel>();
+
   public static register(
     context: vscode.ExtensionContext,
-    projects: readonly ProjectWatcher[]
+    projects: readonly ProjectWatcher[],
+    appmaps: AppMapCollectionFile
   ): void {
     const project = projects[0];
     if (!project) {
@@ -18,10 +45,29 @@ export default class QuickstartWebview {
     }
 
     context.subscriptions.push(
-      vscode.commands.registerCommand(this.command, () => {
+      vscode.commands.registerCommand(this.command, (milestoneIndex?: string) => {
+        // Attempt to re-use an existing webview for this project if one exists
+        const existingPanel: vscode.WebviewPanel = this.openWebviews[
+          project.rootDirectory as string
+        ];
+        if (existingPanel) {
+          existingPanel.reveal(vscode.ViewColumn.One);
+
+          if (milestoneIndex) {
+            existingPanel.webview.postMessage({ type: 'changeMilestone', milestoneIndex });
+          }
+
+          return;
+        }
+
+        let title = 'AppMap: Quickstart';
+        if (projects.length > 1) {
+          title += ` (${project.workspaceFolder.name})`;
+        }
+
         const panel = vscode.window.createWebviewPanel(
           this.viewType,
-          'AppMap: Quickstart',
+          title,
           vscode.ViewColumn.One,
           {
             enableScripts: true,
@@ -29,42 +75,120 @@ export default class QuickstartWebview {
           }
         );
 
+        // Cache this panel so we can reuse it later if the user clicks another quickstart milestone from the tree view
+        this.openWebviews[project.rootDirectory as string] = panel;
+
+        // If the user closes the panel, make sure it's no longer cached
+        panel.onDidDispose(() => {
+          delete this.openWebviews[project.rootDirectory as string];
+        });
+
         panel.webview.html = getWebviewContent(panel.webview, context);
+
+        const eventListener = project.onAppMapCreated(() => {
+          // TODO.
+          // This could be made a lot more efficient by only sending the list item that's new, not the entire snapshot.
+          // This also won't be triggered if AppMaps are deleted (BUG).
+          panel.webview.postMessage({
+            type: 'appmapSnapshot',
+            appmaps: listAppMaps(appmaps, project.workspaceFolder),
+          });
+        });
+
+        panel.onDidDispose(() => {
+          eventListener.dispose();
+        });
 
         panel.webview.onDidReceiveMessage(async (message) => {
           switch (message.command) {
-            case 'ready':
+            case 'preInitialize':
               {
-                // The webview has been created and is ready to receive messages
+                // The webview has been created but may not be ready to receive all messages yet.
                 panel.webview.postMessage({
                   type: 'init',
                   language: project.language,
-                  completedSteps: Object.values(project.milestones)
-                    .map((m, i) => (m.state === 'complete' ? i + 1 : null))
-                    .filter(Boolean),
+                  testFrameworks: project.testFrameworks,
+                  initialStep: milestoneIndex,
+                  appmapYmlSnippet: await project.appmapYml(),
+                  appmaps: listAppMaps(appmaps, project.workspaceFolder),
+                  steps: Object.values(project.milestones).map((m) => ({
+                    state: m.state,
+                    errors: [],
+                  })),
                 });
               }
+              break;
+
+            case 'postInitialize':
+              // Listen for state changes on each milestone
+              Object.values(project.milestones).forEach(({ onChangeState }, index) => {
+                onChangeState(({ id, state }) => {
+                  panel.webview.postMessage({ type: 'milestoneUpdate', id, state, index });
+                });
+              });
+
+              project.milestones.INSTALL_AGENT.onChangeState(async ({ state }) => {
+                if (state === 'complete') {
+                  panel.webview.postMessage({
+                    type: 'agentInfo',
+                    appmapYmlSnippet: await project.appmapYml(),
+                    testFrameworks: project.testFrameworks,
+                  });
+                }
+              });
+
+              panel.webview.postMessage({
+                type: 'milestoneSnapshot',
+                steps: Object.values(project.milestones).map((m) => ({
+                  state: m.state,
+                  errors: [],
+                })),
+              });
               break;
 
             case 'milestoneAction':
               {
                 // The webview is requesting a milestone action be performed
-                const { milestone, language } = message.data;
+                const { milestone, language, data } = message.data;
 
                 try {
                   if (language !== project.language) {
                     project.language = language;
                   }
 
-                  await projects[0].performMilestoneAction(milestone);
+                  await projects[0].performMilestoneAction(milestone, data);
                   panel.webview.postMessage({ type: message.command });
                 } catch (e) {
                   panel.webview.postMessage({
-                    type: message.command,
-                    error: e.message,
+                    type: 'milestoneError',
+                    index: Object.keys(project.milestones).indexOf(milestone),
+                    errors: [
+                      {
+                        code: 'ERROR',
+                        message: e.message,
+                      },
+                    ],
                   });
                 }
               }
+              break;
+
+            case 'openFile':
+              {
+                const { file } = message;
+                let filePath = file;
+
+                if (!path.isAbsolute(file)) {
+                  // If the file is not absolute, it's relative to the workspace folder
+                  filePath = path.join(project.rootDirectory as string, file);
+                }
+
+                vscode.commands.executeCommand('vscode.open', vscode.Uri.file(filePath));
+              }
+              break;
+
+            case 'focus':
+              vscode.commands.executeCommand('appmap.focus');
               break;
 
             default:

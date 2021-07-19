@@ -4,3 +4,12 @@ node_modules
 *.vsix
 *.codekit3
 .DS_Store
+
+# Yarn files
+.yarn/*
+!.yarn/patches
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+.pnp.*

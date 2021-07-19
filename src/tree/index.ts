@@ -33,7 +33,13 @@ export default function registerTrees(
     treeDataProvider: milestoneTreeProvider,
   });
 
-  MilestoneTreeDataProvider.DEMO_HACK(context);
+  MilestoneTreeDataProvider.registerCommands(context);
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand('appmap.focus', () => {
+      localTree.reveal(localAppMaps.appMaps[0], { select: false });
+    })
+  );
 
   return { localTree, usingAppmaps, masteringAppmaps, milestoneTree };
 }

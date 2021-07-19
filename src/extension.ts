@@ -5,7 +5,8 @@ import Telemetry, { Events } from './telemetry';
 import registerTrees from './tree';
 import AppMapCollectionFile from './appmapCollectionFile';
 import RemoteRecording from './remoteRecording';
-import { notEmpty } from './util';
+import { getQuickstartSeen, notEmpty, setQuickstartSeen } from './util';
+import { registerUtilityCommands } from './registerUtilityCommands';
 import ProjectWatcher from './projectWatcher';
 import QuickstartWebview from './quickstartWebview';
 
@@ -20,16 +21,28 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
     localAppMaps.initialize();
 
+    const appmapWatcher = vscode.workspace.createFileSystemWatcher(
+      '**/*.appmap.json',
+      false,
+      true,
+      true
+    );
+    context.subscriptions.push(appmapWatcher);
+
     const projects = (vscode.workspace.workspaceFolders || []).map((workspaceFolder) => {
-      const project = new ProjectWatcher(context, workspaceFolder);
+      const project = new ProjectWatcher(context, workspaceFolder, appmapWatcher);
       return project;
     });
 
-    QuickstartWebview.register(context, projects);
+    QuickstartWebview.register(context, projects, localAppMaps);
 
     await Promise.all(projects.map(async (project) => await project.initialize()));
 
-    const { localTree } = registerTrees(context, localAppMaps, projects);
+    const { localTree, usingAppmaps, masteringAppmaps, milestoneTree } = registerTrees(
+      context,
+      localAppMaps,
+      projects
+    );
 
     context.subscriptions.push(
       vscode.commands.registerCommand('appmap.applyFilter', async () => {
@@ -39,15 +52,15 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         });
 
         localAppMaps.setFilter(filter || '');
-        localTree.reveal(localAppMaps.appmapDescriptors[0], { select: false });
+        localTree.reveal(localAppMaps.appMaps[0], { select: false });
       })
     );
 
     context.subscriptions.push(
       vscode.commands.registerCommand('appmap.findByName', async () => {
         const items = localAppMaps
-          .allDescriptors()
-          .map((d) => d.metadata?.name as string)
+          .allAppMaps()
+          .map((loader) => loader.descriptor.metadata?.name as string)
           .filter(notEmpty)
           .sort();
 
@@ -56,15 +69,28 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
           return;
         }
 
-        const descriptor = localAppMaps.findByName(name);
-        if (!descriptor) {
+        const loader = localAppMaps.findByName(name);
+        if (!loader) {
           return;
         }
 
-        vscode.commands.executeCommand('vscode.open', descriptor.resourceUri);
+        vscode.commands.executeCommand('vscode.open', loader.descriptor.resourceUri);
       })
     );
+
+    registerUtilityCommands(context);
+
+    if (!getQuickstartSeen(context) && projects.length == 1) {
+      // only open the quickstart for the first time and a single-project workspace is open
+      // open the quickstart WebView, step INSTALL_AGENT
+      const installAgentMilestone = projects[0].milestones['INSTALL_AGENT'];
+      vscode.commands.executeCommand('appmap.clickMilestone', installAgentMilestone);
+      // open the quickstart side view
+      milestoneTree.reveal(installAgentMilestone, { focus: false });
+      setQuickstartSeen(context, true);
+    }
   } catch (exception) {
     Telemetry.sendEvent(Events.DEBUG_EXCEPTION, { exception });
+    throw exception;
   }
 }

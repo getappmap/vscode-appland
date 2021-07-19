@@ -4,7 +4,6 @@
   "displayName": "AppMap",
   "description": "Interactive maps and architecture analysis help you write better Ruby, Python and Java code",
   "version": "0.14.4",
-  "releaseKey": "0.14.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/applandinc/vscode-appland"
@@ -12,6 +11,9 @@
   "qna": "https://appland.com/docs/faq.html",
   "engines": {
     "vscode": "^1.55.0"
+  },
+  "agents": {
+    "ruby": ">=0.60.0"
   },
   "activationEvents": [
     "onStartupFinished"
@@ -93,6 +95,14 @@
         "title": "AppMap: Stop the active remote recording",
         "icon": "images/record_stop.svg",
         "when": "appmap.recordingIsRunning"
+      },
+      {
+        "command": "appmap.openQuickstart",
+        "title": "AppMap: Quickstart"
+      },
+      {
+        "command": "appmap.resetUsageState",
+        "title": "AppMap: Reset Usage State"
       }
     ],
     "configuration": {
@@ -117,7 +127,7 @@
     "viewsWelcome": [
       {
         "view": "appmap.views.local",
-        "contents": "No AppMaps found.\n[Learn more](https://appland.com/docs)",
+        "contents": "No AppMaps found.\n[Open Quickstart](command:appmap.openQuickstart)",
         "when": "appmap.initialized && !appmap.hasData"
       },
       {
@@ -247,9 +257,11 @@
     "bootstrap-autocomplete": "^2.3.7",
     "diff": "^5.0.0",
     "glob-to-regexp": "^0.4.1",
+    "highlight.js": "^11.0.1",
     "jquery": "^3.5.1",
     "js-yaml": "^4.0.0",
     "popper.js": "^1.16.1",
+    "semver": "^7.3.5",
     "vscode-extension-telemetry": "^0.1.7",
     "vue": "^2.6.14",
     "vue-template-compiler": "^2.6.14",
