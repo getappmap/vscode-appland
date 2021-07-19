@@ -89,10 +89,10 @@ export default class RemoteRecording {
   }
 
   private async stop(url: string): Promise<boolean> {
-    let isSuccessful = false;
+    let isFinished = false;
     if (!url) {
       // We'll consider this a valid case - no error is thrown.
-      return isSuccessful;
+      return isFinished;
     }
 
     const appmapName = await vscode.window.showInputBox({
@@ -100,7 +100,7 @@ export default class RemoteRecording {
     });
 
     if (!appmapName || appmapName === '') {
-      return isSuccessful;
+      return isFinished;
     }
 
     try {
@@ -111,7 +111,7 @@ export default class RemoteRecording {
 
       if (stopResult.statusCode === 404) {
         vscode.window.showInformationMessage(`No recording was running on ${url}.`);
-        return isSuccessful;
+        return isFinished;
       }
 
       const appmap = stopResult.body;
@@ -136,12 +136,25 @@ export default class RemoteRecording {
       await vscode.commands.executeCommand('vscode.openWith', uri, 'appmap.views.appMapFile');
 
       vscode.window.showInformationMessage(`Recording successfully stopped at ${url}.`);
-      isSuccessful = true;
+      isFinished = true;
     } catch (e) {
       vscode.window.showErrorMessage(`Failed to stop recording: ${e.name}: ${e.message}`);
+
+      const recordingStatus = await this.getStatus(url);
+      if (recordingStatus === false) {
+        isFinished = true;
+      }
     }
 
-    return isSuccessful;
+    return isFinished;
+  }
+
+  private async getStatus(recordingUrl): Promise<boolean | string> {
+    try {
+      return (await RemoteRecordingClient.getStatus(recordingUrl)) ? 'enabled' : 'disabled';
+    } catch (e) {
+      return false;
+    }
   }
 
   private getFolder(): string {
@@ -227,15 +240,22 @@ export default class RemoteRecording {
       return;
     }
 
-    try {
-      const recordingStatus = (await RemoteRecordingClient.getStatus(recordingUrl))
+    const recordingStatus = await this.getStatus(recordingUrl);
+
+    if (recordingStatus === false) {
+      vscode.window.showErrorMessage(
+        `Failed to check recording status: can't connect to ${recordingUrl}`
+      );
+      return;
+    }
+
+    const statusMsg =
+      recordingStatus == 'enabled'
         ? 'has an active recording in progress'
         : 'is ready to begin recording';
-      vscode.window.showInformationMessage(`${recordingUrl} ${recordingStatus}.`);
-      this.addRecentUrl(recordingUrl);
-    } catch (e) {
-      vscode.window.showErrorMessage(`Failed to check recording status: ${e.name}: ${e.message}`);
-    }
+
+    vscode.window.showInformationMessage(`${recordingUrl} ${statusMsg}.`);
+    this.addRecentUrl(recordingUrl);
   }
 
   async getBaseUrl(): Promise<string> {
