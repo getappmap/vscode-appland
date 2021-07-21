@@ -6,7 +6,6 @@ import LanguageResolver from './languageResolver';
 import { createMilestones, MilestoneMap, MilestoneType } from './milestones';
 import Telemetry, { Events } from './telemetry';
 import {
-  flagWorkspaceRecordedAppMap,
   hasWorkspaceFolderOpenedAppMap,
   hasWorkspaceFolderRecordedAppMap,
   unreachable,
@@ -102,6 +101,8 @@ const State = {
     }
     onExit(project: ProjectWatcher) {
       project.milestones.INSTALL_AGENT.setState('complete');
+      project.milestones.RECORD_APPMAP.setState('incomplete');
+      project.milestones.VIEW_APPMAP.setState('incomplete');
     }
     async tick(project: ProjectWatcher, agent: AppMapAgent): Promise<StatusResponse | undefined> {
       const isInstalled = await agent.isInstalled(project.rootDirectory);
@@ -193,6 +194,8 @@ const State = {
         .on('properties.config.valid', (isValid) => {
           if (isValid) {
             project.milestones.CREATE_CONFIGURATION.setState('complete');
+            project.milestones.RECORD_APPMAP.setState('incomplete');
+            project.milestones.VIEW_APPMAP.setState('incomplete');
           } else if (status.properties.config.present) {
             project.milestones.CREATE_CONFIGURATION.setState('error');
           }
