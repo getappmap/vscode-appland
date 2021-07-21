@@ -2,7 +2,7 @@ import { PathLike, promises as fs } from 'fs';
 import { join } from 'path';
 import semver from 'semver';
 import vscode from 'vscode';
-import { execFile, exec, execCommand } from '../util';
+import { execCommand } from '../util';
 import AppMapAgent, {
   FilesResponse,
   StatusResponse,
@@ -21,7 +21,13 @@ export default class AppMapAgentRuby implements AppMapAgent {
 
   async isInstalled(path: PathLike): Promise<boolean> {
     try {
-      const { stdout, exitCode } = await execCommand(path, 'bundle', ['info', 'appmap'], null, 'isInstalled');
+      const { stdout, exitCode } = await execCommand(
+        path,
+        'bundle',
+        ['info', 'appmap'],
+        null,
+        'isInstalled'
+      );
 
       if (exitCode !== 0) {
         return false;
