@@ -3,6 +3,7 @@ import { extname, join } from 'path';
 import AppMapAgent from './agent/appMapAgent';
 import GitProperties from './telemetry/properties/versionControlGit';
 import AppMapAgentRuby from './agent/appMapAgentRuby';
+import AppMapAgentJava from './agent/appMapAgentJava';
 
 const LANGUAGES = [
   {
@@ -176,7 +177,7 @@ const LANGUAGE_EXTENSIONS = LANGUAGES.reduce((memo, lang) => {
 /**
  * Register new AppMap agent CLI interfaces here.
  */
-const LANGUAGE_AGENTS = [new AppMapAgentRuby()].reduce((memo, agent) => {
+const LANGUAGE_AGENTS = [new AppMapAgentRuby(), new AppMapAgentJava()].reduce((memo, agent) => {
   memo[agent.language] = agent;
   return memo;
 }, {});
