@@ -7,6 +7,9 @@ import {
   ExecOptions as ProcessExecOptions,
 } from 'child_process';
 import * as vscode from 'vscode';
+import { resolve } from 'dns';
+
+let terminals: Map<string, vscode.Terminal> = new Map;
 
 export function getNonce(): string {
   let text = '';
@@ -136,6 +139,71 @@ export async function execFile(
     }
 
     output.append('\n');
+  });
+}
+
+/**
+ * Exec a command in terminal
+ */
+ export async function execCommand(
+  path: fs.PathLike,
+  program: string,
+  args?: ReadonlyArray<string> | null,
+  environment?: ReadonlyArray<string> | null,
+  terminalName: string = 'AppMap'
+): Promise<{ exitCode: number; stdout: string; stderr: string }> {
+  const baseDir = path as string + '/tmp/appmap/terminal/' + terminalName + '/' + getNonce() + '/';
+  fs.mkdirSync(baseDir, { recursive: true });
+
+  if (!terminals.has(terminalName)) {
+    terminals.set(terminalName, vscode.window.createTerminal(terminalName));
+    vscode.window.onDidCloseTerminal((term) => {
+      if (term.name === terminalName) {
+        terminals.delete(terminalName);
+      }
+    });
+  }
+
+  ['exitStatus', 'output'].forEach(filename => {
+    const pathname = baseDir + filename;
+    if (fs.existsSync(pathname)) {
+      fs.unlinkSync(pathname);
+    }
+    fs.closeSync(fs.openSync(pathname, 'w'));
+  });
+
+  const cmd = program + ' ' + (environment ? environment.join(' ') : '') + (args ? args.join(' ') : '');
+  const echoStatus = 'echo $? > ' + baseDir + 'exitStatus'
+  
+  const chokidar = require('chokidar');
+  const watcher = chokidar.watch(baseDir + 'output', {
+    awaitWriteFinish: {
+      stabilityThreshold: 500,
+      pollInterval: 100
+    },
+  });
+
+  if (terminalName === 'AppMap') {
+    terminals.get(terminalName).show();
+  }
+  terminals.get(terminalName).sendText(cmd + ' 2>&1 | tee + ' + baseDir + 'output && ' + echoStatus + ' || ' + echoStatus, true);
+
+  return new Promise(function (resolve, reject) {
+    watcher
+      .on('change', (path) => {
+        console.log(`File ${path} has been added`);
+        
+        try {
+          const output = fs.readFileSync(baseDir + 'output').toString(); 
+          const exitCode = parseInt(fs.readFileSync(baseDir + 'exitStatus').toString()); 
+          console.log('exitcode: ' + exitCode);
+          resolve({ exitCode: exitCode, stdout: exitCode === 0 ? output : '', stderr: exitCode !== 0 ? output : ''}); 
+        } catch (e) {
+          reject({ exitCode: 1, stdout: '', stderr: e.message}); 
+        } finally {
+          watcher.close().then(() => console.log('closed'));
+        }
+      });
   });
 }
 

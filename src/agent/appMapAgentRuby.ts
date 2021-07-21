@@ -1,7 +1,8 @@
 import { PathLike, promises as fs } from 'fs';
 import { join } from 'path';
 import semver from 'semver';
-import { chainPromises, execFile, exec } from '../util';
+import vscode from 'vscode';
+import { execFile, exec, execCommand } from '../util';
 import AppMapAgent, {
   FilesResponse,
   StatusResponse,
@@ -16,12 +17,11 @@ export default class AppMapAgentRuby implements AppMapAgent {
   private static readonly REGEX_GEM_DEPENDENCY = /^\s*gem\s+['|"]appmap['|"].*$/m;
   private static readonly REGEX_GEM_VERSION = /appmap\s+\((\d+\.\d+\.\d+)\)/;
   private static readonly GEM_DEPENDENCY = "gem 'appmap', :groups => [:development, :test]";
+  private terminal: vscode.Terminal | null = null;
 
   async isInstalled(path: PathLike): Promise<boolean> {
     try {
-      const { stdout, exitCode } = await execFile('bundle', ['info', 'appmap'], {
-        cwd: path as string,
-      });
+      const { stdout, exitCode } = await execCommand(path, 'bundle', ['info', 'appmap'], null, 'isInstalled');
 
       if (exitCode !== 0) {
         return false;
@@ -68,29 +68,25 @@ export default class AppMapAgentRuby implements AppMapAgent {
     let error;
 
     try {
-      const { exitCode } = await execFile('bundle', ['info', 'appmap'], { cwd: path as string });
+      const { exitCode, stdout, stderr } = await execCommand(path, 'bundle', ['info', 'appmap']);
+
       if (exitCode === 0) {
         // The gem is already present. Make sure it's up to date.
-        const { stderr, exitCode } = await execFile('bundle', ['update', 'appmap'], {
-          cwd: path as string,
-          output: true,
-        });
+        const { stderr, exitCode } = await execCommand(path, 'bundle', ['update', 'appmap']);
 
         if (exitCode !== 0) {
           error = stderr;
         }
       } else {
         // The gem is not present. Install it.
-        const { stderr, exitCode } = await execFile('bundle', ['install'], {
-          cwd: path as string,
-          output: true,
-        });
+        const { stderr, exitCode } = await execCommand(path, 'bundle', ['install']);
 
         if (exitCode !== 0) {
           error = stderr;
         }
       }
     } catch (e) {
+      console.log(e);
       throw new Error(e);
     }
 
@@ -102,9 +98,7 @@ export default class AppMapAgentRuby implements AppMapAgent {
   }
 
   async init(path: PathLike): Promise<InitResponse> {
-    const { stdout, stderr, exitCode } = await execFile('bundle', ['exec', 'appmap-agent-init'], {
-      cwd: path as string,
-    });
+    const { stdout, stderr, exitCode } = await execCommand(path, 'bundle', ['exec', 'appmap-agent-init']);
 
     if (exitCode !== 0) {
       throw new Error(stderr);
@@ -114,16 +108,12 @@ export default class AppMapAgentRuby implements AppMapAgent {
   }
 
   async files(path: PathLike): Promise<FilesResponse> {
-    const { stdout } = await execFile('bundle', ['exec', 'appmap-agent-files'], {
-      cwd: path as string,
-    });
+    const { stdout } = await execCommand(path, 'bundle', ['exec', 'appmap-agent-files']);
     return JSON.parse(stdout);
   }
 
   async status(path: PathLike): Promise<StatusResponse> {
-    const { stdout, stderr, exitCode } = await execFile('bundle', ['exec', 'appmap-agent-status'], {
-      cwd: path as string,
-    });
+    const { stdout, stderr, exitCode } = await execCommand(path, 'bundle', ['exec', 'appmap-agent-status'], null, 'status');
 
     if (exitCode !== 0) {
       throw new Error(stderr);
@@ -134,12 +124,7 @@ export default class AppMapAgentRuby implements AppMapAgent {
 
   async test(path: PathLike, command: Array<string>): Promise<void> {
     return await command.forEach(async (row) => {
-      await exec(row, {
-        cwd: path as string,
-        output: true,
-        userCanTerminate: true,
-        progressMessage: 'Recording tests...',
-      });
+      await execCommand(path, row);
     });
   }
 }

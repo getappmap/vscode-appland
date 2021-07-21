@@ -255,6 +255,7 @@
     "bent": "^7.3.12",
     "bootstrap": "^4.5.3",
     "bootstrap-autocomplete": "^2.3.7",
+    "chokidar": "^3.5.1",
     "diff": "^5.0.0",
     "glob-to-regexp": "^0.4.1",
     "highlight.js": "^11.0.1",
