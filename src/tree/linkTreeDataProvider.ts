@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
-import svgComplete from '../../web/static/media/tree/complete.svg';
 import svgLink from '../../web/static/media/tree/link.svg';
+import svgLinkVisited from '../../web/static/media/tree/link-visited.svg';
 
 interface LinkDefinitions {
   [key: string]: {
@@ -78,7 +78,7 @@ export class LinkTreeDataProvider implements vscode.TreeDataProvider<vscode.Tree
         ],
       } as vscode.Command;
 
-      const iconPath = visitedLinks.includes(id) ? svgComplete : svgLink;
+      const iconPath = visitedLinks.includes(id) ? svgLinkVisited : svgLink;
       treeItem.iconPath = path.join(__dirname, iconPath);
 
       return treeItem;

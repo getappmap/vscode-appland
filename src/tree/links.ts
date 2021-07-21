@@ -1,47 +1,44 @@
 export default {
-  UsingAppMaps: {
-    USING_APPMAPS_HOW_TO_USE_DIAGRAMS: {
+  Documentation: {
+    DOC_QUICKSTART: {
+      label: 'Quickstart',
+      link: 'https://appland.com/docs/quickstart',
+    },
+    DOC_APPMAP_OVERVIEW: {
+      label: 'AppMap overview',
+      link: 'https://appland.com/docs/appmap-overview',
+    },
+    DOC_HOW_TO_USE_DIAGRAMS: {
       label: 'How to use AppMap diagrams',
-      link: 'https://appland.com/docs/how-to-use-appmap-diagrams.html',
+      link: 'https://appland.com/docs/how-to-use-appmap-diagrams',
     },
-    USING_APPMAPS_HOW_TO_READ_SQL_AGENT: {
-      label: 'How to read SQL in AppMaps',
-      link:
-        'https://appland.com/docs/how-to-use-appmap-diagrams.html#how-to-read-sql-code-in-appmaps',
+    DOC_GUIDES: {
+      label: 'Guides',
+      link: 'https://appland.com/docs/guides',
     },
-    USING_REMOTE_RECORDING: {
-      label: 'Remote recording of AppMaps',
-      link: 'https://appland.com/docs/reference/remote-recording.html',
+    DOC_REFERENCE: {
+      label: 'Reference',
+      link: 'https://appland.com/docs/reference',
     },
-    USING_REFINING_APPMAPS: {
-      label: 'Refining AppMaps',
-      link: 'https://appland.com/docs/reference/refine-appmaps.html',
-    },
-    USING_REFERENCE_GUIDES: {
-      label: 'Reference guides',
-      link: 'https://appland.com/docs/reference/',
-    },
-    USING_TROUBLESHOOTING: {
+    DOC_TROUBLESHOOTING: {
       label: 'Troubleshooting',
-      link: 'https://appland.com/docs/troubleshooting.html',
+      link: 'https://appland.com/docs/troubleshooting',
     },
-  },
-  MasteringAppMaps: {
-    MASTERING_APPMAPS_ONBOARDING: {
-      label: 'Learn how unfamiliar code works',
-      link: 'https://appland.com/docs/guides/learn-how-new-to-you-code-works.html',
+    DOC_RECORDING_METHODS: {
+      label: 'Recording methods',
+      link: 'https://appland.com/docs/recording-methods',
     },
-    MASTERING_APPMAP_ADD_TO_CODE_ISSUE: {
-      label: 'Add AppMap to a code issue',
-      link: 'https://appland.com/docs/guides/add-appmaps-to-a-code-issue.html',
+    DOC_INTEGRATIONS: {
+      label: 'Integrations',
+      link: 'https://appland.com/docs/integrations',
     },
-    MASTERING_APPMAPS_DEBUG_CODE: {
-      label: 'Debug code using visual maps',
-      link: 'https://appland.com/docs/guides/debug-code-using-visual-maps.html',
+    DOC_COMMUNITY: {
+      label: 'Community',
+      link: 'https://appland.com/docs/community',
     },
-    MASTERING_APPMAPS_DEV_TO: {
-      label: 'Read AppMap articles on dev.to',
-      link: 'https://dev.to/appland',
+    DOC_FAQ: {
+      label: 'FAQ',
+      link: 'https://appland.com/docs/faq',
     },
   },
 };
