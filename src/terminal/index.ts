@@ -1,4 +1,5 @@
 import * as fs from 'fs';
+import * as path from 'path';
 import vscode from 'vscode';
 import chokidar from 'chokidar';
 import { createTerminal, closeTerminal, findTerminal } from './util';
@@ -16,14 +17,13 @@ export default class Terminal {
   private instance: vscode.Terminal;
   private name: string;
   private cwd: fs.PathLike;
-  private baseDir: fs.PathLike;
+  private baseDir: string;
   private watcher: chokidar.FSWatcher = new chokidar.FSWatcher();
 
   constructor(cwd: fs.PathLike, name: string) {
     this.cwd = cwd;
     this.name = name ?? DEFAULT_TERMINAL_NAME;
-    this.baseDir =
-      (this.cwd as string) + '/tmp/appmap/terminal/' + this.name + '/' + getNonce() + '/';
+    this.baseDir = path.join(this.cwd as string, 'tmp/appmap/terminal', this.name, getNonce());
 
     this.prepareFiles();
 
@@ -49,14 +49,14 @@ export default class Terminal {
     fs.mkdirSync(this.baseDir, { recursive: true });
 
     ['exitStatus', 'output'].forEach((filename) => {
-      const pathname = this.baseDir + filename;
+      const pathname = path.join(this.baseDir, filename);
       if (fs.existsSync(pathname)) {
         fs.unlinkSync(pathname);
       }
       fs.closeSync(fs.openSync(pathname, 'w'));
     });
 
-    this.watcher = chokidar.watch(this.baseDir + 'output', {
+    this.watcher = chokidar.watch(path.join(this.baseDir, 'output'), {
       awaitWriteFinish: {
         stabilityThreshold: 500,
         pollInterval: 100,
@@ -65,20 +65,28 @@ export default class Terminal {
   }
 
   private exec(command: string): Promise<TerminalResult> {
-    const echoStatus = 'echo $? > ' + this.baseDir + 'exitStatus';
+    const echoStatus = 'echo $? > ' + path.join(this.baseDir, 'exitStatus');
     const cmd =
-      command + ' 2>&1 | tee + ' + this.baseDir + 'output && ' + echoStatus + ' || ' + echoStatus;
+      command +
+      ' 2>&1 | tee + ' +
+      path.join(this.baseDir, 'output') +
+      ' && ' +
+      echoStatus +
+      ' || ' +
+      echoStatus;
 
     this.instance.sendText(cmd, true);
     this.instance.show();
 
     return new Promise((resolve, reject) => {
-      this.watcher.on('change', (path) => {
-        console.log(`File ${path} has been added`);
+      this.watcher.on('change', (filePath) => {
+        console.log(`File ${filePath} has been added`);
 
         try {
-          const output = fs.readFileSync(this.baseDir + 'output').toString();
-          const exitCode = parseInt(fs.readFileSync(this.baseDir + 'exitStatus').toString());
+          const output = fs.readFileSync(path.join(this.baseDir, 'output')).toString();
+          const exitCode = parseInt(
+            fs.readFileSync(path.join(this.baseDir, 'exitStatus')).toString()
+          );
           console.log('exitcode: ' + exitCode);
           resolve({
             exitCode: exitCode,
