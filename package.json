@@ -102,7 +102,7 @@
       },
       {
         "command": "appmap.resetUsageState",
-        "title": "AppMap: Reset Usage State"
+        "title": "AppMap: Reset usage state"
       }
     ],
     "configuration": {

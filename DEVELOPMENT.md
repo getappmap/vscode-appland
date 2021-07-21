@@ -79,7 +79,7 @@ their code, delete the appland.appmap.* folders in:
 
 The extension uses `vscode.ExtensionContext.workspaceState` and `vscode.ExtensionContext.globalState`
 for storage of the state of user's activities. To erase the saved state, run this command in VSCode:
-`AppMap: Reset Usage State`
+`AppMap: Reset usage state`
 
 This command is implemented in `src/utils.ts` `registerUtilityCommands()`. If you are adding new
 stored states, please update this function to reset the new stored states. 
