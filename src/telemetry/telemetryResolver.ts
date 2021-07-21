@@ -1,5 +1,4 @@
 import { PathLike } from 'fs';
-import * as vscode from 'vscode';
 import TelemetryDataProvider from './telemetryDataProvider';
 import TelemetryContext from './telemetryContext';
 import LanguageResolver from '../languageResolver';

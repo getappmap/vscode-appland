@@ -38,11 +38,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
     await Promise.all(projects.map(async (project) => await project.initialize()));
 
-    const { localTree, usingAppmaps, masteringAppmaps, milestoneTree } = registerTrees(
-      context,
-      localAppMaps,
-      projects
-    );
+    const { localTree, milestoneTree } = registerTrees(context, localAppMaps, projects);
 
     context.subscriptions.push(
       vscode.commands.registerCommand('appmap.applyFilter', async () => {

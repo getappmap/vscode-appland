@@ -74,7 +74,7 @@ export default class AppMapAgentRuby implements AppMapAgent {
     let error;
 
     try {
-      const { exitCode, stdout, stderr } = await execCommand(path, 'bundle', ['info', 'appmap']);
+      const { exitCode } = await execCommand(path, 'bundle', ['info', 'appmap']);
 
       if (exitCode === 0) {
         // The gem is already present. Make sure it's up to date.
@@ -104,7 +104,10 @@ export default class AppMapAgentRuby implements AppMapAgent {
   }
 
   async init(path: PathLike): Promise<InitResponse> {
-    const { stdout, stderr, exitCode } = await execCommand(path, 'bundle', ['exec', 'appmap-agent-init']);
+    const { stdout, stderr, exitCode } = await execCommand(path, 'bundle', [
+      'exec',
+      'appmap-agent-init',
+    ]);
 
     if (exitCode !== 0) {
       throw new Error(stderr);
@@ -119,7 +122,13 @@ export default class AppMapAgentRuby implements AppMapAgent {
   }
 
   async status(path: PathLike): Promise<StatusResponse> {
-    const { stdout, stderr, exitCode } = await execCommand(path, 'bundle', ['exec', 'appmap-agent-status'], null, 'status');
+    const { stdout, stderr, exitCode } = await execCommand(
+      path,
+      'bundle',
+      ['exec', 'appmap-agent-status'],
+      null,
+      'status'
+    );
 
     if (exitCode !== 0) {
       throw new Error(stderr);

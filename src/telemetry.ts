@@ -1,10 +1,8 @@
 import * as vscode from 'vscode';
 import TelemetryReporter from 'vscode-extension-telemetry';
 import { version, publisher, name } from '../package.json';
-import { getStringRecords } from './util';
-import { PathLike } from 'fs';
 import TelemetryResolver, { EventContext } from './telemetry/telemetryResolver';
-import { Properties, Metrics } from './telemetry/index';
+import { Properties } from './telemetry/index';
 import TelemetryDataProvider from './telemetry/telemetryDataProvider';
 
 const EXTENSION_ID = `${publisher}.${name}`;
