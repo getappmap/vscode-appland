@@ -156,13 +156,8 @@
           "visibility": "visible"
         },
         {
-          "id": "appmap.views.usingAppmaps",
-          "name": "Using AppMaps",
-          "visibility": "collapsed"
-        },
-        {
-          "id": "appmap.views.masteringAppmaps",
-          "name": "Mastering AppMaps",
+          "id": "appmap.views.documentation",
+          "name": "Documentation",
           "visibility": "collapsed"
         }
       ]

@@ -18,14 +18,9 @@ export default function registerTrees(
 
   LinkTreeDataProvider.registerCommands(context);
 
-  const usingAppmapsTreeProvider = new LinkTreeDataProvider(context, Links.UsingAppMaps);
-  const usingAppmaps = vscode.window.createTreeView('appmap.views.usingAppmaps', {
-    treeDataProvider: usingAppmapsTreeProvider,
-  });
-
-  const masteringAppmapsTreeProvider = new LinkTreeDataProvider(context, Links.MasteringAppMaps);
-  const masteringAppmaps = vscode.window.createTreeView('appmap.views.masteringAppmaps', {
-    treeDataProvider: masteringAppmapsTreeProvider,
+  const documentationTreeProvider = new LinkTreeDataProvider(context, Links.Documentation);
+  const documentation = vscode.window.createTreeView('appmap.views.documentation', {
+    treeDataProvider: documentationTreeProvider,
   });
 
   const milestoneTreeProvider = new MilestoneTreeDataProvider(context, projects);
@@ -41,5 +36,5 @@ export default function registerTrees(
     })
   );
 
-  return { localTree, usingAppmaps, masteringAppmaps, milestoneTree };
+  return { localTree, documentation, milestoneTree };
 }
