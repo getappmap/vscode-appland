@@ -1,5 +1,6 @@
 /* eslint-disable */
 const path = require('path');
+const webpack = require('webpack');
 
 module.exports = {
   target: 'node',
@@ -14,6 +15,8 @@ module.exports = {
   externals: {
     vscode: 'commonjs vscode', // the vscode-module is created on-the-fly and must be excluded. Add other modules that cannot be webpack'ed, 📖 -> https://webpack.js.org/configuration/externals/
   },
+  // https://github.com/jsdom/jsdom/issues/3042
+  plugins: [new webpack.IgnorePlugin(/canvas/, /jsdom$/)],
   resolve: {
     extensions: ['.ts', '.js'],
     alias: {},

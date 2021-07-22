@@ -1,4 +1,5 @@
 import { existsSync, PathLike } from 'fs';
+import { promises as fsp } from 'fs';
 import { homedir } from 'os';
 import { join } from 'path';
 import { execFile, exec } from '../util';
@@ -8,6 +9,8 @@ import AppMapAgent, {
   InstallResult,
   InitResponse,
 } from './appMapAgent';
+import { JSDOM } from 'jsdom';
+import xmlSerializer from 'w3c-xmlserializer';
 
 interface BuildFramework {
   isInstalled(): Promise<boolean>;
@@ -56,13 +59,7 @@ class Gradle implements BuildFramework {
   }
 }
 
-interface Installer {
-  available: boolean;
-
-  install(): Promise<InstallResult>;
-}
-
-class MavenInstaller implements Installer {
+abstract class Installer {
   path: string;
 
   constructor(path: string) {
@@ -70,27 +67,127 @@ class MavenInstaller implements Installer {
   }
 
   get available() {
-    return existsSync(join(this.path, 'pom.xml'));
+    return existsSync(this.buildFilePath);
   }
 
-  install(): Promise<InstallResult> {
-    return Promise.resolve('installed');
+  abstract get buildFilePath(): string;
+
+  abstract install(): Promise<InstallResult>;
+}
+
+class MavenInstaller extends Installer {
+  get buildFilePath() {
+    return join(this.path, 'pom.xml');
+  }
+
+  async install(): Promise<InstallResult> {
+    const buildFileSource = (await fsp.readFile(this.buildFilePath)).toString();
+    const jsdom = new JSDOM();
+    const domParser = new jsdom.window.DOMParser();
+    const doc = domParser.parseFromString(buildFileSource, 'text/xml');
+    const ns = doc.getRootNode().childNodes[0].namespaceURI;
+
+    const pluginString = `
+      <plugin xmlns="${ns}">
+          <groupId>com.appland</groupId>
+          <artifactId>appmap-maven-plugin</artifactId>
+          <version>1.1.2</>
+          <executions>
+              <execution>
+                  <phase>process-test-classes</phase>
+                  <goals>
+                      <goal>prepare-agent</goal>
+                  </goals>
+              </execution>
+          </executions>
+      </plugin>
+    `;
+
+    const projectSection = doc.evaluate(
+      '/project',
+      doc,
+      doc.createNSResolver(),
+      9 /* FIRST_ORDERED_NODE_TYPE */
+    ).singleNodeValue;
+    if (!projectSection) {
+      doc.appendChild(doc.createElement('project'));
+    }
+    const buildSection = doc.evaluate('/project/build', doc, doc.createNSResolver(), 9)
+      .singleNodeValue;
+    if (!buildSection) {
+      projectSection?.appendChild(doc.createElement('build'));
+    }
+    const pluginsSection = doc.evaluate('/project/build/plugins', doc, doc.createNSResolver(), 9)
+      .singleNodeValue;
+    if (!pluginsSection) {
+      projectSection?.appendChild(doc.createElement('plugins'));
+    }
+    const appmapPlugin = doc.evaluate(
+      `/project/build/plugins/plugin[groupId/text() = 'com.appland' and artifactId/text() = 'appmap-maven-plugin']`,
+      doc,
+      doc.createNSResolver(),
+      9
+    ).singleNodeValue;
+    if (!appmapPlugin) {
+      const pluginNode = domParser.parseFromString(pluginString, 'application/xml').getRootNode();
+      while (pluginNode.childNodes.length > 0) {
+        const node = pluginNode.childNodes[0];
+        pluginsSection?.appendChild(node);
+      }
+      pluginsSection.appendChild(doc.createTextNode('\n'));
+
+      await fsp.writeFile(this.buildFilePath, xmlSerializer(doc.getRootNode()));
+
+      return 'installed';
+    }
+
+    return 'none';
   }
 }
 
-class GradleInstaller implements Installer {
-  path: string;
-
-  constructor(path: string) {
-    this.path = path;
+class GradleInstaller extends Installer {
+  get buildFilePath() {
+    return join(this.path, 'build.gradle');
   }
 
-  get available() {
-    return existsSync(join(this.path, 'build.gradle'));
-  }
+  async install(): Promise<InstallResult> {
+    const buildFileSource = (await fsp.readFile(this.buildFilePath)).toString();
+    const pluginMatch = buildFileSource.match(/plugins\s*\{\s*([^}]*)\}/);
+    let updatedBuildFileSource;
+    if (pluginMatch) {
+      const pluginMatchIndex = buildFileSource.indexOf(pluginMatch[0]);
+      const plugins = pluginMatch[1]
+        .split('\n')
+        .map((line) => line.trim())
+        .filter((line) => line !== '');
+      const appmapPlugin = plugins.find((line) => line.indexOf('com.appland.appmap') !== -1);
+      if (!appmapPlugin) {
+        plugins.push(`id 'com.appland.appmap' version '1.0.2'`);
+        const pluginSection = `plugins {
+${plugins.map((plugin) => `  ${plugin}`).join('\n')}
+}`;
+        updatedBuildFileSource = [
+          buildFileSource.substring(0, pluginMatchIndex),
+          pluginSection,
+          buildFileSource.substring(
+            pluginMatchIndex + pluginMatch[0].length,
+            buildFileSource.length
+          ),
+        ].join('');
+      }
+    } else {
+      const pluginSection = `plugins {
+  id 'com.appland.appmap'
+}`;
+      updatedBuildFileSource = [buildFileSource, pluginSection].join('\n');
+    }
 
-  install(): Promise<InstallResult> {
-    return Promise.resolve('installed');
+    if (updatedBuildFileSource) {
+      await fsp.writeFile(this.buildFilePath, updatedBuildFileSource);
+      return 'installed';
+    }
+
+    return 'none';
   }
 }
 
@@ -99,14 +196,18 @@ export default class AppMapAgentJava implements AppMapAgent {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async isInstalled(path: PathLike): Promise<boolean> {
+    const buildCommands: Array<BuildFramework> = [];
+    if (process.platform === 'win32') {
+      buildCommands.push(new Gradle(path as string, './gradlew.bat'));
+      buildCommands.push(new Maven(path as string, './mvnw.cmd'));
+    } else {
+      buildCommands.push(new Gradle(path as string, './gradlew'));
+      buildCommands.push(new Maven(path as string, './mvnw'));
+    }
+    buildCommands.push(new Maven(path as string, 'mvn'));
+
     return await Promise.all(
-      [
-        new Gradle(path as string, './gradlew'),
-        new Gradle(path as string, './gradlew.bat'),
-        new Maven(path as string, './mvnw'),
-        new Maven(path as string, './mvnw.cmd'),
-        new Maven(path as string, 'mvn'),
-      ].map((framework) => framework.isInstalled())
+      buildCommands.map((framework) => framework.isInstalled())
     ).then((results) => results.some((r) => r));
   }
 

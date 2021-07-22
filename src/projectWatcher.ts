@@ -6,7 +6,6 @@ import LanguageResolver from './languageResolver';
 import { createMilestones, MilestoneMap, MilestoneType } from './milestones';
 import Telemetry, { Events } from './telemetry';
 import {
-  flagWorkspaceRecordedAppMap,
   hasWorkspaceFolderOpenedAppMap,
   hasWorkspaceFolderRecordedAppMap,
   unreachable,
