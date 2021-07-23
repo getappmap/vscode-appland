@@ -9,6 +9,8 @@ import { getQuickstartSeen, notEmpty, setQuickstartSeen } from './util';
 import { registerUtilityCommands } from './registerUtilityCommands';
 import ProjectWatcher from './projectWatcher';
 import QuickstartWebview from './quickstartWebview';
+import QuickstartDocsInstallAgent from './quickstart-docs/installAgentWebview';
+import QuickstartDocsOpenAppmaps from './quickstart-docs/openAppmapsWebview';
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
   try {
@@ -38,7 +40,10 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
     await Promise.all(projects.map(async (project) => await project.initialize()));
 
-    const { localTree, documentationTree, milestoneTree } = registerTrees(
+    QuickstartDocsInstallAgent.register(context, projects);
+    QuickstartDocsOpenAppmaps.register(context, projects, localAppMaps);
+
+    const { localTree, documentationTree /*, milestoneTree*/ } = registerTrees(
       context,
       localAppMaps,
       projects
@@ -86,7 +91,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
       const installAgentMilestone = projects[0].milestones['INSTALL_AGENT'];
       vscode.commands.executeCommand('appmap.clickMilestone', installAgentMilestone);
       // open the quickstart side view
-      milestoneTree.reveal(installAgentMilestone, { focus: false });
+      // milestoneTree.reveal(installAgentMilestone, { focus: false });
       setQuickstartSeen(context, true);
     }
   } catch (exception) {

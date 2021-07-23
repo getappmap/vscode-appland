@@ -97,10 +97,6 @@
         "when": "appmap.recordingIsRunning"
       },
       {
-        "command": "appmap.openQuickstart",
-        "title": "AppMap: Quickstart"
-      },
-      {
         "command": "appmap.resetUsageState",
         "title": "AppMap: Reset Usage State"
       }
@@ -127,7 +123,7 @@
     "viewsWelcome": [
       {
         "view": "appmap.views.local",
-        "contents": "No AppMaps found.\n[Open Quickstart](command:appmap.openQuickstart)",
+        "contents": "No AppMaps found.\n[Install AppMap agent](command:appmap.openQuickstartDocsInstallAgent)",
         "when": "appmap.initialized && !appmap.hasData"
       },
       {

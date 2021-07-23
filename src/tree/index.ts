@@ -3,7 +3,8 @@ import AppMapCollection from '../appmapCollection';
 import { AppMapTreeDataProvider } from './appmap/AppMapTreeDataProvider';
 import { LinkTreeDataProvider } from './linkTreeDataProvider';
 import Links from './links';
-import { MilestoneTreeDataProvider } from './milestoneTreeDataProvider';
+// import { MilestoneTreeDataProvider } from './milestoneTreeDataProvider';
+import { QuickstartDocsTreeDataProvider } from './quickstartDocsTreeDataProvider';
 import ProjectWatcher from '../projectWatcher';
 
 export default function registerTrees(
@@ -23,12 +24,19 @@ export default function registerTrees(
     treeDataProvider: documentationTreeProvider,
   });
 
+  /*
   const milestoneTreeProvider = new MilestoneTreeDataProvider(context, projects);
   const milestoneTree = vscode.window.createTreeView('appmap.views.milestones', {
     treeDataProvider: milestoneTreeProvider,
   });
 
   MilestoneTreeDataProvider.registerCommands(context);
+  */
+
+  const quickstartDocsTreeProvider = new QuickstartDocsTreeDataProvider();
+  const quickstartDocsTree = vscode.window.createTreeView('appmap.views.milestones', {
+    treeDataProvider: quickstartDocsTreeProvider,
+  });
 
   context.subscriptions.push(
     vscode.commands.registerCommand('appmap.focus', () => {
@@ -36,5 +44,5 @@ export default function registerTrees(
     })
   );
 
-  return { localTree, documentation, milestoneTree };
+  return { localTree, documentation /*, milestoneTree*/ };
 }
