@@ -10,6 +10,18 @@ const supportedLanguages = [
     link: 'https://appland.com/docs/quickstart/vscode/ruby-step-2.html',
     isDetected: false,
   },
+  {
+    id: 'python',
+    name: 'Python',
+    link: 'https://appland.com/docs/quickstart/vscode/python-step-2.html',
+    isDetected: false,
+  },
+  {
+    id: 'java',
+    name: 'Java',
+    link: 'https://appland.com/docs/quickstart/vscode/java-step-2.html',
+    isDetected: false,
+  },
 ];
 
 export default class QuickstartDocsInstallAgent {
