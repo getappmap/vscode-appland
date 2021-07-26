@@ -85,7 +85,9 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
     registerUtilityCommands(context);
 
-    if (!getQuickstartSeen(context) && projects.length == 1) {
+    vscode.commands.executeCommand('appmap.openQuickstartDocsInstallAgent');
+
+    /*if (!getQuickstartSeen(context) && projects.length == 1) {
       // only open the quickstart for the first time and a single-project workspace is open
       // open the quickstart WebView, step INSTALL_AGENT
       const installAgentMilestone = projects[0].milestones['INSTALL_AGENT'];
@@ -93,7 +95,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
       // open the quickstart side view
       // milestoneTree.reveal(installAgentMilestone, { focus: false });
       setQuickstartSeen(context, true);
-    }
+    }*/
   } catch (exception) {
     Telemetry.sendEvent(Events.DEBUG_EXCEPTION, { exception });
     throw exception;
