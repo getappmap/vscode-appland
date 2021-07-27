@@ -5,7 +5,7 @@ import Telemetry, { Events } from './telemetry';
 import registerTrees from './tree';
 import AppMapCollectionFile from './appmapCollectionFile';
 import RemoteRecording from './remoteRecording';
-import { getQuickstartSeen, notEmpty, setQuickstartSeen } from './util';
+import { getQuickstartDocsSeen, notEmpty, setQuickstartDocsSeen } from './util';
 import { registerUtilityCommands } from './registerUtilityCommands';
 import ProjectWatcher from './projectWatcher';
 import QuickstartWebview from './quickstartWebview';
@@ -85,7 +85,10 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
     registerUtilityCommands(context);
 
-    vscode.commands.executeCommand('appmap.openQuickstartDocsInstallAgent');
+    if (!getQuickstartDocsSeen(context) && projects.length == 1) {
+      vscode.commands.executeCommand('appmap.openQuickstartDocsInstallAgent');
+      setQuickstartDocsSeen(context, true);
+    }
 
     /*if (!getQuickstartSeen(context) && projects.length == 1) {
       // only open the quickstart for the first time and a single-project workspace is open

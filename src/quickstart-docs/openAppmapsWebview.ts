@@ -117,6 +117,8 @@ export default class QuickstartWebview {
               break;
           }
         });
+
+        vscode.commands.executeCommand('appmap.focusQuickstartDocs', 1);
       })
     );
   }

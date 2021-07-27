@@ -242,3 +242,14 @@ export function getQuickstartSeen(context: vscode.ExtensionContext): boolean {
 export function setQuickstartSeen(context: vscode.ExtensionContext, seen: boolean): void {
   context.globalState.update(QUICKSTART_SEEN, seen);
 }
+
+export const QUICKSTART_DOCS_SEEN = 'QUICKSTART_DOCS_SEEN';
+
+export function getQuickstartDocsSeen(context: vscode.ExtensionContext): boolean {
+  const seen = context.globalState.get(QUICKSTART_DOCS_SEEN) == true;
+  return seen;
+}
+
+export function setQuickstartDocsSeen(context: vscode.ExtensionContext, seen: boolean): void {
+  context.globalState.update(QUICKSTART_DOCS_SEEN, seen);
+}
