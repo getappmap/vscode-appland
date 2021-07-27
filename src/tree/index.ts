@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import AppMapCollection from '../appmapCollection';
+import AppMapCollectionFile from '../appmapCollectionFile';
 import { AppMapTreeDataProvider } from './appmap/AppMapTreeDataProvider';
 import { LinkTreeDataProvider } from './linkTreeDataProvider';
 import Links from './links';
@@ -9,7 +9,7 @@ import ProjectWatcher from '../projectWatcher';
 
 export default function registerTrees(
   context: vscode.ExtensionContext,
-  localAppMaps: AppMapCollection,
+  localAppMaps: AppMapCollectionFile,
   projects: readonly ProjectWatcher[]
 ): Record<string, vscode.TreeView<vscode.TreeItem>> {
   const localTreeProvider = new AppMapTreeDataProvider(localAppMaps);
@@ -37,6 +37,16 @@ export default function registerTrees(
   const quickstartDocsTree = vscode.window.createTreeView('appmap.views.milestones', {
     treeDataProvider: quickstartDocsTreeProvider,
   });
+
+  if (localAppMaps.allAppMaps().length) {
+    let showQuickstartAppmaps = true;
+    quickstartDocsTree.onDidChangeVisibility(() => {
+      if (showQuickstartAppmaps) {
+        vscode.commands.executeCommand('appmap.openQuickstartDocsOpenAppmaps');
+        showQuickstartAppmaps = false;
+      }
+    });
+  }
 
   context.subscriptions.push(
     vscode.commands.registerCommand('appmap.focus', () => {
