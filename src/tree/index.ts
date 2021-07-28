@@ -6,6 +6,13 @@ import Links from './links';
 // import { MilestoneTreeDataProvider } from './milestoneTreeDataProvider';
 import { QuickstartDocsTreeDataProvider } from './quickstartDocsTreeDataProvider';
 import ProjectWatcher from '../projectWatcher';
+function showQuickstartAppmaps(localAppMaps: AppMapCollectionFile) {
+  if (localAppMaps.allAppMaps().length && !showQuickstartAppmaps.showed) {
+    vscode.commands.executeCommand('appmap.openQuickstartDocsOpenAppmaps');
+    showQuickstartAppmaps.showed = true;
+  }
+}
+showQuickstartAppmaps.showed = false;
 
 export default function registerTrees(
   context: vscode.ExtensionContext,
@@ -38,15 +45,13 @@ export default function registerTrees(
     treeDataProvider: quickstartDocsTreeProvider,
   });
 
-  if (localAppMaps.allAppMaps().length) {
-    let showQuickstartAppmaps = true;
-    quickstartDocsTree.onDidChangeVisibility(() => {
-      if (showQuickstartAppmaps) {
-        vscode.commands.executeCommand('appmap.openQuickstartDocsOpenAppmaps');
-        showQuickstartAppmaps = false;
-      }
-    });
-  }
+  quickstartDocsTree.onDidChangeVisibility(() => {
+    showQuickstartAppmaps(localAppMaps);
+  });
+
+  localAppMaps.onUpdated(() => {
+    showQuickstartAppmaps(localAppMaps);
+  });
 
   context.subscriptions.push(
     vscode.commands.registerCommand('appmap.focus', () => {
