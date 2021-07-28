@@ -25,7 +25,6 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
   private static readonly viewType = 'appmap.views.appMapFile';
   private static readonly INSTRUCTIONS_VIEWED = 'APPMAP_INSTRUCTIONS_VIEWED';
   private static readonly RELEASE_KEY = 'APPMAP_RELEASE_KEY';
-  private static readonly TELEMETRY_INSTALL = 'APPMAP_TELEMETRY_INSTALL';
   public static readonly APPMAP_OPENED = 'APPMAP_OPENED';
 
   constructor(private readonly context: vscode.ExtensionContext) {}
@@ -67,11 +66,6 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
         });
       }
     };
-
-    if (!this.context.globalState.get(ScenarioProvider.TELEMETRY_INSTALL)) {
-      Telemetry.reportAction('install', undefined);
-      this.context.globalState.update(ScenarioProvider.TELEMETRY_INSTALL, true);
-    }
 
     // Handle messages from the webview.
     // Note: this has to be set before setting the HTML to avoid a race.

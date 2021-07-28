@@ -12,6 +12,8 @@ import QuickstartWebview from './quickstartWebview';
 import QuickstartDocsInstallAgent from './quickstart-docs/installAgentWebview';
 import QuickstartDocsOpenAppmaps from './quickstart-docs/openAppmapsWebview';
 
+const storeInstallTimestampKey = 'APPMAP_INSTALL_TIMESTAMP';
+
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
   try {
     const localAppMaps = new AppMapCollectionFile();
@@ -22,6 +24,19 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     RemoteRecording.register(context);
 
     localAppMaps.initialize();
+
+    // Obtain the timestamp of extension installation. If it is not set, this means either:
+    // - the extension was installed before we began to track the installation time, or
+    // - this is a new installation, and the timestamp should be set to the current time.
+    const timestamp: string | undefined = context.globalState.get(storeInstallTimestampKey);
+    let installDate;
+    if (timestamp) {
+      installDate = new Date(parseInt(timestamp, 10));
+    } else if (vscode.env.isNewAppInstall) {
+      installDate = new Date();
+      Telemetry.reportAction('plugin:install', undefined);
+      context.globalState.update(storeInstallTimestampKey, installDate.valueOf());
+    }
 
     const appmapWatcher = vscode.workspace.createFileSystemWatcher(
       '**/*.appmap.json',
