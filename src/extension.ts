@@ -29,7 +29,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     // - the extension was installed before we began to track the installation time, or
     // - this is a new installation, and the timestamp should be set to the current time.
     const timestamp: string | undefined = context.globalState.get(storeInstallTimestampKey);
-    let installDate;
+    let installDate: Date | undefined;
     if (timestamp) {
       installDate = new Date(parseInt(timestamp, 10));
     } else if (vscode.env.isNewAppInstall) {
@@ -100,9 +100,15 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
     registerUtilityCommands(context);
 
-    if (!getQuickstartDocsSeen(context) && projects.length == 1) {
-      vscode.commands.executeCommand('appmap.openQuickstartDocsInstallAgent');
-      setQuickstartDocsSeen(context, true);
+    if (installDate) {
+      // Logic within this block will only be executed if the extension was installed after we began tracking the
+      // time of installation. We will use this to determine whether or not our UX improvements are effective, without
+      // before rolling them out to our existing user base.
+
+      if (!getQuickstartDocsSeen(context) && projects.length == 1) {
+        vscode.commands.executeCommand('appmap.openQuickstartDocsInstallAgent');
+        setQuickstartDocsSeen(context, true);
+      }
     }
 
     /*if (!getQuickstartSeen(context) && projects.length == 1) {
