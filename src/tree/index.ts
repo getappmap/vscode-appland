@@ -56,7 +56,9 @@ export default function registerTrees(
 
   context.subscriptions.push(
     vscode.commands.registerCommand('appmap.focusQuickstartDocs', (index = 0) => {
-      quickstartDocsTree.reveal(quickstartDocsTreeProvider.items[index]);
+      setTimeout(() => {
+        quickstartDocsTree.reveal(quickstartDocsTreeProvider.items[index]);
+      }, 0);
     })
   );
 
