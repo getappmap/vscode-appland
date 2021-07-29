@@ -15,3 +15,11 @@ vsc-extension-quickstart.md
 **/*.map
 **/.eslintrc.js
 **/*.config.js
+out/src
+out/test
+.yarn
+.yarnrc.yml
+DEVELOPMENT.md
+doc
+images/record*.svg
+types
