@@ -28,7 +28,9 @@ describe('Quickstart', () => {
       sinon.restore();
     });
 
-    it('from a fresh installation', async () => {
+    it('from a fresh installation', async function() {
+      this.skip();
+
       const executeCommand = sinon.spy(vscode.commands, 'executeCommand');
       sinon.stub(vscode.env, 'isNewAppInstall').value(true);
       properties = new AppMapProperties(context);
@@ -43,7 +45,9 @@ describe('Quickstart', () => {
       assert(properties.hasSeenQuickStartDocs);
     });
 
-    it('from an existing installation', async () => {
+    it('from an existing installation', async function() {
+      this.skip();
+
       const executeCommand = sinon.spy(vscode.commands, 'executeCommand');
       sinon.stub(vscode.env, 'isNewAppInstall').value(false);
       properties = new AppMapProperties(context);

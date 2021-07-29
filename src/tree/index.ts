@@ -7,6 +7,9 @@ import Links from './links';
 import { QuickstartDocsTreeDataProvider } from './quickstartDocsTreeDataProvider';
 import ProjectWatcher from '../projectWatcher';
 function showQuickstartAppmaps(localAppMaps: AppMapCollectionFile) {
+  // Disabled for now.
+  return;
+
   if (localAppMaps.allAppMaps().length && !showQuickstartAppmaps.showed) {
     vscode.commands.executeCommand('appmap.openQuickstartDocsOpenAppmaps');
     showQuickstartAppmaps.showed = true;

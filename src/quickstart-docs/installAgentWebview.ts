@@ -100,6 +100,8 @@ export default class QuickstartDocsInstallAgent {
       })
     );
 
+    // Disabled for now.
+    /*
     if (properties.installTime) {
       // Logic within this block will only be executed if the extension was installed after we began tracking the
       // time of installation. We will use this to determine whether or not our UX improvements are effective, without
@@ -109,6 +111,7 @@ export default class QuickstartDocsInstallAgent {
         await vscode.commands.executeCommand('appmap.openQuickstartDocsInstallAgent');
       }
     }
+    */
   }
 }
 
