@@ -108,7 +108,7 @@ export default class Telemetry {
     this.reporter.sendTelemetryEvent(event.eventName, properties, metrics);
   }
 
-  static reportAction(action: string, data: Record<string, string> | undefined): void {
+  static reportAction(action: string, data?: Record<string, string>): void {
     this.reporter.sendTelemetryEvent(action, data);
   }
 
