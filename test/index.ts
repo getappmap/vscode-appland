@@ -1,13 +1,16 @@
 import * as path from 'path';
+import * as temp from 'temp';
 import glob from 'glob';
 import Mocha from 'mocha';
 
 function run(): Promise<void> {
   // Create the mocha test
   const mocha = new Mocha({
-    ui: 'tdd',
+    ui: 'bdd',
     color: true,
   });
+
+  temp.track();
 
   return new Promise((resolve, reject) => {
     glob('**/**.test.js', { cwd: __dirname }, (err, files) => {
