@@ -184,42 +184,6 @@ export function workspaceFolderForDocument(
   return bestMatch;
 }
 
-const WORKSPACE_OPENED_APPMAP_KEY = 'appmap.applandinc.workspaces_opened_appmap';
-export function hasWorkspaceFolderOpenedAppMap(
-  context: vscode.ExtensionContext,
-  workspaceFolder: vscode.WorkspaceFolder
-): boolean {
-  const appmapsOpen = new Set<string>(context.globalState.get(WORKSPACE_OPENED_APPMAP_KEY) || []);
-  return appmapsOpen.has(workspaceFolder.uri.fsPath);
-}
-
-export function flagWorkspaceOpenedAppMap(
-  context: vscode.ExtensionContext,
-  workspaceFolder: vscode.WorkspaceFolder
-): void {
-  const appmapsOpen = new Set<string>(context.globalState.get(WORKSPACE_OPENED_APPMAP_KEY) || []);
-  appmapsOpen.add(workspaceFolder.uri.fsPath);
-  context.globalState.update(WORKSPACE_OPENED_APPMAP_KEY, [...appmapsOpen]);
-}
-
-const WORKSPACE_RECORDED_APPMAP_KEY = 'appmap.applandinc.workspace_recorded_appmap';
-export function hasWorkspaceFolderRecordedAppMap(
-  context: vscode.ExtensionContext,
-  workspaceFolder: vscode.WorkspaceFolder
-): boolean {
-  const appmapsOpen = new Set<string>(context.globalState.get(WORKSPACE_RECORDED_APPMAP_KEY) || []);
-  return appmapsOpen.has(workspaceFolder.uri.fsPath);
-}
-
-export function flagWorkspaceRecordedAppMap(
-  context: vscode.ExtensionContext,
-  workspaceFolder: vscode.WorkspaceFolder
-): void {
-  const appmapsOpen = new Set<string>(context.globalState.get(WORKSPACE_RECORDED_APPMAP_KEY) || []);
-  appmapsOpen.add(workspaceFolder.uri.fsPath);
-  context.globalState.update(WORKSPACE_RECORDED_APPMAP_KEY, [...appmapsOpen]);
-}
-
 // Resolve promises serially, one at a time.
 export async function chainPromises(
   onResolve: (unknown) => void,
@@ -230,26 +194,4 @@ export async function chainPromises(
     onResolve(await promise);
     return chainPromises(onResolve, ...promises);
   }
-}
-
-export const QUICKSTART_SEEN = 'QUICKSTART_SEEN';
-
-export function getQuickstartSeen(context: vscode.ExtensionContext): boolean {
-  const seen = context.globalState.get(QUICKSTART_SEEN) == true;
-  return seen;
-}
-
-export function setQuickstartSeen(context: vscode.ExtensionContext, seen: boolean): void {
-  context.globalState.update(QUICKSTART_SEEN, seen);
-}
-
-export const QUICKSTART_DOCS_SEEN = 'QUICKSTART_DOCS_SEEN';
-
-export function getQuickstartDocsSeen(context: vscode.ExtensionContext): boolean {
-  const seen = context.globalState.get(QUICKSTART_DOCS_SEEN) == true;
-  return seen;
-}
-
-export function setQuickstartDocsSeen(context: vscode.ExtensionContext, seen: boolean): void {
-  context.globalState.update(QUICKSTART_DOCS_SEEN, seen);
 }

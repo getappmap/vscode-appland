@@ -1,5 +1,6 @@
 import * as path from 'path';
 import * as vscode from 'vscode';
+import AppMapProperties from '../appmapProperties';
 import ProjectWatcher from '../projectWatcher';
 import { getNonce } from '../util';
 
@@ -31,10 +32,11 @@ export default class QuickstartDocsInstallAgent {
   // Keyed by project root directory
   private static readonly openWebviews = new Map<string, vscode.WebviewPanel>();
 
-  public static register(
+  public static async register(
     context: vscode.ExtensionContext,
+    properties: AppMapProperties,
     projects: readonly ProjectWatcher[]
-  ): void {
+  ): Promise<void> {
     const project = projects[0];
     if (!project) {
       // No project, so no quickstart
@@ -94,8 +96,19 @@ export default class QuickstartDocsInstallAgent {
         });
 
         vscode.commands.executeCommand('appmap.focusQuickstartDocs', 0);
+        properties.hasSeenQuickStartDocs = true;
       })
     );
+
+    if (properties.installTime) {
+      // Logic within this block will only be executed if the extension was installed after we began tracking the
+      // time of installation. We will use this to determine whether or not our UX improvements are effective, without
+      // before rolling them out to our existing user base.
+
+      if (!properties.hasSeenQuickStartDocs && projects.length == 1) {
+        await vscode.commands.executeCommand('appmap.openQuickstartDocsInstallAgent');
+      }
+    }
   }
 }
 

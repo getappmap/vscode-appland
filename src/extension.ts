@@ -5,38 +5,30 @@ import Telemetry, { Events } from './telemetry';
 import registerTrees from './tree';
 import AppMapCollectionFile from './appmapCollectionFile';
 import RemoteRecording from './remoteRecording';
-import { getQuickstartDocsSeen, notEmpty, setQuickstartDocsSeen } from './util';
+import { notEmpty } from './util';
 import { registerUtilityCommands } from './registerUtilityCommands';
 import ProjectWatcher from './projectWatcher';
 import QuickstartWebview from './quickstartWebview';
 import QuickstartDocsInstallAgent from './quickstart-docs/installAgentWebview';
 import QuickstartDocsOpenAppmaps from './quickstart-docs/openAppmapsWebview';
-
-const storeInstallTimestampKey = 'APPMAP_INSTALL_TIMESTAMP';
+import AppMapProperties from './appmapProperties';
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
   try {
     const localAppMaps = new AppMapCollectionFile();
 
     Telemetry.register(context);
-    ScenarioProvider.register(context);
+
+    const properties = new AppMapProperties(context);
+    if (properties.isNewInstall) {
+      Telemetry.reportAction('plugin:install');
+    }
+
+    ScenarioProvider.register(context, properties);
     DatabaseUpdater.register(context);
     RemoteRecording.register(context);
 
     localAppMaps.initialize();
-
-    // Obtain the timestamp of extension installation. If it is not set, this means either:
-    // - the extension was installed before we began to track the installation time, or
-    // - this is a new installation, and the timestamp should be set to the current time.
-    const timestamp: string | undefined = context.globalState.get(storeInstallTimestampKey);
-    let installDate: Date | undefined;
-    if (timestamp) {
-      installDate = new Date(parseInt(timestamp, 10));
-    } else if (vscode.env.isNewAppInstall) {
-      installDate = new Date();
-      Telemetry.reportAction('plugin:install', undefined);
-      context.globalState.update(storeInstallTimestampKey, installDate.valueOf());
-    }
 
     const appmapWatcher = vscode.workspace.createFileSystemWatcher(
       '**/*.appmap.json',
@@ -47,7 +39,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     context.subscriptions.push(appmapWatcher);
 
     const projects = (vscode.workspace.workspaceFolders || []).map((workspaceFolder) => {
-      const project = new ProjectWatcher(context, workspaceFolder, appmapWatcher);
+      const project = new ProjectWatcher(context, workspaceFolder, appmapWatcher, properties);
       return project;
     });
 
@@ -55,14 +47,10 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
     await Promise.all(projects.map(async (project) => await project.initialize()));
 
-    QuickstartDocsInstallAgent.register(context, projects);
+    QuickstartDocsInstallAgent.register(context, properties, projects);
     QuickstartDocsOpenAppmaps.register(context, projects, localAppMaps);
 
-    const { localTree, documentationTree /*, milestoneTree*/ } = registerTrees(
-      context,
-      localAppMaps,
-      projects
-    );
+    const { localTree } = registerTrees(context, localAppMaps, projects);
 
     context.subscriptions.push(
       vscode.commands.registerCommand('appmap.applyFilter', async () => {
@@ -98,28 +86,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
       })
     );
 
-    registerUtilityCommands(context);
-
-    if (installDate) {
-      // Logic within this block will only be executed if the extension was installed after we began tracking the
-      // time of installation. We will use this to determine whether or not our UX improvements are effective, without
-      // before rolling them out to our existing user base.
-
-      if (!getQuickstartDocsSeen(context) && projects.length == 1) {
-        vscode.commands.executeCommand('appmap.openQuickstartDocsInstallAgent');
-        setQuickstartDocsSeen(context, true);
-      }
-    }
-
-    /*if (!getQuickstartSeen(context) && projects.length == 1) {
-      // only open the quickstart for the first time and a single-project workspace is open
-      // open the quickstart WebView, step INSTALL_AGENT
-      const installAgentMilestone = projects[0].milestones['INSTALL_AGENT'];
-      vscode.commands.executeCommand('appmap.clickMilestone', installAgentMilestone);
-      // open the quickstart side view
-      // milestoneTree.reveal(installAgentMilestone, { focus: false });
-      setQuickstartSeen(context, true);
-    }*/
+    registerUtilityCommands(context, properties);
   } catch (exception) {
     Telemetry.sendEvent(Events.DEBUG_EXCEPTION, { exception });
     throw exception;
