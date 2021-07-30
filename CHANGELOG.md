@@ -1,3 +1,27 @@
+# [0.15.0](https://github.com/applandinc/vscode-appland/compare/v0.14.4...v0.15.0) (2021-07-30)
+
+
+### Bug Fixes
+
+* add possible folders with appmaps to file watcher ([a003af6](https://github.com/applandinc/vscode-appland/commit/a003af6e1e8dec196faf1f90ea56bbcbca694df5))
+* check recording status when trying to stop not running session ([7163177](https://github.com/applandinc/vscode-appland/commit/7163177041affa2bffb4f9bfb2763dbdd3900f87))
+* ensure config contents is available on step 2 for fresh installations ([0743a4a](https://github.com/applandinc/vscode-appland/commit/0743a4a9d2b5fc8ef67c1537ff2d13a2695a056e))
+* finish extension initialization when no workspace is open ([e4bd612](https://github.com/applandinc/vscode-appland/commit/e4bd612f1f445ca12a1d80a52c3b7757ee5c084f))
+* Only return supported languages when identifying project language ([875856c](https://github.com/applandinc/vscode-appland/commit/875856cee17c9649b465b6c54eb17733a1f85429))
+* prevent silent errors when CLI commands are failed ([fb37b8f](https://github.com/applandinc/vscode-appland/commit/fb37b8f5aabe2a938b9c087ba091a33b01aebd25))
+* read project.testFrameworks after the `status` information is available ([213cffe](https://github.com/applandinc/vscode-appland/commit/213cffe6831371ddeed6655661494dca1d99fb58))
+* real links to docs ([17c2fd3](https://github.com/applandinc/vscode-appland/commit/17c2fd36628bfdf7c8849019ae078a3b04f3e15b))
+* set steps 3 and 4 incomplete when steps 1 or 2 are completed ([efec142](https://github.com/applandinc/vscode-appland/commit/efec142e531358dea1e3982ebf5f40622732211c))
+* show update notification only when extension was updated ([b8217c4](https://github.com/applandinc/vscode-appland/commit/b8217c4c45b808dc070e961be80c839db008b8ed))
+
+
+### Features
+
+* add 'Using AppMaps' and 'Mastering AppMaps' sidebar lists ([#253](https://github.com/applandinc/vscode-appland/issues/253)) ([30097fa](https://github.com/applandinc/vscode-appland/commit/30097faf2ba2d106b0278a68c64b8ef5a55cec7f))
+* Add Quickstart documentation pages ([#297](https://github.com/applandinc/vscode-appland/issues/297)) ([444dadb](https://github.com/applandinc/vscode-appland/commit/444dadbb8d4d7d65fa324cfb8389da88aa1cf57b))
+* Reset saved usage state ([9885b57](https://github.com/applandinc/vscode-appland/commit/9885b5739ae863d1d66fe7f5223063ebb8529634))
+* show 'Open Quickstart' button when no appmaps found ([3620dcb](https://github.com/applandinc/vscode-appland/commit/3620dcb17e820662062ea0574ec33e3c7cbc28d1))
+
 ## [0.14.4](https://github.com/applandinc/vscode-appland/compare/v0.14.3...v0.14.4) (2021-06-23)
 
 
