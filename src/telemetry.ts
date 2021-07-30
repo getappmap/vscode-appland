@@ -18,10 +18,11 @@ const INSTRUMENTATION_KEY = ['NTBjMWE1YzI', 'NDliNA', 'NDkxMw', 'YjdjYw', 'ODZhN
   .map((x) => Buffer.from(x, 'base64').toString('utf8'))
   .join('-');
 
-interface Event {
+export interface Event {
   readonly eventName: string;
   properties?: Array<TelemetryDataProvider<string>>;
   metrics?: Array<TelemetryDataProvider<number>>;
+  staticMetrics?: Record<string, number>;
 }
 
 /**
@@ -58,6 +59,9 @@ export const Events: { [key: string]: Event } = {
   MILESTONE_CHANGE_STATE: {
     eventName: 'milestone:change_state',
     properties: [Properties.Milestones.ID, Properties.Milestones.STATE],
+  },
+  APPMAP_OPEN: {
+    eventName: 'appmap:open',
   },
 };
 
@@ -98,7 +102,7 @@ export default class Telemetry {
         {
           event: `${EXTENSION_ID}/${event.eventName}`,
           properties,
-          metrics,
+          metrics: { ...metrics, ...event.staticMetrics },
         },
         null,
         2
