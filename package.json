@@ -184,15 +184,15 @@
     }
   },
   "scripts": {
-    "vscode:prepublish": "npm run compile",
+    "vscode:prepublish": "yarn run compile",
     "lint": "eslint . --ext .ts",
-    "pretest": "npm run lint && tsc",
+    "pretest": "yarn run lint && tsc",
     "test:extension": "node ./out/test/runTest.js",
     "test:web-client": "mocha web/test/*.test.mjs",
     "test": "yarn run test:extension && yarn run test:web-client",
     "compile": "webpack --mode=production",
     "watch": "webpack --watch --mode=development",
-    "package": "vsce package",
+    "package": "vsce package --no-yarn",
     "semantic-release": "semantic-release"
   },
   "devDependencies": {
@@ -243,9 +243,9 @@
     "webpack-cli": "^4.3.1"
   },
   "dependencies": {
-    "@appland/components": "^1.2.1",
-    "@appland/diagrams": "^1.2.1",
-    "@appland/models": "^1.2.0",
+    "@appland/components": "^1.6.1",
+    "@appland/diagrams": "^1.2.3",
+    "@appland/models": "^1.3.1",
     "bent": "^7.3.12",
     "bootstrap": "^4.5.3",
     "bootstrap-autocomplete": "^2.3.7",
