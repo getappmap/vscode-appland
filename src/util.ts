@@ -1,4 +1,5 @@
 import * as fs from 'fs';
+import * as path from 'path';
 import {
   ChildProcess,
   exec as processExec,
@@ -194,4 +195,34 @@ export async function chainPromises(
     onResolve(await promise);
     return chainPromises(onResolve, ...promises);
   }
+}
+
+/** Iterate over extension directories to find another AppMap extension. Presence of another installation would
+ * indicate that this is not a new user.
+ */
+export function hasPreviouslyInstalledExtension(extensionPath: string): boolean {
+  const extensionDirectories = [
+    ...new Set(
+      vscode.extensions.all.map((extension) => path.dirname(extension.extensionUri.fsPath))
+    ),
+  ];
+
+  const extensionName = path.basename(extensionPath);
+  for (let i = 0; i < extensionDirectories.length; i++) {
+    const dir = extensionDirectories[i];
+    const ents = fs.readdirSync(dir, { withFileTypes: true });
+
+    for (let k = 0; k < ents.length; ++k) {
+      const ent = ents[k];
+      if (
+        ent.isDirectory() &&
+        ent.name.startsWith('appland.appmap') &&
+        ent.name !== extensionName
+      ) {
+        return true;
+      }
+    }
+  }
+
+  return false;
 }

@@ -1,5 +1,6 @@
 import * as path from 'path';
 import * as vscode from 'vscode';
+import * as semver from 'semver';
 import AppMapProperties from '../appmapProperties';
 import ProjectWatcher from '../projectWatcher';
 import { getNonce } from '../util';
@@ -100,7 +101,10 @@ export default class QuickstartDocsInstallAgent {
       })
     );
 
-    if (properties.installTime) {
+    if (
+      semver.valid(properties.firstVersionInstalled) &&
+      semver.gte(properties.firstVersionInstalled, '0.15.0')
+    ) {
       // Logic within this block will only be executed if the extension was installed after we began tracking the
       // time of installation. We will use this to determine whether or not our UX improvements are effective, without
       // before rolling them out to our existing user base.

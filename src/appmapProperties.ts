@@ -1,20 +1,21 @@
 import * as vscode from 'vscode';
+import { hasPreviouslyInstalledExtension } from './util';
 
 export const Keys = {
   Global: {
     QUICKSTART_SEEN: 'appmap.applandinc.quickstartSeen',
     QUICKSTART_DOCS_SEEN: 'appmap.applandinc.quickstartDocsSeen',
     INSTALL_TIMESTAMP: 'appmap.applandinc.installTimestamp',
+    INSTALL_VERSION: 'appmap.applandinc.installVersion',
   },
   Workspace: {
     RECORDED_APPMAP: 'appmap.applandinc.recordedAppMap',
     OPENED_APPMAP: 'appmap.applandinc.workspaces_opened_appmap',
   },
 };
-
 export default class AppMapProperties {
   private readonly context: vscode.ExtensionContext;
-  private readonly _installTime?: Date;
+  private readonly _installTime: Date;
   private _isNewInstall = false;
 
   constructor(context: vscode.ExtensionContext) {
@@ -26,9 +27,17 @@ export default class AppMapProperties {
 
     if (timestamp) {
       this._installTime = new Date(parseInt(timestamp, 10));
-    } else if (vscode.env.isNewAppInstall) {
+    } else {
       this._installTime = new Date();
-      this._isNewInstall = true;
+      this._isNewInstall = !hasPreviouslyInstalledExtension(context.extensionPath);
+
+      if (this._isNewInstall) {
+        this.context.globalState.update(
+          Keys.Global.INSTALL_VERSION,
+          this.context.extension.packageJSON.version
+        );
+      }
+
       this.context.globalState.update(Keys.Global.INSTALL_TIMESTAMP, this._installTime.valueOf());
     }
   }
@@ -72,12 +81,16 @@ export default class AppMapProperties {
     this.context.globalState.update(Keys.Global.QUICKSTART_DOCS_SEEN, value);
   }
 
-  get installTime(): Date | undefined {
+  get installTime(): Date {
     return this._installTime;
   }
 
   get isNewInstall(): boolean {
     return this._isNewInstall;
+  }
+
+  get firstVersionInstalled(): string {
+    return this.context.globalState.get(Keys.Global.INSTALL_VERSION, 'unknown');
   }
 
   /** Returns whether or not the user has recorded an AppMap from within the given workspace folder. */

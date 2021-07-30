@@ -7,7 +7,6 @@ import {
   EnvironmentVariableCollection,
   EnvironmentVariableMutator,
   ExtensionMode,
-  Extension,
 } from 'vscode';
 import * as temp from 'temp';
 import * as path from 'path';
@@ -26,7 +25,13 @@ export default class MockExtensionContext implements ExtensionContext {
   readonly logUri: Uri;
   readonly logPath: string;
   readonly extensionMode: ExtensionMode = ExtensionMode.Test;
-  readonly extension!: Extension<unknown>;
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  readonly extension: any = {
+    packageJSON: {
+      version: '1.0.0-test',
+    },
+  };
 
   readonly secrets = new (class implements SecretStorage {
     get(): Thenable<string | undefined> {
