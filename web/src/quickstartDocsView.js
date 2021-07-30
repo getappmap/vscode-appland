@@ -24,6 +24,13 @@ export function mountQuickstartInstallAgent() {
             languages: event.languages,
           };
         },
+        mounted() {
+          document.querySelectorAll('a[href]').forEach((el) => {
+            el.addEventListener('click', (e) => {
+              vscode.postMessage({ command: 'clickLink', uri: e.target.href });
+            });
+          });
+        },
       });
 
       vscode.postMessage({ command: 'postInitialize' });
