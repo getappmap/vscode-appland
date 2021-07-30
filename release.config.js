@@ -4,16 +4,21 @@ module.exports = {
     '@semantic-release/release-notes-generator',
     '@semantic-release/changelog',
     [
+      '@semantic-release/npm',
       {
-        path: '@semantic-release/npm',
         npmPublish: false,
       },
     ],
-    'semantic-release-vsce',
+    [
+      '@semantic-release/exec',
+      {
+        publishCmd: 'yarn run publish -p $VSCE_TOKEN',
+      },
+    ],
     '@semantic-release/git',
     [
+      '@semantic-release/github',
       {
-        path: '@semantic-release/github',
         assets: '*.vsix',
       },
     ],
