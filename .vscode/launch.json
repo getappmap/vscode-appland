@@ -20,7 +20,7 @@
       "request": "launch",
       "args": [
         "--extensionDevelopmentPath=${workspaceFolder}",
-        "--extensionTestsPath=${workspaceFolder}/test/suite/index"
+        "--extensionTestsPath=${workspaceFolder}/out/test/index"
       ]
     }
   ]

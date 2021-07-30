@@ -5,17 +5,26 @@ import Telemetry, { Events } from './telemetry';
 import registerTrees from './tree';
 import AppMapCollectionFile from './appmapCollectionFile';
 import RemoteRecording from './remoteRecording';
-import { getQuickstartSeen, notEmpty, setQuickstartSeen } from './util';
+import { notEmpty } from './util';
 import { registerUtilityCommands } from './registerUtilityCommands';
 import ProjectWatcher from './projectWatcher';
 import QuickstartWebview from './quickstartWebview';
+import QuickstartDocsInstallAgent from './quickstart-docs/installAgentWebview';
+import QuickstartDocsOpenAppmaps from './quickstart-docs/openAppmapsWebview';
+import AppMapProperties from './appmapProperties';
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
   try {
     const localAppMaps = new AppMapCollectionFile();
 
     Telemetry.register(context);
-    ScenarioProvider.register(context);
+
+    const properties = new AppMapProperties(context);
+    if (properties.isNewInstall) {
+      Telemetry.reportAction('plugin:install');
+    }
+
+    ScenarioProvider.register(context, properties);
     DatabaseUpdater.register(context);
     RemoteRecording.register(context);
 
@@ -30,7 +39,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     context.subscriptions.push(appmapWatcher);
 
     const projects = (vscode.workspace.workspaceFolders || []).map((workspaceFolder) => {
-      const project = new ProjectWatcher(context, workspaceFolder, appmapWatcher);
+      const project = new ProjectWatcher(context, workspaceFolder, appmapWatcher, properties);
       return project;
     });
 
@@ -38,11 +47,10 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
     await Promise.all(projects.map(async (project) => await project.initialize()));
 
-    const { localTree, documentationTree, milestoneTree } = registerTrees(
-      context,
-      localAppMaps,
-      projects
-    );
+    QuickstartDocsInstallAgent.register(context, properties, projects);
+    QuickstartDocsOpenAppmaps.register(context, projects, localAppMaps);
+
+    const { localTree } = registerTrees(context, localAppMaps, projects);
 
     context.subscriptions.push(
       vscode.commands.registerCommand('appmap.applyFilter', async () => {
@@ -78,17 +86,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
       })
     );
 
-    registerUtilityCommands(context);
-
-    if (!getQuickstartSeen(context) && projects.length == 1) {
-      // only open the quickstart for the first time and a single-project workspace is open
-      // open the quickstart WebView, step INSTALL_AGENT
-      const installAgentMilestone = projects[0].milestones['INSTALL_AGENT'];
-      vscode.commands.executeCommand('appmap.clickMilestone', installAgentMilestone);
-      // open the quickstart side view
-      milestoneTree.reveal(installAgentMilestone, { focus: false });
-      setQuickstartSeen(context, true);
-    }
+    registerUtilityCommands(context, properties);
   } catch (exception) {
     Telemetry.sendEvent(Events.DEBUG_EXCEPTION, { exception });
     throw exception;

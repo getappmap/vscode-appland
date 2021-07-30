@@ -5,11 +5,8 @@ import AppMapAgent, { StatusResponse } from './agent/appMapAgent';
 import LanguageResolver from './languageResolver';
 import { createMilestones, MilestoneMap, MilestoneType } from './milestones';
 import Telemetry, { Events } from './telemetry';
-import {
-  hasWorkspaceFolderOpenedAppMap,
-  hasWorkspaceFolderRecordedAppMap,
-  unreachable,
-} from './util';
+import { unreachable } from './util';
+import AppMapProperties from './appmapProperties';
 
 function resolveFullyQualifiedKey(key: string, obj: Record<string, unknown>): unknown {
   const tokens = key.split(/\./);
@@ -226,19 +223,18 @@ export default class ProjectWatcher {
   public readonly milestones: MilestoneMap;
   public readonly context: vscode.ExtensionContext;
   private readonly frequencyMs: number;
-  private readonly appmapWatcher: vscode.FileSystemWatcher;
+  private readonly properties: AppMapProperties;
   private _language?: string;
   private agent?: AppMapAgent;
   private nextStatusTimer?: NodeJS.Timeout;
   private lastStatus?: StatusResponse;
   private currentState: ProjectWatcherState;
-  private _appmapExists?: boolean;
-  private _appmapOpened?: boolean;
 
   constructor(
     context: vscode.ExtensionContext,
     workspaceFolder: vscode.WorkspaceFolder,
     appmapWatcher: vscode.FileSystemWatcher,
+    properties: AppMapProperties,
     frequencyMs = 6000
   ) {
     this.context = context;
@@ -246,7 +242,7 @@ export default class ProjectWatcher {
     this.frequencyMs = frequencyMs;
     this.milestones = createMilestones(this);
     this.currentState = State.WAIT_FOR_AGENT_INSTALL;
-    this.appmapWatcher = appmapWatcher;
+    this.properties = properties;
 
     appmapWatcher.onDidCreate((uri) => {
       if (uri.fsPath.startsWith(this.rootDirectory as string)) {
@@ -308,26 +304,14 @@ export default class ProjectWatcher {
    * Utility getter. Returns true if the user has previously recorded an AppMap in this project directory.
    */
   appmapExists(): boolean {
-    if (this._appmapExists) {
-      return true;
-    }
-
-    this._appmapExists = hasWorkspaceFolderRecordedAppMap(this.context, this.workspaceFolder);
-
-    return this._appmapExists;
+    return this.properties.getWorkspaceRecordedAppMap(this.workspaceFolder);
   }
 
   /**
    * Utility getter. Returns true if the user has previously opened an AppMap from within this project directory.
    */
   appmapOpened(): boolean {
-    if (this._appmapOpened) {
-      return true;
-    }
-
-    this._appmapOpened = hasWorkspaceFolderOpenedAppMap(this.context, this.workspaceFolder);
-
-    return this._appmapOpened;
+    return this.properties.getWorkspaceOpenedAppMap(this.workspaceFolder);
   }
 
   /**

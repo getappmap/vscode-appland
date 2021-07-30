@@ -1,14 +1,22 @@
 import * as vscode from 'vscode';
-import AppMapCollection from '../appmapCollection';
+import AppMapCollectionFile from '../appmapCollectionFile';
 import { AppMapTreeDataProvider } from './appmap/AppMapTreeDataProvider';
 import { LinkTreeDataProvider } from './linkTreeDataProvider';
 import Links from './links';
-import { MilestoneTreeDataProvider } from './milestoneTreeDataProvider';
+// import { MilestoneTreeDataProvider } from './milestoneTreeDataProvider';
+import { QuickstartDocsTreeDataProvider } from './quickstartDocsTreeDataProvider';
 import ProjectWatcher from '../projectWatcher';
+function showQuickstartAppmaps(localAppMaps: AppMapCollectionFile) {
+  if (localAppMaps.allAppMaps().length && !showQuickstartAppmaps.showed) {
+    vscode.commands.executeCommand('appmap.openQuickstartDocsOpenAppmaps');
+    showQuickstartAppmaps.showed = true;
+  }
+}
+showQuickstartAppmaps.showed = false;
 
 export default function registerTrees(
   context: vscode.ExtensionContext,
-  localAppMaps: AppMapCollection,
+  localAppMaps: AppMapCollectionFile,
   projects: readonly ProjectWatcher[]
 ): Record<string, vscode.TreeView<vscode.TreeItem>> {
   const localTreeProvider = new AppMapTreeDataProvider(localAppMaps);
@@ -23,12 +31,27 @@ export default function registerTrees(
     treeDataProvider: documentationTreeProvider,
   });
 
+  /*
   const milestoneTreeProvider = new MilestoneTreeDataProvider(context, projects);
   const milestoneTree = vscode.window.createTreeView('appmap.views.milestones', {
     treeDataProvider: milestoneTreeProvider,
   });
 
   MilestoneTreeDataProvider.registerCommands(context);
+  */
+
+  const quickstartDocsTreeProvider = new QuickstartDocsTreeDataProvider();
+  const quickstartDocsTree = vscode.window.createTreeView('appmap.views.milestones', {
+    treeDataProvider: quickstartDocsTreeProvider,
+  });
+
+  quickstartDocsTree.onDidChangeVisibility(() => {
+    showQuickstartAppmaps(localAppMaps);
+  });
+
+  localAppMaps.onUpdated(() => {
+    showQuickstartAppmaps(localAppMaps);
+  });
 
   context.subscriptions.push(
     vscode.commands.registerCommand('appmap.focus', () => {
@@ -36,5 +59,13 @@ export default function registerTrees(
     })
   );
 
-  return { localTree, documentation, milestoneTree };
+  context.subscriptions.push(
+    vscode.commands.registerCommand('appmap.focusQuickstartDocs', (index = 0) => {
+      setTimeout(() => {
+        quickstartDocsTree.reveal(quickstartDocsTreeProvider.items[index]);
+      }, 0);
+    })
+  );
+
+  return { localTree, documentation /*, milestoneTree*/ };
 }

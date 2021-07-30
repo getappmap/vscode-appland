@@ -1,20 +1,16 @@
 import { isAbsolute, join } from 'path';
 import * as vscode from 'vscode';
 import Telemetry from './telemetry';
-import {
-  flagWorkspaceOpenedAppMap,
-  getNonce,
-  getStringRecords,
-  workspaceFolderForDocument,
-} from './util';
+import { getNonce, getStringRecords, workspaceFolderForDocument } from './util';
 import { version } from '../package.json';
+import AppMapProperties from './appmapProperties';
 
 /**
  * Provider for AppLand scenario files.
  */
 export class ScenarioProvider implements vscode.CustomTextEditorProvider {
-  public static register(context: vscode.ExtensionContext): void {
-    const provider = new ScenarioProvider(context);
+  public static register(context: vscode.ExtensionContext, properties: AppMapProperties): void {
+    const provider = new ScenarioProvider(context, properties);
     const providerRegistration = vscode.window.registerCustomEditorProvider(
       ScenarioProvider.viewType,
       provider
@@ -25,10 +21,12 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
   private static readonly viewType = 'appmap.views.appMapFile';
   private static readonly INSTRUCTIONS_VIEWED = 'APPMAP_INSTRUCTIONS_VIEWED';
   private static readonly RELEASE_KEY = 'APPMAP_RELEASE_KEY';
-  private static readonly TELEMETRY_INSTALL = 'APPMAP_TELEMETRY_INSTALL';
   public static readonly APPMAP_OPENED = 'APPMAP_OPENED';
 
-  constructor(private readonly context: vscode.ExtensionContext) {}
+  constructor(
+    private readonly context: vscode.ExtensionContext,
+    private readonly properties: AppMapProperties
+  ) {}
 
   /**
    * Called when our custom editor is opened.
@@ -46,7 +44,7 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
 
       const workspaceFolder = workspaceFolderForDocument(document);
       if (workspaceFolder) {
-        flagWorkspaceOpenedAppMap(this.context, workspaceFolder);
+        this.properties.setWorkspaceOpenedAppMap(workspaceFolder, true);
       }
 
       // show AppMap instructions on first open
@@ -67,11 +65,6 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
         });
       }
     };
-
-    if (!this.context.globalState.get(ScenarioProvider.TELEMETRY_INSTALL)) {
-      Telemetry.reportAction('install', undefined);
-      this.context.globalState.update(ScenarioProvider.TELEMETRY_INSTALL, true);
-    }
 
     // Handle messages from the webview.
     // Note: this has to be set before setting the HTML to avoid a race.
