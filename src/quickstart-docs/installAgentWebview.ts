@@ -101,10 +101,8 @@ export default class QuickstartDocsInstallAgent {
       })
     );
 
-    if (
-      semver.valid(properties.firstVersionInstalled) &&
-      semver.gte(properties.firstVersionInstalled, '0.15.0')
-    ) {
+    const firstVersionInstalled = semver.coerce(properties.firstVersionInstalled);
+    if (firstVersionInstalled && semver.gte(firstVersionInstalled, '0.15.0')) {
       // Logic within this block will only be executed if the extension was installed after we began tracking the
       // time of installation. We will use this to determine whether or not our UX improvements are effective, without
       // before rolling them out to our existing user base.

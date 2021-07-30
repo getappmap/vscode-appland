@@ -86,6 +86,10 @@ describe('Quickstart', () => {
       await withExtensionVersion('0.16.1', true);
     });
 
+    it('automatically opens quickstart if first version is a release candidate', async () => {
+      await withExtensionVersion('0.15.0-rc1', true);
+    });
+
     it('does not open quickstart if first version is unknown', async () => {
       await withExtensionVersion('unknown', false);
     });
