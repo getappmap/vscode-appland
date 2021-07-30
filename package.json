@@ -4,7 +4,6 @@
   "displayName": "AppMap",
   "description": "Interactive maps and architecture analysis help you write better Ruby, Python and Java code",
   "version": "0.14.4",
-  "releaseKey": "0.14.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/applandinc/vscode-appland"
@@ -12,6 +11,9 @@
   "qna": "https://appland.com/docs/faq.html",
   "engines": {
     "vscode": "^1.55.0"
+  },
+  "agents": {
+    "ruby": ">=0.60.0"
   },
   "activationEvents": [
     "onStartupFinished"
@@ -93,6 +95,10 @@
         "title": "AppMap: Stop the active remote recording",
         "icon": "images/record_stop.svg",
         "when": "appmap.recordingIsRunning"
+      },
+      {
+        "command": "appmap.resetUsageState",
+        "title": "AppMap: Reset Usage State"
       }
     ],
     "configuration": {
@@ -117,7 +123,7 @@
     "viewsWelcome": [
       {
         "view": "appmap.views.local",
-        "contents": "No AppMaps found.\n[Learn more](https://appland.com/docs)",
+        "contents": "No AppMaps found.\n[Install AppMap agent](command:appmap.openQuickstartDocsInstallAgent)",
         "when": "appmap.initialized && !appmap.hasData"
       },
       {
@@ -139,6 +145,16 @@
           "contextualTitle": "AppMap",
           "visibility": "visible",
           "icon": "images/logo.svg"
+        },
+        {
+          "id": "appmap.views.milestones",
+          "name": "quickstart",
+          "visibility": "visible"
+        },
+        {
+          "id": "appmap.views.documentation",
+          "name": "Documentation",
+          "visibility": "collapsed"
         }
       ]
     },
@@ -168,13 +184,15 @@
     }
   },
   "scripts": {
-    "vscode:prepublish": "npm run compile",
+    "vscode:prepublish": "yarn run compile",
     "lint": "eslint . --ext .ts",
-    "pretest": "npm run lint",
-    "test": "node ./test/runTest.js",
+    "pretest": "yarn run lint && tsc",
+    "test:extension": "node ./out/test/runTest.js",
+    "test:web-client": "mocha web/test/*.test.mjs",
+    "test": "yarn run test:extension && yarn run test:web-client",
     "compile": "webpack --mode=production",
     "watch": "webpack --watch --mode=development",
-    "package": "vsce package",
+    "package": "vsce package --no-yarn",
     "semantic-release": "semantic-release"
   },
   "devDependencies": {
@@ -187,6 +205,7 @@
     "@types/glob": "^7.1.3",
     "@types/mocha": "^8.2.0",
     "@types/node": "^12.19.12",
+    "@types/sinon": "^10.0.2",
     "@types/vscode": "^1.55.0",
     "@typescript-eslint/eslint-plugin": "^4.22.1",
     "@typescript-eslint/parser": "^4.22.1",
@@ -208,9 +227,12 @@
     "sass-loader": "^10.1.0",
     "semantic-release": "^17.3.8",
     "semantic-release-vsce": "^3.1.3",
+    "sinon": "^11.1.2",
     "style-loader": "^2.0.0",
     "tape": "^5.1.1",
+    "temp": "^0.9.4",
     "ts-loader": "^8.0.14",
+    "ts-node": "^10.0.0",
     "tslib": "^2.1.0",
     "typescript": "^4.1.3",
     "vsce": "^1.83.0",
@@ -221,16 +243,19 @@
     "webpack-cli": "^4.3.1"
   },
   "dependencies": {
-    "@appland/components": "^1.2.1",
-    "@appland/diagrams": "^1.2.1",
-    "@appland/models": "^1.2.0",
+    "@appland/components": "^1.6.1",
+    "@appland/diagrams": "^1.2.3",
+    "@appland/models": "^1.3.1",
     "bent": "^7.3.12",
     "bootstrap": "^4.5.3",
     "bootstrap-autocomplete": "^2.3.7",
     "diff": "^5.0.0",
+    "glob-to-regexp": "^0.4.1",
+    "highlight.js": "^11.0.1",
     "jquery": "^3.5.1",
     "js-yaml": "^4.0.0",
     "popper.js": "^1.16.1",
+    "semver": "^7.3.5",
     "vscode-extension-telemetry": "^0.1.7",
     "vue": "^2.6.14",
     "vue-template-compiler": "^2.6.14",

@@ -30,14 +30,14 @@ export class AppMapTreeDataProvider implements vscode.TreeDataProvider<vscode.Tr
     }
 
     const listItems = this.appmaps
-      .appmapDescriptors()
-      .map((d) => ({
-        label: (d.metadata?.name as string) || LABEL_NO_NAME,
-        tooltip: (d.metadata?.name as string) || LABEL_NO_NAME,
+      .appMaps()
+      .map((appmap) => ({
+        label: (appmap.descriptor.metadata?.name as string) || LABEL_NO_NAME,
+        tooltip: (appmap.descriptor.metadata?.name as string) || LABEL_NO_NAME,
         command: {
           title: 'open',
           command: 'vscode.openWith',
-          arguments: [d.resourceUri, 'appmap.views.appMapFile'],
+          arguments: [appmap.descriptor.resourceUri, 'appmap.views.appMapFile'],
         },
       }))
       .sort((a, b) => a.label.localeCompare(b.label));

@@ -1,15 +1,16 @@
 import { isAbsolute, join } from 'path';
 import * as vscode from 'vscode';
 import Telemetry from './telemetry';
-import { getNonce, getStringRecords } from './util';
-import { version, releaseKey } from '../package.json';
+import { getNonce, getStringRecords, workspaceFolderForDocument } from './util';
+import { version } from '../package.json';
+import AppMapProperties from './appmapProperties';
 
 /**
  * Provider for AppLand scenario files.
  */
 export class ScenarioProvider implements vscode.CustomTextEditorProvider {
-  public static register(context: vscode.ExtensionContext): void {
-    const provider = new ScenarioProvider(context);
+  public static register(context: vscode.ExtensionContext, properties: AppMapProperties): void {
+    const provider = new ScenarioProvider(context, properties);
     const providerRegistration = vscode.window.registerCustomEditorProvider(
       ScenarioProvider.viewType,
       provider
@@ -18,11 +19,14 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
   }
 
   private static readonly viewType = 'appmap.views.appMapFile';
-  private static readonly storeInstructionsKey = 'APPMAP_INSTRUCTIONS_VIEWED';
-  private static readonly storeReleaseKey = 'APPMAP_RELEASE_KEY';
-  private static readonly storeTelemetryInstallKey = 'APPMAP_TELEMETRY_INSTALL';
+  private static readonly INSTRUCTIONS_VIEWED = 'APPMAP_INSTRUCTIONS_VIEWED';
+  private static readonly RELEASE_KEY = 'APPMAP_RELEASE_KEY';
+  public static readonly APPMAP_OPENED = 'APPMAP_OPENED';
 
-  constructor(private readonly context: vscode.ExtensionContext) {}
+  constructor(
+    private readonly context: vscode.ExtensionContext,
+    private readonly properties: AppMapProperties
+  ) {}
 
   /**
    * Called when our custom editor is opened.
@@ -38,27 +42,29 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
         text: document.getText(),
       });
 
+      const workspaceFolder = workspaceFolderForDocument(document);
+      if (workspaceFolder) {
+        this.properties.setWorkspaceOpenedAppMap(workspaceFolder, true);
+      }
+
       // show AppMap instructions on first open
-      if (!this.context.globalState.get(ScenarioProvider.storeInstructionsKey)) {
+      if (!this.context.globalState.get(ScenarioProvider.INSTRUCTIONS_VIEWED)) {
         webviewPanel.webview.postMessage({
           type: 'showInstructions',
         });
-        this.context.globalState.update(ScenarioProvider.storeInstructionsKey, true);
+        this.context.globalState.update(ScenarioProvider.INSTRUCTIONS_VIEWED, true);
       }
 
-      const lastReleaseKey = this.context.globalState.get(ScenarioProvider.storeReleaseKey);
-      if (lastReleaseKey !== releaseKey) {
+      const lastVersion = this.context.globalState.get(ScenarioProvider.RELEASE_KEY);
+      if (!lastVersion) {
+        this.context.globalState.update(ScenarioProvider.RELEASE_KEY, version);
+      } else if (lastVersion !== version) {
         webviewPanel.webview.postMessage({
           type: 'displayUpdateNotification',
           version,
         });
       }
     };
-
-    if (!this.context.globalState.get(ScenarioProvider.storeTelemetryInstallKey)) {
-      Telemetry.reportAction('install', undefined);
-      this.context.globalState.update(ScenarioProvider.storeTelemetryInstallKey, true);
-    }
 
     // Handle messages from the webview.
     // Note: this has to be set before setting the HTML to avoid a race.
@@ -74,8 +80,9 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
           vscode.env.clipboard.writeText(message.state);
           vscode.window.setStatusBarMessage('AppMap state was copied to clipboard', 5000);
           break;
-        case 'metadata':
-          Telemetry.reportLoadAppMap(message.metadata);
+        case 'onLoadComplete':
+          // TODO.
+          // Report appland.appmap/plugin/appmap:open
           break;
         case 'performAction':
           Telemetry.reportAction(
@@ -87,7 +94,7 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
           Telemetry.reportWebviewError(message.error);
           break;
         case 'closeUpdateNotification':
-          this.context.globalState.update(ScenarioProvider.storeReleaseKey, releaseKey);
+          this.context.globalState.update(ScenarioProvider.RELEASE_KEY, version);
           break;
         case 'appmapOpenUrl':
           vscode.env.openExternal(message.url);
@@ -225,5 +232,12 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
     } catch {
       throw new Error('Could not get document as json. Content is not valid json');
     }
+  }
+
+  //forget usage state set by this class
+  public static resetState(context: vscode.ExtensionContext): void {
+    context.globalState.update(ScenarioProvider.INSTRUCTIONS_VIEWED, null);
+    context.globalState.update(ScenarioProvider.RELEASE_KEY, null);
+    context.globalState.update(ScenarioProvider.APPMAP_OPENED, null);
   }
 }

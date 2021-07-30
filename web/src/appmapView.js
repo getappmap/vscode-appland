@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import { VVsCodeExtension } from '@appland/components'; // eslint-disable-line import/no-named-default
 import patchNotesHtml from '../static/html/patch_notes.html';
+import { getAppMapMetrics } from './telemetry';
 import '@appland/diagrams/dist/style.css';
 
 export default function mountApp() {
@@ -12,28 +13,13 @@ export default function mountApp() {
     render: (h) => h(VVsCodeExtension, { ref: 'ui' }),
     methods: {
       async loadData(text) {
-        const appmapData = JSON.parse(text);
-        this.$refs.ui.loadData(appmapData);
+        const { ui } = this.$refs;
+        ui.loadData(text);
 
-        const events = appmapData.events || [];
-        const numEvents = appmapData.events.length;
-        let numHttpEvents = 0;
-        let numSqlEvents = 0;
-        for (let i = 0; i < numEvents; i += 1) {
-          const event = events[i];
-          if (event.http_server_request) {
-            numHttpEvents += 1;
-          } else if (event.sql_query) {
-            numSqlEvents += 1;
-          }
-        }
         vscode.postMessage({
-          command: 'metadata',
-          metadata: {
-            ...appmapData.metadata,
-            numEvents,
-            numHttpEvents,
-            numSqlEvents,
+          command: 'onLoadComplete',
+          metrics: {
+            ...getAppMapMetrics(ui.$store.state.appMap),
             loadTime: (new Date() - startTime) / 1000,
           },
         });

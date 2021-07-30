@@ -1,7 +1,7 @@
 import { Event } from 'vscode';
-import AppMapDescriptor from './appmapDescriptor';
+import AppMapLoader from './appmapLoader';
 
 export default interface AppMapCollection {
   readonly onUpdated: Event<AppMapCollection>;
-  appmapDescriptors(): AppMapDescriptor[];
+  appMaps(): AppMapLoader[];
 }

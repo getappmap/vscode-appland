@@ -47,7 +47,16 @@ export class DatabaseUpdater {
   }
 
   initialize(context: vscode.ExtensionContext): void {
-    const appmapFolders = ['tmp/appmap', 'tmp/appmap/rspec', 'tmp/appmap/minitest'];
+    const appmapFolders = [
+      'build/appmap',
+      'build/appmap/recordings',
+      'target/appmap',
+      'target/appmap/recordings',
+      'tmp/appmap',
+      'tmp/appmap/minitest',
+      'tmp/appmap/recordings',
+      'tmp/appmap/rspec',
+    ];
     const folders = vscode.workspace.workspaceFolders;
     if (folders) {
       folders.forEach((wsFolder) => {
