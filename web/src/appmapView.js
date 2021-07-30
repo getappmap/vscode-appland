@@ -20,7 +20,7 @@ export default function mountApp() {
           command: 'onLoadComplete',
           metrics: {
             ...getAppMapMetrics(ui.$store.state.appMap),
-            loadTime: (new Date() - startTime) / 1000,
+            'appmap.json.load_time': (new Date() - startTime) / 1000,
           },
         });
       },

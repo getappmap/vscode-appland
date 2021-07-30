@@ -1,6 +1,6 @@
 import { isAbsolute, join } from 'path';
 import * as vscode from 'vscode';
-import Telemetry from './telemetry';
+import Telemetry, { Events } from './telemetry';
 import {
   flagWorkspaceOpenedAppMap,
   getNonce,
@@ -82,8 +82,9 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
           vscode.window.setStatusBarMessage('AppMap state was copied to clipboard', 5000);
           break;
         case 'onLoadComplete':
-          // TODO.
-          // Report appland.appmap/plugin/appmap:open
+          let event = Events.APPMAP_OPEN;
+          event.staticMetrics = message.metrics;
+          Telemetry.sendEvent(event, {});
           break;
         case 'performAction':
           Telemetry.reportAction(
