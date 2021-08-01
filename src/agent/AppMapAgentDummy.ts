@@ -6,6 +6,13 @@ import AppMapAgent, {
   InitResponse,
 } from './appMapAgent';
 
+export class ErrorUnsupportedLanguage extends Error {
+  constructor(langauge: string) {
+    super(`Language '${langauge}' is not supported`);
+    Object.setPrototypeOf(this, ErrorUnsupportedLanguage.prototype);
+  }
+}
+
 export default class AppMapAgentJavaDummy implements AppMapAgent {
   language: string;
 
@@ -14,21 +21,21 @@ export default class AppMapAgentJavaDummy implements AppMapAgent {
   }
 
   isInstalled(path: PathLike): Promise<boolean> {
-    throw new Error('Language not supported!');
+    throw new ErrorUnsupportedLanguage(this.language);
   }
   install(path: PathLike): Promise<InstallResult> {
-    throw new Error('Language not supported!');
+    throw new ErrorUnsupportedLanguage(this.language);
   }
   init(path: PathLike): Promise<InitResponse> {
-    throw new Error('Language not supported!');
+    throw new ErrorUnsupportedLanguage(this.language);
   }
   files(path: PathLike): Promise<FilesResponse> {
-    throw new Error('Language not supported!');
+    throw new ErrorUnsupportedLanguage(this.language);
   }
   status(path: PathLike): Promise<StatusResponse> {
-    throw new Error('Language not supported!');
+    throw new ErrorUnsupportedLanguage(this.language);
   }
   test(path: PathLike, command: string[]): Promise<void> {
-    throw new Error('Language not supported!');
+    throw new ErrorUnsupportedLanguage(this.language);
   }
 }

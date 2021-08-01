@@ -7,6 +7,7 @@ import { createMilestones, MilestoneMap, MilestoneType } from './milestones';
 import Telemetry, { Events } from './telemetry';
 import { unreachable } from './util';
 import AppMapProperties from './appmapProperties';
+import { ErrorUnsupportedLanguage } from './agent/AppMapAgentDummy';
 
 function resolveFullyQualifiedKey(key: string, obj: Record<string, unknown>): unknown {
   const tokens = key.split(/\./);
@@ -360,10 +361,18 @@ export default class ProjectWatcher {
 
       status = await this.currentState.tick(this, this.agent, this.lastStatus);
     } catch (exception) {
+      if (exception instanceof ErrorUnsupportedLanguage) {
+        // give up on this project
+        return;
+      }
+
       Telemetry.sendEvent(Events.DEBUG_EXCEPTION, { exception });
-    } finally {
-      this.queueNextTick(status);
+
+      // For now, assume that the error is unrecoverable and stop polling.
+      return;
     }
+
+    this.queueNextTick(status);
   }
 
   /**
