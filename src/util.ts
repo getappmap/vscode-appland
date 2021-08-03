@@ -226,3 +226,12 @@ export function hasPreviouslyInstalledExtension(extensionPath: string): boolean 
 
   return false;
 }
+
+// Convert a union type to an intersection type. Don't use this on boolean types.
+// e.g. ( string | number ) => ( string & number )
+// See https://stackoverflow.com/a/50375286
+export type UnionToIntersection<U> = (U extends unknown
+? (k: U) => U
+: never) extends (k: infer I) => void
+  ? I
+  : never;

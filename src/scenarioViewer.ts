@@ -1,6 +1,6 @@
 import { isAbsolute, join } from 'path';
 import * as vscode from 'vscode';
-import Telemetry, { Events, Event } from './telemetry';
+import { Telemetry, APPMAP_OPEN } from './telemetry';
 import { getNonce, getStringRecords, workspaceFolderForDocument } from './util';
 import { version } from '../package.json';
 import AppMapProperties from './appmapProperties';
@@ -81,10 +81,10 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
           vscode.window.setStatusBarMessage('AppMap state was copied to clipboard', 5000);
           break;
         case 'onLoadComplete':
-          Telemetry.sendEvent(this.buildAppMapOpenEvent(message), {
+          Telemetry.sendEvent(APPMAP_OPEN, {
             rootDirectory: workspaceFolderForDocument(document)?.uri.fsPath,
-            file: document.uri.fsPath,
-            metadata: JSON.parse(document.getText()).metadata || {},
+            uri: document.uri,
+            metadata: JSON.parse(document.getText()).metadata,
           });
           break;
         case 'performAction':
@@ -190,13 +190,6 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
         }
       });
     }
-  }
-
-  private buildAppMapOpenEvent(message): Event {
-    const event = Events.APPMAP_OPEN;
-    event.staticMetrics = message.metrics;
-
-    return event;
   }
 
   /**

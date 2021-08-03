@@ -4,9 +4,9 @@ import ProjectWatcher from '../projectWatcher';
 import svgComplete from '../../web/static/media/tree/complete.svg';
 import svgIncomplete from '../../web/static/media/tree/incomplete.svg';
 import svgError from '../../web/static/media/tree/error.svg';
-import Telemetry, { Events } from '../telemetry';
 import QuickstartWebview from '../quickstartWebview';
 import Milestone from '../milestones';
+import { Telemetry, DEBUG_EXCEPTION } from '../telemetry';
 
 const Icons = {
   complete: path.join(__dirname, svgComplete),
@@ -46,7 +46,7 @@ export class MilestoneTreeDataProvider implements vscode.TreeDataProvider<vscode
 
           vscode.commands.executeCommand(QuickstartWebview.command, milestoneIndex);
         } catch (exception) {
-          Telemetry.sendEvent(Events.DEBUG_EXCEPTION, { exception });
+          Telemetry.sendEvent(DEBUG_EXCEPTION, { exception });
         }
       })
     );
