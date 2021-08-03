@@ -1,3 +1,10 @@
+## [0.15.2](https://github.com/applandinc/vscode-appland/compare/v0.15.1...v0.15.2) (2021-08-03)
+
+
+### Bug Fixes
+
+* Alter files included in the extension bundle ([2b765d5](https://github.com/applandinc/vscode-appland/commit/2b765d53e5663770ac78b7225962f34f70804bd0))
+
 ## [0.15.1](https://github.com/applandinc/vscode-appland/compare/v0.15.0...v0.15.1) (2021-08-01)
 
 
