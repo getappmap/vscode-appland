@@ -81,7 +81,11 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
           vscode.window.setStatusBarMessage('AppMap state was copied to clipboard', 5000);
           break;
         case 'onLoadComplete':
-          Telemetry.sendEvent(this.buildAppMapOpenEvent(message), {});
+          Telemetry.sendEvent(this.buildAppMapOpenEvent(message), {
+            rootDirectory: workspaceFolderForDocument(document)?.uri.fsPath,
+            file: document.uri.fsPath,
+            metadata: JSON.parse(document.getText()).metadata || {},
+          });
           break;
         case 'performAction':
           Telemetry.reportAction(

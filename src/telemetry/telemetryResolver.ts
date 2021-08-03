@@ -39,6 +39,7 @@ export interface EventContext {
   milestone?: Milestone;
   file?: PathLike;
   exception?: Error;
+  metadata?: Record<string, unknown>;
 }
 
 export default class TelemetryResolver {

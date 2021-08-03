@@ -62,6 +62,12 @@ export const Events: { [key: string]: Event } = {
   },
   APPMAP_OPEN: {
     eventName: 'appmap:open',
+    properties: [
+      Properties.File.PATH,
+      Properties.File.SHA_256,
+      Properties.File.METADATA,
+      Properties.Project.LANGUAGE,
+    ],
   },
 };
 

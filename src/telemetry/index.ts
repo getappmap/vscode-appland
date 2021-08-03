@@ -1,6 +1,9 @@
 import LanguageResolver from '../languageResolver';
 import TelemetryContext from './telemetryContext';
 import TelemetryDataProvider from './telemetryDataProvider';
+import * as path from 'path';
+import { createHash } from 'crypto';
+import fs from 'fs';
 
 export const Properties = {
   Debug: {
@@ -81,6 +84,43 @@ export const Properties = {
 
         const languageDistribution = await LanguageResolver.getLanguageDistribution(rootDirectory);
         return JSON.stringify(languageDistribution);
+      },
+    }),
+  },
+  File: {
+    PATH: new TelemetryDataProvider({
+      id: 'appmap.file.path',
+      async value(context: TelemetryContext) {
+        const { rootDirectory, file } = context.event;
+        if (!rootDirectory || !file) {
+          throw new Error('Root directory and file must be provided');
+        }
+
+        return path.relative(rootDirectory.toString(), file.toString());
+      },
+    }),
+    SHA_256: new TelemetryDataProvider({
+      id: 'appmap.file.sha_256',
+      async value(context: TelemetryContext) {
+        const { file } = context.event;
+        if (!file) {
+          throw new Error('File must be provided');
+        }
+
+        const hash = createHash('sha256');
+        hash.update(await fs.promises.readFile(file));
+        return hash.digest('hex');
+      },
+    }),
+    METADATA: new TelemetryDataProvider({
+      id: 'appmap.file.metadata',
+      async value(context: TelemetryContext) {
+        const { metadata } = context.event;
+        if (!metadata) {
+          throw new Error('AppMap metadata must be provided');
+        }
+
+        return JSON.stringify(metadata);
       },
     }),
   },
