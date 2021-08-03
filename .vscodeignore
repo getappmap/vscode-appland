@@ -1,25 +1,12 @@
-.vscode/**
-.vscode-test/**
-node_modules/**
-src/**
-test/**
-web/**
-webpack/**
-.gitignore
-.travis.yml
-*.vsix
-package*.json
-vsc-extension-quickstart.md
-**/jsconfig.json
-**/tsconfig.json
-**/*.map
-**/.eslintrc.js
-**/*.config.js
-out/src
-out/test
-.yarn
-.yarnrc.yml
-DEVELOPMENT.md
-doc
-images/record*.svg
-types
+# Ignore everything
+*
+*/**
+
+# Explicitly un-ignore specific files and directories
+!.vscodeignore
+!out/*.*
+!images
+!package.json
+!README.md
+!DEVELOPMENT.md
+!LICENSE
