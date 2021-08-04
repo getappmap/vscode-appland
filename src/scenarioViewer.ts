@@ -85,6 +85,7 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
             rootDirectory: workspaceFolderForDocument(document)?.uri.fsPath,
             uri: document.uri,
             metadata: JSON.parse(document.getText()).metadata,
+            metrics: message.metrics,
           });
           break;
         case 'performAction':
