@@ -36,11 +36,16 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
       true,
       true
     );
+    const configWatcher = vscode.workspace.createFileSystemWatcher(
+      '**/appmap.yml',
+      false,
+      false,
+      false
+    );
     context.subscriptions.push(appmapWatcher);
 
     const projects = (vscode.workspace.workspaceFolders || []).map((workspaceFolder) => {
-      const project = new ProjectWatcher(context, workspaceFolder, appmapWatcher, properties);
-      return project;
+      return new ProjectWatcher(context, workspaceFolder, appmapWatcher, configWatcher, properties);
     });
 
     QuickstartWebview.register(context, projects, localAppMaps);

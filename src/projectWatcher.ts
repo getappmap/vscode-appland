@@ -186,11 +186,6 @@ const State = {
 
       diff
         .on('properties.config.present', (isPresent) => {
-          // Send a telemetry event.
-          Telemetry.sendEvent(PROJECT_CONFIG_WRITE, {
-            rootDirectory: project.rootDirectory,
-          });
-
           if (!isPresent) {
             project.milestones.CREATE_CONFIGURATION.setState('incomplete');
           }
@@ -241,6 +236,7 @@ export default class ProjectWatcher {
     context: vscode.ExtensionContext,
     workspaceFolder: vscode.WorkspaceFolder,
     appmapWatcher: vscode.FileSystemWatcher,
+    configWatcher: vscode.FileSystemWatcher,
     properties: AppMapProperties,
     frequencyMs = 6000
   ) {
@@ -256,6 +252,19 @@ export default class ProjectWatcher {
         this.onAppMapCreatedEmitter.fire(uri);
       }
     });
+
+    const configWatcherListener = (uri) => {
+      if (uri.fsPath.startsWith(this.rootDirectory as string)) {
+        Telemetry.sendEvent(PROJECT_CONFIG_WRITE, {
+          rootDirectory: this.rootDirectory,
+          agent: this.agent,
+          uri: uri,
+        });
+      }
+    };
+
+    configWatcher.onDidCreate(configWatcherListener);
+    configWatcher.onDidChange(configWatcherListener);
   }
 
   get rootDirectory(): PathLike {

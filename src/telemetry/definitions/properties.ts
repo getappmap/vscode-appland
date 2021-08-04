@@ -6,6 +6,7 @@ import TelemetryDataProvider from '../telemetryDataProvider';
 import Milestone from '../../milestones';
 import LanguageResolver, { UNKNOWN_LANGUAGE } from '../../languageResolver';
 import AppMapAgent from '../../agent/appMapAgent';
+import yaml = require('js-yaml');
 
 export const DEBUG_EXCEPTION = new TelemetryDataProvider({
   id: 'appmap.debug.exception',
@@ -22,16 +23,25 @@ export const FILE_PATH = new TelemetryDataProvider({
       return undefined;
     }
 
-    return path.relative(rootDirectory as string, uri.fsPath);
+    try {
+      return await path.relative(rootDirectory as string, uri.fsPath);
+    } catch {
+      return undefined;
+    }
   },
 });
 
 export const FILE_SHA_256 = new TelemetryDataProvider({
   id: 'appmap.file.sha_256',
   async value({ uri }: { uri: Uri }) {
-    const hash = createHash('sha256');
-    hash.update(await fs.readFile(uri.fsPath));
-    return hash.digest('hex');
+    return fs
+      .access(uri.fsPath)
+      .then(async () => {
+        const hash = createHash('sha256');
+        hash.update(await fs.readFile(uri.fsPath));
+        return hash.digest('hex');
+      })
+      .catch(() => '');
   },
 });
 
@@ -126,5 +136,70 @@ export const PROJECT_LANGUAGE_DISTRIBUTION = new TelemetryDataProvider({
   async value({ rootDirectory }: { rootDirectory: PathLike }) {
     const languageDistribution = await LanguageResolver.getLanguageDistribution(rootDirectory);
     return JSON.stringify(languageDistribution);
+  },
+});
+
+export const CONFIG_IS_VALID = new TelemetryDataProvider({
+  id: 'appmap.config.is_valid',
+  proxyCache: ['agent'],
+  async value({ agent, rootDirectory }: { agent?: AppMapAgent; rootDirectory: PathLike }) {
+    try {
+      const status = await agent?.status(rootDirectory);
+      return String(status?.properties.config.valid || false);
+    } catch {
+      return 'false';
+    }
+  },
+});
+
+export const CONFIG_APP = new TelemetryDataProvider({
+  id: 'appmap.config.app',
+  proxyCache: ['agent'],
+  async value({
+    rootDirectory,
+    name,
+    config,
+    uri,
+    agent,
+  }: {
+    rootDirectory: PathLike;
+    name?: string;
+    config?: Record<string, unknown>;
+    uri?: Uri;
+    agent?: AppMapAgent;
+  }) {
+    if (name) {
+      return name;
+    }
+
+    if (config?.name) {
+      return config.name;
+    }
+    try {
+      if (uri) {
+        const parsedConfig = yaml.load(await fs.readFile(uri.fsPath, 'utf-8'));
+        return parsedConfig?.name || undefined;
+      }
+
+      if (agent) {
+        const status = await agent?.status(rootDirectory);
+        return status?.properties.config.app || undefined;
+      }
+    } catch {
+      return undefined;
+    }
+
+    return undefined;
+  },
+});
+
+export const CONFIG_CONTENT = new TelemetryDataProvider({
+  id: 'appmap.config.content',
+  async value({ uri }: { uri: Uri }) {
+    try {
+      return await fs.readFile(uri.fsPath, 'utf-8');
+    } catch {
+      return undefined;
+    }
   },
 });
