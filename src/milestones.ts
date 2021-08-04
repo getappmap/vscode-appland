@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import ProjectWatcher from './projectWatcher';
-import Telemetry, { Events } from './telemetry';
+import { Telemetry, MILESTONE_CHANGE_STATE } from './telemetry';
 
 type CompletionState = 'complete' | 'incomplete' | 'error';
 
@@ -65,9 +65,6 @@ export default class Milestone implements MilestoneDefinition {
 
     this._state = state;
     this.onChangeStateEmitter.fire(this);
-    Telemetry.sendEvent(Events.MILESTONE_CHANGE_STATE, {
-      rootDirectory: this.project.rootDirectory,
-      milestone: this,
-    });
+    Telemetry.sendEvent(MILESTONE_CHANGE_STATE, { milestone: this });
   }
 }

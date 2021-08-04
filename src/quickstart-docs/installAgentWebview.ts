@@ -4,7 +4,7 @@ import * as semver from 'semver';
 import AppMapProperties from '../appmapProperties';
 import ProjectWatcher from '../projectWatcher';
 import { getNonce } from '../util';
-import Telemetry from '../telemetry';
+import { Telemetry } from '../telemetry';
 
 const supportedLanguages = [
   {

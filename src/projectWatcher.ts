@@ -4,7 +4,13 @@ import path from 'path';
 import AppMapAgent, { StatusResponse } from './agent/appMapAgent';
 import LanguageResolver from './languageResolver';
 import { createMilestones, MilestoneMap, MilestoneType } from './milestones';
-import Telemetry, { Events } from './telemetry';
+import {
+  Telemetry,
+  DEBUG_EXCEPTION,
+  PROJECT_CLIENT_AGENT_REMOVE,
+  PROJECT_CONFIG_WRITE,
+  PROJECT_OPEN,
+} from './telemetry';
 import { unreachable } from './util';
 import AppMapProperties from './appmapProperties';
 import { ErrorUnsupportedLanguage } from './agent/AppMapAgentDummy';
@@ -147,7 +153,7 @@ const State = {
     }
 
     onExit(project: ProjectWatcher) {
-      Telemetry.sendEvent(Events.PROJECT_CLIENT_AGENT_REMOVE, {
+      Telemetry.sendEvent(PROJECT_CLIENT_AGENT_REMOVE, {
         rootDirectory: project.rootDirectory,
       });
 
@@ -181,7 +187,7 @@ const State = {
       diff
         .on('properties.config.present', (isPresent) => {
           // Send a telemetry event.
-          Telemetry.sendEvent(Events.PROJECT_CONFIG_WRITE, {
+          Telemetry.sendEvent(PROJECT_CONFIG_WRITE, {
             rootDirectory: project.rootDirectory,
           });
 
@@ -324,7 +330,7 @@ export default class ProjectWatcher {
       throw new Error('initialization has already occurred');
     }
 
-    Telemetry.sendEvent(Events.PROJECT_OPEN, { rootDirectory: this.rootDirectory });
+    Telemetry.sendEvent(PROJECT_OPEN, { rootDirectory: this.rootDirectory, agent: this.agent });
 
     this.language = await LanguageResolver.getLanguage(this.rootDirectory);
     if (!this.agent) {
@@ -366,7 +372,7 @@ export default class ProjectWatcher {
         return;
       }
 
-      Telemetry.sendEvent(Events.DEBUG_EXCEPTION, { exception });
+      Telemetry.sendEvent(DEBUG_EXCEPTION, { exception });
 
       // For now, assume that the error is unrecoverable and stop polling.
       return;
