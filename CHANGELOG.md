@@ -1,3 +1,10 @@
+# [0.16.0](https://github.com/applandinc/vscode-appland/compare/v0.15.2...v0.16.0) (2021-08-05)
+
+
+### Features
+
+* Replace `Insatll AppMap agent` button ([7de440a](https://github.com/applandinc/vscode-appland/commit/7de440a19c4fad296aee3a6ed825107ac5f0226b))
+
 ## [0.15.2](https://github.com/applandinc/vscode-appland/compare/v0.15.1...v0.15.2) (2021-08-03)
 
 
