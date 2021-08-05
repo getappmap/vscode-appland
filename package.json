@@ -123,7 +123,7 @@
     "viewsWelcome": [
       {
         "view": "appmap.views.local",
-        "contents": "No AppMaps found.\n[Install AppMap agent](command:appmap.openQuickstartDocsInstallAgent)",
+        "contents": "No AppMaps found.\n[Open quickstart documentation](https://appland.com/docs/quickstart/)",
         "when": "appmap.initialized && !appmap.hasData"
       },
       {
