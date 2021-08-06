@@ -2,7 +2,31 @@ import * as vscode from 'vscode';
 import bent from 'bent';
 
 export class AppmapUploader {
-  public static async upload(appMapFile: vscode.TextDocument): Promise<void> {
+  private static DIALOG_KEY = 'applandinc.appmap.uploadDialog';
+
+  public static async upload(
+    appMapFile: vscode.TextDocument,
+    context: vscode.ExtensionContext
+  ): Promise<void> {
+    const acceptedPreviously = context.globalState.get<boolean>(this.DIALOG_KEY);
+    if (!acceptedPreviously) {
+      const result = await vscode.window.showInformationMessage(
+        [
+          'Performing this action will upload this AppMap to the AppLand cloud where it can be easily shared.',
+          'By continuing, you agree that you have permission to distribute the data contained in this AppMap.',
+          'If you choose to continue, this dialog will not appear again.',
+        ].join(' '),
+        'Continue',
+        'Cancel'
+      );
+
+      if (!result || result === 'Cancel') {
+        return;
+      }
+
+      context.globalState.update(this.DIALOG_KEY, true);
+    }
+
     const post = bent(this.getUri().toString(), 'POST', 'json', 201, {
       'X-Requested-With': 'VSCodeUploader',
     });
@@ -25,10 +49,14 @@ export class AppmapUploader {
     }
   }
 
+  public static resetState(context: vscode.ExtensionContext) {
+    context.globalState.update(this.DIALOG_KEY, undefined);
+  }
+
   private static getUri(): vscode.Uri {
     const configUrl: string = vscode.workspace
       .getConfiguration('appMap')
-      .get('appLandURL') as string;
+      .get('applandUrl') as string;
     return vscode.Uri.parse(configUrl);
   }
 

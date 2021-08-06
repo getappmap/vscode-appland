@@ -106,7 +106,7 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
           Telemetry.reportOpenUri(message.url);
           break;
         case 'uploadAppmap':
-          AppmapUploader.upload(document);
+          AppmapUploader.upload(document, this.context);
           break;
       }
     });
