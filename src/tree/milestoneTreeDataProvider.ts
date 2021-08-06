@@ -8,7 +8,7 @@ import QuickstartWebview from '../quickstartWebview';
 import Milestone from '../milestones';
 import { Telemetry, DEBUG_EXCEPTION } from '../telemetry';
 
-const Icons = {
+const ICONS = {
   complete: path.join(__dirname, svgComplete),
   incomplete: path.join(__dirname, svgIncomplete),
   error: path.join(__dirname, svgError),
@@ -68,7 +68,7 @@ export class MilestoneTreeDataProvider implements vscode.TreeDataProvider<vscode
     const items = Object.values(project.milestones).map((milestone) => {
       const treeItem = new vscode.TreeItem(milestone.label);
       treeItem.id = milestone.id;
-      treeItem.iconPath = Icons[milestone.state];
+      treeItem.iconPath = ICONS[milestone.state];
       treeItem.command = {
         command: 'appmap.clickMilestone',
         arguments: [milestone],

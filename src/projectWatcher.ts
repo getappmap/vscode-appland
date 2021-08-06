@@ -98,7 +98,7 @@ interface ProjectWatcherState {
  * - `onExit`: Called just before changing to another state.
  * - `tick`: Called every time the ProjectWatcher is ticked.
  */
-const State = {
+const STATE = {
   WAIT_FOR_AGENT_INSTALL: new (class implements ProjectWatcherState {
     onEnter(project: ProjectWatcher) {
       project.milestones.INSTALL_AGENT.setState('incomplete');
@@ -127,7 +127,7 @@ const State = {
         return undefined;
       }
 
-      project.setState(State.WATCH_PROJECT_STATUS);
+      project.setState(STATE.WATCH_PROJECT_STATUS);
       return initialStatus;
     }
   })(),
@@ -167,13 +167,13 @@ const State = {
     ): Promise<StatusResponse | undefined> {
       const isInstalled = await agent.isInstalled(project.rootDirectory);
       if (!isInstalled) {
-        project.setState(State.WAIT_FOR_AGENT_INSTALL);
+        project.setState(STATE.WAIT_FOR_AGENT_INSTALL);
         return;
       }
 
       const status = await agent.status(project.rootDirectory);
       if (!status) {
-        project.setState(State.WAIT_FOR_AGENT_INSTALL);
+        project.setState(STATE.WAIT_FOR_AGENT_INSTALL);
         return;
       }
 
@@ -248,7 +248,7 @@ export default class ProjectWatcher {
     this.workspaceFolder = workspaceFolder;
     this.frequencyMs = frequencyMs;
     this.milestones = createMilestones(this);
-    this.currentState = State.WAIT_FOR_AGENT_INSTALL;
+    this.currentState = STATE.WAIT_FOR_AGENT_INSTALL;
     this.properties = properties;
 
     appmapWatcher.onDidCreate((uri) => {

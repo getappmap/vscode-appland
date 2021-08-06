@@ -4,6 +4,7 @@ import { Telemetry, APPMAP_OPEN } from './telemetry';
 import { getNonce, getStringRecords, workspaceFolderForDocument } from './util';
 import { version } from '../package.json';
 import AppMapProperties from './appmapProperties';
+import { AppmapUploader } from './appmapUploader';
 
 /**
  * Provider for AppLand scenario files.
@@ -103,6 +104,9 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
         case 'appmapOpenUrl':
           vscode.env.openExternal(message.url);
           Telemetry.reportOpenUri(message.url);
+          break;
+        case 'uploadAppmap':
+          AppmapUploader.upload(document, this.context);
           break;
       }
     });
