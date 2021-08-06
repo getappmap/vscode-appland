@@ -50,7 +50,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     QuickstartDocsInstallAgent.register(context, properties, projects);
     QuickstartDocsOpenAppmaps.register(context, projects, localAppMaps);
 
-    const { localTree } = registerTrees(context, localAppMaps, projects);
+    const { localTree } = registerTrees(context, localAppMaps);
 
     context.subscriptions.push(
       vscode.commands.registerCommand('appmap.applyFilter', async () => {

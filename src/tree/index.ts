@@ -5,19 +5,10 @@ import { LinkTreeDataProvider } from './linkTreeDataProvider';
 import Links from './links';
 // import { MilestoneTreeDataProvider } from './milestoneTreeDataProvider';
 import { QuickstartDocsTreeDataProvider } from './quickstartDocsTreeDataProvider';
-import ProjectWatcher from '../projectWatcher';
-function showQuickstartAppmaps(localAppMaps: AppMapCollectionFile) {
-  if (localAppMaps.allAppMaps().length && !showQuickstartAppmaps.showed) {
-    vscode.commands.executeCommand('appmap.openQuickstartDocsOpenAppmaps');
-    showQuickstartAppmaps.showed = true;
-  }
-}
-showQuickstartAppmaps.showed = false;
 
 export default function registerTrees(
   context: vscode.ExtensionContext,
-  localAppMaps: AppMapCollectionFile,
-  projects: readonly ProjectWatcher[]
+  localAppMaps: AppMapCollectionFile
 ): Record<string, vscode.TreeView<vscode.TreeItem>> {
   const localTreeProvider = new AppMapTreeDataProvider(localAppMaps);
   const localTree = vscode.window.createTreeView('appmap.views.local', {
@@ -43,14 +34,6 @@ export default function registerTrees(
   const quickstartDocsTreeProvider = new QuickstartDocsTreeDataProvider();
   const quickstartDocsTree = vscode.window.createTreeView('appmap.views.milestones', {
     treeDataProvider: quickstartDocsTreeProvider,
-  });
-
-  quickstartDocsTree.onDidChangeVisibility(() => {
-    showQuickstartAppmaps(localAppMaps);
-  });
-
-  localAppMaps.onUpdated(() => {
-    showQuickstartAppmaps(localAppMaps);
   });
 
   context.subscriptions.push(
