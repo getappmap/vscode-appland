@@ -1,3 +1,15 @@
+# [0.17.0](https://github.com/applandinc/vscode-appland/compare/v0.16.0...v0.17.0) (2021-08-06)
+
+
+### Bug Fixes
+
+* Don't open a webview upon initialization ([a44ce5b](https://github.com/applandinc/vscode-appland/commit/a44ce5b81a48a5ff0a0ee547d60b1ed6169ad842))
+
+
+### Features
+
+* Add the ability to upload AppMaps to AppLand cloud ([#182](https://github.com/applandinc/vscode-appland/issues/182)) ([5b5b35f](https://github.com/applandinc/vscode-appland/commit/5b5b35fd8d1809b6df1f80023142198a655741bc))
+
 # [0.16.0](https://github.com/applandinc/vscode-appland/compare/v0.15.2...v0.16.0) (2021-08-05)
 
 
