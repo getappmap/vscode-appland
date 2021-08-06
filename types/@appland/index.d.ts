@@ -5,5 +5,5 @@ declare module '@appland/models' {
     build(): AppMap;
   }
 
-  function buildAppMap(data: string | Record<string, unknown>): AppMapBuilder;
+  export function buildAppMap(data: string | Record<string, unknown>): AppMapBuilder;
 }

@@ -1,4 +1,4 @@
-import { PathLike, promises as fs } from 'fs';
+import { PathLike } from 'fs';
 import AppMapAgent, {
   FilesResponse,
   StatusResponse,
@@ -20,22 +20,22 @@ export default class AppMapAgentJavaDummy implements AppMapAgent {
     this.language = language;
   }
 
-  isInstalled(path: PathLike): Promise<boolean> {
+  isInstalled(): Promise<boolean> {
     throw new ErrorUnsupportedLanguage(this.language);
   }
-  install(path: PathLike): Promise<InstallResult> {
+  install(): Promise<InstallResult> {
     throw new ErrorUnsupportedLanguage(this.language);
   }
-  init(path: PathLike): Promise<InitResponse> {
+  init(): Promise<InitResponse> {
     throw new ErrorUnsupportedLanguage(this.language);
   }
-  files(path: PathLike): Promise<FilesResponse> {
+  files(): Promise<FilesResponse> {
     throw new ErrorUnsupportedLanguage(this.language);
   }
-  status(path: PathLike): Promise<StatusResponse> {
+  status(): Promise<StatusResponse> {
     throw new ErrorUnsupportedLanguage(this.language);
   }
-  test(path: PathLike, command: string[]): Promise<void> {
+  test(): Promise<void> {
     throw new ErrorUnsupportedLanguage(this.language);
   }
 }

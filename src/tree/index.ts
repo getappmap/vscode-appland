@@ -3,7 +3,6 @@ import AppMapCollectionFile from '../appmapCollectionFile';
 import { AppMapTreeDataProvider } from './appmap/AppMapTreeDataProvider';
 import { LinkTreeDataProvider } from './linkTreeDataProvider';
 import Links from './links';
-// import { MilestoneTreeDataProvider } from './milestoneTreeDataProvider';
 import { QuickstartDocsTreeDataProvider } from './quickstartDocsTreeDataProvider';
 
 export default function registerTrees(

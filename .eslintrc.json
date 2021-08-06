@@ -11,11 +11,17 @@
     "prettier/prettier": "error",
     "@typescript-eslint/naming-convention": [
       "error",
+      {
+        "format": null,
+        "leadingUnderscore": "require",
+        "selector": "variableLike",
+        "modifiers": ["unused"]
+      },
       { "selector": "variableLike", "format": ["camelCase", "UPPER_CASE"] },
       {
         "selector": "variable",
         "modifiers": ["exported"],
-        "format": ["PascalCase"]
+        "format": ["PascalCase", "UPPER_CASE"]
       }
     ]
   }
