@@ -1,10 +1,3 @@
-import { PathLike } from 'fs';
-import * as vscode from 'vscode';
-import TelemetryDataProvider from './telemetryDataProvider';
-import TelemetryContext from './telemetryContext';
-import LanguageResolver from '../languageResolver';
-import Milestone from '../milestones';
-
 /**
  * The main interface for requesting telemetry data. A new instance of this class should be created for each unique
  * telemetry event. Some results will be cached between data prodivers, while others may be globally cached for the
@@ -31,43 +24,32 @@ import Milestone from '../milestones';
  * ```
  */
 
-/**
- * EventContext contains data that may be provided from the event sender.
- */
-export interface EventContext {
-  rootDirectory?: PathLike;
-  milestone?: Milestone;
-  file?: PathLike;
-  exception?: Error;
-}
+import { getStringRecords } from '../util';
+import TelemetryDataProvider from './telemetryDataProvider';
 
-export default class TelemetryResolver {
-  private eventContext: EventContext;
-
-  constructor(eventContext: EventContext) {
-    this.eventContext = eventContext;
-  }
+export default class TelemetryResolver<DataType extends Record<string, unknown>> {
+  constructor(private readonly data: DataType) {}
 
   /**
    * Requests any number of telemetry providers to resolve thier value, returning a JSON object containing the data
    * ready to be sent out with an event.
    */
-  public async resolve<T>(
-    ...providers: Array<TelemetryDataProvider<T>>
-  ): Promise<Record<string, T>> {
-    const { rootDirectory } = this.eventContext;
-    let language: string | undefined;
-    if (rootDirectory) {
-      language = await LanguageResolver.getLanguage(rootDirectory);
-    }
-
-    const context = new TelemetryContext(this.eventContext, language);
+  public async resolve<ValueType>(
+    ...providers: Array<TelemetryDataProvider<Record<string, unknown>, ValueType>>
+  ): Promise<Record<string, ValueType>> {
     const entries = await Promise.all(
-      providers.map(async (provider) => [provider.id, await provider.getValue(context)])
+      providers.map(async (provider) => [provider.id, await provider.getValue(this.data)])
     );
 
-    return entries.reduce((memo, [k, v]) => {
-      memo[k] = v;
+    return entries.reduce((memo, [providerId, resolvedValue]) => {
+      if (typeof resolvedValue === 'object') {
+        const flattenedObject = getStringRecords(resolvedValue, providerId);
+        Object.entries(flattenedObject).forEach(([key, value]) => {
+          memo[key] = value;
+        });
+      } else {
+        memo[providerId] = resolvedValue;
+      }
       return memo;
     }, {});
   }

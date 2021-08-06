@@ -1,9 +1,10 @@
 import { isAbsolute, join } from 'path';
 import * as vscode from 'vscode';
-import Telemetry from './telemetry';
+import { Telemetry, APPMAP_OPEN } from './telemetry';
 import { getNonce, getStringRecords, workspaceFolderForDocument } from './util';
 import { version } from '../package.json';
 import AppMapProperties from './appmapProperties';
+import { AppmapUploader } from './appmapUploader';
 
 /**
  * Provider for AppLand scenario files.
@@ -81,8 +82,12 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
           vscode.window.setStatusBarMessage('AppMap state was copied to clipboard', 5000);
           break;
         case 'onLoadComplete':
-          // TODO.
-          // Report appland.appmap/plugin/appmap:open
+          Telemetry.sendEvent(APPMAP_OPEN, {
+            rootDirectory: workspaceFolderForDocument(document)?.uri.fsPath,
+            uri: document.uri,
+            metadata: JSON.parse(document.getText()).metadata,
+            metrics: message.metrics,
+          });
           break;
         case 'performAction':
           Telemetry.reportAction(
@@ -99,6 +104,9 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
         case 'appmapOpenUrl':
           vscode.env.openExternal(message.url);
           Telemetry.reportOpenUri(message.url);
+          break;
+        case 'uploadAppmap':
+          AppmapUploader.upload(document, this.context);
           break;
       }
     });

@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { DatabaseUpdater } from './databaseUpdater';
 import { ScenarioProvider } from './scenarioViewer';
-import Telemetry, { Events } from './telemetry';
+import { Telemetry, DEBUG_EXCEPTION } from './telemetry';
 import registerTrees from './tree';
 import AppMapCollectionFile from './appmapCollectionFile';
 import RemoteRecording from './remoteRecording';
@@ -50,7 +50,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     QuickstartDocsInstallAgent.register(context, properties, projects);
     QuickstartDocsOpenAppmaps.register(context, projects, localAppMaps);
 
-    const { localTree } = registerTrees(context, localAppMaps, projects);
+    const { localTree } = registerTrees(context, localAppMaps);
 
     context.subscriptions.push(
       vscode.commands.registerCommand('appmap.applyFilter', async () => {
@@ -88,7 +88,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
     registerUtilityCommands(context, properties);
   } catch (exception) {
-    Telemetry.sendEvent(Events.DEBUG_EXCEPTION, { exception });
+    Telemetry.sendEvent(DEBUG_EXCEPTION, { exception });
     throw exception;
   }
 }

@@ -4,7 +4,13 @@ import path from 'path';
 import AppMapAgent, { StatusResponse } from './agent/appMapAgent';
 import LanguageResolver from './languageResolver';
 import { createMilestones, MilestoneMap, MilestoneType } from './milestones';
-import Telemetry, { Events } from './telemetry';
+import {
+  Telemetry,
+  DEBUG_EXCEPTION,
+  PROJECT_CLIENT_AGENT_REMOVE,
+  PROJECT_CONFIG_WRITE,
+  PROJECT_OPEN,
+} from './telemetry';
 import { unreachable } from './util';
 import AppMapProperties from './appmapProperties';
 import { ErrorUnsupportedLanguage } from './agent/AppMapAgentDummy';
@@ -92,7 +98,7 @@ interface ProjectWatcherState {
  * - `onExit`: Called just before changing to another state.
  * - `tick`: Called every time the ProjectWatcher is ticked.
  */
-const State = {
+const STATE = {
   WAIT_FOR_AGENT_INSTALL: new (class implements ProjectWatcherState {
     onEnter(project: ProjectWatcher) {
       project.milestones.INSTALL_AGENT.setState('incomplete');
@@ -121,7 +127,7 @@ const State = {
         return undefined;
       }
 
-      project.setState(State.WATCH_PROJECT_STATUS);
+      project.setState(STATE.WATCH_PROJECT_STATUS);
       return initialStatus;
     }
   })(),
@@ -147,7 +153,7 @@ const State = {
     }
 
     onExit(project: ProjectWatcher) {
-      Telemetry.sendEvent(Events.PROJECT_CLIENT_AGENT_REMOVE, {
+      Telemetry.sendEvent(PROJECT_CLIENT_AGENT_REMOVE, {
         rootDirectory: project.rootDirectory,
       });
 
@@ -161,13 +167,13 @@ const State = {
     ): Promise<StatusResponse | undefined> {
       const isInstalled = await agent.isInstalled(project.rootDirectory);
       if (!isInstalled) {
-        project.setState(State.WAIT_FOR_AGENT_INSTALL);
+        project.setState(STATE.WAIT_FOR_AGENT_INSTALL);
         return;
       }
 
       const status = await agent.status(project.rootDirectory);
       if (!status) {
-        project.setState(State.WAIT_FOR_AGENT_INSTALL);
+        project.setState(STATE.WAIT_FOR_AGENT_INSTALL);
         return;
       }
 
@@ -181,7 +187,7 @@ const State = {
       diff
         .on('properties.config.present', (isPresent) => {
           // Send a telemetry event.
-          Telemetry.sendEvent(Events.PROJECT_CONFIG_WRITE, {
+          Telemetry.sendEvent(PROJECT_CONFIG_WRITE, {
             rootDirectory: project.rootDirectory,
           });
 
@@ -242,7 +248,7 @@ export default class ProjectWatcher {
     this.workspaceFolder = workspaceFolder;
     this.frequencyMs = frequencyMs;
     this.milestones = createMilestones(this);
-    this.currentState = State.WAIT_FOR_AGENT_INSTALL;
+    this.currentState = STATE.WAIT_FOR_AGENT_INSTALL;
     this.properties = properties;
 
     appmapWatcher.onDidCreate((uri) => {
@@ -324,7 +330,7 @@ export default class ProjectWatcher {
       throw new Error('initialization has already occurred');
     }
 
-    Telemetry.sendEvent(Events.PROJECT_OPEN, { rootDirectory: this.rootDirectory });
+    Telemetry.sendEvent(PROJECT_OPEN, { rootDirectory: this.rootDirectory, agent: this.agent });
 
     this.language = await LanguageResolver.getLanguage(this.rootDirectory);
     if (!this.agent) {
@@ -366,7 +372,7 @@ export default class ProjectWatcher {
         return;
       }
 
-      Telemetry.sendEvent(Events.DEBUG_EXCEPTION, { exception });
+      Telemetry.sendEvent(DEBUG_EXCEPTION, { exception });
 
       // For now, assume that the error is unrecoverable and stop polling.
       return;
