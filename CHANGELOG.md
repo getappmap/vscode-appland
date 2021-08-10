@@ -1,3 +1,10 @@
+## [0.17.1](https://github.com/applandinc/vscode-appland/compare/v0.17.0...v0.17.1) (2021-08-10)
+
+
+### Bug Fixes
+
+* Don't coerce arbitrary types into strings ([53800dc](https://github.com/applandinc/vscode-appland/commit/53800dc30dd6e62700c735d5967b201f7002aa79))
+
 # [0.17.0](https://github.com/applandinc/vscode-appland/compare/v0.16.0...v0.17.0) (2021-08-06)
 
 
