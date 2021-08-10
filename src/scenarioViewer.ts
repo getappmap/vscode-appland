@@ -1,7 +1,7 @@
 import { isAbsolute, join } from 'path';
 import * as vscode from 'vscode';
 import { Telemetry, APPMAP_OPEN } from './telemetry';
-import { getNonce, getStringRecords, workspaceFolderForDocument } from './util';
+import { getNonce, getRecords, workspaceFolderForDocument } from './util';
 import { version } from '../package.json';
 import AppMapProperties from './appmapProperties';
 import { AppmapUploader } from './appmapUploader';
@@ -92,7 +92,7 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
         case 'performAction':
           Telemetry.reportAction(
             message.action,
-            getStringRecords(message.data, `appmap.${message.action}`)
+            getRecords(message.data, `appmap.${message.action}`)
           );
           break;
         case 'reportError':

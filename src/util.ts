@@ -21,18 +21,15 @@ export function getNonce(): string {
 // Returns an object's string values with an optional key prefix
 // getStringRecords({ a: 'hello', b: [object Object] }, 'myApp') ->
 // { 'myApp.a': 'hello' }
-export function getStringRecords(
-  obj: Record<string, unknown>,
-  keyPrefix?: string
-): Record<string, string> {
+export function getRecords<T>(obj: Record<string, unknown>, keyPrefix?: string): Record<string, T> {
   const base = keyPrefix ? `${keyPrefix}.` : '';
 
   return Object.entries(obj).reduce((memo, [k, v]) => {
     if (typeof v !== 'object') {
-      memo[`${base}${k}`] = String(v);
+      memo[`${base}${k}`] = v as T;
     }
     return memo;
-  }, {} as Record<string, string>);
+  }, {} as Record<string, T>);
 }
 
 export function notEmpty<TValue>(value: TValue | null | undefined): value is TValue {
