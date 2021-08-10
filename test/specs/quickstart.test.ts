@@ -13,6 +13,7 @@ describe('Quickstart', () => {
   describe('First time flow', () => {
     let sinon: SinonSandbox;
     let appmapWatcher: MockFileSystemWatcher;
+    let configWatcher: MockFileSystemWatcher;
     let context: MockExtensionContext;
     let properties: AppMapProperties;
     let projects: ProjectWatcher[];
@@ -21,10 +22,12 @@ describe('Quickstart', () => {
       sinon = createSandbox();
       context = new MockExtensionContext();
       appmapWatcher = new MockFileSystemWatcher();
+      configWatcher = new MockFileSystemWatcher();
     });
 
     afterEach(() => {
       appmapWatcher.dispose();
+      configWatcher.dispose();
       context.dispose();
       sinon.restore();
     });
@@ -35,7 +38,7 @@ describe('Quickstart', () => {
       properties = new AppMapProperties(context);
       mockSingleProjectWorkspace(sinon);
       projects = (vscode.workspace.workspaceFolders || []).map(
-        (folder) => new ProjectWatcher(context, folder, appmapWatcher, properties)
+        (folder) => new ProjectWatcher(context, folder, appmapWatcher, configWatcher, properties)
       );
 
       assert(properties.hasSeenQuickStartDocs === false);
@@ -50,7 +53,7 @@ describe('Quickstart', () => {
       properties = new AppMapProperties(context);
       mockSingleProjectWorkspace(sinon);
       projects = (vscode.workspace.workspaceFolders || []).map(
-        (folder) => new ProjectWatcher(context, folder, appmapWatcher, properties)
+        (folder) => new ProjectWatcher(context, folder, appmapWatcher, configWatcher, properties)
       );
 
       assert(properties.hasSeenQuickStartDocs === false);
@@ -65,7 +68,7 @@ describe('Quickstart', () => {
       sinon.stub(properties, 'firstVersionInstalled').value(version);
       mockSingleProjectWorkspace(sinon);
       projects = (vscode.workspace.workspaceFolders || []).map(
-        (folder) => new ProjectWatcher(context, folder, appmapWatcher, properties)
+        (folder) => new ProjectWatcher(context, folder, appmapWatcher, configWatcher, properties)
       );
 
       assert(properties.hasSeenQuickStartDocs === false);

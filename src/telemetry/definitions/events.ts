@@ -34,7 +34,14 @@ export const PROJECT_CLIENT_AGENT_REMOVE = new Event({
 
 export const PROJECT_CONFIG_WRITE = new Event({
   name: 'project/config:write',
-  properties: [],
+  properties: [
+    Properties.CONFIG_APP,
+    Properties.CONFIG_CONTENT,
+    Properties.CONFIG_IS_VALID,
+    Properties.FILE_PATH,
+    Properties.FILE_SHA_256,
+    Properties.PROJECT_LANGUAGE,
+  ],
 });
 
 export const MILESTONE_CHANGE_STATE = new Event({
