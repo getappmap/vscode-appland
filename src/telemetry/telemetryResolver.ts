@@ -24,7 +24,7 @@
  * ```
  */
 
-import { getStringRecords } from '../util';
+import { getRecords } from '../util';
 import TelemetryDataProvider from './telemetryDataProvider';
 
 export default class TelemetryResolver<DataType extends Record<string, unknown>> {
@@ -43,9 +43,9 @@ export default class TelemetryResolver<DataType extends Record<string, unknown>>
 
     return entries.reduce((memo, [providerId, resolvedValue]) => {
       if (typeof resolvedValue === 'object') {
-        const flattenedObject = getStringRecords(resolvedValue, providerId);
+        const flattenedObject = getRecords(resolvedValue, providerId);
         Object.entries(flattenedObject).forEach(([key, value]) => {
-          memo[key] = value;
+          memo[key] = value as ValueType;
         });
       } else {
         memo[providerId] = resolvedValue;
