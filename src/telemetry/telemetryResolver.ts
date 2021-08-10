@@ -45,7 +45,7 @@ export default class TelemetryResolver<DataType extends Record<string, unknown>>
       if (typeof resolvedValue === 'object') {
         const flattenedObject = getRecords(resolvedValue, providerId);
         Object.entries(flattenedObject).forEach(([key, value]) => {
-          memo[key] = value as ValueType;
+          memo[key] = value;
         });
       } else {
         memo[providerId] = resolvedValue;
