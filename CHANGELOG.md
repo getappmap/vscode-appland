@@ -1,3 +1,10 @@
+## [0.17.2](https://github.com/applandinc/vscode-appland/compare/v0.17.1...v0.17.2) (2021-08-11)
+
+
+### Bug Fixes
+
+* Do not show instructions popup automatically ([f62a93a](https://github.com/applandinc/vscode-appland/commit/f62a93a5a04cef7bf6ff4ef8e35bba2286b8f7c7))
+
 ## [0.17.1](https://github.com/applandinc/vscode-appland/compare/v0.17.0...v0.17.1) (2021-08-10)
 
 
