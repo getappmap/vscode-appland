@@ -48,14 +48,6 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
         this.properties.setWorkspaceOpenedAppMap(workspaceFolder, true);
       }
 
-      // show AppMap instructions on first open
-      if (!this.context.globalState.get(ScenarioProvider.INSTRUCTIONS_VIEWED)) {
-        webviewPanel.webview.postMessage({
-          type: 'showInstructions',
-        });
-        this.context.globalState.update(ScenarioProvider.INSTRUCTIONS_VIEWED, true);
-      }
-
       const lastVersion = this.context.globalState.get(ScenarioProvider.RELEASE_KEY);
       if (!lastVersion) {
         this.context.globalState.update(ScenarioProvider.RELEASE_KEY, version);
