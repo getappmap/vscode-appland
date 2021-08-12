@@ -1,5 +1,9 @@
 import Vue from 'vue';
-import { VQuickstartDocsInstallAgent, VQuickstartDocsOpenAppmaps } from '@appland/components';
+import {
+  VQuickstartDocsInstallAgent,
+  VQuickstartDocsOpenAppmaps,
+  VQuickstartDocsRecordAppmaps,
+} from '@appland/components';
 import '@appland/diagrams/dist/style.css';
 import MessagePublisher from './messagePublisher';
 
@@ -71,6 +75,30 @@ export function mountQuickstartOpenAppmaps() {
 
       messages.on('appmapSnapshot', ({ appmaps }) => {
         app.appmaps = appmaps;
+      });
+
+      vscode.postMessage({ command: 'postInitialize' });
+    })
+    .on(undefined, (event) => {
+      throw new Error(`unhandled message type: ${event.type}`);
+    });
+
+  vscode.postMessage({ command: 'preInitialize' });
+}
+
+export function mountQuickstartRecordAppmaps() {
+  const vscode = window.acquireVsCodeApi();
+  const messages = new MessagePublisher(vscode);
+
+  messages
+    .on('init', () => {
+      const app = new Vue({
+        el: '#app',
+        render(h) {
+          return h(VQuickstartDocsRecordAppmaps, {
+            ref: 'ui',
+          });
+        },
       });
 
       vscode.postMessage({ command: 'postInitialize' });

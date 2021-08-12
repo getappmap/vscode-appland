@@ -1,34 +1,11 @@
-import { PathLike } from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
-import AppMapCollectionFile from '../appmapCollectionFile';
 import ProjectWatcher from '../projectWatcher';
 import { getNonce } from '../util';
 
-interface AppMapListItem {
-  path: PathLike;
-  name?: string;
-  requests?: number;
-  sqlQueries?: number;
-  functions?: number;
-}
-
-function listAppMaps(
-  appmaps: AppMapCollectionFile,
-  workspaceFolder: vscode.WorkspaceFolder
-): AppMapListItem[] {
-  return appmaps.allAppMapsForWorkspaceFolder(workspaceFolder).map(({ descriptor }) => ({
-    path: descriptor.resourceUri.fsPath,
-    name: descriptor.metadata?.name as string,
-    requests: descriptor.numRequests,
-    sqlQueries: descriptor.numQueries,
-    functions: descriptor.numFunctions,
-  }));
-}
-
-export default class QuickstartWebview {
+export default class QuickstartDocsRecordAppmaps {
   public static readonly viewType = 'appmap.views.quickstart';
-  public static readonly command = 'appmap.openQuickstartDocsOpenAppmaps';
+  public static readonly command = 'appmap.openQuickstartDocsRecordAppmaps';
 
   // Keyed by project root directory
   private static readonly openWebviews = new Map<string, vscode.WebviewPanel>();
@@ -36,7 +13,6 @@ export default class QuickstartWebview {
   public static register(
     context: vscode.ExtensionContext,
     projects: readonly ProjectWatcher[],
-    appmaps: AppMapCollectionFile
   ): void {
     const project = projects[0];
     if (!project) {
@@ -57,7 +33,7 @@ export default class QuickstartWebview {
 
         const panel = vscode.window.createWebviewPanel(
           this.viewType,
-          'Quickstart: Open AppMaps',
+          'Quickstart: Record AppMaps',
           vscode.ViewColumn.One,
           {
             enableScripts: true,
@@ -75,20 +51,6 @@ export default class QuickstartWebview {
 
         panel.webview.html = getWebviewContent(panel.webview, context);
 
-        const eventListener = project.onAppMapCreated(() => {
-          // TODO.
-          // This could be made a lot more efficient by only sending the list item that's new, not the entire snapshot.
-          // This also won't be triggered if AppMaps are deleted (BUG).
-          panel.webview.postMessage({
-            type: 'appmapSnapshot',
-            appmaps: listAppMaps(appmaps, project.workspaceFolder),
-          });
-        });
-
-        panel.onDidDispose(() => {
-          eventListener.dispose();
-        });
-
         panel.webview.onDidReceiveMessage(async (message) => {
           switch (message.command) {
             case 'preInitialize':
@@ -96,21 +58,7 @@ export default class QuickstartWebview {
                 // The webview has been created but may not be ready to receive all messages yet.
                 panel.webview.postMessage({
                   type: 'init',
-                  appmaps: listAppMaps(appmaps, project.workspaceFolder),
                 });
-              }
-              break;
-            case 'openFile':
-              {
-                const { file } = message;
-                let filePath = file;
-
-                if (!path.isAbsolute(file)) {
-                  // If the file is not absolute, it's relative to the workspace folder
-                  filePath = path.join(project.rootDirectory as string, file);
-                }
-
-                vscode.commands.executeCommand('vscode.open', vscode.Uri.file(filePath));
               }
               break;
             default:
@@ -118,7 +66,7 @@ export default class QuickstartWebview {
           }
         });
 
-        vscode.commands.executeCommand('appmap.focusQuickstartDocs', 2);
+        vscode.commands.executeCommand('appmap.focusQuickstartDocs', 1);
       })
     );
   }
@@ -143,7 +91,7 @@ function getWebviewContent(webview: vscode.Webview, context: vscode.ExtensionCon
     </div>
     <script nonce="${nonce}" src="${scriptUri}"></script>
     <script type="text/javascript" nonce="${nonce}">
-      AppLandWeb.mountQuickstartOpenAppmaps();
+      AppLandWeb.mountQuickstartRecordAppmaps();
     </script>
   </body>
   </html>`;

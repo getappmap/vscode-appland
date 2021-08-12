@@ -7,6 +7,11 @@ const docsPages = [
     command: 'appmap.openQuickstartDocsInstallAgent',
   },
   {
+    id: 'QUICKSTART_DOCS_RECORD_APPMAPS',
+    title: 'Record AppMaps',
+    command: 'appmap.openQuickstartDocsRecordAppmaps',
+  },
+  {
     id: 'QUICKSTART_DOCS_OPEN_APPMAPS',
     title: 'Open AppMaps',
     command: 'appmap.openQuickstartDocsOpenAppmaps',
