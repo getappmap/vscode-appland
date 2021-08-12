@@ -11,18 +11,21 @@ const supportedLanguages = [
     id: 'ruby',
     name: 'Ruby',
     link: 'https://appland.com/docs/quickstart/vscode/ruby-step-2.html',
+    installCommand: 'npx @appland/appmap install-agent ruby',
     isDetected: false,
   },
   {
     id: 'python',
     name: 'Python',
     link: 'https://appland.com/docs/quickstart/vscode/python-step-2.html',
+    installCommand: 'npx @appland/appmap install-agent python',
     isDetected: false,
   },
   {
     id: 'java',
     name: 'Java',
     link: 'https://appland.com/docs/quickstart/vscode/java-step-2.html',
+    installCommand: 'npx @appland/appmap install-agent java',
     isDetected: false,
   },
 ];
