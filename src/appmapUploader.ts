@@ -1,5 +1,7 @@
 import * as vscode from 'vscode';
 import bent from 'bent';
+import { workspaceFolderForDocument } from './util';
+import { Telemetry, APPMAP_UPLOAD } from './telemetry';
 
 export class AppmapUploader {
   private static DIALOG_KEY = 'applandinc.appmap.uploadDialog';
@@ -44,6 +46,12 @@ export class AppmapUploader {
       vscode.env.openExternal(confirmUri);
 
       vscode.window.showInformationMessage(`Uploaded ${appMapFile.fileName}`);
+
+      Telemetry.sendEvent(APPMAP_UPLOAD, {
+        rootDirectory: workspaceFolderForDocument(appMapFile)?.uri.fsPath,
+        uri: appMapFile.uri,
+        metadata: JSON.parse(appMapFile.getText()).metadata,
+      });
     } catch (e) {
       vscode.window.showErrorMessage(`Upload failed: ${e.name}: ${e.message}`);
     }

@@ -35,6 +35,13 @@ export const FILE_SHA_256 = new TelemetryDataProvider({
   },
 });
 
+export const FILE_SIZE = new TelemetryDataProvider({
+  id: 'appmap.file.size',
+  async value({ uri }: { uri: Uri }) {
+    return (await fs.stat(uri.fsPath)).size;
+  },
+});
+
 export const FILE_METADATA = new TelemetryDataProvider({
   id: 'appmap.file.metadata',
   async value({ metadata }: { metadata?: Record<string, unknown> }) {

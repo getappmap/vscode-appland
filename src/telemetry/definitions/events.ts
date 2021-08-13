@@ -52,3 +52,13 @@ export const APPMAP_OPEN = new Event({
   ],
   metrics: [Metrics.APPMAP_JSON],
 });
+
+export const APPMAP_UPLOAD = new Event({
+  name: 'appmap:upload',
+  properties: [
+    Properties.FILE_PATH,
+    Properties.FILE_SHA_256,
+    Properties.FILE_SIZE,
+    Properties.FILE_METADATA,
+  ],
+});
