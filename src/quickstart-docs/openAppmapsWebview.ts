@@ -4,6 +4,7 @@ import * as vscode from 'vscode';
 import AppMapCollectionFile from '../appmapCollectionFile';
 import ProjectWatcher from '../projectWatcher';
 import { getNonce } from '../util';
+import { Telemetry, MILESTONE_OPEN_WEBVIEW } from '../telemetry';
 
 interface AppMapListItem {
   path: PathLike;
@@ -112,6 +113,14 @@ export default class QuickstartWebview {
 
                 vscode.commands.executeCommand('vscode.open', vscode.Uri.file(filePath));
               }
+              break;
+            case 'clickLink':
+              Telemetry.reportOpenUri(message.uri);
+              break;
+            case 'postInitialize':
+              Telemetry.sendEvent(MILESTONE_OPEN_WEBVIEW, {
+                milestone: project.milestones.VIEW_APPMAP,
+              });
               break;
             default:
               break;

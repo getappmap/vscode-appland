@@ -42,6 +42,11 @@ export const MILESTONE_CHANGE_STATE = new Event({
   properties: [Properties.MILESTONE_ID, Properties.MILESTONE_STATE],
 });
 
+export const MILESTONE_OPEN_WEBVIEW = new Event({
+  name: 'milestone:open_webview',
+  properties: [Properties.MILESTONE_ID],
+});
+
 export const APPMAP_OPEN = new Event({
   name: 'appmap:open',
   properties: [

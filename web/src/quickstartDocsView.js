@@ -67,6 +67,13 @@ export function mountQuickstartOpenAppmaps() {
             appmaps: event.appmaps,
           };
         },
+        mounted() {
+          document.querySelectorAll('a[href]').forEach((el) => {
+            el.addEventListener('click', (e) => {
+              vscode.postMessage({ command: 'clickLink', uri: e.target.href });
+            });
+          });
+        },
       });
 
       app.$on('openAppmap', (file) => {
@@ -97,6 +104,13 @@ export function mountQuickstartRecordAppmaps() {
         render(h) {
           return h(VQuickstartDocsRecordAppmaps, {
             ref: 'ui',
+          });
+        },
+        mounted() {
+          document.querySelectorAll('a[href]').forEach((el) => {
+            el.addEventListener('click', (e) => {
+              vscode.postMessage({ command: 'clickLink', uri: e.target.href });
+            });
           });
         },
       });

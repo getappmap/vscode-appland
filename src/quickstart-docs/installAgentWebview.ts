@@ -4,7 +4,7 @@ import * as semver from 'semver';
 import AppMapProperties from '../appmapProperties';
 import ProjectWatcher from '../projectWatcher';
 import { getNonce } from '../util';
-import { Telemetry } from '../telemetry';
+import { Telemetry, MILESTONE_OPEN_WEBVIEW } from '../telemetry';
 
 const supportedLanguages = [
   {
@@ -98,7 +98,11 @@ export default class QuickstartDocsInstallAgent {
             case 'clickLink':
               Telemetry.reportOpenUri(message.uri);
               break;
-
+            case 'postInitialize':
+              Telemetry.sendEvent(MILESTONE_OPEN_WEBVIEW, {
+                milestone: project.milestones.INSTALL_AGENT,
+              });
+              break;
             default:
               break;
           }
