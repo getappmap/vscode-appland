@@ -1,4 +1,4 @@
-import { FileSystemWatcher, Event, EventEmitter, Uri } from 'vscode';
+import { FileSystemWatcher, EventEmitter, Uri } from 'vscode';
 
 export default class MockFileSystemWatcher implements FileSystemWatcher {
   ignoreCreateEvents = true;

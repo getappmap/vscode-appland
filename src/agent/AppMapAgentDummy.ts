@@ -1,4 +1,3 @@
-import { PathLike } from 'fs';
 import AppMapAgent, {
   FilesResponse,
   StatusResponse,

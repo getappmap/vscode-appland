@@ -51,7 +51,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     await Promise.all(projects.map(async (project) => await project.initialize()));
 
     QuickstartDocsInstallAgent.register(context, properties, projects);
-    QuickstartDocsRecordAppmaps.register(context, projects, localAppMaps);
+    QuickstartDocsRecordAppmaps.register(context, projects);
     QuickstartDocsOpenAppmaps.register(context, projects, localAppMaps);
 
     const { localTree } = registerTrees(context, localAppMaps);

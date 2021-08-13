@@ -1,7 +1,7 @@
 import { PathLike, promises as fs } from 'fs';
 import { join } from 'path';
 import semver from 'semver';
-import { chainPromises, execFile, exec } from '../util';
+import { execFile, exec } from '../util';
 import AppMapAgent, {
   FilesResponse,
   StatusResponse,

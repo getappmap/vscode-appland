@@ -12,7 +12,7 @@ export default class QuickstartDocsRecordAppmaps {
 
   public static register(
     context: vscode.ExtensionContext,
-    projects: readonly ProjectWatcher[],
+    projects: readonly ProjectWatcher[]
   ): void {
     const project = projects[0];
     if (!project) {
