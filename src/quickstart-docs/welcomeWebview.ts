@@ -1,43 +1,22 @@
 import * as path from 'path';
 import * as vscode from 'vscode';
+import * as semver from 'semver';
+import AppMapProperties from '../appmapProperties';
 import ProjectWatcher from '../projectWatcher';
 import { getNonce } from '../util';
-import { Telemetry, MILESTONE_OPEN_WEBVIEW } from '../telemetry';
-import QuickstartDocsRecordAppmaps from './recordAppmapsWebview';
+import { Telemetry } from '../telemetry';
+import QuickstartDocsInstallAgent from './installAgentWebview';
 
-const supportedLanguages = [
-  {
-    id: 'ruby',
-    name: 'Ruby',
-    link: 'https://appland.com/docs/quickstart/vscode/ruby-step-2.html',
-    installCommand: 'npx @appland/appmap install-agent ruby',
-    isDetected: false,
-  },
-  {
-    id: 'python',
-    name: 'Python',
-    link: 'https://appland.com/docs/quickstart/vscode/python-step-2.html',
-    installCommand: 'npx @appland/appmap install-agent python',
-    isDetected: false,
-  },
-  {
-    id: 'java',
-    name: 'Java',
-    link: 'https://appland.com/docs/quickstart/vscode/java-step-2.html',
-    installCommand: 'npx @appland/appmap install-agent java',
-    isDetected: false,
-  },
-];
-
-export default class QuickstartDocsInstallAgent {
+export default class QuickstartDocsWelcome {
   public static readonly viewType = 'appmap.views.quickstart';
-  public static readonly command = 'appmap.openQuickstartDocsInstallAgent';
+  public static readonly command = 'appmap.openQuickstartDocsWelcome';
 
   // Keyed by project root directory
   private static readonly openWebviews = new Map<string, vscode.WebviewPanel>();
 
   public static async register(
     context: vscode.ExtensionContext,
+    properties: AppMapProperties,
     projects: readonly ProjectWatcher[]
   ): Promise<void> {
     const project = projects[0];
@@ -58,8 +37,8 @@ export default class QuickstartDocsInstallAgent {
         }
 
         const panel = vscode.window.createWebviewPanel(
-          this.viewType,
-          'Quickstart: Install Appmap Agent',
+          '',
+          'Quickstart: Welcome',
           vscode.ViewColumn.One,
           {
             enableScripts: true,
@@ -84,26 +63,15 @@ export default class QuickstartDocsInstallAgent {
                 // The webview has been created but may not be ready to receive all messages yet.
                 panel.webview.postMessage({
                   type: 'init',
-                  languages: supportedLanguages.map((lang) => {
-                    if (lang.id === project.language) {
-                      lang.isDetected = true;
-                    }
-                    return lang;
-                  }),
                 });
               }
               break;
             case 'clickLink':
               Telemetry.reportOpenUri(message.uri);
               break;
-            case 'postInitialize':
-              Telemetry.sendEvent(MILESTONE_OPEN_WEBVIEW, {
-                milestone: project.milestones.INSTALL_AGENT,
-              });
-              break;
             case 'transition':
-              if (message.target === 'RECORD_APPMAPS') {
-                vscode.commands.executeCommand(QuickstartDocsRecordAppmaps.command);
+              if (message.target === 'INSTALL_AGENT') {
+                vscode.commands.executeCommand(QuickstartDocsInstallAgent.command);
               }
               break;
             default:
@@ -111,9 +79,20 @@ export default class QuickstartDocsInstallAgent {
           }
         });
 
-        vscode.commands.executeCommand('appmap.focusQuickstartDocs', 0);
+        properties.hasSeenQuickStartDocs = true;
       })
     );
+
+    const firstVersionInstalled = semver.coerce(properties.firstVersionInstalled);
+    if (firstVersionInstalled && semver.gte(firstVersionInstalled, '0.15.0')) {
+      // Logic within this block will only be executed if the extension was installed after we began tracking the
+      // time of installation. We will use this to determine whether or not our UX improvements are effective, without
+      // before rolling them out to our existing user base.
+
+      if (!properties.hasSeenQuickStartDocs && projects.length == 1) {
+        await vscode.commands.executeCommand(this.command);
+      }
+    }
   }
 }
 
@@ -135,8 +114,8 @@ function getWebviewContent(webview: vscode.Webview, context: vscode.ExtensionCon
     <div id="app">
     </div>
     <script nonce="${nonce}" src="${scriptUri}"></script>
-    <script type="text/javascript" nonce="${nonce}">
-      AppLandWeb.mountQuickstartInstallAgent();
+    <script type="text/javascript" nonce="${nonce}" defer>
+      AppLandWeb.mountQuickstartWelcome();
     </script>
   </body>
   </html>`;

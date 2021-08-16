@@ -10,6 +10,7 @@ import { notEmpty } from './util';
 import { registerUtilityCommands } from './registerUtilityCommands';
 import ProjectWatcher from './projectWatcher';
 import QuickstartWebview from './quickstartWebview';
+import QuickstartDocsWelcome from './quickstart-docs/welcomeWebview';
 import QuickstartDocsInstallAgent from './quickstart-docs/installAgentWebview';
 import QuickstartDocsRecordAppmaps from './quickstart-docs/recordAppmapsWebview';
 import QuickstartDocsOpenAppmaps from './quickstart-docs/openAppmapsWebview';
@@ -50,7 +51,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
     await Promise.all(projects.map(async (project) => await project.initialize()));
 
-    QuickstartDocsInstallAgent.register(context, properties, projects);
+    QuickstartDocsWelcome.register(context, properties, projects);
+    QuickstartDocsInstallAgent.register(context, projects);
     QuickstartDocsRecordAppmaps.register(context, projects);
     QuickstartDocsOpenAppmaps.register(context, projects, localAppMaps);
 

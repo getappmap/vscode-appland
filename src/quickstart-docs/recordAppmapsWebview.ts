@@ -3,6 +3,7 @@ import * as vscode from 'vscode';
 import ProjectWatcher from '../projectWatcher';
 import { getNonce } from '../util';
 import { Telemetry, MILESTONE_OPEN_WEBVIEW } from '../telemetry';
+import QuickstartDocsOpenAppmaps from './openAppmapsWebview';
 
 export default class QuickstartDocsRecordAppmaps {
   public static readonly viewType = 'appmap.views.quickstart';
@@ -69,6 +70,11 @@ export default class QuickstartDocsRecordAppmaps {
               Telemetry.sendEvent(MILESTONE_OPEN_WEBVIEW, {
                 milestone: project.milestones.RECORD_APPMAP,
               });
+              break;
+            case 'transition':
+              if (message.target === 'OPEN_APPMAPS') {
+                vscode.commands.executeCommand(QuickstartDocsOpenAppmaps.command);
+              }
               break;
             default:
               break;

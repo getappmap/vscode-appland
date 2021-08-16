@@ -4,6 +4,7 @@ import { default as plugin } from '@appland/components'; // eslint-disable-line 
 export { default as mountApp } from './appmapView'; // eslint-disable-line import/prefer-default-export
 export { default as mountQuickstart } from './quickstartView';
 export {
+  mountQuickstartWelcome,
   mountQuickstartInstallAgent,
   mountQuickstartOpenAppmaps,
   mountQuickstartRecordAppmaps,
