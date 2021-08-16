@@ -60,5 +60,7 @@ export const APPMAP_UPLOAD = new Event({
     Properties.FILE_SHA_256,
     Properties.FILE_SIZE,
     Properties.FILE_METADATA,
+    Properties.PROJECT_LANGUAGE,
   ],
+  metrics: [Metrics.APPMAP_JSON],
 });

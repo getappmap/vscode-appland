@@ -60,7 +60,10 @@ export default function mountApp() {
   });
 
   app.$on('uploadAppmap', () => {
-    vscode.postMessage({ command: 'uploadAppmap' });
+    vscode.postMessage({
+      command: 'uploadAppmap',
+      metrics: getAppMapMetrics(app.$refs.$store.state.appMap),
+    });
     vscode.postMessage({ command: 'performAction', action: 'upload_appmap' });
   });
 
