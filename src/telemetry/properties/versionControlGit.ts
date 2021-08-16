@@ -3,17 +3,28 @@ import { PathLike, promises as fs } from 'fs';
 import { join, dirname } from 'path';
 import globToRegExp from 'glob-to-regexp';
 import VersionControlProperties from './versionControl';
+import { Telemetry, DEBUG_EXCEPTION } from '../index';
 
 async function regexFromGitIgnore(filePath: PathLike): Promise<readonly RegExp[]> {
   const directory = dirname(filePath as string);
   const content = await fs.readFile(filePath);
+
   return content
     .toString()
     .replace(/#.*$/gm, '')
     .split(/^/gm)
     .map((line) => line.trim().replace(/^\//, `${directory}/`))
     .filter((line) => line !== '')
-    .map((glob) => globToRegExp(glob, { flags: 'g' }));
+    .map((glob) => {
+      try {
+        return globToRegExp(glob, { flags: 'g' });
+      } catch {
+        const exception = new Error(`Invalid git ignore pattern: ${glob}`);
+        Telemetry.sendEvent(DEBUG_EXCEPTION, { exception });
+        return null;
+      }
+    })
+    .filter(Boolean);
 }
 
 async function ignoresForWorkspaceFolder(
