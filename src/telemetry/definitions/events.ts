@@ -91,3 +91,8 @@ export const RECORDING_STATUS = new Event({
     Properties.RECORDING_RETURN_CODE,
   ],
 });
+
+export const TELEMETRY_ENABLED = new Event({
+  name: 'telemetry',
+  properties: [Properties.IS_TELEMETRY_ENABLED],
+});

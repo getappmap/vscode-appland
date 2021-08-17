@@ -149,3 +149,10 @@ export const RECORDING_RETURN_CODE = new TelemetryDataProvider({
     return code;
   },
 });
+
+export const IS_TELEMETRY_ENABLED = new TelemetryDataProvider({
+  id: 'appmap.enabled',
+  async value({ enabled }: { enabled: boolean }) {
+    return enabled;
+  },
+});

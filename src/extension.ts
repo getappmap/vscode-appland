@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { DatabaseUpdater } from './databaseUpdater';
 import { ScenarioProvider } from './scenarioViewer';
-import { Telemetry, DEBUG_EXCEPTION } from './telemetry';
+import { Telemetry, DEBUG_EXCEPTION, TELEMETRY_ENABLED } from './telemetry';
 import registerTrees from './tree';
 import AppMapCollectionFile from './appmapCollectionFile';
 import RemoteRecording from './remoteRecording';
@@ -87,6 +87,12 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     );
 
     registerUtilityCommands(context, properties);
+
+    vscode.env.onDidChangeTelemetryEnabled((enabled: boolean) => {
+      Telemetry.sendEvent(TELEMETRY_ENABLED, {
+        enabled,
+      });
+    });
   } catch (exception) {
     Telemetry.sendEvent(DEBUG_EXCEPTION, { exception });
     throw exception;
