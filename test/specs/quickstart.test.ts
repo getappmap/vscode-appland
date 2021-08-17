@@ -39,7 +39,7 @@ describe('Quickstart', () => {
       );
 
       assert(properties.hasSeenQuickStartDocs === false);
-      await QuickstartDocsInstallAgent.register(context, properties, projects);
+      await QuickstartDocsInstallAgent.register(context, projects);
       assert(executeCommand.calledWith('appmap.openQuickstartDocsInstallAgent'));
       assert(properties.hasSeenQuickStartDocs);
     });
@@ -54,7 +54,7 @@ describe('Quickstart', () => {
       );
 
       assert(properties.hasSeenQuickStartDocs === false);
-      await QuickstartDocsInstallAgent.register(context, properties, projects);
+      await QuickstartDocsInstallAgent.register(context, projects);
       assert(executeCommand.calledWith('appmap.openQuickstartDocsInstallAgent') === false);
       assert(properties.hasSeenQuickStartDocs === false);
     });
@@ -69,7 +69,7 @@ describe('Quickstart', () => {
       );
 
       assert(properties.hasSeenQuickStartDocs === false);
-      await QuickstartDocsInstallAgent.register(context, properties, projects);
+      await QuickstartDocsInstallAgent.register(context, projects);
       assert(executeCommand.calledWith('appmap.openQuickstartDocsInstallAgent') === shouldOpen);
       assert(properties.hasSeenQuickStartDocs === shouldOpen);
     }
