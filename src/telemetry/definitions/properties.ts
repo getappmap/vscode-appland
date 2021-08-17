@@ -135,3 +135,17 @@ export const PROJECT_LANGUAGE_DISTRIBUTION = new TelemetryDataProvider({
     return JSON.stringify(languageDistribution);
   },
 });
+
+export const RECORDING_ENDPOINT_URL = new TelemetryDataProvider({
+  id: 'appmap.remote_recording.endpoint_url',
+  async value({ url }: { url?: string | undefined }) {
+    return url;
+  },
+});
+
+export const RECORDING_RETURN_CODE = new TelemetryDataProvider({
+  id: 'appmap.remote_recording.return_code',
+  async value({ code }: { code?: number | undefined }) {
+    return code;
+  },
+});
