@@ -111,7 +111,7 @@ export default class QuickstartDocsInstallAgent {
           }
         });
 
-        vscode.commands.executeCommand('appmap.focusQuickstartDocs', 0);
+        vscode.commands.executeCommand('appmap.focusQuickstartDocs', 1);
       })
     );
   }

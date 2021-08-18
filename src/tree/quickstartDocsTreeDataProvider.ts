@@ -2,6 +2,11 @@ import * as vscode from 'vscode';
 
 const docsPages = [
   {
+    id: 'QUICKSTART_DOCS_WELCOME',
+    title: 'Welcome',
+    command: 'appmap.openQuickstartDocsWelcome',
+  },
+  {
     id: 'QUICKSTART_DOCS_INSTALL_AGENT',
     title: 'Install AppMap Agent',
     command: 'appmap.openQuickstartDocsInstallAgent',

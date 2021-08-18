@@ -80,6 +80,8 @@ export default class QuickstartDocsWelcome {
         });
 
         properties.hasSeenQuickStartDocs = true;
+
+        vscode.commands.executeCommand('appmap.focusQuickstartDocs', 0);
       })
     );
 

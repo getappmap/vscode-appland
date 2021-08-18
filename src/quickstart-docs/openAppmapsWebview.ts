@@ -127,7 +127,7 @@ export default class QuickstartWebview {
           }
         });
 
-        vscode.commands.executeCommand('appmap.focusQuickstartDocs', 2);
+        vscode.commands.executeCommand('appmap.focusQuickstartDocs', 3);
       })
     );
   }
@@ -153,7 +153,7 @@ function getWebviewContent(webview: vscode.Webview, context: vscode.ExtensionCon
     <script nonce="${nonce}" src="${scriptUri}"></script>
     <script type="text/javascript" nonce="${nonce}">
       AppLandWeb.mountQuickstartOpenAppmaps();
-    </script>
+    </script>1
   </body>
   </html>`;
 }

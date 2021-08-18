@@ -81,7 +81,7 @@ export default class QuickstartDocsRecordAppmaps {
           }
         });
 
-        vscode.commands.executeCommand('appmap.focusQuickstartDocs', 1);
+        vscode.commands.executeCommand('appmap.focusQuickstartDocs', 2);
       })
     );
   }
