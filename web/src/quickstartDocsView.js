@@ -91,13 +91,21 @@ export function mountQuickstartRecordAppmaps() {
   const messages = new MessagePublisher(vscode);
 
   messages
-    .on('init', () => {
+    .on('init', (event) => {
       const app = new Vue({
         el: '#app',
         render(h) {
           return h(VQuickstartDocsRecordAppmaps, {
             ref: 'ui',
+            props: {
+              language: this.language,
+            },
           });
+        },
+        data() {
+          return {
+            language: event.language,
+          };
         },
         mounted() {
           document.querySelectorAll('a[href]').forEach((el) => {
