@@ -1,12 +1,12 @@
 import * as vscode from 'vscode';
 import { PathLike, promises as fs } from 'fs';
-import { join } from 'path';
-import ignore from 'ignore';
+import path from 'path';
+import { default as ignore, Ignore } from 'ignore';
 import VersionControlProperties from './versionControl';
 
-async function ignoresForWorkspaceFolder(wsFolder: vscode.WorkspaceFolder): Promise<unknown> {
-  const directories = [wsFolder.uri.fsPath];
-  const wsIgnore = ignore();
+async function ignoresForWorkspaceFolder(wsFolder: string): Promise<Ignore> {
+  const directories: Array<string> = [wsFolder];
+  const wsIgnore: Ignore = ignore();
 
   for (;;) {
     const currentDirectory = directories.pop() as string;
@@ -17,7 +17,7 @@ async function ignoresForWorkspaceFolder(wsFolder: vscode.WorkspaceFolder): Prom
     const files = await fs.readdir(currentDirectory, { withFileTypes: true });
     const gitIgnore = files.find((file) => file.isFile() && file.name === '.gitignore');
     if (gitIgnore) {
-      wsIgnore.add(join(currentDirectory, gitIgnore.name));
+      wsIgnore.add((await fs.readFile(path.join(currentDirectory, gitIgnore.name))).toString());
     }
 
     files.filter((file) => {
@@ -25,8 +25,8 @@ async function ignoresForWorkspaceFolder(wsFolder: vscode.WorkspaceFolder): Prom
         return false;
       }
 
-      const fullPath = join(currentDirectory, file.name);
-      if (!wsIgnore.ignores(fullPath)) {
+      const fullPath = path.join(currentDirectory, file.name);
+      if (!wsIgnore.ignores(file.name)) {
         directories.push(fullPath);
       }
     });
@@ -35,21 +35,37 @@ async function ignoresForWorkspaceFolder(wsFolder: vscode.WorkspaceFolder): Prom
   return wsIgnore;
 }
 export default class GitProperties implements VersionControlProperties {
-  private ignore;
+  private ignores: Record<string, Ignore> = {};
 
   public async initialize(): Promise<void> {
-    this.ignore = ignore();
-
     const { workspaceFolders } = vscode.workspace;
     if (workspaceFolders) {
-      const workspaceIgnores = await Promise.all(
-        workspaceFolders.map(async (wsFolder) => await ignoresForWorkspaceFolder(wsFolder))
-      );
-      this.ignore.add(workspaceIgnores);
+      for (const wsFolder of workspaceFolders) {
+        const path = wsFolder.uri.fsPath;
+        this.ignores[path] = await ignoresForWorkspaceFolder(path);
+      }
     }
   }
 
-  public isIgnored(path: PathLike): boolean {
-    return this.ignore.ignores(path as string);
+  public isIgnored(filePath: PathLike): boolean {
+    const rootFolder = path.parse(filePath as string).root;
+
+    let filename = path.basename(filePath as string);
+    let dirname = path.dirname(filePath as string);
+
+    for (;;) {
+      if (this.ignores[dirname] && this.ignores[dirname]?.ignores(filename)) {
+        return true;
+      }
+
+      if (dirname !== rootFolder) {
+        filename = path.join(path.basename(dirname), filename);
+        dirname = path.dirname(dirname);
+      } else {
+        break;
+      }
+    }
+
+    return false;
   }
 }
