@@ -48,21 +48,13 @@ export function mountQuickstartInstallAgent() {
   const messages = new MessagePublisher(vscode);
 
   messages
-    .on('init', (event) => {
+    .on('init', () => {
       const app = new Vue({
         el: '#app',
         render(h) {
           return h(VQuickstartDocsInstallAgent, {
             ref: 'ui',
-            props: {
-              languages: this.languages,
-            },
           });
-        },
-        data() {
-          return {
-            languages: event.languages,
-          };
         },
         mounted() {
           document.querySelectorAll('a[href]').forEach((el) => {
@@ -98,13 +90,13 @@ export function mountQuickstartRecordAppmaps() {
           return h(VQuickstartDocsRecordAppmaps, {
             ref: 'ui',
             props: {
-              language: this.language,
+              editor: this.editor,
             },
           });
         },
         data() {
           return {
-            language: event.language,
+            editor: event.editor,
           };
         },
         mounted() {
