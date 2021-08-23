@@ -5,30 +5,6 @@ import { getNonce } from '../util';
 import { Telemetry, MILESTONE_OPEN_WEBVIEW } from '../telemetry';
 import QuickstartDocsRecordAppmaps from './recordAppmapsWebview';
 
-const supportedLanguages = [
-  {
-    id: 'ruby',
-    name: 'Ruby',
-    link: 'https://appland.com/docs/quickstart/vscode/ruby-step-2.html',
-    installCommand: 'npx @appland/appmap install-agent ruby',
-    isDetected: false,
-  },
-  {
-    id: 'python',
-    name: 'Python',
-    link: 'https://appland.com/docs/quickstart/vscode/python-step-2.html',
-    installCommand: 'npx @appland/appmap install-agent python',
-    isDetected: false,
-  },
-  {
-    id: 'java',
-    name: 'Java',
-    link: 'https://appland.com/docs/quickstart/vscode/java-step-2.html',
-    installCommand: 'npx @appland/appmap install-agent java',
-    isDetected: false,
-  },
-];
-
 export default class QuickstartDocsInstallAgent {
   public static readonly viewType = 'appmap.views.quickstart';
   public static readonly command = 'appmap.openQuickstartDocsInstallAgent';
@@ -84,12 +60,6 @@ export default class QuickstartDocsInstallAgent {
                 // The webview has been created but may not be ready to receive all messages yet.
                 panel.webview.postMessage({
                   type: 'init',
-                  languages: supportedLanguages.map((lang) => {
-                    if (lang.id === project.language) {
-                      lang.isDetected = true;
-                    }
-                    return lang;
-                  }),
                 });
               }
               break;

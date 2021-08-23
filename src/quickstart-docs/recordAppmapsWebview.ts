@@ -60,7 +60,6 @@ export default class QuickstartDocsRecordAppmaps {
                 // The webview has been created but may not be ready to receive all messages yet.
                 panel.webview.postMessage({
                   type: 'init',
-                  language: project.language,
                 });
               }
               break;
