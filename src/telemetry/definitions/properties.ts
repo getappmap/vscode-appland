@@ -138,21 +138,21 @@ export const PROJECT_LANGUAGE_DISTRIBUTION = new TelemetryDataProvider({
 
 export const RECORDING_ENDPOINT_URL = new TelemetryDataProvider({
   id: 'appmap.remote_recording.endpoint_url',
-  async value({ url }: { url: string | undefined }) {
+  async value({ url }: { url: string }) {
     return url;
   },
 });
 
 export const RECORDING_STATUS_CODE = new TelemetryDataProvider({
   id: 'appmap.remote_recording.status_code',
-  async value({ code }: { code: number | undefined }) {
-    return code;
+  async value({ code }: { code: number }) {
+    return String(code);
   },
 });
 
 export const IS_TELEMETRY_ENABLED = new TelemetryDataProvider({
   id: 'appmap.enabled',
   async value({ enabled }: { enabled: boolean }) {
-    return enabled;
+    return String(enabled);
   },
 });
