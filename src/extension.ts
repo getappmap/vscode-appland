@@ -92,6 +92,33 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
       })
     );
 
+    context.subscriptions.push(
+      vscode.window.registerUriHandler({
+        handleUri(uri: vscode.Uri) {
+          if (uri.path === '/open') {
+            const queryParams = new URLSearchParams(uri.query);
+
+            if (queryParams.get('uri')) {
+              vscode.commands.executeCommand(
+                'vscode.open',
+                vscode.Uri.parse(queryParams.get('uri') as string)
+              );
+            }
+
+            if (queryParams.get('state')) {
+              // let's give some time to open AppMap file before setting state
+              setTimeout(() => {
+                vscode.commands.executeCommand(
+                  'appmap.setAppmapStateNoPrompt',
+                  queryParams.get('state')
+                );
+              }, 1000);
+            }
+          }
+        },
+      })
+    );
+
     registerUtilityCommands(context, properties);
 
     vscode.env.onDidChangeTelemetryEnabled((enabled: boolean) => {

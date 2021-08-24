@@ -43,6 +43,17 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
         }
       })
     );
+
+    context.subscriptions.push(
+      vscode.commands.registerCommand('appmap.setAppmapStateNoPrompt', async (state) => {
+        if (provider.currentWebView) {
+          provider.currentWebView.webview.postMessage({
+            type: 'setAppmapState',
+            state: state,
+          });
+        }
+      })
+    );
   }
 
   private static readonly viewType = 'appmap.views.appMapFile';
