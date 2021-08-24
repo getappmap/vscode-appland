@@ -1,4 +1,4 @@
-import bent from 'bent';
+import bent, { NodeResponse } from 'bent';
 import { Telemetry, RECORDING_START, RECORDING_STOP, RECORDING_STATUS } from './telemetry';
 
 export default class RemoteRecordingClient {
@@ -19,19 +19,16 @@ export default class RemoteRecordingClient {
   }
 
   static async getStatus(baseURL: string): Promise<boolean> {
-    const request = bent(baseURL, 'GET', 'json', 200);
-
-    const response = (await request(this.RECORDING_URI)) as {
-      enabled: boolean;
-      statusCode: number;
-    };
+    const request = bent(baseURL, 'GET', 200);
+    const response = (await request(this.RECORDING_URI)) as NodeResponse;
+    const body = (await response.json()) as { enabled: boolean };
 
     Telemetry.sendEvent(RECORDING_STATUS, {
       url: baseURL + this.RECORDING_URI,
       code: response.statusCode,
     });
 
-    return response.enabled;
+    return body.enabled;
   }
 
   static async stop(baseURL: string): Promise<unknown> {
