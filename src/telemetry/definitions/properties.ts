@@ -138,14 +138,14 @@ export const PROJECT_LANGUAGE_DISTRIBUTION = new TelemetryDataProvider({
 
 export const RECORDING_ENDPOINT_URL = new TelemetryDataProvider({
   id: 'appmap.remote_recording.endpoint_url',
-  async value({ url }: { url?: string | undefined }) {
+  async value({ url }: { url: string | undefined }) {
     return url;
   },
 });
 
 export const RECORDING_STATUS_CODE = new TelemetryDataProvider({
   id: 'appmap.remote_recording.status_code',
-  async value({ code }: { code?: number | undefined }) {
+  async value({ code }: { code: number | undefined }) {
     return code;
   },
 });
