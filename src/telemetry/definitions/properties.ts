@@ -143,8 +143,8 @@ export const RECORDING_ENDPOINT_URL = new TelemetryDataProvider({
   },
 });
 
-export const RECORDING_RETURN_CODE = new TelemetryDataProvider({
-  id: 'appmap.remote_recording.return_code',
+export const RECORDING_STATUS_CODE = new TelemetryDataProvider({
+  id: 'appmap.remote_recording.status_code',
   async value({ code }: { code?: number | undefined }) {
     return code;
   },
