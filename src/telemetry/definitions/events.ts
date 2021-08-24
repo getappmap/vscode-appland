@@ -67,29 +67,17 @@ export const APPMAP_UPLOAD = new Event({
 
 export const RECORDING_START = new Event({
   name: 'remote_recording:start',
-  properties: [
-    Properties.PROJECT_LANGUAGE,
-    Properties.RECORDING_ENDPOINT_URL,
-    Properties.RECORDING_RETURN_CODE,
-  ],
+  properties: [Properties.RECORDING_ENDPOINT_URL, Properties.RECORDING_RETURN_CODE],
 });
 
 export const RECORDING_STOP = new Event({
   name: 'remote_recording:stop',
-  properties: [
-    Properties.PROJECT_LANGUAGE,
-    Properties.RECORDING_ENDPOINT_URL,
-    Properties.RECORDING_RETURN_CODE,
-  ],
+  properties: [Properties.RECORDING_ENDPOINT_URL, Properties.RECORDING_RETURN_CODE],
 });
 
 export const RECORDING_STATUS = new Event({
   name: 'remote_recording:status',
-  properties: [
-    Properties.PROJECT_LANGUAGE,
-    Properties.RECORDING_ENDPOINT_URL,
-    Properties.RECORDING_RETURN_CODE,
-  ],
+  properties: [Properties.RECORDING_ENDPOINT_URL, Properties.RECORDING_RETURN_CODE],
 });
 
 export const TELEMETRY_ENABLED = new Event({
