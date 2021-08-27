@@ -14,17 +14,25 @@ interface AppMapListItem {
   functions?: number;
 }
 
-function listAppMaps(
+function getGoodAppMaps(
   appmaps: AppMapCollectionFile,
   workspaceFolder: vscode.WorkspaceFolder
 ): AppMapListItem[] {
-  return appmaps.allAppMapsForWorkspaceFolder(workspaceFolder).map(({ descriptor }) => ({
-    path: descriptor.resourceUri.fsPath,
-    name: descriptor.metadata?.name as string,
-    requests: descriptor.numRequests,
-    sqlQueries: descriptor.numQueries,
-    functions: descriptor.numFunctions,
-  }));
+  return appmaps
+    .allAppMapsForWorkspaceFolder(workspaceFolder)
+    .map(({ descriptor }) => ({
+      path: descriptor.resourceUri.fsPath,
+      name: descriptor.metadata?.name as string,
+      requests: descriptor.numRequests as number,
+      sqlQueries: descriptor.numQueries as number,
+      functions: descriptor.numFunctions as number,
+    }))
+    .sort((a, b) => {
+      const scoreA = a.requests * 100 + a.sqlQueries * 100 + a.functions * 100;
+      const scoreB = b.requests * 100 + b.sqlQueries * 100 + b.functions * 100;
+      return scoreB - scoreA;
+    })
+    .slice(0, 10);
 }
 
 export default class QuickstartWebview {
@@ -82,7 +90,7 @@ export default class QuickstartWebview {
           // This also won't be triggered if AppMaps are deleted (BUG).
           panel.webview.postMessage({
             type: 'appmapSnapshot',
-            appmaps: listAppMaps(appmaps, project.workspaceFolder),
+            appmaps: getGoodAppMaps(appmaps, project.workspaceFolder),
           });
         });
 
@@ -97,7 +105,7 @@ export default class QuickstartWebview {
                 // The webview has been created but may not be ready to receive all messages yet.
                 panel.webview.postMessage({
                   type: 'init',
-                  appmaps: listAppMaps(appmaps, project.workspaceFolder),
+                  appmaps: getGoodAppMaps(appmaps, project.workspaceFolder),
                 });
               }
               break;
