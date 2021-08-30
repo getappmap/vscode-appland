@@ -140,7 +140,7 @@
     "viewsWelcome": [
       {
         "view": "appmap.views.local",
-        "contents": "No AppMaps found.\n[Open quickstart documentation](https://appland.com/docs/quickstart/)",
+        "contents": "There are no AppMaps in this project. To record AppMaps you need to install the AppMap agent.\n[Install AppMap agent](https://appland.com/docs/quickstart/vscode/step-2)\nRead more about sharing appmaps, manual installation instructiions, and advanced topics in our documentation.\n[AppMap Documentation](https://appland.com/docs/appmap-overview.html)\nTo open an existing AppMap file\nAdd the file to a directory in this project, and click on it in the left hand sidebar as you normally would to open a file. The file will open automatically in the AppMap viewer.\n\nOpen a link to an AppMap\nSimply click the link you recieved, follow the prompt to log-in with a new or existing account, and you will be directed to the AppMap.",
         "when": "appmap.initialized && !appmap.hasData"
       },
       {
