@@ -106,13 +106,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
             }
 
             if (queryParams.get('state')) {
-              // let's give some time to open AppMap file before setting state
-              setTimeout(() => {
-                vscode.commands.executeCommand(
-                  'appmap.setAppmapStateNoPrompt',
-                  queryParams.get('state')
-                );
-              }, 1000);
+              context.globalState.update(ScenarioProvider.INITIAL_STATE, queryParams.get('state'));
             }
           }
         },

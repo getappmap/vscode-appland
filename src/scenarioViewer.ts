@@ -60,6 +60,7 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
   private static readonly INSTRUCTIONS_VIEWED = 'APPMAP_INSTRUCTIONS_VIEWED';
   private static readonly RELEASE_KEY = 'APPMAP_RELEASE_KEY';
   public static readonly APPMAP_OPENED = 'APPMAP_OPENED';
+  public static readonly INITIAL_STATE = 'INITIAL_STATE';
   public currentWebView;
 
   constructor(
@@ -103,6 +104,13 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
           version,
         });
       }
+
+      // get initial state and apply to opened webview
+      const initialState = this.context.globalState.get(ScenarioProvider.INITIAL_STATE);
+      if (initialState) {
+        vscode.commands.executeCommand('appmap.setAppmapStateNoPrompt', initialState);
+      }
+      this.context.globalState.update(ScenarioProvider.INITIAL_STATE, null);
     };
 
     // Handle messages from the webview.
@@ -296,5 +304,6 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
     context.globalState.update(ScenarioProvider.INSTRUCTIONS_VIEWED, null);
     context.globalState.update(ScenarioProvider.RELEASE_KEY, null);
     context.globalState.update(ScenarioProvider.APPMAP_OPENED, null);
+    context.globalState.update(ScenarioProvider.INITIAL_STATE, null);
   }
 }
