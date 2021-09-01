@@ -99,6 +99,14 @@
       {
         "command": "appmap.resetUsageState",
         "title": "AppMap: Reset Usage State"
+      },
+      {
+        "command": "appmap.context.openInFileExplorer",
+        "title": "Open in File Explorer"
+      },
+      {
+        "command": "appmap.context.openAsJson",
+        "title": "Open as JSON"
       }
     ],
     "configuration": {
@@ -184,6 +192,16 @@
           "command": "appmap.stopCurrentRemoteRecording",
           "when": "view == appmap.views.local && appmap.recordingIsRunning",
           "group": "navigation@0"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "appmap.context.openInFileExplorer",
+          "when": "view == appmap.views.local && viewItem == appmap.views.local.item"
+        },
+        {
+          "command": "appmap.context.openAsJson",
+          "when": "view == appmap.views.local && viewItem == appmap.views.local.item"
         }
       ]
     }

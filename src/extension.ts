@@ -4,6 +4,7 @@ import { ScenarioProvider } from './scenarioViewer';
 import { Telemetry, DEBUG_EXCEPTION } from './telemetry';
 import registerTrees from './tree';
 import AppMapCollectionFile from './appmapCollectionFile';
+import ContextMenu from './contextMenu';
 import RemoteRecording from './remoteRecording';
 import { notEmpty } from './util';
 import { registerUtilityCommands } from './registerUtilityCommands';
@@ -27,6 +28,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     ScenarioProvider.register(context, properties);
     DatabaseUpdater.register(context);
     RemoteRecording.register(context);
+    ContextMenu.register(context);
 
     localAppMaps.initialize();
 
