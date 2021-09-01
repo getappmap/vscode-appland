@@ -107,6 +107,10 @@
       {
         "command": "appmap.context.openAsJson",
         "title": "Open as JSON"
+      },
+      {
+        "command": "appmap.context.rename",
+        "title": "Rename"
       }
     ],
     "configuration": {
@@ -201,6 +205,10 @@
         },
         {
           "command": "appmap.context.openAsJson",
+          "when": "view == appmap.views.local && viewItem == appmap.views.local.item"
+        },
+        {
+          "command": "appmap.context.rename",
           "when": "view == appmap.views.local && viewItem == appmap.views.local.item"
         }
       ]
