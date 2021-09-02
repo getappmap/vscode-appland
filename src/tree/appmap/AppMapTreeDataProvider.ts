@@ -39,6 +39,8 @@ export class AppMapTreeDataProvider implements vscode.TreeDataProvider<vscode.Tr
           command: 'vscode.openWith',
           arguments: [appmap.descriptor.resourceUri, 'appmap.views.appMapFile'],
         },
+        contextValue: 'appmap.views.local.item',
+        descriptor: appmap.descriptor,
       }))
       .sort((a, b) => a.label.localeCompare(b.label));
 
