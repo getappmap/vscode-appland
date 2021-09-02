@@ -14,7 +14,9 @@ export default class ContextMenu {
       vscode.commands.registerCommand(
         'appmap.context.openInFileExplorer',
         async (item: TreeItemContext) => {
-          vscode.commands.executeCommand('revealFileInOS', item.descriptor.resourceUri);
+          const { remoteName } = vscode.env;
+          const command = remoteName === 'wsl' ? 'remote-wsl.revealInExplorer' : 'revealFileInOS';
+          vscode.commands.executeCommand(command, item.descriptor.resourceUri);
         }
       )
     );
