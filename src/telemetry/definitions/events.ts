@@ -52,3 +52,35 @@ export const APPMAP_OPEN = new Event({
   ],
   metrics: [Metrics.APPMAP_JSON],
 });
+
+export const APPMAP_UPLOAD = new Event({
+  name: 'appmap:upload',
+  properties: [
+    Properties.FILE_PATH,
+    Properties.FILE_SHA_256,
+    Properties.FILE_SIZE,
+    Properties.FILE_METADATA,
+    Properties.PROJECT_LANGUAGE,
+  ],
+  metrics: [Metrics.APPMAP_JSON],
+});
+
+export const RECORDING_START = new Event({
+  name: 'remote_recording:start',
+  properties: [Properties.RECORDING_ENDPOINT_URL, Properties.RECORDING_STATUS_CODE],
+});
+
+export const RECORDING_STOP = new Event({
+  name: 'remote_recording:stop',
+  properties: [Properties.RECORDING_ENDPOINT_URL, Properties.RECORDING_STATUS_CODE],
+});
+
+export const RECORDING_STATUS = new Event({
+  name: 'remote_recording:status',
+  properties: [Properties.RECORDING_ENDPOINT_URL, Properties.RECORDING_STATUS_CODE],
+});
+
+export const TELEMETRY_ENABLED = new Event({
+  name: 'telemetry',
+  properties: [Properties.IS_TELEMETRY_ENABLED],
+});
