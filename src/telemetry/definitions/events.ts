@@ -89,3 +89,8 @@ export const TELEMETRY_ENABLED = new Event({
   name: 'telemetry',
   properties: [Properties.IS_TELEMETRY_ENABLED],
 });
+
+export const COPY_INSTALL_COMMAND = new Event({
+  name: 'copy_install_command',
+  properties: [Properties.PROJECT_LANGUAGE],
+});

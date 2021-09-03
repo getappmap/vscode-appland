@@ -2,7 +2,7 @@ import * as path from 'path';
 import * as vscode from 'vscode';
 import ProjectWatcher from '../projectWatcher';
 import { getNonce } from '../util';
-import { Telemetry, MILESTONE_OPEN_WEBVIEW } from '../telemetry';
+import { Telemetry, MILESTONE_OPEN_WEBVIEW, COPY_INSTALL_COMMAND } from '../telemetry';
 import QuickstartDocsRecordAppmaps from './recordAppmapsWebview';
 
 export default class QuickstartDocsInstallAgent {
@@ -75,6 +75,11 @@ export default class QuickstartDocsInstallAgent {
               if (message.target === 'RECORD_APPMAPS') {
                 vscode.commands.executeCommand(QuickstartDocsRecordAppmaps.command);
               }
+              break;
+            case 'copyInstallCommand':
+              Telemetry.sendEvent(COPY_INSTALL_COMMAND, {
+                rootDirectory: project.rootDirectory,
+              });
               break;
             default:
               break;

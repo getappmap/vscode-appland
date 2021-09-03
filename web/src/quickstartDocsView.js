@@ -69,6 +69,10 @@ export function mountQuickstartInstallAgent() {
         vscode.postMessage({ command: 'transition', target });
       });
 
+      app.$on('clipboard', () => {
+        vscode.postMessage({ command: 'copyInstallCommand' });
+      });
+
       vscode.postMessage({ command: 'postInitialize' });
     })
     .on(undefined, (event) => {
