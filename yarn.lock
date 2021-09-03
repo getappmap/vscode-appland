@@ -5,9 +5,9 @@ __metadata:
   version: 4
   cacheKey: 7
 
-"@appland/components@npm:^1.10.0":
-  version: 1.10.0
-  resolution: "@appland/components@npm:1.10.0"
+"@appland/components@npm:^1.12.0":
+  version: 1.12.0
+  resolution: "@appland/components@npm:1.12.0"
   dependencies:
     "@appland/diagrams": ^1.3.1
     "@appland/models": ^1.5.0
@@ -15,7 +15,7 @@ __metadata:
     sql-formatter: ^2.3.3
     vue: ^2.6.11
     vuex: ^3.6.0
-  checksum: cd8953c47aff6516633f702b74151ae307be85d32fb670a4a7b3cd450e28d43e04eb547df50ba8d0902bb04e6f7d7997eedd87e104b9ccb1c5012731940bef3f
+  checksum: ee9372fe86d13b8df103b17e6597b91da518c08431e0636881d240ae713e0582f4d13a6910b08f4b9f9a9a790a87e30d29b42409b55bc3138fcf50e9e6314a33
   languageName: node
   linkType: hard
 
@@ -3144,7 +3144,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "appmap@workspace:."
   dependencies:
-    "@appland/components": ^1.10.0
+    "@appland/components": ^1.12.0
     "@appland/diagrams": ^1.3.1
     "@appland/models": ^1.5.0
     "@babel/core": ^7.14.3
