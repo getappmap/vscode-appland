@@ -5,6 +5,7 @@ import { createHash } from 'crypto';
 import TelemetryDataProvider from '../telemetryDataProvider';
 import Milestone from '../../milestones';
 import LanguageResolver, { UNKNOWN_LANGUAGE } from '../../languageResolver';
+import GitProperties from '../properties/versionControlGit';
 import AppMapAgent from '../../agent/appMapAgent';
 
 export const DEBUG_EXCEPTION = new TelemetryDataProvider({
@@ -133,6 +134,27 @@ export const PROJECT_LANGUAGE_DISTRIBUTION = new TelemetryDataProvider({
   async value({ rootDirectory }: { rootDirectory: PathLike }) {
     const languageDistribution = await LanguageResolver.getLanguageDistribution(rootDirectory);
     return JSON.stringify(languageDistribution);
+  },
+});
+
+export const VERSION_CONTROL_IS_IGNORED = new TelemetryDataProvider({
+  id: 'appmap.version_control.is_ignored',
+  async value({ uri }: { uri: Uri }) {
+    return String(await GitProperties.isIgnored(uri.fsPath));
+  },
+});
+
+export const VERSION_CONTROL_IS_TRACKED = new TelemetryDataProvider({
+  id: 'appmap.version_control.is_tracked',
+  async value({ uri }: { uri: Uri }) {
+    return String((await GitProperties.isTracked(uri.fsPath)) === true);
+  },
+});
+
+export const VERSION_CONTROL_REPOSITORY_ID = new TelemetryDataProvider({
+  id: 'appmap.version_control.repository_id',
+  async value({ uri }: { uri: Uri }) {
+    return (await GitProperties.repositoryId(uri.fsPath)) ?? '';
   },
 });
 

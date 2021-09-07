@@ -54,6 +54,9 @@ export const APPMAP_OPEN = new Event({
     Properties.FILE_SHA_256,
     Properties.FILE_METADATA,
     Properties.PROJECT_LANGUAGE,
+    Properties.VERSION_CONTROL_IS_IGNORED,
+    Properties.VERSION_CONTROL_IS_TRACKED,
+    Properties.VERSION_CONTROL_REPOSITORY_ID,
   ],
   metrics: [Metrics.APPMAP_JSON],
 });
@@ -66,6 +69,9 @@ export const APPMAP_UPLOAD = new Event({
     Properties.FILE_SIZE,
     Properties.FILE_METADATA,
     Properties.PROJECT_LANGUAGE,
+    Properties.VERSION_CONTROL_IS_IGNORED,
+    Properties.VERSION_CONTROL_IS_TRACKED,
+    Properties.VERSION_CONTROL_REPOSITORY_ID,
   ],
   metrics: [Metrics.APPMAP_JSON],
 });

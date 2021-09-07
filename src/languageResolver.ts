@@ -204,8 +204,6 @@ export default class LanguageResolver {
 
     const directories = [rootDirectory];
     const extensions: Record<string, number> = {};
-    const gitProperties = new GitProperties();
-    await gitProperties.initialize();
 
     for (;;) {
       const currentDirectory = directories.pop() as string;
@@ -219,7 +217,7 @@ export default class LanguageResolver {
         const absPath = join(currentDirectory, f.name);
 
         if (f.isDirectory()) {
-          if (f.name !== '.git' && !gitProperties.isIgnored(absPath)) {
+          if (f.name !== '.git' && !GitProperties.isIgnored(absPath)) {
             directories.push(absPath);
           }
           return;
