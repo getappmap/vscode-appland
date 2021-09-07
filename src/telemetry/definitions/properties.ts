@@ -35,6 +35,13 @@ export const FILE_SHA_256 = new TelemetryDataProvider({
   },
 });
 
+export const FILE_SIZE = new TelemetryDataProvider({
+  id: 'appmap.file.size',
+  async value({ uri }: { uri: Uri }) {
+    return (await fs.stat(uri.fsPath)).size;
+  },
+});
+
 export const FILE_METADATA = new TelemetryDataProvider({
   id: 'appmap.file.metadata',
   async value({ metadata }: { metadata?: Record<string, unknown> }) {
@@ -126,5 +133,26 @@ export const PROJECT_LANGUAGE_DISTRIBUTION = new TelemetryDataProvider({
   async value({ rootDirectory }: { rootDirectory: PathLike }) {
     const languageDistribution = await LanguageResolver.getLanguageDistribution(rootDirectory);
     return JSON.stringify(languageDistribution);
+  },
+});
+
+export const RECORDING_ENDPOINT_URL = new TelemetryDataProvider({
+  id: 'appmap.remote_recording.endpoint_url',
+  async value({ url }: { url: string }) {
+    return url;
+  },
+});
+
+export const RECORDING_STATUS_CODE = new TelemetryDataProvider({
+  id: 'appmap.remote_recording.status_code',
+  async value({ code }: { code: number }) {
+    return String(code);
+  },
+});
+
+export const IS_TELEMETRY_ENABLED = new TelemetryDataProvider({
+  id: 'appmap.enabled',
+  async value({ enabled }: { enabled: boolean }) {
+    return String(enabled);
   },
 });

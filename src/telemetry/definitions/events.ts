@@ -42,6 +42,11 @@ export const MILESTONE_CHANGE_STATE = new Event({
   properties: [Properties.MILESTONE_ID, Properties.MILESTONE_STATE],
 });
 
+export const MILESTONE_OPEN_WEBVIEW = new Event({
+  name: 'milestone:open_webview',
+  properties: [Properties.MILESTONE_ID],
+});
+
 export const APPMAP_OPEN = new Event({
   name: 'appmap:open',
   properties: [
@@ -51,4 +56,41 @@ export const APPMAP_OPEN = new Event({
     Properties.PROJECT_LANGUAGE,
   ],
   metrics: [Metrics.APPMAP_JSON],
+});
+
+export const APPMAP_UPLOAD = new Event({
+  name: 'appmap:upload',
+  properties: [
+    Properties.FILE_PATH,
+    Properties.FILE_SHA_256,
+    Properties.FILE_SIZE,
+    Properties.FILE_METADATA,
+    Properties.PROJECT_LANGUAGE,
+  ],
+  metrics: [Metrics.APPMAP_JSON],
+});
+
+export const RECORDING_START = new Event({
+  name: 'remote_recording:start',
+  properties: [Properties.RECORDING_ENDPOINT_URL, Properties.RECORDING_STATUS_CODE],
+});
+
+export const RECORDING_STOP = new Event({
+  name: 'remote_recording:stop',
+  properties: [Properties.RECORDING_ENDPOINT_URL, Properties.RECORDING_STATUS_CODE],
+});
+
+export const RECORDING_STATUS = new Event({
+  name: 'remote_recording:status',
+  properties: [Properties.RECORDING_ENDPOINT_URL, Properties.RECORDING_STATUS_CODE],
+});
+
+export const TELEMETRY_ENABLED = new Event({
+  name: 'telemetry',
+  properties: [Properties.IS_TELEMETRY_ENABLED],
+});
+
+export const COPY_INSTALL_COMMAND = new Event({
+  name: 'copy_install_command',
+  properties: [Properties.PROJECT_LANGUAGE],
 });

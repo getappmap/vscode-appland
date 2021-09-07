@@ -1,15 +1,18 @@
 import * as vscode from 'vscode';
 import { DatabaseUpdater } from './databaseUpdater';
 import { ScenarioProvider } from './scenarioViewer';
-import { Telemetry, DEBUG_EXCEPTION } from './telemetry';
+import { Telemetry, DEBUG_EXCEPTION, TELEMETRY_ENABLED } from './telemetry';
 import registerTrees from './tree';
 import AppMapCollectionFile from './appmapCollectionFile';
+import ContextMenu from './contextMenu';
 import RemoteRecording from './remoteRecording';
 import { notEmpty } from './util';
 import { registerUtilityCommands } from './registerUtilityCommands';
 import ProjectWatcher from './projectWatcher';
 import QuickstartWebview from './quickstartWebview';
+import QuickstartDocsWelcome from './quickstart-docs/welcomeWebview';
 import QuickstartDocsInstallAgent from './quickstart-docs/installAgentWebview';
+import QuickstartDocsRecordAppmaps from './quickstart-docs/recordAppmapsWebview';
 import QuickstartDocsOpenAppmaps from './quickstart-docs/openAppmapsWebview';
 import AppMapProperties from './appmapProperties';
 
@@ -27,6 +30,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     ScenarioProvider.register(context, properties);
     DatabaseUpdater.register(context);
     RemoteRecording.register(context);
+    ContextMenu.register(context);
 
     localAppMaps.initialize();
 
@@ -47,7 +51,9 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
     await Promise.all(projects.map(async (project) => await project.initialize()));
 
-    QuickstartDocsInstallAgent.register(context, properties, projects);
+    QuickstartDocsWelcome.register(context, properties, projects);
+    QuickstartDocsInstallAgent.register(context, projects);
+    QuickstartDocsRecordAppmaps.register(context, projects);
     QuickstartDocsOpenAppmaps.register(context, projects, localAppMaps);
 
     const { localTree } = registerTrees(context, localAppMaps);
@@ -87,6 +93,12 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     );
 
     registerUtilityCommands(context, properties);
+
+    vscode.env.onDidChangeTelemetryEnabled((enabled: boolean) => {
+      Telemetry.sendEvent(TELEMETRY_ENABLED, {
+        enabled,
+      });
+    });
   } catch (exception) {
     Telemetry.sendEvent(DEBUG_EXCEPTION, { exception });
     throw exception;

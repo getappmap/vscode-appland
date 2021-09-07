@@ -1,26 +1,12 @@
 import * as vscode from 'vscode';
 import { PathLike, promises as fs } from 'fs';
-import { join, dirname } from 'path';
-import globToRegExp from 'glob-to-regexp';
+import path from 'path';
+import { default as ignore, Ignore } from 'ignore';
 import VersionControlProperties from './versionControl';
 
-async function regexFromGitIgnore(filePath: PathLike): Promise<readonly RegExp[]> {
-  const directory = dirname(filePath as string);
-  const content = await fs.readFile(filePath);
-  return content
-    .toString()
-    .replace(/#.*$/gm, '')
-    .split(/^/gm)
-    .map((line) => line.trim().replace(/^\//, `${directory}/`))
-    .filter((line) => line !== '')
-    .map((glob) => globToRegExp(glob, { flags: 'g' }));
-}
-
-async function ignoresForWorkspaceFolder(
-  wsFolder: vscode.WorkspaceFolder
-): Promise<readonly RegExp[]> {
-  const directories = [wsFolder.uri.fsPath];
-  const allGitIgnores: RegExp[] = [/\.git/];
+async function ignoresForWorkspaceFolder(wsFolder: string): Promise<Ignore> {
+  const directories: Array<string> = [wsFolder];
+  const wsIgnore: Ignore = ignore();
 
   for (;;) {
     const currentDirectory = directories.pop() as string;
@@ -31,8 +17,7 @@ async function ignoresForWorkspaceFolder(
     const files = await fs.readdir(currentDirectory, { withFileTypes: true });
     const gitIgnore = files.find((file) => file.isFile() && file.name === '.gitignore');
     if (gitIgnore) {
-      const gitIgnores = await regexFromGitIgnore(join(currentDirectory, gitIgnore.name));
-      gitIgnores.forEach((re) => allGitIgnores.push(re));
+      wsIgnore.add((await fs.readFile(path.join(currentDirectory, gitIgnore.name))).toString());
     }
 
     files.filter((file) => {
@@ -40,42 +25,47 @@ async function ignoresForWorkspaceFolder(
         return false;
       }
 
-      const fullPath = join(currentDirectory, file.name);
-      const isIgnored = allGitIgnores.some((re) => re.test(fullPath));
-      if (!isIgnored) {
+      const fullPath = path.join(currentDirectory, file.name);
+      if (!wsIgnore.ignores(file.name)) {
         directories.push(fullPath);
       }
     });
   }
 
-  return allGitIgnores;
+  return wsIgnore;
 }
-
-async function getIgnoreGlobs(): Promise<readonly RegExp[]> {
-  const { workspaceFolders } = vscode.workspace;
-  if (!workspaceFolders) {
-    return Promise.resolve([]);
-  }
-
-  const workspaceIgnores = await Promise.all(
-    workspaceFolders.map(async (wsFolder) => await ignoresForWorkspaceFolder(wsFolder))
-  );
-
-  return workspaceIgnores.flat();
-}
-
 export default class GitProperties implements VersionControlProperties {
-  private ignoreRegex: readonly RegExp[] = [];
+  private ignores: Record<string, Ignore> = {};
 
   public async initialize(): Promise<void> {
-    this.ignoreRegex = await getIgnoreGlobs();
+    const { workspaceFolders } = vscode.workspace;
+    if (workspaceFolders) {
+      for (const wsFolder of workspaceFolders) {
+        const path = wsFolder.uri.fsPath;
+        this.ignores[path] = await ignoresForWorkspaceFolder(path);
+      }
+    }
   }
 
-  public isIgnored(path: PathLike): boolean {
-    if (!this.ignoreRegex) {
-      return false;
+  public isIgnored(filePath: PathLike): boolean {
+    const rootFolder = path.parse(filePath as string).root;
+
+    let filename = path.basename(filePath as string);
+    let dirname = path.dirname(filePath as string);
+
+    for (;;) {
+      if (this.ignores[dirname] && this.ignores[dirname]?.ignores(filename)) {
+        return true;
+      }
+
+      if (dirname !== rootFolder) {
+        filename = path.join(path.basename(dirname), filename);
+        dirname = path.dirname(dirname);
+      } else {
+        break;
+      }
     }
-    const result = this.ignoreRegex.some((re) => re.test(path as string));
-    return result;
+
+    return false;
   }
 }

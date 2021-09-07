@@ -1,6 +1,6 @@
 import { isAbsolute, join } from 'path';
 import * as vscode from 'vscode';
-import { Telemetry, APPMAP_OPEN } from './telemetry';
+import { Telemetry, APPMAP_OPEN, APPMAP_UPLOAD } from './telemetry';
 import { getNonce, getRecords, workspaceFolderForDocument } from './util';
 import { version } from '../package.json';
 import AppMapProperties from './appmapProperties';
@@ -61,7 +61,7 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
 
     // Handle messages from the webview.
     // Note: this has to be set before setting the HTML to avoid a race.
-    webviewPanel.webview.onDidReceiveMessage((message) => {
+    webviewPanel.webview.onDidReceiveMessage(async (message) => {
       switch (message.command) {
         case 'viewSource':
           viewSource(message.text);
@@ -98,7 +98,17 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
           Telemetry.reportOpenUri(message.url);
           break;
         case 'uploadAppmap':
-          AppmapUploader.upload(document, this.context);
+          {
+            const uploadResult = await AppmapUploader.upload(document, this.context);
+            if (uploadResult) {
+              Telemetry.sendEvent(APPMAP_UPLOAD, {
+                rootDirectory: workspaceFolderForDocument(document)?.uri.fsPath,
+                uri: document.uri,
+                metadata: JSON.parse(document.getText()).metadata,
+                metrics: message.metrics,
+              });
+            }
+          }
           break;
       }
     });

@@ -7,7 +7,7 @@ export class AppmapUploader {
   public static async upload(
     appMapFile: vscode.TextDocument,
     context: vscode.ExtensionContext
-  ): Promise<void> {
+  ): Promise<boolean> {
     const acceptedPreviously = context.globalState.get<boolean>(this.DIALOG_KEY);
     if (!acceptedPreviously) {
       const result = await vscode.window.showInformationMessage(
@@ -21,7 +21,7 @@ export class AppmapUploader {
       );
 
       if (!result || result === 'Cancel') {
-        return;
+        return false;
       }
 
       context.globalState.update(this.DIALOG_KEY, true);
@@ -44,12 +44,16 @@ export class AppmapUploader {
       vscode.env.openExternal(confirmUri);
 
       vscode.window.showInformationMessage(`Uploaded ${appMapFile.fileName}`);
+
+      return true;
     } catch (e) {
       vscode.window.showErrorMessage(`Upload failed: ${e.name}: ${e.message}`);
     }
+
+    return false;
   }
 
-  public static resetState(context: vscode.ExtensionContext) {
+  public static resetState(context: vscode.ExtensionContext): void {
     context.globalState.update(this.DIALOG_KEY, undefined);
   }
 

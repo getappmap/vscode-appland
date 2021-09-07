@@ -1,51 +1,20 @@
-import { PathLike } from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
-import AppMapCollectionFile from '../appmapCollectionFile';
 import ProjectWatcher from '../projectWatcher';
 import { getNonce } from '../util';
 import { Telemetry, MILESTONE_OPEN_WEBVIEW } from '../telemetry';
+import QuickstartDocsOpenAppmaps from './openAppmapsWebview';
 
-interface AppMapListItem {
-  path: PathLike;
-  name?: string;
-  requests?: number;
-  sqlQueries?: number;
-  functions?: number;
-}
-
-function getGoodAppMaps(
-  appmaps: AppMapCollectionFile,
-  workspaceFolder: vscode.WorkspaceFolder
-): AppMapListItem[] {
-  return appmaps
-    .allAppMapsForWorkspaceFolder(workspaceFolder)
-    .map(({ descriptor }) => ({
-      path: descriptor.resourceUri.fsPath,
-      name: descriptor.metadata?.name as string,
-      requests: descriptor.numRequests as number,
-      sqlQueries: descriptor.numQueries as number,
-      functions: descriptor.numFunctions as number,
-    }))
-    .sort((a, b) => {
-      const scoreA = a.requests * 100 + a.sqlQueries * 100 + a.functions * 100;
-      const scoreB = b.requests * 100 + b.sqlQueries * 100 + b.functions * 100;
-      return scoreB - scoreA;
-    })
-    .slice(0, 10);
-}
-
-export default class QuickstartWebview {
+export default class QuickstartDocsRecordAppmaps {
   public static readonly viewType = 'appmap.views.quickstart';
-  public static readonly command = 'appmap.openQuickstartDocsOpenAppmaps';
+  public static readonly command = 'appmap.openQuickstartDocsRecordAppmaps';
 
   // Keyed by project root directory
   private static readonly openWebviews = new Map<string, vscode.WebviewPanel>();
 
   public static register(
     context: vscode.ExtensionContext,
-    projects: readonly ProjectWatcher[],
-    appmaps: AppMapCollectionFile
+    projects: readonly ProjectWatcher[]
   ): void {
     const project = projects[0];
     if (!project) {
@@ -66,7 +35,7 @@ export default class QuickstartWebview {
 
         const panel = vscode.window.createWebviewPanel(
           this.viewType,
-          'Quickstart: Open AppMaps',
+          'Quickstart: Record AppMaps',
           vscode.ViewColumn.One,
           {
             enableScripts: true,
@@ -84,20 +53,6 @@ export default class QuickstartWebview {
 
         panel.webview.html = getWebviewContent(panel.webview, context);
 
-        const eventListener = project.onAppMapCreated(() => {
-          // TODO.
-          // This could be made a lot more efficient by only sending the list item that's new, not the entire snapshot.
-          // This also won't be triggered if AppMaps are deleted (BUG).
-          panel.webview.postMessage({
-            type: 'appmapSnapshot',
-            appmaps: getGoodAppMaps(appmaps, project.workspaceFolder),
-          });
-        });
-
-        panel.onDidDispose(() => {
-          eventListener.dispose();
-        });
-
         panel.webview.onDidReceiveMessage(async (message) => {
           switch (message.command) {
             case 'preInitialize':
@@ -105,21 +60,8 @@ export default class QuickstartWebview {
                 // The webview has been created but may not be ready to receive all messages yet.
                 panel.webview.postMessage({
                   type: 'init',
-                  appmaps: getGoodAppMaps(appmaps, project.workspaceFolder),
+                  editor: 'vscode',
                 });
-              }
-              break;
-            case 'openFile':
-              {
-                const { file } = message;
-                let filePath = file;
-
-                if (!path.isAbsolute(file)) {
-                  // If the file is not absolute, it's relative to the workspace folder
-                  filePath = path.join(project.rootDirectory as string, file);
-                }
-
-                vscode.commands.executeCommand('vscode.open', vscode.Uri.file(filePath));
               }
               break;
             case 'clickLink':
@@ -127,15 +69,20 @@ export default class QuickstartWebview {
               break;
             case 'postInitialize':
               Telemetry.sendEvent(MILESTONE_OPEN_WEBVIEW, {
-                milestone: project.milestones.VIEW_APPMAP,
+                milestone: project.milestones.RECORD_APPMAP,
               });
+              break;
+            case 'transition':
+              if (message.target === 'OPEN_APPMAPS') {
+                vscode.commands.executeCommand(QuickstartDocsOpenAppmaps.command);
+              }
               break;
             default:
               break;
           }
         });
 
-        vscode.commands.executeCommand('appmap.focusQuickstartDocs', 3);
+        vscode.commands.executeCommand('appmap.focusQuickstartDocs', 2);
       })
     );
   }
@@ -160,8 +107,8 @@ function getWebviewContent(webview: vscode.Webview, context: vscode.ExtensionCon
     </div>
     <script nonce="${nonce}" src="${scriptUri}"></script>
     <script type="text/javascript" nonce="${nonce}">
-      AppLandWeb.mountQuickstartOpenAppmaps();
-    </script>1
+      AppLandWeb.mountQuickstartRecordAppmaps();
+    </script>
   </body>
   </html>`;
 }

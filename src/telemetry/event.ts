@@ -1,5 +1,3 @@
-import TelemetryDataProvider from './telemetryDataProvider';
-
 interface EventData<PropertyType, MetricType> {
   readonly name: string;
   properties?: PropertyType;

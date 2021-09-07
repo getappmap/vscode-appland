@@ -1,19 +1,22 @@
 import * as path from 'path';
 import * as vscode from 'vscode';
+import * as semver from 'semver';
+import AppMapProperties from '../appmapProperties';
 import ProjectWatcher from '../projectWatcher';
 import { getNonce } from '../util';
-import { Telemetry, MILESTONE_OPEN_WEBVIEW, COPY_INSTALL_COMMAND } from '../telemetry';
-import QuickstartDocsRecordAppmaps from './recordAppmapsWebview';
+import { Telemetry } from '../telemetry';
+import QuickstartDocsInstallAgent from './installAgentWebview';
 
-export default class QuickstartDocsInstallAgent {
+export default class QuickstartDocsWelcome {
   public static readonly viewType = 'appmap.views.quickstart';
-  public static readonly command = 'appmap.openQuickstartDocsInstallAgent';
+  public static readonly command = 'appmap.openQuickstartDocsWelcome';
 
   // Keyed by project root directory
   private static readonly openWebviews = new Map<string, vscode.WebviewPanel>();
 
   public static async register(
     context: vscode.ExtensionContext,
+    properties: AppMapProperties,
     projects: readonly ProjectWatcher[]
   ): Promise<void> {
     const project = projects[0];
@@ -34,8 +37,8 @@ export default class QuickstartDocsInstallAgent {
         }
 
         const panel = vscode.window.createWebviewPanel(
-          this.viewType,
-          'Quickstart: Install Appmap Agent',
+          '',
+          'Quickstart: Welcome',
           vscode.ViewColumn.One,
           {
             enableScripts: true,
@@ -66,29 +69,32 @@ export default class QuickstartDocsInstallAgent {
             case 'clickLink':
               Telemetry.reportOpenUri(message.uri);
               break;
-            case 'postInitialize':
-              Telemetry.sendEvent(MILESTONE_OPEN_WEBVIEW, {
-                milestone: project.milestones.INSTALL_AGENT,
-              });
-              break;
             case 'transition':
-              if (message.target === 'RECORD_APPMAPS') {
-                vscode.commands.executeCommand(QuickstartDocsRecordAppmaps.command);
+              if (message.target === 'INSTALL_AGENT') {
+                vscode.commands.executeCommand(QuickstartDocsInstallAgent.command);
               }
-              break;
-            case 'copyInstallCommand':
-              Telemetry.sendEvent(COPY_INSTALL_COMMAND, {
-                rootDirectory: project.rootDirectory,
-              });
               break;
             default:
               break;
           }
         });
 
-        vscode.commands.executeCommand('appmap.focusQuickstartDocs', 1);
+        properties.hasSeenQuickStartDocs = true;
+
+        vscode.commands.executeCommand('appmap.focusQuickstartDocs', 0);
       })
     );
+
+    const firstVersionInstalled = semver.coerce(properties.firstVersionInstalled);
+    if (firstVersionInstalled && semver.gte(firstVersionInstalled, '0.15.0')) {
+      // Logic within this block will only be executed if the extension was installed after we began tracking the
+      // time of installation. We will use this to determine whether or not our UX improvements are effective, without
+      // before rolling them out to our existing user base.
+
+      if (!properties.hasSeenQuickStartDocs && projects.length == 1) {
+        await vscode.commands.executeCommand(this.command);
+      }
+    }
   }
 }
 
@@ -110,8 +116,8 @@ function getWebviewContent(webview: vscode.Webview, context: vscode.ExtensionCon
     <div id="app">
     </div>
     <script nonce="${nonce}" src="${scriptUri}"></script>
-    <script type="text/javascript" nonce="${nonce}">
-      AppLandWeb.mountQuickstartInstallAgent();
+    <script type="text/javascript" nonce="${nonce}" defer>
+      AppLandWeb.mountQuickstartWelcome();
     </script>
   </body>
   </html>`;
