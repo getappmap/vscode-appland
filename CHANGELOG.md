@@ -1,3 +1,17 @@
+# [0.18.0](https://github.com/applandinc/vscode-appland/compare/v0.17.2...v0.18.0) (2021-09-07)
+
+
+### Bug Fixes
+
+* Better support for `.gitignore` while identifying project language ([#334](https://github.com/applandinc/vscode-appland/issues/334)) ([92d175d](https://github.com/applandinc/vscode-appland/commit/92d175d32b814edaaff7908c3a4a6a3bb57d1053))
+
+
+### Features
+
+* Add additional telemetry events ([#328](https://github.com/applandinc/vscode-appland/issues/328)) ([21a8839](https://github.com/applandinc/vscode-appland/commit/21a883952de42a86f9ac943c53e8c510d7584ab8))
+* Add CLI installer flow ([#325](https://github.com/applandinc/vscode-appland/issues/325)) ([882767f](https://github.com/applandinc/vscode-appland/commit/882767f696299a936d3e332813bfa30961282844))
+* Add context menu to AppMap panel ([#344](https://github.com/applandinc/vscode-appland/issues/344)) ([14492c5](https://github.com/applandinc/vscode-appland/commit/14492c5080ade2a67042e814ceafebc847bc2727))
+
 ## [0.17.2](https://github.com/applandinc/vscode-appland/compare/v0.17.1...v0.17.2) (2021-08-11)
 
 
