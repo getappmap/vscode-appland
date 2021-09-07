@@ -42,6 +42,11 @@ export const MILESTONE_CHANGE_STATE = new Event({
   properties: [Properties.MILESTONE_ID, Properties.MILESTONE_STATE],
 });
 
+export const MILESTONE_OPEN_WEBVIEW = new Event({
+  name: 'milestone:open_webview',
+  properties: [Properties.MILESTONE_ID],
+});
+
 export const APPMAP_OPEN = new Event({
   name: 'appmap:open',
   properties: [
@@ -83,4 +88,9 @@ export const RECORDING_STATUS = new Event({
 export const TELEMETRY_ENABLED = new Event({
   name: 'telemetry',
   properties: [Properties.IS_TELEMETRY_ENABLED],
+});
+
+export const COPY_INSTALL_COMMAND = new Event({
+  name: 'copy_install_command',
+  properties: [Properties.PROJECT_LANGUAGE],
 });
