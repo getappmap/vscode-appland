@@ -4,7 +4,6 @@ import { PathLike, promises as fs } from 'fs';
 import path from 'path';
 import { createHash } from 'crypto';
 import { default as ignore, Ignore } from 'ignore';
-import VersionControlProperties from './versionControl';
 
 async function ignoresForWorkspaceFolder(wsFolder: string): Promise<Ignore> {
   const directories: Array<string> = [wsFolder];
@@ -36,7 +35,7 @@ async function ignoresForWorkspaceFolder(wsFolder: string): Promise<Ignore> {
 
   return wsIgnore;
 }
-export default class GitProperties implements VersionControlProperties {
+export default class GitProperties {
   private static ignores: Record<string, Ignore> | null = null;
 
   private static async getGitRepoAPI(file: Uri): Promise<Repository | null | undefined> {
