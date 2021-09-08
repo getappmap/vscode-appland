@@ -4,6 +4,7 @@ import * as semver from 'semver';
 import { getNonce } from '../util';
 import { Telemetry, MILESTONE_OPEN_WEBVIEW, COPY_INSTALL_COMMAND } from '../telemetry';
 import AppMapProperties from '../appmapProperties';
+import ProjectWatcher from '../projectWatcher';
 import QuickstartDocsRecordAppmaps from './recordAppmapsWebview';
 
 export default class QuickstartDocsInstallAgent {
@@ -15,8 +16,10 @@ export default class QuickstartDocsInstallAgent {
 
   public static async register(
     context: vscode.ExtensionContext,
+    projects: readonly ProjectWatcher[],
     properties: AppMapProperties
   ): Promise<void> {
+    const project = projects[0];
     const rootDirectory = vscode.workspace.workspaceFolders?.[0].uri.fsPath;
 
     context.subscriptions.push(
@@ -63,6 +66,8 @@ export default class QuickstartDocsInstallAgent {
               break;
             case 'postInitialize':
               Telemetry.sendEvent(MILESTONE_OPEN_WEBVIEW, {
+                rootDirectory: project.rootDirectory,
+                milestone: project.milestones.INSTALL_AGENT,
                 milestoneId: 'INSTALL_AGENT',
               });
               break;

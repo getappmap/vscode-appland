@@ -153,8 +153,8 @@ export const VERSION_CONTROL_IS_TRACKED = new TelemetryDataProvider({
 
 export const VERSION_CONTROL_REPOSITORY_ID = new TelemetryDataProvider({
   id: 'appmap.version_control.repository_id',
-  async value({ uri }: { uri: Uri }) {
-    return (await GitProperties.repositoryId(uri.fsPath)) ?? '';
+  async value({ rootDirectory }: { rootDirectory: PathLike }) {
+    return (await GitProperties.repositoryId(rootDirectory)) ?? '';
   },
 });
 

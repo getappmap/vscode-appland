@@ -65,6 +65,11 @@ export default class Milestone implements MilestoneDefinition {
 
     this._state = state;
     this.onChangeStateEmitter.fire(this);
-    Telemetry.sendEvent(MILESTONE_CHANGE_STATE, { milestone: this, milestoneId: this.id });
+
+    Telemetry.sendEvent(MILESTONE_CHANGE_STATE, {
+      rootDirectory: this.project.rootDirectory,
+      milestone: this,
+      milestoneId: this.id,
+    });
   }
 }

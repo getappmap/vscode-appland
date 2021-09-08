@@ -129,7 +129,7 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
           break;
         case 'onLoadComplete':
           Telemetry.sendEvent(APPMAP_OPEN, {
-            rootDirectory: workspaceFolderForDocument(document)?.uri.fsPath,
+            rootDirectory: workspaceFolderForDocument(document)?.uri.fsPath as string,
             uri: document.uri,
             metadata: JSON.parse(document.getText()).metadata,
             metrics: message.metrics,
@@ -156,7 +156,7 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
             const uploadResult = await AppmapUploader.upload(document, this.context);
             if (uploadResult) {
               Telemetry.sendEvent(APPMAP_UPLOAD, {
-                rootDirectory: workspaceFolderForDocument(document)?.uri.fsPath,
+                rootDirectory: workspaceFolderForDocument(document)?.uri.fsPath as string,
                 uri: document.uri,
                 metadata: JSON.parse(document.getText()).metadata,
                 metrics: message.metrics,

@@ -128,6 +128,8 @@ export default class QuickstartWebview {
             case 'postInitialize':
               Telemetry.sendEvent(MILESTONE_OPEN_WEBVIEW, {
                 milestoneId: 'VIEW_APPMAP',
+                rootDirectory: project.rootDirectory,
+                milestone: project.milestones.VIEW_APPMAP,
               });
               break;
             default:

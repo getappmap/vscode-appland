@@ -18,33 +18,51 @@ export const PROJECT_OPEN = new Event({
     Properties.PROJECT_IS_CONFIG_PRESENT,
     Properties.PROJECT_LANGUAGE,
     Properties.PROJECT_LANGUAGE_DISTRIBUTION,
+    Properties.VERSION_CONTROL_REPOSITORY_ID,
   ],
   // metrics: [Metrics.PROJECT_EXAMPLE],
 });
 
 export const PROJECT_CLIENT_AGENT_ADD = new Event({
   name: 'project/client_agent:add',
-  properties: [Properties.PROJECT_AGENT_VERSION, Properties.PROJECT_LANGUAGE],
+  properties: [
+    Properties.FILE_PATH,
+    Properties.PROJECT_AGENT_VERSION,
+    Properties.PROJECT_LANGUAGE,
+    Properties.VERSION_CONTROL_IS_IGNORED,
+    Properties.VERSION_CONTROL_IS_TRACKED,
+    Properties.VERSION_CONTROL_REPOSITORY_ID,
+  ],
 });
 
 export const PROJECT_CLIENT_AGENT_REMOVE = new Event({
   name: 'project/client_agent:remove',
-  properties: [],
+  properties: [Properties.VERSION_CONTROL_REPOSITORY_ID],
 });
 
 export const PROJECT_CONFIG_WRITE = new Event({
   name: 'project/config:write',
-  properties: [],
+  properties: [Properties.VERSION_CONTROL_REPOSITORY_ID],
 });
 
 export const MILESTONE_CHANGE_STATE = new Event({
   name: 'milestone:change_state',
-  properties: [Properties.MILESTONE_ID, Properties.MILESTONE_STATE],
+  properties: [
+    Properties.MILESTONE_ID,
+    Properties.MILESTONE_STATE,
+    Properties.PROJECT_LANGUAGE,
+    Properties.VERSION_CONTROL_REPOSITORY_ID,
+  ],
 });
 
 export const MILESTONE_OPEN_WEBVIEW = new Event({
   name: 'milestone:open_webview',
-  properties: [Properties.MILESTONE_ID],
+  properties: [
+    Properties.MILESTONE_ID,
+    Properties.MILESTONE_STATE,
+    Properties.PROJECT_LANGUAGE,
+    Properties.VERSION_CONTROL_REPOSITORY_ID,
+  ],
 });
 
 export const APPMAP_OPEN = new Event({
