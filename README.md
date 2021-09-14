@@ -3,6 +3,73 @@
 
 # AppMap for Visual Studio Code
 
+AppMap supports **Django**, **Flask**, **Spring**, and **Rails** projects.
+
+AppMap is an  open-source software analysis tool for understanding web services and web applications built with Java, Ruby, or Python. To generate AppMaps you will need to install the AppMap agent for your project:
+
+
+Run this command from within the top level directory of your project:
+
+npx @appland/appmap install-agent
+
+
+--- 
+
+
+Spring Project Requirements
+
+For first time usage of AppMap for Java, the best results come with web app/services such as Spring framework or Tomcat apps. AppMap has specific features that work well with these projects - recording web services and SQL. 
+
+Required Java Version
+Required Node.js version*
+Required Framework version
+JDK 8+
+12+
+
+
+
+
+
+
+
+
+Django and Flask Project Requirements
+
+AppMap for Python requires either the Django or Flask framework. 
+
+Required Python Version
+Required Node.js version*
+Required Framework version
+>=3.6
+12+
+Django v.3.2.x or 2.2.x
+
+
+Flask  v.2.0.x
+
+
+
+Rails Project Requirements
+
+AppMap for Ruby requires Ruby on Rails.
+
+Required Ruby Version
+Required Node.js version*
+Required Framework version
+2.5, 2.6, 2.7
+12+
+ Rails Version 5, 6
+
+
+
+* To Install AppMap without using Node.js follow the Manual Installation Procedure for Ruby, Java, or Python.
+
+
+
+
+
+
+
 Navigate your code more efficiently with interactive, accurate software architecture diagrams right in your IDE. 
 In two minutes you can go from installing this plugin to exploring maps of your code's architecture. 
 
