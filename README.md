@@ -1,73 +1,37 @@
 [![Version](https://img.shields.io/visual-studio-marketplace/v/appland.appmap)](https://marketplace.visualstudio.com/items?itemName=appland.appmap) [![Avg Stars](https://img.shields.io/visual-studio-marketplace/stars/appland.appmap)](https://marketplace.visualstudio.com/items?itemName=appland.appmap)  [![GitHub Stars](https://img.shields.io/github/stars/applandinc/vscode-appland?style=social)](https://marketplace.visualstudio.com/items?itemName=appland.appmap) [![Discord](https://img.shields.io/discord/766016904056930325)](https://discord.com/invite/N9VUap6)
-
-
 # AppMap for Visual Studio Code
-
 AppMap supports **Django**, **Flask**, **Spring**, and **Rails** projects.
 
-AppMap is an  open-source software analysis tool for understanding web services and web applications built with Java, Ruby, or Python. To generate AppMaps you will need to install the AppMap agent for your project:
+AppMap is an open-source software analysis tool for understanding web services and web applications built with **Java**, **Ruby**, or **Python**. To generate AppMaps you will need to install the AppMap agent for your project:
 
-
-Run this command from within the top level directory of your project:
-
+#### Run this command from within the top level directory of your project:
+``` bash
 npx @appland/appmap install-agent
-
-
---- 
-
-
-Spring Project Requirements
-
+```
+### Spring Project Requirements
 For first time usage of AppMap for Java, the best results come with web app/services such as Spring framework or Tomcat apps. AppMap has specific features that work well with these projects - recording web services and SQL. 
 
-Required Java Version
-Required Node.js version*
-Required Framework version
-JDK 8+
-12+
+| Required Framework version | Required Java version | Required Node.js version* |
+| -------------------------- | --------------------- | ------------------------- |
+| Spring       v. ???        |       JDK 8+          | Node.js 12+               |
 
 
-
-
-
-
-
-
-Django and Flask Project Requirements
-
+### Django and Flask Project Requirements
 AppMap for Python requires either the Django or Flask framework. 
 
-Required Python Version
-Required Node.js version*
-Required Framework version
->=3.6
-12+
-Django v.3.2.x or 2.2.x
+| Required Framework version | Required Python Version | Required Node.js version* |
+| -------------------------- | ----------------------- | ------------------------- |
+| Django v.3.2.x or 2.2.x  Flask  v.2.0.x    |  >=3.6  | Node.js 12+               |
 
 
-Flask  v.2.0.x
-
-
-
-Rails Project Requirements
-
+### Rails Project Requirements
 AppMap for Ruby requires Ruby on Rails.
 
-Required Ruby Version
-Required Node.js version*
-Required Framework version
-2.5, 2.6, 2.7
-12+
- Rails Version 5, 6
+| Required Framework version | Required Ruby Version | Required Node.js version* |
+| -------------------------- | --------------------- | ------------------------- |
+|   Rails Version 5, 6       |    2.5, 2.6, 2.7      | Node.js 12+               |
 
-
-
-* To Install AppMap without using Node.js follow the Manual Installation Procedure for Ruby, Java, or Python.
-
-
-
-
-
+ 
 
 
 Navigate your code more efficiently with interactive, accurate software architecture diagrams right in your IDE. 
