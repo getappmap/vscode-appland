@@ -1,28 +1,38 @@
 [![Version](https://img.shields.io/visual-studio-marketplace/v/appland.appmap)](https://marketplace.visualstudio.com/items?itemName=appland.appmap) [![Avg Stars](https://img.shields.io/visual-studio-marketplace/stars/appland.appmap)](https://marketplace.visualstudio.com/items?itemName=appland.appmap)  [![GitHub Stars](https://img.shields.io/github/stars/applandinc/vscode-appland?style=social)](https://marketplace.visualstudio.com/items?itemName=appland.appmap) [![Discord](https://img.shields.io/discord/766016904056930325)](https://discord.com/invite/N9VUap6)
 # AppMap for Visual Studio Code
 
-AppMap supports **Django**, **Flask**, **Spring**, and **Rails** projects.
+Navigate your code more efficiently with interactive, accurate software architecture diagrams right in your IDE. 
+In two minutes you can go from installing this plugin to exploring maps of your code's architecture. 
 
-AppMap is an open-source software analysis tool for understanding web services and web applications built with **Java**, **Ruby**, or **Python**. To generate AppMaps you will need to install the AppMap agent for your project:
-#### Run this command from within the top level directory of your project:
+![AppMap](https://vscode-appmap.s3.us-east-2.amazonaws.com/media/vscode-sidebyside.png)
+
+Visit [dev.to/appland](https://dev.to/appland) for popular articles about AppMap use cases and tutorials.
+
+AppMap supports **Spring**, **Django**, **Flask**, and **Rails** projects. To generate AppMaps you will need to install the AppMap agent for your project.
+
+Run this command from within the top level directory of your project:
 ``` bash
 npx @appland/appmap install-agent
-```
----
+```  
+*Requires Node.js 12+*  
+
+---  
 ### Spring Project Requirements
-| Required Framework version | Required Language version | Required Node.js version* |
-| -------------------------- | --------------------- | ------------------------- |
-| Spring (any version)        |       JDK 8+          | Node.js 12+               |
+| Required Framework version | Required Language version |
+| -------------------------- | --------------------- |
+| Spring (any version)        |       JDK 8+          |
 
 ### Django & Flask Project Requirements
-| Required Framework version | Required Language Version | Required Node.js version* |
-| -------------------------- | ----------------------- | ------------------------- |
-| Django v.3.2.x, 2.2.x, or Flask  v.2.0.x    |  Python >=3.6  | Node.js 12+               |
+| Required Framework version | Required Language Version |
+| -------------------------- | ----------------------- |
+| Django v.3.2.x, 2.2.x   |  Python >=3.6  |
+| Flask  v.2.0.x |
 
 ### Rails Project Requirements
-| Required Framework version | Required Language Version | Required Node.js version* |
-| -------------------------- | --------------------- | ------------------------- |
-|   Rails Version 5, 6       |   Ruby 2.5, 2.6, 2.7      | Node.js 12+               |
+| Required Framework version | Required Language Version |
+| -------------------------- | --------------------- |
+|   Rails Version 5, 6       |   Ruby  2.6, 2.7, 3    |  
+
 
 ---
 
