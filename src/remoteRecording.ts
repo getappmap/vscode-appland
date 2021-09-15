@@ -10,6 +10,8 @@ export default class RemoteRecording {
   private readonly statusBar: vscode.StatusBarItem;
   private readonly context: vscode.ExtensionContext;
   private activeRecordingUrl: string | null;
+  private stopEmitter: vscode.EventEmitter<boolean> | null = null;
+  onDidStop: vscode.Event<boolean> | undefined = this.stopEmitter?.event;
 
   constructor(context: vscode.ExtensionContext) {
     this.context = context;
@@ -75,7 +77,27 @@ export default class RemoteRecording {
       this.statusBar.text = `$(circle-record) Recording is running on ${recordingUrl}`;
       this.statusBar.show();
 
-      vscode.window.showInformationMessage(`Recording has started at ${recordingUrl}.`);
+      vscode.window.withProgress(
+        {
+          cancellable: true,
+          location: vscode.ProgressLocation.Notification,
+          title: `Recording has started at ${recordingUrl}.`,
+        },
+        (_progress, token) => {
+          return new Promise((_resolve, reject) => {
+            token.onCancellationRequested(() => {
+              this.commandStopCurrent();
+            });
+
+            this.stopEmitter = new vscode.EventEmitter<boolean>();
+            this.onDidStop = this.stopEmitter.event;
+            this.onDidStop(() => {
+              this.stopEmitter?.dispose();
+              reject();
+            });
+          });
+        }
+      );
       this.onBeginRecording(recordingUrl);
     } catch (e) {
       vscode.window.showErrorMessage(`The endpoint does not support AppMap recording`);
@@ -134,6 +156,7 @@ export default class RemoteRecording {
 
       vscode.window.showInformationMessage(`Recording successfully stopped at ${url}.`);
       isFinished = true;
+      this.stopEmitter?.fire(true);
     } catch (e) {
       vscode.window.showErrorMessage(`Failed to stop recording: ${e.name}: ${e.message}`);
 
