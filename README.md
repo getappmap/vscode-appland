@@ -10,11 +10,13 @@ Visit [dev.to/appland](https://dev.to/appland) for popular articles about AppMap
 
 AppMap supports **Spring**, **Django**, **Flask**, and **Rails** projects. To generate AppMaps you will need to install the AppMap agent for your project.
 
+&nbsp;
+
 Run this command from within the top level directory of your project:
 ``` bash
 npx @appland/appmap install-agent
 ```  
-*Requires Node.js 12+*  
+&nbsp;
 
 ---  
 ### Spring Project Requirements
