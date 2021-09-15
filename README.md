@@ -20,7 +20,7 @@ npx @appland/appmap install-agent
 
 ---  
 ### Requirements
-AppMap is intended for mapping web services and web applications.
+AppMap is intended for mapping web services and web applications, and works seamlessly with these popular frameworks.
 
 **Spring**
 | Required Framework version | Required Language version |
