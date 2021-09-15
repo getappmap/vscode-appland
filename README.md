@@ -19,31 +19,29 @@ npx @appland/appmap install-agent
 &nbsp;
 
 ---  
-### Spring Project Requirements
+### Requirements
+
+**Spring**
 | Required Framework version | Required Language version |
 | -------------------------- | --------------------- |
 | Spring (any version)        |       JDK 8+          |
 
-### Django & Flask Project Requirements
+**Django** 
 | Required Framework version | Required Language Version |
 | -------------------------- | ----------------------- |
 | Django v.3.2.x, 2.2.x   |  Python >=3.6  |
-| Flask  v.2.0.x |
 
-### Rails Project Requirements
+**Flask** 
+| Required Framework version | Required Language Version |
+| -------------------------- | ----------------------- |
+| Flask  v.2.0.x  |  Python >=3.6  |
+
+**Rails**
 | Required Framework version | Required Language Version |
 | -------------------------- | --------------------- |
 |   Rails Version 5, 6       |   Ruby  2.6, 2.7, 3    |  
 
-
 ---
-
-Navigate your code more efficiently with interactive, accurate software architecture diagrams right in your IDE. In two minutes you can go from installing this plugin to exploring maps of your code's architecture.
-
-![AppMap](https://vscode-appmap.s3.us-east-2.amazonaws.com/media/vscode-sidebyside.png)
-
-Visit [dev.to/appland](https://dev.to/appland) for popular articles about AppMap use cases and tutorials.
-
 ## Quickstart
 Follow the instructions in the **[AppMap quickstart](https://appland.com/docs/quickstart/)** guide.
 
