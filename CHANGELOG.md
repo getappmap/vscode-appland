@@ -1,3 +1,10 @@
+# [0.19.0](https://github.com/applandinc/vscode-appland/compare/v0.18.1...v0.19.0) (2021-09-17)
+
+
+### Features
+
+* Show progress notification when remote recording is in progress ([#350](https://github.com/applandinc/vscode-appland/issues/350)) ([9854030](https://github.com/applandinc/vscode-appland/commit/98540303ed0642f8b87323623af2393b80833e8d))
+
 ## [0.18.1](https://github.com/applandinc/vscode-appland/compare/v0.18.0...v0.18.1) (2021-09-15)
 
 
