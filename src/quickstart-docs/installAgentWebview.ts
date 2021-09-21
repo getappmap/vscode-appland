@@ -1,8 +1,9 @@
 import * as path from 'path';
 import * as vscode from 'vscode';
-import ProjectWatcher from '../projectWatcher';
+import * as semver from 'semver';
 import { getNonce } from '../util';
 import { Telemetry, MILESTONE_OPEN_WEBVIEW, COPY_INSTALL_COMMAND } from '../telemetry';
+import AppMapProperties from '../appmapProperties';
 import QuickstartDocsRecordAppmaps from './recordAppmapsWebview';
 
 export default class QuickstartDocsInstallAgent {
@@ -14,20 +15,14 @@ export default class QuickstartDocsInstallAgent {
 
   public static async register(
     context: vscode.ExtensionContext,
-    projects: readonly ProjectWatcher[]
+    properties: AppMapProperties
   ): Promise<void> {
-    const project = projects[0];
-    if (!project) {
-      // No project, so no quickstart
-      return;
-    }
+    const rootDirectory = vscode.workspace.workspaceFolders?.[0].uri.fsPath;
 
     context.subscriptions.push(
       vscode.commands.registerCommand(this.command, () => {
         // Attempt to re-use an existing webview for this project if one exists
-        const existingPanel: vscode.WebviewPanel = this.openWebviews[
-          project.rootDirectory as string
-        ];
+        const existingPanel: vscode.WebviewPanel = this.openWebviews[rootDirectory as string];
         if (existingPanel) {
           existingPanel.reveal(vscode.ViewColumn.One);
           return;
@@ -44,11 +39,11 @@ export default class QuickstartDocsInstallAgent {
         );
 
         // Cache this panel so we can reuse it later if the user clicks another quickstart milestone from the tree view
-        this.openWebviews[project.rootDirectory as string] = panel;
+        this.openWebviews[rootDirectory as string] = panel;
 
         // If the user closes the panel, make sure it's no longer cached
         panel.onDidDispose(() => {
-          delete this.openWebviews[project.rootDirectory as string];
+          delete this.openWebviews[rootDirectory as string];
         });
 
         panel.webview.html = getWebviewContent(panel.webview, context);
@@ -68,7 +63,7 @@ export default class QuickstartDocsInstallAgent {
               break;
             case 'postInitialize':
               Telemetry.sendEvent(MILESTONE_OPEN_WEBVIEW, {
-                milestone: project.milestones.INSTALL_AGENT,
+                milestoneId: 'INSTALL_AGENT',
               });
               break;
             case 'transition':
@@ -78,7 +73,7 @@ export default class QuickstartDocsInstallAgent {
               break;
             case 'copyInstallCommand':
               Telemetry.sendEvent(COPY_INSTALL_COMMAND, {
-                rootDirectory: project.rootDirectory,
+                rootDirectory,
               });
               break;
             default:
@@ -89,6 +84,17 @@ export default class QuickstartDocsInstallAgent {
         vscode.commands.executeCommand('appmap.focusQuickstartDocs', 1);
       })
     );
+
+    const firstVersionInstalled = semver.coerce(properties.firstVersionInstalled);
+    if (firstVersionInstalled && semver.gte(firstVersionInstalled, '0.15.0')) {
+      // Logic within this block will only be executed if the extension was installed after we began tracking the
+      // time of installation. We will use this to determine whether or not our UX improvements are effective, without
+      // before rolling them out to our existing user base.
+
+      if (!properties.hasSeenQuickStartDocs) {
+        await vscode.commands.executeCommand(this.command);
+      }
+    }
   }
 }
 

@@ -69,7 +69,7 @@ export default class QuickstartDocsRecordAppmaps {
               break;
             case 'postInitialize':
               Telemetry.sendEvent(MILESTONE_OPEN_WEBVIEW, {
-                milestone: project.milestones.RECORD_APPMAP,
+                milestoneId: 'RECORD_APPMAP',
               });
               break;
             case 'transition':
