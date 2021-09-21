@@ -1,3 +1,16 @@
+# [0.20.0](https://github.com/applandinc/vscode-appland/compare/v0.19.0...v0.20.0) (2021-09-21)
+
+
+### Bug Fixes
+
+* Disable uploading AppMaps from within the app ([3fb2d4e](https://github.com/applandinc/vscode-appland/commit/3fb2d4ef0389c420814ed5fcf4fa5e1fcae33268))
+* Upgrade @appland/components to v1.12.2 ([e8d6bba](https://github.com/applandinc/vscode-appland/commit/e8d6bbaa470d3d0f1d27222abf03709cc18fa564))
+
+
+### Features
+
+* Welcome and install views have merged ([1644d43](https://github.com/applandinc/vscode-appland/commit/1644d43dabe9cfdffce351e70b7779e224e69b5e))
+
 # [0.19.0](https://github.com/applandinc/vscode-appland/compare/v0.18.1...v0.19.0) (2021-09-17)
 
 
