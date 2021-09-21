@@ -5,9 +5,9 @@ __metadata:
   version: 4
   cacheKey: 7
 
-"@appland/components@npm:^1.12.0":
-  version: 1.12.0
-  resolution: "@appland/components@npm:1.12.0"
+"@appland/components@npm:^1.12.2":
+  version: 1.12.2
+  resolution: "@appland/components@npm:1.12.2"
   dependencies:
     "@appland/diagrams": ^1.3.1
     "@appland/models": ^1.5.0
@@ -15,7 +15,7 @@ __metadata:
     sql-formatter: ^2.3.3
     vue: ^2.6.11
     vuex: ^3.6.0
-  checksum: ee9372fe86d13b8df103b17e6597b91da518c08431e0636881d240ae713e0582f4d13a6910b08f4b9f9a9a790a87e30d29b42409b55bc3138fcf50e9e6314a33
+  checksum: 10eaf1baec04a42946e84bc18e7b2da2f63c16bb924a8b225e03c554b6fa6be452842f1ad66592f4b4d9a07cb1666c9ee19be4efb6b3e42834b40f679358c24a
   languageName: node
   linkType: hard
 
@@ -3144,7 +3144,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "appmap@workspace:."
   dependencies:
-    "@appland/components": ^1.12.0
+    "@appland/components": ^1.12.2
     "@appland/diagrams": ^1.3.1
     "@appland/models": ^1.5.0
     "@babel/core": ^7.14.3
@@ -3175,9 +3175,9 @@ __metadata:
     eslint-plugin-prettier: ^3.4.0
     file-loader: ^6.2.0
     glob: ^7.1.6
-    glob-to-regexp: ^0.4.1
     highlight.js: ^11.0.1
     html-loader: ^1.3.2
+    ignore: ^5.1.8
     jquery: ^3.5.1
     js-yaml: ^4.0.0
     mocha: ^8.1.3
@@ -7304,7 +7304,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"ignore@npm:^5.1.4":
+"ignore@npm:^5.1.4, ignore@npm:^5.1.8":
   version: 5.1.8
   resolution: "ignore@npm:5.1.8"
   checksum: b08e3d5b5d94eca13475f29a5d47d221060e9cdd7e38d7647088e29d90130669a970fecbc4cdb41b8fa295c6673740c729d3dc05dadc381f593efb42282cbf9f
