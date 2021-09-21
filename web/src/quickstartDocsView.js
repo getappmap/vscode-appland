@@ -1,47 +1,11 @@
 import Vue from 'vue';
 import {
-  VQuickstartDocsWelcome,
   VQuickstartDocsInstallAgent,
   VQuickstartDocsOpenAppmaps,
   VQuickstartDocsRecordAppmaps,
 } from '@appland/components';
 import '@appland/diagrams/dist/style.css';
 import MessagePublisher from './messagePublisher';
-
-export function mountQuickstartWelcome() {
-  const vscode = window.acquireVsCodeApi();
-  const messages = new MessagePublisher(vscode);
-
-  messages
-    .on('init', () => {
-      const app = new Vue({
-        el: '#app',
-        render(h) {
-          return h(VQuickstartDocsWelcome, {
-            ref: 'ui',
-          });
-        },
-        mounted() {
-          document.querySelectorAll('a[href]').forEach((el) => {
-            el.addEventListener('click', (e) => {
-              vscode.postMessage({ command: 'clickLink', uri: e.target.href });
-            });
-          });
-        },
-      });
-
-      app.$on('transition', (target) => {
-        vscode.postMessage({ command: 'transition', target });
-      });
-
-      vscode.postMessage({ command: 'postInitialize' });
-    })
-    .on(undefined, (event) => {
-      throw new Error(`unhandled message type: ${event.type}`);
-    });
-
-  vscode.postMessage({ command: 'preInitialize' });
-}
 
 export function mountQuickstartInstallAgent() {
   const vscode = window.acquireVsCodeApi();

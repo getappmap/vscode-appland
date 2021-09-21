@@ -51,8 +51,8 @@ export const FILE_METADATA = new TelemetryDataProvider({
 
 export const MILESTONE_ID = new TelemetryDataProvider({
   id: 'appmap.milestone.id',
-  async value({ milestone }: { milestone: Milestone }): Promise<string> {
-    return milestone.id;
+  async value({ milestoneId }: { milestoneId: string }): Promise<string> {
+    return milestoneId;
   },
 });
 

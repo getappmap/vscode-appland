@@ -2,7 +2,6 @@ import assert from 'assert';
 import * as vscode from 'vscode';
 import { SinonSandbox, createSandbox } from 'sinon';
 import AppMapProperties from '../../src/appmapProperties';
-import ProjectWatcher from '../../src/projectWatcher';
 import QuickstartDocsInstallAgent from '../../src/quickstart-docs/installAgentWebview';
 import MockExtensionContext from '../mocks/mockExtensionContext';
 import MockFileSystemWatcher from '../mocks/mockFileSystemWatcher';
@@ -15,7 +14,6 @@ describe('Quickstart', () => {
     let appmapWatcher: MockFileSystemWatcher;
     let context: MockExtensionContext;
     let properties: AppMapProperties;
-    let projects: ProjectWatcher[];
 
     beforeEach(() => {
       sinon = createSandbox();
@@ -34,12 +32,9 @@ describe('Quickstart', () => {
       sinon.stub(util, 'hasPreviouslyInstalledExtension').returns(false);
       properties = new AppMapProperties(context);
       mockSingleProjectWorkspace(sinon);
-      projects = (vscode.workspace.workspaceFolders || []).map(
-        (folder) => new ProjectWatcher(context, folder, appmapWatcher, properties)
-      );
 
       assert(properties.hasSeenQuickStartDocs === false);
-      await QuickstartDocsInstallAgent.register(context, projects);
+      await QuickstartDocsInstallAgent.register(context, properties);
       setTimeout(() => {
         assert(executeCommand.calledWith('appmap.openQuickstartDocsInstallAgent'));
         assert(properties.hasSeenQuickStartDocs);
@@ -51,12 +46,9 @@ describe('Quickstart', () => {
       sinon.stub(util, 'hasPreviouslyInstalledExtension').returns(true);
       properties = new AppMapProperties(context);
       mockSingleProjectWorkspace(sinon);
-      projects = (vscode.workspace.workspaceFolders || []).map(
-        (folder) => new ProjectWatcher(context, folder, appmapWatcher, properties)
-      );
 
       assert(properties.hasSeenQuickStartDocs === false);
-      await QuickstartDocsInstallAgent.register(context, projects);
+      await QuickstartDocsInstallAgent.register(context, properties);
       setTimeout(() => {
         assert(executeCommand.calledWith('appmap.openQuickstartDocsInstallAgent') === false);
         assert(properties.hasSeenQuickStartDocs === false);
@@ -68,12 +60,9 @@ describe('Quickstart', () => {
       properties = new AppMapProperties(context);
       sinon.stub(properties, 'firstVersionInstalled').value(version);
       mockSingleProjectWorkspace(sinon);
-      projects = (vscode.workspace.workspaceFolders || []).map(
-        (folder) => new ProjectWatcher(context, folder, appmapWatcher, properties)
-      );
 
       assert(properties.hasSeenQuickStartDocs === false);
-      await QuickstartDocsInstallAgent.register(context, projects);
+      await QuickstartDocsInstallAgent.register(context, properties);
 
       setTimeout(() => {
         assert(executeCommand.calledWith('appmap.openQuickstartDocsInstallAgent') === shouldOpen);
