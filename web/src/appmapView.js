@@ -15,7 +15,7 @@ export default function mountApp() {
       return h(VVsCodeExtension, {
         ref: 'ui',
         props: {
-          appMapUploadable: true,
+          appMapUploadable: false,
         },
       });
     },
