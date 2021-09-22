@@ -2,11 +2,11 @@ import assert from 'assert';
 import * as vscode from 'vscode';
 import { SinonSandbox, createSandbox } from 'sinon';
 import AppMapProperties from '../../src/appmapProperties';
-import QuickstartDocsInstallAgent from '../../src/quickstart-docs/installAgentWebview';
 import MockExtensionContext from '../mocks/mockExtensionContext';
 import MockFileSystemWatcher from '../mocks/mockFileSystemWatcher';
 import { mockSingleProjectWorkspace } from '../mocks/mockWorkspace';
 import * as util from '../../src/util';
+import registerWorkspaceOverview from '../../src/workspaceOverview';
 
 describe('Quickstart', () => {
   describe('First time flow', () => {
@@ -34,8 +34,8 @@ describe('Quickstart', () => {
       mockSingleProjectWorkspace(sinon);
 
       assert(properties.hasSeenQuickStartDocs === false);
-      await QuickstartDocsInstallAgent.register(context, properties);
-      assert(executeCommand.calledWith('appmap.openQuickstartDocsInstallAgent'));
+      await registerWorkspaceOverview(context, properties);
+      assert(executeCommand.calledWith('appmap.openWorkspaceOverview'));
       assert(properties.hasSeenQuickStartDocs);
     });
 
@@ -46,8 +46,8 @@ describe('Quickstart', () => {
       mockSingleProjectWorkspace(sinon);
 
       assert(properties.hasSeenQuickStartDocs === false);
-      await QuickstartDocsInstallAgent.register(context, properties);
-      assert(executeCommand.calledWith('appmap.openQuickstartDocsInstallAgent') === false);
+      await registerWorkspaceOverview(context, properties);
+      assert(executeCommand.calledWith('appmap.openWorkspaceOverview') === false);
       assert(properties.hasSeenQuickStartDocs === false);
     });
 
@@ -58,9 +58,9 @@ describe('Quickstart', () => {
       mockSingleProjectWorkspace(sinon);
 
       assert(properties.hasSeenQuickStartDocs === false);
-      await QuickstartDocsInstallAgent.register(context, properties);
+      await registerWorkspaceOverview(context, properties);
 
-      assert(executeCommand.calledWith('appmap.openQuickstartDocsInstallAgent') === shouldOpen);
+      assert(executeCommand.calledWith('appmap.openWorkspaceOverview') === shouldOpen);
       assert(properties.hasSeenQuickStartDocs === shouldOpen);
     }
 

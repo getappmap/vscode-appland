@@ -1,6 +1,5 @@
 import * as path from 'path';
 import * as vscode from 'vscode';
-import * as semver from 'semver';
 import { getNonce } from '../util';
 import { Telemetry, MILESTONE_OPEN_WEBVIEW, COPY_INSTALL_COMMAND } from '../telemetry';
 import AppMapProperties from '../appmapProperties';
@@ -15,7 +14,7 @@ export default class QuickstartDocsInstallAgent {
 
   public static async register(
     context: vscode.ExtensionContext,
-    properties: AppMapProperties
+    _properties: AppMapProperties
   ): Promise<void> {
     const rootDirectory = vscode.workspace.workspaceFolders?.[0].uri.fsPath;
 
@@ -84,18 +83,6 @@ export default class QuickstartDocsInstallAgent {
         vscode.commands.executeCommand('appmap.focusQuickstartDocs', 1);
       })
     );
-
-    const firstVersionInstalled = semver.coerce(properties.firstVersionInstalled);
-    if (firstVersionInstalled && semver.gte(firstVersionInstalled, '0.15.0')) {
-      // Logic within this block will only be executed if the extension was installed after we began tracking the
-      // time of installation. We will use this to determine whether or not our UX improvements are effective, without
-      // before rolling them out to our existing user base.
-
-      if (!properties.hasSeenQuickStartDocs) {
-        properties.hasSeenQuickStartDocs = true;
-        await vscode.commands.executeCommand(this.command);
-      }
-    }
   }
 }
 
