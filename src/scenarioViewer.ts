@@ -17,12 +17,51 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
       provider
     );
     context.subscriptions.push(providerRegistration);
+
+    context.subscriptions.push(
+      vscode.commands.registerCommand('appmap.getAppmapState', () => {
+        if (provider.currentWebView) {
+          provider.currentWebView.webview.postMessage({
+            type: 'requestAppmapState',
+          });
+        }
+      })
+    );
+
+    context.subscriptions.push(
+      vscode.commands.registerCommand('appmap.setAppmapState', async () => {
+        if (provider.currentWebView) {
+          const state = await vscode.window.showInputBox({
+            placeHolder: 'AppMap state serialized string',
+          });
+          if (state) {
+            provider.currentWebView.webview.postMessage({
+              type: 'setAppmapState',
+              state: state,
+            });
+          }
+        }
+      })
+    );
+
+    context.subscriptions.push(
+      vscode.commands.registerCommand('appmap.setAppmapStateNoPrompt', async (state) => {
+        if (provider.currentWebView) {
+          provider.currentWebView.webview.postMessage({
+            type: 'setAppmapState',
+            state: state,
+          });
+        }
+      })
+    );
   }
 
   private static readonly viewType = 'appmap.views.appMapFile';
   private static readonly INSTRUCTIONS_VIEWED = 'APPMAP_INSTRUCTIONS_VIEWED';
   private static readonly RELEASE_KEY = 'APPMAP_RELEASE_KEY';
   public static readonly APPMAP_OPENED = 'APPMAP_OPENED';
+  public static readonly INITIAL_STATE = 'INITIAL_STATE';
+  public currentWebView;
 
   constructor(
     private readonly context: vscode.ExtensionContext,
@@ -37,6 +76,14 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
     webviewPanel: vscode.WebviewPanel
     /* _token: vscode.CancellationToken */
   ): Promise<void> {
+    this.currentWebView = webviewPanel;
+
+    webviewPanel.onDidChangeViewState((e) => {
+      if (e.webviewPanel.active) {
+        this.currentWebView = e.webviewPanel;
+      }
+    });
+
     const updateWebview = () => {
       webviewPanel.webview.postMessage({
         type: 'update',
@@ -57,6 +104,13 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
           version,
         });
       }
+
+      // get initial state and apply to opened webview
+      const initialState = this.context.globalState.get(ScenarioProvider.INITIAL_STATE);
+      if (initialState) {
+        vscode.commands.executeCommand('appmap.setAppmapStateNoPrompt', initialState);
+      }
+      this.context.globalState.update(ScenarioProvider.INITIAL_STATE, null);
     };
 
     // Handle messages from the webview.
@@ -135,6 +189,7 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
     // Make sure we get rid of the listener when our editor is closed.
     webviewPanel.onDidDispose(() => {
       changeDocumentSubscription.dispose();
+      this.currentWebView = null;
     });
 
     function openFile(uri: vscode.Uri, lineNumber: number) {
@@ -249,5 +304,6 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
     context.globalState.update(ScenarioProvider.INSTRUCTIONS_VIEWED, null);
     context.globalState.update(ScenarioProvider.RELEASE_KEY, null);
     context.globalState.update(ScenarioProvider.APPMAP_OPENED, null);
+    context.globalState.update(ScenarioProvider.INITIAL_STATE, null);
   }
 }
