@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+
 import { DatabaseUpdater } from './databaseUpdater';
 import { ScenarioProvider } from './scenarioViewer';
 import { Telemetry, DEBUG_EXCEPTION, TELEMETRY_ENABLED } from './telemetry';
@@ -10,10 +11,9 @@ import { notEmpty } from './util';
 import { registerUtilityCommands } from './registerUtilityCommands';
 import ProjectWatcher from './projectWatcher';
 import QuickstartWebview from './quickstartWebview';
-import QuickstartDocsInstallAgent from './quickstart-docs/installAgentWebview';
-import QuickstartDocsRecordAppmaps from './quickstart-docs/recordAppmapsWebview';
 import QuickstartDocsOpenAppmaps from './quickstart-docs/openAppmapsWebview';
 import AppMapProperties from './appmapProperties';
+import registerWorkspaceOverview from './workspaceOverview';
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
   try {
@@ -50,8 +50,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
     await Promise.all(projects.map(async (project) => await project.initialize()));
 
-    QuickstartDocsInstallAgent.register(context, properties);
-    QuickstartDocsRecordAppmaps.register(context, projects);
+    registerWorkspaceOverview(context, properties);
+
     QuickstartDocsOpenAppmaps.register(context, projects, localAppMaps);
 
     const { localTree } = registerTrees(context, localAppMaps);

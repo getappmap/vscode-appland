@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "esModuleInterop": true,
-    "lib": ["ES2019"],
     "module": "commonjs",
     "moduleResolution": "node",
     "noImplicitAny": false,
@@ -9,7 +8,7 @@
     "resolveJsonModule": true,
     "sourceMap": true,
     "strict": true,
-    "target": "es2019"
+    "target": "es2021"
   },
   "exclude": ["node_modules", ".vscode-test", "web"]
 }
