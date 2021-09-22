@@ -1,3 +1,10 @@
+# [0.21.0](https://github.com/applandinc/vscode-appland/compare/v0.20.0...v0.21.0) (2021-09-22)
+
+
+### Features
+
+* Load AppMaps from a URI ([#232](https://github.com/applandinc/vscode-appland/issues/232)) ([2d38e4e](https://github.com/applandinc/vscode-appland/commit/2d38e4e30c3686836ae24e540e92cb3f7ad5cb8c))
+
 # [0.20.0](https://github.com/applandinc/vscode-appland/compare/v0.19.0...v0.20.0) (2021-09-21)
 
 
