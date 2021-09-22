@@ -13,6 +13,7 @@ import QuickstartWebview from './quickstartWebview';
 import QuickstartDocsInstallAgent from './quickstart-docs/installAgentWebview';
 import QuickstartDocsRecordAppmaps from './quickstart-docs/recordAppmapsWebview';
 import QuickstartDocsOpenAppmaps from './quickstart-docs/openAppmapsWebview';
+import openProjectOverview from './projectOverview';
 import AppMapProperties from './appmapProperties';
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
@@ -49,6 +50,10 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     QuickstartWebview.register(context, projects, localAppMaps);
 
     await Promise.all(projects.map(async (project) => await project.initialize()));
+
+    context.subscriptions.push(
+      vscode.commands.registerCommand('appmap.openProjectOverview', openProjectOverview)
+    );
 
     QuickstartDocsInstallAgent.register(context, properties);
     QuickstartDocsRecordAppmaps.register(context, projects);
