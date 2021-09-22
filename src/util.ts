@@ -207,7 +207,12 @@ export function hasPreviouslyInstalledExtension(extensionPath: string): boolean 
   const extensionName = path.basename(extensionPath);
   for (let i = 0; i < extensionDirectories.length; i++) {
     const dir = extensionDirectories[i];
-    const ents = fs.readdirSync(dir, { withFileTypes: true });
+    let ents: fs.Dirent[] = [];
+    try {
+      ents = fs.readdirSync(dir, { withFileTypes: true });
+    } catch (e) {
+      continue;
+    }
 
     for (let k = 0; k < ents.length; ++k) {
       const ent = ents[k];

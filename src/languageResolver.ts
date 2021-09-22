@@ -1,4 +1,4 @@
-import { PathLike, promises as fs } from 'fs';
+import { PathLike, promises as fs, Dirent } from 'fs';
 import { extname, join } from 'path';
 import AppMapAgent from './agent/appMapAgent';
 import GitProperties from './telemetry/properties/versionControlGit';
@@ -213,7 +213,12 @@ export default class LanguageResolver {
         break;
       }
 
-      const files = await fs.readdir(currentDirectory, { withFileTypes: true });
+      let files: Dirent[] = [];
+      try {
+        files = await fs.readdir(currentDirectory, { withFileTypes: true });
+      } catch {
+        continue;
+      }
 
       files.forEach((f) => {
         const absPath = join(currentDirectory, f.name);
