@@ -19,7 +19,7 @@ export const PROJECT_OPEN = new Event({
     Properties.PROJECT_LANGUAGE,
     Properties.PROJECT_LANGUAGE_DISTRIBUTION,
   ],
-  // metrics: [Metrics.PROJECT_EXAMPLE],
+  metrics: [Metrics.NUM_WORKSPACE_FOLDERS],
 });
 
 export const PROJECT_CLIENT_AGENT_ADD = new Event({
