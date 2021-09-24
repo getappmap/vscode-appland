@@ -1,3 +1,10 @@
+## [0.21.1](https://github.com/applandinc/vscode-appland/compare/v0.21.0...v0.21.1) (2021-09-24)
+
+
+### Bug Fixes
+
+* Capture debug information on number of workspace folders ([ede0c1c](https://github.com/applandinc/vscode-appland/commit/ede0c1caf48a2aca1830672a0ecaf966114043f1))
+
 # [0.21.0](https://github.com/applandinc/vscode-appland/compare/v0.20.0...v0.21.0) (2021-09-22)
 
 
