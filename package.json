@@ -2,7 +2,7 @@
   "publisher": "appland",
   "name": "appmap",
   "displayName": "AppMap",
-  "description": "Interactive maps and architecture analysis help you write better Ruby, Python and Java code",
+  "description": "Visual debugger for Rails, Spring, Flask and Django applications",
   "version": "0.21.1",
   "repository": {
     "type": "git",
