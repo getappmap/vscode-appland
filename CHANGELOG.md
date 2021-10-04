@@ -1,3 +1,10 @@
+## [0.21.2](https://github.com/applandinc/vscode-appland/compare/v0.21.1...v0.21.2) (2021-10-04)
+
+
+### Bug Fixes
+
+* Update Marketplace description ([a22ca47](https://github.com/applandinc/vscode-appland/commit/a22ca47ff077a22f2a6303411f2a587d9b41f263))
+
 ## [0.21.1](https://github.com/applandinc/vscode-appland/compare/v0.21.0...v0.21.1) (2021-09-24)
 
 
