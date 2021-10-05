@@ -1,3 +1,10 @@
+## [0.21.3](https://github.com/applandinc/vscode-appland/compare/v0.21.2...v0.21.3) (2021-10-05)
+
+
+### Bug Fixes
+
+* Update social media section in README ([#355](https://github.com/applandinc/vscode-appland/issues/355)) ([74049c0](https://github.com/applandinc/vscode-appland/commit/74049c00752f9dcc65bc0dd101964dada41132bd))
+
 ## [0.21.2](https://github.com/applandinc/vscode-appland/compare/v0.21.1...v0.21.2) (2021-10-04)
 
 
