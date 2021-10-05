@@ -95,6 +95,8 @@ how it accelerates development processes.
 
 ## Twitter
 
-- [AppMap Ruby](https://twitter.com/appmapruby)
-- [AppMap Python](https://twitter.com/appmappython)
-- [AppMap Java](https://twitter.com/appmapjava)
+- [AppLand](https://twitter.com/landofapps)
+
+## YouTube
+
+- [AppMap channel](https://www.youtube.com/channel/UCxVv4gVnr2Uf2PSzoELZUcg)
