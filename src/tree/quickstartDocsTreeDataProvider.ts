@@ -7,6 +7,11 @@ const docsPages = [
     command: 'appmap.openProjectOverview',
   },
   {
+    id: 'QUICKSTART_WORKSPACE_OVERVIEW',
+    title: 'Workspace overview',
+    command: 'appmap.openWorkspaceOverview',
+  },
+  {
     id: 'QUICKSTART_DOCS_INSTALL_AGENT',
     title: 'Install AppMap Agent',
     command: 'appmap.openQuickstartDocsInstallAgent',

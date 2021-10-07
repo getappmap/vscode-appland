@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { analyze as analyzeProject, Tip } from './analyzers';
+import { analyze as analyzeProject, Features } from './analyzers';
 
 const COLUMN = vscode.ViewColumn.One;
 
@@ -27,8 +27,10 @@ export default async function openProjectOverview(): Promise<void> {
   panel.webview.html = await analyze(folder);
 }
 
-function formatTips(tips: Tip[]) {
-  const lis = ''.concat(...tips.map(({ score, text }) => `<li class="${score}">${text}</li>`));
+function formatTips(tips: Features) {
+  const lis = ''.concat(
+    ...Object.entries(tips).map(([, { score, text }]) => `<li class="${score}">${text}</li>`)
+  );
   return `<ul>${lis}</ul>`;
 }
 
@@ -45,13 +47,8 @@ function formatResult(scoreNum: number) {
   return `<p class="result ${score}">${text}</p>`;
 }
 
-function formatModules(modules: string[]) {
-  const lis = ''.concat(...modules.map((module) => `<li>${module}</li>`));
-  return `<ul>${lis}</ul>`;
-}
-
 async function analyze(folder: vscode.WorkspaceFolder): Promise<string> {
-  const { tips, modules, score } = await analyzeProject(folder);
+  const { features: tips, score } = await analyzeProject(folder);
 
   let doc = `
     <head>
@@ -122,20 +119,6 @@ async function analyze(folder: vscode.WorkspaceFolder): Promise<string> {
       ${formatResult(score)}
     </section>
   `;
-
-  if (modules.length > 0) {
-    doc += `
-      <section id="modules">
-      <h2>Modules</h2>
-      <p>
-        Here is the list of modules we found in your project.
-        Using AppMap, you can see exactly how they work and interact!
-      </p>
-      ${formatModules(modules)}
-      </section>
-    `;
-  }
-
   doc += '</article></body>';
 
   return doc;

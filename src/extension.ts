@@ -15,6 +15,7 @@ import QuickstartDocsRecordAppmaps from './quickstart-docs/recordAppmapsWebview'
 import QuickstartDocsOpenAppmaps from './quickstart-docs/openAppmapsWebview';
 import openProjectOverview from './projectOverview';
 import AppMapProperties from './appmapProperties';
+import openWorkspaceOverview from './workspaceOverview';
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
   try {
@@ -52,7 +53,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     await Promise.all(projects.map(async (project) => await project.initialize()));
 
     context.subscriptions.push(
-      vscode.commands.registerCommand('appmap.openProjectOverview', openProjectOverview)
+      vscode.commands.registerCommand('appmap.openProjectOverview', openProjectOverview),
+      vscode.commands.registerCommand('appmap.openWorkspaceOverview', openWorkspaceOverview)
     );
 
     QuickstartDocsInstallAgent.register(context, properties);
