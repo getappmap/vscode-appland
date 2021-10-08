@@ -1,3 +1,10 @@
+## [0.21.4](https://github.com/applandinc/vscode-appland/compare/v0.21.3...v0.21.4) (2021-10-08)
+
+
+### Bug Fixes
+
+* Ignore file access errors where possible ([8b7ac90](https://github.com/applandinc/vscode-appland/commit/8b7ac9020a01a89bb1c12ff8f1017bd1aaed6a67))
+
 ## [0.21.3](https://github.com/applandinc/vscode-appland/compare/v0.21.2...v0.21.3) (2021-10-05)
 
 
