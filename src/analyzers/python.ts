@@ -5,17 +5,23 @@ const fs = workspace.fs;
 
 type DependencyFinder = (name: string) => boolean;
 
-async function pipDependencies(folder: WorkspaceFolder): Promise<DependencyFinder | null> {
-  try {
-    const requirements = utfDecoder(
-      await fs.readFile(Uri.joinPath(folder.uri, 'requirements.txt'))
-    );
-    return (name) => {
-      return new RegExp(`^${name}(\\W|$)`, 'mi').test(requirements);
-    };
-  } catch (_) {
-    return null;
-  }
+async function pipDependencies(folder: WorkspaceFolder): Promise<DependencyFinder> {
+  const requirements = utfDecoder(await fs.readFile(Uri.joinPath(folder.uri, 'requirements.txt')));
+  return (name) => {
+    return new RegExp(`^${name}(\\W|$)`, 'mi').test(requirements);
+  };
+}
+
+async function pyprojectDependencies(folder: WorkspaceFolder): Promise<DependencyFinder> {
+  const pyproject = utfDecoder(await fs.readFile(Uri.joinPath(folder.uri, 'pyproject.toml')));
+  return (name) => {
+    // TOML is quite flexible and requirements can be specified in many
+    // different ways. Depending on the tool (ie. flit, poetry, etc.) they
+    // can also be in different places.
+    // I didn't want to bring in a whole TOML parser just for this; it's not
+    // required to be 100% foolproof, so do a simple word match.
+    return new RegExp(`(\\W|^)${name}(\\W|$)`, 'mi').test(pyproject);
+  };
 }
 
 export default async function analyze(folder: WorkspaceFolder): Promise<Result | null> {
@@ -30,9 +36,8 @@ export default async function analyze(folder: WorkspaceFolder): Promise<Result |
     },
   };
 
-  const dependency = await pipDependencies(folder);
-
-  if (dependency) {
+  try {
+    const dependency = await Promise.any([pipDependencies(folder), pyprojectDependencies(folder)]);
     if (dependency('django')) {
       tips.web = {
         title: 'Django',
@@ -63,7 +68,7 @@ export default async function analyze(folder: WorkspaceFolder): Promise<Result |
           "This project doesn't seem to use a supported test framework. Automatic test recording won't be possible.",
       };
     }
-  } else {
+  } catch (_) {
     tips.lang = {
       title: 'Python',
       score: 'ok',
