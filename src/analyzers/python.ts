@@ -1,12 +1,25 @@
-import * as vscode from 'vscode';
-const fs = vscode.workspace.fs;
-
+import { RelativePattern, Uri, workspace, WorkspaceFolder } from 'vscode';
 import { Result, scoreValue, Features } from '.';
+import utfDecoder from '../utfDecoder';
+const fs = workspace.fs;
 
-export default async function analyze(folder: vscode.WorkspaceFolder): Promise<Result | null> {
-  const pyfiles = await vscode.workspace.findFiles(
-    new vscode.RelativePattern(folder, '**/__init__.py')
-  );
+type DependencyFinder = (name: string) => boolean;
+
+async function pipDependencies(folder: WorkspaceFolder): Promise<DependencyFinder | null> {
+  try {
+    const requirements = utfDecoder(
+      await fs.readFile(Uri.joinPath(folder.uri, 'requirements.txt'))
+    );
+    return (name) => {
+      return new RegExp(`^${name}(\\W|$)`, 'mi').test(requirements);
+    };
+  } catch (_) {
+    return null;
+  }
+}
+
+export default async function analyze(folder: WorkspaceFolder): Promise<Result | null> {
+  const pyfiles = await workspace.findFiles(new RelativePattern(folder, '**/__init__.py'));
   if (pyfiles.length == 0) return null;
 
   const tips: Features = {
@@ -17,12 +30,10 @@ export default async function analyze(folder: vscode.WorkspaceFolder): Promise<R
     },
   };
 
-  try {
-    const decoder = new TextDecoder();
-    const rawReqs = await fs.readFile(vscode.Uri.joinPath(folder.uri, 'requirements.txt'));
-    const requirements = decoder.decode(rawReqs);
+  const dependency = await pipDependencies(folder);
 
-    if (/^django/m.test(requirements)) {
+  if (dependency) {
+    if (dependency('django')) {
       tips.web = {
         title: 'Django',
         score: 'good',
@@ -38,7 +49,7 @@ export default async function analyze(folder: vscode.WorkspaceFolder): Promise<R
       };
     }
 
-    if (/^pytest/m.test(requirements)) {
+    if (dependency('pytest')) {
       tips.test = {
         score: 'good',
         title: 'pytest',
@@ -52,7 +63,7 @@ export default async function analyze(folder: vscode.WorkspaceFolder): Promise<R
           "This project doesn't seem to use a supported test framework. Automatic test recording won't be possible.",
       };
     }
-  } catch (_) {
+  } else {
     tips.lang = {
       title: 'Python',
       score: 'ok',
