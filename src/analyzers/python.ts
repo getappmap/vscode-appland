@@ -24,6 +24,21 @@ async function pyprojectDependencies(folder: WorkspaceFolder): Promise<Dependenc
   };
 }
 
+async function grepFiles(pattern: string, folder: WorkspaceFolder) {
+  async function grepFile(file: PromiseLike<Uint8Array>) {
+    const text = utfDecoder(await file);
+    if (text.search(pattern) < 0) return Promise.reject();
+    return Promise.resolve();
+  }
+
+  const files = await workspace.findFiles(new RelativePattern(folder, '**/*.py'));
+
+  return Promise.any(files.map(fs.readFile).map(grepFile)).then(
+    () => true,
+    () => false
+  );
+}
+
 export default async function analyze(folder: WorkspaceFolder): Promise<Result | null> {
   const pyfiles = await workspace.findFiles(new RelativePattern(folder, '**/__init__.py'));
   if (pyfiles.length == 0) return null;
@@ -45,8 +60,14 @@ export default async function analyze(folder: WorkspaceFolder): Promise<Result |
         text:
           'This project uses Django. AppMap enables recording web requests and remote recording.',
       };
+    } else if (dependency('flask')) {
+      tips.web = {
+        title: 'flask',
+        score: 'good',
+        text:
+          'This project uses flask. AppMap enables recording web requests and remote recording.',
+      };
     } else {
-      // TODO: add flask
       tips.web = {
         score: 'bad',
         text:
@@ -60,8 +81,13 @@ export default async function analyze(folder: WorkspaceFolder): Promise<Result |
         title: 'pytest',
         text: 'This project uses Pytest. Test execution can be automatically recorded.',
       };
+    } else if (await grepFiles('unittest', folder)) {
+      tips.test = {
+        score: 'good',
+        title: 'unittest',
+        text: 'This project uses unittest. Test execution can be automatically recorded.',
+      };
     } else {
-      // TODO: add flask
       tips.test = {
         score: 'bad',
         text:
