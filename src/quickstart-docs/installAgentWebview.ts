@@ -46,7 +46,7 @@ export default class QuickstartDocsInstallAgent {
           delete this.openWebviews[rootDirectory as string];
         });
 
-        panel.webview.html = getWebviewContent(panel.webview, context);
+        panel.webview.html = getWebviewContent(panel.webview, context, rootDirectory);
 
         panel.webview.onDidReceiveMessage(async (message) => {
           switch (message.command) {
@@ -98,11 +98,16 @@ export default class QuickstartDocsInstallAgent {
   }
 }
 
-function getWebviewContent(webview: vscode.Webview, context: vscode.ExtensionContext): string {
+function getWebviewContent(
+  webview: vscode.Webview,
+  context: vscode.ExtensionContext,
+  rootDirectory?: string
+): string {
   const scriptUri = webview.asWebviewUri(
     vscode.Uri.file(path.join(context.extensionPath, 'out', 'app.js'))
   );
   const nonce = getNonce();
+  const pathString = rootDirectory ? `"${path.resolve(rootDirectory)}"` : 'undefined';
 
   return ` <!DOCTYPE html>
   <html lang="en">
@@ -117,7 +122,7 @@ function getWebviewContent(webview: vscode.Webview, context: vscode.ExtensionCon
     </div>
     <script nonce="${nonce}" src="${scriptUri}"></script>
     <script type="text/javascript" nonce="${nonce}">
-      AppLandWeb.mountQuickstartInstallAgent();
+      AppLandWeb.mountQuickstartInstallAgent(${pathString});
     </script>
   </body>
   </html>`;

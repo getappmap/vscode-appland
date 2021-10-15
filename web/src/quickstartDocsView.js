@@ -7,9 +7,12 @@ import {
 import '@appland/diagrams/dist/style.css';
 import MessagePublisher from './messagePublisher';
 
-export function mountQuickstartInstallAgent() {
+export function mountQuickstartInstallAgent(path) {
+  console.log(path);
   const vscode = window.acquireVsCodeApi();
   const messages = new MessagePublisher(vscode);
+
+  const codeSnippet = ['npx @appland/appmap install', path].filter(Boolean).join(' ');
 
   messages
     .on('init', () => {
@@ -18,6 +21,9 @@ export function mountQuickstartInstallAgent() {
         render(h) {
           return h(VQuickstartDocsInstallAgent, {
             ref: 'ui',
+            props: {
+              codeSnippet,
+            },
           });
         },
         mounted() {
