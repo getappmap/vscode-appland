@@ -1,7 +1,8 @@
 import { WorkspaceFolder } from 'vscode';
 import python from './python';
+import ruby from './ruby';
 
-const ANALYZERS = [python];
+const ANALYZERS = [python, ruby];
 
 export type Score = 'bad' | 'ok' | 'good';
 const SCORE_VALUES = { bad: 0, ok: 1, good: 2 };
