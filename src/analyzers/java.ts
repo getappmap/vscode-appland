@@ -18,6 +18,12 @@ export default async function analyze(folder: WorkspaceFolder): Promise<Result |
     const dependency = await Promise.any(
       ['pom.xml', 'build.gradle'].map((f) => fileWordScanner(f)(folder))
     );
+    features.lang.depFile = dependency.filename;
+    if (dependency.filename == 'pom.xml') {
+      features.lang.plugin = 'com.appland';
+    } else {
+      features.lang.plugin = 'com.appland.appmap';
+    }
     if (dependency('spring')) {
       features.web = {
         title: 'Spring',

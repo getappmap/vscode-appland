@@ -6,9 +6,11 @@ const fs = workspace.fs;
 
 async function pipDependencies(folder: WorkspaceFolder): Promise<DependencyFinder> {
   const requirements = utfDecoder(await fs.readFile(Uri.joinPath(folder.uri, 'requirements.txt')));
-  return (name) => {
+  const finder = (name) => {
     return new RegExp(`^${name}(\\W|$)`, 'mi').test(requirements);
   };
+  finder.filename = 'requirements.txt';
+  return finder;
 }
 
 const pyprojectDependencies = fileWordScanner('pyproject.toml');
@@ -42,6 +44,7 @@ export default async function analyze(folder: WorkspaceFolder): Promise<Result |
 
   try {
     const dependency = await Promise.any([pipDependencies(folder), pyprojectDependencies(folder)]);
+    features.lang.depFile = dependency.filename;
     if (dependency('django')) {
       features.web = {
         title: 'Django',

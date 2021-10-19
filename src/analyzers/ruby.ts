@@ -18,6 +18,7 @@ export default async function analyze(folder: WorkspaceFolder): Promise<Result |
 
   try {
     const dependency = await scanGemfile(folder);
+    features.lang.depFile = dependency.filename;
     if (dependency('rails')) {
       features.web = {
         title: 'Rails',

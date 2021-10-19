@@ -50,7 +50,12 @@ async function resultRows(): Promise<string[]> {
 
     const klass = classOfScore(score);
 
-    rows.push(`<tr class="${klass}" data-path="${encodeURI(path || '')}" data-score="${klass}">
+    rows.push(`<tr class="${klass}"
+        data-path="${encodeURI(path || '')}"
+        data-score="${klass}"
+        data-lang="${lang.title?.toLowerCase() || ''}"
+        data-depfile="${lang.depFile || ''}"
+        data-plugin="${lang.plugin || ''}">
       <th>${name}</th>
       ${tdOfFeature(lang)}
       ${tdOfFeature(test)}
@@ -220,10 +225,18 @@ async function refresh(): Promise<void> {
             executing test cases or recording a live interactive session of a web service.</p>
             <p class="explain ok">It appears this project might not be a good choice for your first AppMap.
             We recommend you pick another project; proceed at your own risk.</p>
-            <p>To install the AppMap agent, run this command:</p>
+            <p>To install, configure and use the agent:</p>
+            <ul>
+              <li>add <code id="plugin">appmap</code> package as a dependency to the project <code id="depfile"></code>,</li>
+              <li>create <code>appmap.yml</code> configuration file,</li>
+              <li>with <code>APPMAP=true</code> in the environment, run project tests as usual or launch your project and use remote recording.</li>
+            </ul>
+            <p>Refer to <a id="docref" href="https://appland.com/docs/reference/">AppMap documentation</a> for details.
+              You can also run a script that will guide your through this process:</p>
             <p class="command"><code>
               npx @appland/appmap install <span id="directory"></span>
             </code></p>
+            <p>Note you should take care to run it in the project's environment so it can correctly detect runtimes and libraries.</p>
           </article>
           <article class="explain bad">
             <h2>Open your project</h2>
@@ -255,8 +268,11 @@ async function refresh(): Promise<void> {
           }
           if (target) {
             target.classList.add('selected');
-            document.querySelector('#directory').innerText = decodeURI(target.dataset.path);
             explain(target.dataset.score);
+            document.querySelector('#directory').innerText = decodeURI(target.dataset.path);
+            document.querySelector('#plugin').innerText = target.dataset.plugin || 'appmap';
+            document.querySelector('#depfile').innerText = target.dataset.depfile;
+            document.querySelector('#docref').href = 'https://appland.com/docs/reference/appmap-' + target.dataset.lang;
           } else {
             explain('bad');
           }
