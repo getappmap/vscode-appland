@@ -11,7 +11,7 @@ export default async function openWorkspaceOverview(): Promise<void> {
     return;
   }
 
-  panel = window.createWebviewPanel('overview', 'AppMap – Workspace overview', COLUMN, {
+  panel = window.createWebviewPanel('overview', 'AppMap Quickstart', COLUMN, {
     enableScripts: true,
   });
   panel.onDidDispose(() => (panel = null));
@@ -55,6 +55,7 @@ async function resultRows(): Promise<string[]> {
         data-score="${klass}"
         data-lang="${lang.title?.toLowerCase() || ''}"
         data-depfile="${lang.depFile || ''}"
+        data-type="${lang.pluginType || ''}"
         data-plugin="${lang.plugin || ''}">
       <th>${name}</th>
       ${tdOfFeature(lang)}
@@ -196,11 +197,11 @@ async function refresh(): Promise<void> {
     <body>
       <section>
         <header>
-          <h1>AppMap: Quickstart</h1>
+          <h1>AppMap Quickstart</h1>
         </header>
         <main>
           <article>
-            <h2>Select a project</h2>
+            <h2>1. Select a suitable project</h2>
             <p>To make sure that your projects are suitable for mapping, we make a couple of quick
             requirement checks on your workspace to help you find a project to start AppMapping.
             Select a suitable project from the table below.</p>
@@ -218,36 +219,45 @@ async function refresh(): Promise<void> {
               </tbody>
             </table>
           </article>
+          &nbsp;
           <article class="explain good ok">
-            <h2>Install agent</h2>
+            <h2>2. Install AppMap agent</h2>
             <p>The AppMap agent watches your code as it executes and generates traces you can
-            examine visually to understand exactly how it works from running it normally,
+            examine visually to understand exactly how it works from running it,
             executing test cases or recording a live interactive session of a web service.</p>
             <p class="explain ok">It appears this project might not be a good choice for your first AppMap.
             We recommend you pick another project; proceed at your own risk.</p>
-            <p>To install, configure and use the agent:</p>
+            <p>To install the agent:</p>
             <ul>
-              <li>add <code id="plugin">appmap</code> package as a dependency to the project <code id="depfile"></code>,</li>
-              <li>create <code>appmap.yml</code> configuration file,</li>
-              <li>with <code>APPMAP=true</code> in the environment, run project tests as usual or launch your project and use remote recording.</li>
+              <li>add <code id="plugin">appmap</code> <span id="pluginType">pickage</span> as a dependency to the project <code id="depfile"></code></li>
+              <li>create <code>appmap.yml</code> configuration file</li>
             </ul>
-            <p>Refer to <a id="docref" href="https://appland.com/docs/reference/">AppMap documentation</a> for details.
+            <p>Refer to <a id="docref-step2" href="https://appland.com/docs/quickstart/vscode/step-2">AppMap documentation</a> for details.
               You can also run a script that will guide your through this process:</p>
             <p class="command"><code>
               npx @appland/appmap install <span id="directory"></span>
             </code></p>
-            <p>Note you should take care to run it in the project's environment so it can correctly detect runtimes and libraries.</p>
+            <p><i>Note: you should take care to run it in the project's environment so it can correctly detect runtimes and libraries.</i></p>
+            <h2>3. Analyze running code</h2>
+            <p>To analyze your application with AppMap, the application code has to be run with the agent to record AppMap files:</p>
+            <ul>
+              <li>AppMaps will be automatically recorded from test cases when you run the tests</li>
+              <li>When troubleshooting or when you don't have tests, start the application and record AppMaps manually using remote recording</li>
+            </ul>
+            <p>Refer to <a id="docref-step3" href="https://appland.com/docs/quickstart/vscode/step-3">AppMap documentation</a> for details.
+            <p><i>Note: you need to run tests or record a running application with the AppMap agent in order to see AppMaps in your project.</i></p>
           </article>
           <article class="explain bad">
-            <h2>Open your project</h2>
-            <p>For your first AppMap, we recommend a project:</p>
+            <p>For your first AppMap, we recommend a project that:</p>
             <ul>
-              <li>that is a web service,</li>
-              <li>with reasonably comprehensive integration test suite,
-              <li>written in Python, Ruby or Java.</li>
+              <li>is a web application or a web service</li>
+              <li>is written in Python (Django or Flask), Ruby (Rails) or Java (Spring)</li>
+              <li>has reasonably comprehensive integration test suite
             </ul>
-            <p>Please open a project meeting these recommendations to proceed.</p>
-            <p>Prefer an example? Try this, that or these instead.</p>
+            <p><b>Please open a project meeting these recommendations to proceed.</b></p>
+            <!-- let's do this later
+            <p>Prefer an example? Try this, that or these instead.#TODO</p> 
+            -->
           </article>
         </main>
       </section>
@@ -271,8 +281,10 @@ async function refresh(): Promise<void> {
             explain(target.dataset.score);
             document.querySelector('#directory').innerText = decodeURI(target.dataset.path);
             document.querySelector('#plugin').innerText = target.dataset.plugin || 'appmap';
+            document.querySelector('#pluginType').innerText = target.dataset.type || 'package';
             document.querySelector('#depfile').innerText = target.dataset.depfile;
-            document.querySelector('#docref').href = 'https://appland.com/docs/reference/appmap-' + target.dataset.lang;
+            document.querySelector('#docref-step2').href = 'https://appland.com/docs/quickstart/vscode/' + target.dataset.lang + '-step-2.html';
+            document.querySelector('#docref-step3').href = 'https://appland.com/docs/quickstart/vscode/' + target.dataset.lang + '-step-3.html';
           } else {
             explain('bad');
           }

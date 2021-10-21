@@ -20,9 +20,11 @@ export default async function analyze(folder: WorkspaceFolder): Promise<Result |
     );
     features.lang.depFile = dependency.filename;
     if (dependency.filename == 'pom.xml') {
-      features.lang.plugin = 'com.appland';
+      features.lang.plugin = 'com.appland:appmap-maven-plugin';
+      features.lang.pluginType = 'plugin';
     } else {
       features.lang.plugin = 'com.appland.appmap';
+      features.lang.pluginType = 'plugin';
     }
     if (dependency('spring')) {
       features.web = {

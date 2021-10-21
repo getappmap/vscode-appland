@@ -19,7 +19,7 @@ export type Feature = {
 };
 
 export type Features = {
-  lang: Feature & { depFile?: string, plugin?: string };
+  lang: Feature & { depFile?: string; plugin?: string; pluginType?: string };
   web?: Feature;
   test?: Feature;
 };
