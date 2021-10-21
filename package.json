@@ -3,7 +3,7 @@
   "name": "appmap",
   "displayName": "AppMap",
   "description": "Visual debugger for Rails, Spring, Flask and Django applications",
-  "version": "0.21.4",
+  "version": "0.21.5",
   "repository": {
     "type": "git",
     "url": "https://github.com/applandinc/vscode-appland"

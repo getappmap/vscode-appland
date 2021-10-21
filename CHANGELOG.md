@@ -1,3 +1,10 @@
+## [0.21.5](https://github.com/applandinc/vscode-appland/compare/v0.21.4...v0.21.5) (2021-10-21)
+
+
+### Bug Fixes
+
+* Add the project path to the installer command ([#356](https://github.com/applandinc/vscode-appland/issues/356)) ([69de4b9](https://github.com/applandinc/vscode-appland/commit/69de4b9ba96e7c562897dd4a97d4afa8c9dfba34))
+
 ## [0.21.4](https://github.com/applandinc/vscode-appland/compare/v0.21.3...v0.21.4) (2021-10-08)
 
 
