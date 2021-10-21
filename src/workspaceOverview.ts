@@ -13,6 +13,7 @@ export default async function openWorkspaceOverview(): Promise<void> {
 
   panel = window.createWebviewPanel('overview', 'AppMap Quickstart', COLUMN, {
     enableScripts: true,
+    enableCommandUris: true,
   });
   panel.onDidDispose(() => (panel = null));
   workspace.onDidChangeWorkspaceFolders(refresh);
@@ -229,8 +230,8 @@ async function refresh(): Promise<void> {
             We recommend you pick another project; proceed at your own risk.</p>
             <p>To install the agent:</p>
             <ul>
-              <li>add <code id="plugin">appmap</code> <span id="pluginType">pickage</span> as a dependency to the project <code id="depfile"></code></li>
-              <li>create <code>appmap.yml</code> configuration file</li>
+              <li>add <code id="plugin">appmap</code> <span id="pluginType">package</span> to the project <a id="depfile-a"><code id="depfile"></code></a>,</li>
+              <li>create <code>appmap.yml</code> configuration file.</li>
             </ul>
             <p>Refer to <a id="docref-step2" href="https://appland.com/docs/quickstart/vscode/step-2">AppMap documentation</a> for details.
               You can also run a script that will guide your through this process:</p>
@@ -278,13 +279,17 @@ async function refresh(): Promise<void> {
           }
           if (target) {
             target.classList.add('selected');
-            explain(target.dataset.score);
-            document.querySelector('#directory').innerText = decodeURI(target.dataset.path);
-            document.querySelector('#plugin').innerText = target.dataset.plugin || 'appmap';
-            document.querySelector('#pluginType').innerText = target.dataset.type || 'package';
-            document.querySelector('#depfile').innerText = target.dataset.depfile;
-            document.querySelector('#docref-step2').href = 'https://appland.com/docs/quickstart/vscode/' + target.dataset.lang + '-step-2.html';
-            document.querySelector('#docref-step3').href = 'https://appland.com/docs/quickstart/vscode/' + target.dataset.lang + '-step-3.html';
+            const d = target.dataset;
+            const path = decodeURI(d.path);
+            explain(d.score);
+            document.querySelector('#directory').innerText = path;
+            document.querySelector('#plugin').innerText = d.plugin || 'appmap';
+            document.querySelector('#pluginType').innerText = d.type || 'package';
+            document.querySelector('#depfile').innerText = d.depfile;
+            document.querySelector('#depfile-a').href = 'command:vscode.open?'
+              + encodeURIComponent(JSON.stringify([{scheme: 'file', path: path + '/' + d.depfile}]));
+            document.querySelector('#docref-step2').href = 'https://appland.com/docs/quickstart/vscode/' + d.lang + '-step-2.html';
+            document.querySelector('#docref-step3').href = 'https://appland.com/docs/quickstart/vscode/' + d.lang + '-step-3.html';
           } else {
             explain('bad');
           }
