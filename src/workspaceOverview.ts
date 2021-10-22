@@ -87,6 +87,10 @@ async function refresh(): Promise<void> {
           color: var(--vscode-foreground);
         }
 
+        main {
+          counter-reset: step;
+        }
+
         section {
           max-width: 1280px;
           background: var(--vscode-welcomePage-tileBackground);
@@ -103,6 +107,11 @@ async function refresh(): Promise<void> {
 
         h2 {
           margin-block-end: 0;
+          counter-increment: step;
+        }
+
+        h2::before {
+          content: counter(step) ". ";
         }
 
         header {
@@ -196,6 +205,19 @@ async function refresh(): Promise<void> {
           border-left: thin solid var(--appmap-border);
           line-height: 3em;
         }
+
+        p.note {
+          font-style: italic;
+        }
+
+        p.note::before {
+          content: "Note: ";
+          font-size: large;
+          opacity: 0.8;
+          font-variant-caps: all-small-caps;
+          margin-right: 0.8ex;
+          font-style: normal;
+        }
       </style>
     </head>
     <body>
@@ -205,7 +227,7 @@ async function refresh(): Promise<void> {
         </header>
         <main>
           <article>
-            <h2>1. Select a suitable project</h2>
+            <h2>Select a suitable project</h2>
             <p>To make sure that your projects are suitable for mapping, we make a couple of quick
             requirement checks on your workspace to help you find a project to start AppMapping.
             Select a suitable project from the table below.</p>
@@ -223,9 +245,8 @@ async function refresh(): Promise<void> {
               </tbody>
             </table>
           </article>
-          &nbsp;
           <article class="explain good ok">
-            <h2>2. Install AppMap agent</h2>
+            <h2>Install AppMap agent</h2>
             <p>The AppMap agent watches your code as it executes and generates traces you can
             examine visually to understand exactly how it works from running it,
             executing test cases or recording a live interactive session of a web service.</p>
@@ -241,15 +262,15 @@ async function refresh(): Promise<void> {
             <p class="command"><code>
               npx @appland/appmap install <span id="directory"></span>
             </code></p>
-            <p><i>Note: you should take care to run it in the project's environment so it can correctly detect runtimes and libraries.</i></p>
-            <h2>3. Analyze running code</h2>
-            <p>To analyze your application with AppMap, the application code has to be run with the agent to record AppMap files:</p>
+            <p class="note">You should take care to run it in the project's environment so it can correctly detect runtimes and libraries.</p>
+            <h2>Analyze running code</h2>
+            <p>To analyze your application with AppMap, the application code has to be run with the agent to record AppMap files.</p>
             <ul>
-              <li>AppMaps will be automatically recorded from test cases when you run the tests</li>
-              <li>When troubleshooting or when you don't have tests, start the application and record AppMaps manually using remote recording</li>
+              <li>AppMaps will be automatically recorded from test cases when you run the tests.</li>
+              <li>When troubleshooting or when you don't have tests, start the application and record AppMaps manually using remote recording.</li>
             </ul>
             <p>Refer to <a id="docref-step3" href="https://appland.com/docs/quickstart/vscode/step-3">AppMap documentation</a> for details.
-            <p><i>Note: you need to run tests or record a running application with the AppMap agent in order to see AppMaps in your project.</i></p>
+            <p class="note">You need to run tests or record a running application with the AppMap agent in order to see AppMaps in your project.</p>
           </article>
           <article class="explain bad">
             <p>For your first AppMap, we recommend a project that:</p>
