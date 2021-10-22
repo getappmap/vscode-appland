@@ -14,7 +14,7 @@ export default async function openWorkspaceOverview(): Promise<void> {
   }
 
   const subscriptions: Disposable[] = [];
-  panel = window.createWebviewPanel('overview', 'AppMap Quickstart', COLUMN, {
+  panel = window.createWebviewPanel('overview', 'AppMap — Getting started', COLUMN, {
     enableScripts: true,
     enableCommandUris: true,
   });
@@ -249,7 +249,7 @@ async function refresh(): Promise<void> {
     <body>
       <section>
         <header>
-          <h1>AppMap Quickstart</h1>
+          <h1>Getting started with AppMap</h1>
         </header>
         <main>
           <article>
