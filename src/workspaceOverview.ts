@@ -1,6 +1,7 @@
-import { ViewColumn, WebviewPanel, window, workspace } from 'vscode';
+import { Disposable, ViewColumn, WebviewPanel, window, workspace } from 'vscode';
 import { analyze, Feature, Score } from './analyzers';
 import { randomBytes } from 'crypto';
+import { COPY_INSTALL_COMMAND, MILESTONE_OPEN_WEBVIEW, Telemetry } from './telemetry';
 
 const COLUMN = ViewColumn.One;
 
@@ -12,14 +13,39 @@ export default async function openWorkspaceOverview(): Promise<void> {
     return;
   }
 
+  const subscriptions: Disposable[] = [];
   panel = window.createWebviewPanel('overview', 'AppMap Quickstart', COLUMN, {
     enableScripts: true,
     enableCommandUris: true,
   });
-  panel.onDidDispose(() => (panel = null));
-  workspace.onDidChangeWorkspaceFolders(refresh);
 
-  return refresh();
+  panel.webview.onDidReceiveMessage(messageReceived, null, subscriptions);
+  workspace.onDidChangeWorkspaceFolders(refresh, null, subscriptions);
+
+  panel.onDidDispose(
+    () => {
+      for (const s of subscriptions) s.dispose();
+      panel = null;
+    },
+    null,
+    subscriptions
+  );
+
+  await refresh();
+  Telemetry.sendEvent(MILESTONE_OPEN_WEBVIEW, { milestoneId: 'WORKSPACE_OVERVIEW' });
+}
+
+type CopyMessage = {
+  msg: 'copy';
+  root: string;
+};
+
+function messageReceived(msg: CopyMessage) {
+  if (msg.msg != 'copy') {
+    console.log(`unknown message received`);
+    return;
+  }
+  Telemetry.sendEvent(COPY_INSTALL_COMMAND, { rootDirectory: msg.root });
 }
 
 async function resultRows(): Promise<string[]> {
@@ -287,6 +313,10 @@ async function refresh(): Promise<void> {
         </main>
       </section>
       <script nonce="${nonce}">
+      (function() {
+        const vscode = acquireVsCodeApi();
+        var currentProject;
+
         function explain(state) {
           if (!state) state = 'bad';
           for (const ex of document.querySelectorAll('.explain')) {
@@ -303,7 +333,7 @@ async function refresh(): Promise<void> {
           }
           if (target) {
             target.classList.add('selected');
-            const d = target.dataset;
+            const d = currentProject = target.dataset;
             const path = decodeURI(d.path);
             explain(d.score);
             document.querySelector('#directory').innerText = path;
@@ -327,9 +357,11 @@ async function refresh(): Promise<void> {
 
         for (const cmd of document.querySelectorAll('.command')) {
           cmd.addEventListener('click', (e) => {
+            vscode.postMessage({msg: 'copy', root: currentProject.path});
             navigator.clipboard.writeText(e.target.closest('.command').innerText);
           });
         }
+      })();
       </script>
     </body>
   `;
