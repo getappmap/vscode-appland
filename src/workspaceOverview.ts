@@ -254,29 +254,35 @@ async function refresh(): Promise<void> {
         <main>
           <article>
             <h2>Select a suitable project</h2>
-            <p>To make sure that your projects are suitable for mapping, we make a couple of quick
-            requirement checks on your workspace to help you find a project to start AppMapping.
-            Select a suitable project from the table below.</p>
-            <table>
-              <thead>
-                <tr>
-                  <th scope="col">Project name (${rows.length})</th>
-                  <th scope="col">Language</th>
-                  <th scope="col">Test framework</th>
-                  <th scope="col">Web framework</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${rows.join('\n')}
-              </tbody>
-            </table>
+            ${
+              rows.length > 0
+                ? `
+                  <p>To make sure that your projects are suitable for mapping, we make a couple of quick
+                  requirement checks on your workspace to help you find a project to start AppMapping.
+                  Select a suitable project from the table below.</p>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th scope="col">Project name (${rows.length})</th>
+                        <th scope="col">Language</th>
+                        <th scope="col">Test framework</th>
+                        <th scope="col">Web framework</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      ${rows.join('\n')}
+                    </tbody>
+                  </table>
+                `
+                : ''
+            }
           </article>
           <article class="explain good ok">
             <h2>Install AppMap agent</h2>
             <p>The AppMap agent watches your code as it executes and generates traces you can
             examine visually to understand exactly how it works from running it,
             executing test cases or recording a live interactive session of a web service.</p>
-            <p class="explain ok">It appears this project might not be a good choice for your first AppMap.
+            <p class="explain ok note">It appears this project might not be a good choice for your first AppMap.
             We recommend you pick another project; proceed at your own risk.</p>
             <p>To install the agent:</p>
             <ul>
