@@ -1,5 +1,6 @@
 import { ViewColumn, WebviewPanel, window, workspace } from 'vscode';
 import { analyze, Feature, Score } from './analyzers';
+import { randomBytes } from 'crypto';
 
 const COLUMN = ViewColumn.One;
 
@@ -72,10 +73,12 @@ async function refresh(): Promise<void> {
   if (!panel) return;
 
   const rows = await resultRows();
+  const nonce = randomBytes(18).toString('base64');
 
   panel.webview.html = `
     <head>
-      <style>
+      <meta http-equiv="Content-Security-Policy" content="default-src 'nonce-${nonce}';">
+      <style nonce="${nonce}">
         :root {
           --appmap-border: #7F6BE6;
         }
@@ -262,7 +265,7 @@ async function refresh(): Promise<void> {
           </article>
         </main>
       </section>
-      <script>
+      <script nonce="${nonce}">
         function explain(state) {
           if (!state) state = 'bad';
           for (const ex of document.querySelectorAll('.explain')) {
