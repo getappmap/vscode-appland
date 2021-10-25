@@ -280,21 +280,20 @@ async function refresh(): Promise<void> {
           <article class="explain good ok">
             <h2>Install AppMap agent</h2>
             <p>The AppMap agent watches your code as it executes and generates traces you can
-            examine visually to understand exactly how it works from running it,
-            executing test cases or recording a live interactive session of a web service.</p>
+            examine visually.</p>
             <p class="explain ok note">It appears this project might not be a good choice for your first AppMap.
             We recommend you pick another project; proceed at your own risk.</p>
-            <p>To install the agent:</p>
+            <p>This script will guide you through the installation process.</p>
+            <p class="note">You should take care to run it in the project's environment so it can correctly detect runtimes and libraries.</p>
+            <p class="command"><code>
+              npx @appland/appmap install <span id="directory"></span>
+            </code></p>
+            <p>The installation script will:</p>
             <ul>
               <li>add <code id="plugin">appmap</code> <span id="pluginType">package</span> to the project <a id="depfile-a"><code id="depfile"></code></a>,</li>
               <li>create <code>appmap.yml</code> configuration file.</li>
             </ul>
-            <p>Refer to <a id="docref-step2" href="https://appland.com/docs/quickstart/vscode/step-2">AppMap documentation</a> for details.
-              You can also run a script that will guide your through this process:</p>
-            <p class="command"><code>
-              npx @appland/appmap install <span id="directory"></span>
-            </code></p>
-            <p class="note">You should take care to run it in the project's environment so it can correctly detect runtimes and libraries.</p>
+            <p>Refer to <a id="docref-step2" href="https://appland.com/docs/quickstart/vscode/step-2">AppMap documentation</a> for details.</p>
             <h2>Analyze running code</h2>
             <p>To analyze your application with AppMap, the application code has to be run with the agent to record AppMap files.</p>
             <ul>

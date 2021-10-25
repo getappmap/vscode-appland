@@ -3,7 +3,7 @@ import * as vscode from 'vscode';
 const docsPages = [
   {
     id: 'QUICKSTART_WORKSPACE_OVERVIEW',
-    title: 'AppMap Quickstart',
+    title: 'Getting started with AppMap',
     command: 'appmap.openWorkspaceOverview',
   },
   {
