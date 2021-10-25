@@ -2,7 +2,7 @@
   "publisher": "appland",
   "name": "appmap",
   "displayName": "AppMap",
-  "description": "Visual debugger for Rails, Spring, Flask and Django applications",
+  "description": "Interactive maps of runtime code behavior",
   "version": "0.21.5",
   "repository": {
     "type": "git",

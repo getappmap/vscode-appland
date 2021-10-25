@@ -5,97 +5,57 @@
 
 # AppMap for Visual Studio Code
 
-Navigate your code more efficiently with interactive, accurate software architecture diagrams right
-in your IDE. In two minutes you can go from installing this plugin to exploring maps of your code's
-architecture.
+AppMap is a free and open source visualization tool that allows you to see how your software works as it’s running.
+You can use AppMaps to onboard to unfamiliar code, debug hard-to-fix issues, review code behavior changes before
+making a commit, and improve the quality of code reviews.
+
 
 ![AppMap](https://vscode-appmap.s3.us-east-2.amazonaws.com/media/vscode-sidebyside.png)
 
-Visit [dev.to/appland](https://dev.to/appland) for popular articles about AppMap use cases and
-tutorials.
 
-AppMap supports **Spring**, **Django**, **Flask**, and **Rails** projects. To generate AppMaps you
-will need to install the AppMap agent for your project.
-
-&nbsp;
-
-Run this command from within the top level directory of your project:
-
-```bash
-npx @appland/appmap install-agent
-```
+AppMap works best for mapping web services and web applications. [Join our community](https://appland.com/community/)
+ to help us expand support for more types of applications and frameworks!
 
 &nbsp;
 
 ---
 
-### Requirements
+## Requirements
 
-AppMap is intended for mapping web services and web applications, and works seamlessly with these
-popular frameworks.
+Currently, AppMap supports Spring, Django, Flask and Rails projects. The most up-to-date list of frameworks and languages we support is
+[here](https://appland.com/docs/integrations.html). 
 
-**Spring**
+To start making AppMaps, you’ll need to install and configure the AppMap client agent for your project.
+Then, you’ll make AppMaps by running your app - either by
+[running test cases](https://appland.com/docs/recording-methods.html#recording-test-cases), or by
+[recording a short interaction with your app](https://appland.com/docs/reference/remote-recording.html).
 
-| Required Framework version | Required Language version |
-| -------------------------- | ------------------------- |
-| Spring (any version)       | JDK 8+                    |
-
-**Django**
-
-| Required Framework version | Required Language Version |
-| -------------------------- | ------------------------- |
-| Django v.3.2.x, 2.2.x      | Python >=3.6              |
-
-**Flask**
-
-| Required Framework version | Required Language Version |
-| -------------------------- | ------------------------- |
-| Flask v.2.0.x              | Python >=3.6              |
-
-**Rails**
-
-| Required Framework version | Required Language Version |
-| -------------------------- | ------------------------- |
-| Rails Version 5, 6         | Ruby 2.6, 2.7, 3          |
+[Here's a convenient quickstart guide](https://appland.com/docs/quickstart/) that walks you through the AppMap install flow.  
 
 ---
-
-## Quickstart
-
-Follow the instructions in the **[AppMap quickstart](https://appland.com/docs/quickstart/)** guide.
 
 ## Summary of features
 
-- Interactive Code Analyzer that records and processes dynamic execution traces of running code
-- Dependency Map that displays key application components and how they are interrelated during
-  execution
-- Execution Trace diagrams that visualize code and data flows:
-  - Web service endpoints
-  - Function calls
-  - SQL commands
-  - REST calls
-  - Semantic code labels
-- List of SQL queries generated automatically from executed code
-- List of Web services generated automatically from executed code
-- Direct navigation from diagrams to sources
-- Filtering by class, package, function or label
+Summary of Features:
+- Interactive maps of code’s behavior, so you can see what code is really doing as it runs, including: 
+    - Dependency maps that display how your app’s components are all connected, so you can quickly see how changes affect the big picture
+    - Trace diagrams that show details about how a feature works, so you can find optimization opportunities and investigate tricky bugs
+    - SQL query data, so you can see exactly what’s happening between your code and the database  
+    - Web services data, so you can see what message your app received and how it responded
+    - Labels that identify the key functions in source code, so you can easily find critical code events and ensure they’re configured and used properly
+
 
 ## Resources
 
-- [Documentation](https://appland.com/docs/)
-- [AppMap FAQ](https://appland.com/docs/faq.html)
-- Join us on [Discord](https://discord.com/invite/N9VUap6) and
-  [GitHub](https://github.com/applandinc/vscode-appland)
-- Support email: [support@app.land](mailto:support@app.land)
-
-## About AppMap
-
-See [AppMap overview](https://appland.com/docs/appmap-overview.html) to learn how AppMap works and
-how it accelerates development processes.
+- [Our doc site](https://appland.com/docs/appmap-overview.html)
+- [Our GitHub](https://github.com/applandinc)
+- [Our blog](https://appland.com/blog/)
+- [1:1 support with our dev team on Discord](https://discord.com/invite/N9VUap6)
+- Email support: [support@app.land](mailto:support@app.land)
 
 ## Twitter
 
-- [AppLand](https://twitter.com/landofapps)
+- [@LandOfApps](https://twitter.com/landofapps)
 
 ## YouTube
 
