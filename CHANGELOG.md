@@ -1,3 +1,10 @@
+## [0.21.6](https://github.com/applandinc/vscode-appland/compare/v0.21.5...v0.21.6) (2021-10-25)
+
+
+### Bug Fixes
+
+* Update extension description in README ([#359](https://github.com/applandinc/vscode-appland/issues/359)) ([00a2270](https://github.com/applandinc/vscode-appland/commit/00a22703262bbf02336aef8042461d9fa303ce28))
+
 ## [0.21.5](https://github.com/applandinc/vscode-appland/compare/v0.21.4...v0.21.5) (2021-10-21)
 
 
