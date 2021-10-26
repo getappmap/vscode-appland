@@ -35,10 +35,8 @@ describe('Quickstart', () => {
 
       assert(properties.hasSeenQuickStartDocs === false);
       await QuickstartDocsInstallAgent.register(context, properties);
-      setTimeout(() => {
-        assert(executeCommand.calledWith('appmap.openQuickstartDocsInstallAgent'));
-        assert(properties.hasSeenQuickStartDocs);
-      }, 1000);
+      assert(executeCommand.calledWith('appmap.openQuickstartDocsInstallAgent'));
+      assert(properties.hasSeenQuickStartDocs);
     });
 
     it('does not automatically open quickstart from an existing installation', async () => {
@@ -49,10 +47,8 @@ describe('Quickstart', () => {
 
       assert(properties.hasSeenQuickStartDocs === false);
       await QuickstartDocsInstallAgent.register(context, properties);
-      setTimeout(() => {
-        assert(executeCommand.calledWith('appmap.openQuickstartDocsInstallAgent') === false);
-        assert(properties.hasSeenQuickStartDocs === false);
-      }, 1000);
+      assert(executeCommand.calledWith('appmap.openQuickstartDocsInstallAgent') === false);
+      assert(properties.hasSeenQuickStartDocs === false);
     });
 
     async function withExtensionVersion(version: string, shouldOpen: boolean): Promise<void> {
@@ -64,10 +60,8 @@ describe('Quickstart', () => {
       assert(properties.hasSeenQuickStartDocs === false);
       await QuickstartDocsInstallAgent.register(context, properties);
 
-      setTimeout(() => {
-        assert(executeCommand.calledWith('appmap.openQuickstartDocsInstallAgent') === shouldOpen);
-        assert(properties.hasSeenQuickStartDocs === shouldOpen);
-      }, 1000);
+      assert(executeCommand.calledWith('appmap.openQuickstartDocsInstallAgent') === shouldOpen);
+      assert(properties.hasSeenQuickStartDocs === shouldOpen);
     }
 
     it('does not automatically open quickstart if first version less than 0.15.0', async () => {
