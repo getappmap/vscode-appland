@@ -3,7 +3,6 @@ import { hasPreviouslyInstalledExtension } from './util';
 
 export const Keys = {
   Global: {
-    QUICKSTART_SEEN: 'appmap.applandinc.quickstartSeen',
     QUICKSTART_DOCS_SEEN: 'appmap.applandinc.quickstartDocsSeen',
     INSTALL_TIMESTAMP: 'appmap.applandinc.installTimestamp',
     INSTALL_VERSION: 'appmap.applandinc.installVersion',
@@ -62,14 +61,6 @@ export default class AppMapProperties {
   private getWorkspaceFlag(key: string, fsPath: string): boolean {
     const workspaceFolders = new Set<string>(this.context.globalState.get(key, []));
     return workspaceFolders.has(fsPath);
-  }
-
-  get hasSeenQuickStart(): boolean {
-    return Boolean(this.context.globalState.get(Keys.Global.QUICKSTART_SEEN, false));
-  }
-
-  set hasSeenQuickStart(value: boolean) {
-    this.context.globalState.update(Keys.Global.QUICKSTART_SEEN, value);
   }
 
   /** Returns whether or not the user has viewed the quickstart documentation. */
