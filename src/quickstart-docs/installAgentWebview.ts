@@ -92,6 +92,7 @@ export default class QuickstartDocsInstallAgent {
       // before rolling them out to our existing user base.
 
       if (!properties.hasSeenQuickStartDocs) {
+        properties.hasSeenQuickStartDocs = true;
         await vscode.commands.executeCommand(this.command);
       }
     }
