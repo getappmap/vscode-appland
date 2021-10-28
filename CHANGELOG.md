@@ -1,3 +1,10 @@
+## [0.22.1](https://github.com/applandinc/vscode-appland/compare/v0.22.0...v0.22.1) (2021-10-28)
+
+
+### Bug Fixes
+
+* Quote paths with spaces in "getting started" ([61612ad](https://github.com/applandinc/vscode-appland/commit/61612ad9fc9311984a487346c3ff88ef22ab4421))
+
 # [0.22.0](https://github.com/applandinc/vscode-appland/compare/v0.21.6...v0.22.0) (2021-10-28)
 
 
