@@ -1,3 +1,10 @@
+# [0.22.0](https://github.com/applandinc/vscode-appland/compare/v0.21.6...v0.22.0) (2021-10-28)
+
+
+### Features
+
+* Replace quickstart screens with project picker ([73ab5ac](https://github.com/applandinc/vscode-appland/commit/73ab5ac4615a8ddd2a206fa074ae7475ad06eb3c))
+
 ## [0.21.6](https://github.com/applandinc/vscode-appland/compare/v0.21.5...v0.21.6) (2021-10-25)
 
 
