@@ -372,6 +372,16 @@ async function refresh(): Promise<void> {
           }
         }
 
+        // Quote path for the command line
+        function quote(path) {
+          // Don't try to be too smart, shell quoting is an ugly can of worms.
+          // Just quote spaces if needed; this is pretty common on some platforms.
+          // If the user has funnier characters in paths, they should be smart
+          // enough to deal with them.
+          if (path.includes(' ')) return '"' + path + '"';
+          return path;
+        }
+
         function select(target) {
           for (const tr of document.querySelectorAll('tbody tr')) {
             tr.classList.remove('selected');
@@ -381,7 +391,7 @@ async function refresh(): Promise<void> {
             const d = currentProject = target.dataset;
             const path = decodeURI(d.path);
             explain(d.score);
-            document.querySelector('#directory').innerText = path;
+            document.querySelector('#directory').innerText = quote(path);
             document.querySelector('#plugin').innerText = d.plugin || 'appmap';
             document.querySelector('#pluginType').innerText = d.type || 'package';
             document.querySelector('#depfile').innerText = d.depfile;
