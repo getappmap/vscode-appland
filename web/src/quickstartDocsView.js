@@ -8,11 +8,12 @@ import '@appland/diagrams/dist/style.css';
 import MessagePublisher from './messagePublisher';
 
 export function mountQuickstartInstallAgent(path) {
-  console.log(path);
   const vscode = window.acquireVsCodeApi();
   const messages = new MessagePublisher(vscode);
 
-  const codeSnippet = ['npx @appland/appmap install', path].filter(Boolean).join(' ');
+  const codeSnippet = ['npx @appland/appmap install', path.match(/\s/) ? `"${path}"` : path]
+    .filter(Boolean)
+    .join(' ');
 
   messages
     .on('init', () => {

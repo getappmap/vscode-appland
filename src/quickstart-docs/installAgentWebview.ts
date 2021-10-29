@@ -95,7 +95,9 @@ function getWebviewContent(
     vscode.Uri.file(path.join(context.extensionPath, 'out', 'app.js'))
   );
   const nonce = getNonce();
-  const pathString = rootDirectory ? `"${path.resolve(rootDirectory)}"` : 'undefined';
+  const pathString = rootDirectory
+    ? `"${path.resolve(rootDirectory).replace(/\\/g, '\\\\')}"`
+    : 'undefined';
 
   return ` <!DOCTYPE html>
   <html lang="en">
