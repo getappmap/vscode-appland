@@ -1,11 +1,8 @@
-import { RelativePattern, workspace, WorkspaceFolder } from 'vscode';
+import { WorkspaceFolder } from 'vscode';
 import { Features, Result, scoreValue } from '.';
 import { fileWordScanner } from './deps';
 
 export default async function analyze(folder: WorkspaceFolder): Promise<Result | null> {
-  const javafiles = await workspace.findFiles(new RelativePattern(folder, '**/*.java'));
-  if (javafiles.length == 0) return null;
-
   const features: Features = {
     lang: {
       title: 'Java',
@@ -55,7 +52,6 @@ export default async function analyze(folder: WorkspaceFolder): Promise<Result |
 
   return {
     name: folder.name,
-    confidence: javafiles.length,
     features: features,
     score: scoreValue(...Object.entries(features).map(([, t]) => t.score)),
   };

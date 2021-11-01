@@ -40,8 +40,8 @@ $ yarn run package
    value as the `id` field as the language definition in the `LANGUAGES` array in
    [`src/languageResolver.ts`](src/languageResolver.ts). This creates a link between the agent and
    the language.
-4. Define a version constraint in [`package.json`](package.json) under the `appmapDependencies`
-   property. The agent will not be installed without it.
+4. Make sure there's a corresponding analyzer in [`src/analyzers`](src/analyzers).
+   This implements the quick requirement check for the *Getting started* page.
 
 ## Running in development with a local version of `@appland/components`
 

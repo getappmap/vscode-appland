@@ -31,9 +31,6 @@ async function grepFiles(pattern: string, folder: WorkspaceFolder) {
 }
 
 export default async function analyze(folder: WorkspaceFolder): Promise<Result | null> {
-  const pyfiles = await workspace.findFiles(new RelativePattern(folder, '**/__init__.py'));
-  if (pyfiles.length == 0) return null;
-
   const features: Features = {
     lang: {
       title: 'Python',
@@ -96,7 +93,6 @@ export default async function analyze(folder: WorkspaceFolder): Promise<Result |
 
   return {
     name: folder.name,
-    confidence: pyfiles.length,
     features: features,
     score: scoreValue(...Object.entries(features).map(([, t]) => t.score)),
   };
