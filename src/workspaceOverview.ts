@@ -410,14 +410,19 @@ async function refresh(): Promise<void> {
 
         select(document.querySelector('tbody tr'));
 
+        function sendCopyEvent() {
+          vscode.postMessage({msg: 'copy', root: currentProject.path});
+        }
+
         for (const cmd of document.querySelectorAll('.command')) {
           const button = document.createElement('button');
           button.innerText = '⧉';
           button.title = 'Copy to clipboard';
           cmd.appendChild(button);
+          cmd.addEventListener('copy', sendCopyEvent);
           button.addEventListener('click', (e) => {
+            sendCopyEvent();
             const btn = e.target;
-            vscode.postMessage({msg: 'copy', root: currentProject.path});
             navigator.clipboard.writeText(btn.closest('.command').firstChild.innerText);
             btn.innerText = "Copied";
             setTimeout(() => btn.innerText = '⧉', 1000);
