@@ -1,3 +1,10 @@
+## [0.22.2](https://github.com/applandinc/vscode-appland/compare/v0.22.1...v0.22.2) (2021-11-02)
+
+
+### Bug Fixes
+
+* Send telemetry event on manual command copy ([4fad9d2](https://github.com/applandinc/vscode-appland/commit/4fad9d2edaaeba8c8420df725319db3c667d54fc))
+
 ## [0.22.1](https://github.com/applandinc/vscode-appland/compare/v0.22.0...v0.22.1) (2021-10-28)
 
 
