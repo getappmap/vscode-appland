@@ -1,3 +1,10 @@
+## [0.22.3](https://github.com/applandinc/vscode-appland/compare/v0.22.2...v0.22.3) (2021-11-05)
+
+
+### Bug Fixes
+
+* More robust language detection in project overview ([6313233](https://github.com/applandinc/vscode-appland/commit/63132334d0cb83fd3195017068e31373fadeba9a))
+
 ## [0.22.2](https://github.com/applandinc/vscode-appland/compare/v0.22.1...v0.22.2) (2021-11-02)
 
 
