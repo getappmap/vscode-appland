@@ -257,27 +257,19 @@ export default class LanguageResolver {
 
   /**
    * Retrieve the most frequently used language id for a given directory. The language returned must be supported (i.e.,
-   * it must be registered in LANGUAGE_AGENTS).
+   * it must be registered in LANGUAGE_AGENTS). If the language is not supported, returns 'unknown'.
    */
   private static async identifyLanguage(rootDirectory: PathLike): Promise<string> {
     const languages = await this.getLanguageDistribution(rootDirectory);
-    let bestFitLanguage = UNKNOWN_LANGUAGE;
-    let maxCount = 0;
-
-    Object.entries(languages).forEach(([lang, count]) => {
-      if (count > maxCount && LANGUAGE_AGENTS[lang]) {
-        bestFitLanguage = lang;
-        maxCount = count;
-      }
-    });
-
-    return bestFitLanguage;
+    const best = Object.entries(languages).sort((a, b) => b[1] - a[1])[0][0];
+    if (LANGUAGE_AGENTS[best]) return best;
+    return UNKNOWN_LANGUAGE;
   }
 
   /**
    * Recursively walk the given `rootDirectory` for known source code files and returns the best-guess SUPPORTED
    * language for the full directory tree. Ignores files and directories that are Git ignored. Results are cached for
-   * each directory for the lifetime of the extension.
+   * each directory for the lifetime of the extension. If the most used language is not supported, returns 'unknown'.
    */
   public static async getLanguage(rootDirectory: PathLike): Promise<string> {
     let language = this.LANGUAGE_CACHE[rootDirectory as string];

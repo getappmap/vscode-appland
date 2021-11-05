@@ -1,9 +1,5 @@
 import { WorkspaceFolder } from 'vscode';
-import python from './python';
-import ruby from './ruby';
-import java from './java';
-
-const ANALYZERS = [python, ruby, java];
+import LanguageResolver from '../languageResolver';
 
 export type Score = 'bad' | 'ok' | 'good';
 const SCORE_VALUES = { bad: 0, ok: 1, good: 2 };
@@ -25,7 +21,6 @@ export type Features = {
 };
 
 export type Result = {
-  confidence: number;
   features: Features;
   score: number;
   name: string;
@@ -33,19 +28,10 @@ export type Result = {
 };
 
 export async function analyze(folder: WorkspaceFolder): Promise<Result> {
-  const results = await Promise.all(ANALYZERS.map((a) => a(folder)));
-  const best = results.sort((a, b) => (b?.confidence || 0) - (a?.confidence || 0))[0] || {
-    confidence: 0,
-    features: {
-      lang: {
-        score: 'bad',
-        text: `This project looks like it's written in a language not currently supported by AppMap.`,
-      },
-    },
-    name: folder.name,
-    score: 0,
-  };
-
-  best.path = folder.uri.fsPath;
-  return best;
+  const path = folder.uri.fsPath;
+  const language = await LanguageResolver.getLanguage(path);
+  const analyzer = (await import(`./${language}`)).default;
+  const result = await analyzer(folder);
+  result.path = path;
+  return result;
 }
