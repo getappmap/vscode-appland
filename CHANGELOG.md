@@ -1,3 +1,10 @@
+## [0.22.4](https://github.com/applandinc/vscode-appland/compare/v0.22.3...v0.22.4) (2021-11-08)
+
+
+### Bug Fixes
+
+* Don't attempt to index undefined when no languages are available ([4a6c2de](https://github.com/applandinc/vscode-appland/commit/4a6c2dea6c83262ba46c2576a2f3bd7f3eb99fae))
+
 ## [0.22.3](https://github.com/applandinc/vscode-appland/compare/v0.22.2...v0.22.3) (2021-11-05)
 
 
