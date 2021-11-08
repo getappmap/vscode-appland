@@ -261,7 +261,7 @@ export default class LanguageResolver {
    */
   private static async identifyLanguage(rootDirectory: PathLike): Promise<string> {
     const languages = await this.getLanguageDistribution(rootDirectory);
-    const best = Object.entries(languages).sort((a, b) => b[1] - a[1])[0][0];
+    const best = Object.entries(languages).sort((a, b) => b[1] - a[1])?.[0]?.[0];
     if (LANGUAGE_AGENTS[best]) return best;
     return UNKNOWN_LANGUAGE;
   }
