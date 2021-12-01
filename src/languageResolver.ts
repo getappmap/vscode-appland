@@ -80,7 +80,7 @@ const LANGUAGES = [
   {
     id: 'javascript',
     name: 'JavaScript',
-    extensions: ['.cjs', '.es6', '.js', '.jsx', '.mjs'],
+    extensions: ['.cjs', '.es6', '.js', '.jsx', '.mjs', '.ts'],
   },
   {
     id: 'kotlin',
@@ -182,6 +182,7 @@ const LANGUAGE_AGENTS = [
   new AppMapAgentDummy('java'),
   new AppMapAgentDummy('python'),
   new AppMapAgentDummy('unknown'),
+  new AppMapAgentDummy('javascript'),
 ].reduce((memo, agent) => {
   memo[agent.language] = agent;
   return memo;

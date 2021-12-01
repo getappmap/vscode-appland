@@ -2092,6 +2092,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/semver@npm:^7.3.9":
+  version: 7.3.9
+  resolution: "@types/semver@npm:7.3.9"
+  checksum: 62edbef51565255ac6e4d0aa9437743ac899c12a54776882e71195a610cb8fa7b493f19f8f35429dec1d9eeb3f310eea0f9290489155f1713eebae5560669d67
+  languageName: node
+  linkType: hard
+
 "@types/sinon@npm:^10.0.2":
   version: 10.0.2
   resolution: "@types/sinon@npm:10.0.2"
@@ -3157,6 +3164,7 @@ __metadata:
     "@types/glob": ^7.1.3
     "@types/mocha": ^8.2.0
     "@types/node": ^12.19.12
+    "@types/semver": ^7.3.9
     "@types/sinon": ^10.0.2
     "@types/vscode": ^1.55.0
     "@typescript-eslint/eslint-plugin": ^4.22.1
