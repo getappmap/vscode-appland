@@ -1,3 +1,10 @@
+# [0.23.0](https://github.com/applandinc/vscode-appland/compare/v0.22.4...v0.23.0) (2021-12-02)
+
+
+### Features
+
+* JavaScript support in the project picker ([5b7e648](https://github.com/applandinc/vscode-appland/commit/5b7e64811362032593c25d84a5068145d8cdfa80)), closes [#366](https://github.com/applandinc/vscode-appland/issues/366)
+
 ## [0.22.4](https://github.com/applandinc/vscode-appland/compare/v0.22.3...v0.22.4) (2021-11-08)
 
 
