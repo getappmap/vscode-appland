@@ -28,9 +28,10 @@ export default class AppMapAgentRuby implements AppMapAgent {
       }
 
       const match = stdout.match(AppMapAgentRuby.REGEX_GEM_VERSION);
-      const version = match ? match[1] : undefined;
+      if (!match) return false;
+      const [, version] = match;
 
-      return version && semver.satisfies(version, agentVersions[this.language]);
+      return semver.satisfies(version, agentVersions[this.language]);
     } catch (e) {
       return false;
     }
