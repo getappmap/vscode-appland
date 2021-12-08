@@ -38,7 +38,9 @@
     "diff",
     "ruby",
     "python",
-    "java"
+    "java",
+    "javascript",
+    "js"
   ],
   "contributes": {
     "customEditors": [
