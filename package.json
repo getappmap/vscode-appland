@@ -40,7 +40,7 @@
     "python",
     "java",
     "javascript",
-    "js"
+    "typescript"
   ],
   "contributes": {
     "customEditors": [
