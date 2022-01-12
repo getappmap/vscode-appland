@@ -22,7 +22,8 @@ AppMap works best for mapping web services and web applications. [Join our commu
 
 ## Requirements
 
-Currently, AppMap supports Spring, Express.js, Django, Flask and Rails projects. The most up-to-date list of frameworks and languages we support is
+Currently, AppMap supports Spring, Express.js, Django, Flask, Rails and Express projects ([AppMap for JavaScript](https://appland.com/docs/reference/appmap-javascript.html)
+is now available in beta!). The most up-to-date list of frameworks and languages we support is
 [here](https://appland.com/docs/integrations.html). 
 
 To start making AppMaps, you’ll need to install and configure the AppMap client agent for your project.
