@@ -1,3 +1,10 @@
+## [0.23.1](https://github.com/applandinc/vscode-appland/compare/v0.23.0...v0.23.1) (2022-01-12)
+
+
+### Bug Fixes
+
+* Document availability of AppMap for JavaScript ([#370](https://github.com/applandinc/vscode-appland/issues/370)) ([591b8f0](https://github.com/applandinc/vscode-appland/commit/591b8f012a1824193e3c1dc97bf01ca88087d0cc))
+
 # [0.23.0](https://github.com/applandinc/vscode-appland/compare/v0.22.4...v0.23.0) (2021-12-02)
 
 
