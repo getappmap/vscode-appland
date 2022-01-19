@@ -347,7 +347,7 @@ async function refresh(): Promise<void> {
             <p>For your first AppMap, we recommend a project that:</p>
             <ul>
               <li>is a web application or a web service</li>
-              <li>is written in Python (Django or Flask), Ruby (Rails) or Java (Spring)</li>
+              <li>is written in Python (Django or Flask), Ruby (Rails), Java (Spring), or JavaScript (Node & Express)</li>
               <li>has reasonably comprehensive integration test suite
             </ul>
             <p><b>Please open a project meeting these recommendations to proceed.</b></p>
