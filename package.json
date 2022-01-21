@@ -170,6 +170,12 @@
           "icon": "images/logo.svg"
         },
         {
+          "id": "appmap.views.recordappmaps",
+          "name": "Recording AppMaps",
+          "contents": "If your application server is running with the AppMap agent, you can start a remote recording.\n[Start a remote recording](command:appmap.startRemoteRecording)\n additional info about recording methods",
+          "when": "appmap.initialized"
+        },
+        {
           "id": "appmap.views.milestones",
           "name": "Getting started with AppMap",
           "visibility": "collapsed"
