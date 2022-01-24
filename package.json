@@ -168,7 +168,7 @@
       "appmap": [
         {
           "id": "appmap.views.local",
-          "name": "local files",
+          "name": "appmaps",
           "contextualTitle": "AppMap",
           "visibility": "visible",
           "icon": "images/logo.svg"
