@@ -161,7 +161,7 @@
       },
       {
         "view": "appmap.views.recordappmaps",
-        "contents": "If your application server is running with the AppMap agent, you can start a remote recording.\n[Start a remote recording](command:appmap.startRemoteRecording)\n additional info about recording methods",
+        "contents": "If your application server is running with the AppMap agent, you can start a remote recording.\n[Start a remote recording](command:appmap.startRemoteRecording)\n additional info about recording methods"
       }
     ],
     "views": {
