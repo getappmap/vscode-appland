@@ -146,9 +146,6 @@ export default function mountApp() {
       case 'setAppmapState':
         app.setState(message.state);
         break;
-      case 'displayUpdateNotification':
-        app.displayUpdateNotification(message.version);
-        break;
       case 'openUrl':
         vscode.postMessage({
           command: 'appmapOpenUrl',
