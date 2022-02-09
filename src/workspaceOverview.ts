@@ -144,6 +144,10 @@ async function refresh(): Promise<void> {
           color: var(--vscode-foreground);
         }
 
+        .body-text {
+          max-width: 550px;
+        }
+
         main {
           counter-reset: step;
         }
@@ -297,7 +301,7 @@ async function refresh(): Promise<void> {
             ${
               rows.length > 0
                 ? `
-                  <p>To make sure that your projects are suitable for mapping, we make a couple of quick
+                  <p class="body-text">To make sure that your projects are suitable for mapping, we make a couple of quick
                   requirement checks on your workspace to help you find a project to start AppMapping.
                   Select a suitable project from the table below.</p>
                   <table>
@@ -320,10 +324,10 @@ async function refresh(): Promise<void> {
           <article class="explain good ok">
           <br/>
             <h2>Install AppMap agent</h2>
-            <p>AppMap agent records executing code. It creates JSON files as you execute test cases, run sample programs, or perform interactive sessions with your app. This script will guide you through the installation process. Run it in the project's environment so it can correctly detect runtimes and libraries.</p>
-            <p class="explain ok note">It appears this project might not be a good choice for your first AppMap.
+            <p class="body-text">AppMap agent records executing code. It creates JSON files as you execute test cases, run sample programs, or perform interactive sessions with your app. This script will guide you through the installation process. Run it in the project's environment so it can correctly detect runtimes and libraries.</p>
+            <p class="explain ok note body-text">It appears this project might not be a good choice for your first AppMap.
             We recommend you pick another project; proceed at your own risk.</p>
-            <p>If you do not have Node.js installed, or would prefer manual installion of the AppMap agent visit our
+            <p class="body-text">If you do not have Node.js installed, or would prefer manual installion of the AppMap agent visit our
             <a id="docref-step2" href="https://appland.com/docs/quickstart/vscode/step-2">installation documentation.</a></p>
             <p class="command"><code>
               npx @appland/appmap install <span id="directory"></span>
