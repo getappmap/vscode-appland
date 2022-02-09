@@ -382,11 +382,6 @@ async function refresh(): Promise<void> {
             const path = decodeURI(d.path);
             explain(d.score);
             document.querySelector('#directory').innerText = quote(path);
-            document.querySelector('#plugin').innerText = d.plugin || 'appmap';
-            document.querySelector('#pluginType').innerText = d.type || 'package';
-            document.querySelector('#depfile').innerText = d.depfile;
-            document.querySelector('#depfile-a').href = 'command:vscode.open?'
-              + encodeURIComponent(JSON.stringify([{scheme: 'file', path: path + '/' + d.depfile}]));
             document.querySelector('#docref-step2').href = 'https://appland.com/docs/quickstart/vscode/' + d.lang + '-step-2.html';
             document.querySelector('#docref-step3').href = 'https://appland.com/docs/quickstart/vscode/' + d.lang + '-step-3.html';
           } else {
