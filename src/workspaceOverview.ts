@@ -318,30 +318,20 @@ async function refresh(): Promise<void> {
             }
           </article>
           <article class="explain good ok">
+          <br/>
             <h2>Install AppMap agent</h2>
             <p>The AppMap agent watches your code as it executes and generates traces you can
-            examine visually.</p>
+            examine visually. This script will guide you through the installation process. Run it in the project's environment so it can correctly detect runtimes and libraries.</p>
             <p class="explain ok note">It appears this project might not be a good choice for your first AppMap.
             We recommend you pick another project; proceed at your own risk.</p>
-            <p>This script will guide you through the installation process.</p>
-            <p class="note">You should take care to run it in the project's environment so it can correctly detect runtimes and libraries.</p>
+            <p>If you do not have Node.js installed, or would prefer manual installion of the AppMap agent visit our
+            <a id="docref-step2" href="https://appland.com/docs/quickstart/vscode/step-2">installation documentation.</a></p>
             <p class="command"><code>
               npx @appland/appmap install <span id="directory"></span>
             </code></p>
-            <p>The installation script will:</p>
-            <ul>
-              <li>add <code id="plugin">appmap</code> <span id="pluginType">package</span> to the project <a id="depfile-a"><code id="depfile"></code></a>,</li>
-              <li>create <code>appmap.yml</code> configuration file.</li>
-            </ul>
-            <p>Refer to <a id="docref-step2" href="https://appland.com/docs/quickstart/vscode/step-2">AppMap documentation</a> for details.</p>
-            <h2>Analyze running code</h2>
-            <p>To analyze your application with AppMap, the application code has to be run with the agent to record AppMap files.</p>
-            <ul>
-              <li>AppMaps will be automatically recorded from test cases when you run the tests.</li>
-              <li>When troubleshooting or when you don't have tests, start the application and record AppMaps manually using remote recording.</li>
-            </ul>
-            <p>Refer to <a id="docref-step3" href="https://appland.com/docs/quickstart/vscode/step-3">AppMap documentation</a> for details.
-            <p class="note">You need to run tests or record a running application with the AppMap agent in order to see AppMaps in your project.</p>
+            <br/>
+            <h2>Record AppMaps</h2>
+            <p>To record AppMaps from a running application or from integration tests <a id="docref-step3" href="https://appland.com/docs/quickstart/vscode/step-3">follow these instructions.</a> </p>
           </article>
           <article class="explain bad">
             <p>For your first AppMap, we recommend a project that:</p>
