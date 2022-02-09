@@ -119,7 +119,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
       });
     });
   } catch (exception) {
-    Telemetry.sendEvent(DEBUG_EXCEPTION, { exception });
+    Telemetry.sendEvent(DEBUG_EXCEPTION, { exception: exception as Error });
     throw exception;
   }
 }

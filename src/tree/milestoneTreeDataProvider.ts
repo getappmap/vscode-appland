@@ -46,7 +46,7 @@ export class MilestoneTreeDataProvider implements vscode.TreeDataProvider<vscode
 
           vscode.commands.executeCommand(QuickstartWebview.command, milestoneIndex);
         } catch (exception) {
-          Telemetry.sendEvent(DEBUG_EXCEPTION, { exception });
+          Telemetry.sendEvent(DEBUG_EXCEPTION, { exception: exception as Error });
         }
       })
     );

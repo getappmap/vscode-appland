@@ -158,7 +158,8 @@ export default class RemoteRecording {
       isFinished = true;
       this.stopEmitter?.fire(true);
     } catch (e) {
-      vscode.window.showErrorMessage(`Failed to stop recording: ${e.name}: ${e.message}`);
+      const err = e as Error;
+      vscode.window.showErrorMessage(`Failed to stop recording: ${err.name}: ${err.message}`);
 
       const recordingStatus = await this.getStatus(url);
       if (recordingStatus === false) {

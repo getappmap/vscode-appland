@@ -372,7 +372,7 @@ export default class ProjectWatcher {
         return;
       }
 
-      Telemetry.sendEvent(DEBUG_EXCEPTION, { exception });
+      Telemetry.sendEvent(DEBUG_EXCEPTION, { exception: exception as Error });
 
       // For now, assume that the error is unrecoverable and stop polling.
       return;
