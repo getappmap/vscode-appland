@@ -320,8 +320,7 @@ async function refresh(): Promise<void> {
           <article class="explain good ok">
           <br/>
             <h2>Install AppMap agent</h2>
-            <p>The AppMap agent watches your code as it executes and generates traces you can
-            examine visually. This script will guide you through the installation process. Run it in the project's environment so it can correctly detect runtimes and libraries.</p>
+            <p>AppMap agent records executing code. It creates JSON files as you execute test cases, run sample programs, or perform interactive sessions with your app. This script will guide you through the installation process. Run it in the project's environment so it can correctly detect runtimes and libraries.</p>
             <p class="explain ok note">It appears this project might not be a good choice for your first AppMap.
             We recommend you pick another project; proceed at your own risk.</p>
             <p>If you do not have Node.js installed, or would prefer manual installion of the AppMap agent visit our
