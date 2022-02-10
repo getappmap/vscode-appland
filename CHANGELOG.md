@@ -1,3 +1,10 @@
+## [0.23.4](https://github.com/applandinc/vscode-appland/compare/v0.23.3...v0.23.4) (2022-02-10)
+
+
+### Bug Fixes
+
+* Clarify installation instructions ([#371](https://github.com/applandinc/vscode-appland/issues/371)) ([19c15ca](https://github.com/applandinc/vscode-appland/commit/19c15ca8b0ec08ed5075db9489de08fdcc19948b))
+
 ## [0.23.3](https://github.com/applandinc/vscode-appland/compare/v0.23.2...v0.23.3) (2022-02-08)
 
 
