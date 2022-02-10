@@ -47,8 +47,9 @@ export default class ContextMenu {
 
           fs.writeFile(item.descriptor.resourceUri.fsPath, JSON.stringify(content));
         } catch (e) {
+          const err = e as Error;
           vscode.window.showErrorMessage(
-            `Error while changing AppMap name: ${e.name}: ${e.message}`
+            `Error while changing AppMap name: ${err.name}: ${err.message}`
           );
         }
       })

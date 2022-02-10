@@ -92,7 +92,7 @@ export default class AppMapAgentRuby implements AppMapAgent {
         }
       }
     } catch (e) {
-      throw new Error(e);
+      throw new Error((e as Error).message);
     }
 
     if (error) {

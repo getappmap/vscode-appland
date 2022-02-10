@@ -47,7 +47,8 @@ export class AppmapUploader {
 
       return true;
     } catch (e) {
-      vscode.window.showErrorMessage(`Upload failed: ${e.name}: ${e.message}`);
+      const err = e as Error;
+      vscode.window.showErrorMessage(`Upload failed: ${err.name}: ${err.message}`);
     }
 
     return false;

@@ -159,13 +159,14 @@ export default class QuickstartWebview {
                   await projects[0].performMilestoneAction(milestone, data);
                   panel.webview.postMessage({ type: message.command });
                 } catch (e) {
+                  const err = e as Error;
                   panel.webview.postMessage({
                     type: 'milestoneError',
                     index: Object.keys(project.milestones).indexOf(milestone),
                     errors: [
                       {
                         code: 'ERROR',
-                        message: e.message,
+                        message: err.message,
                       },
                     ],
                   });

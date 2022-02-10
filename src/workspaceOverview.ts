@@ -144,6 +144,10 @@ async function refresh(): Promise<void> {
           color: var(--vscode-foreground);
         }
 
+        .body-text {
+          max-width: 550px;
+        }
+
         main {
           counter-reset: step;
         }
@@ -297,7 +301,7 @@ async function refresh(): Promise<void> {
             ${
               rows.length > 0
                 ? `
-                  <p>To make sure that your projects are suitable for mapping, we make a couple of quick
+                  <p class="body-text">To make sure that your projects are suitable for mapping, we make a couple of quick
                   requirement checks on your workspace to help you find a project to start AppMapping.
                   Select a suitable project from the table below.</p>
                   <table>
@@ -318,36 +322,25 @@ async function refresh(): Promise<void> {
             }
           </article>
           <article class="explain good ok">
+          <br/>
             <h2>Install AppMap agent</h2>
-            <p>The AppMap agent watches your code as it executes and generates traces you can
-            examine visually.</p>
-            <p class="explain ok note">It appears this project might not be a good choice for your first AppMap.
+            <p class="body-text">AppMap agent records executing code. It creates JSON files as you execute test cases, run sample programs, or perform interactive sessions with your app. This script will guide you through the installation process. Run it in the project's environment so it can correctly detect runtimes and libraries.</p>
+            <p class="explain ok note body-text">It appears this project might not be a good choice for your first AppMap.
             We recommend you pick another project; proceed at your own risk.</p>
-            <p>This script will guide you through the installation process.</p>
-            <p class="note">You should take care to run it in the project's environment so it can correctly detect runtimes and libraries.</p>
+            <p class="body-text">If you do not have Node.js installed, or would prefer manual installion of the AppMap agent visit our
+            <a id="docref-step2" href="https://appland.com/docs/quickstart/vscode/step-2">installation documentation.</a></p>
             <p class="command"><code>
               npx @appland/appmap install <span id="directory"></span>
             </code></p>
-            <p>The installation script will:</p>
-            <ul>
-              <li>add <code id="plugin">appmap</code> <span id="pluginType">package</span> to the project <a id="depfile-a"><code id="depfile"></code></a>,</li>
-              <li>create <code>appmap.yml</code> configuration file.</li>
-            </ul>
-            <p>Refer to <a id="docref-step2" href="https://appland.com/docs/quickstart/vscode/step-2">AppMap documentation</a> for details.</p>
-            <h2>Analyze running code</h2>
-            <p>To analyze your application with AppMap, the application code has to be run with the agent to record AppMap files.</p>
-            <ul>
-              <li>AppMaps will be automatically recorded from test cases when you run the tests.</li>
-              <li>When troubleshooting or when you don't have tests, start the application and record AppMaps manually using remote recording.</li>
-            </ul>
-            <p>Refer to <a id="docref-step3" href="https://appland.com/docs/quickstart/vscode/step-3">AppMap documentation</a> for details.
-            <p class="note">You need to run tests or record a running application with the AppMap agent in order to see AppMaps in your project.</p>
+            <br/>
+            <h2>Record AppMaps</h2>
+            <p>To record AppMaps from a running application or from integration tests <a id="docref-step3" href="https://appland.com/docs/quickstart/vscode/step-3">follow these instructions.</a> </p>
           </article>
           <article class="explain bad">
             <p>For your first AppMap, we recommend a project that:</p>
             <ul>
               <li>is a web application or a web service</li>
-              <li>is written in Python (Django or Flask), Ruby (Rails) or Java (Spring)</li>
+              <li>is written in Python (Django or Flask), Ruby (Rails), Java (Spring), or JavaScript (Node & Express)</li>
               <li>has reasonably comprehensive integration test suite
             </ul>
             <p><b>Please open a project meeting these recommendations to proceed.</b></p>
@@ -392,11 +385,6 @@ async function refresh(): Promise<void> {
             const path = decodeURI(d.path);
             explain(d.score);
             document.querySelector('#directory').innerText = quote(path);
-            document.querySelector('#plugin').innerText = d.plugin || 'appmap';
-            document.querySelector('#pluginType').innerText = d.type || 'package';
-            document.querySelector('#depfile').innerText = d.depfile;
-            document.querySelector('#depfile-a').href = 'command:vscode.open?'
-              + encodeURIComponent(JSON.stringify([{scheme: 'file', path: path + '/' + d.depfile}]));
             document.querySelector('#docref-step2').href = 'https://appland.com/docs/quickstart/vscode/' + d.lang + '-step-2.html';
             document.querySelector('#docref-step3').href = 'https://appland.com/docs/quickstart/vscode/' + d.lang + '-step-3.html';
           } else {
