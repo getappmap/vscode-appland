@@ -1,3 +1,10 @@
+## [0.23.5](https://github.com/applandinc/vscode-appland/compare/v0.23.4...v0.23.5) (2022-02-12)
+
+
+### Bug Fixes
+
+* Update dependencies ([cb0e9b0](https://github.com/applandinc/vscode-appland/commit/cb0e9b054024776e89c937bd4261dc4ecfe2ad8b))
+
 ## [0.23.4](https://github.com/applandinc/vscode-appland/compare/v0.23.3...v0.23.4) (2022-02-10)
 
 
