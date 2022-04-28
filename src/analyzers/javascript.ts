@@ -48,7 +48,7 @@ export default async function analyze(folder: WorkspaceFolder): Promise<Result |
     }
   } catch (_) {
     features.lang = {
-      title: 'JavaScipt',
+      title: 'JavaScript',
       score: 'ok',
       text: `This project looks like JavaScript, but we couldn't read a supported dependency file.`,
     };
