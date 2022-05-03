@@ -12,10 +12,6 @@ export default {
       label: 'How to use AppMap diagrams',
       link: 'https://appland.com/docs/how-to-use-appmap-diagrams',
     },
-    DOC_GUIDES: {
-      label: 'Guides',
-      link: 'https://appland.com/docs/guides',
-    },
     DOC_REFERENCE: {
       label: 'Reference',
       link: 'https://appland.com/docs/reference',
@@ -27,10 +23,6 @@ export default {
     DOC_RECORDING_METHODS: {
       label: 'Recording methods',
       link: 'https://appland.com/docs/recording-methods',
-    },
-    DOC_INTEGRATIONS: {
-      label: 'Integrations',
-      link: 'https://appland.com/docs/integrations',
     },
     DOC_COMMUNITY: {
       label: 'Community',
