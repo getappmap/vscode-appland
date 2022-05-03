@@ -7,7 +7,6 @@ import AppMapCollection from './appmapCollection';
 import AppMapLoaderFile from './appmapLoaderFile';
 
 export default class AppMapCollectionFile implements AppMapCollection {
-  private static readonly GLOB_PATTERN = '**/*.appmap.json';
   private _onUpdated: vscode.EventEmitter<AppMapCollection> = new vscode.EventEmitter<
     AppMapCollection
   >();
