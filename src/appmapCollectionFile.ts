@@ -133,7 +133,9 @@ export default class AppMapCollectionFile implements AppMapCollection {
   }
 
   public findByName(name: string): AppMapLoader | undefined {
-    return Object.values(this.loaders).find((d) => d.metadata?.name === name);
+    return Object.values(this.loaders).find(
+      (d: AppMapLoaderFile) => d.descriptor.metadata?.name === name
+    );
   }
 
   public appMaps(): AppMapLoader[] {
