@@ -47,31 +47,37 @@ export class DatabaseUpdater {
   }
 
   initialize(context: vscode.ExtensionContext): void {
-    const appmapFolders = [
-      'build/appmap',
-      'build/appmap/recordings',
-      'target/appmap',
-      'target/appmap/recordings',
-      'tmp/appmap',
-      'tmp/appmap/minitest',
-      'tmp/appmap/recordings',
-      'tmp/appmap/rspec',
-    ];
-    const folders = vscode.workspace.workspaceFolders;
-    if (folders) {
-      folders.forEach((wsFolder) => {
-        appmapFolders.forEach((folder) => {
-          const appmapPattern = new vscode.RelativePattern(wsFolder, `${folder}/*.appmap.json`);
-          const watcher = vscode.workspace.createFileSystemWatcher(appmapPattern);
-          watcher.onDidChange(this.onChange.bind(this));
-          watcher.onDidCreate(this.onCreate.bind(this));
-          watcher.onDidDelete(this.onDelete.bind(this));
-          context.subscriptions.push(watcher);
-        });
-      });
-    }
+    const watchers: Record<string, vscode.Disposable> = {};
 
-    vscode.workspace.findFiles('**/*.appmap.json').then((uris) => {
+    const watchFolder = (folder: vscode.WorkspaceFolder) => {
+      const appmapPattern = new vscode.RelativePattern(folder, `**/*.appmap.json`);
+      const watcher = vscode.workspace.createFileSystemWatcher(appmapPattern);
+      watcher.onDidChange(this.onChange.bind(this));
+      watcher.onDidCreate(this.onCreate.bind(this));
+      watcher.onDidDelete(this.onDelete.bind(this));
+      watchers[folder.uri.toString()] = watcher;
+      context.subscriptions.push(watcher);
+    };
+
+    const unwatchFolder = (folder: vscode.WorkspaceFolder) => {
+      const watcher = watchers[folder.uri.toString()];
+      if (watcher) watcher.dispose();
+    };
+
+    vscode.workspace.onDidChangeWorkspaceFolders((e) => {
+      e.added.forEach((folder) => {
+        console.log(`added folder: ${folder.uri}`);
+        watchFolder(folder);
+      });
+      e.removed.forEach((folder) => {
+        console.log(`removed folder: ${folder.uri}`);
+        unwatchFolder(folder);
+      });
+    });
+
+    (vscode.workspace.workspaceFolders || []).forEach(watchFolder);
+
+    vscode.workspace.findFiles('**/*.appmap.json', `**/node_modules/**`).then((uris) => {
       uris.forEach(this.addUri.bind(this));
     });
 
@@ -104,11 +110,6 @@ export class DatabaseUpdater {
   }
 
   private trackModifiedFile(uri: vscode.Uri) {
-    // Don't track or open the "Inventory" file.
-    if (uri.path.match(/\/Inventory\.appmap\.json/)) {
-      return;
-    }
-
     this.lastModifiedAppMap = uri;
   }
 
@@ -118,27 +119,5 @@ export class DatabaseUpdater {
 
   private addUri() {
     this.appMapCount += 1;
-    /*
-    readFile(uri.path, (err, data) => {
-      this.appMapCount += 1;
-      if (err) {
-        return console.error(err);
-      }
-
-      const digest = crypto.createHash('sha256').update(data).digest('hex');
-      const filename = [digest, 'min', 'appmap'].join('.');
-      if (existsSync(filename)) {
-        return;
-      }
-
-      const appmap = Models.buildAppMap()
-        .source(JSON.parse(data.toString()))
-        .build();
-      const callTree = appmap.callTree.asJSON(appmap.classMap);
-      console.log(`Saving to database: ${uri}`)
-      callTree._id = uri;
-      const base = basename(uri.path);
-    });
-    */
   }
 }
