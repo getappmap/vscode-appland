@@ -1,3 +1,10 @@
+# [0.24.0](https://github.com/applandinc/vscode-appland/compare/v0.23.6...v0.24.0) (2022-05-04)
+
+
+### Features
+
+* Ensure the editor is configured to watch AppMaps ([a7e3aa5](https://github.com/applandinc/vscode-appland/commit/a7e3aa5b1469f82d7eeea9d882b98c578fda58fb))
+
 ## [0.23.6](https://github.com/applandinc/vscode-appland/compare/v0.23.5...v0.23.6) (2022-05-04)
 
 
