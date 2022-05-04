@@ -8,14 +8,16 @@ import {
   workspace,
 } from 'vscode';
 import * as semver from 'semver';
-import { analyze, Feature, Score } from './analyzers';
+import { analyze, Feature, Score } from '../analyzers';
 import { randomBytes } from 'crypto';
-import { COPY_INSTALL_COMMAND, MILESTONE_OPEN_WEBVIEW, Telemetry } from './telemetry';
-import AppMapProperties from './appmapProperties';
+import { COPY_INSTALL_COMMAND, OPEN_VIEW, Telemetry } from '../telemetry';
+import AppMapProperties from '../appmapProperties';
 
 const COLUMN = ViewColumn.One;
 
 let panel: WebviewPanel | null = null;
+
+const VIEW_ID: Readonly<string> = 'appmap.views.openWorkspaceOverview';
 
 export default async function register(
   context: ExtensionContext,
@@ -31,8 +33,8 @@ export default async function register(
     // time of installation. We will use this to determine whether or not our UX improvements are effective, without
     // before rolling them out to our existing user base.
 
-    if (!properties.hasSeenQuickStartDocs) {
-      properties.hasSeenQuickStartDocs = true;
+    if (!properties.hasViewedInstallGuide) {
+      properties.hasViewedInstallGuide = true;
       return commands.executeCommand('appmap.openWorkspaceOverview');
     }
   }
@@ -45,7 +47,7 @@ async function openWorkspaceOverview(): Promise<void> {
   }
 
   const subscriptions: Disposable[] = [];
-  panel = window.createWebviewPanel('overview', 'AppMap — Getting started', COLUMN, {
+  panel = window.createWebviewPanel(VIEW_ID, 'AppMap — Getting started', COLUMN, {
     enableScripts: true,
     enableCommandUris: true,
   });
@@ -63,7 +65,7 @@ async function openWorkspaceOverview(): Promise<void> {
   );
 
   await refresh();
-  Telemetry.sendEvent(MILESTONE_OPEN_WEBVIEW, { milestoneId: 'WORKSPACE_OVERVIEW' });
+  Telemetry.sendEvent(OPEN_VIEW, { viewId: VIEW_ID });
 }
 
 type CopyMessage = {

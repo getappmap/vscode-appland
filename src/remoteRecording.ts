@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 import RemoteRecordingClient from './remoteRecordingClient';
-import { isFileExists } from './util';
+import { fileExists } from './util';
 
 export default class RemoteRecording {
   private static readonly RECENT_REMOTE_URLS = 'APPMAP_RECENT_REMOTE_URLS';
@@ -143,7 +143,7 @@ export default class RemoteRecording {
       let checkFileName = fileName;
       let i = 0;
 
-      while (isFileExists(checkFileName + fileExt)) {
+      while (await fileExists(checkFileName + fileExt)) {
         i++;
         checkFileName = `${fileName}(${i})`;
       }

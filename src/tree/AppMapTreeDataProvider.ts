@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import AppMapCollection from '../../appmapCollection';
+import AppMapCollection from '../appmapCollection';
 
 const LABEL_NO_NAME = 'Untitled AppMap';
 export class AppMapTreeDataProvider implements vscode.TreeDataProvider<vscode.TreeItem> {

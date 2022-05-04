@@ -2,18 +2,18 @@ import * as vscode from 'vscode';
 
 const docsPages = [
   {
-    id: 'QUICKSTART_WORKSPACE_OVERVIEW',
+    id: 'GETTING_STARTED_WORKSPACE_OVERVIEW',
     title: 'Getting started with AppMap',
     command: 'appmap.openWorkspaceOverview',
   },
   {
-    id: 'QUICKSTART_DOCS_OPEN_APPMAPS',
+    id: 'GETTING_STARTED_OPEN_APPMAPS',
     title: 'Open AppMaps',
-    command: 'appmap.openQuickstartDocsOpenAppmaps',
+    command: 'appmap.openOpenAppmaps',
   },
 ];
 
-export class QuickstartDocsTreeDataProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
+export class GettingStartedTreeDataProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
   private _onDidChangeTreeData: vscode.EventEmitter<
     vscode.TreeItem | undefined | null | void
   > = new vscode.EventEmitter<vscode.TreeItem | undefined | null | void>();

@@ -6,9 +6,9 @@ import MockExtensionContext from '../mocks/mockExtensionContext';
 import MockFileSystemWatcher from '../mocks/mockFileSystemWatcher';
 import { mockSingleProjectWorkspace } from '../mocks/mockWorkspace';
 import * as util from '../../src/util';
-import registerWorkspaceOverview from '../../src/workspaceOverview';
+import registerWorkspaceOverview from '../../src/webviews/projectPickerWebview';
 
-describe('Quickstart', () => {
+describe('Install guide', () => {
   describe('First time flow', () => {
     let sinon: SinonSandbox;
     let appmapWatcher: MockFileSystemWatcher;
@@ -27,16 +27,16 @@ describe('Quickstart', () => {
       sinon.restore();
     });
 
-    it('automatically opens quickstart from a fresh installation', async () => {
+    it('automatically opens install guide from a fresh installation', async () => {
       const executeCommand = sinon.spy(vscode.commands, 'executeCommand');
       sinon.stub(util, 'hasPreviouslyInstalledExtension').returns(false);
       properties = new AppMapProperties(context);
       mockSingleProjectWorkspace(sinon);
 
-      assert(properties.hasSeenQuickStartDocs === false);
+      assert(properties.hasViewedInstallGuide === false);
       await registerWorkspaceOverview(context, properties);
       assert(executeCommand.calledWith('appmap.openWorkspaceOverview'));
-      assert(properties.hasSeenQuickStartDocs);
+      assert(properties.hasViewedInstallGuide);
     });
 
     it('does not automatically open quickstart from an existing installation', async () => {
@@ -45,10 +45,10 @@ describe('Quickstart', () => {
       properties = new AppMapProperties(context);
       mockSingleProjectWorkspace(sinon);
 
-      assert(properties.hasSeenQuickStartDocs === false);
+      assert(properties.hasViewedInstallGuide === false);
       await registerWorkspaceOverview(context, properties);
       assert(executeCommand.calledWith('appmap.openWorkspaceOverview') === false);
-      assert(properties.hasSeenQuickStartDocs === false);
+      assert(properties.hasViewedInstallGuide === false);
     });
 
     async function withExtensionVersion(version: string, shouldOpen: boolean): Promise<void> {
@@ -57,11 +57,11 @@ describe('Quickstart', () => {
       sinon.stub(properties, 'firstVersionInstalled').value(version);
       mockSingleProjectWorkspace(sinon);
 
-      assert(properties.hasSeenQuickStartDocs === false);
+      assert(properties.hasViewedInstallGuide === false);
       await registerWorkspaceOverview(context, properties);
 
       assert(executeCommand.calledWith('appmap.openWorkspaceOverview') === shouldOpen);
-      assert(properties.hasSeenQuickStartDocs === shouldOpen);
+      assert(properties.hasViewedInstallGuide === shouldOpen);
     }
 
     it('does not automatically open quickstart if first version less than 0.15.0', async () => {
