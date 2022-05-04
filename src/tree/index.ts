@@ -21,15 +21,6 @@ export default function registerTrees(
     treeDataProvider: documentationTreeProvider,
   });
 
-  /*
-  const milestoneTreeProvider = new MilestoneTreeDataProvider(context, projects);
-  const milestoneTree = vscode.window.createTreeView('appmap.views.milestones', {
-    treeDataProvider: milestoneTreeProvider,
-  });
-
-  MilestoneTreeDataProvider.registerCommands(context);
-  */
-
   const quickstartDocsTreeProvider = new QuickstartDocsTreeDataProvider();
   const quickstartDocsTree = vscode.window.createTreeView('appmap.views.milestones', {
     treeDataProvider: quickstartDocsTreeProvider,
@@ -49,5 +40,5 @@ export default function registerTrees(
     })
   );
 
-  return { localTree, documentation /*, milestoneTree*/ };
+  return { localTree, documentation };
 }

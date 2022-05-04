@@ -7,7 +7,6 @@ import AppMapCollection from './appmapCollection';
 import AppMapLoaderFile from './appmapLoaderFile';
 
 export default class AppMapCollectionFile implements AppMapCollection {
-  private static readonly GLOB_PATTERN = '**/*.appmap.json';
   private _onUpdated: vscode.EventEmitter<AppMapCollection> = new vscode.EventEmitter<
     AppMapCollection
   >();
@@ -134,7 +133,9 @@ export default class AppMapCollectionFile implements AppMapCollection {
   }
 
   public findByName(name: string): AppMapLoader | undefined {
-    return Object.values(this.loaders).find((d) => d.metadata?.name === name);
+    return Object.values(this.loaders).find(
+      (d: AppMapLoaderFile) => d.descriptor.metadata?.name === name
+    );
   }
 
   public appMaps(): AppMapLoader[] {
