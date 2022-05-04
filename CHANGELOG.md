@@ -1,3 +1,12 @@
+## [0.23.6](https://github.com/applandinc/vscode-appland/compare/v0.23.5...v0.23.6) (2022-05-04)
+
+
+### Bug Fixes
+
+* AppMap count responds to project add/remove ([eb50ac1](https://github.com/applandinc/vscode-appland/commit/eb50ac12b640668d849f84dafd61d98a9247a74c))
+* Fix appmap.findByName ([9065f32](https://github.com/applandinc/vscode-appland/commit/9065f32413128262e2fe59bc367964d81eeb1e3d))
+* Remove broken doc links ([e2f1364](https://github.com/applandinc/vscode-appland/commit/e2f136490d2aebfd2471c150d27f4a363fcc7efb))
+
 ## [0.23.5](https://github.com/applandinc/vscode-appland/compare/v0.23.4...v0.23.5) (2022-02-12)
 
 
