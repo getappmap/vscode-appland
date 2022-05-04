@@ -17,7 +17,7 @@ import registerWorkspaceOverview from './workspaceOverview';
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
   try {
-    const localAppMaps = new AppMapCollectionFile();
+    const localAppMaps = new AppMapCollectionFile(context);
 
     Telemetry.register(context);
 
@@ -33,16 +33,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
     localAppMaps.initialize();
 
-    const appmapWatcher = vscode.workspace.createFileSystemWatcher(
-      '**/*.appmap.json',
-      false,
-      true,
-      true
-    );
-    context.subscriptions.push(appmapWatcher);
-
     const projects = (vscode.workspace.workspaceFolders || []).map((workspaceFolder) => {
-      const project = new ProjectWatcher(context, workspaceFolder, appmapWatcher, properties);
+      const project = new ProjectWatcher(context, workspaceFolder, properties);
       return project;
     });
 

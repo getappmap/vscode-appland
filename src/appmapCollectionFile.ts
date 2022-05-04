@@ -1,10 +1,10 @@
 import * as vscode from 'vscode';
 import { promises as fs } from 'fs';
-import { basename } from 'path';
 import AppMapLoader, { AppMapDescriptor } from './appmapLoader';
 import AppMapDescriptorFile from './appmapLoaderFile';
 import AppMapCollection from './appmapCollection';
 import AppMapLoaderFile from './appmapLoaderFile';
+import appmapWatcher from './appmapWatcher';
 
 export default class AppMapCollectionFile implements AppMapCollection {
   private _onUpdated: vscode.EventEmitter<AppMapCollection> = new vscode.EventEmitter<
@@ -20,20 +20,40 @@ export default class AppMapCollectionFile implements AppMapCollection {
   private loaders: Map<string, AppMapLoaderFile> = new Map<string, AppMapLoaderFile>();
   private currentFilter = '';
 
-  constructor() {
+  constructor(context: vscode.ExtensionContext) {
     const { workspaceFolders } = vscode.workspace;
     if (!workspaceFolders) {
       return;
     }
 
-    workspaceFolders.forEach((dir) => {
-      const appmapPattern = new vscode.RelativePattern(dir, `**/*.appmap.json`);
-      const watcher = vscode.workspace.createFileSystemWatcher(appmapPattern);
+    const onDelete = async (uri: vscode.Uri): Promise<void> => {
+      delete this.loaders[uri.fsPath];
+      this._onUpdated.fire(this);
+    };
 
-      watcher.onDidChange((uri) => AppMapCollectionFile.validate(uri, () => this.onChange(uri)));
-      watcher.onDidCreate((uri) => AppMapCollectionFile.validate(uri, () => this.onCreate(uri)));
-      watcher.onDidDelete((uri) => AppMapCollectionFile.validate(uri, () => this.onDelete(uri)));
-    });
+    const onChange = async (uri: vscode.Uri): Promise<void> => {
+      const metadata = await AppMapCollectionFile.collectAppMapDescriptor(uri);
+      if (metadata) {
+        const descriptor = new AppMapDescriptorFile(uri, metadata);
+        this.loaders[uri.fsPath] = descriptor;
+        this._onContentChanged.fire(descriptor);
+      } else {
+        onDelete(uri);
+      }
+      this._onUpdated.fire(this);
+    };
+
+    const onCreate = async (uri: vscode.Uri): Promise<void> => {
+      const metadata = await AppMapCollectionFile.collectAppMapDescriptor(uri);
+      if (metadata) {
+        const descriptor = new AppMapDescriptorFile(uri, metadata);
+        this.loaders[uri.fsPath] = descriptor;
+        this._onUpdated.fire(this);
+        this._onContentChanged.fire(descriptor);
+      }
+    };
+
+    appmapWatcher(context, { onCreate, onChange, onDelete });
   }
 
   static async collectAppMapDescriptor(uri: vscode.Uri): Promise<AppMapDescriptor | undefined> {
@@ -70,17 +90,6 @@ export default class AppMapCollectionFile implements AppMapCollection {
     }
   }
 
-  static validate(uri: vscode.Uri, onSuccess: (uri: vscode.Uri) => void): void {
-    if (AppMapCollectionFile.validateUri(uri)) {
-      onSuccess(uri);
-    }
-  }
-
-  static validateUri(uri: vscode.Uri): boolean {
-    const fileName = basename(uri.fsPath);
-    return fileName !== 'Inventory.appmap.json';
-  }
-
   async initialize(): Promise<void> {
     const { workspaceFolders } = vscode.workspace;
     if (workspaceFolders) {
@@ -95,15 +104,12 @@ export default class AppMapCollectionFile implements AppMapCollection {
       );
 
       await Promise.all(
-        files
-          .flat()
-          .filter((uri) => AppMapCollectionFile.validateUri(uri))
-          .map(async (uri) => {
-            const metadata = await AppMapCollectionFile.collectAppMapDescriptor(uri);
-            if (metadata) {
-              this.loaders[uri.fsPath] = new AppMapDescriptorFile(uri, metadata);
-            }
-          })
+        files.flat().map(async (uri) => {
+          const metadata = await AppMapCollectionFile.collectAppMapDescriptor(uri);
+          if (metadata) {
+            this.loaders[uri.fsPath] = new AppMapDescriptorFile(uri, metadata);
+          }
+        })
       );
     }
 
@@ -158,32 +164,5 @@ export default class AppMapCollectionFile implements AppMapCollection {
     return this.allAppMaps().filter((appmap) =>
       appmap.descriptor.resourceUri.fsPath.startsWith(workspaceFolder.uri.fsPath)
     );
-  }
-
-  private async onChange(uri: vscode.Uri): Promise<void> {
-    const metadata = await AppMapCollectionFile.collectAppMapDescriptor(uri);
-    if (metadata) {
-      const descriptor = new AppMapDescriptorFile(uri, metadata);
-      this.loaders[uri.fsPath] = descriptor;
-      this._onContentChanged.fire(descriptor);
-    } else {
-      this.onDelete(uri);
-    }
-    this._onUpdated.fire(this);
-  }
-
-  private async onCreate(uri: vscode.Uri): Promise<void> {
-    const metadata = await AppMapCollectionFile.collectAppMapDescriptor(uri);
-    if (metadata) {
-      const descriptor = new AppMapDescriptorFile(uri, metadata);
-      this.loaders[uri.fsPath] = descriptor;
-      this._onUpdated.fire(this);
-      this._onContentChanged.fire(descriptor);
-    }
-  }
-
-  private async onDelete(uri: vscode.Uri): Promise<void> {
-    delete this.loaders[uri.fsPath];
-    this._onUpdated.fire(this);
   }
 }
