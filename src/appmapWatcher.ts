@@ -9,6 +9,20 @@ type Handler = {
 };
 
 export default function appmapWatcher(context: vscode.ExtensionContext, handler: Handler): void {
+  const config = vscode.workspace.getConfiguration('files');
+  const values = config.get('watcherExclude') as string[] | undefined;
+  // Proxy {**/.git/objects/**: true, **/.git/subtree-cache/**: true, **/node_modules/*/**: true, **/.hg/store/**: true}
+  if (values && Object.keys(values).some((path) => path.split(/[\\/]/).includes('appmap'))) {
+    vscode.window
+      .showErrorMessage(
+        `The 'appmap' folder is excluded from the VSCode file watcher. Please update the setting 'Files: Watcher Exclude' (files.watcherExclude) and remove any paths which include 'appmap'.`,
+        'Open Settings'
+      )
+      .then(() => {
+        vscode.commands.executeCommand('workbench.action.openSettings', 'files.watcherExclude');
+      });
+  }
+
   const watchFolder = (folder: vscode.WorkspaceFolder) => {
     const appmapPattern = new vscode.RelativePattern(folder, `**/*.appmap.json`);
     const watcher = vscode.workspace.createFileSystemWatcher(appmapPattern);
