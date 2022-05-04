@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import * as vscode from 'vscode';
 import { promises as fs, PathLike } from 'fs';
 import path from 'path';
@@ -14,6 +15,7 @@ import {
 import { unreachable } from './util';
 import AppMapProperties from './appmapProperties';
 import { ErrorUnsupportedLanguage } from './agent/AppMapAgentDummy';
+import appmapWatcher from './appmapWatcher';
 
 function resolveFullyQualifiedKey(key: string, obj: Record<string, unknown>): unknown {
   const tokens = key.split(/\./);
@@ -240,7 +242,6 @@ export default class ProjectWatcher {
   constructor(
     context: vscode.ExtensionContext,
     workspaceFolder: vscode.WorkspaceFolder,
-    appmapWatcher: vscode.FileSystemWatcher,
     properties: AppMapProperties,
     frequencyMs = 6000
   ) {
@@ -251,11 +252,16 @@ export default class ProjectWatcher {
     this.currentState = STATE.WAIT_FOR_AGENT_INSTALL;
     this.properties = properties;
 
-    appmapWatcher.onDidCreate((uri) => {
+    const onCreate = (uri: vscode.Uri) => {
       if (uri.fsPath.startsWith(this.rootDirectory as string)) {
         this.onAppMapCreatedEmitter.fire(uri);
       }
-    });
+    };
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const nop = (_uri: vscode.Uri) => {};
+
+    appmapWatcher(context, { onCreate, onChange: nop, onDelete: nop });
   }
 
   get rootDirectory(): PathLike {

@@ -2,7 +2,6 @@ import * as path from 'path';
 import * as vscode from 'vscode';
 import { getNonce } from '../util';
 import { Telemetry, MILESTONE_OPEN_WEBVIEW, COPY_INSTALL_COMMAND } from '../telemetry';
-import AppMapProperties from '../appmapProperties';
 import QuickstartDocsRecordAppmaps from './recordAppmapsWebview';
 
 export default class QuickstartDocsInstallAgent {
@@ -12,10 +11,7 @@ export default class QuickstartDocsInstallAgent {
   // Keyed by project root directory
   private static readonly openWebviews = new Map<string, vscode.WebviewPanel>();
 
-  public static async register(
-    context: vscode.ExtensionContext,
-    _properties: AppMapProperties
-  ): Promise<void> {
+  public static async register(context: vscode.ExtensionContext): Promise<void> {
     const rootDirectory = vscode.workspace.workspaceFolders?.[0].uri.fsPath;
 
     context.subscriptions.push(

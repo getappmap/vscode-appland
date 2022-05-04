@@ -1,11 +1,6 @@
 import * as vscode from 'vscode';
-/*
-import * as crypto from 'crypto';
-import * as Models from '@appland/models';
-import { existsSync, readFile, writeFile } from 'fs';
-import { basename } from 'path';
-import { maxHeaderSize } from 'http';
-*/
+import appmapFinder from './appmapFinder';
+import appmapWatcher from './appmapWatcher';
 
 /**
  * Keeps the AppMap database up-to-date.
@@ -47,39 +42,8 @@ export class DatabaseUpdater {
   }
 
   initialize(context: vscode.ExtensionContext): void {
-    const watchers: Record<string, vscode.Disposable> = {};
-
-    const watchFolder = (folder: vscode.WorkspaceFolder) => {
-      const appmapPattern = new vscode.RelativePattern(folder, `**/*.appmap.json`);
-      const watcher = vscode.workspace.createFileSystemWatcher(appmapPattern);
-      watcher.onDidChange(this.onChange.bind(this));
-      watcher.onDidCreate(this.onCreate.bind(this));
-      watcher.onDidDelete(this.onDelete.bind(this));
-      watchers[folder.uri.toString()] = watcher;
-      context.subscriptions.push(watcher);
-    };
-
-    const unwatchFolder = (folder: vscode.WorkspaceFolder) => {
-      const watcher = watchers[folder.uri.toString()];
-      if (watcher) watcher.dispose();
-    };
-
-    vscode.workspace.onDidChangeWorkspaceFolders((e) => {
-      e.added.forEach((folder) => {
-        console.log(`added folder: ${folder.uri}`);
-        watchFolder(folder);
-      });
-      e.removed.forEach((folder) => {
-        console.log(`removed folder: ${folder.uri}`);
-        unwatchFolder(folder);
-      });
-    });
-
-    (vscode.workspace.workspaceFolders || []).forEach(watchFolder);
-
-    vscode.workspace.findFiles('**/*.appmap.json', `**/node_modules/**`).then((uris) => {
-      uris.forEach(this.addUri.bind(this));
-    });
+    appmapWatcher(context, this);
+    appmapFinder(this.addUri.bind(this));
 
     this.statusBarItem.show();
   }
