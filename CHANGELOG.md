@@ -1,3 +1,10 @@
+## [0.24.1](https://github.com/applandinc/vscode-appland/compare/v0.24.0...v0.24.1) (2022-05-09)
+
+
+### Bug Fixes
+
+* Remove project watcher, milestones and quickstart ([ef2b135](https://github.com/applandinc/vscode-appland/commit/ef2b135d0023c1604d0864477cbc5977c7dda282))
+
 # [0.24.0](https://github.com/applandinc/vscode-appland/compare/v0.23.6...v0.24.0) (2022-05-04)
 
 
