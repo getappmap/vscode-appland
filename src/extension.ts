@@ -2,18 +2,16 @@ import * as vscode from 'vscode';
 
 import { DatabaseUpdater } from './databaseUpdater';
 import { ScenarioProvider } from './scenarioViewer';
-import { Telemetry, DEBUG_EXCEPTION, TELEMETRY_ENABLED } from './telemetry';
+import { Telemetry, DEBUG_EXCEPTION, TELEMETRY_ENABLED, PROJECT_OPEN } from './telemetry';
 import registerTrees from './tree';
 import AppMapCollectionFile from './appmapCollectionFile';
 import ContextMenu from './contextMenu';
 import RemoteRecording from './remoteRecording';
 import { notEmpty } from './util';
 import { registerUtilityCommands } from './registerUtilityCommands';
-import ProjectWatcher from './projectWatcher';
-import QuickstartWebview from './quickstartWebview';
-import QuickstartDocsOpenAppmaps from './quickstart-docs/openAppmapsWebview';
+import OpenAppMapsWebview from './webviews/openAppmapsWebview';
 import AppMapProperties from './appmapProperties';
-import registerWorkspaceOverview from './workspaceOverview';
+import registerWorkspaceOverview from './webviews/projectPickerWebview';
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
   try {
@@ -33,18 +31,13 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
     localAppMaps.initialize();
 
-    const projects = (vscode.workspace.workspaceFolders || []).map((workspaceFolder) => {
-      const project = new ProjectWatcher(context, workspaceFolder, properties);
-      return project;
+    (vscode.workspace.workspaceFolders || []).forEach((workspaceFolder) => {
+      Telemetry.sendEvent(PROJECT_OPEN, { rootDirectory: workspaceFolder.uri.fsPath });
     });
-
-    QuickstartWebview.register(context, projects, localAppMaps);
-
-    await Promise.all(projects.map(async (project) => await project.initialize()));
 
     registerWorkspaceOverview(context, properties);
 
-    QuickstartDocsOpenAppmaps.register(context, projects, localAppMaps);
+    OpenAppMapsWebview.register(context, localAppMaps);
 
     const { localTree } = registerTrees(context, localAppMaps);
 

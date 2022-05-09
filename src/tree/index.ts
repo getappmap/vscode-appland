@@ -1,9 +1,9 @@
 import * as vscode from 'vscode';
 import AppMapCollectionFile from '../appmapCollectionFile';
-import { AppMapTreeDataProvider } from './appmap/AppMapTreeDataProvider';
+import { AppMapTreeDataProvider } from './AppMapTreeDataProvider';
 import { LinkTreeDataProvider } from './linkTreeDataProvider';
 import Links from './links';
-import { QuickstartDocsTreeDataProvider } from './quickstartDocsTreeDataProvider';
+import { GettingStartedTreeDataProvider } from './gettingStartedTreeDataProvider';
 
 export default function registerTrees(
   context: vscode.ExtensionContext,
@@ -21,9 +21,9 @@ export default function registerTrees(
     treeDataProvider: documentationTreeProvider,
   });
 
-  const quickstartDocsTreeProvider = new QuickstartDocsTreeDataProvider();
-  const quickstartDocsTree = vscode.window.createTreeView('appmap.views.milestones', {
-    treeDataProvider: quickstartDocsTreeProvider,
+  const gettingStartedTreeProvider = new GettingStartedTreeDataProvider();
+  const gettingStartedTree = vscode.window.createTreeView('appmap.views.milestones', {
+    treeDataProvider: gettingStartedTreeProvider,
   });
 
   context.subscriptions.push(
@@ -33,9 +33,9 @@ export default function registerTrees(
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand('appmap.focusQuickstartDocs', (index = 0) => {
+    vscode.commands.registerCommand('appmap.focusgettingStarted', (index = 0) => {
       setTimeout(() => {
-        quickstartDocsTree.reveal(quickstartDocsTreeProvider.items[index]);
+        gettingStartedTree.reveal(gettingStartedTreeProvider.items[index]);
       }, 0);
     })
   );

@@ -14,8 +14,8 @@ export const DEBUG_EXCEPTION = new Event({
 export const PROJECT_OPEN = new Event({
   name: 'project:open',
   properties: [
-    Properties.PROJECT_AGENT_VERSION,
-    Properties.PROJECT_IS_CONFIG_PRESENT,
+    Properties.AGENT_CONFIG_PRESENT,
+    Properties.SCANNER_CONFIG_PRESENT,
     Properties.PROJECT_LANGUAGE,
     Properties.PROJECT_LANGUAGE_DISTRIBUTION,
   ],
@@ -24,7 +24,7 @@ export const PROJECT_OPEN = new Event({
 
 export const PROJECT_CLIENT_AGENT_ADD = new Event({
   name: 'project/client_agent:add',
-  properties: [Properties.PROJECT_AGENT_VERSION, Properties.PROJECT_LANGUAGE],
+  properties: [Properties.PROJECT_LANGUAGE],
 });
 
 export const PROJECT_CLIENT_AGENT_REMOVE = new Event({
@@ -37,14 +37,9 @@ export const PROJECT_CONFIG_WRITE = new Event({
   properties: [],
 });
 
-export const MILESTONE_CHANGE_STATE = new Event({
-  name: 'milestone:change_state',
-  properties: [Properties.MILESTONE_ID, Properties.MILESTONE_STATE],
-});
-
-export const MILESTONE_OPEN_WEBVIEW = new Event({
-  name: 'milestone:open_webview',
-  properties: [Properties.MILESTONE_ID],
+export const OPEN_VIEW = new Event({
+  name: 'view:open',
+  properties: [Properties.VIEW_ID],
 });
 
 export const APPMAP_OPEN = new Event({

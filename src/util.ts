@@ -36,13 +36,8 @@ export function notEmpty<TValue>(value: TValue | null | undefined): value is TVa
   return value !== null && value !== undefined;
 }
 
-export function isFileExists(filename: string): boolean {
-  try {
-    fs.accessSync(filename, fs.constants.R_OK | fs.constants.W_OK);
-    return true;
-  } catch (e) {
-    return false;
-  }
+export async function fileExists(filename: string): Promise<boolean> {
+  return new Promise((resolve) => fs.access(filename, (err) => resolve(err === null)));
 }
 
 interface ExecOptions {

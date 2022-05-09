@@ -3,7 +3,7 @@ import { hasPreviouslyInstalledExtension } from './util';
 
 export const Keys = {
   Global: {
-    QUICKSTART_DOCS_SEEN: 'appmap.applandinc.quickstartDocsSeen',
+    INSTALL_GUIDE_VIEWED: 'appmap.applandinc.quickstartDocsSeen',
     INSTALL_TIMESTAMP: 'appmap.applandinc.installTimestamp',
     INSTALL_VERSION: 'appmap.applandinc.installVersion',
   },
@@ -63,13 +63,13 @@ export default class AppMapProperties {
     return workspaceFolders.has(fsPath);
   }
 
-  /** Returns whether or not the user has viewed the quickstart documentation. */
-  get hasSeenQuickStartDocs(): boolean {
-    return Boolean(this.context.globalState.get(Keys.Global.QUICKSTART_DOCS_SEEN, false));
+  /** Returns whether or not the user has viewed the install guide. */
+  get hasViewedInstallGuide(): boolean {
+    return Boolean(this.context.globalState.get(Keys.Global.INSTALL_GUIDE_VIEWED, false));
   }
 
-  set hasSeenQuickStartDocs(value: boolean) {
-    this.context.globalState.update(Keys.Global.QUICKSTART_DOCS_SEEN, value);
+  set hasViewedInstallGuide(value: boolean) {
+    this.context.globalState.update(Keys.Global.INSTALL_GUIDE_VIEWED, value);
   }
 
   get installTime(): Date {
