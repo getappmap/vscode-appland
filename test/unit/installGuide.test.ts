@@ -1,19 +1,26 @@
 import assert from 'assert';
 import * as vscode from 'vscode';
 import { SinonSandbox, createSandbox } from 'sinon';
-import AppMapProperties from '../../src/appmapProperties';
+import ExtensionState from '../../src/extensionState';
 import MockExtensionContext from '../mocks/mockExtensionContext';
 import MockFileSystemWatcher from '../mocks/mockFileSystemWatcher';
 import { mockSingleProjectWorkspace } from '../mocks/mockWorkspace';
 import * as util from '../../src/util';
 import registerWorkspaceOverview from '../../src/webviews/projectPickerWebview';
 
+// KEG: These tests are not being run currently, because they directly run operations
+// like registerWorkspaceOverview that are already run by vscode when the extension loads.
+// It looks like these tests were originally run in a workspace context in which the
+// AppMap extension was not loaded, so they passed.
+//
+// To re-enable them, either (a) mock out VSCode completely or (b) run them in a context
+// that doesn't have the AppMap extension running.
 describe('Install guide', () => {
   describe('First time flow', () => {
     let sinon: SinonSandbox;
     let appmapWatcher: MockFileSystemWatcher;
     let context: MockExtensionContext;
-    let properties: AppMapProperties;
+    let properties: ExtensionState;
 
     beforeEach(() => {
       sinon = createSandbox();
@@ -30,7 +37,7 @@ describe('Install guide', () => {
     it('automatically opens install guide from a fresh installation', async () => {
       const executeCommand = sinon.spy(vscode.commands, 'executeCommand');
       sinon.stub(util, 'hasPreviouslyInstalledExtension').returns(false);
-      properties = new AppMapProperties(context);
+      properties = new ExtensionState(context);
       mockSingleProjectWorkspace(sinon);
 
       assert(properties.hasViewedInstallGuide === false);
@@ -42,7 +49,7 @@ describe('Install guide', () => {
     it('does not automatically open quickstart from an existing installation', async () => {
       const executeCommand = sinon.spy(vscode.commands, 'executeCommand');
       sinon.stub(util, 'hasPreviouslyInstalledExtension').returns(true);
-      properties = new AppMapProperties(context);
+      properties = new ExtensionState(context);
       mockSingleProjectWorkspace(sinon);
 
       assert(properties.hasViewedInstallGuide === false);
@@ -53,7 +60,7 @@ describe('Install guide', () => {
 
     async function withExtensionVersion(version: string, shouldOpen: boolean): Promise<void> {
       const executeCommand = sinon.spy(vscode.commands, 'executeCommand');
-      properties = new AppMapProperties(context);
+      properties = new ExtensionState(context);
       sinon.stub(properties, 'firstVersionInstalled').value(version);
       mockSingleProjectWorkspace(sinon);
 
