@@ -11,21 +11,11 @@ export default class AppMapCollectionFile implements AppMapCollection {
     AppMapCollection
   >();
   public readonly onUpdated: vscode.Event<AppMapCollection> = this._onUpdated.event;
-  private _onContentChanged: vscode.EventEmitter<AppMapDescriptorFile> = new vscode.EventEmitter<
-    AppMapDescriptorFile
-  >();
-  public readonly onContentChanged: vscode.Event<AppMapDescriptorFile> = this._onContentChanged
-    .event;
 
   private loaders: Map<string, AppMapLoaderFile> = new Map<string, AppMapLoaderFile>();
   private currentFilter = '';
 
   constructor(context: vscode.ExtensionContext) {
-    const { workspaceFolders } = vscode.workspace;
-    if (!workspaceFolders) {
-      return;
-    }
-
     const onDelete = async (uri: vscode.Uri): Promise<void> => {
       delete this.loaders[uri.fsPath];
       this._onUpdated.fire(this);
@@ -36,7 +26,6 @@ export default class AppMapCollectionFile implements AppMapCollection {
       if (metadata) {
         const descriptor = new AppMapDescriptorFile(uri, metadata);
         this.loaders[uri.fsPath] = descriptor;
-        this._onContentChanged.fire(descriptor);
       } else {
         onDelete(uri);
       }
@@ -49,7 +38,6 @@ export default class AppMapCollectionFile implements AppMapCollection {
         const descriptor = new AppMapDescriptorFile(uri, metadata);
         this.loaders[uri.fsPath] = descriptor;
         this._onUpdated.fire(this);
-        this._onContentChanged.fire(descriptor);
       }
     };
 
