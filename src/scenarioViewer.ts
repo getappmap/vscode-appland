@@ -3,14 +3,14 @@ import * as vscode from 'vscode';
 import { Telemetry, APPMAP_OPEN, APPMAP_UPLOAD } from './telemetry';
 import { getNonce, getRecords, workspaceFolderForDocument } from './util';
 import { version } from '../package.json';
-import AppMapProperties from './appmapProperties';
+import ExtensionState from './extensionState';
 import { AppmapUploader } from './appmapUploader';
 
 /**
  * Provider for AppLand scenario files.
  */
 export class ScenarioProvider implements vscode.CustomTextEditorProvider {
-  public static register(context: vscode.ExtensionContext, properties: AppMapProperties): void {
+  public static register(context: vscode.ExtensionContext, properties: ExtensionState): void {
     const provider = new ScenarioProvider(context, properties);
     const providerRegistration = vscode.window.registerCustomEditorProvider(
       ScenarioProvider.viewType,
@@ -65,7 +65,7 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
 
   constructor(
     private readonly context: vscode.ExtensionContext,
-    private readonly properties: AppMapProperties
+    private readonly properties: ExtensionState
   ) {}
 
   /**
@@ -105,12 +105,11 @@ export class ScenarioProvider implements vscode.CustomTextEditorProvider {
         });
       }
 
-      // get initial state and apply to opened webview
       const initialState = this.context.globalState.get(ScenarioProvider.INITIAL_STATE);
       if (initialState) {
         vscode.commands.executeCommand('appmap.setAppmapStateNoPrompt', initialState);
+        this.context.globalState.update(ScenarioProvider.INITIAL_STATE, null);
       }
-      this.context.globalState.update(ScenarioProvider.INITIAL_STATE, null);
     };
 
     // Handle messages from the webview.

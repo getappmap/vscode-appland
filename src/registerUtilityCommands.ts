@@ -2,12 +2,12 @@ import { ScenarioProvider } from './scenarioViewer';
 import * as vscode from 'vscode';
 import { LinkTreeDataProvider } from './tree/linkTreeDataProvider';
 import RemoteRecording from './remoteRecording';
-import AppMapProperties from './appmapProperties';
+import ExtensionState from './extensionState';
 import { AppmapUploader } from './appmapUploader';
 
 export function registerUtilityCommands(
   context: vscode.ExtensionContext,
-  properties: AppMapProperties
+  properties: ExtensionState
 ): void {
   context.subscriptions.push(
     vscode.commands.registerCommand('appmap.resetUsageState', async () => {

@@ -11,7 +11,7 @@ import * as semver from 'semver';
 import { analyze, Feature, Score } from '../analyzers';
 import { randomBytes } from 'crypto';
 import { COPY_INSTALL_COMMAND, OPEN_VIEW, Telemetry } from '../telemetry';
-import AppMapProperties from '../appmapProperties';
+import ExtensionState from '../extensionState';
 
 const COLUMN = ViewColumn.One;
 
@@ -19,9 +19,9 @@ let panel: WebviewPanel | null = null;
 
 const VIEW_ID: Readonly<string> = 'appmap.views.openWorkspaceOverview';
 
-export default async function register(
+export default async function projectPickerWebview(
   context: ExtensionContext,
-  properties: AppMapProperties
+  properties: ExtensionState
 ): Promise<void> {
   context.subscriptions.push(
     commands.registerCommand('appmap.openWorkspaceOverview', openWorkspaceOverview)

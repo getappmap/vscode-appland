@@ -12,7 +12,7 @@ export const Keys = {
     OPENED_APPMAP: 'appmap.applandinc.workspaces_opened_appmap',
   },
 };
-export default class AppMapProperties {
+export default class ExtensionState {
   private readonly context: vscode.ExtensionContext;
   private readonly _installTime: Date;
   private _isNewInstall = false;
