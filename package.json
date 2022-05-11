@@ -315,5 +315,14 @@
     "vue": "^2.6.14",
     "vue-template-compiler": "^2.6.14",
     "vuex": "^3.6.0"
+  },
+  "workspaces": [
+    "test/fixtures/workspaces/project-with-findings"
+  ],
+  "__metadata": {
+    "id": "41d86b02-68d3-4049-9422-95da6d11cc2e",
+    "publisherDisplayName": "AppLand",
+    "publisherId": "f7f1004e-6038-49cd-a096-4e618fe53f77",
+    "isPreReleaseVersion": false
   }
 }

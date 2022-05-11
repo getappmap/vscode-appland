@@ -2,15 +2,25 @@
   "version": "1.7.0",
   "metadata": {
     "app": "sample_app_6th_ed",
-    "language": { "name": "ruby", "engine": "ruby", "version": "3.0.2" },
+    "language": {
+      "name": "ruby",
+      "engine": "ruby",
+      "version": "3.0.2"
+    },
     "client": {
       "name": "appmap",
       "url": "https://github.com/applandinc/appmap-ruby",
       "version": "0.83.0"
     },
     "frameworks": [
-      { "name": "rails", "version": "6.0.4.1" },
-      { "name": "minitest", "version": "5.11.3" }
+      {
+        "name": "rails",
+        "version": "6.0.4.1"
+      },
+      {
+        "name": "minitest",
+        "version": "5.11.3"
+      }
     ],
     "git": {
       "repository": "git@github.com:land-of-apps/sample_app_6th_ed.git",
@@ -36,8 +46,84 @@
     },
     "name": "Microposts_controller can get microposts as JSON",
     "source_location": "/Users/kgilpin/source/land-of-apps/sample_app_6th_ed/test/controllers/microposts_controller_test.rb:9",
-    "recorder": { "name": "minitest" },
-    "test_status": "succeeded"
+    "recorder": {
+      "name": "minitest"
+    },
+    "test_status": "succeeded",
+    "fingerprints": [
+      {
+        "appmap_digest": "4234ce26ceb5227d59f5202dad170693e805a533dfb2b66ebe3ac672d88576d9",
+        "canonicalization_algorithm": "classDependencies",
+        "digest": "a8d50258e06a38331abf42b066a1328de7993fc053b874f909df4527019f6803",
+        "fingerprint_algorithm": "sha256"
+      },
+      {
+        "appmap_digest": "4234ce26ceb5227d59f5202dad170693e805a533dfb2b66ebe3ac672d88576d9",
+        "canonicalization_algorithm": "classes",
+        "digest": "b5fd5bc7fdb5fe1dff062c52fa2783a4523bfa2405f75adc586620d7e6ae3833",
+        "fingerprint_algorithm": "sha256"
+      },
+      {
+        "appmap_digest": "4234ce26ceb5227d59f5202dad170693e805a533dfb2b66ebe3ac672d88576d9",
+        "canonicalization_algorithm": "httpClientRequests",
+        "digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "fingerprint_algorithm": "sha256"
+      },
+      {
+        "appmap_digest": "4234ce26ceb5227d59f5202dad170693e805a533dfb2b66ebe3ac672d88576d9",
+        "canonicalization_algorithm": "httpServerRequests",
+        "digest": "77b34bfe2afef6d90c33f8c6869014294757c68ace567c233925b68625f9878c",
+        "fingerprint_algorithm": "sha256"
+      },
+      {
+        "appmap_digest": "4234ce26ceb5227d59f5202dad170693e805a533dfb2b66ebe3ac672d88576d9",
+        "canonicalization_algorithm": "info",
+        "digest": "0932847f38f5ad421e2fcf86d295fbd21f5ee324991aa72364c1a26784f6b3e9",
+        "fingerprint_algorithm": "sha256"
+      },
+      {
+        "appmap_digest": "4234ce26ceb5227d59f5202dad170693e805a533dfb2b66ebe3ac672d88576d9",
+        "canonicalization_algorithm": "labels",
+        "digest": "d8c2bc16597190d9107243adcdd8ae00401eb26c36ed428dad79fdbf717fd46c",
+        "fingerprint_algorithm": "sha256"
+      },
+      {
+        "appmap_digest": "4234ce26ceb5227d59f5202dad170693e805a533dfb2b66ebe3ac672d88576d9",
+        "canonicalization_algorithm": "packageDependencies",
+        "digest": "bcf27fea0932d3ec986caca4770fe0b36a33a46a7b3192c784aaf36c0a86aec9",
+        "fingerprint_algorithm": "sha256"
+      },
+      {
+        "appmap_digest": "4234ce26ceb5227d59f5202dad170693e805a533dfb2b66ebe3ac672d88576d9",
+        "canonicalization_algorithm": "packages",
+        "digest": "83e7ca41f3945faf90473cccf8968f47c699e1d91b76357aa601b8458e5ee424",
+        "fingerprint_algorithm": "sha256"
+      },
+      {
+        "appmap_digest": "4234ce26ceb5227d59f5202dad170693e805a533dfb2b66ebe3ac672d88576d9",
+        "canonicalization_algorithm": "sqlNormalized",
+        "digest": "76e605bf425a51d62dee052f3cbd22cbaff833027caad07a3f1a184123a31a02",
+        "fingerprint_algorithm": "sha256"
+      },
+      {
+        "appmap_digest": "4234ce26ceb5227d59f5202dad170693e805a533dfb2b66ebe3ac672d88576d9",
+        "canonicalization_algorithm": "sqlTables",
+        "digest": "31fdcdb3b0a8e86ba7286c8d620a1c4e77cfa037a016393b22fe1b0e37c59419",
+        "fingerprint_algorithm": "sha256"
+      },
+      {
+        "appmap_digest": "4234ce26ceb5227d59f5202dad170693e805a533dfb2b66ebe3ac672d88576d9",
+        "canonicalization_algorithm": "trace",
+        "digest": "fb075c34aea1995d80a44a377fb013111573e464604720ecd3698675b31963ea",
+        "fingerprint_algorithm": "sha256"
+      },
+      {
+        "appmap_digest": "4234ce26ceb5227d59f5202dad170693e805a533dfb2b66ebe3ac672d88576d9",
+        "canonicalization_algorithm": "update",
+        "digest": "ba6ccc1b1440df4948a7c0af470dd06a22adffe8f8280e571c1e9286fccd112e",
+        "fingerprint_algorithm": "sha256"
+      }
+    ]
   },
   "classMap": [
     {
@@ -61,7 +147,10 @@
                       "type": "function",
                       "location": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/testing/integration.rb:320",
                       "static": false,
-                      "labels": ["deserialize.safe", "lang.eval.safe"]
+                      "labels": [
+                        "deserialize.safe",
+                        "lang.eval.safe"
+                      ]
                     }
                   ]
                 }
@@ -80,7 +169,9 @@
                       "type": "function",
                       "location": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb:91",
                       "static": false,
-                      "labels": ["http.session.read"],
+                      "labels": [
+                        "http.session.read"
+                      ],
                       "comment": "# Returns value of the key stored in the session or\n# +nil+ if the given key is not found in the session.\n"
                     },
                     {
@@ -88,14 +179,19 @@
                       "type": "function",
                       "location": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb:79",
                       "static": false,
-                      "labels": ["http.session.write"]
+                      "labels": [
+                        "http.session.write"
+                      ]
                     },
                     {
                       "name": "clear",
                       "type": "function",
                       "location": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb:137",
                       "static": false,
-                      "labels": ["http.session.write", "http.session.clear"],
+                      "labels": [
+                        "http.session.write",
+                        "http.session.clear"
+                      ],
                       "comment": "# Clears the session.\n"
                     },
                     {
@@ -103,7 +199,9 @@
                       "type": "function",
                       "location": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb:131",
                       "static": false,
-                      "labels": ["http.session.write"],
+                      "labels": [
+                        "http.session.write"
+                      ],
                       "comment": "# Writes given value to given key of the session.\n"
                     }
                   ]
@@ -123,14 +221,18 @@
                       "type": "function",
                       "location": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/middleware/cookies.rb:333",
                       "static": false,
-                      "labels": ["http.session.write"]
+                      "labels": [
+                        "http.session.write"
+                      ]
                     },
                     {
                       "name": "[]",
                       "type": "function",
                       "location": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/middleware/cookies.rb:317",
                       "static": false,
-                      "labels": ["http.session.read"],
+                      "labels": [
+                        "http.session.read"
+                      ],
                       "comment": "# Returns the value of the cookie by +name+, or +nil+ if no such cookie exists.\n"
                     },
                     {
@@ -138,7 +240,9 @@
                       "type": "function",
                       "location": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/middleware/cookies.rb:373",
                       "static": false,
-                      "labels": ["http.session.write"],
+                      "labels": [
+                        "http.session.write"
+                      ],
                       "comment": "# Sets the cookie named +name+. The second argument may be the cookie's\n# value or a hash of options as documented above.\n"
                     }
                   ]
@@ -160,14 +264,18 @@
                   "type": "function",
                   "location": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_controller/metal/instrumentation.rb:19",
                   "static": false,
-                  "labels": ["mvc.controller"]
+                  "labels": [
+                    "mvc.controller"
+                  ]
                 },
                 {
                   "name": "redirect_to",
                   "type": "function",
                   "location": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_controller/metal/instrumentation.rb:62",
                   "static": false,
-                  "labels": ["mvc.controller"]
+                  "labels": [
+                    "mvc.controller"
+                  ]
                 }
               ]
             },
@@ -180,7 +288,9 @@
                   "type": "function",
                   "location": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_controller/metal/renderers.rb:141",
                   "static": false,
-                  "labels": ["mvc.render"],
+                  "labels": [
+                    "mvc.render"
+                  ],
                   "comment": "# Called by +render+ in <tt>AbstractController::Rendering</tt>\n# which sets the return value as the +response_body+.\n#\n# If no renderer is found, +super+ returns control to\n# <tt>ActionView::Rendering.render_to_body</tt>, if present.\n"
                 }
               ]
@@ -210,14 +320,18 @@
                       "type": "function",
                       "location": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb:512",
                       "static": false,
-                      "labels": ["mvc.before_action"]
+                      "labels": [
+                        "mvc.before_action"
+                      ]
                     },
                     {
                       "name": "invoke_after",
                       "type": "function",
                       "location": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb:516",
                       "static": false,
-                      "labels": ["mvc.after_action"]
+                      "labels": [
+                        "mvc.after_action"
+                      ]
                     }
                   ]
                 }
@@ -244,7 +358,9 @@
                   "type": "function",
                   "location": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb:31",
                   "static": false,
-                  "labels": ["log"]
+                  "labels": [
+                    "log"
+                  ]
                 }
               ]
             }
@@ -269,7 +385,9 @@
                   "type": "function",
                   "location": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activerecord-6.0.4.1/lib/active_record/relation.rb:249",
                   "static": false,
-                  "labels": ["dao.materialize"]
+                  "labels": [
+                    "dao.materialize"
+                  ]
                 }
               ]
             }
@@ -290,14 +408,18 @@
               "type": "function",
               "location": "<internal:pack>:256",
               "static": false,
-              "labels": ["string.unpack"]
+              "labels": [
+                "string.unpack"
+              ]
             },
             {
               "name": "unpack1",
               "type": "function",
               "location": "<internal:pack>:280",
               "static": false,
-              "labels": ["string.unpack"]
+              "labels": [
+                "string.unpack"
+              ]
             }
           ]
         }
@@ -320,7 +442,10 @@
                   "type": "function",
                   "location": "app/controllers/sessions_controller.rb:9",
                   "static": false,
-                  "labels": ["access.public", "security.login"],
+                  "labels": [
+                    "access.public",
+                    "security.login"
+                  ],
                   "comment": "# Login a new user.\n# @label access.public security.login\n"
                 }
               ]
@@ -366,7 +491,9 @@
                   "type": "function",
                   "location": "app/helpers/sessions_helper.rb:35",
                   "static": false,
-                  "labels": ["security.authentication"],
+                  "labels": [
+                    "security.authentication"
+                  ],
                   "comment": "# Returns true if the user is logged in, false otherwise.\n# @label security.authentication\n"
                 },
                 {
@@ -387,7 +514,9 @@
                   "type": "function",
                   "location": "app/helpers/logged_in_helper.rb:3",
                   "static": false,
-                  "labels": ["security.require_login"],
+                  "labels": [
+                    "security.require_login"
+                  ],
                   "comment": "# @label security.require_login\n"
                 }
               ]
@@ -414,7 +543,9 @@
                   "type": "function",
                   "location": "app/models/user.rb:30",
                   "static": true,
-                  "labels": ["secret"],
+                  "labels": [
+                    "secret"
+                  ],
                   "comment": "# @label secret\n"
                 },
                 {
@@ -455,7 +586,10 @@
                           "type": "function",
                           "location": "JSON::Ext::Generator::State#generate",
                           "static": false,
-                          "labels": ["format.json.generate", "serialize"]
+                          "labels": [
+                            "format.json.generate",
+                            "serialize"
+                          ]
                         }
                       ]
                     }
@@ -470,7 +604,10 @@
                       "type": "function",
                       "location": "JSON::Ext::Parser#parse",
                       "static": false,
-                      "labels": ["format.json.parse", "deserialize.safe"]
+                      "labels": [
+                        "format.json.parse",
+                        "deserialize.safe"
+                      ]
                     }
                   ]
                 }
@@ -497,14 +634,18 @@
                   "type": "function",
                   "location": "OpenSSL::Cipher#encrypt",
                   "static": false,
-                  "labels": ["crypto.encrypt"]
+                  "labels": [
+                    "crypto.encrypt"
+                  ]
                 },
                 {
                   "name": "decrypt",
                   "type": "function",
                   "location": "OpenSSL::Cipher#decrypt",
                   "static": false,
-                  "labels": ["crypto.decrypt"]
+                  "labels": [
+                    "crypto.decrypt"
+                  ]
                 }
               ]
             }
@@ -559,8 +700,13 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 4912,
-      "elapsed": 2.00001522898674e-6,
-      "return_value": { "class": "Array", "value": "[]", "object_id": 88460, "size": 0 }
+      "elapsed": 0.00000200001522898674,
+      "return_value": {
+        "class": "Array",
+        "value": "[]",
+        "object_id": 88460,
+        "size": 0
+      }
     },
     {
       "id": 4914,
@@ -591,7 +737,7 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 4914,
-      "elapsed": 8.00006091594696e-6,
+      "elapsed": 0.00000800006091594696,
       "return_value": {
         "class": "Array",
         "value": "[#<Proc:0x00007f9b97fcacd0 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
@@ -628,8 +774,12 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 4916,
-      "elapsed": 1.4999997802078724e-5,
-      "return_value": { "class": "Integer", "value": "56", "object_id": 113 }
+      "elapsed": 0.000014999997802078724,
+      "return_value": {
+        "class": "Integer",
+        "value": "56",
+        "object_id": 113
+      }
     },
     {
       "id": 4918,
@@ -641,7 +791,13 @@
         "server_version": "3.38.2"
       }
     },
-    { "id": 4919, "event": "return", "thread_id": 5220, "parent_id": 4918, "elapsed": 0.000126 },
+    {
+      "id": 4919,
+      "event": "return",
+      "thread_id": 5220,
+      "parent_id": 4918,
+      "elapsed": 0.000126
+    },
     {
       "id": 4920,
       "event": "call",
@@ -671,8 +827,12 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 4920,
-      "elapsed": 1.7000013031065464e-5,
-      "return_value": { "class": "Integer", "value": "58", "object_id": 117 }
+      "elapsed": 0.000017000013031065464,
+      "return_value": {
+        "class": "Integer",
+        "value": "58",
+        "object_id": 117
+      }
     },
     {
       "id": 4922,
@@ -703,8 +863,12 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 4922,
-      "elapsed": 8.999952115118504e-6,
-      "return_value": { "class": "Integer", "value": "58", "object_id": 117 }
+      "elapsed": 0.000008999952115118504,
+      "return_value": {
+        "class": "Integer",
+        "value": "58",
+        "object_id": 117
+      }
     },
     {
       "id": 4924,
@@ -735,8 +899,12 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 4924,
-      "elapsed": 7.999944500625134e-6,
-      "return_value": { "class": "Integer", "value": "58", "object_id": 117 }
+      "elapsed": 0.000007999944500625134,
+      "return_value": {
+        "class": "Integer",
+        "value": "58",
+        "object_id": 117
+      }
     },
     {
       "id": 4926,
@@ -767,7 +935,7 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 4926,
-      "elapsed": 2.6000081561505795e-5,
+      "elapsed": 0.000026000081561505795,
       "return_value": {
         "class": "Array",
         "value": "[#<Proc:0x00007f9b55b140c0 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007f9b55b14228 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
@@ -804,8 +972,13 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 4928,
-      "elapsed": 2.00001522898674e-6,
-      "return_value": { "class": "Array", "value": "[]", "object_id": 31120, "size": 0 }
+      "elapsed": 0.00000200001522898674,
+      "return_value": {
+        "class": "Array",
+        "value": "[]",
+        "object_id": 31120,
+        "size": 0
+      }
     },
     {
       "id": 4930,
@@ -813,7 +986,11 @@
       "thread_id": 5220,
       "parent_id": 4911,
       "elapsed": 0.0011999999405816197,
-      "return_value": { "class": "TrueClass", "value": "true", "object_id": 20 }
+      "return_value": {
+        "class": "TrueClass",
+        "value": "true",
+        "object_id": 20
+      }
     },
     {
       "id": 4931,
@@ -860,8 +1037,12 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 4932,
-      "elapsed": 3.100000321865082e-5,
-      "return_value": { "class": "Integer", "value": "163", "object_id": 327 }
+      "elapsed": 0.00003100000321865082,
+      "return_value": {
+        "class": "Integer",
+        "value": "163",
+        "object_id": 327
+      }
     },
     {
       "id": 4934,
@@ -873,7 +1054,13 @@
         "server_version": "3.38.2"
       }
     },
-    { "id": 4935, "event": "return", "thread_id": 5220, "parent_id": 4934, "elapsed": 0.001862 },
+    {
+      "id": 4935,
+      "event": "return",
+      "thread_id": 5220,
+      "parent_id": 4934,
+      "elapsed": 0.001862
+    },
     {
       "id": 4936,
       "event": "return",
@@ -932,8 +1119,12 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 4938,
-      "elapsed": 1.8000020645558834e-5,
-      "return_value": { "class": "Integer", "value": "143", "object_id": 287 }
+      "elapsed": 0.000018000020645558834,
+      "return_value": {
+        "class": "Integer",
+        "value": "143",
+        "object_id": 287
+      }
     },
     {
       "id": 4940,
@@ -945,7 +1136,13 @@
         "server_version": "3.38.2"
       }
     },
-    { "id": 4941, "event": "return", "thread_id": 5220, "parent_id": 4940, "elapsed": 0.000154 },
+    {
+      "id": 4941,
+      "event": "return",
+      "thread_id": 5220,
+      "parent_id": 4940,
+      "elapsed": 0.000154
+    },
     {
       "id": 4942,
       "event": "return",
@@ -988,7 +1185,7 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 4943,
-      "elapsed": 7.499998901039362e-5,
+      "elapsed": 0.00007499998901039362,
       "return_value": {
         "class": "Array",
         "value": "[#<Proc:0x00007f9b55c47550 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007f9b55c47730 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007f9b55c47898 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007f9b55c47ac8 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
@@ -1025,8 +1222,13 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 4945,
-      "elapsed": 1.00000761449337e-6,
-      "return_value": { "class": "Array", "value": "[]", "object_id": 31440, "size": 0 }
+      "elapsed": 0.00000100000761449337,
+      "return_value": {
+        "class": "Array",
+        "value": "[]",
+        "object_id": 31440,
+        "size": 0
+      }
     },
     {
       "id": 4947,
@@ -1038,16 +1240,26 @@
       "lineno": 256,
       "static": false,
       "parameters": [
-        { "name": "fmt", "class": "String", "object_id": 31460, "value": "NnnnnN", "kind": "req" }
+        {
+          "name": "fmt",
+          "class": "String",
+          "object_id": 31460,
+          "value": "NnnnnN",
+          "kind": "req"
+        }
       ],
-      "receiver": { "class": "String", "object_id": 93400, "value": "????#'?\u0001?!A??e\u0003?" }
+      "receiver": {
+        "class": "String",
+        "object_id": 93400,
+        "value": "????#'?\u0001?!A??e\u0003?"
+      }
     },
     {
       "id": 4948,
       "event": "return",
       "thread_id": 5220,
       "parent_id": 4947,
-      "elapsed": 3.999914042651653e-6,
+      "elapsed": 0.000003999914042651653,
       "return_value": {
         "class": "Array",
         "value": "[2733437123, 8999, 61441, 58657, 16801, 4150592399]",
@@ -1084,8 +1296,12 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 4949,
-      "elapsed": 2.3999949917197227e-5,
-      "return_value": { "class": "Integer", "value": "65", "object_id": 131 }
+      "elapsed": 0.000023999949917197227,
+      "return_value": {
+        "class": "Integer",
+        "value": "65",
+        "object_id": 131
+      }
     },
     {
       "id": 4951,
@@ -1109,13 +1325,32 @@
           "value": "{email=>michael@example.com, password=>[FILTERED], remember_me=>1}",
           "object_id": 95500,
           "properties": [
-            { "name": "email", "class": "String" },
-            { "name": "password", "class": "String" },
-            { "name": "remember_me", "class": "String" }
+            {
+              "name": "email",
+              "class": "String"
+            },
+            {
+              "name": "password",
+              "class": "String"
+            },
+            {
+              "name": "remember_me",
+              "class": "String"
+            }
           ]
         },
-        { "name": "controller", "class": "String", "value": "sessions", "object_id": 87360 },
-        { "name": "action", "class": "String", "value": "create", "object_id": 87380 }
+        {
+          "name": "controller",
+          "class": "String",
+          "value": "sessions",
+          "object_id": 87360
+        },
+        {
+          "name": "action",
+          "class": "String",
+          "value": "create",
+          "object_id": 87380
+        }
       ]
     },
     {
@@ -1172,8 +1407,12 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 4953,
-      "elapsed": 1.8000020645558834e-5,
-      "return_value": { "class": "Integer", "value": "48", "object_id": 97 }
+      "elapsed": 0.000018000020645558834,
+      "return_value": {
+        "class": "Integer",
+        "value": "48",
+        "object_id": 97
+      }
     },
     {
       "id": 4955,
@@ -1204,8 +1443,12 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 4955,
-      "elapsed": 9.00006853044033e-6,
-      "return_value": { "class": "Integer", "value": "106", "object_id": 213 }
+      "elapsed": 0.00000900006853044033,
+      "return_value": {
+        "class": "Integer",
+        "value": "106",
+        "object_id": 213
+      }
     },
     {
       "id": 4957,
@@ -1285,7 +1528,7 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 4959,
-      "elapsed": 2.00001522898674e-6,
+      "elapsed": 0.00000200001522898674,
       "return_value": {
         "class": "ActionDispatch::Cookies::CookieJar",
         "value": "#<ActionDispatch::Cookies::CookieJar:0x00007f9b567a34f8>",
@@ -1321,7 +1564,7 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 4961,
-      "elapsed": 1.00000761449337e-6
+      "elapsed": 0.00000100000761449337
     },
     {
       "id": 4963,
@@ -1388,8 +1631,12 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 4966,
-      "elapsed": 2.0000035874545574e-5,
-      "return_value": { "class": "Integer", "value": "161", "object_id": 323 }
+      "elapsed": 0.000020000035874545574,
+      "return_value": {
+        "class": "Integer",
+        "value": "161",
+        "object_id": 323
+      }
     },
     {
       "id": 4968,
@@ -1401,7 +1648,13 @@
         "server_version": "3.38.2"
       }
     },
-    { "id": 4969, "event": "return", "thread_id": 5220, "parent_id": 4968, "elapsed": 0.00184 },
+    {
+      "id": 4969,
+      "event": "return",
+      "thread_id": 5220,
+      "parent_id": 4968,
+      "elapsed": 0.00184
+    },
     {
       "id": 4970,
       "event": "call",
@@ -1431,7 +1684,7 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 4970,
-      "elapsed": 5.00003807246685e-6
+      "elapsed": 0.00000500003807246685
     },
     {
       "id": 4972,
@@ -1475,16 +1728,26 @@
       "lineno": 256,
       "static": false,
       "parameters": [
-        { "name": "fmt", "class": "String", "object_id": 39580, "value": "H*", "kind": "req" }
+        {
+          "name": "fmt",
+          "class": "String",
+          "object_id": 39580,
+          "value": "H*",
+          "kind": "req"
+        }
       ],
-      "receiver": { "class": "String", "object_id": 93660, "value": "??8??/Xo2\b???rT?" }
+      "receiver": {
+        "class": "String",
+        "object_id": 93660,
+        "value": "??8??/Xo2\b???rT?"
+      }
     },
     {
       "id": 4975,
       "event": "return",
       "thread_id": 5220,
       "parent_id": 4974,
-      "elapsed": 2.00001522898674e-6,
+      "elapsed": 0.00000200001522898674,
       "return_value": {
         "class": "Array",
         "value": "[f6b038f9e72f586f320895eec47254fc]",
@@ -1497,8 +1760,13 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 4973,
-      "elapsed": 4.900002386420965e-5,
-      "return_value": { "class": "Hash", "value": "{}", "object_id": 93700, "size": 0 }
+      "elapsed": 0.00004900002386420965,
+      "return_value": {
+        "class": "Hash",
+        "value": "{}",
+        "object_id": 93700,
+        "size": 0
+      }
     },
     {
       "id": 4977,
@@ -1510,16 +1778,26 @@
       "lineno": 256,
       "static": false,
       "parameters": [
-        { "name": "fmt", "class": "String", "object_id": 39580, "value": "H*", "kind": "req" }
+        {
+          "name": "fmt",
+          "class": "String",
+          "object_id": 39580,
+          "value": "H*",
+          "kind": "req"
+        }
       ],
-      "receiver": { "class": "String", "object_id": 93720, "value": "|?`?\u00164*\u0015?e?>l?~?" }
+      "receiver": {
+        "class": "String",
+        "object_id": 93720,
+        "value": "|?`?\u00164*\u0015?e?>l?~?"
+      }
     },
     {
       "id": 4978,
       "event": "return",
       "thread_id": 5220,
       "parent_id": 4977,
-      "elapsed": 1.00000761449337e-6,
+      "elapsed": 0.00000100000761449337,
       "return_value": {
         "class": "Array",
         "value": "[7cbe60c916342a15cd65913e6cb17e91]",
@@ -1533,7 +1811,11 @@
       "thread_id": 5220,
       "parent_id": 4972,
       "elapsed": 0.00010199996177107096,
-      "return_value": { "class": "TrueClass", "value": "true", "object_id": 20 }
+      "return_value": {
+        "class": "TrueClass",
+        "value": "true",
+        "object_id": 20
+      }
     },
     {
       "id": 4980,
@@ -1595,8 +1877,12 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 4981,
-      "elapsed": 3.00002284348011e-6,
-      "return_value": { "class": "Integer", "value": "762146111", "object_id": 1524292223 }
+      "elapsed": 0.00000300002284348011,
+      "return_value": {
+        "class": "Integer",
+        "value": "762146111",
+        "object_id": 1524292223
+      }
     },
     {
       "id": 4983,
@@ -1604,7 +1890,11 @@
       "thread_id": 5220,
       "parent_id": 4980,
       "elapsed": 0.0016769999638199806,
-      "return_value": { "class": "Integer", "value": "762146111", "object_id": 1524292223 }
+      "return_value": {
+        "class": "Integer",
+        "value": "762146111",
+        "object_id": 1524292223
+      }
     },
     {
       "id": 4984,
@@ -1640,7 +1930,11 @@
       "lineno": 45,
       "static": false,
       "parameters": [],
-      "receiver": { "class": "User", "object_id": 93760, "value": "#<User:0x00007f9b567223d0>" }
+      "receiver": {
+        "class": "User",
+        "object_id": 93760,
+        "value": "#<User:0x00007f9b567223d0>"
+      }
     },
     {
       "id": 4986,
@@ -1652,15 +1946,23 @@
       "lineno": 30,
       "static": true,
       "parameters": [],
-      "receiver": { "class": "Class", "object_id": 28980, "value": "User" }
+      "receiver": {
+        "class": "Class",
+        "object_id": 28980,
+        "value": "User"
+      }
     },
     {
       "id": 4987,
       "event": "return",
       "thread_id": 5220,
       "parent_id": 4986,
-      "elapsed": 8.00006091594696e-6,
-      "return_value": { "class": "String", "value": "4kzFKby25hWd6INvqhnWSw", "object_id": 93780 }
+      "elapsed": 0.00000800006091594696,
+      "return_value": {
+        "class": "String",
+        "value": "4kzFKby25hWd6INvqhnWSw",
+        "object_id": 93780
+      }
     },
     {
       "id": 4988,
@@ -1680,7 +1982,11 @@
           "kind": "req"
         }
       ],
-      "receiver": { "class": "Class", "object_id": 28980, "value": "User" }
+      "receiver": {
+        "class": "Class",
+        "object_id": 28980,
+        "value": "User"
+      }
     },
     {
       "id": 4989,
@@ -1723,8 +2029,13 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 4990,
-      "elapsed": 1.00000761449337e-6,
-      "return_value": { "class": "Array", "value": "[]", "object_id": 39800, "size": 0 }
+      "elapsed": 0.00000100000761449337,
+      "return_value": {
+        "class": "Array",
+        "value": "[]",
+        "object_id": 39800,
+        "size": 0
+      }
     },
     {
       "id": 4992,
@@ -1755,7 +2066,7 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 4992,
-      "elapsed": 1.3999990187585354e-5,
+      "elapsed": 0.000013999990187585354,
       "return_value": {
         "class": "Array",
         "value": "[#<Proc:0x00007f9b55dce478 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
@@ -1792,8 +2103,13 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 4994,
-      "elapsed": 1.00000761449337e-6,
-      "return_value": { "class": "Array", "value": "[]", "object_id": 39900, "size": 0 }
+      "elapsed": 0.00000100000761449337,
+      "return_value": {
+        "class": "Array",
+        "value": "[]",
+        "object_id": 39900,
+        "size": 0
+      }
     },
     {
       "id": 4996,
@@ -1824,8 +2140,12 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 4996,
-      "elapsed": 2.0000035874545574e-5,
-      "return_value": { "class": "Integer", "value": "64", "object_id": 129 }
+      "elapsed": 0.000020000035874545574,
+      "return_value": {
+        "class": "Integer",
+        "value": "64",
+        "object_id": 129
+      }
     },
     {
       "id": 4998,
@@ -1837,7 +2157,13 @@
         "server_version": "3.38.2"
       }
     },
-    { "id": 4999, "event": "return", "thread_id": 5220, "parent_id": 4998, "elapsed": 0.000134 },
+    {
+      "id": 4999,
+      "event": "return",
+      "thread_id": 5220,
+      "parent_id": 4998,
+      "elapsed": 0.000134
+    },
     {
       "id": 5000,
       "event": "call",
@@ -1867,8 +2193,12 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 5000,
-      "elapsed": 1.00000761449337e-5,
-      "return_value": { "class": "Integer", "value": "283", "object_id": 567 }
+      "elapsed": 0.0000100000761449337,
+      "return_value": {
+        "class": "Integer",
+        "value": "283",
+        "object_id": 567
+      }
     },
     {
       "id": 5002,
@@ -1880,7 +2210,13 @@
         "server_version": "3.38.2"
       }
     },
-    { "id": 5003, "event": "return", "thread_id": 5220, "parent_id": 5002, "elapsed": 0.000309 },
+    {
+      "id": 5003,
+      "event": "return",
+      "thread_id": 5220,
+      "parent_id": 5002,
+      "elapsed": 0.000309
+    },
     {
       "id": 5004,
       "event": "call",
@@ -1910,7 +2246,7 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 5004,
-      "elapsed": 4.600000102072954e-5,
+      "elapsed": 0.00004600000102072954,
       "return_value": {
         "class": "Array",
         "value": "[#<Proc:0x00007f9b55dd6f10 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007f9b55dd6d08 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007f9b55dd6b00 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007f9b55dd68f8 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007f9b55dd66f0 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
@@ -1947,8 +2283,13 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 5006,
-      "elapsed": 2.00001522898674e-6,
-      "return_value": { "class": "Array", "value": "[]", "object_id": 40040, "size": 0 }
+      "elapsed": 0.00000200001522898674,
+      "return_value": {
+        "class": "Array",
+        "value": "[]",
+        "object_id": 40040,
+        "size": 0
+      }
     },
     {
       "id": 5008,
@@ -1979,8 +2320,13 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 5008,
-      "elapsed": 1.00000761449337e-6,
-      "return_value": { "class": "Array", "value": "[]", "object_id": 40060, "size": 0 }
+      "elapsed": 0.00000100000761449337,
+      "return_value": {
+        "class": "Array",
+        "value": "[]",
+        "object_id": 40060,
+        "size": 0
+      }
     },
     {
       "id": 5010,
@@ -2011,8 +2357,12 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 5010,
-      "elapsed": 1.1999974958598614e-5,
-      "return_value": { "class": "Integer", "value": "72", "object_id": 145 }
+      "elapsed": 0.000011999974958598614,
+      "return_value": {
+        "class": "Integer",
+        "value": "72",
+        "object_id": 145
+      }
     },
     {
       "id": 5012,
@@ -2024,14 +2374,24 @@
         "server_version": "3.38.2"
       }
     },
-    { "id": 5013, "event": "return", "thread_id": 5220, "parent_id": 5012, "elapsed": 9.6e-5 },
+    {
+      "id": 5013,
+      "event": "return",
+      "thread_id": 5220,
+      "parent_id": 5012,
+      "elapsed": 0.000096
+    },
     {
       "id": 5014,
       "event": "return",
       "thread_id": 5220,
       "parent_id": 4985,
       "elapsed": 0.004976999945938587,
-      "return_value": { "class": "TrueClass", "value": "true", "object_id": 20 }
+      "return_value": {
+        "class": "TrueClass",
+        "value": "true",
+        "object_id": 20
+      }
     },
     {
       "id": 5015,
@@ -2061,8 +2421,12 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 5015,
-      "elapsed": 4.00003045797348e-6,
-      "return_value": { "class": "String", "value": "762146111", "object_id": 93940 }
+      "elapsed": 0.00000400003045797348,
+      "return_value": {
+        "class": "String",
+        "value": "762146111",
+        "object_id": 93940
+      }
     },
     {
       "id": 5017,
@@ -2093,7 +2457,7 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 5017,
-      "elapsed": 2.00001522898674e-6,
+      "elapsed": 0.00000200001522898674,
       "return_value": {
         "class": "OpenSSL::Cipher",
         "value": "#<OpenSSL::Cipher:0x00007f9b565e2088>",
@@ -2129,7 +2493,7 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 5019,
-      "elapsed": 1.6999896615743637e-5,
+      "elapsed": 0.000016999896615743637,
       "return_value": {
         "class": "String",
         "value": "{\"_rails\":{\"message\":\"NzYyMTQ2MTEx\",\"exp\":null,\"pur\":\"cookie.user_id\"}}",
@@ -2173,7 +2537,7 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 5021,
-      "elapsed": 3.300001844763756e-5,
+      "elapsed": 0.00003300001844763756,
       "return_value": {
         "class": "String",
         "value": "B5PrmriaSDi/yR0yVytp2MnTZihCXPOuG2Kl4PkzUdCO+zPeLKv8hT0r/hmvADVBODulqRxWlRZGapQ+58Vo/DE8U+N41e4=--3VxlPWkaJWT5LoCJ--iBEFou4WEP/V2Dedo0Tanw==",
@@ -2217,8 +2581,12 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 5023,
-      "elapsed": 6.9999368861317635e-6,
-      "return_value": { "class": "String", "value": "4kzFKby25hWd6INvqhnWSw", "object_id": 93780 }
+      "elapsed": 0.0000069999368861317635,
+      "return_value": {
+        "class": "String",
+        "value": "4kzFKby25hWd6INvqhnWSw",
+        "object_id": 93780
+      }
     },
     {
       "id": 5025,
@@ -2226,7 +2594,11 @@
       "thread_id": 5220,
       "parent_id": 4984,
       "elapsed": 0.005987000069580972,
-      "return_value": { "class": "String", "value": "4kzFKby25hWd6INvqhnWSw", "object_id": 93780 }
+      "return_value": {
+        "class": "String",
+        "value": "4kzFKby25hWd6INvqhnWSw",
+        "object_id": 93780
+      }
     },
     {
       "id": 5026,
@@ -2282,8 +2654,12 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 5027,
-      "elapsed": 1.9000028260052204e-5,
-      "return_value": { "class": "Integer", "value": "53", "object_id": 107 }
+      "elapsed": 0.000019000028260052204,
+      "return_value": {
+        "class": "Integer",
+        "value": "53",
+        "object_id": 107
+      }
     },
     {
       "id": 5029,
@@ -2338,7 +2714,7 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 5031,
-      "elapsed": 8.00006091594696e-6,
+      "elapsed": 0.00000800006091594696,
       "return_value": {
         "class": "Array",
         "value": "[#<Proc:0x00007f9b55d8ebe8 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
@@ -2375,8 +2751,12 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 5033,
-      "elapsed": 9.999959729611874e-6,
-      "return_value": { "class": "Integer", "value": "70", "object_id": 141 }
+      "elapsed": 0.000009999959729611874,
+      "return_value": {
+        "class": "Integer",
+        "value": "70",
+        "object_id": 141
+      }
     },
     {
       "id": 5035,
@@ -2397,7 +2777,6 @@
       "parent_id": 4951,
       "elapsed": 0.01568599999882281,
       "http_server_response": {
-        "status_code": 302,
         "headers": {
           "X-Frame-Options": "SAMEORIGIN",
           "X-XSS-Protection": "1; mode=block",
@@ -2406,7 +2785,8 @@
           "X-Permitted-Cross-Domain-Policies": "none",
           "Referrer-Policy": "strict-origin-when-cross-origin",
           "Location": "http://www.example.com/users/762146111"
-        }
+        },
+        "status": 302
       }
     },
     {
@@ -2438,7 +2818,7 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 5037,
-      "elapsed": 1.2999982573091984e-5,
+      "elapsed": 0.000012999982573091984,
       "return_value": {
         "class": "String",
         "value": "{\"session_id\":\"7cbe60c916342a15cd65913e6cb17e91\",\"user_id\":762146111}",
@@ -2474,7 +2854,7 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 5039,
-      "elapsed": 1.00000761449337e-6,
+      "elapsed": 0.00000100000761449337,
       "return_value": {
         "class": "OpenSSL::Cipher",
         "value": "#<OpenSSL::Cipher:0x00007f9b564e29d0>",
@@ -2510,7 +2890,7 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 5041,
-      "elapsed": 1.3999990187585354e-5,
+      "elapsed": 0.000013999990187585354,
       "return_value": {
         "class": "String",
         "value": "{\"_rails\":{\"message\":\"eyJzZXNzaW9uX2lkIjoiN2NiZTYwYzkxNjM0MmExNWNkNjU5MTNlNmNiMTdlOTEiLCJ1c2VyX2lkIjo3NjIxNDYxMTF9\",\"exp\":null,\"pur\":\"cookie._sample_app_session\"}}",
@@ -2554,7 +2934,7 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 5043,
-      "elapsed": 8.999952115118504e-6,
+      "elapsed": 0.000008999952115118504,
       "return_value": {
         "class": "String",
         "value": "zO+8113akU+c0RO0+xiowjh8pG43xr/TL+LSA7Z9o8s4Hf/8mX+kGKGzVMK0p3VcXF7g0mSPMHz9nvMA51S4KP8XkQcrv+GSB/arQGrkPDHnjE/AGJPcAUv2JOO4z3E6a7/Ej/U9mXUK76rcntTwXIkQmDxDCRWbTGI7SczNl2gthyXuMOYzolu1qkNwX3KO/BfFbSyeQViboX4cD3uVxsuB4Q==--Z+RHpaf3W66KBhrq--X94keIgAaqxuvv0ygZh9nw==",
@@ -2590,7 +2970,7 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 5045,
-      "elapsed": 4.39999857917428e-5,
+      "elapsed": 0.0000439999857917428,
       "return_value": {
         "class": "Array",
         "value": "[#<Proc:0x00007f9b55e25f48 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007f9b55e260b0 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007f9b55e26290 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
@@ -2627,7 +3007,7 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 5047,
-      "elapsed": 1.0999967344105244e-5,
+      "elapsed": 0.000010999967344105244,
       "return_value": {
         "class": "Array",
         "value": "[#<Proc:0x00007f9b55e263f8 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
@@ -2664,7 +3044,7 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 5049,
-      "elapsed": 4.299997817724943e-5,
+      "elapsed": 0.00004299997817724943,
       "return_value": {
         "class": "Array",
         "value": "[#<Proc:0x00007f9b55c47550 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007f9b55c47730 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007f9b55c47898 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007f9b55c47ac8 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
@@ -2702,7 +3082,12 @@
       "thread_id": 5220,
       "parent_id": 5051,
       "elapsed": 0.001682999893091619,
-      "return_value": { "class": "Array", "value": "[]", "object_id": 31440, "size": 0 }
+      "return_value": {
+        "class": "Array",
+        "value": "[]",
+        "object_id": 31440,
+        "size": 0
+      }
     },
     {
       "id": 5053,
@@ -2714,16 +3099,26 @@
       "lineno": 256,
       "static": false,
       "parameters": [
-        { "name": "fmt", "class": "String", "object_id": 31460, "value": "NnnnnN", "kind": "req" }
+        {
+          "name": "fmt",
+          "class": "String",
+          "object_id": 31460,
+          "value": "NnnnnN",
+          "kind": "req"
+        }
       ],
-      "receiver": { "class": "String", "object_id": 94460, "value": "!\u0001??,?_A??\u0005??? L" }
+      "receiver": {
+        "class": "String",
+        "object_id": 94460,
+        "value": "!\u0001??,?_A??\u0005??? L"
+      }
     },
     {
       "id": 5054,
       "event": "return",
       "thread_id": 5220,
       "parent_id": 5053,
-      "elapsed": 3.999914042651653e-6,
+      "elapsed": 0.000003999914042651653,
       "return_value": {
         "class": "Array",
         "value": "[553758872, 11442, 24385, 60886, 1520, 3822788684]",
@@ -2760,8 +3155,12 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 5055,
-      "elapsed": 2.5000073947012424e-5,
-      "return_value": { "class": "Integer", "value": "69", "object_id": 139 }
+      "elapsed": 0.000025000073947012424,
+      "return_value": {
+        "class": "Integer",
+        "value": "69",
+        "object_id": 139
+      }
     },
     {
       "id": 5057,
@@ -2779,8 +3178,18 @@
         }
       },
       "message": [
-        { "name": "controller", "class": "String", "value": "microposts", "object_id": 87660 },
-        { "name": "action", "class": "String", "value": "index", "object_id": 95520 }
+        {
+          "name": "controller",
+          "class": "String",
+          "value": "microposts",
+          "object_id": 87660
+        },
+        {
+          "name": "action",
+          "class": "String",
+          "value": "index",
+          "object_id": 95520
+        }
       ]
     },
     {
@@ -2837,8 +3246,12 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 5059,
-      "elapsed": 1.9000028260052204e-5,
-      "return_value": { "class": "Integer", "value": "49", "object_id": 99 }
+      "elapsed": 0.000019000028260052204,
+      "return_value": {
+        "class": "Integer",
+        "value": "49",
+        "object_id": 99
+      }
     },
     {
       "id": 5061,
@@ -2918,7 +3331,7 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 5063,
-      "elapsed": 3.00002284348011e-6,
+      "elapsed": 0.00000300002284348011,
       "return_value": {
         "class": "ActionDispatch::Cookies::CookieJar",
         "value": "#<ActionDispatch::Cookies::CookieJar:0x00007f9b560ce498>",
@@ -2954,7 +3367,7 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 5065,
-      "elapsed": 1.00000761449337e-6,
+      "elapsed": 0.00000100000761449337,
       "return_value": {
         "class": "String",
         "value": "zO+8113akU+c0RO0+xiowjh8pG43xr/TL+LSA7Z9o8s4Hf/8mX+kGKGzVMK0p3VcXF7g0mSPMHz9nvMA51S4KP8XkQcrv+GSB/arQGrkPDHnjE/AGJPcAUv2JOO4z3E6a7/Ej/U9mXUK76rcntTwXIkQmDxDCRWbTGI7SczNl2gthyXuMOYzolu1qkNwX3KO/BfFbSyeQViboX4cD3uVxsuB4Q==--Z+RHpaf3W66KBhrq--X94keIgAaqxuvv0ygZh9nw==",
@@ -2971,7 +3384,13 @@
       "lineno": 280,
       "static": false,
       "parameters": [
-        { "name": "fmt", "class": "String", "object_id": 41080, "value": "m0", "kind": "req" }
+        {
+          "name": "fmt",
+          "class": "String",
+          "object_id": 41080,
+          "value": "m0",
+          "kind": "req"
+        }
       ],
       "receiver": {
         "class": "String",
@@ -2984,7 +3403,7 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 5067,
-      "elapsed": 3.00002284348011e-6,
+      "elapsed": 0.00000300002284348011,
       "return_value": {
         "class": "String",
         "value": "????]??O??\u0013??\u0018??8|?n7???/??\u0003?}??8\u001d????\u0018??T???u\\\\^??d?0|???\u0000?T?(?\u0017?\u0007+???\u0007??@j?<1??O?\u0018??\u0001K?$???q:k????=?u\n??????\\?\u0010?<C\t\u0015?Lb;I???h-?%?0?3?[??Cp_r??\u0017?m,?AX??~\u001c\u000f{?????",
@@ -3001,17 +3420,31 @@
       "lineno": 280,
       "static": false,
       "parameters": [
-        { "name": "fmt", "class": "String", "object_id": 41080, "value": "m0", "kind": "req" }
+        {
+          "name": "fmt",
+          "class": "String",
+          "object_id": 41080,
+          "value": "m0",
+          "kind": "req"
+        }
       ],
-      "receiver": { "class": "String", "object_id": 94740, "value": "Z+RHpaf3W66KBhrq" }
+      "receiver": {
+        "class": "String",
+        "object_id": 94740,
+        "value": "Z+RHpaf3W66KBhrq"
+      }
     },
     {
       "id": 5070,
       "event": "return",
       "thread_id": 5220,
       "parent_id": 5069,
-      "elapsed": 2.00001522898674e-6,
-      "return_value": { "class": "String", "value": "g?G???[??\u0006\u001a?", "object_id": 94760 }
+      "elapsed": 0.00000200001522898674,
+      "return_value": {
+        "class": "String",
+        "value": "g?G???[??\u0006\u001a?",
+        "object_id": 94760
+      }
     },
     {
       "id": 5071,
@@ -3023,17 +3456,31 @@
       "lineno": 280,
       "static": false,
       "parameters": [
-        { "name": "fmt", "class": "String", "object_id": 41080, "value": "m0", "kind": "req" }
+        {
+          "name": "fmt",
+          "class": "String",
+          "object_id": 41080,
+          "value": "m0",
+          "kind": "req"
+        }
       ],
-      "receiver": { "class": "String", "object_id": 94780, "value": "X94keIgAaqxuvv0ygZh9nw==" }
+      "receiver": {
+        "class": "String",
+        "object_id": 94780,
+        "value": "X94keIgAaqxuvv0ygZh9nw=="
+      }
     },
     {
       "id": 5072,
       "event": "return",
       "thread_id": 5220,
       "parent_id": 5071,
-      "elapsed": 2.00001522898674e-6,
-      "return_value": { "class": "String", "value": "_?$x?\u0000j?n??2??}?", "object_id": 94800 }
+      "elapsed": 0.00000200001522898674,
+      "return_value": {
+        "class": "String",
+        "value": "_?$x?\u0000j?n??2??}?",
+        "object_id": 94800
+      }
     },
     {
       "id": 5073,
@@ -3091,7 +3538,7 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 5075,
-      "elapsed": 4.999921657145023e-6,
+      "elapsed": 0.000004999921657145023,
       "return_value": {
         "class": "Hash",
         "value": "{_rails=>{message=>eyJzZXNzaW9uX2lkIjoiN2NiZTYwYzkxNjM0MmExNWNkNjU5MTNlNmNiMTdlOTEiLCJ1c2VyX2lkIjo3NjIxNDYxMTF9, exp=>, pur=>cookie._sample_app_session}}",
@@ -3109,7 +3556,13 @@
       "lineno": 280,
       "static": false,
       "parameters": [
-        { "name": "fmt", "class": "String", "object_id": 41080, "value": "m0", "kind": "req" }
+        {
+          "name": "fmt",
+          "class": "String",
+          "object_id": 41080,
+          "value": "m0",
+          "kind": "req"
+        }
       ],
       "receiver": {
         "class": "String",
@@ -3122,7 +3575,7 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 5077,
-      "elapsed": 2.00001522898674e-6,
+      "elapsed": 0.00000200001522898674,
       "return_value": {
         "class": "String",
         "value": "{\"session_id\":\"7cbe60c916342a15cd65913e6cb17e91\",\"user_id\":762146111}",
@@ -3149,7 +3602,7 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 5079,
-      "elapsed": 4.00003045797348e-6,
+      "elapsed": 0.00000400003045797348,
       "return_value": {
         "class": "Hash",
         "value": "{session_id=>7cbe60c916342a15cd65913e6cb17e91, user_id=>762146111}",
@@ -3241,8 +3694,12 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 5085,
-      "elapsed": 2.00001522898674e-6,
-      "return_value": { "class": "Integer", "value": "762146111", "object_id": 1524292223 }
+      "elapsed": 0.00000200001522898674,
+      "return_value": {
+        "class": "Integer",
+        "value": "762146111",
+        "object_id": 1524292223
+      }
     },
     {
       "id": 5087,
@@ -3273,8 +3730,12 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 5087,
-      "elapsed": 1.8000020645558834e-5,
-      "return_value": { "class": "Integer", "value": "143", "object_id": 287 }
+      "elapsed": 0.000018000020645558834,
+      "return_value": {
+        "class": "Integer",
+        "value": "143",
+        "object_id": 287
+      }
     },
     {
       "id": 5089,
@@ -3286,14 +3747,24 @@
         "server_version": "3.38.2"
       }
     },
-    { "id": 5090, "event": "return", "thread_id": 5220, "parent_id": 5089, "elapsed": 0.000417 },
+    {
+      "id": 5090,
+      "event": "return",
+      "thread_id": 5220,
+      "parent_id": 5089,
+      "elapsed": 0.000417
+    },
     {
       "id": 5091,
       "event": "return",
       "thread_id": 5220,
       "parent_id": 5084,
       "elapsed": 0.0006349999457597733,
-      "return_value": { "class": "User", "value": "#<User:0x00007f9b767d3390>", "object_id": 95000 }
+      "return_value": {
+        "class": "User",
+        "value": "#<User:0x00007f9b767d3390>",
+        "object_id": 95000
+      }
     },
     {
       "id": 5092,
@@ -3301,7 +3772,11 @@
       "thread_id": 5220,
       "parent_id": 5083,
       "elapsed": 0.0006699999794363976,
-      "return_value": { "class": "TrueClass", "value": "true", "object_id": 20 }
+      "return_value": {
+        "class": "TrueClass",
+        "value": "true",
+        "object_id": 20
+      }
     },
     {
       "id": 5093,
@@ -3309,7 +3784,11 @@
       "thread_id": 5220,
       "parent_id": 5082,
       "elapsed": 0.00069500005338341,
-      "return_value": { "class": "TrueClass", "value": "true", "object_id": 20 }
+      "return_value": {
+        "class": "TrueClass",
+        "value": "true",
+        "object_id": 20
+      }
     },
     {
       "id": 5094,
@@ -3385,16 +3864,24 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 5097,
-      "elapsed": 1.999898813664913e-6,
-      "return_value": { "class": "Integer", "value": "762146111", "object_id": 1524292223 }
+      "elapsed": 0.000001999898813664913,
+      "return_value": {
+        "class": "Integer",
+        "value": "762146111",
+        "object_id": 1524292223
+      }
     },
     {
       "id": 5099,
       "event": "return",
       "thread_id": 5220,
       "parent_id": 5096,
-      "elapsed": 2.9999995604157448e-5,
-      "return_value": { "class": "User", "value": "#<User:0x00007f9b767d3390>", "object_id": 95000 }
+      "elapsed": 0.000029999995604157448,
+      "return_value": {
+        "class": "User",
+        "value": "#<User:0x00007f9b767d3390>",
+        "object_id": 95000
+      }
     },
     {
       "id": 5100,
@@ -3466,8 +3953,12 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 5102,
-      "elapsed": 1.300009898841381e-5,
-      "return_value": { "class": "Integer", "value": "191", "object_id": 383 }
+      "elapsed": 0.00001300009898841381,
+      "return_value": {
+        "class": "Integer",
+        "value": "191",
+        "object_id": 383
+      }
     },
     {
       "id": 5104,
@@ -3479,7 +3970,13 @@
         "server_version": "3.38.2"
       }
     },
-    { "id": 5105, "event": "return", "thread_id": 5220, "parent_id": 5104, "elapsed": 0.000228 },
+    {
+      "id": 5105,
+      "event": "return",
+      "thread_id": 5220,
+      "parent_id": 5104,
+      "elapsed": 0.000228
+    },
     {
       "id": 5106,
       "event": "return",
@@ -3582,7 +4079,7 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 5111,
-      "elapsed": 1.4999997802078724e-5,
+      "elapsed": 0.000014999997802078724,
       "return_value": {
         "class": "Array",
         "value": "[#<Proc:0x00007f9b56359b68 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
@@ -3619,8 +4116,12 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 5113,
-      "elapsed": 2.8999987989664078e-5,
-      "return_value": { "class": "Integer", "value": "82", "object_id": 165 }
+      "elapsed": 0.000028999987989664078,
+      "return_value": {
+        "class": "Integer",
+        "value": "82",
+        "object_id": 165
+      }
     },
     {
       "id": 5115,
@@ -3646,15 +4147,29 @@
         "object_id": 95180,
         "size": 34,
         "properties": [
-          { "name": "id", "class": "Integer" },
-          { "name": "content", "class": "String" },
-          { "name": "user_id", "class": "Integer" },
-          { "name": "created_at", "class": "String" },
-          { "name": "updated_at", "class": "String" }
+          {
+            "name": "id",
+            "class": "Integer"
+          },
+          {
+            "name": "content",
+            "class": "String"
+          },
+          {
+            "name": "user_id",
+            "class": "Integer"
+          },
+          {
+            "name": "created_at",
+            "class": "String"
+          },
+          {
+            "name": "updated_at",
+            "class": "String"
+          }
         ]
       },
       "http_server_response": {
-        "status_code": 200,
         "headers": {
           "X-Frame-Options": "SAMEORIGIN",
           "X-XSS-Protection": "1; mode=block",
@@ -3663,7 +4178,8 @@
           "X-Permitted-Cross-Domain-Policies": "none",
           "Referrer-Policy": "strict-origin-when-cross-origin",
           "Content-Type": "application/json; charset=utf-8"
-        }
+        },
+        "status": 200
       }
     },
     {
@@ -3695,7 +4211,7 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 5117,
-      "elapsed": 9.00006853044033e-6,
+      "elapsed": 0.00000900006853044033,
       "return_value": {
         "class": "String",
         "value": "{\"session_id\":\"7cbe60c916342a15cd65913e6cb17e91\",\"user_id\":762146111}",
@@ -3731,7 +4247,7 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 5119,
-      "elapsed": 2.00001522898674e-6,
+      "elapsed": 0.00000200001522898674,
       "return_value": {
         "class": "OpenSSL::Cipher",
         "value": "#<OpenSSL::Cipher:0x00007f9b97183938>",
@@ -3767,7 +4283,7 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 5121,
-      "elapsed": 1.3999990187585354e-5,
+      "elapsed": 0.000013999990187585354,
       "return_value": {
         "class": "String",
         "value": "{\"_rails\":{\"message\":\"eyJzZXNzaW9uX2lkIjoiN2NiZTYwYzkxNjM0MmExNWNkNjU5MTNlNmNiMTdlOTEiLCJ1c2VyX2lkIjo3NjIxNDYxMTF9\",\"exp\":null,\"pur\":\"cookie._sample_app_session\"}}",
@@ -3811,7 +4327,7 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 5123,
-      "elapsed": 8.00006091594696e-6,
+      "elapsed": 0.00000800006091594696,
       "return_value": {
         "class": "String",
         "value": "I++isPNLxDxGDfXMnNv6xk5FenySK8X4QHv94DpmUz8fNPdMmE7ooy7/A15ks5xqIluw4V/W8j9/Ml48zeOSOMHZE1Sc93pTyHIrVdloS5COTu06i7G3p3tgk8jFM5c+mzGWCQTWs7cnwvlGbVeXg+dxUDgOgeES3wspos26Pi9Q2cSpkSDQLqauFUjdP252eJXu4/6t58IRkQ+sUp8aoglCew==--bZbxMpC9fwgj7Lz+--ghfWtjK72mDYTDilUKULWA==",
@@ -3847,7 +4363,7 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 5125,
-      "elapsed": 4.199997056275606e-5,
+      "elapsed": 0.00004199997056275606,
       "return_value": {
         "class": "Array",
         "value": "[#<Proc:0x00007f9b55e25f48 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007f9b55e260b0 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007f9b55e26290 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
@@ -3884,7 +4400,7 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 5127,
-      "elapsed": 8.00006091594696e-6,
+      "elapsed": 0.00000800006091594696,
       "return_value": {
         "class": "Array",
         "value": "[#<Proc:0x00007f9b55e263f8 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
@@ -3921,8 +4437,13 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 5129,
-      "elapsed": 2.00001522898674e-6,
-      "return_value": { "class": "Array", "value": "[]", "object_id": 87120, "size": 0 }
+      "elapsed": 0.00000200001522898674,
+      "return_value": {
+        "class": "Array",
+        "value": "[]",
+        "object_id": 87120,
+        "size": 0
+      }
     },
     {
       "id": 5131,
@@ -3990,8 +4511,12 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 5133,
-      "elapsed": 1.300009898841381e-5,
-      "return_value": { "class": "Integer", "value": "59", "object_id": 119 }
+      "elapsed": 0.00001300009898841381,
+      "return_value": {
+        "class": "Integer",
+        "value": "59",
+        "object_id": 119
+      }
     },
     {
       "id": 5135,
@@ -4003,7 +4528,13 @@
         "server_version": "3.38.2"
       }
     },
-    { "id": 5136, "event": "return", "thread_id": 5220, "parent_id": 5135, "elapsed": 0.000322 },
+    {
+      "id": 5136,
+      "event": "return",
+      "thread_id": 5220,
+      "parent_id": 5135,
+      "elapsed": 0.000322
+    },
     {
       "id": 5137,
       "event": "call",
@@ -4033,8 +4564,13 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 5137,
-      "elapsed": 1.00000761449337e-6,
-      "return_value": { "class": "Array", "value": "[]", "object_id": 87220, "size": 0 }
+      "elapsed": 0.00000100000761449337,
+      "return_value": {
+        "class": "Array",
+        "value": "[]",
+        "object_id": 87220,
+        "size": 0
+      }
     },
     {
       "id": 5139,
@@ -4065,7 +4601,7 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 5139,
-      "elapsed": 5.999929271638393e-6,
+      "elapsed": 0.000005999929271638393,
       "return_value": {
         "class": "Array",
         "value": "[#<Proc:0x00007f9b864d2460 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007f9b864d2280 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
