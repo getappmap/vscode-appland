@@ -131,6 +131,14 @@
           "type": "string",
           "default": "https://app.land",
           "description": "URL of an AppLand cloud instance for AppMap storage"
+        },
+        "appMap.indexCommand": {
+          "type": "string",
+          "description": "Command use to run the @appland/appmap index command in watch mode"
+        },
+        "appMap.scanCommand": {
+          "type": "string",
+          "description": "Command use to run the @appland/scanner scan command in watch mode"
         }
       }
     },
@@ -163,16 +171,21 @@
     "views": {
       "appmap": [
         {
+          "id": "appmap.views.instructions",
+          "name": "Instructions",
+          "visibility": "visible"
+        },
+        {
+          "id": "appmap.views.findings",
+          "name": "Findings",
+          "visibility": "visible"
+        },
+        {
           "id": "appmap.views.local",
           "name": "AppMaps",
           "contextualTitle": "AppMap",
-          "visibility": "visible",
+          "visibility": "collapsed",
           "icon": "images/logo.svg"
-        },
-        {
-          "id": "appmap.views.milestones",
-          "name": "Getting started with AppMap",
-          "visibility": "collapsed"
         },
         {
           "id": "appmap.views.documentation",
@@ -224,7 +237,8 @@
     "vscode:prepublish": "yarn run compile",
     "lint": "eslint . --ext .ts",
     "pretest": "yarn run lint && tsc",
-    "test:extension": "node ./out/test/runTest.js",
+    "test:unit": "ts-node ./test/unit/*.test.ts",
+    "test:extension": "ts-node ./test/integrationTest.ts",
     "test:web-client": "mocha web/test/*.test.mjs",
     "test": "yarn run test:extension && yarn run test:web-client",
     "compile": "webpack --mode=production",
@@ -287,6 +301,7 @@
     "@appland/components": "^1.23.0",
     "@appland/diagrams": "^1.5.1",
     "@appland/models": "^1.12.1",
+    "@appland/scanner": "^1.54.1",
     "bent": "^7.3.12",
     "bootstrap": "^4.5.3",
     "bootstrap-autocomplete": "^2.3.7",
