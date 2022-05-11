@@ -10,16 +10,34 @@ import RemoteRecording from './remoteRecording';
 import { notEmpty } from './util';
 import { registerUtilityCommands } from './registerUtilityCommands';
 import OpenAppMapsWebview from './webviews/openAppmapsWebview';
-import AppMapProperties from './appmapProperties';
-import registerWorkspaceOverview from './webviews/projectPickerWebview';
+import ExtensionState from './extensionState';
+import projectPickerWebview from './webviews/projectPickerWebview';
+import FindingsIndex from './findingsIndex';
+import AutoIndexer from './services/autoIndexer';
+import AutoScanner from './services/autoScanner';
+import FindingsDiagnosticsProvider from './findingsDiagnosticsProvider';
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
   try {
     const localAppMaps = new AppMapCollectionFile(context);
+    const findingsIndex = new FindingsIndex(context);
+
+    await Promise.all(
+      (vscode.workspace.workspaceFolders || []).map(async (folder) => {
+        const autoIndexer = new AutoIndexer(folder.uri.fsPath);
+        const autoScanner = new AutoScanner(folder.uri.fsPath);
+        await autoIndexer.start();
+        await autoScanner.start();
+
+        // TODO: Dynamically add and remove these in response to workspace (folder) changes.
+        context.subscriptions.push(autoIndexer);
+        context.subscriptions.push(autoScanner);
+      })
+    );
 
     Telemetry.register(context);
 
-    const properties = new AppMapProperties(context);
+    const properties = new ExtensionState(context);
     if (properties.isNewInstall) {
       Telemetry.reportAction('plugin:install');
     }
@@ -29,17 +47,23 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     RemoteRecording.register(context);
     ContextMenu.register(context);
 
-    localAppMaps.initialize();
+    projectPickerWebview(context, properties);
 
     (vscode.workspace.workspaceFolders || []).forEach((workspaceFolder) => {
       Telemetry.sendEvent(PROJECT_OPEN, { rootDirectory: workspaceFolder.uri.fsPath });
     });
 
-    registerWorkspaceOverview(context, properties);
-
     OpenAppMapsWebview.register(context, localAppMaps);
 
-    const { localTree } = registerTrees(context, localAppMaps);
+    const findingsDiagnosticsProvider = new FindingsDiagnosticsProvider();
+    findingsIndex.onChanged((uri: vscode.Uri) => {
+      findingsDiagnosticsProvider.updateFindings(uri, findingsIndex.findingsForUri(uri));
+    });
+
+    localAppMaps.initialize();
+    findingsIndex.initialize();
+
+    const { localTree } = registerTrees(context, localAppMaps, findingsIndex);
 
     context.subscriptions.push(
       vscode.commands.registerCommand('appmap.applyFilter', async () => {
