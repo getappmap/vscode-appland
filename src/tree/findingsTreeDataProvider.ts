@@ -22,17 +22,17 @@ export class FindingsTreeDataProvider implements vscode.TreeDataProvider<vscode.
   }
 
   public getChildren(): vscode.TreeItem[] {
-    return this.findingsIndex.findings().map(
+    const uniqueFindings: { [key: string]: ResolvedFinding } = this.findingsIndex
+      .findings()
+      .reduce((acc, finding) => {
+        acc[finding.finding.hash] = finding;
+        return acc;
+      }, {});
+
+    return Object.values(uniqueFindings).map(
       (finding: ResolvedFinding): vscode.TreeItem => {
         const item = new vscode.TreeItem(finding.finding.message);
-        // TODO: Revisit how to make this id unique.
-        item.id = [
-          finding.finding.ruleId,
-          finding.finding.message,
-          finding.finding.relatedEvents.map((e: Event) => e.id),
-        ]
-          .flat()
-          .join('\n');
+        item.id = finding.finding.hash;
         if (finding.problemLocation) {
           item.command = {
             title: 'Open',

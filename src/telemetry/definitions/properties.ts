@@ -5,11 +5,19 @@ import { createHash } from 'crypto';
 import TelemetryDataProvider from '../telemetryDataProvider';
 import LanguageResolver, { UNKNOWN_LANGUAGE } from '../../services/languageResolver';
 import { fileExists } from '../../util';
+import ErrorCode from './errorCodes';
 
 export const DEBUG_EXCEPTION = new TelemetryDataProvider({
   id: 'appmap.debug.exception',
   async value({ exception }: { exception: Error }): Promise<string> {
     return exception.stack || '';
+  },
+});
+
+export const DEBUG_ERROR_CODE = new TelemetryDataProvider({
+  id: 'appmap.debug.error_code',
+  async value({ errorCode }: { errorCode?: ErrorCode }): Promise<string> {
+    return ErrorCode[errorCode || ErrorCode.Unknown];
   },
 });
 

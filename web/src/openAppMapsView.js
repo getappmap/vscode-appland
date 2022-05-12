@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { VQuickstartDocsOpenAppmaps } from '@appland/components';
+import { VOpenAppmaps } from '@appland/components';
 import '@appland/diagrams/dist/style.css';
 import MessagePublisher from './messagePublisher';
 
@@ -12,7 +12,7 @@ export default function mountQuickstartOpenAppmaps() {
       const app = new Vue({
         el: '#app',
         render(h) {
-          return h(VQuickstartDocsOpenAppmaps, {
+          return h(VOpenAppmaps, {
             ref: 'ui',
             props: {
               appmaps: this.appmaps,

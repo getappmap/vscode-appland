@@ -7,10 +7,15 @@ import EventEmitter from 'events';
 import { fileExists } from '../util';
 
 export default class FindingsIndex extends EventEmitter {
-  private _onChanged = new vscode.EventEmitter<FindingsIndex>();
+  private _onChanged = new vscode.EventEmitter<vscode.WorkspaceFolder>();
   public readonly onChanged = this._onChanged.event;
 
   private findingsBySourceUri = new Map<string, ResolvedFinding[]>();
+  private findingsByWorkspace = new Map<vscode.WorkspaceFolder, ResolvedFinding[]>();
+
+  findingsForWorkspace(workspaceFolder: vscode.WorkspaceFolder): ResolvedFinding[] {
+    return this.findingsByWorkspace.get(workspaceFolder) || [];
+  }
 
   findingsForUri(uri: vscode.Uri): ResolvedFinding[] {
     return this.findingsBySourceUri[uri.toString()] || [];
@@ -22,14 +27,19 @@ export default class FindingsIndex extends EventEmitter {
 
   clear(): void {
     const sourceUris = Object.keys(this.findingsBySourceUri);
+    const workspaceFolders = [...this.findingsByWorkspace.keys()];
     this.findingsBySourceUri = new Map();
+    this.findingsByWorkspace = new Map();
     sourceUris.forEach((sourceUri) => {
       this.emit('removed', vscode.Uri.parse(sourceUri));
     });
-    this._onChanged.fire(this);
+    workspaceFolders.forEach((workspaceFolder) => this._onChanged.fire(workspaceFolder));
   }
 
-  async addFindingsFile(sourceUri: vscode.Uri): Promise<void> {
+  async addFindingsFile(
+    sourceUri: vscode.Uri,
+    workspaceFolder: vscode.WorkspaceFolder
+  ): Promise<void> {
     console.log(`Findings file added: ${sourceUri.fsPath}`);
 
     let findingsData: Buffer;
@@ -66,19 +76,56 @@ export default class FindingsIndex extends EventEmitter {
       )
     );
     this.findingsBySourceUri[sourceUri.toString()] = resolvedFindings;
+    this.registerFindingsWithWorkspace(resolvedFindings, workspaceFolder);
 
     this.emit('added', sourceUri, resolvedFindings);
-    this._onChanged.fire(this);
+    this._onChanged.fire(workspaceFolder);
   }
 
-  async removeFindingsFile(sourceUri: vscode.Uri): Promise<void> {
+  async removeFindingsFile(
+    sourceUri: vscode.Uri,
+    workspaceFolder: vscode.WorkspaceFolder
+  ): Promise<void> {
     if (await fileExists(sourceUri.fsPath)) return;
 
     console.log(`Findings file removed: ${sourceUri.fsPath}`);
 
+    const removedFindings = this.findingsBySourceUri[sourceUri.toString()];
+    if (removedFindings) {
+      this.removeFindingsFromWorkspace(removedFindings, workspaceFolder);
+    }
+
     delete this.findingsBySourceUri[sourceUri.toString()];
 
     this.emit('removed', sourceUri);
-    this._onChanged.fire(this);
+    this._onChanged.fire(workspaceFolder);
+  }
+
+  private registerFindingsWithWorkspace(
+    findings: ResolvedFinding[],
+    workspaceFolder: vscode.WorkspaceFolder
+  ): void {
+    let workspaceFindings = this.findingsByWorkspace.get(workspaceFolder);
+    if (!workspaceFindings) {
+      workspaceFindings = [];
+      this.findingsByWorkspace.set(workspaceFolder, workspaceFindings);
+    }
+    workspaceFindings.push(...findings);
+  }
+
+  private removeFindingsFromWorkspace(
+    findings: ResolvedFinding[],
+    workspaceFolder: vscode.WorkspaceFolder
+  ): void {
+    let workspaceFindings = this.findingsByWorkspace.get(workspaceFolder);
+    if (workspaceFindings) {
+      const findingsToRemove = new Set(findings);
+      workspaceFindings = workspaceFindings.filter((f) => !findingsToRemove.has(f));
+      if (workspaceFindings.length > 0) {
+        this.findingsByWorkspace.set(workspaceFolder, workspaceFindings);
+      } else {
+        this.findingsByWorkspace.delete(workspaceFolder);
+      }
+    }
   }
 }

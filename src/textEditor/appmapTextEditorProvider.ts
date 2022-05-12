@@ -10,8 +10,8 @@ import { AppmapUploader } from '../actions/appmapUploader';
  * Provider for AppLand scenario files.
  */
 export class AppMapTextEditorProvider implements vscode.CustomTextEditorProvider {
-  public static register(context: vscode.ExtensionContext, properties: ExtensionState): void {
-    const provider = new AppMapTextEditorProvider(context, properties);
+  public static register(context: vscode.ExtensionContext, extensionState: ExtensionState): void {
+    const provider = new AppMapTextEditorProvider(context, extensionState);
     const providerRegistration = vscode.window.registerCustomEditorProvider(
       AppMapTextEditorProvider.viewType,
       provider
@@ -65,7 +65,7 @@ export class AppMapTextEditorProvider implements vscode.CustomTextEditorProvider
 
   constructor(
     private readonly context: vscode.ExtensionContext,
-    private readonly properties: ExtensionState
+    private readonly extensionState: ExtensionState
   ) {}
 
   /**
@@ -107,7 +107,7 @@ export class AppMapTextEditorProvider implements vscode.CustomTextEditorProvider
 
       const workspaceFolder = workspaceFolderForDocument(document);
       if (workspaceFolder) {
-        this.properties.setWorkspaceOpenedAppMap(workspaceFolder, true);
+        this.extensionState.setWorkspaceOpenedAppMap(workspaceFolder, true);
       }
 
       const lastVersion = this.context.globalState.get(AppMapTextEditorProvider.RELEASE_KEY);

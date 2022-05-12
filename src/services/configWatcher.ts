@@ -3,10 +3,10 @@ import { fileExists } from '../util';
 import { FileChangeEmitter, FileChangeEvent } from './fileChangeEmitter';
 import { WorkspaceService, WorkspaceServiceInstance } from './workspaceService';
 
-class FindingWatcherInstance implements WorkspaceServiceInstance {
-  protected watcher: vscode.FileSystemWatcher;
+class ConfigWatcherInstance implements WorkspaceServiceInstance {
+  watcher: vscode.FileSystemWatcher;
   protected disposables: vscode.Disposable[] = [];
-  protected findingsPattern = new vscode.RelativePattern(this.folder, `**/appmap-findings.json`);
+  protected configPattern = new vscode.RelativePattern(this.folder, `**/appmap.yml`);
 
   constructor(
     public folder: vscode.WorkspaceFolder,
@@ -14,7 +14,7 @@ class FindingWatcherInstance implements WorkspaceServiceInstance {
     protected onCreate: vscode.EventEmitter<FileChangeEvent>,
     protected onDelete: vscode.EventEmitter<FileChangeEvent>
   ) {
-    this.watcher = vscode.workspace.createFileSystemWatcher(this.findingsPattern);
+    this.watcher = vscode.workspace.createFileSystemWatcher(this.configPattern);
     this.disposables.push(
       this.watcher,
       this.watcher.onDidChange((uri) => this.onChange.fire({ uri, workspaceFolder: this.folder })),
@@ -27,18 +27,16 @@ class FindingWatcherInstance implements WorkspaceServiceInstance {
   }
 
   async initialize() {
-    (await vscode.workspace.findFiles(this.findingsPattern, '**/node_modules/**')).forEach(
-      (uri) => {
-        this.onCreate.fire({ uri, workspaceFolder: this.folder });
-      }
-    );
+    (await vscode.workspace.findFiles(this.configPattern, '**/node_modules/**')).forEach((uri) => {
+      this.onCreate.fire({ uri, workspaceFolder: this.folder });
+    });
     return this;
   }
 
   async dispose() {
     (
       await vscode.workspace.findFiles(
-        new vscode.RelativePattern(this.folder, '**/appmap-findings.json'),
+        new vscode.RelativePattern(this.folder, '**/*.appmap.json'),
         '**/node_modules/**'
       )
     ).forEach((uri) => {
@@ -49,15 +47,14 @@ class FindingWatcherInstance implements WorkspaceServiceInstance {
   }
 }
 
-export class FindingWatcher extends FileChangeEmitter implements WorkspaceService {
+export class ConfigWatcher extends FileChangeEmitter implements WorkspaceService {
   async create(folder: vscode.WorkspaceFolder): Promise<WorkspaceServiceInstance> {
-    const watcher = new FindingWatcherInstance(
+    const watcher = new ConfigWatcherInstance(
       folder,
       this._onChange,
       this._onCreate,
       this._onDelete
     );
-    await watcher.initialize();
-    return watcher;
+    return watcher.initialize();
   }
 }

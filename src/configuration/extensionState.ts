@@ -8,10 +8,12 @@ export const Keys = {
     INSTALL_VERSION: 'appmap.applandinc.installVersion',
   },
   Workspace: {
+    CONFIGURED_AGENT: 'appmap.applandinc.agentConfigured',
     RECORDED_APPMAP: 'appmap.applandinc.recordedAppMap',
     OPENED_APPMAP: 'appmap.applandinc.workspaces_opened_appmap',
   },
 };
+
 export default class ExtensionState {
   private readonly context: vscode.ExtensionContext;
   private readonly _installTime: Date;
@@ -45,15 +47,15 @@ export default class ExtensionState {
    * (if available).
    */
   private setWorkspaceFlag(key: string, value: boolean, fsPath: string): void {
-    const appmapsOpen = new Set<string>(this.context.globalState.get(key, []));
+    const workspaces = new Set<string>(this.context.globalState.get(key, []));
 
     if (value) {
-      appmapsOpen.add(fsPath);
+      workspaces.add(fsPath);
     } else {
-      appmapsOpen.delete(fsPath);
+      workspaces.delete(fsPath);
     }
 
-    this.context.globalState.update(key, [...appmapsOpen]);
+    this.context.globalState.update(key, [...workspaces]);
   }
 
   /** Returns whether or not the workspace folder at the given path exists in the set.
@@ -100,6 +102,15 @@ export default class ExtensionState {
 
   setWorkspaceOpenedAppMap(workspaceFolder: vscode.WorkspaceFolder, value: boolean): void {
     return this.setWorkspaceFlag(Keys.Workspace.OPENED_APPMAP, value, workspaceFolder.uri.fsPath);
+  }
+
+  /** Returns whether or not the user has created an AppMap agent config (appmap.yml) */
+  getWorkspaceConfiguredAgent(workspaceFolder: vscode.WorkspaceFolder): boolean {
+    return this.getWorkspaceFlag(Keys.Workspace.CONFIGURED_AGENT, workspaceFolder.uri.fsPath);
+  }
+
+  setWorkspaceConfiguredAgent(workspaceFolder: vscode.WorkspaceFolder, value: boolean): void {
+    this.setWorkspaceFlag(Keys.Workspace.CONFIGURED_AGENT, value, workspaceFolder.uri.fsPath);
   }
 
   resetState(): void {
