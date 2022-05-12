@@ -108,15 +108,15 @@
       },
       {
         "command": "appmap.context.openInFileExplorer",
-        "title": "Open in File Explorer"
+        "title": "AppMap: Open in File Explorer"
       },
       {
         "command": "appmap.context.openAsJson",
-        "title": "Open as JSON"
+        "title": "AppMap: Open as JSON"
       },
       {
         "command": "appmap.context.rename",
-        "title": "Rename"
+        "title": "AppMap: Rename"
       }
     ],
     "configuration": {
