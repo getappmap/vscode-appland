@@ -1,33 +1,13 @@
 import assert from 'assert';
-import { exec } from 'child_process';
-import { unlink } from 'fs';
+import { rename, unlink } from 'fs';
 import { join } from 'path';
 import { promisify } from 'util';
 import * as vscode from 'vscode';
-import { touch, waitFor } from './util';
-
-const fixtureDir = join(__dirname, '../../../test/fixtures/workspaces/project-with-findings');
-
-async function executeWorkspaceCommand(cmd: string) {
-  return new Promise<void>((resolve, reject) => {
-    exec(cmd, { cwd: fixtureDir }, (err, stdout, stderr) => {
-      if (err) {
-        console.log(stdout);
-        console.warn(stderr);
-        return reject(err);
-      }
-      resolve();
-    });
-  });
-}
-
-async function cleanWorkspace() {
-  await executeWorkspaceCommand(`git clean -fd .`);
-}
+import { FixtureDir, initializeWorkspace, touch, waitFor } from './util';
 
 describe('Findings', () => {
-  beforeEach(async () => await cleanWorkspace());
-  afterEach(async () => await cleanWorkspace());
+  beforeEach(initializeWorkspace);
+  afterEach(initializeWorkspace);
 
   it('should be populated in the Problems view', async () => {
     const controllerFile = await vscode.workspace.findFiles(
@@ -39,7 +19,7 @@ describe('Findings', () => {
 
     return new Promise((resolve, reject) => {
       waitFor(
-        'No Diagnostics found within timeout period',
+        'No Diagnostics were created',
         () => vscode.languages.getDiagnostics().length > 0
       ).catch(reject);
 
@@ -65,7 +45,7 @@ describe('Findings', () => {
 
     return new Promise((resolve, reject) => {
       waitFor(
-        'No mtime (AppMap timestamp) files found within timeout period',
+        'No mtime (AppMap timestamp) files found',
         async () => (await mtimeFiles()).length > 0
       ).catch(reject);
 
@@ -77,19 +57,17 @@ describe('Findings', () => {
   });
 
   it('auto-scans AppMaps as they are modified', async () => {
-    // TODO: Not working yet
-    return true;
-
     await waitFor(
-      'No Diagnostics found within timeout period',
+      'No Diagnostics were created',
       () => vscode.languages.getDiagnostics().length > 0
     );
 
-    await promisify(unlink)(join(fixtureDir, 'appmap-findings.json'));
+    await promisify(rename)(
+      join(FixtureDir, 'appmap-findings.json'),
+      join(FixtureDir, 'appmap-findings.json.bak')
+    );
 
-    await waitFor('Diagnostics not removed within within the timeout period', () => {
-      const diagnostics = vscode.languages.getDiagnostics();
-      console.log(diagnostics.map((d) => d[0]));
+    await waitFor('Diagnostics were not removed', () => {
       return vscode.languages.getDiagnostics().length === 0;
     });
 
@@ -97,7 +75,7 @@ describe('Findings', () => {
     await Promise.all(mtimeFiles.map((uri) => touch(uri.fsPath)));
 
     await waitFor(
-      'No Diagnostics found within timeout period',
+      'No Diagnostics were created',
       () => vscode.languages.getDiagnostics().length > 0
     );
   });

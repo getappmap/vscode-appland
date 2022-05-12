@@ -13,8 +13,10 @@ function run(): Promise<void> {
 
   temp.track();
 
+  const testPath = process.env.TEST_PATH ? process.env.TEST_PATH : '**/*.test.js';
+  console.log(`Loading tests ${testPath} within ${__dirname}`);
   return new Promise((resolve, reject) => {
-    glob('**/**.test.js', { cwd: __dirname }, (err, files) => {
+    glob(testPath, { cwd: __dirname }, (err, files) => {
       if (err) {
         return reject(err);
       }
