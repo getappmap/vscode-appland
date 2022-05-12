@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 
 import { DatabaseUpdater } from './databaseUpdater';
-import { ScenarioProvider } from './scenarioViewer';
+import { AppMapTextEditorProvider } from './appmapTextEditorProvider';
 import { Telemetry, DEBUG_EXCEPTION, TELEMETRY_ENABLED, PROJECT_OPEN } from './telemetry';
 import registerTrees from './tree';
 import AppMapCollectionFile from './appmapCollectionFile';
@@ -42,7 +42,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
       Telemetry.reportAction('plugin:install');
     }
 
-    ScenarioProvider.register(context, properties);
+    AppMapTextEditorProvider.register(context, properties);
     DatabaseUpdater.register(context);
     RemoteRecording.register(context);
     ContextMenu.register(context);
@@ -113,7 +113,10 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
             }
 
             if (queryParams.get('state')) {
-              context.globalState.update(ScenarioProvider.INITIAL_STATE, queryParams.get('state'));
+              context.globalState.update(
+                AppMapTextEditorProvider.INITIAL_STATE,
+                queryParams.get('state')
+              );
             }
           }
         },
