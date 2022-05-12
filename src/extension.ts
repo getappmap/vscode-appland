@@ -16,24 +16,27 @@ import FindingsIndex from './findingsIndex';
 import AutoIndexer from './services/autoIndexer';
 import AutoScanner from './services/autoScanner';
 import FindingsDiagnosticsProvider from './findingsDiagnosticsProvider';
+import extensionSettings from './extensionSettings';
+import { FindingsTreeDataProvider } from './tree/findingsTreeDataProvider';
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
   try {
     const localAppMaps = new AppMapCollectionFile(context);
-    const findingsIndex = new FindingsIndex(context);
+    const findingsEnabled = extensionSettings.findingsEnabled();
+    if (findingsEnabled) {
+      await Promise.all(
+        (vscode.workspace.workspaceFolders || []).map(async (folder) => {
+          const autoIndexer = new AutoIndexer(folder.uri.fsPath);
+          const autoScanner = new AutoScanner(folder.uri.fsPath);
+          await autoIndexer.start();
+          await autoScanner.start();
 
-    await Promise.all(
-      (vscode.workspace.workspaceFolders || []).map(async (folder) => {
-        const autoIndexer = new AutoIndexer(folder.uri.fsPath);
-        const autoScanner = new AutoScanner(folder.uri.fsPath);
-        await autoIndexer.start();
-        await autoScanner.start();
-
-        // TODO: Dynamically add and remove these in response to workspace (folder) changes.
-        context.subscriptions.push(autoIndexer);
-        context.subscriptions.push(autoScanner);
-      })
-    );
+          // TODO: Dynamically add and remove these in response to workspace (folder) changes.
+          context.subscriptions.push(autoIndexer);
+          context.subscriptions.push(autoScanner);
+        })
+      );
+    }
 
     Telemetry.register(context);
 
@@ -55,15 +58,24 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
     OpenAppMapsWebview.register(context, localAppMaps);
 
-    const findingsDiagnosticsProvider = new FindingsDiagnosticsProvider();
-    findingsIndex.onChanged((uri: vscode.Uri) => {
-      findingsDiagnosticsProvider.updateFindings(uri, findingsIndex.findingsForUri(uri));
-    });
-
     localAppMaps.initialize();
-    findingsIndex.initialize();
 
-    const { localTree } = registerTrees(context, localAppMaps, findingsIndex);
+    if (findingsEnabled) {
+      const findingsIndex = new FindingsIndex(context);
+
+      const findingsDiagnosticsProvider = new FindingsDiagnosticsProvider();
+      findingsIndex.onChanged((uri: vscode.Uri) =>
+        findingsDiagnosticsProvider.updateFindings(uri, findingsIndex.findingsForUri(uri))
+      );
+      const findingsTreeProvider = new FindingsTreeDataProvider(findingsIndex);
+      vscode.window.createTreeView('appmap.views.findings', {
+        treeDataProvider: findingsTreeProvider,
+      });
+
+      findingsIndex.initialize();
+    }
+
+    const { localTree } = registerTrees(context, localAppMaps);
 
     context.subscriptions.push(
       vscode.commands.registerCommand('appmap.applyFilter', async () => {

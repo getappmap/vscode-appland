@@ -1,4 +1,5 @@
 {
   "appMap.indexCommand": "yarn run index --watch",
-  "appMap.scanCommand": "yarn run scan --watch"
+  "appMap.scanCommand": "yarn run scan --watch",
+  "appMap.findingsEnabled": true
 }

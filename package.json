@@ -132,6 +132,10 @@
           "default": "https://app.land",
           "description": "URL of an AppLand cloud instance for AppMap storage"
         },
+        "appMap.findingsEnabled": {
+          "type": "boolean",
+          "description": "Enable AppMap scanner and findings"
+        },
         "appMap.indexCommand": {
           "type": "string",
           "description": "Command use to run the @appland/appmap index command in watch mode"
@@ -176,21 +180,21 @@
           "visibility": "visible"
         },
         {
-          "id": "appmap.views.findings",
-          "name": "Findings",
-          "visibility": "visible"
-        },
-        {
           "id": "appmap.views.local",
           "name": "AppMaps",
           "contextualTitle": "AppMap",
-          "visibility": "collapsed",
+          "visibility": "visible",
           "icon": "images/logo.svg"
+        },
+        {
+          "id": "appmap.views.findings",
+          "name": "Findings",
+          "visibility": "collapsed"
         },
         {
           "id": "appmap.views.documentation",
           "name": "Documentation",
-          "visibility": "collapsed"
+          "visibility": "visible"
         }
       ]
     },

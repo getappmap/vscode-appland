@@ -2,26 +2,18 @@ import * as vscode from 'vscode';
 import AppMapCollectionFile from '../appmapCollectionFile';
 import Links from './links';
 import { InstructionsTreeDataProvider } from './instructionsTreeDataProvider';
-import { FindingsTreeDataProvider } from './findingsTreeDataProvider';
-import FindingsIndex from '../findingsIndex';
 import { AppMapTreeDataProvider } from './AppMapTreeDataProvider';
 import { LinkTreeDataProvider } from './linkTreeDataProvider';
 
 export default function registerTrees(
   context: vscode.ExtensionContext,
-  localAppMaps: AppMapCollectionFile,
-  findingsIndex: FindingsIndex
+  localAppMaps: AppMapCollectionFile
 ): Record<string, vscode.TreeView<vscode.TreeItem>> {
   LinkTreeDataProvider.registerCommands(context);
 
   const instructionsTreeProvider = new InstructionsTreeDataProvider();
   const instructionsTree = vscode.window.createTreeView('appmap.views.instructions', {
     treeDataProvider: instructionsTreeProvider,
-  });
-
-  const findingsTreeProvider = new FindingsTreeDataProvider(findingsIndex);
-  const findingsTree = vscode.window.createTreeView('appmap.views.findings', {
-    treeDataProvider: findingsTreeProvider,
   });
 
   const localAppMapsProvider = new AppMapTreeDataProvider(localAppMaps);
@@ -50,5 +42,5 @@ export default function registerTrees(
     })
   );
 
-  return { instructionsTree, findingsTree, localTree: localAppMapsTree, documentation };
+  return { instructionsTree, localTree: localAppMapsTree, documentation };
 }
