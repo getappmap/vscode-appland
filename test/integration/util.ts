@@ -32,6 +32,7 @@ async function executeWorkspaceOSCommand(cmd: string): Promise<void> {
 
 async function cleanWorkspace(): Promise<void> {
   await executeWorkspaceOSCommand(`git clean -fd .`);
+  await executeWorkspaceOSCommand(`git restore .`);
 }
 
 export async function waitFor(
@@ -40,13 +41,15 @@ export async function waitFor(
   timeout = 10000
 ): Promise<void> {
   const startTime = Date.now();
+  let delay = 250;
   while (!(await test())) {
     const elapsed = Date.now() - startTime;
     if (elapsed > timeout) {
       throw new Error(message);
     }
 
-    await wait(250);
+    delay = delay * 1.5;
+    await wait(delay);
   }
 }
 

@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { rename, unlink } from 'fs';
+import { rename } from 'fs';
 import { join } from 'path';
 import { promisify } from 'util';
 import * as vscode from 'vscode';
@@ -8,6 +8,16 @@ import { FixtureDir, initializeWorkspace, touch, waitFor } from './util';
 describe('Findings', () => {
   beforeEach(initializeWorkspace);
   afterEach(initializeWorkspace);
+
+  const hasDiagnostics = (): boolean =>
+    vscode.languages.getDiagnostics().filter((d) => d[1].length > 0).length > 0;
+
+  const hasNoDiagnostics = (): boolean => !hasDiagnostics();
+
+  const mtimeFiles = async (): Promise<vscode.Uri[]> => vscode.workspace.findFiles(`**/mtime`);
+
+  const appmapFiles = async (): Promise<vscode.Uri[]> =>
+    vscode.workspace.findFiles(`**/*.appmap.json`);
 
   it('should be populated in the Problems view', async () => {
     const controllerFile = await vscode.workspace.findFiles(
@@ -57,26 +67,20 @@ describe('Findings', () => {
   });
 
   it('auto-scans AppMaps as they are modified', async () => {
-    await waitFor(
-      'No Diagnostics were created',
-      () => vscode.languages.getDiagnostics().length > 0
-    );
-
     await promisify(rename)(
       join(FixtureDir, 'appmap-findings.json'),
       join(FixtureDir, 'appmap-findings.json.bak')
     );
 
-    await waitFor('Diagnostics were not removed', () => {
-      return vscode.languages.getDiagnostics().length === 0;
-    });
+    await waitFor('Diagnostics were not cleared', hasNoDiagnostics);
 
-    const mtimeFiles = await vscode.workspace.findFiles(`**/mtime`);
-    await Promise.all(mtimeFiles.map((uri) => touch(uri.fsPath)));
+    await Promise.all((await appmapFiles()).map((uri) => touch(uri.fsPath)));
 
     await waitFor(
-      'No Diagnostics were created',
-      () => vscode.languages.getDiagnostics().length > 0
+      'AppMaps were not indexed',
+      async (): Promise<boolean> => (await mtimeFiles()).length > 0
     );
+
+    await waitFor('No Diagnostics were created', hasDiagnostics);
   });
 });

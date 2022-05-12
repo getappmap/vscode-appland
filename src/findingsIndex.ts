@@ -73,7 +73,6 @@ export default class FindingsIndex {
     const resolvedFindings = await Promise.all(
       findings.map(
         async (finding: Finding): Promise<ResolvedFinding> => {
-          console.log(`Resolving finding: ${finding.hash}`);
           const resolvedFinding = new ResolvedFinding(sourceUri, finding);
           await resolvedFinding.initialize();
           return resolvedFinding;
