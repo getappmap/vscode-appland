@@ -38,7 +38,7 @@ async function cleanWorkspace(): Promise<void> {
 export async function waitFor(
   message: string,
   test: () => boolean | Promise<boolean>,
-  timeout = 10000
+  timeout = 30000
 ): Promise<void> {
   const startTime = Date.now();
   let delay = 250;

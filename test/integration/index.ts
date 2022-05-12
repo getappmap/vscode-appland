@@ -8,7 +8,7 @@ function run(): Promise<void> {
   const mocha = new Mocha({
     ui: 'bdd',
     color: true,
-    timeout: '60s',
+    timeout: '120s',
   });
 
   temp.track();
