@@ -24,7 +24,12 @@ async function ignoresForWorkspaceFolder(wsFolder: string): Promise<Ignore> {
     const gitIgnore = files.find((file) => file.isFile() && file.name === '.gitignore');
     if (gitIgnore) {
       try {
-        wsIgnore.add((await fs.readFile(path.join(currentDirectory, gitIgnore.name))).toString());
+        const ignoreFile = await fs.readFile(path.join(currentDirectory, gitIgnore.name));
+        ignoreFile
+          .toString()
+          .split(/\r?\n/)
+          .map((line) => path.relative(wsFolder, path.join(currentDirectory, line)))
+          .forEach((path) => wsIgnore.add(path));
       } catch (e) {
         // This case is odd enough that it's worth logging. You have a gitignore file, but it's not readable.
         if (e instanceof Error) {
