@@ -55,6 +55,7 @@ export default class ProcessService {
     }
 
     options.env = environment;
+    options.detached = false;
 
     this.invokeCommand(mainCommand, args, options);
   }
