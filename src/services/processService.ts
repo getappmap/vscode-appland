@@ -1,5 +1,8 @@
 import * as vscode from 'vscode';
-import { ChildProcess, spawn, SpawnOptions } from 'child_process';
+import { ChildProcess, exec, spawn, SpawnOptions } from 'child_process';
+import { resolveFilePath } from '../util';
+import { promisify } from 'util';
+import { readFile } from 'fs';
 
 export default class ProcessService {
   process?: ChildProcess;
@@ -17,13 +20,52 @@ export default class ProcessService {
     return new Promise<number>((resolve) => process.once('exit', resolve));
   }
 
-  protected runProcess(
+  protected async runProcess(
     command: string,
+    args: string[],
+    options: SpawnOptions
+  ): Promise<void> {
+    const home = process.env.HOME || '';
+    let error: string | undefined;
+    let mainCommand: string | undefined;
+    const environment: Record<string, string> = {};
+    const nvmrcPath = await resolveFilePath(this.dir, '.nvmrc');
+    if (nvmrcPath) {
+      mainCommand = [home, '.nvm/nvm-exec'].join('/');
+      const version = (await promisify(readFile)(nvmrcPath)).toString().trim();
+      environment.NODE_VERSION = version;
+      args = [command].concat(args);
+      error = validateNodeVersion('nvm', version);
+    } else {
+      const availableVersion = await systemNodeVersion();
+      if (availableVersion instanceof Error) {
+        error = `Node.js is not installed`;
+      } else {
+        error = validateNodeVersion('System', availableVersion);
+      }
+    }
+    if (error) {
+      vscode.window.showErrorMessage(error);
+      return;
+    }
+    if (!mainCommand) mainCommand = command;
+
+    if (process.env.SHELL) {
+      options.shell = process.env.SHELL;
+    }
+
+    options.env = environment;
+
+    this.invokeCommand(mainCommand, args, options);
+  }
+
+  protected invokeCommand(
+    mainCommand: string,
     args: string[],
     options: SpawnOptions,
     timeout = 3000
   ): void {
-    this.process = spawn(command, args, options);
+    this.process = spawn(mainCommand, args, options);
 
     ProcessService.logProcess(this.process, true);
 
@@ -34,7 +76,7 @@ export default class ProcessService {
         );
 
         // Restart
-        setTimeout(() => this.runProcess(command, args, options, timeout * 1.5), timeout);
+        setTimeout(() => this.invokeCommand(mainCommand, args, options, timeout * 1.5), timeout);
       }
     });
   }
@@ -57,4 +99,30 @@ export default class ProcessService {
       });
     }
   }
+}
+
+function validateNodeVersion(versionType: string, version: string): string | undefined {
+  const digits = version.split('.');
+  if (digits.length === 0) {
+    return `Version string is empty`;
+  }
+
+  const majorVersion = parseInt(digits[0].replace(/[^0-9]/g, ''), 10);
+  if (majorVersion % 2 === 0 && majorVersion >= 14) {
+    return;
+  }
+
+  return `${versionType} Node.js version ${version} should be an even major version number >= 14`;
+}
+
+async function systemNodeVersion(): Promise<string | Error> {
+  return new Promise((resolve) => {
+    exec('node -v', (err, stdout) => {
+      if (err) {
+        resolve(err);
+      } else {
+        resolve(stdout.trim());
+      }
+    });
+  });
 }
