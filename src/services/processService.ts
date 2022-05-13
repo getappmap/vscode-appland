@@ -1,3 +1,4 @@
+import * as vscode from 'vscode';
 import { ChildProcess, spawn, SpawnOptions } from 'child_process';
 
 export default class ProcessService {
@@ -28,7 +29,9 @@ export default class ProcessService {
 
     this.process.once('exit', (code) => {
       if (this.retry) {
-        console.warn(`${this.process?.spawnargs.join(' ')} exited with code ${code}`);
+        vscode.window.showErrorMessage(
+          `${this.process?.spawnargs.join(' ')} exited with code ${code}`
+        );
 
         // Restart
         setTimeout(() => this.runProcess(command, args, options, timeout * 1.5), timeout);
