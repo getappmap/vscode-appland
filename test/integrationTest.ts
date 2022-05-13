@@ -27,7 +27,7 @@ async function main(): Promise<void> {
     await runTests({
       extensionDevelopmentPath,
       extensionTestsPath,
-      launchArgs: [testWorkspace],
+      launchArgs: ['--disable-extensions', '--disable-gpu', testWorkspace],
       version: 'insiders',
     });
   } catch (err) {
