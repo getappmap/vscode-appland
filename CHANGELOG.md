@@ -1,3 +1,10 @@
+## [0.24.2](https://github.com/applandinc/vscode-appland/compare/v0.24.1...v0.24.2) (2022-05-13)
+
+
+### Bug Fixes
+
+* Non-root level gitignores will no longer be treated as root ([112998d](https://github.com/applandinc/vscode-appland/commit/112998d90ef51e9f8dd93b14a339d44f385dc79c))
+
 ## [0.24.1](https://github.com/applandinc/vscode-appland/compare/v0.24.0...v0.24.1) (2022-05-09)
 
 
