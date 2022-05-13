@@ -1,8 +1,6 @@
 import * as vscode from 'vscode';
 import { Finding } from '@appland/scanner/built/cli';
 import { resolveFilePath } from './util';
-import { promisify } from 'util';
-import { readFile } from 'fs';
 
 class StackFrameIndex {
   locationByFrame = new Map<string, vscode.Location>();
@@ -113,15 +111,11 @@ export class ResolvedFinding {
     const filePath = await resolveFilePath(folder.uri.fsPath, fileName);
     if (!filePath) return;
 
-    const fileContents = await promisify(readFile)(filePath);
-    const lineContents = fileContents.toString().split('\n')[Number(line) - 1];
-    const lineWidth = lineContents ? lineContents.length : 1;
-
     return new vscode.Location(
       vscode.Uri.file(filePath),
       new vscode.Range(
         new vscode.Position(Number(line) - 1, 0),
-        new vscode.Position(Number(line) - 1, lineWidth)
+        new vscode.Position(Number(line) - 1, Number.MAX_VALUE)
       )
     );
   }
