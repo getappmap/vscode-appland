@@ -6,12 +6,14 @@ export default class ProcessService {
 
   constructor(public dir: string) {}
 
-  dispose(): void {
+  async dispose(): Promise<number | undefined> {
     if (!this.process) return;
 
-    this.process.kill();
     this.retry = false;
+    this.process.kill();
+    const process = this.process;
     this.process = undefined;
+    return new Promise<number>((resolve) => process.once('exit', resolve));
   }
 
   protected runProcess(
