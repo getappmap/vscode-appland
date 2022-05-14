@@ -1,7 +1,9 @@
+import * as vscode from 'vscode';
 import extensionSettings from '../extensionSettings';
-import ProcessService from './processService';
+import ProcessService from '../util/processService';
+import { WorkspaceService, WorkspaceServiceInstance } from './workspaceService';
 
-export default class AutoScanner extends ProcessService {
+class AutoScanner extends ProcessService implements WorkspaceServiceInstance {
   async start(): Promise<void> {
     const command = extensionSettings.scanCommand();
     let commandArgs: [string, string[]];
@@ -12,8 +14,14 @@ export default class AutoScanner extends ProcessService {
       commandArgs = command;
     }
 
-    this.runProcess(commandArgs[0], commandArgs[1], {
-      cwd: this.dir,
-    });
+    this.runProcess(commandArgs[0], commandArgs[1], {});
+  }
+}
+
+export default class AutoScannerService implements WorkspaceService {
+  async create(folder: vscode.WorkspaceFolder): Promise<AutoScanner> {
+    const scanner = new AutoScanner(folder);
+    await scanner.start();
+    return scanner;
   }
 }
