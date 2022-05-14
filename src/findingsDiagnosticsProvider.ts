@@ -74,7 +74,10 @@ export default class FindingsDiagnosticsProvider {
         .flat()
         .map((diagnosticWithProblemLocation) => diagnosticWithProblemLocation.diagnostic);
 
-      this.diagnosticsCollection.set(vscode.Uri.parse(problemUriString, true), diagnostics);
+      this.diagnosticsCollection.set(
+        vscode.Uri.parse(problemUriString, true),
+        diagnostics.sort((a, b) => a.message.localeCompare(b.message))
+      );
     });
   }
 }

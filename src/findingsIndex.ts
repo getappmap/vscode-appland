@@ -10,45 +10,6 @@ export default class FindingsIndex {
 
   private findingsBySourceUri = new Map<string, ResolvedFinding[]>();
 
-  constructor(context: vscode.ExtensionContext) {
-    const watchers: Record<string, vscode.Disposable> = {};
-
-    const watchFolder = (folder: vscode.WorkspaceFolder) => {
-      const findingsPattern = new vscode.RelativePattern(folder, `**/appmap-findings.json`);
-      const watcher = vscode.workspace.createFileSystemWatcher(findingsPattern);
-      watcher.onDidCreate(this.addFindingsFile.bind(this));
-      watcher.onDidChange((file) => {
-        this.removeFindingsFile(file);
-        this.addFindingsFile(file);
-      });
-      watcher.onDidDelete(this.removeFindingsFile.bind(this));
-      watchers[folder.uri.toString()] = watcher;
-      context.subscriptions.push(watcher);
-    };
-
-    const unwatchFolder = (folder: vscode.WorkspaceFolder) => {
-      const watcher = watchers[folder.uri.toString()];
-      if (watcher) watcher.dispose();
-    };
-
-    vscode.workspace.onDidChangeWorkspaceFolders((e) => {
-      e.added.forEach((folder) => {
-        watchFolder(folder);
-      });
-      e.removed.forEach((folder) => {
-        unwatchFolder(folder);
-      });
-    });
-
-    (vscode.workspace.workspaceFolders || []).forEach(watchFolder);
-  }
-
-  async initialize(): Promise<void> {
-    (await vscode.workspace.findFiles('**/appmap-findings.json', '**/node_modules/**')).map(
-      this.addFindingsFile.bind(this)
-    );
-  }
-
   findingsForUri(uri: vscode.Uri): ResolvedFinding[] {
     return this.findingsBySourceUri[uri.toString()] || [];
   }
@@ -67,6 +28,11 @@ export default class FindingsIndex {
     } catch (e) {
       // Malformed JSON file. This is logged because findings files should be written atomically.
       console.warn(e);
+      return;
+    }
+
+    if (!findings) {
+      console.log(`Findings from ${sourceUri} is falsey`);
       return;
     }
 

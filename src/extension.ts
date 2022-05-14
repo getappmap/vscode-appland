@@ -1,6 +1,5 @@
 import * as vscode from 'vscode';
 
-import { DatabaseUpdater } from './databaseUpdater';
 import { AppMapTextEditorProvider } from './appmapTextEditorProvider';
 import { Telemetry, DEBUG_EXCEPTION, TELEMETRY_ENABLED, PROJECT_OPEN } from './telemetry';
 import registerTrees from './tree';
@@ -13,55 +12,55 @@ import OpenAppMapsWebview from './webviews/openAppmapsWebview';
 import ExtensionState from './extensionState';
 import projectPickerWebview from './webviews/projectPickerWebview';
 import FindingsIndex from './findingsIndex';
-import AutoIndexer from './services/autoIndexer';
-import AutoScanner from './services/autoScanner';
 import FindingsDiagnosticsProvider from './findingsDiagnosticsProvider';
 import extensionSettings from './extensionSettings';
 import { FindingsTreeDataProvider } from './tree/findingsTreeDataProvider';
+import WorkspaceServices from './services/workspaceServices';
+import { AppMapWatcher } from './services/appmapWatcher';
+import AutoIndexerService from './services/autoIndexer';
+import AutoScannerService from './services/autoScanner';
+import { FindingWatcher } from './services/findingWatcher';
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
+  const workspaceServices = new WorkspaceServices(context);
+  Telemetry.register(context);
+
   try {
-    const localAppMaps = new AppMapCollectionFile(context);
-    const findingsEnabled = extensionSettings.findingsEnabled();
-    if (findingsEnabled) {
-      await Promise.all(
-        (vscode.workspace.workspaceFolders || []).map(async (folder) => {
-          const autoIndexer = new AutoIndexer(folder.uri.fsPath);
-          const autoScanner = new AutoScanner(folder.uri.fsPath);
-          await autoIndexer.start();
-          await autoScanner.start();
-
-          // TODO: Dynamically add and remove these in response to workspace (folder) changes.
-          context.subscriptions.push(autoIndexer);
-          context.subscriptions.push(autoScanner);
-        })
-      );
-    }
-
-    Telemetry.register(context);
-
     const properties = new ExtensionState(context);
     if (properties.isNewInstall) {
       Telemetry.reportAction('plugin:install');
     }
 
+    const appmapCollectionFile = new AppMapCollectionFile();
+    let findingsIndex: FindingsIndex;
+
+    {
+      const appmapWatcher = new AppMapWatcher({
+        onCreate: appmapCollectionFile.onCreate.bind(appmapCollectionFile),
+        onDelete: appmapCollectionFile.onDelete.bind(appmapCollectionFile),
+        onChange: appmapCollectionFile.onChange.bind(appmapCollectionFile),
+      });
+      workspaceServices.enroll(appmapWatcher);
+    }
+
+    const findingsEnabled = extensionSettings.findingsEnabled();
+    {
+      if (findingsEnabled) {
+        workspaceServices.enroll(new AutoIndexerService());
+        workspaceServices.enroll(new AutoScannerService());
+      }
+    }
+
     AppMapTextEditorProvider.register(context, properties);
-    DatabaseUpdater.register(context);
     RemoteRecording.register(context);
     ContextMenu.register(context);
 
     projectPickerWebview(context, properties);
 
-    (vscode.workspace.workspaceFolders || []).forEach((workspaceFolder) => {
-      Telemetry.sendEvent(PROJECT_OPEN, { rootDirectory: workspaceFolder.uri.fsPath });
-    });
-
-    OpenAppMapsWebview.register(context, localAppMaps);
-
-    localAppMaps.initialize();
+    OpenAppMapsWebview.register(context, appmapCollectionFile);
 
     if (findingsEnabled) {
-      const findingsIndex = new FindingsIndex(context);
+      findingsIndex = new FindingsIndex();
 
       const findingsDiagnosticsProvider = new FindingsDiagnosticsProvider();
       findingsIndex.onChanged((uri: vscode.Uri) =>
@@ -72,10 +71,24 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         treeDataProvider: findingsTreeProvider,
       });
 
-      findingsIndex.initialize();
+      const findingWatcher = new FindingWatcher({
+        onCreate: findingsIndex.addFindingsFile.bind(findingsIndex),
+        onDelete: findingsIndex.removeFindingsFile.bind(findingsIndex),
+        onChange: (uri) => {
+          findingsIndex.removeFindingsFile(uri);
+          findingsIndex.addFindingsFile(uri);
+        },
+      });
+      workspaceServices.enroll(findingWatcher);
     }
 
-    const { localTree } = registerTrees(context, localAppMaps);
+    appmapCollectionFile.initialize();
+
+    const { localTree } = registerTrees(context, appmapCollectionFile);
+
+    (vscode.workspace.workspaceFolders || []).forEach((workspaceFolder) => {
+      Telemetry.sendEvent(PROJECT_OPEN, { rootDirectory: workspaceFolder.uri.fsPath });
+    });
 
     context.subscriptions.push(
       vscode.commands.registerCommand('appmap.applyFilter', async () => {
@@ -84,14 +97,14 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
             'Enter a case sensitive partial match or leave this input empty to clear an existing filter',
         });
 
-        localAppMaps.setFilter(filter || '');
-        localTree.reveal(localAppMaps.appMaps[0], { select: false });
+        appmapCollectionFile.setFilter(filter || '');
+        localTree.reveal(appmapCollectionFile.appMaps[0], { select: false });
       })
     );
 
     context.subscriptions.push(
       vscode.commands.registerCommand('appmap.findByName', async () => {
-        const items = localAppMaps
+        const items = appmapCollectionFile
           .allAppMaps()
           .map((loader) => loader.descriptor.metadata?.name as string)
           .filter(notEmpty)
@@ -102,7 +115,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
           return;
         }
 
-        const loader = localAppMaps.findByName(name);
+        const loader = appmapCollectionFile.findByName(name);
         if (!loader) {
           return;
         }

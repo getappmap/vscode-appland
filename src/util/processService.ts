@@ -8,7 +8,7 @@ export default class ProcessService {
   process?: ChildProcess;
   retry = true;
 
-  constructor(public dir: string) {}
+  constructor(public folder: vscode.WorkspaceFolder) {}
 
   async dispose(): Promise<number | undefined> {
     if (!this.process) return;
@@ -29,7 +29,7 @@ export default class ProcessService {
     let error: string | undefined;
     let mainCommand: string | undefined;
     const environment: Record<string, string> = {};
-    const nvmrcPath = await resolveFilePath(this.dir, '.nvmrc');
+    const nvmrcPath = await resolveFilePath(this.folder.uri.fsPath, '.nvmrc');
     if (nvmrcPath) {
       mainCommand = [home, '.nvm/nvm-exec'].join('/');
       const version = (await promisify(readFile)(nvmrcPath)).toString().trim();
@@ -45,8 +45,7 @@ export default class ProcessService {
       }
     }
     if (error) {
-      vscode.window.showErrorMessage(error);
-      return;
+      vscode.window.showWarningMessage(error);
     }
     if (!mainCommand) mainCommand = command;
 
@@ -55,6 +54,7 @@ export default class ProcessService {
     }
 
     options.env = { ...process.env, ...environment };
+    options.cwd = this.folder.uri.fsPath;
     options.detached = false;
 
     this.invokeCommand(mainCommand, args, options);

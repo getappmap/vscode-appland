@@ -3,5 +3,6 @@ import AppMapLoader from './appmapLoader';
 
 export default interface AppMapCollection {
   readonly onUpdated: Event<AppMapCollection>;
+
   appMaps(): AppMapLoader[];
 }
