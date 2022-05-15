@@ -1,3 +1,23 @@
+# [0.25.0](https://github.com/applandinc/vscode-appland/compare/v0.24.2...v0.25.0) (2022-05-15)
+
+
+### Bug Fixes
+
+* Fix command titles ([3a33841](https://github.com/applandinc/vscode-appland/commit/3a3384179d971a32aa50a79ca1b7778a7e21398d))
+* Number.MAX_VALUE shows marker to end-of-line ([b60bef7](https://github.com/applandinc/vscode-appland/commit/b60bef775a457cf0e42c86ddf877057385dab2b8))
+* Try re-adding launch args ([3b85580](https://github.com/applandinc/vscode-appland/commit/3b85580738a1102c0673fa33e9d6ed06dee41249))
+
+
+### Features
+
+* Enable/disable findings via setting ([48bee0a](https://github.com/applandinc/vscode-appland/commit/48bee0a0a4ca852be6efbf206b7fd96494499f8b))
+* Identify and display Findings ([b622eaa](https://github.com/applandinc/vscode-appland/commit/b622eaab9130accbe09d005eab76d3a86040ec75))
+* Index and scan AppMaps continuously ([85852f4](https://github.com/applandinc/vscode-appland/commit/85852f4b497d77b33a0a162907cfd99bde40b6c6))
+* Make sure child processes are not detached ([02d1d57](https://github.com/applandinc/vscode-appland/commit/02d1d579d196e4e50c4e98bb9a01b5dc7f0b0812))
+* Show error message when a dependent process can't be spawned ([a78f7d5](https://github.com/applandinc/vscode-appland/commit/a78f7d5ee0ce3fd8839d606e6246fa8e99482f72))
+* Verify project Node.js version ([70b6986](https://github.com/applandinc/vscode-appland/commit/70b698637ef3e93945ba1792393a803d4230e0b2))
+* Wait for child processes to terminate ([88c8792](https://github.com/applandinc/vscode-appland/commit/88c879211d3668511588799191e51fa422bc6e0d))
+
 ## [0.24.2](https://github.com/applandinc/vscode-appland/compare/v0.24.1...v0.24.2) (2022-05-13)
 
 
