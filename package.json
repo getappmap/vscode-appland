@@ -244,7 +244,7 @@
     "test:unit": "ts-node ./test/unit/*.test.ts",
     "test:extension": "ts-node ./test/integrationTest.ts",
     "test:web-client": "mocha web/test/*.test.mjs",
-    "test": "yarn run test:extension && yarn run test:web-client",
+    "test": "yarn run test:web-client",
     "compile": "webpack --mode=production",
     "watch": "webpack --watch --mode=development",
     "package": "vsce package --no-yarn",
