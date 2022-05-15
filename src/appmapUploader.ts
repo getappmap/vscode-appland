@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import bent from 'bent';
+import extensionSettings from './extensionSettings';
 
 export class AppmapUploader {
   private static DIALOG_KEY = 'applandinc.appmap.uploadDialog';
@@ -27,7 +28,7 @@ export class AppmapUploader {
       context.globalState.update(this.DIALOG_KEY, true);
     }
 
-    const post = bent(this.getUri().toString(), 'POST', 'json', 201, {
+    const post = bent(extensionSettings.uploadURL().toString(), 'POST', 'json', 201, {
       'X-Requested-With': 'VSCodeUploader',
     });
 
@@ -58,15 +59,12 @@ export class AppmapUploader {
     context.globalState.update(this.DIALOG_KEY, undefined);
   }
 
-  private static getUri(): vscode.Uri {
-    const configUrl: string = vscode.workspace
-      .getConfiguration('appMap')
-      .get('applandUrl') as string;
-    return vscode.Uri.parse(configUrl);
-  }
-
   private static getConfirmUri(id: number, token: string): vscode.Uri {
-    return vscode.Uri.joinPath(this.getUri(), '/scenario_uploads', id.toString()).with({
+    return vscode.Uri.joinPath(
+      extensionSettings.uploadURL(),
+      '/scenario_uploads',
+      id.toString()
+    ).with({
       query: `token=${token}`,
     });
   }

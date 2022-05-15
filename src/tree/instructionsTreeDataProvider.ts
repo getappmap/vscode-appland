@@ -13,7 +13,7 @@ const docsPages = [
   },
 ];
 
-export class GettingStartedTreeDataProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
+export class InstructionsTreeDataProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
   private _onDidChangeTreeData: vscode.EventEmitter<
     vscode.TreeItem | undefined | null | void
   > = new vscode.EventEmitter<vscode.TreeItem | undefined | null | void>();

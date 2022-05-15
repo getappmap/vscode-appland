@@ -107,7 +107,7 @@ export default class OpenAppMapsWebview {
           }
         });
 
-        vscode.commands.executeCommand('appmap.focusQuickstartDocs', 3);
+        vscode.commands.executeCommand('appmap.focusInstructions', 3);
       })
     );
   }

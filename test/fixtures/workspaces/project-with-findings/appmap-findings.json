@@ -1,0 +1,56 @@
+{
+  "findings": [
+    {
+      "appMapFile": "tmp/appmap/minitest/Microposts_controller_can_get_microposts_as_JSON.appmap.json",
+      "checkId": "unbatched-materialized-query",
+      "ruleId": "unbatched-materialized-query",
+      "ruleTitle": "Unbatched materialized SQL query",
+      "event": {
+        "id": 194,
+        "event": "call",
+        "thread_id": 5220,
+        "sql_query": {
+          "sql": "SELECT \"microposts\".* FROM \"microposts\" WHERE \"microposts\".\"user_id\" = ? ORDER BY \"microposts\".\"created_at\" DESC",
+          "database_type": "sqlite",
+          "server_version": "3.38.2"
+        }
+      },
+      "hash": "a806b8da7d6fa5e1d5294ee0f3a63a715a2a6962d2af8ad5628a72baf26ca2f0",
+      "stack": [
+        "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activerecord-6.0.4.1/lib/active_record/relation.rb:249",
+        "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_controller/metal/renderers.rb:141",
+        "app/controllers/microposts_controller.rb:6",
+        "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_controller/metal/instrumentation.rb:19"
+      ],
+      "scope": {
+        "id": 147,
+        "event": "call",
+        "thread_id": 5220,
+        "http_server_request": {
+          "request_method": "GET",
+          "path_info": "/microposts",
+          "normalized_path_info": "/microposts",
+          "headers": {
+            "Host": "www.example.com",
+            "Accept": "text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5",
+            "Cookie": "_sample_app_session=zO%2B8113akU%2Bc0RO0%2Bxiowjh8pG43xr%2FTL%2BLSA7Z9o8s4Hf%2F8mX%2BkGKGzVMK0p3VcXF7g0mSPMHz9nvMA51S4KP8XkQcrv%2BGSB%2FarQGrkPDHnjE%2FAGJPcAUv2JOO4z3E6a7%2FEj%2FU9mXUK76rcntTwXIkQmDxDCRWbTGI7SczNl2gthyXuMOYzolu1qkNwX3KO%2FBfFbSyeQViboX4cD3uVxsuB4Q%3D%3D--Z%2BRHpaf3W66KBhrq--X94keIgAaqxuvv0ygZh9nw%3D%3D; remember_token=4kzFKby25hWd6INvqhnWSw; user_id=B5PrmriaSDi%2FyR0yVytp2MnTZihCXPOuG2Kl4PkzUdCO%2BzPeLKv8hT0r%2FhmvADVBODulqRxWlRZGapQ%2B58Vo%2FDE8U%2BN41e4%3D--3VxlPWkaJWT5LoCJ--iBEFou4WEP%2FV2Dedo0Tanw%3D%3D",
+            "Content-Length": "0"
+          }
+        }
+      },
+      "message": "Unbatched materialized SQL query: SELECT \"microposts\".* FROM \"microposts\" WHERE \"microposts\".\"user_id\" = ? ORDER BY \"microposts\".\"created_at\" DESC",
+      "relatedEvents": [
+        {
+          "id": 194,
+          "event": "call",
+          "thread_id": 5220,
+          "sql_query": {
+            "sql": "SELECT \"microposts\".* FROM \"microposts\" WHERE \"microposts\".\"user_id\" = ? ORDER BY \"microposts\".\"created_at\" DESC",
+            "database_type": "sqlite",
+            "server_version": "3.38.2"
+          }
+        }
+      ]
+    }
+  ]
+}

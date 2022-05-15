@@ -3,7 +3,8 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 import RemoteRecordingClient from './remoteRecordingClient';
-import { fileExists } from './util';
+import { resolveFilePath } from './util';
+import { promisify } from 'util';
 
 export default class RemoteRecording {
   private static readonly RECENT_REMOTE_URLS = 'APPMAP_RECENT_REMOTE_URLS';
@@ -138,18 +139,18 @@ export default class RemoteRecording {
 
       const folder = this.getFolder();
 
-      const fileName = path.join(folder, appmapName.replace(/[^a-zA-Z0-9]/g, '_'));
+      const fileName = appmapName.replace(/[^a-zA-Z0-9]/g, '_');
       const fileExt = '.appmap.json';
       let checkFileName = fileName;
       let i = 0;
 
-      while (await fileExists(checkFileName + fileExt)) {
+      while (await resolveFilePath(folder, checkFileName + fileExt)) {
         i++;
         checkFileName = `${fileName}(${i})`;
       }
 
-      const filePath = checkFileName + fileExt;
-      fs.writeFileSync(filePath, JSON.stringify(appmap), 'utf8');
+      const filePath = path.join(folder, checkFileName + fileExt);
+      await promisify(fs.writeFile)(filePath, JSON.stringify(appmap), 'utf8');
 
       const uri = vscode.Uri.file(filePath);
       await vscode.commands.executeCommand('vscode.openWith', uri, 'appmap.views.appMapFile');

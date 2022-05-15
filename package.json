@@ -108,15 +108,15 @@
       },
       {
         "command": "appmap.context.openInFileExplorer",
-        "title": "Open in File Explorer"
+        "title": "AppMap: Open in File Explorer"
       },
       {
         "command": "appmap.context.openAsJson",
-        "title": "Open as JSON"
+        "title": "AppMap: Open as JSON"
       },
       {
         "command": "appmap.context.rename",
-        "title": "Rename"
+        "title": "AppMap: Rename"
       }
     ],
     "configuration": {
@@ -131,6 +131,18 @@
           "type": "string",
           "default": "https://app.land",
           "description": "URL of an AppLand cloud instance for AppMap storage"
+        },
+        "appMap.findingsEnabled": {
+          "type": "boolean",
+          "description": "Enable AppMap scanner and findings"
+        },
+        "appMap.indexCommand": {
+          "type": "string",
+          "description": "Command use to run the @appland/appmap index command in watch mode"
+        },
+        "appMap.scanCommand": {
+          "type": "string",
+          "description": "Command use to run the @appland/scanner scan command in watch mode"
         }
       }
     },
@@ -163,6 +175,11 @@
     "views": {
       "appmap": [
         {
+          "id": "appmap.views.instructions",
+          "name": "Instructions",
+          "visibility": "visible"
+        },
+        {
           "id": "appmap.views.local",
           "name": "AppMaps",
           "contextualTitle": "AppMap",
@@ -170,14 +187,14 @@
           "icon": "images/logo.svg"
         },
         {
-          "id": "appmap.views.milestones",
-          "name": "Getting started with AppMap",
+          "id": "appmap.views.findings",
+          "name": "Findings",
           "visibility": "collapsed"
         },
         {
           "id": "appmap.views.documentation",
           "name": "Documentation",
-          "visibility": "collapsed"
+          "visibility": "visible"
         }
       ]
     },
@@ -224,9 +241,10 @@
     "vscode:prepublish": "yarn run compile",
     "lint": "eslint . --ext .ts",
     "pretest": "yarn run lint && tsc",
-    "test:extension": "node ./out/test/runTest.js",
+    "test:unit": "ts-node ./test/unit/*.test.ts",
+    "test:extension": "ts-node ./test/integrationTest.ts",
     "test:web-client": "mocha web/test/*.test.mjs",
-    "test": "yarn run test:extension && yarn run test:web-client",
+    "test": "yarn run test:web-client",
     "compile": "webpack --mode=production",
     "watch": "webpack --watch --mode=development",
     "package": "vsce package --no-yarn",
@@ -287,6 +305,7 @@
     "@appland/components": "^1.23.0",
     "@appland/diagrams": "^1.5.1",
     "@appland/models": "^1.12.1",
+    "@appland/scanner": "^1.54.1",
     "bent": "^7.3.12",
     "bootstrap": "^4.5.3",
     "bootstrap-autocomplete": "^2.3.7",
@@ -300,5 +319,14 @@
     "vue": "^2.6.14",
     "vue-template-compiler": "^2.6.14",
     "vuex": "^3.6.0"
+  },
+  "workspaces": [
+    "test/fixtures/workspaces/project-with-findings"
+  ],
+  "__metadata": {
+    "id": "41d86b02-68d3-4049-9422-95da6d11cc2e",
+    "publisherDisplayName": "AppLand",
+    "publisherId": "f7f1004e-6038-49cd-a096-4e618fe53f77",
+    "isPreReleaseVersion": false
   }
 }

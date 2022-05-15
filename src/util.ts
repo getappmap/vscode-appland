@@ -36,6 +36,22 @@ export function notEmpty<TValue>(value: TValue | null | undefined): value is TVa
   return value !== null && value !== undefined;
 }
 
+export async function resolveFilePath(
+  basePath: string,
+  filePath: string
+): Promise<string | undefined> {
+  if (!path.isAbsolute(filePath)) filePath = path.join(basePath, filePath);
+
+  return new Promise<string | undefined>((resolve) => {
+    fs.stat(filePath, (err) => {
+      if (err) {
+        return resolve(undefined);
+      }
+      return resolve(filePath);
+    });
+  });
+}
+
 export async function fileExists(filename: string): Promise<boolean> {
   return new Promise((resolve) => fs.access(filename, (err) => resolve(err === null)));
 }
