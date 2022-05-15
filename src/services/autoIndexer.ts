@@ -14,7 +14,7 @@ class AutoIndexer extends ProcessService implements WorkspaceServiceInstance {
       commandArgs = command;
     }
 
-    this.runProcess(commandArgs[0], commandArgs[1], {});
+    return this.runProcess(commandArgs[0], commandArgs[1], {});
   }
 }
 
