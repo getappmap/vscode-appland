@@ -12,7 +12,7 @@ async function main(): Promise<void> {
     // Passed to --extensionTestsPath
     const extensionTestsPath = path.resolve(__dirname, '../out/test/integration/index.js');
 
-    const testWorkspace = 'test/fixtures/workspaces/project-with-findings';
+    const testWorkspace = 'test/fixtures/workspaces/project-a';
 
     await new Promise<void>((resolve, reject) => {
       const proc = exec(`yarn install`, { cwd: testWorkspace });

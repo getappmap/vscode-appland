@@ -11728,9 +11728,18 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"project-with-findings@workspace:test/fixtures/workspaces/project-with-findings":
+"project-a@workspace:test/fixtures/workspaces/project-a":
   version: 0.0.0-use.local
-  resolution: "project-with-findings@workspace:test/fixtures/workspaces/project-with-findings"
+  resolution: "project-a@workspace:test/fixtures/workspaces/project-a"
+  dependencies:
+    "@appland/appmap": ^3.25.3
+    "@appland/scanner": ^1.56.0
+  languageName: unknown
+  linkType: soft
+
+"project-b@workspace:test/fixtures/workspaces/project-b":
+  version: 0.0.0-use.local
+  resolution: "project-b@workspace:test/fixtures/workspaces/project-b"
   dependencies:
     "@appland/appmap": ^3.25.3
     "@appland/scanner": ^1.56.0

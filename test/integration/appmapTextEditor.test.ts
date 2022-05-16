@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { FixtureDir, initializeWorkspace, waitFor } from './util';
+import { ProjectA, initializeWorkspace, waitFor } from './util';
 import { join } from 'path';
 import assert, { AssertionError } from 'assert';
 
@@ -33,7 +33,7 @@ describe('AppMapTextEditor', () => {
     };
     const uri = vscode.Uri.parse(
       `file://${join(
-        FixtureDir,
+        ProjectA,
         'tmp/appmap/minitest/Microposts_controller_can_get_microposts_as_JSON.appmap.json'
       )}#${JSON.stringify(state)}`
     );
