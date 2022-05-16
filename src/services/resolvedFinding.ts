@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { Finding } from '@appland/scanner/built/cli';
-import { resolveFilePath } from './util';
+import { resolveFilePath } from '../util';
 
 class StackFrameIndex {
   locationByFrame = new Map<string, vscode.Location>();

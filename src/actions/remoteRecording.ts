@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 import RemoteRecordingClient from './remoteRecordingClient';
-import { resolveFilePath } from './util';
+import { resolveFilePath } from '../util';
 import { promisify } from 'util';
 
 export default class RemoteRecording {

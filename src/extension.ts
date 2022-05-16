@@ -1,19 +1,19 @@
 import * as vscode from 'vscode';
 
-import { AppMapTextEditorProvider } from './appmapTextEditorProvider';
+import { AppMapTextEditorProvider } from './textEditor/appmapTextEditorProvider';
 import { Telemetry, DEBUG_EXCEPTION, TELEMETRY_ENABLED, PROJECT_OPEN } from './telemetry';
 import registerTrees from './tree';
-import AppMapCollectionFile from './appmapCollectionFile';
-import ContextMenu from './contextMenu';
-import RemoteRecording from './remoteRecording';
+import AppMapCollectionFile from './services/appmapCollectionFile';
+import ContextMenu from './tree/contextMenu';
+import RemoteRecording from './actions/remoteRecording';
 import { notEmpty } from './util';
 import { registerUtilityCommands } from './registerUtilityCommands';
 import OpenAppMapsWebview from './webviews/openAppmapsWebview';
-import ExtensionState from './extensionState';
+import ExtensionState from './configuration/extensionState';
 import projectPickerWebview from './webviews/projectPickerWebview';
-import FindingsIndex from './findingsIndex';
-import FindingsDiagnosticsProvider from './findingsDiagnosticsProvider';
-import extensionSettings from './extensionSettings';
+import FindingsIndex from './services/findingsIndex';
+import FindingsDiagnosticsProvider from './diagnostics/findingsDiagnosticsProvider';
+import extensionSettings from './configuration/extensionSettings';
 import { FindingsTreeDataProvider } from './tree/findingsTreeDataProvider';
 import WorkspaceServices from './services/workspaceServices';
 import { AppMapWatcher } from './services/appmapWatcher';

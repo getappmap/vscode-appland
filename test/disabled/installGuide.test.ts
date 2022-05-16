@@ -1,7 +1,7 @@
 import assert from 'assert';
 import * as vscode from 'vscode';
 import { SinonSandbox, createSandbox } from 'sinon';
-import ExtensionState from '../../src/extensionState';
+import ExtensionState from '../../src/configuration/extensionState';
 import MockExtensionContext from '../mocks/mockExtensionContext';
 import MockFileSystemWatcher from '../mocks/mockFileSystemWatcher';
 import { mockSingleProjectWorkspace } from '../mocks/mockWorkspace';

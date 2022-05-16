@@ -3,7 +3,7 @@ import { Uri } from 'vscode';
 import * as path from 'path';
 import { createHash } from 'crypto';
 import TelemetryDataProvider from '../telemetryDataProvider';
-import LanguageResolver, { UNKNOWN_LANGUAGE } from '../../languageResolver';
+import LanguageResolver, { UNKNOWN_LANGUAGE } from '../../services/languageResolver';
 import { fileExists } from '../../util';
 
 export const DEBUG_EXCEPTION = new TelemetryDataProvider({

@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { hasPreviouslyInstalledExtension } from './util';
+import { hasPreviouslyInstalledExtension } from '../util';
 
 export const Keys = {
   Global: {
