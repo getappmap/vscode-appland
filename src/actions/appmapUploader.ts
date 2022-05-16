@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import bent from 'bent';
-import extensionSettings from './extensionSettings';
+import extensionSettings from '../configuration/extensionSettings';
 
 export class AppmapUploader {
   private static DIALOG_KEY = 'applandinc.appmap.uploadDialog';

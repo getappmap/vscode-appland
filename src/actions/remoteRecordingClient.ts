@@ -1,5 +1,5 @@
 import bent, { NodeResponse } from 'bent';
-import { Telemetry, RECORDING_START, RECORDING_STOP, RECORDING_STATUS } from './telemetry';
+import { Telemetry, RECORDING_START, RECORDING_STOP, RECORDING_STATUS } from '../telemetry';
 
 export default class RemoteRecordingClient {
   private static readonly RECORDING_URI = '/_appmap/record';

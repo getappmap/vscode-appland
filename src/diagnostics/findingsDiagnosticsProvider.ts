@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { ResolvedFinding } from './resolvedFinding';
+import { ResolvedFinding } from '../services/resolvedFinding';
 
 type DiagnosticWithProblemLocation = {
   diagnostic: vscode.Diagnostic;

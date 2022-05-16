@@ -1,9 +1,9 @@
 import { PathLike, promises as fs, Dirent } from 'fs';
 import { extname, join } from 'path';
-import AppMapAgent from './agent/appMapAgent';
-import GitProperties from './telemetry/properties/versionControlGit';
-import AppMapAgentRuby from './agent/appMapAgentRuby';
-import AppMapAgentDummy from './agent/AppMapAgentDummy';
+import AppMapAgent from '../agent/appMapAgent';
+import GitProperties from '../telemetry/properties/versionControlGit';
+import AppMapAgentRuby from '../agent/appMapAgentRuby';
+import AppMapAgentDummy from '../agent/AppMapAgentDummy';
 
 const LANGUAGES = [
   {

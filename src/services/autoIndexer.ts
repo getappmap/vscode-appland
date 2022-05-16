@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
-import extensionSettings from '../extensionSettings';
-import ProcessService from '../util/processService';
+import extensionSettings from '../configuration/extensionSettings';
+import ProcessService from './processService';
 import { WorkspaceService, WorkspaceServiceInstance } from './workspaceService';
 
 class AutoIndexer extends ProcessService implements WorkspaceServiceInstance {

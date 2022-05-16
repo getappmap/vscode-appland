@@ -11,7 +11,7 @@ import * as semver from 'semver';
 import { analyze, Feature, Score } from '../analyzers';
 import { randomBytes } from 'crypto';
 import { COPY_INSTALL_COMMAND, OPEN_VIEW, Telemetry } from '../telemetry';
-import ExtensionState from '../extensionState';
+import ExtensionState from '../configuration/extensionState';
 
 const COLUMN = ViewColumn.One;
 

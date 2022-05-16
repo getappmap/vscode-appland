@@ -1,5 +1,5 @@
 import { WorkspaceFolder } from 'vscode';
-import LanguageResolver from '../languageResolver';
+import LanguageResolver from '../services/languageResolver';
 
 export type Score = 'bad' | 'ok' | 'good';
 const SCORE_VALUES = { bad: 0, ok: 1, good: 2 };

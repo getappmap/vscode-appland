@@ -1,9 +1,9 @@
-import { AppMapTextEditorProvider } from './appmapTextEditorProvider';
+import { AppMapTextEditorProvider } from './textEditor/appmapTextEditorProvider';
 import * as vscode from 'vscode';
 import { LinkTreeDataProvider } from './tree/linkTreeDataProvider';
-import RemoteRecording from './remoteRecording';
-import ExtensionState from './extensionState';
-import { AppmapUploader } from './appmapUploader';
+import RemoteRecording from './actions/remoteRecording';
+import ExtensionState from './configuration/extensionState';
+import { AppmapUploader } from './actions/appmapUploader';
 
 export function registerUtilityCommands(
   context: vscode.ExtensionContext,

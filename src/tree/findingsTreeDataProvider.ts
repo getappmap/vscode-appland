@@ -1,7 +1,7 @@
 import { Event } from '@appland/models';
 import * as vscode from 'vscode';
-import FindingsIndex from '../findingsIndex';
-import { ResolvedFinding } from '../resolvedFinding';
+import FindingsIndex from '../services/findingsIndex';
+import { ResolvedFinding } from '../services/resolvedFinding';
 
 export class FindingsTreeDataProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
   private _onDidChangeTreeData: vscode.EventEmitter<

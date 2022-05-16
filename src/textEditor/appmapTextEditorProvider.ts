@@ -1,10 +1,10 @@
 import { isAbsolute, join } from 'path';
 import * as vscode from 'vscode';
-import { Telemetry, APPMAP_OPEN, APPMAP_UPLOAD } from './telemetry';
-import { getNonce, getRecords, workspaceFolderForDocument } from './util';
-import { version } from '../package.json';
-import ExtensionState from './extensionState';
-import { AppmapUploader } from './appmapUploader';
+import { Telemetry, APPMAP_OPEN, APPMAP_UPLOAD } from '../telemetry';
+import { getNonce, getRecords, workspaceFolderForDocument } from '../util';
+import { version } from '../../package.json';
+import ExtensionState from '../configuration/extensionState';
+import { AppmapUploader } from '../actions/appmapUploader';
 
 /**
  * Provider for AppLand scenario files.
