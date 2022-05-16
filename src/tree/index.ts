@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import AppMapCollectionFile from '../services/appmapCollectionFile';
 import Links from './links';
 import { InstructionsTreeDataProvider } from './instructionsTreeDataProvider';
-import { AppMapTreeDataProvider } from './AppMapTreeDataProvider';
+import { AppMapTreeDataProvider } from './appMapTreeDataProvider';
 import { LinkTreeDataProvider } from './linkTreeDataProvider';
 
 export default function registerTrees(

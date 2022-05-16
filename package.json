@@ -192,6 +192,11 @@
           "visibility": "collapsed"
         },
         {
+          "id": "appmap.views.codeObjects",
+          "name": "Code Objects",
+          "visibility": "collapsed"
+        },
+        {
           "id": "appmap.views.documentation",
           "name": "Documentation",
           "visibility": "visible"
