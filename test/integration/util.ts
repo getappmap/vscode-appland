@@ -3,10 +3,8 @@ import { exec } from 'child_process';
 import { close, open, utimes } from 'fs';
 import { join } from 'path';
 
-export const FixtureDir = join(
-  __dirname,
-  '../../../test/fixtures/workspaces/project-with-findings'
-);
+export const ProjectA = join(__dirname, '../../../test/fixtures/workspaces/project-a');
+export const ProjectB = join(__dirname, '../../../test/fixtures/workspaces/project-b');
 
 export async function initializeWorkspace(): Promise<void> {
   await closeAllEditors();
@@ -17,9 +15,9 @@ async function closeAllEditors(): Promise<void> {
   await vscode.commands.executeCommand('workbench.action.closeAllEditors');
 }
 
-async function executeWorkspaceOSCommand(cmd: string): Promise<void> {
+async function executeWorkspaceOSCommand(cmd: string, workspaceName: string): Promise<void> {
   return new Promise<void>((resolve, reject) => {
-    exec(cmd, { cwd: FixtureDir }, (err, stdout, stderr) => {
+    exec(cmd, { cwd: workspaceName }, (err, stdout, stderr) => {
       if (err) {
         console.log(stdout);
         console.warn(stderr);
@@ -31,8 +29,10 @@ async function executeWorkspaceOSCommand(cmd: string): Promise<void> {
 }
 
 async function cleanWorkspace(): Promise<void> {
-  await executeWorkspaceOSCommand(`git clean -fd .`);
-  await executeWorkspaceOSCommand(`git restore .`);
+  await executeWorkspaceOSCommand(`git clean -fd .`, ProjectA);
+  await executeWorkspaceOSCommand(`git restore .`, ProjectA);
+  await executeWorkspaceOSCommand(`git clean -fd .`, ProjectB);
+  await executeWorkspaceOSCommand(`git restore .`, ProjectB);
 }
 
 export async function waitFor(
@@ -72,4 +72,12 @@ export async function touch(path: string): Promise<void> {
       resolve();
     });
   });
+}
+
+export async function mtimeFiles(): Promise<vscode.Uri[]> {
+  return vscode.workspace.findFiles(`**/mtime`);
+}
+
+export async function appmapFiles(): Promise<vscode.Uri[]> {
+  return vscode.workspace.findFiles(`**/*.appmap.json`);
 }

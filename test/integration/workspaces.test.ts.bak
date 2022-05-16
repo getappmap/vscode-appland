@@ -1,0 +1,41 @@
+import * as vscode from 'vscode';
+import { initializeWorkspace, waitFor, ProjectB } from './util';
+
+// TODO: This test does not work because of the VSCode error:
+// "Entering a new workspace is not possible in tests"
+
+describe('WorkspaceServices', () => {
+  beforeEach(initializeWorkspace);
+  afterEach(initializeWorkspace);
+
+  it('newly opened project is scanned', async () => {
+    await waitFor(
+      'Expecting 1 open project',
+      () => vscode.workspace.workspaceFolders?.length === 1
+    );
+
+    await waitFor(
+      'Expecting 1 Finding diagnostic',
+      () => vscode.languages.getDiagnostics().filter((d) => d[1].length > 0).length === 1
+    );
+
+    vscode.workspace.updateWorkspaceFolders(0, undefined, { uri: vscode.Uri.file(ProjectB) });
+
+    await waitFor(
+      'Expecting 2 open projects',
+      () => vscode.workspace.workspaceFolders?.length === 2
+    );
+
+    await waitFor(
+      'Expecting a new Finding diagnostic',
+      () => vscode.languages.getDiagnostics().filter((d) => d[1].length > 0).length === 2
+    );
+
+    console.log(
+      vscode.languages
+        .getDiagnostics()
+        .filter((entry) => entry[1].length > 0)
+        .map((entry) => [entry[0].toString(), entry[1].map((d) => d.message)])
+    );
+  });
+});

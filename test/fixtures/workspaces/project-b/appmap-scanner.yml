@@ -1,0 +1,2 @@
+- rule: deserializationOfUntrustedData
+  scope: command
