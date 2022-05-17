@@ -13,15 +13,21 @@ export default {
       vscode.workspace.getConfiguration('appMap').get('findingsEnabled') || false
     ),
 
-  indexCommand: (): string | [string, string[]] =>
+  indexCommand: (): string | string[] =>
     vscode.workspace.getConfiguration('appMap').get('indexCommand') || [
-      'npx',
-      ['--no-install', '@appland/appmap', 'index', '--watch', '--appmap-dir', '.'],
+      'appmap',
+      'index',
+      '--watch',
+      '--appmap-dir',
+      '.',
     ],
 
-  scanCommand: (): string | [string, string[]] =>
+  scanCommand: (): string | string[] =>
     vscode.workspace.getConfiguration('appMap').get('scanCommand') || [
-      'npx',
-      ['--no-install', '@appland/scanner', 'scan', '--watch', '--appmap-dir', '.'],
+      'scanner',
+      'scan',
+      '--watch',
+      '--appmap-dir',
+      '.',
     ],
 };

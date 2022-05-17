@@ -6,15 +6,14 @@ import { WorkspaceService, WorkspaceServiceInstance } from './workspaceService';
 class AutoScanner extends ProcessService implements WorkspaceServiceInstance {
   async start(): Promise<void> {
     const command = extensionSettings.scanCommand();
-    let commandArgs: [string, string[]];
+    let commandArgs: string[];
     if (typeof command === 'string') {
-      const tokens = command.split(' ');
-      commandArgs = [tokens[0], tokens.slice(1)];
+      commandArgs = command.split(' ');
     } else {
       commandArgs = command;
     }
 
-    return this.runProcess(commandArgs[0], commandArgs[1], {});
+    return this.runProcess(commandArgs, {});
   }
 }
 

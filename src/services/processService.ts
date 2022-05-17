@@ -3,6 +3,7 @@ import { ChildProcess, exec, spawn, SpawnOptions } from 'child_process';
 import { resolveFilePath } from '../util';
 import { promisify } from 'util';
 import { readFile } from 'fs';
+import { assert } from 'console';
 
 export default class ProcessService {
   process?: ChildProcess;
@@ -20,21 +21,27 @@ export default class ProcessService {
     return new Promise<number>((resolve) => process.once('exit', resolve));
   }
 
-  protected async runProcess(
-    command: string,
-    args: string[],
-    options: SpawnOptions
-  ): Promise<void> {
+  protected async runProcess(args: string[], options: SpawnOptions): Promise<void> {
     const home = process.env.HOME || '';
     let error: string | undefined;
-    let mainCommand: string | undefined;
     const environment: Record<string, string> = {};
+
+    const npmLockFile = await resolveFilePath(this.folder.uri.fsPath, 'package-lock.json');
+    const yarnLockFile = await resolveFilePath(this.folder.uri.fsPath, 'yarn.lock');
+
+    if (yarnLockFile) {
+      args.unshift('run');
+      args.unshift('yarn');
+    } else if (npmLockFile) {
+      args.unshift('exec');
+      args.unshift('npm');
+    }
+
     const nvmrcPath = await resolveFilePath(this.folder.uri.fsPath, '.nvmrc');
     if (nvmrcPath) {
-      mainCommand = [home, '.nvm/nvm-exec'].join('/');
+      args.unshift([home, '.nvm/nvm-exec'].join('/'));
       const version = (await promisify(readFile)(nvmrcPath)).toString().trim();
       environment.NODE_VERSION = version;
-      args = [command].concat(args);
       error = validateNodeVersion('nvm', version);
     } else {
       const availableVersion = await systemNodeVersion();
@@ -47,8 +54,6 @@ export default class ProcessService {
     if (error) {
       vscode.window.showWarningMessage(error);
     }
-    if (!mainCommand) mainCommand = command;
-
     if (process.env.SHELL) {
       options.shell = process.env.SHELL;
     }
@@ -56,6 +61,9 @@ export default class ProcessService {
     options.env = { ...process.env, ...environment };
     options.cwd = this.folder.uri.fsPath;
     options.detached = false;
+
+    const mainCommand = args.shift();
+    if (!mainCommand) throw new Error('No command provided');
 
     this.invokeCommand(mainCommand, args, options);
   }
