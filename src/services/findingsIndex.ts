@@ -3,9 +3,11 @@ import { Finding } from '@appland/scanner/built/cli';
 import { ResolvedFinding } from './resolvedFinding';
 import { promisify } from 'util';
 import { readFile } from 'fs';
+import EventEmitter from 'events';
+import { fileExists } from '../util';
 
-export default class FindingsIndex {
-  private _onChanged = new vscode.EventEmitter<vscode.Uri>();
+export default class FindingsIndex extends EventEmitter {
+  private _onChanged = new vscode.EventEmitter<FindingsIndex>();
   public readonly onChanged = this._onChanged.event;
 
   private findingsBySourceUri = new Map<string, ResolvedFinding[]>();
@@ -47,14 +49,18 @@ export default class FindingsIndex {
     );
     this.findingsBySourceUri[sourceUri.toString()] = resolvedFindings;
 
-    this._onChanged.fire(sourceUri);
+    this.emit('added', sourceUri, resolvedFindings);
+    this._onChanged.fire(this);
   }
 
-  removeFindingsFile(sourceUri: vscode.Uri): void {
+  async removeFindingsFile(sourceUri: vscode.Uri): Promise<void> {
+    if (await fileExists(sourceUri.fsPath)) return;
+
     console.log(`Findings file removed: ${sourceUri.fsPath}`);
 
     delete this.findingsBySourceUri[sourceUri.toString()];
 
-    this._onChanged.fire(sourceUri);
+    this.emit('removed', sourceUri);
+    this._onChanged.fire(this);
   }
 }

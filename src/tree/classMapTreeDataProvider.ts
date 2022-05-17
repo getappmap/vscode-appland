@@ -3,18 +3,14 @@ import * as vscode from 'vscode';
 import ClassMapIndex, { CodeObjectEntry } from '../services/classMapIndex';
 
 export class ClassMapTreeDataProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
-  private _onDidChangeTreeData: vscode.EventEmitter<
-    vscode.TreeItem | undefined | null | void
-  > = new vscode.EventEmitter<vscode.TreeItem | undefined | null | void>();
-  public readonly onDidChangeTreeData: vscode.Event<
-    vscode.TreeItem | undefined | null | void
-  > = this._onDidChangeTreeData.event;
+  private _onDidChangeTreeData = new vscode.EventEmitter<undefined>();
+  public readonly onDidChangeTreeData = this._onDidChangeTreeData.event;
 
   classMap: ClassMapIndex;
 
   constructor(classMap: ClassMapIndex) {
     this.classMap = classMap;
-    this.classMap.onChanged(() => this._onDidChangeTreeData.fire());
+    this.classMap.onChanged(() => this._onDidChangeTreeData.fire(undefined));
   }
 
   async getTreeItem(element: vscode.TreeItem): Promise<vscode.TreeItem> {

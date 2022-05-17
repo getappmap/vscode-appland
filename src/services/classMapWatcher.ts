@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { fileExists } from '../util';
 import FileChangeHandler from './fileChangeHandler';
 import { WorkspaceService, WorkspaceServiceInstance } from './workspaceService';
 
@@ -6,11 +7,19 @@ class ClassMapWatcherInstance implements WorkspaceServiceInstance {
   watcher: vscode.FileSystemWatcher;
 
   constructor(public folder: vscode.WorkspaceFolder, public handler: FileChangeHandler) {
-    const appmapPattern = new vscode.RelativePattern(this.folder, `**/classMap.json`);
-    this.watcher = vscode.workspace.createFileSystemWatcher(appmapPattern);
-    this.watcher.onDidChange(handler.onChange.bind(handler));
-    this.watcher.onDidCreate(handler.onCreate.bind(handler));
-    this.watcher.onDidDelete(handler.onDelete.bind(handler));
+    const classMapPattern = new vscode.RelativePattern(this.folder, `**/classMap.json`);
+    this.watcher = vscode.workspace.createFileSystemWatcher(classMapPattern);
+    this.watcher.onDidChange((uri) => {
+      handler.onChange(uri);
+    });
+    this.watcher.onDidCreate((uri) => {
+      handler.onCreate(uri);
+    });
+    this.watcher.onDidDelete(async (uri) => {
+      if (await fileExists(uri.fsPath)) return;
+
+      handler.onDelete(uri);
+    });
   }
 
   async initialize() {

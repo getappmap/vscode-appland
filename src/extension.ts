@@ -23,6 +23,7 @@ import { FindingWatcher } from './services/findingWatcher';
 import ClassMapIndex from './services/classMapIndex';
 import { ClassMapWatcher } from './services/classMapWatcher';
 import { ClassMapTreeDataProvider } from './tree/classMapTreeDataProvider';
+import { ResolvedFinding } from './services/resolvedFinding';
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
   const workspaceServices = new WorkspaceServices(context);
@@ -67,9 +68,13 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
       findingsIndex = new FindingsIndex();
 
       const findingsDiagnosticsProvider = new FindingsDiagnosticsProvider();
-      findingsIndex.onChanged((uri: vscode.Uri) =>
-        findingsDiagnosticsProvider.updateFindings(uri, findingsIndex.findingsForUri(uri))
+      findingsIndex.on('added', (uri: vscode.Uri, findings: ResolvedFinding[]) =>
+        findingsDiagnosticsProvider.updateFindings(uri, findings)
       );
+      findingsIndex.on('removed', (uri: vscode.Uri) =>
+        findingsDiagnosticsProvider.updateFindings(uri, [])
+      );
+
       const findingsTreeProvider = new FindingsTreeDataProvider(findingsIndex);
       vscode.window.createTreeView('appmap.views.findings', {
         treeDataProvider: findingsTreeProvider,
@@ -77,11 +82,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
       const classMapWatcher = new ClassMapWatcher({
         onCreate: classMapIndex.addClassMapFile.bind(classMapIndex),
+        onChange: classMapIndex.addClassMapFile.bind(classMapIndex),
         onDelete: classMapIndex.removeClassMapFile.bind(classMapIndex),
-        onChange: (uri) => {
-          classMapIndex.removeClassMapFile(uri);
-          classMapIndex.addClassMapFile(uri);
-        },
       });
       const classMapProvider = new ClassMapTreeDataProvider(classMapIndex);
       vscode.window.createTreeView('appmap.views.codeObjects', {
@@ -90,11 +92,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
       const findingWatcher = new FindingWatcher({
         onCreate: findingsIndex.addFindingsFile.bind(findingsIndex),
+        onChange: findingsIndex.addFindingsFile.bind(findingsIndex),
         onDelete: findingsIndex.removeFindingsFile.bind(findingsIndex),
-        onChange: (uri) => {
-          findingsIndex.removeFindingsFile(uri);
-          findingsIndex.addFindingsFile(uri);
-        },
       });
       workspaceServices.enroll(classMapWatcher);
       workspaceServices.enroll(findingWatcher);

@@ -4,16 +4,13 @@ import AppMapCollection from '../services/appmapCollection';
 const LABEL_NO_NAME = 'Untitled AppMap';
 export class AppMapTreeDataProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
   private appmaps: AppMapCollection;
-  private _onDidChangeTreeData: vscode.EventEmitter<
-    vscode.TreeItem | undefined | null | void
-  > = new vscode.EventEmitter<vscode.TreeItem | undefined | null | void>();
-  public readonly onDidChangeTreeData: vscode.Event<
-    vscode.TreeItem | undefined | null | void
-  > = this._onDidChangeTreeData.event;
+
+  private _onDidChangeTreeData = new vscode.EventEmitter<undefined>();
+  public readonly onDidChangeTreeData = this._onDidChangeTreeData.event;
 
   constructor(appmaps: AppMapCollection) {
     this.appmaps = appmaps;
-    this.appmaps.onUpdated(() => this._onDidChangeTreeData.fire());
+    this.appmaps.onUpdated(() => this._onDidChangeTreeData.fire(undefined));
   }
 
   public getTreeItem(element: vscode.TreeItem): vscode.TreeItem {

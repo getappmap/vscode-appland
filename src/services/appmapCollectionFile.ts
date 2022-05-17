@@ -4,9 +4,11 @@ import AppMapLoader, { AppMapDescriptor } from './appmapLoader';
 import AppMapDescriptorFile from './appmapLoaderFile';
 import AppMapCollection from './appmapCollection';
 import AppMapLoaderFile from './appmapLoaderFile';
+import ChangeEventDebouncer from './changeEventDebouncer';
+import { fileExists } from '../util';
 
 export default class AppMapCollectionFile implements AppMapCollection {
-  private _onUpdated: vscode.EventEmitter<AppMapCollection> = new vscode.EventEmitter<
+  private _onUpdated: vscode.EventEmitter<AppMapCollection> = new ChangeEventDebouncer<
     AppMapCollection
   >();
   public readonly onUpdated: vscode.Event<AppMapCollection> = this._onUpdated.event;
@@ -15,6 +17,8 @@ export default class AppMapCollectionFile implements AppMapCollection {
   private currentFilter = '';
 
   async onDelete(uri: vscode.Uri): Promise<void> {
+    if (await fileExists(uri.fsPath)) return;
+
     delete this.loaders[uri.fsPath];
     this._onUpdated.fire(this);
   }

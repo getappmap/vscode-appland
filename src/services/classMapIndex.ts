@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { promisify } from 'util';
 import { readFile } from 'fs';
+import ChangeEventDebouncer from './changeEventDebouncer';
 
 const betterNames = {
   'database Database': 'Queries',
@@ -84,7 +85,7 @@ export class CodeObjectEntry {
 }
 
 export default class ClassMapIndex {
-  private _onChanged = new vscode.EventEmitter<vscode.Uri>();
+  private _onChanged = new ChangeEventDebouncer<ClassMapIndex>();
   public readonly onChanged = this._onChanged.event;
 
   private classMapFiles = new Set<string>();
@@ -107,21 +108,17 @@ export default class ClassMapIndex {
   addClassMapFile(sourceUri: vscode.Uri): void {
     console.log(`ClassMap file added: ${sourceUri.fsPath}`);
 
-    if (!this.classMapFiles.has(sourceUri.fsPath)) {
-      this._dirty = true;
-      this.classMapFiles.add(sourceUri.fsPath);
-      this._onChanged.fire(sourceUri);
-    }
+    this._dirty = true;
+    this.classMapFiles.add(sourceUri.fsPath);
+    this._onChanged.fire(this);
   }
 
   removeClassMapFile(sourceUri: vscode.Uri): void {
     console.log(`ClassMap file removed: ${sourceUri.fsPath}`);
 
-    if (this.classMapFiles.has(sourceUri.fsPath)) {
-      this._dirty = true;
-      this.classMapFiles.delete(sourceUri.fsPath);
-      this._onChanged.fire(sourceUri);
-    }
+    this._dirty = true;
+    this.classMapFiles.delete(sourceUri.fsPath);
+    this._onChanged.fire(this);
   }
 
   protected async updateClassMap(): Promise<void> {

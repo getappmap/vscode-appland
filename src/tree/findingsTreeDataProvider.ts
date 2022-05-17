@@ -4,17 +4,13 @@ import FindingsIndex from '../services/findingsIndex';
 import { ResolvedFinding } from '../services/resolvedFinding';
 
 export class FindingsTreeDataProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
-  private _onDidChangeTreeData: vscode.EventEmitter<
-    vscode.TreeItem | undefined | null | void
-  > = new vscode.EventEmitter<vscode.TreeItem | undefined | null | void>();
-  public readonly onDidChangeTreeData: vscode.Event<
-    vscode.TreeItem | undefined | null | void
-  > = this._onDidChangeTreeData.event;
+  private _onDidChangeTreeData = new vscode.EventEmitter<undefined>();
+  public readonly onDidChangeTreeData = this._onDidChangeTreeData.event;
   findingsIndex: FindingsIndex;
 
   constructor(findingsIndex: FindingsIndex) {
     this.findingsIndex = findingsIndex;
-    this.findingsIndex.onChanged(() => this._onDidChangeTreeData.fire());
+    this.findingsIndex.onChanged(() => this._onDidChangeTreeData.fire(undefined));
   }
 
   public getTreeItem(element: vscode.TreeItem): vscode.TreeItem {
