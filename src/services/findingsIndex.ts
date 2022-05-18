@@ -23,12 +23,20 @@ export default class FindingsIndex extends EventEmitter {
   async addFindingsFile(sourceUri: vscode.Uri): Promise<void> {
     console.log(`Findings file added: ${sourceUri.fsPath}`);
 
-    const findingsData = await promisify(readFile)(sourceUri.fsPath);
+    let findingsData: Buffer;
     let findings: Finding[];
+
+    try {
+      findingsData = await promisify(readFile)(sourceUri.fsPath);
+    } catch (e) {
+      console.warn(e);
+      return;
+    }
+
     try {
       findings = JSON.parse(findingsData.toString()).findings;
     } catch (e) {
-      // Malformed JSON file. This is logged because findings files should be written atomically.
+      // Malformed JSON file. This is unexpected because findings files should be written atomically.
       console.warn(e);
       return;
     }
