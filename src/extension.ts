@@ -25,6 +25,9 @@ import { ClassMapWatcher } from './services/classMapWatcher';
 import { ClassMapTreeDataProvider } from './tree/classMapTreeDataProvider';
 import { ResolvedFinding } from './services/resolvedFinding';
 import AppMapService from './appMapService';
+import LineInfoIndex from './services/lineInfoIndex';
+import registerDecorationProvider from './decorations/decorationProvider';
+import registerHoverProvider from './hover/hoverProvider';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   const workspaceServices = new WorkspaceServices(context);
@@ -37,7 +40,9 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     }
 
     const appmapCollectionFile = new AppMapCollectionFile();
-    let findingsIndex: FindingsIndex | undefined, classMapIndex: ClassMapIndex | undefined;
+    let findingsIndex: FindingsIndex | undefined,
+      classMapIndex: ClassMapIndex | undefined,
+      lineInfoIndex: LineInfoIndex | undefined;
 
     {
       const appmapWatcher = new AppMapWatcher({
@@ -67,6 +72,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     if (findingsEnabled) {
       classMapIndex = new ClassMapIndex();
       findingsIndex = new FindingsIndex();
+      lineInfoIndex = new LineInfoIndex(findingsIndex, classMapIndex);
 
       const findingsDiagnosticsProvider = new FindingsDiagnosticsProvider();
       findingsIndex.on('added', (uri: vscode.Uri, findings: ResolvedFinding[]) =>
@@ -81,14 +87,18 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
         treeDataProvider: findingsTreeProvider,
       });
 
+      const classMapProvider = new ClassMapTreeDataProvider(classMapIndex);
+      vscode.window.createTreeView('appmap.views.codeObjects', {
+        treeDataProvider: classMapProvider,
+      });
+
+      registerDecorationProvider(context, lineInfoIndex);
+      registerHoverProvider(context, lineInfoIndex);
+
       const classMapWatcher = new ClassMapWatcher({
         onCreate: classMapIndex.addClassMapFile.bind(classMapIndex),
         onChange: classMapIndex.addClassMapFile.bind(classMapIndex),
         onDelete: classMapIndex.removeClassMapFile.bind(classMapIndex),
-      });
-      const classMapProvider = new ClassMapTreeDataProvider(classMapIndex);
-      vscode.window.createTreeView('appmap.views.codeObjects', {
-        treeDataProvider: classMapProvider,
       });
 
       const findingWatcher = new FindingWatcher({
@@ -96,6 +106,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
         onChange: findingsIndex.addFindingsFile.bind(findingsIndex),
         onDelete: findingsIndex.removeFindingsFile.bind(findingsIndex),
       });
+
       workspaceServices.enroll(classMapWatcher);
       workspaceServices.enroll(findingWatcher);
     }
