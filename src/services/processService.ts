@@ -63,7 +63,7 @@ export default class ProcessService {
     mainCommand: string,
     args: string[],
     options: SpawnOptions,
-    timeout = 3000
+    timeout = 10000
   ): void {
     this.process = spawn(mainCommand, args, options);
 
