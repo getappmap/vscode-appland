@@ -1,6 +1,13 @@
 import assert from 'assert';
+import { basename, isAbsolute } from 'path';
 import * as vscode from 'vscode';
 import ClassMapIndex, { CodeObjectEntry } from '../services/classMapIndex';
+
+export interface CodeObjectTreeItem extends vscode.TreeItem {
+  codeObjectFqid: string;
+  codeObjectType: string;
+  codeObjectName: string;
+}
 
 export class ClassMapTreeDataProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
   private _onDidChangeTreeData = new vscode.EventEmitter<undefined>();
@@ -64,18 +71,52 @@ export class ClassMapTreeDataProvider implements vscode.TreeDataProvider<vscode.
       return aLabel.localeCompare(bLabel);
     };
 
-    return (codeObjects || []).map(this.buildTreeItem.bind(this)).sort(comparator);
+    return (await Promise.all((codeObjects || []).map(this.buildTreeItem.bind(this)))).sort(
+      comparator
+    );
   }
 
-  private buildTreeItem(codeObject: CodeObjectEntry): vscode.TreeItem {
-    return {
+  private async buildTreeItem(codeObject: CodeObjectEntry): Promise<CodeObjectTreeItem> {
+    const treeItem = {
       id: codeObject.fqid,
+      codeObjectFqid: codeObject.fqid,
+      codeObjectType: codeObject.type,
+      codeObjectName: codeObject.name,
       label: codeObject.name,
       tooltip: codeObject.fqid,
+      contextValue: `appmap.views.codeObjects.${codeObject.type}`,
       collapsibleState:
         codeObject.children.length > 0
           ? vscode.TreeItemCollapsibleState.Collapsed
           : vscode.TreeItemCollapsibleState.None,
-    };
+    } as CodeObjectTreeItem;
+    if (
+      codeObject.type === 'function' &&
+      codeObject.location &&
+      codeObject.location.includes('.') // Filter out pseudo-filenames like 'OpenSSL'
+    ) {
+      const showOptions = {} as vscode.TextDocumentShowOptions;
+      const fileAndLine = basename(codeObject.location);
+      const [file, lineNumber] = fileAndLine.split(':');
+      if (lineNumber) {
+        showOptions.selection = new vscode.Range(
+          new vscode.Position(parseInt(lineNumber) - 1, 0),
+          new vscode.Position(parseInt(lineNumber) - 1, 0)
+        );
+      }
+      const [filePath] = codeObject.location.split(':');
+      let uri: vscode.Uri;
+      if (isAbsolute(filePath)) {
+        uri = vscode.Uri.file(filePath);
+      } else {
+        uri = vscode.Uri.joinPath(codeObject.folder.uri, filePath);
+      }
+      treeItem.command = {
+        command: 'vscode.open',
+        title: `Open ${file}`,
+        arguments: [uri, showOptions],
+      };
+    }
+    return treeItem;
   }
 }

@@ -95,6 +95,7 @@ export class AppMapTextEditorProvider implements vscode.CustomTextEditorProvider
         }
       }
     })();
+
     if (initialState)
       this.context.globalState.update(AppMapTextEditorProvider.INITIAL_STATE, initialState);
 

@@ -1,6 +1,5 @@
 import * as vscode from 'vscode';
-import { ProjectA, initializeWorkspace, waitFor } from './util';
-import { join } from 'path';
+import { initializeWorkspace, waitFor, ExampleAppMap } from './util';
 import assert, { AssertionError } from 'assert';
 
 describe('AppMapTextEditor', () => {
@@ -31,12 +30,7 @@ describe('AppMapTextEditor', () => {
         limitRootEvents: false,
       },
     };
-    const uri = vscode.Uri.parse(
-      `file://${join(
-        ProjectA,
-        'tmp/appmap/minitest/Microposts_controller_can_get_microposts_as_JSON.appmap.json'
-      )}#${JSON.stringify(state)}`
-    );
+    const uri = vscode.Uri.parse(`file://${ExampleAppMap}#${JSON.stringify(state)}`);
 
     await vscode.commands.executeCommand('vscode.open', uri);
 

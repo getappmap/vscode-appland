@@ -47,13 +47,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/appmap@npm:^3.25.3":
-  version: 3.25.3
-  resolution: "@appland/appmap@npm:3.25.3"
+"@appland/appmap@portal:/Users/kgilpin/source/appland/appmap-js/packages/cli::locator=appmap%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@appland/appmap@portal:/Users/kgilpin/source/appland/appmap-js/packages/cli::locator=appmap%40workspace%3A."
   dependencies:
-    "@appland/components": 2.1.0
-    "@appland/diagrams": 1.5.2
-    "@appland/models": ^1.14.1
+    "@appland/components": "workspace:*"
+    "@appland/diagrams": "workspace:*"
+    "@appland/models": "workspace:^1.14.1"
+    "@appland/openapi": "workspace:packages/openapi"
     "@sidvind/better-ajv-errors": ^0.9.1
     "@types/moo": ^0.5.5
     JSONStream: ^1.3.5
@@ -76,7 +77,6 @@ __metadata:
     jsdom: ^16.6.0
     moo: ^0.5.1
     open: ^8.2.1
-    openapi-types: ^10.0.0
     ora: ^5.4.1
     port-pid: ^0.0.7
     ps-node: ^0.1.6
@@ -86,79 +86,70 @@ __metadata:
     yargs: ^17.1.1
   bin:
     appmap: built/src/cli.js
-  checksum: 4f9d34535658a555801befc210aa5ec24d2c75b824a279c9faac087e3172a9e833b0f1705e6b65df284663a861cc8a6c793c56fcc7a4b727d7d67d2809184f05
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@appland/client@npm:^1.3.0":
-  version: 1.3.0
-  resolution: "@appland/client@npm:1.3.0"
+"@appland/client@portal:/Users/kgilpin/source/appland/appmap-js/packages/client::locator=appmap%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@appland/client@portal:/Users/kgilpin/source/appland/appmap-js/packages/client::locator=appmap%40workspace%3A."
   dependencies:
-    "@appland/models": ^1.8.1
+    "@appland/models": "workspace:^1.8.1"
     js-yaml: ^4.1.0
-  checksum: d5b9c55bf199333e5622af012586dc08b45571d538adea778ce70abf1b17fbf9c5049b212cac6c03cd5d1ca598799c41b8939cef64ea7a6044e9efaa6085727e
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@appland/components@npm:2.1.0":
-  version: 2.1.0
-  resolution: "@appland/components@npm:2.1.0"
+"@appland/components@portal:/Users/kgilpin/source/appland/appmap-js/packages/components::locator=appmap%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@appland/components@portal:/Users/kgilpin/source/appland/appmap-js/packages/components::locator=appmap%40workspace%3A."
   dependencies:
-    "@appland/diagrams": ^1.5.1
-    "@appland/models": ^1.9.0
+    "@appland/diagrams": "workspace:^1.5.1"
+    "@appland/models": "workspace:^1.9.0"
     highlight.js: ^10.7.2
     sql-formatter: ^4.0.2
     vue: ^2.6.11
     vuex: ^3.6.0
-  checksum: c7ee3e5d397c659d3b606f6ff8b1a63f66b719adeb500e9b5a242d83cac6506eae12d23e9275e9dc061d9641048de8eb15469db9ab347d72ef031507bd5963be
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@appland/components@npm:^1.23.0":
-  version: 1.24.1
-  resolution: "@appland/components@npm:1.24.1"
+"@appland/diagrams@portal:/Users/kgilpin/source/appland/appmap-js/packages/diagrams::locator=appmap%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@appland/diagrams@portal:/Users/kgilpin/source/appland/appmap-js/packages/diagrams::locator=appmap%40workspace%3A."
   dependencies:
-    "@appland/diagrams": ^1.5.1
-    "@appland/models": ^1.9.0
-    highlight.js: ^10.7.2
-    sql-formatter: ^4.0.2
-    vue: ^2.6.11
-    vuex: ^3.6.0
-  checksum: e34c6e8f0e22c5081d027f1e263d22e04e197190454b257d25c5dee604825786512da930ec80d7061b4617fc877c50c92a67e01e8c981d02e51f91f872ff8cce
-  languageName: node
-  linkType: hard
-
-"@appland/diagrams@npm:1.5.2, @appland/diagrams@npm:^1.5.1":
-  version: 1.5.2
-  resolution: "@appland/diagrams@npm:1.5.2"
-  dependencies:
-    "@appland/models": ^1.9.0
+    "@appland/models": "workspace:^1.9.0"
     d3-interpolate: ^1.4.0
     d3-selection: ^1.4.2
     d3-shape: ^1.3.7
     d3-zoom: ^1.8.3
     dagre: ^0.8.5
     deepmerge: ^4.2.2
-  checksum: 4cac690580c15ce4da05167dcc6921453b3139734f08e52ad8122855f66284f9622ffa0e26f5f263aaed6adf12cc766b9c71b3ca2ef39b03cb9c3e126d48fd25
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@appland/models@npm:^1.12.1, @appland/models@npm:^1.14.1, @appland/models@npm:^1.14.5, @appland/models@npm:^1.8.1, @appland/models@npm:^1.9.0":
-  version: 1.15.0
-  resolution: "@appland/models@npm:1.15.0"
+"@appland/models@portal:/Users/kgilpin/source/appland/appmap-js/packages/models::locator=appmap%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@appland/models@portal:/Users/kgilpin/source/appland/appmap-js/packages/models::locator=appmap%40workspace%3A."
   dependencies:
     "@appland/sql-parser": ^1.5.0
     crypto-js: ^4.0.0
-  checksum: 1384c3396b5a9ccfec2ec07e618ee51db01a19db52a462a32eb456b8417941cb40903839cd742bc67a46927b222c8ccaf9d1569a0268e354be8f3095f4ff6d32
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@appland/scanner@npm:^1.54.1, @appland/scanner@npm:^1.56.0":
-  version: 1.56.0
-  resolution: "@appland/scanner@npm:1.56.0"
+"@appland/openapi@portal:/Users/kgilpin/source/appland/appmap-js/packages/openapi::locator=appmap%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@appland/openapi@portal:/Users/kgilpin/source/appland/appmap-js/packages/openapi::locator=appmap%40workspace%3A."
+  dependencies:
+    "@appland/models": "workspace:packages/models"
+    js-yaml: ^4.1.0
+  languageName: node
+  linkType: soft
+
+"@appland/scanner@portal:/Users/kgilpin/source/appland/appmap-js/packages/scanner::locator=appmap%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@appland/scanner@portal:/Users/kgilpin/source/appland/appmap-js/packages/scanner::locator=appmap%40workspace%3A."
   dependencies:
     "@appland/client": ^1.3.0
     "@appland/models": ^1.14.5
+    "@appland/openapi": "workspace:packages/openapi"
     "@appland/sql-parser": ^1.5.0
     "@types/cli-progress": ^3.9.2
     ajv: ^8.8.2
@@ -180,9 +171,8 @@ __metadata:
     yargs: ^17.1.1
   bin:
     scanner: built/cli.js
-  checksum: d0190206d425de2795d8b1bd65e10ccfd31a713297efa6f90e20ac7fba5da2a8e965f1588b1f1684ed7be2629b50a7d705e07c317da2122560696aad88ad278e
   languageName: node
-  linkType: hard
+  linkType: soft
 
 "@appland/sql-parser@npm:^1.5.0":
   version: 1.5.1
@@ -2608,6 +2598,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@vscode/test-electron@npm:^2.1.3":
+  version: 2.1.3
+  resolution: "@vscode/test-electron@npm:2.1.3"
+  dependencies:
+    http-proxy-agent: ^4.0.1
+    https-proxy-agent: ^5.0.0
+    rimraf: ^3.0.2
+    unzipper: ^0.10.11
+  checksum: b1948973e43a09f618448f4bc0fcf6f5ea501cc79dfe273c173415bdcc7ed88fc967d34d9e6c3c4aff2e5f9a8d527e7238ba17f4b98f5788f1b3a1a4ba416b2b
+  languageName: node
+  linkType: hard
+
 "@vue/babel-helper-vue-jsx-merge-props@npm:^1.2.1":
   version: 1.2.1
   resolution: "@vue/babel-helper-vue-jsx-merge-props@npm:1.2.1"
@@ -3602,6 +3604,7 @@ __metadata:
     "@types/vscode": ^1.55.0
     "@typescript-eslint/eslint-plugin": ^4.22.1
     "@typescript-eslint/parser": ^4.22.1
+    "@vscode/test-electron": ^2.1.3
     "@vue/cli-plugin-babel": ^4.5.10
     babel-loader: ^8.2.2
     bent: ^7.3.12
@@ -3640,7 +3643,6 @@ __metadata:
     typescript: ^4.1.3
     vsce: ^1.83.0
     vscode-extension-telemetry: ^0.1.7
-    vscode-test: ^1.4.0
     vue: ^2.6.14
     vue-loader: ^15.9.6
     vue-style-loader: ^4.1.2
@@ -10918,13 +10920,6 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"openapi-types@npm:^10.0.0":
-  version: 10.0.0
-  resolution: "openapi-types@npm:10.0.0"
-  checksum: 8cc8b5bf40ea10b1f9c56fb05aada74bfe3d9e94e141464561a5c3cd0a933906e57d9bf4e059219ec8e63a97a69e0655d21c9dd3f4de1ff4f71672d10664cfc0
-  languageName: node
-  linkType: hard
-
 "openapi3-ts@npm:^2.0.0":
   version: 2.0.2
   resolution: "openapi3-ts@npm:2.0.2"
@@ -14560,18 +14555,6 @@ typescript@^4.1.3:
   dependencies:
     applicationinsights: 1.7.4
   checksum: 979ace4f38d63a3f85b0aec78700c1316ec3eaa067d41f97367725f01839e86a3aaf2c528927137b5b705ab297939da4f9e5000bbfd0db1614cd29e60b134ec2
-  languageName: node
-  linkType: hard
-
-"vscode-test@npm:^1.4.0":
-  version: 1.6.1
-  resolution: "vscode-test@npm:1.6.1"
-  dependencies:
-    http-proxy-agent: ^4.0.1
-    https-proxy-agent: ^5.0.0
-    rimraf: ^3.0.2
-    unzipper: ^0.10.11
-  checksum: 37779441eaccfe7eb4c5ec53950441d2084b213010c6cb40855d4126f41140d021dbc12388da025df0f2ea1bfa85a4e5bcdd7c13bf78144dee18fa9b35c90793
   languageName: node
   linkType: hard
 

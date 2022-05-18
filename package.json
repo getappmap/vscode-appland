@@ -58,47 +58,47 @@
     "commands": [
       {
         "command": "appmap.openMostRecentlyModifiedAppMap",
-        "title": "AppMap: Open most recently modified AppMap file"
+        "title": "AppMap: Open Most Recently Modified AppMap File"
       },
       {
         "command": "appmap.getAppmapState",
-        "title": "AppMap: Copy current AppMap state to clipboard"
+        "title": "AppMap: Copy Current AppMap State to Clipboard"
       },
       {
         "command": "appmap.setAppmapState",
-        "title": "AppMap: Set AppMap state from serialized string"
+        "title": "AppMap: Set AppMap State From Serialized String"
       },
       {
         "command": "appmap.findByName",
-        "title": "AppMap: Find an AppMap by name",
+        "title": "AppMap: Find an AppMap by Name",
         "icon": "$(search-view-icon)"
       },
       {
         "command": "appmap.applyFilter",
-        "title": "AppMap: Filter all AppMaps by name",
+        "title": "AppMap: Filter All AppMaps by Name",
         "icon": "$(extensions-filter)"
       },
       {
         "command": "appmap.openWorkspaceOverview",
-        "title": "AppMap: Open getting started guide"
+        "title": "AppMap: Open Instructions"
       },
       {
         "command": "appmap.startRemoteRecording",
-        "title": "AppMap: Start remote recording",
+        "title": "AppMap: Start a Remote Recording",
         "icon": "images/record_start.svg"
       },
       {
         "command": "appmap.getRemoteRecordingStatus",
-        "title": "AppMap: Get remote recording status"
+        "title": "AppMap: Get Remote Recording Status"
       },
       {
         "command": "appmap.stopRemoteRecording",
-        "title": "AppMap: Stop remote recording",
+        "title": "AppMap: Stop the Remote Recording",
         "icon": "images/record_stop.svg"
       },
       {
         "command": "appmap.stopCurrentRemoteRecording",
-        "title": "AppMap: Stop the active remote recording",
+        "title": "AppMap: Stop the Active Remote Recording",
         "icon": "images/record_stop.svg",
         "when": "appmap.recordingIsRunning"
       },
@@ -117,6 +117,10 @@
       {
         "command": "appmap.context.rename",
         "title": "AppMap: Rename"
+      },
+      {
+        "command": "appmap.context.inspectCodeObject",
+        "title": "AppMap: Inspect Code Object"
       }
     ],
     "configuration": {
@@ -229,15 +233,19 @@
       "view/item/context": [
         {
           "command": "appmap.context.openInFileExplorer",
-          "when": "view == appmap.views.local && viewItem == appmap.views.local.item"
+          "when": "view == appmap.views.local && viewItem == appmap.views.local.appMap"
         },
         {
           "command": "appmap.context.openAsJson",
-          "when": "view == appmap.views.local && viewItem == appmap.views.local.item"
+          "when": "view == appmap.views.local && viewItem == appmap.views.local.appMap"
         },
         {
           "command": "appmap.context.rename",
-          "when": "view == appmap.views.local && viewItem == appmap.views.local.item"
+          "when": "view == appmap.views.local && viewItem == appmap.views.local.appMap"
+        },
+        {
+          "command": "appmap.context.inspectCodeObject",
+          "when": "viewItem == appmap.views.codeObjects.package || viewItem == appmap.views.codeObjects.class || viewItem == appmap.views.codeObjects.function || viewItem == appmap.views.codeObjects.query || viewItem == appmap.views.codeObjects.route"
         }
       ]
     }
@@ -301,7 +309,6 @@
     "tslib": "^2.1.0",
     "typescript": "^4.1.3",
     "vsce": "^1.83.0",
-    "vscode-test": "^1.4.0",
     "vue-loader": "^15.9.6",
     "vue-style-loader": "^4.1.2",
     "webpack": "^5.37.0",

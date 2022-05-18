@@ -3,7 +3,7 @@ import { ChildProcess, exec, spawn, SpawnOptions } from 'child_process';
 import { resolveFilePath } from '../util';
 import { promisify } from 'util';
 import { readFile } from 'fs';
-import { assert } from 'console';
+import { packageManagerCommand } from '../configuration/packageManager';
 
 export default class ProcessService {
   process?: ChildProcess;
@@ -26,16 +26,7 @@ export default class ProcessService {
     let error: string | undefined;
     const environment: Record<string, string> = {};
 
-    const npmLockFile = await resolveFilePath(this.folder.uri.fsPath, 'package-lock.json');
-    const yarnLockFile = await resolveFilePath(this.folder.uri.fsPath, 'yarn.lock');
-
-    if (yarnLockFile) {
-      args.unshift('run');
-      args.unshift('yarn');
-    } else if (npmLockFile) {
-      args.unshift('exec');
-      args.unshift('npm');
-    }
+    (await packageManagerCommand(this.folder.uri)).reverse().forEach((cmd) => args.unshift(cmd));
 
     const nvmrcPath = await resolveFilePath(this.folder.uri.fsPath, '.nvmrc');
     if (nvmrcPath) {

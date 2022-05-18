@@ -85,6 +85,7 @@ export class ResolvedFinding {
       currentView: 'viewFlow',
       selectedObject: `event:${finding.event.id}`,
     } as any;
+
     if (finding.relatedEvents) {
       state.traceFilter = finding.relatedEvents.map((evt) => ['id', evt.id].join(':')).join(' ');
     }

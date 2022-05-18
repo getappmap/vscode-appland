@@ -240,6 +240,22 @@ export function hasPreviouslyInstalledExtension(extensionPath: string): boolean 
   return false;
 }
 
+export function shellescape(...command: string[]): string {
+  const result: string[] = [];
+
+  command.forEach(function(word) {
+    if (/[^A-Za-z0-9_/:=-]/.test(word)) {
+      word = "'" + word.replace(/'/g, "'\\''") + "'";
+      word = word
+        .replace(/^(?:'')+/g, '') // unduplicate single-quote at the beginning
+        .replace(/\\'''/g, "\\'"); // remove non-escaped single-quote if there are enclosed between 2 escaped
+    }
+    result.push(word);
+  });
+
+  return result.join(' ');
+}
+
 // Convert a union type to an intersection type. Don't use this on boolean types.
 // e.g. ( string | number ) => ( string & number )
 // See https://stackoverflow.com/a/50375286

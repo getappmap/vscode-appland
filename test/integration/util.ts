@@ -5,6 +5,14 @@ import { join } from 'path';
 
 export const ProjectA = join(__dirname, '../../../test/fixtures/workspaces/project-a');
 export const ProjectB = join(__dirname, '../../../test/fixtures/workspaces/project-b');
+export const ExampleAppMap = join(
+  ProjectA,
+  'tmp/appmap/minitest/Microposts_controller_can_get_microposts_as_JSON.appmap.json'
+);
+export const ExampleAppMapIndexDir = join(
+  ProjectA,
+  'tmp/appmap/minitest/Microposts_controller_can_get_microposts_as_JSON'
+);
 
 export async function initializeWorkspace(): Promise<void> {
   await closeAllEditors();

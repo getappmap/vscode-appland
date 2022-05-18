@@ -6,8 +6,9 @@ import AppMapCollection from './appmapCollection';
 import AppMapLoaderFile from './appmapLoaderFile';
 import ChangeEventDebouncer from './changeEventDebouncer';
 import { fileExists } from '../util';
+import { AppMapsService } from '../appMapsService';
 
-export default class AppMapCollectionFile implements AppMapCollection {
+export default class AppMapCollectionFile implements AppMapCollection, AppMapsService {
   private _onUpdated: vscode.EventEmitter<AppMapCollection> = new ChangeEventDebouncer<
     AppMapCollection
   >();
