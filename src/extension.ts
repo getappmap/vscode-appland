@@ -24,8 +24,9 @@ import ClassMapIndex from './services/classMapIndex';
 import { ClassMapWatcher } from './services/classMapWatcher';
 import { ClassMapTreeDataProvider } from './tree/classMapTreeDataProvider';
 import { ResolvedFinding } from './services/resolvedFinding';
+import AppMapService from './appMapService';
 
-export async function activate(context: vscode.ExtensionContext): Promise<void> {
+export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   const workspaceServices = new WorkspaceServices(context);
   Telemetry.register(context);
 
@@ -36,7 +37,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     }
 
     const appmapCollectionFile = new AppMapCollectionFile();
-    let findingsIndex: FindingsIndex, classMapIndex: ClassMapIndex;
+    let findingsIndex: FindingsIndex | undefined, classMapIndex: ClassMapIndex | undefined;
 
     {
       const appmapWatcher = new AppMapWatcher({
@@ -172,6 +173,12 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         enabled,
       });
     });
+
+    return {
+      localAppMaps: appmapCollectionFile,
+      findings: findingsIndex,
+      classMap: classMapIndex,
+    };
   } catch (exception) {
     Telemetry.sendEvent(DEBUG_EXCEPTION, { exception: exception as Error });
     throw exception;
