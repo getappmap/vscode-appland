@@ -2,11 +2,13 @@ import * as vscode from 'vscode';
 import { promisify } from 'util';
 import { readFile } from 'fs';
 import ChangeEventDebouncer from './changeEventDebouncer';
+import { normalizeSQL } from '@appland/models';
 
 const ROOT_ID = '<root>';
 const FOLDER = 'folder';
 const HTTP = 'http';
 const DATABASE = 'database';
+const QUERY = 'query';
 const PACKAGE = 'package';
 const FUNCTION = 'function';
 
@@ -30,17 +32,26 @@ type ClassMapEntry = {
 export class CodeObjectEntry {
   private _parent?: CodeObjectEntry;
   private _children: CodeObjectEntry[] = [];
+  private _appMapFiles = new Set<string>();
   private childrenByFqid: Map<string, CodeObjectEntry> = new Map();
 
   constructor(
     public folder: vscode.WorkspaceFolder,
+    appMapFilePath: string | undefined,
     public fqid: string,
     public type: string,
     public name: string,
     public isStatic = false,
     public labels: Set<string> = new Set(),
-    public location?: string
-  ) {}
+    public path?: string,
+    public lineNo?: number
+  ) {
+    if (appMapFilePath) this._appMapFiles.add(appMapFilePath);
+  }
+
+  get appMapFiles(): string[] {
+    return [...this._appMapFiles].sort();
+  }
 
   get parent(): CodeObjectEntry | undefined {
     return this._parent;
@@ -57,6 +68,7 @@ export class CodeObjectEntry {
   static fromClassMapEntry(
     parent: CodeObjectEntry,
     folder: vscode.WorkspaceFolder,
+    appMapFilePath: string,
     cme: ClassMapEntry
   ): CodeObjectEntry {
     let ancestors: MinimalCodeObject[] = [];
@@ -98,34 +110,45 @@ export class CodeObjectEntry {
     });
 
     const fqid = [cme.type, tokens.join('')].join(':');
+    let path: string | undefined, lineNo: string | undefined;
+    if (cme.location) {
+      [path, lineNo] = cme.location.split(':');
+    }
     return new CodeObjectEntry(
       folder,
+      appMapFilePath,
       fqid,
       cme.type,
       cme.name,
       cme.static,
       new Set(...(cme.labels || [])),
-      cme.location
+      path,
+      lineNo ? parseInt(lineNo) : undefined
     );
   }
 
-  merge(folder: vscode.WorkspaceFolder, other: ClassMapEntry): void {
+  merge(folder: vscode.WorkspaceFolder, appMapFilePath: string, other: ClassMapEntry): void {
     if (other.labels) {
       for (const label of other.labels) {
         this.labels.add(label);
       }
     }
+    this._appMapFiles.add(appMapFilePath);
 
-    (other.children || []).forEach(this.findOrMergeChild.bind(this, folder));
+    (other.children || []).forEach(this.findOrMergeChild.bind(this, folder, appMapFilePath));
   }
 
-  findOrMergeChild(folder: vscode.WorkspaceFolder, cme: ClassMapEntry): CodeObjectEntry {
+  findOrMergeChild(
+    folder: vscode.WorkspaceFolder,
+    appMapFilePath: string,
+    cme: ClassMapEntry
+  ): CodeObjectEntry {
     const existing = this.children.find((child) => child.name === cme.name);
     if (existing) {
-      existing.merge(folder, cme);
+      existing.merge(folder, appMapFilePath, cme);
       return existing;
     } else {
-      const child = CodeObjectEntry.fromClassMapEntry(this, folder, cme);
+      const child = CodeObjectEntry.fromClassMapEntry(this, folder, appMapFilePath, cme);
       this.children.push(child);
       child.parent = this;
       this.childrenByFqid.set(child.fqid, child);
@@ -200,12 +223,13 @@ export default class ClassMapIndex {
   protected async buildClassMap(): Promise<CodeObjectEntry[]> {
     const mergeCodeObject = (
       folder: vscode.WorkspaceFolder,
+      appMapFilePath: string,
       parent: CodeObjectEntry,
       cme: ClassMapEntry
     ) => {
-      const child = parent.findOrMergeChild(folder, cme);
+      const child = parent.findOrMergeChild(folder, appMapFilePath, cme);
       this._codeObjectByFqid[child.fqid] = child;
-      (cme.children || []).forEach(mergeCodeObject.bind(this, folder, child));
+      (cme.children || []).forEach(mergeCodeObject.bind(this, folder, appMapFilePath, child));
     };
 
     function normalize(cme: ClassMapEntry): ClassMapEntry {
@@ -213,6 +237,13 @@ export default class ClassMapIndex {
       cme.children = cme.children || [];
       const betterName = betterNames[[cme.type, cme.name].join(' ')];
       if (betterName) cme.name = betterName;
+
+      if (cme.type === QUERY) {
+        // TODO: We need a database type in order to do this properly.
+        // It would be great if the Database object stored this info.
+        const normalizedSql = normalizeSQL(cme.name, 'postgresql');
+        if (normalizedSql) cme.name = normalizedSql;
+      }
 
       if (cme.type === PACKAGE) {
         cme = {
@@ -228,14 +259,30 @@ export default class ClassMapIndex {
       return cme;
     }
 
-    const root = new CodeObjectEntry({} as vscode.WorkspaceFolder, ROOT_ID, FOLDER, 'root');
+    const root = new CodeObjectEntry(
+      {} as vscode.WorkspaceFolder,
+      undefined,
+      ROOT_ID,
+      FOLDER,
+      'root'
+    );
     await Promise.all(
       [...this.classMapFileURLs]
         .map((urlStr) => vscode.Uri.parse(urlStr, true))
         .map(async (classMapFileURL) => {
-          const classMapData = await promisify(readFile)(classMapFileURL.fsPath);
+          let classMapData: Buffer;
+          try {
+            classMapData = await promisify(readFile)(classMapFileURL.fsPath);
+          } catch (e) {
+            console.warn(e);
+            return;
+          }
+
           const folder = vscode.workspace.getWorkspaceFolder(classMapFileURL);
-          if (!folder) return;
+          if (!folder) {
+            console.warn(`No workspace folder for ${classMapFileURL.fsPath}`);
+            return;
+          }
 
           let classMap: ClassMapEntry[];
           try {
@@ -251,7 +298,13 @@ export default class ClassMapIndex {
             return;
           }
 
-          classMap.map(normalize.bind(this)).forEach(mergeCodeObject.bind(this, folder, root));
+          const classMapFileTokens = classMapFileURL.fsPath.split('/');
+          classMapFileTokens.pop();
+          const indexDir = classMapFileTokens.join('/');
+          const appMapFilePath = [indexDir, 'appmap.json'].join('.');
+          classMap
+            .map(normalize.bind(this))
+            .forEach(mergeCodeObject.bind(this, folder, appMapFilePath, root));
         })
     );
     return root.children;

@@ -92,11 +92,11 @@ export class ClassMapTreeDataProvider implements vscode.TreeDataProvider<vscode.
     } as CodeObjectTreeItem;
     if (
       codeObject.type === 'function' &&
-      codeObject.location &&
-      codeObject.location.includes('.') // Filter out pseudo-filenames like 'OpenSSL'
+      codeObject.path &&
+      codeObject.path.includes('.') // Filter out pseudo-filenames like 'OpenSSL'
     ) {
       const showOptions = {} as vscode.TextDocumentShowOptions;
-      const fileAndLine = basename(codeObject.location);
+      const fileAndLine = basename(codeObject.path);
       const [file, lineNumber] = fileAndLine.split(':');
       if (lineNumber) {
         showOptions.selection = new vscode.Range(
@@ -104,12 +104,11 @@ export class ClassMapTreeDataProvider implements vscode.TreeDataProvider<vscode.
           new vscode.Position(parseInt(lineNumber) - 1, 0)
         );
       }
-      const [filePath] = codeObject.location.split(':');
       let uri: vscode.Uri;
-      if (isAbsolute(filePath)) {
-        uri = vscode.Uri.file(filePath);
+      if (isAbsolute(codeObject.path)) {
+        uri = vscode.Uri.file(codeObject.path);
       } else {
-        uri = vscode.Uri.joinPath(codeObject.folder.uri, filePath);
+        uri = vscode.Uri.joinPath(codeObject.folder.uri, codeObject.path);
       }
       treeItem.command = {
         command: 'vscode.open',
