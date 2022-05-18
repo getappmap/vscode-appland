@@ -1,43 +1,72 @@
-import { exec } from 'child_process';
+import * as cp from 'child_process';
 import * as path from 'path';
-import { runTests } from 'vscode-test';
+import {
+  downloadAndUnzipVSCode,
+  resolveCliArgsFromVSCodeExecutablePath,
+  runTests,
+} from '@vscode/test-electron';
 
-async function main(): Promise<void> {
+async function main() {
   try {
-    // The folder containing the Extension Manifest package.json
-    // Passed to `--extensionDevelopmentPath`
     const extensionDevelopmentPath = path.resolve(__dirname, '..');
-
-    // The path to the extension test script
-    // Passed to --extensionTestsPath
+    const userDataDir = path.resolve(__dirname, '../.vscode-test/user-data');
     const extensionTestsPath = path.resolve(__dirname, '../out/test/integration/index.js');
+    const vscodeExecutablePath = await downloadAndUnzipVSCode('stable');
+    const [cliPath] = resolveCliArgsFromVSCodeExecutablePath(vscodeExecutablePath);
 
-    const testWorkspace = 'test/fixtures/workspaces/project-a';
+    const testWorkspaces = [
+      'test/fixtures/workspaces/project-a',
+      'test/fixtures/workspaces/project-b',
+    ];
 
-    await new Promise<void>((resolve, reject) => {
-      const proc = exec(`yarn install`, { cwd: testWorkspace });
-      proc.on('exit', (code) => {
-        if (code !== 0) return reject(code);
+    await Promise.all(
+      testWorkspaces.map(async (testWorkspace) => {
+        await new Promise<void>((resolve, reject) => {
+          const proc = cp.exec(`yarn install`, { cwd: testWorkspace });
+          proc.on('exit', (code) => {
+            if (code !== 0) return reject(code);
 
-        resolve();
-      });
-    });
+            resolve();
+          });
+        });
+      })
+    );
 
-    // Download VS Code, unzip it and run the integration test
+    cp.spawnSync(
+      cliPath,
+      [
+        '--extensions-dir',
+        extensionDevelopmentPath,
+        '--user-data-dir',
+        userDataDir,
+        '--install-extension',
+        'appland.appmap',
+        '--force',
+      ],
+      {
+        encoding: 'utf-8',
+        stdio: 'inherit',
+      }
+    );
+
+    // Run the extension test
     await runTests({
+      // Use the specified `code` executable
+      vscodeExecutablePath,
       extensionDevelopmentPath,
       extensionTestsPath,
-      launchArgs: ['--disable-extensions', '--disable-gpu', testWorkspace],
-      version: 'insiders',
+      launchArgs: [
+        '--user-data-dir',
+        userDataDir,
+        '--disable-extensions',
+        '--disable-gpu',
+        testWorkspaces[0],
+      ],
     });
   } catch (err) {
-    console.error('Failed to run tests');
+    console.error(`Failed to run tests: ${err}`);
     process.exit(1);
   }
-
-  // HACK.
-  // I'm not sure why this is necessary, but this prevents the process from hanging after the tests have been run.
-  process.exit(0);
 }
 
 main();
