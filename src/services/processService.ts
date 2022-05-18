@@ -1,9 +1,6 @@
 import * as vscode from 'vscode';
-import { ChildProcess, exec, spawn, SpawnOptions } from 'child_process';
-import { resolveFilePath } from '../util';
-import { promisify } from 'util';
-import { readFile } from 'fs';
-import { packageManagerCommand } from '../configuration/packageManager';
+import { ChildProcess, spawn, SpawnOptions } from 'child_process';
+import commandArgs, { Command } from './commandArgs';
 
 export default class ProcessService {
   process?: ChildProcess;
@@ -22,50 +19,12 @@ export default class ProcessService {
   }
 
   protected async runProcess(args: string[], options: SpawnOptions): Promise<void> {
-    const home = process.env.HOME || '';
-    let error: string | undefined;
-    const environment: Record<string, string> = {};
-
-    (await packageManagerCommand(this.folder.uri)).reverse().forEach((cmd) => args.unshift(cmd));
-
-    const nvmrcPath = await resolveFilePath(this.folder.uri.fsPath, '.nvmrc');
-    if (nvmrcPath) {
-      args.unshift([home, '.nvm/nvm-exec'].join('/'));
-      const version = (await promisify(readFile)(nvmrcPath)).toString().trim();
-      environment.NODE_VERSION = version;
-      error = validateNodeVersion('nvm', version);
-    } else {
-      const availableVersion = await systemNodeVersion();
-      if (availableVersion instanceof Error) {
-        error = `Node.js is not installed`;
-      } else {
-        error = validateNodeVersion('System', availableVersion);
-      }
-    }
-    if (error) {
-      vscode.window.showWarningMessage(error);
-    }
-    if (process.env.SHELL) {
-      options.shell = process.env.SHELL;
-    }
-
-    options.env = { ...process.env, ...environment };
-    options.cwd = this.folder.uri.fsPath;
-    options.detached = false;
-
-    const mainCommand = args.shift();
-    if (!mainCommand) throw new Error('No command provided');
-
-    this.invokeCommand(mainCommand, args, options);
+    const command = await commandArgs(this.folder, args, options);
+    return this.invokeCommand(command);
   }
 
-  protected invokeCommand(
-    mainCommand: string,
-    args: string[],
-    options: SpawnOptions,
-    timeout = 10000
-  ): void {
-    this.process = spawn(mainCommand, args, options);
+  protected async invokeCommand(command: Command, timeout = 10000): Promise<void> {
+    this.process = spawn(command.mainCommand, command.args, command.options);
 
     ProcessService.logProcess(this.process, true);
 
@@ -76,7 +35,7 @@ export default class ProcessService {
         );
 
         // Restart
-        setTimeout(() => this.invokeCommand(mainCommand, args, options, timeout * 1.5), timeout);
+        setTimeout(() => this.invokeCommand(command, timeout * 1.5), timeout);
       }
     });
   }
@@ -100,6 +59,7 @@ export default class ProcessService {
     }
   }
 }
+<<<<<<< HEAD
 
 function validateNodeVersion(versionType: string, version: string): string | undefined {
   const digits = version.split('.');
@@ -126,3 +86,5 @@ async function systemNodeVersion(): Promise<string | Error> {
     });
   });
 }
+=======
+>>>>>>> 1d4c803 (refactor: Refactor ProcessService)
