@@ -28,6 +28,7 @@ import AppMapService from './appMapService';
 import LineInfoIndex from './services/lineInfoIndex';
 import registerDecorationProvider from './decorations/decorationProvider';
 import registerHoverProvider from './hover/hoverProvider';
+import registerInspectCodeObject from './commands/inspectCodeObject';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   const workspaceServices = new WorkspaceServices(context);
@@ -94,6 +95,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
       registerDecorationProvider(context, lineInfoIndex);
       registerHoverProvider(context, lineInfoIndex);
+      registerInspectCodeObject(context);
 
       const classMapWatcher = new ClassMapWatcher({
         onCreate: classMapIndex.addClassMapFile.bind(classMapIndex),

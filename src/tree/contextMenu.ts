@@ -1,24 +1,12 @@
 import * as vscode from 'vscode';
 import { promises as fs } from 'fs';
 import { CodeObjectTreeItem } from './classMapTreeDataProvider';
-import { packageManagerCommand } from '../configuration/packageManager';
-import { shellescape } from '../util';
 
 interface TreeItemContext {
   descriptor: {
     resourceUri: vscode.Uri;
     metadata: Record<string, unknown>;
   };
-}
-
-// eslint-disable-next-line @typescript-eslint/naming-convention
-let _appMapTerminal: vscode.Terminal | undefined;
-
-function appMapTerminal(): vscode.Terminal {
-  if (!_appMapTerminal) {
-    _appMapTerminal = vscode.window.createTerminal('AppMap');
-  }
-  return _appMapTerminal;
 }
 
 export default class ContextMenu {
@@ -71,27 +59,7 @@ export default class ContextMenu {
       vscode.commands.registerCommand(
         'appmap.context.inspectCodeObject',
         async (item: CodeObjectTreeItem) => {
-          if (
-            !vscode.workspace.workspaceFolders ||
-            vscode.workspace.workspaceFolders.length === 0
-          ) {
-            return;
-          }
-          let workspace: vscode.WorkspaceFolder | undefined;
-          if (vscode.workspace.workspaceFolders.length === 1) {
-            workspace = vscode.workspace.workspaceFolders[0];
-          } else {
-            workspace = await vscode.window.showWorkspaceFolderPick();
-          }
-          if (!workspace) return;
-
-          const searchArg = item.codeObjectFqid;
-          const command = [
-            ...(await packageManagerCommand(workspace.uri)),
-            shellescape('appmap', 'inspect', '-i', searchArg),
-          ].join(' ');
-          appMapTerminal().show();
-          appMapTerminal().sendText(command);
+          vscode.commands.executeCommand('appmap.inspectCodeObject', item.codeObjectFqid);
         }
       )
     );

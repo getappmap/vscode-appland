@@ -44,8 +44,8 @@ class DecorationProvider {
     const decorations = lineInfo
       .map((lineInfo) => {
         const range = new vscode.Range(
-          new vscode.Position(lineInfo.line - 1, editorLines[lineInfo.line - 1].length),
-          new vscode.Position(lineInfo.line - 1, editorLines[lineInfo.line - 1].length)
+          new vscode.Position(lineInfo.line, editorLines[lineInfo.line].length),
+          new vscode.Position(lineInfo.line, editorLines[lineInfo.line].length)
         );
         return { range };
       })

@@ -52,7 +52,7 @@ export default class LineInfoIndex {
       if (codeObject.path && codeObject.lineNo) {
         const codeObjectUri = vscode.Uri.joinPath(codeObject.folder.uri, codeObject.path);
         if (codeObjectUri.fsPath === uri.fsPath) {
-          lineInfo(codeObject.lineNo).addCodeObject(codeObject);
+          lineInfo(codeObject.lineNo - 1).addCodeObject(codeObject);
         }
       }
       codeObject.children.forEach(collectCodeObject);

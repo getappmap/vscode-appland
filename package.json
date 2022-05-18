@@ -107,20 +107,24 @@
         "title": "AppMap: Reset Usage State"
       },
       {
+        "command": "appmap.inspectCodeObject",
+        "title": "AppMap: Inspect Code Object"
+      },
+      {
         "command": "appmap.context.openInFileExplorer",
-        "title": "AppMap: Open in File Explorer"
+        "title": "AppMap View: Open in File Explorer"
       },
       {
         "command": "appmap.context.openAsJson",
-        "title": "AppMap: Open as JSON"
+        "title": "AppMap View: Open as JSON"
       },
       {
         "command": "appmap.context.rename",
-        "title": "AppMap: Rename"
+        "title": "AppMap View: Rename AppMap"
       },
       {
         "command": "appmap.context.inspectCodeObject",
-        "title": "AppMap: Inspect Code Object"
+        "title": "AppMap View: Inspect Code Object"
       }
     ],
     "configuration": {

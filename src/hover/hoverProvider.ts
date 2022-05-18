@@ -2,7 +2,6 @@ import { Metadata } from '@appland/models';
 import { readFile } from 'fs';
 import { promisify } from 'util';
 import * as vscode from 'vscode';
-import inspectCodeObject, { InspectResult } from '../services/inspectCodeObject';
 import LineInfoIndex from '../services/lineInfoIndex';
 
 export default function registerHoverProvider(
@@ -14,7 +13,7 @@ export default function registerHoverProvider(
     position: vscode.Position
   ): Promise<vscode.Hover | null> {
     const lineInfo = (await lineInfoIndex.lineInfo(document.uri)).find(
-      (lineInfo) => lineInfo.line - 1 === position.line
+      (lineInfo) => lineInfo.line === position.line
     );
     if (!lineInfo) return null;
 
@@ -26,11 +25,8 @@ export default function registerHoverProvider(
     const contents: vscode.MarkdownString[] = [];
     if (lineInfo.codeObjects) {
       const appMapMetadata: Record<string, Metadata> = {};
-      const codeObjectDetails: Record<string, InspectResult> = {};
       await Promise.all(
         lineInfo.codeObjects.map(async (codeObject) => {
-          const inspectResult = await inspectCodeObject(codeObject.folder, codeObject.fqid);
-          codeObjectDetails[codeObject.fqid] = inspectResult;
           await Promise.all(
             codeObject.appMapFiles.map(async (file) => {
               if (appMapMetadata[file]) return;
@@ -45,29 +41,14 @@ export default function registerHoverProvider(
       );
 
       const md = new vscode.MarkdownString();
+      md.isTrusted = true;
       lineInfo.codeObjects.forEach((codeObject) => {
-        const inspectDetails = codeObjectDetails[codeObject.fqid];
-
-        md.appendMarkdown(`**${codeObject.fqid}**\n`);
-        md.appendMarkdown(`\n`);
-        if (inspectDetails.httpServerRequests.length > 0) {
-          md.appendMarkdown(`_HTTP server requests_\n`);
-          inspectDetails.httpServerRequests.forEach((request) => {
-            md.appendMarkdown(` * ${request}\n`);
-          });
-          md.appendMarkdown(`\n`);
-        }
-        if (inspectDetails.sqlQueries.length > 0) {
-          md.appendMarkdown(`_SQL queries_\n`);
-          inspectDetails.sqlQueries.forEach((query) => {
-            md.appendMarkdown(` * ${query}\n`);
-          });
-          md.appendMarkdown(`\n`);
-        }
-        md.appendMarkdown(`_AppMaps_\n`);
-        codeObject.appMapFiles.forEach((file) => {
-          md.appendMarkdown(` * [${appMapMetadata[file].name}](${file})\n`);
-        });
+        md.appendMarkdown(`Inspect `);
+        const args = [codeObject.fqid];
+        const commandUri = vscode.Uri.parse(
+          `command:appmap.inspectCodeObject?${encodeURIComponent(JSON.stringify(args))}`
+        );
+        md.appendMarkdown(`[${codeObject.fqid.split(':')[1]}](${commandUri})`);
       });
       contents.push(md);
     }
