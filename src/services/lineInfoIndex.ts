@@ -1,3 +1,4 @@
+import { isAbsolute } from 'path';
 import * as vscode from 'vscode';
 import ClassMapIndex, { CodeObjectEntry } from './classMapIndex';
 import FindingsIndex from './findingsIndex';
@@ -50,7 +51,9 @@ export default class LineInfoIndex {
     const classMap = await this.classMapIndex.classMap();
     const collectCodeObject = (codeObject: CodeObjectEntry) => {
       if (codeObject.path && codeObject.lineNo) {
-        const codeObjectUri = vscode.Uri.joinPath(codeObject.folder.uri, codeObject.path);
+        const codeObjectUri = isAbsolute(codeObject.path)
+          ? vscode.Uri.file(codeObject.path)
+          : vscode.Uri.joinPath(codeObject.folder.uri, codeObject.path);
         if (codeObjectUri.fsPath === uri.fsPath) {
           lineInfo(codeObject.lineNo - 1).addCodeObject(codeObject);
         }
