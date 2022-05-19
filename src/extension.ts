@@ -75,7 +75,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       findingsIndex = new FindingsIndex();
       lineInfoIndex = new LineInfoIndex(findingsIndex, classMapIndex);
 
-      const findingsDiagnosticsProvider = new FindingsDiagnosticsProvider();
+      const findingsDiagnosticsProvider = new FindingsDiagnosticsProvider(context);
       findingsIndex.on('added', (uri: vscode.Uri, findings: ResolvedFinding[]) =>
         findingsDiagnosticsProvider.updateFindings(uri, findings)
       );

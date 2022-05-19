@@ -26,15 +26,14 @@ class DecorationProvider {
     lineInfoIndex.onChanged(() => {
       if (vscode.window.activeTextEditor) this.decorate(vscode.window.activeTextEditor);
     });
-    vscode.window.onDidChangeActiveTextEditor(
+    const onDidChangeActiveTextEditor = vscode.window.onDidChangeActiveTextEditor(
       async (editor) => {
         if (editor) {
           this.decorate(editor);
         }
-      },
-      null,
-      context.subscriptions
+      }
     );
+    context.subscriptions.push(onDidChangeActiveTextEditor);
     if (vscode.window.activeTextEditor) this.decorate(vscode.window.activeTextEditor);
   }
 

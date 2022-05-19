@@ -18,6 +18,7 @@ export default class RemoteRecording {
     this.context = context;
     this.activeRecordingUrl = null;
     this.statusBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
+    context.subscriptions.push(this.statusBar);
     this.statusBar.command = 'appmap.stopCurrentRemoteRecording';
     this.statusBar.tooltip = 'Click to stop recording';
   }
