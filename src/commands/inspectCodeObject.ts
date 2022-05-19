@@ -26,11 +26,13 @@ export default async function inspectCodeObject(context: vscode.ExtensionContext
     if (!workspace) return;
 
     const searchArg = fqid;
+    const chdir = ['chdir', shellescape(workspace.uri.fsPath)];
     const command = [
       ...(await packageManagerCommand(workspace.uri)),
       shellescape('appmap', 'inspect', '-i', searchArg),
     ].join(' ');
     appMapTerminal().show();
+    appMapTerminal().sendText(chdir.join(' '));
     appMapTerminal().sendText(command);
   });
   context.subscriptions.push(command);

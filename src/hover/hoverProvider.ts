@@ -25,26 +25,18 @@ export default function registerHoverProvider(
 
     const contents: vscode.MarkdownString[] = [];
     if (lineInfo.codeObjects) {
-      const appMapMetadata: Record<string, Metadata> = {};
-      await Promise.all(
-        lineInfo.codeObjects.map(async (codeObject) => {
-          await Promise.all(
-            codeObject.appMapFiles.map(async (file) => {
-              if (appMapMetadata[file]) return;
-
-              const metadataFileName = file.replace(/\.appmap\.json$/, '/metadata.json');
-              const metadataData = await promisify(readFile)(metadataFileName);
-              const metadata = JSON.parse(metadataData.toString()) as Metadata;
-              appMapMetadata[file] = metadata;
-            })
-          );
-        })
-      );
-
       const md = new vscode.MarkdownString();
       md.isTrusted = true;
-      md.appendMarkdown(`**Inspect code object**\n\n`);
       lineInfo.codeObjects.forEach((codeObject) => {
+        md.appendMarkdown(`**Open code object in AppMap**\n\n`);
+        const commandUri = vscode.Uri.parse(
+          `command:appmap.openCodeObjectInAppMap?${encodeURIComponent(
+            JSON.stringify([codeObject.fqid])
+          )}`
+        );
+        md.appendMarkdown(`[${codeObject.fqid}](${commandUri})\n\n`);
+
+        md.appendMarkdown(`**Inspect code object**\n\n`);
         let ancestor: CodeObjectEntry | undefined = codeObject;
         while (ancestor && ancestor.isInspectable) {
           md.appendMarkdown(`- `);

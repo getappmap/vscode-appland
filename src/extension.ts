@@ -29,6 +29,7 @@ import LineInfoIndex from './services/lineInfoIndex';
 import registerDecorationProvider from './decorations/decorationProvider';
 import registerHoverProvider from './hover/hoverProvider';
 import registerInspectCodeObject from './commands/inspectCodeObject';
+import openCodeObjectInAppMap from './commands/openCodeObjectInAppMap';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   const workspaceServices = new WorkspaceServices(context);
@@ -79,6 +80,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
         treeDataProvider: classMapProvider,
       });
 
+      openCodeObjectInAppMap(context, classMapIndex);
       registerDecorationProvider(context, lineInfoIndex);
       registerHoverProvider(context, lineInfoIndex);
       registerInspectCodeObject(context);

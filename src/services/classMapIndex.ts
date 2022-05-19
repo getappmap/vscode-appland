@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import { promisify } from 'util';
 import { readFile } from 'fs';
 import ChangeEventDebouncer from './changeEventDebouncer';
-import { normalizeSQL } from '@appland/models';
+import { Metadata, normalizeSQL } from '@appland/models';
 
 const ROOT_ID = '<root>';
 const FOLDER = 'folder';
@@ -51,6 +51,25 @@ export class CodeObjectEntry {
     public lineNo?: number
   ) {
     if (appMapFilePath) this._appMapFiles.add(appMapFilePath);
+  }
+
+  async collectAppMapMetadata(appMapMetadata: Record<string, Metadata>): Promise<void[]> {
+    return Promise.all(
+      this.appMapFiles.map(async (file) => {
+        if (appMapMetadata[file]) return;
+
+        const metadataFileName = file.replace(/\.appmap\.json$/, '/metadata.json');
+        const metadataData = await promisify(readFile)(metadataFileName);
+        const metadata = JSON.parse(metadataData.toString()) as Metadata;
+        appMapMetadata[file] = metadata;
+      })
+    );
+  }
+
+  async appMapMetadata(): Promise<Record<string, Metadata>> {
+    const appMapMetadata: Record<string, Metadata> = {};
+    await this.collectAppMapMetadata(appMapMetadata);
+    return appMapMetadata;
   }
 
   get isInspectable(): boolean {
