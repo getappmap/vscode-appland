@@ -34,7 +34,9 @@ class DecorationProvider {
       }
     );
     context.subscriptions.push(onDidChangeActiveTextEditor);
-    if (vscode.window.activeTextEditor) this.decorate(vscode.window.activeTextEditor);
+    if (vscode.window.activeTextEditor) {
+      this.decorate(vscode.window.activeTextEditor);
+    }
   }
 
   async decorate(editor: vscode.TextEditor): Promise<void> {

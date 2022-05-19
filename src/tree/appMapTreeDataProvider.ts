@@ -41,6 +41,7 @@ export class AppMapTreeDataProvider implements vscode.TreeDataProvider<vscode.Tr
     return Promise.resolve(listItems);
   }
 }
+
 function buildTreeItem(appmap: AppMapLoader): AppMapTreeItem {
   return {
     label: (appmap.descriptor.metadata?.name as string) || LABEL_NO_NAME,

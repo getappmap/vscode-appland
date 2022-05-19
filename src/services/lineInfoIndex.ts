@@ -25,8 +25,8 @@ export default class LineInfoIndex {
   public readonly onChanged = this._onChanged.event;
 
   constructor(public findingsIndex: FindingsIndex, public classMapIndex: ClassMapIndex) {
-    findingsIndex.onChanged(this._onChanged.fire.bind(this, this));
-    classMapIndex.onChanged(this._onChanged.fire.bind(this, this));
+    findingsIndex.onChanged(() => this._onChanged.fire(this));
+    classMapIndex.onChanged(() => this._onChanged.fire(this));
   }
 
   async lineInfo(uri: vscode.Uri): Promise<LineInfo[]> {

@@ -51,25 +51,11 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
         onDelete: appmapCollectionFile.onDelete.bind(appmapCollectionFile),
         onChange: appmapCollectionFile.onChange.bind(appmapCollectionFile),
       });
-      workspaceServices.enroll(appmapWatcher);
+      await workspaceServices.enroll(appmapWatcher);
+      await appmapCollectionFile.initialize();
     }
 
     const findingsEnabled = extensionSettings.findingsEnabled();
-    {
-      if (findingsEnabled) {
-        workspaceServices.enroll(new AutoIndexerService());
-        workspaceServices.enroll(new AutoScannerService());
-      }
-    }
-
-    AppMapTextEditorProvider.register(context, properties);
-    RemoteRecording.register(context);
-    ContextMenu.register(context);
-
-    projectPickerWebview(context, properties);
-
-    OpenAppMapsWebview.register(context, appmapCollectionFile);
-
     if (findingsEnabled) {
       classMapIndex = new ClassMapIndex();
       findingsIndex = new FindingsIndex();
@@ -109,17 +95,23 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
         onDelete: findingsIndex.removeFindingsFile.bind(findingsIndex),
       });
 
-      workspaceServices.enroll(classMapWatcher);
-      workspaceServices.enroll(findingWatcher);
+      await workspaceServices.enroll(new AutoIndexerService());
+      await workspaceServices.enroll(new AutoScannerService());
+      await workspaceServices.enroll(classMapWatcher);
+      await workspaceServices.enroll(findingWatcher);
     }
-
-    appmapCollectionFile.initialize();
 
     const { localTree } = registerTrees(context, appmapCollectionFile);
 
     (vscode.workspace.workspaceFolders || []).forEach((workspaceFolder) => {
       Telemetry.sendEvent(PROJECT_OPEN, { rootDirectory: workspaceFolder.uri.fsPath });
     });
+
+    AppMapTextEditorProvider.register(context, properties);
+    RemoteRecording.register(context);
+    ContextMenu.register(context);
+    projectPickerWebview(context, properties);
+    OpenAppMapsWebview.register(context, appmapCollectionFile);
 
     context.subscriptions.push(
       vscode.commands.registerCommand('appmap.applyFilter', async () => {
