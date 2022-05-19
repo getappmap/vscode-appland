@@ -2,19 +2,27 @@ import * as vscode from 'vscode';
 import { promisify } from 'util';
 import { readFile } from 'fs';
 import ChangeEventDebouncer from './changeEventDebouncer';
-import { Metadata, normalizeSQL } from '@appland/models';
+import { Metadata } from '@appland/models';
 
-const ROOT_ID = '<root>';
-const FOLDER = 'folder';
-const HTTP = 'http';
-const ROUTE = 'route';
-const DATABASE = 'database';
-const QUERY = 'query';
-const PACKAGE = 'package';
-const CLASS = 'class';
-const FUNCTION = 'function';
+export enum CodeObjectEntryType {
+  ROOT_ID = '<root>',
+  FOLDER = 'folder',
+  HTTP = 'http',
+  ROUTE = 'route',
+  DATABASE = 'database',
+  QUERY = 'query',
+  PACKAGE = 'package',
+  CLASS = 'class',
+  FUNCTION = 'function',
+}
 
-const inspectableTypes = [PACKAGE, CLASS, FUNCTION, QUERY, ROUTE];
+export const InspectableTypes = [
+  CodeObjectEntryType.PACKAGE,
+  CodeObjectEntryType.CLASS,
+  CodeObjectEntryType.FUNCTION,
+  CodeObjectEntryType.QUERY,
+  CodeObjectEntryType.ROUTE,
+];
 
 const betterNames = {
   'database Database': 'Queries',
@@ -25,7 +33,7 @@ type MinimalCodeObject = CodeObjectEntry | ClassMapEntry;
 
 type ClassMapEntry = {
   folder: vscode.WorkspaceFolder;
-  type: string;
+  type: CodeObjectEntryType;
   name: string;
   static: boolean;
   labels: string[];
@@ -43,7 +51,7 @@ export class CodeObjectEntry {
     public folder: vscode.WorkspaceFolder,
     appMapFilePath: string | undefined,
     public fqid: string,
-    public type: string,
+    public type: CodeObjectEntryType,
     public name: string,
     public isStatic = false,
     public labels: Set<string> = new Set(),
@@ -73,7 +81,7 @@ export class CodeObjectEntry {
   }
 
   get isInspectable(): boolean {
-    return inspectableTypes.includes(this.type);
+    return InspectableTypes.includes(this.type);
   }
 
   get appMapFiles(): string[] {
@@ -116,16 +124,17 @@ export class CodeObjectEntry {
 
       if (parent) {
         if (
-          (parent.type === FOLDER && codeObject.type !== FOLDER) ||
-          parent.type === HTTP ||
-          parent.type === DATABASE
+          (parent.type === CodeObjectEntryType.FOLDER &&
+            codeObject.type !== CodeObjectEntryType.FOLDER) ||
+          parent.type === CodeObjectEntryType.HTTP ||
+          parent.type === CodeObjectEntryType.DATABASE
         ) {
           tokens = [];
         } else {
           let separator: string;
           const co = codeObject as any;
           const isStatic = co.static || co.isStatic;
-          if (codeObject.type === FUNCTION) {
+          if (codeObject.type === CodeObjectEntryType.FUNCTION) {
             separator = isStatic ? '.' : '#';
           } else {
             separator = CodeObjectEntry.separator(parent.type);
@@ -266,7 +275,7 @@ export default class ClassMapIndex {
       if (betterName) cme.name = betterName;
 
       let result = cme;
-      if (cme.type === PACKAGE) {
+      if (cme.type === CodeObjectEntryType.PACKAGE) {
         {
           // Some code object entries have a path-delimited package name, but we want
           // each package name token to be its own object.
@@ -293,7 +302,7 @@ export default class ClassMapIndex {
 
         result = {
           folder: cme.folder,
-          type: FOLDER,
+          type: CodeObjectEntryType.FOLDER,
           name: 'Code',
           static: false,
           location: cme.location,
@@ -308,8 +317,8 @@ export default class ClassMapIndex {
     const root = new CodeObjectEntry(
       {} as vscode.WorkspaceFolder,
       undefined,
-      ROOT_ID,
-      FOLDER,
+      CodeObjectEntryType.ROOT_ID,
+      CodeObjectEntryType.FOLDER,
       'root'
     );
     await Promise.all(

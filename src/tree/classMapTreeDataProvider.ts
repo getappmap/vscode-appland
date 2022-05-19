@@ -1,7 +1,7 @@
 import assert from 'assert';
 import { basename, isAbsolute } from 'path';
 import * as vscode from 'vscode';
-import ClassMapIndex, { CodeObjectEntry } from '../services/classMapIndex';
+import ClassMapIndex, { CodeObjectEntry, InspectableTypes } from '../services/classMapIndex';
 
 export interface CodeObjectTreeItem extends vscode.TreeItem {
   codeObjectFqid: string;
@@ -43,9 +43,6 @@ export class ClassMapTreeDataProvider implements vscode.TreeDataProvider<vscode.
     let codeObjects: CodeObjectEntry[] = [];
     if (element) {
       assert(element.id);
-      if (element.id.match(/Code/)) {
-        const i = 0;
-      }
       const codeObject = await this.classMap.lookupCodeObject(element.id);
       if (codeObject) codeObjects = codeObject.children;
     } else {
@@ -94,17 +91,14 @@ export class ClassMapTreeDataProvider implements vscode.TreeDataProvider<vscode.
           : vscode.TreeItemCollapsibleState.None,
     } as CodeObjectTreeItem;
     if (
-      codeObject.type === 'function' &&
       codeObject.path &&
       codeObject.path.includes('.') // Filter out pseudo-filenames like 'OpenSSL'
     ) {
       const showOptions = {} as vscode.TextDocumentShowOptions;
-      const fileAndLine = basename(codeObject.path);
-      const [file, lineNumber] = fileAndLine.split(':');
-      if (lineNumber) {
+      if (codeObject.lineNo) {
         showOptions.selection = new vscode.Range(
-          new vscode.Position(parseInt(lineNumber) - 1, 0),
-          new vscode.Position(parseInt(lineNumber) - 1, 0)
+          new vscode.Position(codeObject.lineNo - 1, 0),
+          new vscode.Position(codeObject.lineNo - 1, 0)
         );
       }
       let uri: vscode.Uri;
@@ -115,8 +109,14 @@ export class ClassMapTreeDataProvider implements vscode.TreeDataProvider<vscode.
       }
       treeItem.command = {
         command: 'vscode.open',
-        title: `Open ${file}`,
+        title: `Open ${basename(codeObject.path)}`,
         arguments: [uri, showOptions],
+      };
+    } else if (InspectableTypes.includes(codeObject.type) && codeObject.children.length === 0) {
+      treeItem.command = {
+        command: 'appmap.openCodeObjectInAppMap',
+        title: `Open in AppMap`,
+        arguments: [codeObject.fqid],
       };
     }
     return treeItem;
