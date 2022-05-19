@@ -2,6 +2,7 @@ import { Metadata } from '@appland/models';
 import { readFile } from 'fs';
 import { promisify } from 'util';
 import * as vscode from 'vscode';
+import { CodeObjectEntry } from '../services/classMapIndex';
 import LineInfoIndex from '../services/lineInfoIndex';
 
 export default function registerHoverProvider(
@@ -42,26 +43,21 @@ export default function registerHoverProvider(
 
       const md = new vscode.MarkdownString();
       md.isTrusted = true;
+      md.appendMarkdown(`**Inspect code object**\n\n`);
       lineInfo.codeObjects.forEach((codeObject) => {
-        md.appendMarkdown(`Inspect `);
-        const args = [codeObject.fqid];
-        const commandUri = vscode.Uri.parse(
-          `command:appmap.inspectCodeObject?${encodeURIComponent(JSON.stringify(args))}`
-        );
-        md.appendMarkdown(`[${codeObject.fqid.split(':')[1]}](${commandUri})`);
+        let ancestor: CodeObjectEntry | undefined = codeObject;
+        while (ancestor && ancestor.isInspectable) {
+          md.appendMarkdown(`- `);
+          const args = [ancestor.fqid];
+          const commandUri = vscode.Uri.parse(
+            `command:appmap.inspectCodeObject?${encodeURIComponent(JSON.stringify(args))}`
+          );
+          md.appendMarkdown(`[${ancestor.fqid}](${commandUri})\n`);
+          ancestor = ancestor.parent;
+        }
       });
       contents.push(md);
     }
-    /*
-    // This is already pretty well handled by the Problems view
-    if (lineInfo.findings) {
-      const md = new vscode.MarkdownString();
-      md.appendMarkdown(
-        `Matches findings ${lineInfo.findings?.map((finding) => finding.finding.ruleId).join(', ')}`
-      );
-      contents.push(md);
-    }
-    */
 
     return {
       contents,

@@ -7,10 +7,14 @@ import { normalizeSQL } from '@appland/models';
 const ROOT_ID = '<root>';
 const FOLDER = 'folder';
 const HTTP = 'http';
+const ROUTE = 'route';
 const DATABASE = 'database';
 const QUERY = 'query';
 const PACKAGE = 'package';
+const CLASS = 'class';
 const FUNCTION = 'function';
+
+const inspectableTypes = [PACKAGE, CLASS, FUNCTION, QUERY, ROUTE];
 
 const betterNames = {
   'database Database': 'Queries',
@@ -47,6 +51,10 @@ export class CodeObjectEntry {
     public lineNo?: number
   ) {
     if (appMapFilePath) this._appMapFiles.add(appMapFilePath);
+  }
+
+  get isInspectable(): boolean {
+    return inspectableTypes.includes(this.type);
   }
 
   get appMapFiles(): string[] {
