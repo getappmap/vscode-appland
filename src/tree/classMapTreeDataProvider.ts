@@ -43,6 +43,9 @@ export class ClassMapTreeDataProvider implements vscode.TreeDataProvider<vscode.
     let codeObjects: CodeObjectEntry[] = [];
     if (element) {
       assert(element.id);
+      if (element.id.match(/Code/)) {
+        const i = 0;
+      }
       const codeObject = await this.classMap.lookupCodeObject(element.id);
       if (codeObject) codeObjects = codeObject.children;
     } else {

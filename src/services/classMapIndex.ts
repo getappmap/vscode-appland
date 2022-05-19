@@ -259,31 +259,50 @@ export default class ClassMapIndex {
       (cme.children || []).forEach(mergeCodeObject.bind(this, folder, appMapFilePath, child));
     };
 
-    function normalize(cme: ClassMapEntry): ClassMapEntry {
+    function normalizeRoot(cme: ClassMapEntry): ClassMapEntry {
       cme.labels = cme.labels || [];
       cme.children = cme.children || [];
       const betterName = betterNames[[cme.type, cme.name].join(' ')];
       if (betterName) cme.name = betterName;
 
-      if (cme.type === QUERY) {
-        // TODO: We need a database type in order to do this properly.
-        // It would be great if the Database object stored this info.
-        const normalizedSql = normalizeSQL(cme.name, 'postgresql');
-        if (normalizedSql) cme.name = normalizedSql;
-      }
-
+      let result = cme;
       if (cme.type === PACKAGE) {
-        cme = {
+        {
+          // Some code object entries have a path-delimited package name, but we want
+          // each package name token to be its own object.
+          const chain = cme.name.split('/').map(
+            (name: string) =>
+              ({
+                folder: cme.folder,
+                type: cme.type,
+                name: name,
+                static: cme.static,
+                location: cme.location,
+                children: [],
+                labels: cme.labels,
+              } as ClassMapEntry)
+          );
+          chain.forEach((item, index) => {
+            if (index > 0) {
+              chain[index - 1].children = [item];
+            }
+          });
+          chain[chain.length - 1].children = cme.children;
+          cme = chain[0];
+        }
+
+        result = {
           folder: cme.folder,
           type: FOLDER,
           name: 'Code',
           static: false,
+          location: cme.location,
           children: [cme],
           labels: [],
         } as ClassMapEntry;
       }
 
-      return cme;
+      return result;
     }
 
     const root = new CodeObjectEntry(
@@ -330,7 +349,7 @@ export default class ClassMapIndex {
           const indexDir = classMapFileTokens.join('/');
           const appMapFilePath = [indexDir, 'appmap.json'].join('.');
           classMap
-            .map(normalize.bind(this))
+            .map(normalizeRoot.bind(this))
             .forEach(mergeCodeObject.bind(this, folder, appMapFilePath, root));
         })
     );
