@@ -1,12 +1,12 @@
 import * as vscode from 'vscode';
-import { initializeWorkspace, waitFor, ExampleAppMap } from './util';
+import { initializeWorkspace, waitFor, ExampleAppMap } from '../util';
 import assert, { AssertionError } from 'assert';
 
 describe('AppMapTextEditor', () => {
   beforeEach(initializeWorkspace);
   afterEach(initializeWorkspace);
 
-  it('should open an AppMap by source path and initial state', async () => {
+  it('opens an AppMap by source path and initial state', async () => {
     await waitFor(
       'All text editors should be closed',
       () => vscode.window.visibleTextEditors.length === 0

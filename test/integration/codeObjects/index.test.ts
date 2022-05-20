@@ -3,18 +3,18 @@ import { exists } from 'fs';
 import { join } from 'path';
 import { promisify } from 'util';
 import * as vscode from 'vscode';
-import AppMapService from '../../src/appMapService';
-import { CodeObjectEntry } from '../../src/services/classMapIndex';
-import { ExampleAppMap, ExampleAppMapIndexDir, initializeWorkspace, touch, waitFor } from './util';
+import AppMapService from '../../../src/appMapService';
+import { CodeObjectEntry } from '../../../src/services/classMapIndex';
+import { ExampleAppMap, ExampleAppMapIndexDir, initializeWorkspace, touch, waitFor } from '../util';
 
 describe('CodeObjects', () => {
   beforeEach(initializeWorkspace);
   afterEach(initializeWorkspace);
 
-  it('should be loaded on startup', async () => {
+  it('index is created on startup', async () => {
     let extension: vscode.Extension<AppMapService> | undefined;
 
-    waitFor(`Extension not available`, () => {
+    await waitFor(`Extension not available`, () => {
       const ext = vscode.extensions.getExtension('appland.appmap');
       if (ext && ext.isActive) {
         extension = ext;

@@ -4,8 +4,11 @@ import { waitFor } from './util';
 
 describe('Smoke', () => {
   it('Should start extension appland.appmap', async () => {
-    waitFor(`Extension not available`, () => !!vscode.extensions.getExtension('appland.appmap'));
-    waitFor(
+    await waitFor(
+      `Extension not available`,
+      () => !!vscode.extensions.getExtension('appland.appmap')
+    );
+    await waitFor(
       `Extension not active`,
       () => !!vscode.extensions.getExtension('appland.appmap')?.isActive
     );

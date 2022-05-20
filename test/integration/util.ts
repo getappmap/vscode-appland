@@ -14,6 +14,14 @@ export const ExampleAppMapIndexDir = join(
   'tmp/appmap/minitest/Microposts_controller_can_get_microposts_as_JSON'
 );
 
+export function hasDiagnostics(): boolean {
+  return vscode.languages.getDiagnostics().filter((d) => d[1].length > 0).length > 0;
+}
+
+export function hasNoDiagnostics(): boolean {
+  return !hasDiagnostics();
+}
+
 export async function initializeWorkspace(): Promise<void> {
   await closeAllEditors();
   await cleanWorkspace();
