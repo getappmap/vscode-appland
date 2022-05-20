@@ -351,5 +351,6 @@
     "publisherDisplayName": "AppLand",
     "publisherId": "f7f1004e-6038-49cd-a096-4e618fe53f77",
     "isPreReleaseVersion": false
-  }
+  },
+  "packageManager": "yarn@3.2.1"
 }
