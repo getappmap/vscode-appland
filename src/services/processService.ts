@@ -20,14 +20,12 @@ export default class ProcessService {
 
   protected async runProcess(args: string[], options: SpawnOptions): Promise<void> {
     const command = await commandArgs(this.folder, args, options);
-    return this.invokeCommand(command);
+    this.invokeCommand(command);
   }
 
   protected async invokeCommand(command: Command, timeout = 10000): Promise<void> {
     this.process = spawn(command.mainCommand, command.args, command.options);
-
     ProcessService.logProcess(this.process, true);
-
     this.process.once('exit', (code) => {
       if (this.retry) {
         vscode.window.showErrorMessage(

@@ -13,7 +13,7 @@ class AutoIndexer extends ProcessService implements WorkspaceServiceInstance {
       commandArgs = command;
     }
 
-    return this.runProcess(commandArgs, {});
+    this.runProcess(commandArgs, {});
   }
 }
 
