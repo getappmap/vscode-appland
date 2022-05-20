@@ -1,6 +1,3 @@
-import { Metadata } from '@appland/models';
-import { readFile } from 'fs';
-import { promisify } from 'util';
 import * as vscode from 'vscode';
 import { CodeObjectEntry } from '../services/classMapIndex';
 import LineInfoIndex from '../services/lineInfoIndex';
