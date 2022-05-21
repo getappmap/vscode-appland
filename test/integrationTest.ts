@@ -54,18 +54,10 @@ import assert from 'assert';
 
   console.log(`Resolved test paths:\n\t${testFiles.join('\n\t')}`);
 
-  // TODO: Use existing version in dev
-  const vscodeVersion = process.env.TEST_VSCODE_VERSION;
-  // TODO: Obtain platform name
-  const vscodePlatform = process.env.TEST_VSCODE_PLATFORM || process.platform;
-
   const extensionDevelopmentPath = resolve(__dirname, '..');
   const userDataDir = resolve(__dirname, '../.vscode-test/user-data');
 
-  const vscodeExecutablePath = await downloadAndUnzipVSCode.call(
-    null,
-    ...[vscodeVersion, vscodePlatform]
-  );
+  const vscodeExecutablePath = await downloadAndUnzipVSCode();
   const [cliPath] = resolveCliArgsFromVSCodeExecutablePath(vscodeExecutablePath);
 
   const testWorkspaces = [
@@ -111,7 +103,6 @@ import assert from 'assert';
       extensionDevelopmentPath,
       // TEST_PATH env var sends the actual test names. index.js is a wrapper which loads Mocha, etc.
       extensionTestsPath: resolve(testDir, 'index.js'),
-      version: [vscodeVersion || 'stable', process.platform].join('-'),
       extensionTestsEnv: {
         TEST_FILE: testFile,
       },
