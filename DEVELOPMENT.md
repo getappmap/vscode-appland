@@ -86,22 +86,33 @@ stored states, please update this function to reset the new stored states.
 
 ## Testing
 
-This app uses the built-in VSCode mechanism for integration tests: it downloads and runs the
-integration test suite within a dedicated VSCode instance. Integration tests are located in
-`test/integration`.
+This app uses a customized version @vscode/test-electron. Integration tests are located in
+`test/integration`. Unlike the default VSCode integration test script, each test case is run in its
+own Electron process. This keeps state changes from leaking across tests.
 
 ### Running tests
-
-Here's what's working for me:
 
 ```
 yarn run pretest && yarn run test:extension
 ```
 
 Test case code is JavaScript in the `out/test` directory, so the test cases need to be compiled from
-`test/integration` to `out/test/integration`. The `pretest` command seems to do this - it works for
-me anyway. Running the TypeScript compiler in a watch mode doesn't seem to work - I don't know why
-not.
+`test/integration` to `out/test/integration`.
+
+Aside from pretest, another strategy that seems to work is to run these two commands in the terminal
+as I code:
+
+```
+# Compile tests
+yarn run tsc --watch
+
+# Compile the extension
+yarn run watch
+```
+
+Here's a video showing how I do it (May 2022):
+
+https://www.loom.com/share/bab18082ffba4c9fa5011364e452a6bb
 
 ### Test side effects and state leakage
 
