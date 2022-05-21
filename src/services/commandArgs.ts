@@ -4,6 +4,7 @@ import { promisify } from 'util';
 import { readFile } from 'fs';
 import { packageManagerCommand } from '../configuration/packageManager';
 import { exec, SpawnOptions } from 'child_process';
+import { delimiter, resolve } from 'path';
 
 export type Command = {
   mainCommand: string;
@@ -39,8 +40,10 @@ export default async function commandArgs(
   if (error) {
     vscode.window.showWarningMessage(error);
   }
-  if (process.env.SHELL) {
-    options.shell = process.env.SHELL;
+
+  let yarnDir: string | undefined;
+  if (process.env.HOME && (yarnDir = await resolveFilePath(process.env.HOME, '.yarn'))) {
+    environment.PATH = [resolve(yarnDir, 'bin'), process.env.PATH].join(delimiter);
   }
 
   options.cwd = folder.uri.fsPath;
