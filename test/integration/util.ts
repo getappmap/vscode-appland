@@ -111,14 +111,15 @@ export async function waitFor(
   timeout = 30000
 ): Promise<void> {
   const startTime = Date.now();
-  let delay = 250;
+  let delay = 100;
   while (!(await test())) {
     const elapsed = Date.now() - startTime;
     if (elapsed > timeout) {
       throw new Error(message);
     }
 
-    delay = delay * 1.5;
+    delay = delay * 2;
+    console.log(`Waiting ${delay}ms because: ${message}`);
     await wait(delay);
   }
 }

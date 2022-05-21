@@ -1,26 +1,29 @@
+import assert from 'assert';
+import { unlink } from 'fs';
+import { promisify } from 'util';
 import * as vscode from 'vscode';
-import { initializeWorkspace, touch, waitFor } from '../util';
+import { initializeWorkspace, repeatUntil, touch, waitForExtension } from '../util';
 
 describe('AppMapIndex', () => {
   beforeEach(initializeWorkspace);
+  beforeEach(waitForExtension);
   afterEach(initializeWorkspace);
 
   it('updates as AppMaps are modified', async () => {
-    const appmapFiles = await vscode.workspace.findFiles(`**/*.appmap.json`);
-    await Promise.all(appmapFiles.map((uri) => touch(uri.fsPath)));
-
     const mtimeFiles = async () => vscode.workspace.findFiles(`**/mtime`);
+    await Promise.all((await mtimeFiles()).map(async (f) => promisify(unlink)(f.fsPath)));
+    assert.strictEqual((await mtimeFiles()).length, 0, `mtime files should all be erased`);
 
-    return new Promise((resolve, reject) => {
-      waitFor(
-        'No mtime (AppMap timestamp) files found',
-        async () => (await mtimeFiles()).length > 0
-      ).catch(reject);
+    const appmapFileCount = (await vscode.workspace.findFiles(`**/*.appmap.json`)).length;
+    const appmapFiles = (await vscode.workspace.findFiles(`**/*.appmap.json`)).map(
+      (uri) => uri.fsPath
+    );
 
-      mtimeFiles()
-        .then((files) => console.log(files))
-        .then(resolve)
-        .catch(reject);
-    });
+    const touchAppMaps = async () => Promise.all(appmapFiles.map((filePath) => touch(filePath)));
+    await repeatUntil(
+      touchAppMaps,
+      `mtime files not created for all AppMaps`,
+      async () => (await mtimeFiles()).length === appmapFileCount
+    );
   });
 });

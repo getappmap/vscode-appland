@@ -1,9 +1,10 @@
 import assert from 'assert';
 import * as vscode from 'vscode';
-import { hasDiagnostics, initializeWorkspace, waitFor } from '../util';
+import { hasDiagnostics, initializeWorkspace, waitFor, waitForExtension } from '../util';
 
 describe('Findings', () => {
   beforeEach(initializeWorkspace);
+  beforeEach(waitForExtension);
   afterEach(initializeWorkspace);
 
   it('are populated in the Problems view', async () => {
@@ -19,7 +20,7 @@ describe('Findings', () => {
     const diagnostics = vscode.languages.getDiagnostics();
     assert.strictEqual(
       diagnostics[0][0].toString(),
-      `file:///Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activerecord-6.0.4.1/lib/active_record/relation.rb`
+      `file:///Users/kgilpin/source/appland/vscode-appland/test/fixtures/workspaces/project-a/app/controllers/microposts_controller.rb`
     );
     assert.strictEqual(diagnostics[0][1].length, 1);
     assert.strictEqual(

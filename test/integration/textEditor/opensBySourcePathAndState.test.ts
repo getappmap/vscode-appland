@@ -1,9 +1,10 @@
 import * as vscode from 'vscode';
-import { initializeWorkspace, waitFor, ExampleAppMap } from '../util';
+import { initializeWorkspace, waitFor, ExampleAppMap, waitForExtension } from '../util';
 import assert, { AssertionError } from 'assert';
 
 describe('AppMapTextEditor', () => {
   beforeEach(initializeWorkspace);
+  beforeEach(waitForExtension);
   afterEach(initializeWorkspace);
 
   it('opens an AppMap by source path and initial state', async () => {

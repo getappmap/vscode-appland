@@ -3,33 +3,31 @@ import { exists } from 'fs';
 import { join } from 'path';
 import { promisify } from 'util';
 import * as vscode from 'vscode';
-import AppMapService from '../../../src/appMapService';
 import { CodeObjectEntry } from '../../../src/services/classMapIndex';
-import { ExampleAppMap, ExampleAppMapIndexDir, initializeWorkspace, touch, waitFor } from '../util';
+import {
+  ExampleAppMap,
+  ExampleAppMapIndexDir,
+  initializeWorkspace,
+  repeatUntil,
+  touch,
+  waitFor,
+  waitForExtension,
+} from '../util';
 
 describe('CodeObjects', () => {
   beforeEach(initializeWorkspace);
+  beforeEach(waitForExtension);
   afterEach(initializeWorkspace);
 
   it('index is created on startup', async () => {
-    let extension: vscode.Extension<AppMapService> | undefined;
-
-    await waitFor(`Extension not available`, () => {
-      const ext = vscode.extensions.getExtension('appland.appmap');
-      if (ext && ext.isActive) {
-        extension = ext;
-        return true;
-      }
-      return false;
-    });
-
-    if (!extension) throw new Error(`Extension not available`);
-
-    await touch(ExampleAppMap);
+    const extension = vscode.extensions.getExtension('appland.appmap');
+    assert(extension);
 
     const classMapFile = join(ExampleAppMapIndexDir, 'classMap.json');
-    await waitFor(`classMap.json should be generated `, async () =>
-      promisify(exists)(classMapFile)
+    await repeatUntil(
+      async () => touch(ExampleAppMap),
+      `classMap.json should be generated`,
+      async () => promisify(exists)(classMapFile)
     );
 
     const appMapService = extension.exports;
