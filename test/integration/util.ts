@@ -14,8 +14,51 @@ export const ExampleAppMapIndexDir = join(
   'tmp/appmap/minitest/Microposts_controller_can_get_microposts_as_JSON'
 );
 
+export type DiagnosticForUri = {
+  uri: vscode.Uri;
+  diagnostics: vscode.Diagnostic[];
+};
+
+export async function repeatUntil(
+  fn: () => Promise<void | void[]>,
+  message: string,
+  test: () => boolean | Promise<boolean>
+): Promise<void> {
+  const actionInterval = setInterval(fn, 1000);
+
+  try {
+    await waitFor(message, test);
+  } finally {
+    clearInterval(actionInterval);
+  }
+}
+
+function makeDiagnosticForUri(d: [vscode.Uri, vscode.Diagnostic[]]): DiagnosticForUri {
+  return {
+    uri: d[0],
+    diagnostics: d[1],
+  };
+}
+
+export function diagnosticAppMap(diagnostic: vscode.Diagnostic): string | undefined {
+  return (diagnostic.relatedInformation || []).find((r) =>
+    r.location.uri.fsPath.endsWith('.appmap.json')
+  )?.location.uri.fsPath;
+}
+
+export function getDiagnostics(): DiagnosticForUri[] {
+  return vscode.languages.getDiagnostics().map(makeDiagnosticForUri);
+}
+
+export function getDiagnosticsForAppMap(appMapFilePath: string): DiagnosticForUri[] {
+  return vscode.languages
+    .getDiagnostics()
+    .map(makeDiagnosticForUri)
+    .filter((ds) => ds.diagnostics.find((d) => diagnosticAppMap(d) === appMapFilePath));
+}
+
 export function hasDiagnostics(): boolean {
-  return vscode.languages.getDiagnostics().filter((d) => d[1].length > 0).length > 0;
+  return getDiagnostics().filter((d: DiagnosticForUri) => d.diagnostics.length > 0).length > 0;
 }
 
 export function hasNoDiagnostics(): boolean {
@@ -31,7 +74,7 @@ async function closeAllEditors(): Promise<void> {
   await vscode.commands.executeCommand('workbench.action.closeAllEditors');
 }
 
-async function executeWorkspaceOSCommand(cmd: string, workspaceName: string): Promise<void> {
+export async function executeWorkspaceOSCommand(cmd: string, workspaceName: string): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     exec(cmd, { cwd: workspaceName }, (err, stdout, stderr) => {
       if (err) {
@@ -49,6 +92,17 @@ async function cleanWorkspace(): Promise<void> {
   await executeWorkspaceOSCommand(`git restore .`, ProjectA);
   await executeWorkspaceOSCommand(`git clean -fd .`, ProjectB);
   await executeWorkspaceOSCommand(`git restore .`, ProjectB);
+}
+
+export async function waitForExtension(): Promise<void> {
+  await waitFor(
+    `Extension not available`,
+    () => !!vscode.extensions.getExtension('appland.appmap')
+  );
+  await waitFor(
+    `Extension not active`,
+    () => !!vscode.extensions.getExtension('appland.appmap')?.isActive
+  );
 }
 
 export async function waitFor(

@@ -7,20 +7,25 @@ import {
 import { existsSync } from 'fs';
 import { promisify } from 'util';
 import { glob } from 'glob';
-import { basename, resolve } from 'path';
+import { resolve } from 'path';
+import assert from 'assert';
 
 (async function() {
   const projectRootDir = resolve(__dirname, '..');
   const testDir = resolve(__dirname, '../out/test/integration');
 
-  let fileArgs = process.argv.slice(1).filter((arg) => arg.match(/\.js$/));
+  let fileArgs = process.argv.slice(1).filter((arg) => arg.match(/\.test\.(?:js|ts)$/));
   if (fileArgs.length > 0) {
-    console.log(`Running specific tests provided by command line arguments: ${fileArgs.join(' ')}`);
+    console.log(
+      `Running specific tests provided by command line arguments:\n\t${fileArgs.join('\n\t')}`
+    );
   }
 
   if (fileArgs.length === 0) {
     console.log(`Running all integration tests`);
-    fileArgs = await promisify(glob)('**/*.js', { cwd: testDir });
+    fileArgs = (await promisify(glob)('**/*.test.js', { cwd: testDir })).map((file) =>
+      resolve(testDir, file)
+    );
   }
 
   const resolvedTestFiles = fileArgs.map((file) => {
@@ -34,11 +39,20 @@ import { basename, resolve } from 'path';
       console.warn(`Could not find test file ${file}`);
     }
   });
-  const testFiles = resolvedTestFiles.filter(
-    (path) => path && basename(path).includes('.test.')
-  ) as string[];
+  const testFiles = resolvedTestFiles.map((path) => {
+    if (!path) throw new Error(`File path must be truthy`);
+    if (path.endsWith('.js')) return path;
+    const tokens = path.slice(projectRootDir.length).split('/');
+    return resolve(
+      testDir,
+      tokens.slice(3, -1).join('/'),
+      tokens[tokens.length - 1].replace('.ts', '.js')
+    );
+  }) as string[];
 
-  console.log(`Resolved test paths: ${testFiles.join(' ')}`);
+  testFiles.forEach((testFile) => assert(existsSync(testFile)));
+
+  console.log(`Resolved test paths:\n\t${testFiles.join('\n\t')}`);
 
   // TODO: Use existing version in dev
   const vscodeVersion = process.env.TEST_VSCODE_VERSION;
