@@ -4,11 +4,15 @@ import {
   resolveCliArgsFromVSCodeExecutablePath,
   runTests as runTestsInElectron,
 } from '@vscode/test-electron';
-import { exists, existsSync } from 'fs';
+import { exists, existsSync, readFile } from 'fs';
 import { promisify } from 'util';
 import { glob } from 'glob';
 import { resolve } from 'path';
 import assert from 'assert';
+import { workspace } from 'vscode';
+
+const PROJECT_A = 'test/fixtures/workspaces/project-a';
+const PROJECT_WITH_ECHO_COMMAND = 'test/fixtures/workspaces/project-with-echo-command';
 
 (async function() {
   const projectRootDir = resolve(__dirname, '..');
@@ -60,10 +64,7 @@ import assert from 'assert';
   const vscodeExecutablePath = await downloadAndUnzipVSCode();
   const [cliPath] = resolveCliArgsFromVSCodeExecutablePath(vscodeExecutablePath);
 
-  const testWorkspaces = [
-    'test/fixtures/workspaces/project-a',
-    'test/fixtures/workspaces/project-b',
-  ];
+  const testWorkspaces = [PROJECT_A, PROJECT_WITH_ECHO_COMMAND];
 
   if (process.env.TEST_YARN_INSTALL !== 'false') {
     await Promise.all(
@@ -97,7 +98,7 @@ import assert from 'assert';
     }
   );
 
-  const runTests = async (testFile: string) => {
+  const runTests = async (testFile: string, workspaceDir: string) => {
     await runTestsInElectron({
       vscodeExecutablePath,
       extensionDevelopmentPath,
@@ -111,7 +112,7 @@ import assert from 'assert';
         userDataDir,
         // '--disable-extensions',
         '--disable-gpu',
-        testWorkspaces[0],
+        workspaceDir,
       ],
     });
   };
@@ -133,8 +134,22 @@ import assert from 'assert';
       }
     }
 
+    // To specify a workspace project, embed a comment in the test case like:
+    // // @project project-name
+    const headerLines = (await promisify(readFile)(testFile, 'utf8')).split('\n');
+    const projectNameMatch = headerLines
+      .map((line) => line.trim().match(/@project (.*)/))
+      .find(Boolean);
+
+    let projectName: string | undefined;
+    if (projectNameMatch) {
+      projectName = resolve(__dirname, 'fixtures/workspaces', projectNameMatch[1]);
+      assert(await promisify(exists)(projectName));
+      console.log(`Using workspace ${projectName}`);
+    }
+
     try {
-      await runTests(testFile);
+      await runTests(testFile, projectName || PROJECT_A);
     } catch (e) {
       succeeded = false;
       console.warn(`Test ${testFile} failed: ${e}`);

@@ -1,3 +1,4 @@
+// @project project-with-echo-command
 import * as vscode from 'vscode';
 import assert from 'assert';
 import extensionSettings from '../../../src/configuration/extensionSettings';

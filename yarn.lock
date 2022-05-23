@@ -11760,9 +11760,9 @@ fsevents@^1.2.7:
   languageName: unknown
   linkType: soft
 
-"project-b@workspace:test/fixtures/workspaces/project-b":
+"project-with-echo-command@workspace:test/fixtures/workspaces/project-with-echo-command":
   version: 0.0.0-use.local
-  resolution: "project-b@workspace:test/fixtures/workspaces/project-b"
+  resolution: "project-with-echo-command@workspace:test/fixtures/workspaces/project-with-echo-command"
   dependencies:
     "@appland/appmap": ^3.25.4
     "@appland/scanner": ^1.56.0

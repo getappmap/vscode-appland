@@ -4,7 +4,10 @@ import { close, open, utimes } from 'fs';
 import { join } from 'path';
 
 export const ProjectA = join(__dirname, '../../../test/fixtures/workspaces/project-a');
-export const ProjectB = join(__dirname, '../../../test/fixtures/workspaces/project-b');
+export const ProjectWithEchoCommand = join(
+  __dirname,
+  '../../../test/fixtures/workspaces/project-with-echo-command'
+);
 export const ExampleAppMap = join(
   ProjectA,
   'tmp/appmap/minitest/Microposts_controller_can_get_microposts_as_JSON.appmap.json'
@@ -90,8 +93,8 @@ export async function executeWorkspaceOSCommand(cmd: string, workspaceName: stri
 async function cleanWorkspace(): Promise<void> {
   await executeWorkspaceOSCommand(`git clean -fd .`, ProjectA);
   await executeWorkspaceOSCommand(`git restore .`, ProjectA);
-  await executeWorkspaceOSCommand(`git clean -fd .`, ProjectB);
-  await executeWorkspaceOSCommand(`git restore .`, ProjectB);
+  await executeWorkspaceOSCommand(`git clean -fd .`, ProjectWithEchoCommand);
+  await executeWorkspaceOSCommand(`git restore .`, ProjectWithEchoCommand);
 }
 
 export async function waitForExtension(): Promise<void> {
