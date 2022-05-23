@@ -216,6 +216,24 @@
       ]
     },
     "menus": {
+      "commandPalette": [
+        {
+          "command": "appmap.context.openInFileExplorer",
+          "when": "false"
+        },
+        {
+          "command": "appmap.context.openAsJson",
+          "when": "false"
+        },
+        {
+          "command": "appmap.context.rename",
+          "when": "false"
+        },
+        {
+          "command": "appmap.context.inspectCodeObject",
+          "when": "false"
+        }
+      ],
       "view/title": [
         {
           "command": "appmap.applyFilter",
