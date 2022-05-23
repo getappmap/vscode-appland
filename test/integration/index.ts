@@ -1,8 +1,10 @@
 import * as path from 'path';
 import * as temp from 'temp';
 import Mocha from 'mocha';
+import { promisify } from 'util';
+import { exists } from 'fs';
 
-function run(): Promise<void> {
+async function run(): Promise<void> {
   // Create the mocha test
   const mocha = new Mocha({
     ui: 'bdd',
@@ -16,9 +18,13 @@ function run(): Promise<void> {
   if (!testFile) {
     throw new Error(`Expecting TEST_FILE env var to indicate which test to run`);
   }
+  const resolvedTestFile = path.resolve(__dirname, testFile);
+  if (!(await promisify(exists)(resolvedTestFile))) {
+    throw new Error(`TEST_FILE ${resolvedTestFile} does not exist`);
+  }
 
   return new Promise((resolve, reject) => {
-    mocha.addFile(path.resolve(__dirname, testFile));
+    mocha.addFile(resolvedTestFile);
     try {
       // Run the mocha test
       mocha.run((failures) => {

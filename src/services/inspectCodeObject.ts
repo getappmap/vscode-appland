@@ -1,6 +1,6 @@
 import { spawn } from 'child_process';
 import * as vscode from 'vscode';
-import commandArgs from './commandArgs';
+import Command from './command';
 
 export type InspectResult = {
   ancestors: string[];
@@ -19,8 +19,7 @@ class Inspector {
 
   async inspect(): Promise<InspectResult> {
     const args = ['appmap', 'inspect', this.fqid];
-
-    const command = await commandArgs(this.folder, args, {});
+    const command = await Command.commandArgs(this.folder, args, {});
 
     const response: string[] = [];
     const process = spawn(command.mainCommand, command.args, command.options);

@@ -10,6 +10,8 @@ describe('Smoke', () => {
     assert(extension);
     assert.deepStrictEqual(Object.keys(extension.exports), [
       'localAppMaps',
+      'autoIndexService',
+      'autoScanService',
       'findings',
       'classMap',
     ]);

@@ -19,7 +19,7 @@
       "type": "extensionHost",
       "request": "launch",
       "env": {
-        "TEST_FILE": "codeObjects/index.test.js"
+        "TEST_FILE": "processService/autoIndex.test.js"
       },
       "args": [
         "--user-data-dir=${workspaceFolder}/.vscode-test/user-data",

@@ -1,25 +1,21 @@
+import { EventEmitter } from 'stream';
 import * as vscode from 'vscode';
 import extensionSettings from '../configuration/extensionSettings';
 import ProcessService from './processService';
 import { WorkspaceService, WorkspaceServiceInstance } from './workspaceService';
 
 class AutoIndexer extends ProcessService implements WorkspaceServiceInstance {
-  async start(): Promise<void> {
-    const command = extensionSettings.indexCommand();
-    let commandArgs: string[];
-    if (typeof command === 'string') {
-      commandArgs = command.split(' ');
-    } else {
-      commandArgs = command;
-    }
-
-    this.runProcess(commandArgs, {});
+  constructor(public folder: vscode.WorkspaceFolder) {
+    super(folder, extensionSettings.indexCommand);
   }
 }
 
-export default class AutoIndexerService implements WorkspaceService {
+export default class AutoIndexerService extends EventEmitter implements WorkspaceService {
   async create(folder: vscode.WorkspaceFolder): Promise<AutoIndexer> {
     const indexer = new AutoIndexer(folder);
+    ['invoke', 'message', 'exit'].forEach((event) =>
+      indexer.on(event, (...args) => this.emit(event, ...args))
+    );
     await indexer.start();
     return indexer;
   }

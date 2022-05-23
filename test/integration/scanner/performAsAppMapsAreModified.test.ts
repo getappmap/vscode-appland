@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { exists, rename, rmdir, writeFile } from 'fs';
+import { exists, rename, writeFile } from 'fs';
 import { glob } from 'glob';
 import { join } from 'path';
 import { promisify } from 'util';

@@ -4,7 +4,7 @@ import {
   resolveCliArgsFromVSCodeExecutablePath,
   runTests as runTestsInElectron,
 } from '@vscode/test-electron';
-import { existsSync } from 'fs';
+import { exists, existsSync } from 'fs';
 import { promisify } from 'util';
 import { glob } from 'glob';
 import { resolve } from 'path';
@@ -116,12 +116,29 @@ import assert from 'assert';
     });
   };
 
+  let succeeded = true;
   for (const testFile of testFiles) {
     console.log(`Running integration test: ${testFile}`);
+
+    const preconfigureFile = testFile.replace('.test.js', '.preconfigure.js');
+    if (await promisify(exists)(preconfigureFile)) {
+      console.log(`Running preconfiguration script ${preconfigureFile}`);
+      try {
+        const preconfigurationScript = (await import(resolve(preconfigureFile))) as any;
+        await preconfigurationScript.default();
+      } catch (e) {
+        succeeded = false;
+        console.warn(`Test preconfiguration script ${preconfigureFile} failed: ${e}`);
+        continue;
+      }
+    }
+
     try {
       await runTests(testFile);
     } catch (e) {
+      succeeded = false;
       console.warn(`Test ${testFile} failed: ${e}`);
     }
   }
+  process.exit(succeeded ? 0 : 1);
 })();

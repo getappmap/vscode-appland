@@ -30,10 +30,13 @@ import registerDecorationProvider from './decorations/decorationProvider';
 import registerHoverProvider from './hover/hoverProvider';
 import registerInspectCodeObject from './commands/inspectCodeObject';
 import openCodeObjectInAppMap from './commands/openCodeObjectInAppMap';
+import ProcessServiceImpl from './processServiceImpl';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   const workspaceServices = new WorkspaceServices(context);
   Telemetry.register(context);
+  const autoIndexServiceImpl = new ProcessServiceImpl();
+  const autoScanServiceImpl = new ProcessServiceImpl();
 
   try {
     const properties = new ExtensionState(context);
@@ -97,8 +100,22 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
         onDelete: findingsIndex.removeFindingsFile.bind(findingsIndex),
       });
 
-      await workspaceServices.enroll(new AutoIndexerService());
-      await workspaceServices.enroll(new AutoScannerService());
+      {
+        const autoIndexService = new AutoIndexerService();
+        autoIndexService.on('invoke', (command) => autoIndexServiceImpl.startInvocation(command));
+        autoIndexService.on('message', (message) => autoIndexServiceImpl.addMessage(message));
+        autoIndexService.on('exit', (exitStatus) => autoIndexServiceImpl.endInvocation(exitStatus));
+        await workspaceServices.enroll(autoIndexService);
+      }
+      {
+        const autoScannerService = new AutoScannerService();
+        autoScannerService.on('invoke', (command) => autoScanServiceImpl.startInvocation(command));
+        autoScannerService.on('message', (message) => autoScanServiceImpl.addMessage(message));
+        autoScannerService.on('exit', (exitStatus) =>
+          autoScanServiceImpl.endInvocation(exitStatus)
+        );
+        await workspaceServices.enroll(autoScannerService);
+      }
       await workspaceServices.enroll(classMapWatcher);
       await workspaceServices.enroll(findingWatcher);
     }
@@ -183,6 +200,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
     return {
       localAppMaps: appmapCollectionFile,
+      autoIndexService: autoIndexServiceImpl,
+      autoScanService: autoScanServiceImpl,
       findings: findingsIndex,
       classMap: classMapIndex,
     };
