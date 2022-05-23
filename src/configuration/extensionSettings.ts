@@ -8,6 +8,11 @@ export default {
     return vscode.Uri.parse(configUrl);
   },
 
+  inspectEnabled: (): boolean =>
+    [true, 'true'].includes(
+      vscode.workspace.getConfiguration('appMap').get('inspectEnabled') || false
+    ),
+
   findingsEnabled: (): boolean =>
     [true, 'true'].includes(
       vscode.workspace.getConfiguration('appMap').get('findingsEnabled') || false

@@ -146,7 +146,11 @@
         },
         "appMap.findingsEnabled": {
           "type": "boolean",
-          "description": "Enable AppMap scanner and findings"
+          "description": "Enable AppMap scanner and findings (preview)"
+        },
+        "appMap.inspectEnabled": {
+          "type": "boolean",
+          "description": "Enable detailed inspection of AppMap code objects (preview)"
         },
         "appMap.indexCommand": {
           "type": "string",
@@ -154,7 +158,7 @@
         },
         "appMap.scanCommand": {
           "type": "string",
-          "description": "Command use to run the @appland/scanner scan command in watch mode"
+          "description": "Command use to run the @appland/scanner scan command in watch mode (preview)"
         }
       }
     },
@@ -232,6 +236,10 @@
         {
           "command": "appmap.context.inspectCodeObject",
           "when": "false"
+        },
+        {
+          "command": "appmap.inspectCodeObject",
+          "when": "config.appMap.inspectEnabled == true"
         }
       ],
       "view/title": [

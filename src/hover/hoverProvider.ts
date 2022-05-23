@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import extensionSettings from '../configuration/extensionSettings';
 import { CodeObjectEntry } from '../services/classMapIndex';
 import LineInfoIndex from '../services/lineInfoIndex';
 
@@ -33,16 +34,18 @@ export default function registerHoverProvider(
         );
         md.appendMarkdown(`[${codeObject.fqid}](${commandUri})\n\n`);
 
-        md.appendMarkdown(`**Inspect code object**\n\n`);
-        let ancestor: CodeObjectEntry | undefined = codeObject;
-        while (ancestor && ancestor.isInspectable) {
-          md.appendMarkdown(`- `);
-          const args = [ancestor.fqid];
-          const commandUri = vscode.Uri.parse(
-            `command:appmap.inspectCodeObject?${encodeURIComponent(JSON.stringify(args))}`
-          );
-          md.appendMarkdown(`[${ancestor.fqid}](${commandUri})\n`);
-          ancestor = ancestor.parent;
+        if (extensionSettings.inspectEnabled()) {
+          md.appendMarkdown(`**Inspect code object**\n\n`);
+          let ancestor: CodeObjectEntry | undefined = codeObject;
+          while (ancestor && ancestor.isInspectable) {
+            md.appendMarkdown(`- `);
+            const args = [ancestor.fqid];
+            const commandUri = vscode.Uri.parse(
+              `command:appmap.inspectCodeObject?${encodeURIComponent(JSON.stringify(args))}`
+            );
+            md.appendMarkdown(`[${ancestor.fqid}](${commandUri})\n`);
+            ancestor = ancestor.parent;
+          }
         }
       });
       contents.push(md);
