@@ -1,7 +1,7 @@
 import { PathLike } from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
-import AppMapCollectionFile from '../appmapCollectionFile';
+import AppMapCollectionFile from '../services/appmapCollectionFile';
 import { getNonce } from '../util';
 import { OPEN_VIEW, Telemetry } from '../telemetry';
 

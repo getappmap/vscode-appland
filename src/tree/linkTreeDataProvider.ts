@@ -14,12 +14,10 @@ interface LinkDefinitions {
 export class LinkTreeDataProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
   private readonly context: vscode.ExtensionContext;
   private readonly linkDefinitions: LinkDefinitions;
-  private _onDidChangeTreeData: vscode.EventEmitter<
-    vscode.TreeItem | undefined | null | void
-  > = new vscode.EventEmitter<vscode.TreeItem | undefined | null | void>();
-  public readonly onDidChangeTreeData: vscode.Event<
-    vscode.TreeItem | undefined | null | void
-  > = this._onDidChangeTreeData.event;
+
+  private _onDidChangeTreeData = new vscode.EventEmitter<undefined>();
+  public readonly onDidChangeTreeData = this._onDidChangeTreeData.event;
+
   private static readonly VISITED_LINKS = 'VISITED_LINKS';
 
   constructor(context: vscode.ExtensionContext, linkDefinitions: LinkDefinitions) {
@@ -88,7 +86,7 @@ export class LinkTreeDataProvider implements vscode.TreeDataProvider<vscode.Tree
   }
 
   private onUpdate() {
-    this._onDidChangeTreeData.fire();
+    this._onDidChangeTreeData.fire(undefined);
   }
 
   public static resetState(context: vscode.ExtensionContext): void {

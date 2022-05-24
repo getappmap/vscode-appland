@@ -1,10 +1,19 @@
 import * as vscode from 'vscode';
 import assert from 'assert';
+import { waitForExtension } from './util';
 
 describe('Smoke', () => {
   it('Should start extension appland.appmap', async () => {
-    const started = vscode.extensions.getExtension('appland.appmap');
-    assert.notStrictEqual(started, undefined);
-    assert.strictEqual(started?.isActive, true);
+    await waitForExtension();
+
+    const extension = vscode.extensions.getExtension('appland.appmap');
+    assert(extension);
+    assert.deepStrictEqual(Object.keys(extension.exports), [
+      'localAppMaps',
+      'autoIndexService',
+      'autoScanService',
+      'findings',
+      'classMap',
+    ]);
   });
 });

@@ -2,7 +2,7 @@
 # Manual changes might be lost - proceed with caution!
 
 __metadata:
-  version: 5
+  version: 6
   cacheKey: 8
 
 "@apidevtools/json-schema-ref-parser@npm:9.0.9, @apidevtools/json-schema-ref-parser@npm:^9.0.6":
@@ -47,13 +47,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/appmap@npm:^3.25.3":
-  version: 3.25.3
-  resolution: "@appland/appmap@npm:3.25.3"
+"@appland/appmap@npm:^3.25.4":
+  version: 3.25.4
+  resolution: "@appland/appmap@npm:3.25.4"
   dependencies:
     "@appland/components": 2.1.0
     "@appland/diagrams": 1.5.2
     "@appland/models": ^1.14.1
+    "@appland/openapi": 1.0.1
     "@sidvind/better-ajv-errors": ^0.9.1
     "@types/moo": ^0.5.5
     JSONStream: ^1.3.5
@@ -76,7 +77,6 @@ __metadata:
     jsdom: ^16.6.0
     moo: ^0.5.1
     open: ^8.2.1
-    openapi-types: ^10.0.0
     ora: ^5.4.1
     port-pid: ^0.0.7
     ps-node: ^0.1.6
@@ -86,7 +86,7 @@ __metadata:
     yargs: ^17.1.1
   bin:
     appmap: built/src/cli.js
-  checksum: 4f9d34535658a555801befc210aa5ec24d2c75b824a279c9faac087e3172a9e833b0f1705e6b65df284663a861cc8a6c793c56fcc7a4b727d7d67d2809184f05
+  checksum: 395dd4ad765f7a333d7390518eb5d846c01f9092400553f6fa205d35ce34e884425cbeef871a7d92ef0379602c677d1b4eb21fdb0c74db2aaf4699acf5c58764
   languageName: node
   linkType: hard
 
@@ -143,13 +143,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/models@npm:^1.12.1, @appland/models@npm:^1.14.1, @appland/models@npm:^1.14.5, @appland/models@npm:^1.8.1, @appland/models@npm:^1.9.0":
+"@appland/models@npm:1.15.0, @appland/models@npm:^1.12.1, @appland/models@npm:^1.14.1, @appland/models@npm:^1.14.5, @appland/models@npm:^1.8.1, @appland/models@npm:^1.9.0":
   version: 1.15.0
   resolution: "@appland/models@npm:1.15.0"
   dependencies:
     "@appland/sql-parser": ^1.5.0
     crypto-js: ^4.0.0
   checksum: 1384c3396b5a9ccfec2ec07e618ee51db01a19db52a462a32eb456b8417941cb40903839cd742bc67a46927b222c8ccaf9d1569a0268e354be8f3095f4ff6d32
+  languageName: node
+  linkType: hard
+
+"@appland/openapi@npm:1.0.1":
+  version: 1.0.1
+  resolution: "@appland/openapi@npm:1.0.1"
+  dependencies:
+    "@appland/models": 1.15.0
+    js-yaml: ^4.1.0
+  checksum: 5d34775fc3e1f7d9c75533b86506f9a9e2e5fe5c42c1b6db88b62a5074d1fc0fb1a5554df1f5873ab199a9a5ef238c203dba86f23642e9fb70a459e81e0704c5
   languageName: node
   linkType: hard
 
@@ -2608,6 +2618,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@vscode/test-electron@npm:^2.1.3":
+  version: 2.1.3
+  resolution: "@vscode/test-electron@npm:2.1.3"
+  dependencies:
+    http-proxy-agent: ^4.0.1
+    https-proxy-agent: ^5.0.0
+    rimraf: ^3.0.2
+    unzipper: ^0.10.11
+  checksum: b1948973e43a09f618448f4bc0fcf6f5ea501cc79dfe273c173415bdcc7ed88fc967d34d9e6c3c4aff2e5f9a8d527e7238ba17f4b98f5788f1b3a1a4ba416b2b
+  languageName: node
+  linkType: hard
+
 "@vue/babel-helper-vue-jsx-merge-props@npm:^1.2.1":
   version: 1.2.1
   resolution: "@vue/babel-helper-vue-jsx-merge-props@npm:1.2.1"
@@ -3294,7 +3316,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"acorn@npm:^8.2.4":
+"acorn@npm:^8.2.4, acorn@npm:^8.5.0":
   version: 8.7.1
   resolution: "acorn@npm:8.7.1"
   bin:
@@ -3602,6 +3624,7 @@ __metadata:
     "@types/vscode": ^1.55.0
     "@typescript-eslint/eslint-plugin": ^4.22.1
     "@typescript-eslint/parser": ^4.22.1
+    "@vscode/test-electron": ^2.1.3
     "@vue/cli-plugin-babel": ^4.5.10
     babel-loader: ^8.2.2
     bent: ^7.3.12
@@ -3622,6 +3645,7 @@ __metadata:
     jquery: ^3.5.1
     js-yaml: ^4.0.0
     mocha: ^8.1.3
+    openapi-types: ^11.0.1
     popper.js: ^1.16.1
     prettier: ^1.19.1
     prettier-eslint: ^12.0.0
@@ -3640,7 +3664,6 @@ __metadata:
     typescript: ^4.1.3
     vsce: ^1.83.0
     vscode-extension-telemetry: ^0.1.7
-    vscode-test: ^1.4.0
     vue: ^2.6.14
     vue-loader: ^15.9.6
     vue-style-loader: ^4.1.2
@@ -10918,10 +10941,10 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"openapi-types@npm:^10.0.0":
-  version: 10.0.0
-  resolution: "openapi-types@npm:10.0.0"
-  checksum: 8cc8b5bf40ea10b1f9c56fb05aada74bfe3d9e94e141464561a5c3cd0a933906e57d9bf4e059219ec8e63a97a69e0655d21c9dd3f4de1ff4f71672d10664cfc0
+"openapi-types@npm:^11.0.1":
+  version: 11.0.1
+  resolution: "openapi-types@npm:11.0.1"
+  checksum: 182c5b28199a0d030bf5f64b9c23f65dc800cdc845ae09c40aa5e03b862634a02526d5092af53bf853514af778ee2f36dead741e0521e01f944cf7f50927e14e
   languageName: node
   linkType: hard
 
@@ -11732,16 +11755,16 @@ fsevents@^1.2.7:
   version: 0.0.0-use.local
   resolution: "project-a@workspace:test/fixtures/workspaces/project-a"
   dependencies:
-    "@appland/appmap": ^3.25.3
+    "@appland/appmap": ^3.25.4
     "@appland/scanner": ^1.56.0
   languageName: unknown
   linkType: soft
 
-"project-b@workspace:test/fixtures/workspaces/project-b":
+"project-with-echo-command@workspace:test/fixtures/workspaces/project-with-echo-command":
   version: 0.0.0-use.local
-  resolution: "project-b@workspace:test/fixtures/workspaces/project-b"
+  resolution: "project-with-echo-command@workspace:test/fixtures/workspaces/project-with-echo-command"
   dependencies:
-    "@appland/appmap": ^3.25.3
+    "@appland/appmap": ^3.25.4
     "@appland/scanner": ^1.56.0
   languageName: unknown
   linkType: soft
@@ -14193,7 +14216,7 @@ typescript@^4.1.3:
 
 "typescript@patch:typescript@^3.9.3#~builtin<compat/typescript>":
   version: 3.9.10
-  resolution: "typescript@patch:typescript@npm%3A3.9.10#~builtin<compat/typescript>::version=3.9.10&hash=493e53"
+  resolution: "typescript@patch:typescript@npm%3A3.9.10#~builtin<compat/typescript>::version=3.9.10&hash=7ad353"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
@@ -14203,11 +14226,11 @@ typescript@^4.1.3:
 
 "typescript@patch:typescript@^4.1.3#~builtin<compat/typescript>":
   version: 4.3.5
-  resolution: "typescript@patch:typescript@npm%3A4.3.5#~builtin<compat/typescript>::version=4.3.5&hash=493e53"
+  resolution: "typescript@patch:typescript@npm%3A4.3.5#~builtin<compat/typescript>::version=4.3.5&hash=7ad353"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 61fc1a2ca5037420de5bbe17c6ddc4cbcc0d52301ed94f0a7b5821c55ff9eb96307f0816f745ca8f0fc87ed92f3951cde6d97cd6fd6bc6920c02ea63b5b26259
+  checksum: 365df18cf979c971ef9543b2acaa8694377a803f98e1804c41d0ede0b09d7046cb0cd98f2eaf3884b0fe923c01a60af1f653841bd8805c9715d5479c09a4ebe4
   languageName: node
   linkType: hard
 
@@ -14560,18 +14583,6 @@ typescript@^4.1.3:
   dependencies:
     applicationinsights: 1.7.4
   checksum: 979ace4f38d63a3f85b0aec78700c1316ec3eaa067d41f97367725f01839e86a3aaf2c528927137b5b705ab297939da4f9e5000bbfd0db1614cd29e60b134ec2
-  languageName: node
-  linkType: hard
-
-"vscode-test@npm:^1.4.0":
-  version: 1.6.1
-  resolution: "vscode-test@npm:1.6.1"
-  dependencies:
-    http-proxy-agent: ^4.0.1
-    https-proxy-agent: ^5.0.0
-    rimraf: ^3.0.2
-    unzipper: ^0.10.11
-  checksum: 37779441eaccfe7eb4c5ec53950441d2084b213010c6cb40855d4126f41140d021dbc12388da025df0f2ea1bfa85a4e5bcdd7c13bf78144dee18fa9b35c90793
   languageName: node
   linkType: hard
 

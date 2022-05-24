@@ -8,6 +8,9 @@ export default class WorkspaceServices {
   constructor(public context: vscode.ExtensionContext) {
     const folderAdded = (folder: vscode.WorkspaceFolder) => {
       this.workspaceServices.map(async (service) => {
+        console.log(
+          `Creating workspace service ${service.constructor.name} for ${folder.uri.toString()}`
+        );
         const instance = await service.create(folder);
         this.enrollServiceInstance(folder, instance);
       });
@@ -17,7 +20,15 @@ export default class WorkspaceServices {
       const serviceInstances = this.workspaceServiceInstances[folder.uri.toString()];
       if (!serviceInstances) return;
 
-      serviceInstances.forEach((service) => service.dispose());
+      serviceInstances.forEach((service) => {
+        console.log(
+          `Removing workspace service instance ${
+            service.constructor.name
+          } for ${folder.uri.toString()}`
+        );
+
+        service.dispose();
+      });
     };
 
     vscode.workspace.onDidChangeWorkspaceFolders(async (event) => {
@@ -33,6 +44,9 @@ export default class WorkspaceServices {
 
     return Promise.all(
       (vscode.workspace.workspaceFolders || []).map(async (folder) => {
+        console.log(
+          `Creating workspace service ${service.constructor.name} for ${folder.uri.toString()}`
+        );
         const instance = await service.create(folder);
         this.enrollServiceInstance(folder, instance);
         return instance;

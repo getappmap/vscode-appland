@@ -6,8 +6,8 @@
     "index": "npx @appland/appmap index",
     "scan": "npx @appland/scanner scan"
   },
-  "dependencies": {
-    "@appland/appmap": "^3.25.3",
+  "devDependencies": {
+    "@appland/appmap": "^3.25.4",
     "@appland/scanner": "^1.56.0"
   }
 }

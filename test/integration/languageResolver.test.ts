@@ -1,7 +1,7 @@
 import assert from 'assert';
 import MockExtensionContext from '../mocks/mockExtensionContext';
 import { FixtureDir, initializeWorkspace } from './util';
-import LanguageResolver from '../../src/languageResolver';
+import LanguageResolver from '../../src/services/languageResolver';
 import { promises as fs } from 'fs';
 import { join } from 'path';
 

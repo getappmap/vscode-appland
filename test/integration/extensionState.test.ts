@@ -1,6 +1,6 @@
 import assert from 'assert';
 import { SinonSandbox, createSandbox } from 'sinon';
-import ExtensionState, { Keys } from '../../src/extensionState';
+import ExtensionState, { Keys } from '../../src/configuration/extensionState';
 import MockExtensionContext from '../mocks/mockExtensionContext';
 import * as util from '../../src/util';
 
