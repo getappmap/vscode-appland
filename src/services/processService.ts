@@ -54,7 +54,7 @@ export default class ProcessService {
       options.shell = process.env.SHELL;
     }
 
-    options.env = environment;
+    options.env = { ...process.env, ...environment };
     options.detached = false;
 
     this.invokeCommand(mainCommand, args, options);
@@ -118,7 +118,7 @@ function validateNodeVersion(versionType: string, version: string): string | und
 
 async function systemNodeVersion(): Promise<string | Error> {
   return new Promise((resolve) => {
-    exec('node -v', (err, stdout) => {
+    exec('node -v', { shell: vscode.env.shell }, (err, stdout) => {
       if (err) {
         resolve(err);
       } else {
