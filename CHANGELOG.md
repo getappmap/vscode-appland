@@ -1,3 +1,45 @@
+# [0.26.0](https://github.com/applandinc/vscode-appland/compare/v0.25.1...v0.26.0) (2022-05-24)
+
+
+### Bug Fixes
+
+* Absolute file paths don't decorate ([a068b40](https://github.com/applandinc/vscode-appland/commit/a068b40e56187db2303c7e69beac62959d2a17a4))
+* Add ~/.yarn/bin to path ([009b512](https://github.com/applandinc/vscode-appland/commit/009b512f4ab179f1bbd5c2c107112a66857b0bfc))
+* Add missing openapi-types ([959cc4d](https://github.com/applandinc/vscode-appland/commit/959cc4de4d2c46d154ed2e1485b32827d2657973))
+* Add some Disposable subscriptions ([caeedbe](https://github.com/applandinc/vscode-appland/commit/caeedbe32680ce23181716249fc597734152dde9))
+* autoIndexer|Scanner returns process Promise ([936207c](https://github.com/applandinc/vscode-appland/commit/936207c5649dc28288a2bbbdf1e2e78d379c35bc))
+* Decorations show on initial editor ([54bd374](https://github.com/applandinc/vscode-appland/commit/54bd3743a05c351fcf24c0f3a654afc36e96275a))
+* Fix casing in file name ([c18122e](https://github.com/applandinc/vscode-appland/commit/c18122e21d5ee8edfcc23cea01d8be34a2fd98e9))
+* Fixups to rebase ([bd6a247](https://github.com/applandinc/vscode-appland/commit/bd6a247dc52f98c50663f7eb6c3343c438fe6bfa))
+* Handle missing findings file ([f418c51](https://github.com/applandinc/vscode-appland/commit/f418c51f3de14ab8fc78d50039974a816ea5b420))
+* Hide context menus from the command palette ([fba2a0d](https://github.com/applandinc/vscode-appland/commit/fba2a0db50286f21c1d05f4db46eaa8c924cf87d))
+* Increase timeout on process service retry ([e46820a](https://github.com/applandinc/vscode-appland/commit/e46820a62789cdc835a7d94ed53a27f238ab0456))
+* Path-delimited package names in the classMap ([c71ef55](https://github.com/applandinc/vscode-appland/commit/c71ef5544e048195ca4d4cec6782027c75ef5c68))
+* Remove AppMap count as it's usuall wrong ([ba2b34e](https://github.com/applandinc/vscode-appland/commit/ba2b34ec128e2d4f3cd7c370cb473275bb8b12d7))
+* Respond to workspace add/remove events ([564c1be](https://github.com/applandinc/vscode-appland/commit/564c1be907fadcf99b9cf50f6605291aaa662b35))
+* Run service command with yarn run or npm exec ([ffee49a](https://github.com/applandinc/vscode-appland/commit/ffee49acbce1491f9738b24319c6df5c5753c5da))
+* Search parent folders for npm/yarn lock files ([496b2cf](https://github.com/applandinc/vscode-appland/commit/496b2cf974634dde882f3714a06e61d45c73d707))
+
+
+### Features
+
+* Add a Code Objects tree view ([27b0d71](https://github.com/applandinc/vscode-appland/commit/27b0d716e3aaeb23e86ae7c17d71156aa4037089))
+* Add AppMap 12px icon ([49ee452](https://github.com/applandinc/vscode-appland/commit/49ee452b547e773c1904d8b9e41830721872eeb8))
+* Add command appmap.deleteAllAppMaps ([dd0ea7d](https://github.com/applandinc/vscode-appland/commit/dd0ea7d01f5bb68e23924c2926f8ca94faff2860))
+* Context menu + click for Code Objects ([a41b05d](https://github.com/applandinc/vscode-appland/commit/a41b05d30eaaa853f30bd958348146d736732782))
+* Decoration provider ([d23a0a7](https://github.com/applandinc/vscode-appland/commit/d23a0a70082cec0e37ebdb7954791c833f5b2435))
+* Export extension interfaces ([70bbe69](https://github.com/applandinc/vscode-appland/commit/70bbe690ad0ba80a07f058a6c0d29ac3bdf08d97))
+* Extend CodeObjectEntry fields ([2dc839e](https://github.com/applandinc/vscode-appland/commit/2dc839e71ebac9be74dc5305d9356616661d74ba))
+* Feature flag for 'inspect' CLI command ([b4a7532](https://github.com/applandinc/vscode-appland/commit/b4a75328ce77afe056c3ecaa33214b2da0dfcf7f))
+* Hover provider ([2b089e9](https://github.com/applandinc/vscode-appland/commit/2b089e90e924822c2a6cea1f554afc20c9fed142))
+* Inspect code object via CLI shell-out ([16b45eb](https://github.com/applandinc/vscode-appland/commit/16b45ebc5b27b48bcfa61a892569270f1560cd87))
+* Inspect hover shows links to ancestors ([34773c9](https://github.com/applandinc/vscode-appland/commit/34773c9c83e01f92e67e3b17a2cfdfac962c99d2))
+* Line-index, hover, decoration provider ([e72de09](https://github.com/applandinc/vscode-appland/commit/e72de09f7a35aa4658523b8a6b7eb93e4e33ba5f))
+* LineInfoIndex ([875c696](https://github.com/applandinc/vscode-appland/commit/875c6968925065859f56a84063e008753a4ce6e4))
+* Open AppMaps from code object tree ([981bd58](https://github.com/applandinc/vscode-appland/commit/981bd58030eea677527926de628726f6e422b210))
+* Open code object in AppMap ([d0c4751](https://github.com/applandinc/vscode-appland/commit/d0c4751f3da87ea2ae8f26c860ed40cc31663778))
+* Simplify hover ([7bfccf1](https://github.com/applandinc/vscode-appland/commit/7bfccf13e2ce102b1a1e84254675d9cefac26104))
+
 ## [0.25.1](https://github.com/applandinc/vscode-appland/compare/v0.25.0...v0.25.1) (2022-05-24)
 
 
