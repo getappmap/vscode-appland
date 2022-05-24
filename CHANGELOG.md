@@ -1,3 +1,10 @@
+## [0.25.1](https://github.com/applandinc/vscode-appland/compare/v0.25.0...v0.25.1) (2022-05-24)
+
+
+### Bug Fixes
+
+* Process service now inherits user environment ([021b777](https://github.com/applandinc/vscode-appland/commit/021b777f6e86316ac87a19a84d76d2a6257579d2))
+
 # [0.25.0](https://github.com/applandinc/vscode-appland/compare/v0.24.2...v0.25.0) (2022-05-15)
 
 
