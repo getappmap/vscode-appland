@@ -3,7 +3,7 @@ import { rename } from 'fs';
 import { join } from 'path';
 import { promisify } from 'util';
 import * as vscode from 'vscode';
-import { FixtureDir, initializeWorkspace, touch, waitFor } from './util';
+import { ProjectA, initializeWorkspace, touch, waitFor, appmapFiles, mtimeFiles } from './util';
 
 describe('Findings', () => {
   beforeEach(initializeWorkspace);
@@ -13,11 +13,6 @@ describe('Findings', () => {
     vscode.languages.getDiagnostics().filter((d) => d[1].length > 0).length > 0;
 
   const hasNoDiagnostics = (): boolean => !hasDiagnostics();
-
-  const mtimeFiles = async (): Promise<vscode.Uri[]> => vscode.workspace.findFiles(`**/mtime`);
-
-  const appmapFiles = async (): Promise<vscode.Uri[]> =>
-    vscode.workspace.findFiles(`**/*.appmap.json`);
 
   it('should be populated in the Problems view', async () => {
     const controllerFile = await vscode.workspace.findFiles(
@@ -62,8 +57,8 @@ describe('Findings', () => {
 
   it('auto-scans AppMaps as they are modified', async () => {
     await promisify(rename)(
-      join(FixtureDir, 'appmap-findings.json'),
-      join(FixtureDir, 'appmap-findings.json.bak')
+      join(ProjectA, 'appmap-findings.json'),
+      join(ProjectA, 'appmap-findings.json.bak')
     );
 
     await waitFor('Diagnostics were not cleared', hasNoDiagnostics);
