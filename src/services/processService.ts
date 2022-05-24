@@ -83,32 +83,3 @@ export default class ProcessService extends EventEmitter {
     }
   }
 }
-<<<<<<< HEAD
-
-function validateNodeVersion(versionType: string, version: string): string | undefined {
-  const digits = version.split('.');
-  if (digits.length === 0) {
-    return `Version string is empty`;
-  }
-
-  const majorVersion = parseInt(digits[0].replace(/[^0-9]/g, ''), 10);
-  if (majorVersion % 2 === 0 && majorVersion >= 14) {
-    return;
-  }
-
-  return `${versionType} Node.js version ${version} should be an even major version number >= 14`;
-}
-
-async function systemNodeVersion(): Promise<string | Error> {
-  return new Promise((resolve) => {
-    exec('node -v', { shell: vscode.env.shell }, (err, stdout) => {
-      if (err) {
-        resolve(err);
-      } else {
-        resolve(stdout.trim());
-      }
-    });
-  });
-}
-=======
->>>>>>> 1d4c803 (refactor: Refactor ProcessService)

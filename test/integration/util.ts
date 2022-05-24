@@ -3,6 +3,7 @@ import { exec } from 'child_process';
 import { close, open, utimes } from 'fs';
 import { join } from 'path';
 
+export const FixtureDir = join(__dirname, '../../../test/fixtures');
 export const ProjectA = join(__dirname, '../../../test/fixtures/workspaces/project-a');
 export const ProjectWithEchoCommand = join(
   __dirname,
