@@ -56,6 +56,26 @@ export async function fileExists(filename: string): Promise<boolean> {
   return new Promise((resolve) => fs.access(filename, (err) => resolve(err === null)));
 }
 
+export async function retry(fn: () => Promise<void>, retries = 3, timeout = 100): Promise<void> {
+  try {
+    await fn();
+  } catch (e) {
+    if (retries === 0) {
+      throw e;
+    }
+    console.log(e);
+    await new Promise((resolve, reject) =>
+      setTimeout(
+        () =>
+          retry(fn, timeout, retries - 1)
+            .then(resolve)
+            .catch(reject),
+        timeout
+      )
+    );
+  }
+}
+
 interface ExecOptions {
   encoding?: string | null;
   output?: boolean | null;

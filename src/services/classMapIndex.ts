@@ -223,6 +223,14 @@ export default class ClassMapIndex {
     return this._codeObjectByFqid[fqid];
   }
 
+  clear(): void {
+    this._dirty = false;
+    this.classMapFileURLs = new Set<string>();
+    this._classMap = [];
+    this._codeObjectByFqid = {};
+    this._onChanged.fire(this);
+  }
+
   async classMap(): Promise<CodeObjectEntry[]> {
     await this.updateClassMap();
 
@@ -329,7 +337,7 @@ export default class ClassMapIndex {
           try {
             classMapData = await promisify(readFile)(classMapFileURL.fsPath);
           } catch (e) {
-            console.warn(e);
+            if ((e as any).code !== 'ENOENT') console.warn(e);
             return;
           }
 

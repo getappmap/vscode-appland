@@ -111,6 +111,10 @@
         "title": "AppMap: Inspect Code Object"
       },
       {
+        "command": "appmap.deleteAllAppMaps",
+        "title": "AppMap: Delete All AppMaps"
+      },
+      {
         "command": "appmap.openCodeObjectInAppMap",
         "title": "AppMap: Open Code Object in AppMap"
       },

@@ -20,6 +20,15 @@ export default class FindingsIndex extends EventEmitter {
     return Object.values(this.findingsBySourceUri).flat();
   }
 
+  clear(): void {
+    const sourceUris = Object.keys(this.findingsBySourceUri);
+    this.findingsBySourceUri = new Map();
+    sourceUris.forEach((sourceUri) => {
+      this.emit('removed', vscode.Uri.parse(sourceUri));
+    });
+    this._onChanged.fire(this);
+  }
+
   async addFindingsFile(sourceUri: vscode.Uri): Promise<void> {
     console.log(`Findings file added: ${sourceUri.fsPath}`);
 
@@ -29,7 +38,7 @@ export default class FindingsIndex extends EventEmitter {
     try {
       findingsData = await promisify(readFile)(sourceUri.fsPath);
     } catch (e) {
-      console.warn(e);
+      if ((e as any).code !== 'ENOENT') console.warn(e);
       return;
     }
 
@@ -37,6 +46,7 @@ export default class FindingsIndex extends EventEmitter {
       findings = JSON.parse(findingsData.toString()).findings;
     } catch (e) {
       // Malformed JSON file. This is unexpected because findings files should be written atomically.
+      // TODO: Retry in a little while?
       console.warn(e);
       return;
     }
