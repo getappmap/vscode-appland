@@ -357,9 +357,9 @@
   },
   "dependencies": {
     "@appland/components": "^2.2.0",
-    "@appland/diagrams": "^1.5.1",
-    "@appland/models": "^1.12.1",
-    "@appland/scanner": "^1.56.0",
+    "@appland/diagrams": "^1.5.2",
+    "@appland/models": "^1.15.0",
+    "@appland/scanner": "^1.57.0",
     "bent": "^7.3.12",
     "bootstrap": "^4.5.3",
     "bootstrap-autocomplete": "^2.3.7",
