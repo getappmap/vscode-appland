@@ -30,7 +30,8 @@ interface LaunchOptions {
 
 export async function launchCode(
   extensionDevelopmentPath: string,
-  options?: LaunchOptions
+  userDataDir: string,
+  options: LaunchOptions
 ): Promise<CodeHarness> {
   const codePath = await downloadAndUnzipVSCode('insiders');
   const baseCodePath = path.join(codePath, '..');
@@ -51,7 +52,8 @@ export async function launchCode(
       '--skip-release-notes',
       '--disable-workspace-trust',
       '--enable-smoke-test-driver',
-      '--extensionDevelopmentPath=' + extensionDevelopmentPath,
+      `--user-data-dir=${userDataDir}`,
+      `--extensionDevelopmentPath=${extensionDevelopmentPath}`,
       options?.workspacePath || '',
     ],
     env: {

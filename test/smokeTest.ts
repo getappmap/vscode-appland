@@ -7,6 +7,7 @@ import Driver from './smoke/src/driver';
 async function main(): Promise<void> {
   try {
     const extensionDevelopmentPath = path.resolve(__dirname, '..', '..');
+    const userDataDir = path.resolve(__dirname, '../.vscode-test/user-data');
     const workspacePath = path.join(
       __dirname,
       '..',
@@ -32,7 +33,7 @@ async function main(): Promise<void> {
       }
     }
 
-    const { app, context, page } = await launchCode(extensionDevelopmentPath, {
+    const { app, context, page } = await launchCode(extensionDevelopmentPath, userDataDir, {
       workspacePath,
       verbose,
     });
