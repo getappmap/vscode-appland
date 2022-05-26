@@ -1,3 +1,10 @@
+## [0.26.1](https://github.com/applandinc/vscode-appland/compare/v0.26.0...v0.26.1) (2022-05-26)
+
+
+### Bug Fixes
+
+* Update @appland/components ([adac18b](https://github.com/applandinc/vscode-appland/commit/adac18b1ba33174fe9348e842cc5dbf0a1dfe4a9))
+
 # [0.26.0](https://github.com/applandinc/vscode-appland/compare/v0.25.1...v0.26.0) (2022-05-24)
 
 
