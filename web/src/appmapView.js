@@ -50,7 +50,14 @@ export default function mountApp() {
     },
   });
 
-  app.$on('viewSource', (location) => {
+  app.$on('request-resolve-location', (location) => {
+    app.$emit('response-resolve-location', {
+      location,
+      externalUrl: location,
+    });
+  });
+
+  app.$on('viewSource', ({ location }) => {
     vscode.postMessage({ command: 'viewSource', text: location });
     vscode.postMessage({ command: 'performAction', action: 'view_source' });
   });
