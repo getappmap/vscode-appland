@@ -172,7 +172,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
     deleteAllAppMaps(context, classMapIndex, findingsIndex);
 
-    const { localTree } = registerTrees(context, appmapCollectionFile, projectStates);
+    registerTrees(context, appmapCollectionFile, projectStates);
 
     (vscode.workspace.workspaceFolders || []).forEach((workspaceFolder) => {
       Telemetry.sendEvent(PROJECT_OPEN, { rootDirectory: workspaceFolder.uri.fsPath });
@@ -183,18 +183,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     ContextMenu.register(context);
     projectPickerWebview(context, extensionState);
     OpenAppMapsWebview.register(context, appmapCollectionFile);
-
-    context.subscriptions.push(
-      vscode.commands.registerCommand('appmap.applyFilter', async () => {
-        const filter = await vscode.window.showInputBox({
-          placeHolder:
-            'Enter a case sensitive partial match or leave this input empty to clear an existing filter',
-        });
-
-        appmapCollectionFile.setFilter(filter || '');
-        localTree.reveal(appmapCollectionFile.appMaps[0], { select: false });
-      })
-    );
 
     context.subscriptions.push(
       vscode.commands.registerCommand('appmap.findByName', async () => {

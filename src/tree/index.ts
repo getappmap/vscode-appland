@@ -32,11 +32,13 @@ export default function registerTrees(
   const localAppMapsTree = vscode.window.createTreeView('appmap.views.local', {
     treeDataProvider: localAppMapsProvider,
   });
+  context.subscriptions.push(localAppMapsTree);
 
   const documentationTreeProvider = new LinkTreeDataProvider(context, Links.Documentation);
-  const documentation = vscode.window.createTreeView('appmap.views.documentation', {
+  const documentationTree = vscode.window.createTreeView('appmap.views.documentation', {
     treeDataProvider: documentationTreeProvider,
   });
+  context.subscriptions.push(documentationTree);
 
   context.subscriptions.push(
     vscode.commands.registerCommand('appmap.focus', () => {
@@ -44,5 +46,27 @@ export default function registerTrees(
     })
   );
 
-  return { localTree: localAppMapsTree, documentation };
+  context.subscriptions.push(
+    vscode.commands.registerCommand('appmap.focusInstructions', (index = 0) => {
+      setTimeout(() => {
+        // TODO: (KEG) Here is where we would show the repo state to determine which step should be
+        // shown by default.
+        instructionsTree.reveal(instructionsTreeProvider.items[index]);
+      }, 0);
+    })
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand('appmap.applyFilter', async () => {
+      const filter = await vscode.window.showInputBox({
+        placeHolder:
+          'Enter a case sensitive partial match or leave this input empty to clear an existing filter',
+      });
+
+      localAppMaps.setFilter(filter || '');
+      localAppMapsTree.reveal(localAppMaps.appMaps[0], { select: false });
+    })
+  );
+
+  return { localTree: localAppMapsTree, documentationTree };
 }
