@@ -36,6 +36,7 @@ import InstallGuideWebView from './webviews/installGuideWebview';
 import InstallationStatusBadge from './workspace/installationStatus';
 import { AppMapConfigWatcher } from './services/appMapConfigWatcher';
 import ProjectStateService, { ProjectStateServiceInstance } from './services/projectStateService';
+import { AppmapUptodateService } from './services/appmapUptodateService';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   const workspaceServices = new WorkspaceServices(context);
@@ -55,7 +56,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     let findingsIndex: FindingsIndex | undefined,
       classMapIndex: ClassMapIndex | undefined,
       lineInfoIndex: LineInfoIndex | undefined,
-      projectStates: ProjectStateServiceInstance[] = [];
+      projectStates: ProjectStateServiceInstance[] = [],
+      appmapUptodateService: AppmapUptodateService | undefined;
 
     const appmapWatcher = new AppMapWatcher();
     context.subscriptions.push(
@@ -76,6 +78,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     if (indexEnabled) {
       classMapIndex = new ClassMapIndex();
       lineInfoIndex = new LineInfoIndex(classMapIndex);
+
+      appmapUptodateService = new AppmapUptodateService();
 
       const classMapProvider = new ClassMapTreeDataProvider(classMapIndex);
       vscode.window.createTreeView('appmap.views.codeObjects', {
@@ -99,6 +103,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
         autoIndexService.on('exit', (exitStatus) => autoIndexServiceImpl.endInvocation(exitStatus));
         await workspaceServices.enroll(autoIndexService);
       }
+
+      await workspaceServices.enroll(appmapUptodateService);
       await workspaceServices.enroll(classMapWatcher);
     }
 
@@ -172,7 +178,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
     deleteAllAppMaps(context, classMapIndex, findingsIndex);
 
-    registerTrees(context, appmapCollectionFile, projectStates);
+    registerTrees(context, appmapCollectionFile, appmapUptodateService, projectStates);
 
     (vscode.workspace.workspaceFolders || []).forEach((workspaceFolder) => {
       Telemetry.sendEvent(PROJECT_OPEN, { rootDirectory: workspaceFolder.uri.fsPath });
