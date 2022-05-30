@@ -37,7 +37,7 @@ import InstallationStatusBadge from './workspace/installationStatus';
 import { AppMapConfigWatcher } from './services/appMapConfigWatcher';
 import ProjectStateService, { ProjectStateServiceInstance } from './services/projectStateService';
 import { AppmapUptodateService } from './services/appmapUptodateService';
-import { copyOutOfDateTestsToClipboard } from './commands/outOfDateTests';
+import { runOutOfDateTests, copyOutOfDateTestsToClipboard } from './commands/outOfDateTests';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   const workspaceServices = new WorkspaceServices(context);
@@ -88,6 +88,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       });
 
       registerDecorationProvider(context, lineInfoIndex);
+      runOutOfDateTests(context, appmapUptodateService);
       copyOutOfDateTestsToClipboard(context, appmapUptodateService);
       openCodeObjectInAppMap(context, classMapIndex);
       registerHoverProvider(context, lineInfoIndex);
