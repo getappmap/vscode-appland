@@ -119,6 +119,10 @@
         "title": "AppMap: Open Code Object in AppMap"
       },
       {
+        "command": "appmap.copyOutOfDateTestsToClipboard",
+        "title": "AppMap: Copy Out-of-Date Tests to Clipboard"
+      },
+      {
         "command": "appmap.context.openInFileExplorer",
         "title": "AppMap View: Open in File Explorer"
       },
