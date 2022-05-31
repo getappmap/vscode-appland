@@ -1,7 +1,7 @@
 [![Version](https://img.shields.io/visual-studio-marketplace/v/appland.appmap)](https://marketplace.visualstudio.com/items?itemName=appland.appmap)
 [![Avg Stars](https://img.shields.io/visual-studio-marketplace/stars/appland.appmap)](https://marketplace.visualstudio.com/items?itemName=appland.appmap)
 [![GitHub Stars](https://img.shields.io/github/stars/applandinc/vscode-appland?style=social)](https://marketplace.visualstudio.com/items?itemName=appland.appmap)
-[![Discord](https://img.shields.io/discord/766016904056930325)](https://discord.com/invite/N9VUap6)
+[![Slack](https://img.shields.io/badge/Slack-Join%20the%20community-green)](https://appland.com/slack)
 
 # AppMap for Visual Studio Code
 
@@ -56,7 +56,7 @@ Summary of Features:
 - [Our doc site](https://appland.com/docs/appmap-overview.html)
 - [Our GitHub](https://github.com/applandinc)
 - [Our blog](https://appland.com/blog/)
-- [1:1 support with our dev team on Discord](https://discord.com/invite/N9VUap6)
+- [1:1 support with our dev team on Slack](https://appland.com/slack)
 - Email support: [support@app.land](mailto:support@app.land)
 
 ## Twitter
