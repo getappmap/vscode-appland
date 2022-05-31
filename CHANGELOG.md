@@ -1,3 +1,10 @@
+## [0.26.2](https://github.com/applandinc/vscode-appland/compare/v0.26.1...v0.26.2) (2022-05-31)
+
+
+### Bug Fixes
+
+* Migrate Discord to Slack ([a5f6475](https://github.com/applandinc/vscode-appland/commit/a5f6475df0083405e8f69d9e31a6bc29332fbe8b))
+
 ## [0.26.1](https://github.com/applandinc/vscode-appland/compare/v0.26.0...v0.26.1) (2022-05-26)
 
 
