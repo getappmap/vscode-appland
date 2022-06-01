@@ -1,19 +1,11 @@
 import { isAbsolute } from 'path';
 import * as vscode from 'vscode';
 import ClassMapIndex, { CodeObjectEntry } from './classMapIndex';
-import FindingsIndex from './findingsIndex';
-import { ResolvedFinding } from './resolvedFinding';
 
 class LineInfo {
-  public findings?: ResolvedFinding[];
   public codeObjects?: CodeObjectEntry[];
 
   constructor(public line: number) {}
-
-  addFinding(finding: ResolvedFinding) {
-    if (!this.findings) this.findings = [];
-    this.findings.push(finding);
-  }
 
   addCodeObject(codeObject: CodeObjectEntry) {
     if (!this.codeObjects) this.codeObjects = [];
@@ -25,8 +17,7 @@ export default class LineInfoIndex {
   private _onChanged = new vscode.EventEmitter<LineInfoIndex>();
   public readonly onChanged = this._onChanged.event;
 
-  constructor(public findingsIndex: FindingsIndex, public classMapIndex: ClassMapIndex) {
-    findingsIndex.onChanged(() => this._onChanged.fire(this));
+  constructor(public classMapIndex: ClassMapIndex) {
     classMapIndex.onChanged(() => this._onChanged.fire(this));
   }
 
@@ -37,16 +28,6 @@ export default class LineInfoIndex {
       if (!result[line]) result[line] = new LineInfo(line);
       return result[line];
     };
-
-    this.findingsIndex
-      .findings()
-      .filter((finding) => finding.problemLocation)
-      .filter((finding) => finding.problemLocation?.uri.toString() === uri.toString())
-      .forEach((finding) =>
-        finding.problemLocation
-          ? lineInfo(finding.problemLocation?.range.start.line).addFinding(finding)
-          : undefined
-      );
 
     const classMap = await this.classMapIndex.classMap();
     const collectCodeObject = (codeObject: CodeObjectEntry) => {
