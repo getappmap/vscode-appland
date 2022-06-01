@@ -48,8 +48,8 @@ export default class AppmapUptodateServiceInstance extends EventEmitter
         }
         const metadata = JSON.parse(metadataData);
         if (metadata.source_location) {
-          const [path] = metadata.source_location.split(':');
-          result.add(path);
+          const [path, lineNumber] = metadata.source_location.split(':');
+          result.add({ path, lineNumber });
         }
       })
     );
