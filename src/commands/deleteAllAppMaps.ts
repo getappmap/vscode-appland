@@ -20,7 +20,15 @@ async function deleteAppMap(uri: vscode.Uri): Promise<void> {
     )
   );
 
-  await retry(async () => promisify(rmdir)(indexDir));
+  await retry(async () => {
+    try {
+      promisify(rmdir)(indexDir);
+    } catch (err) {
+      if ((err as any).code !== 'ENOENT') {
+        console.warn(err);
+      }
+    }
+  });
 }
 
 async function deleteAppMaps(folder: vscode.WorkspaceFolder): Promise<void> {
