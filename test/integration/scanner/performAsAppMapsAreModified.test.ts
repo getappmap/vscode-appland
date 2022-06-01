@@ -1,6 +1,6 @@
+import * as vscode from 'vscode';
 import assert from 'assert';
-import { exists, rename, writeFile } from 'fs';
-import { glob } from 'glob';
+import { exists, rename } from 'fs';
 import { join } from 'path';
 import { promisify } from 'util';
 import {
@@ -9,12 +9,12 @@ import {
   waitForExtension,
   ProjectA,
   hasNoDiagnostics,
-  touch,
   getDiagnosticsForAppMap,
   ExampleAppMap,
   ExampleAppMapIndexDir,
-  repeatUntil,
   hasDiagnostics,
+  executeWorkspaceOSCommand,
+  repeatUntil,
 } from '../util';
 
 describe('Scanner', () => {
@@ -23,29 +23,27 @@ describe('Scanner', () => {
   afterEach(initializeWorkspace);
 
   it('is performed as AppMaps are modified', async () => {
-    console.log(`Waiting for diagnostics to be present`);
     await waitFor('Diagnostics were not created', hasDiagnostics);
-    console.log(`Diagnostics are present`);
 
     await promisify(rename)(
       join(ProjectA, 'appmap-findings.json'),
       join(ProjectA, 'appmap-findings.json.bak')
     );
 
-    await repeatUntil(
-      async () => {
-        for (const findingsFile in await promisify(glob)('**/appmap-findings.json', {
-          cwd: ProjectA,
-        })) {
-          await promisify(writeFile)(findingsFile, JSON.stringify([]));
-        }
-      },
-      'Diagnostics were not cleared',
-      hasNoDiagnostics
+    await vscode.commands.executeCommand('appmap.deleteAllAppMaps');
+    await waitFor('Diagnostics were not cleared', hasNoDiagnostics);
+
+    await waitFor(
+      `AppMap index dir should be removed`,
+      async () => !(await promisify(exists)(ExampleAppMapIndexDir))
     );
 
     await repeatUntil(
-      async () => touch(ExampleAppMap),
+      async () =>
+        await executeWorkspaceOSCommand(
+          `git show HEAD:./tmp/appmap/minitest/Microposts_controller_can_get_microposts_as_JSON.appmap.json > ./tmp/appmap/minitest/Microposts_controller_can_get_microposts_as_JSON.appmap.json`,
+          ProjectA
+        ),
       `AppMap should be reindexed`,
       async () => promisify(exists)(join(ExampleAppMapIndexDir, 'mtime'))
     );

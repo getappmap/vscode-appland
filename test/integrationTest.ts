@@ -9,7 +9,6 @@ import { promisify } from 'util';
 import { glob } from 'glob';
 import { resolve } from 'path';
 import assert from 'assert';
-import { workspace } from 'vscode';
 
 const PROJECT_A = 'test/fixtures/workspaces/project-a';
 const PROJECT_WITH_ECHO_COMMAND = 'test/fixtures/workspaces/project-with-echo-command';

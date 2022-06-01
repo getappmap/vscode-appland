@@ -4,6 +4,7 @@ import { close, open, utimes } from 'fs';
 import { join } from 'path';
 
 export const FixtureDir = join(__dirname, '../../../test/fixtures');
+export const ProjectRuby = join(__dirname, '../../../test/fixtures/workspaces/project-ruby');
 export const ProjectA = join(__dirname, '../../../test/fixtures/workspaces/project-a');
 export const ProjectWithEchoCommand = join(
   __dirname,
@@ -92,10 +93,10 @@ export async function executeWorkspaceOSCommand(cmd: string, workspaceName: stri
 }
 
 async function cleanWorkspace(): Promise<void> {
+  await executeWorkspaceOSCommand(`git checkout HEAD .`, ProjectA);
   await executeWorkspaceOSCommand(`git clean -fd .`, ProjectA);
-  await executeWorkspaceOSCommand(`git restore .`, ProjectA);
+  await executeWorkspaceOSCommand(`git checkout HEAD .`, ProjectWithEchoCommand);
   await executeWorkspaceOSCommand(`git clean -fd .`, ProjectWithEchoCommand);
-  await executeWorkspaceOSCommand(`git restore .`, ProjectWithEchoCommand);
 }
 
 export async function waitForExtension(): Promise<void> {
@@ -116,6 +117,7 @@ export async function waitFor(
 ): Promise<void> {
   const startTime = Date.now();
   let delay = 100;
+  console.log(`Waiting because: ${message}`);
   while (!(await test())) {
     const elapsed = Date.now() - startTime;
     if (elapsed > timeout) {
