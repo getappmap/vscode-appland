@@ -48,10 +48,10 @@ __metadata:
   linkType: hard
 
 "@appland/appmap@npm:^3.25.4":
-  version: 3.25.4
-  resolution: "@appland/appmap@npm:3.25.4"
+  version: 3.27.3
+  resolution: "@appland/appmap@npm:3.27.3"
   dependencies:
-    "@appland/components": 2.1.0
+    "@appland/components": 2.2.0
     "@appland/diagrams": 1.5.2
     "@appland/models": ^1.14.1
     "@appland/openapi": 1.0.1
@@ -79,14 +79,17 @@ __metadata:
     open: ^8.2.1
     ora: ^5.4.1
     port-pid: ^0.0.7
+    pretty-bytes: ^5.6.0
     ps-node: ^0.1.6
+    read-pkg-up: ^7.0.1
     semver: ^7.3.5
     supports-hyperlinks: ^2.2.0
     w3c-xmlserializer: ^2.0.0
+    write-file-atomic: ^4.0.1
     yargs: ^17.1.1
   bin:
-    appmap: built/src/cli.js
-  checksum: 395dd4ad765f7a333d7390518eb5d846c01f9092400553f6fa205d35ce34e884425cbeef871a7d92ef0379602c677d1b4eb21fdb0c74db2aaf4699acf5c58764
+    appmap: built/cli.js
+  checksum: 24f538b76ab21db998aafa341212b99542eaa448919628532385d5827603b7fdb4676f54167c79b3a102d926b341e241cd1542dced01f7b061f50e95c211c0d7
   languageName: node
   linkType: hard
 
@@ -100,21 +103,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/components@npm:2.1.0":
-  version: 2.1.0
-  resolution: "@appland/components@npm:2.1.0"
-  dependencies:
-    "@appland/diagrams": ^1.5.1
-    "@appland/models": ^1.9.0
-    highlight.js: ^10.7.2
-    sql-formatter: ^4.0.2
-    vue: ^2.6.11
-    vuex: ^3.6.0
-  checksum: c7ee3e5d397c659d3b606f6ff8b1a63f66b719adeb500e9b5a242d83cac6506eae12d23e9275e9dc061d9641048de8eb15469db9ab347d72ef031507bd5963be
-  languageName: node
-  linkType: hard
-
-"@appland/components@npm:^2.2.0":
+"@appland/components@npm:2.2.0":
   version: 2.2.0
   resolution: "@appland/components@npm:2.2.0"
   dependencies:
@@ -125,6 +114,20 @@ __metadata:
     vue: ^2.6.11
     vuex: ^3.6.0
   checksum: 9cc94ff4f6dbdec638fbf0559950a349843f72febd69505450b5304df42231296c657531f14bf8941e27f313f601912591b411ab3904881869973fff45f6e7df
+  languageName: node
+  linkType: hard
+
+"@appland/components@npm:^2.3.0":
+  version: 2.3.0
+  resolution: "@appland/components@npm:2.3.0"
+  dependencies:
+    "@appland/diagrams": ^1.5.1
+    "@appland/models": ^1.9.0
+    highlight.js: ^10.7.2
+    sql-formatter: ^4.0.2
+    vue: ^2.6.11
+    vuex: ^3.6.0
+  checksum: b748147efbbc87cdbdf7b6072cde201a1da0750be24684ee9100677ebce5aefc3f344e2536d4d45871f6cf6b9b86a666653b7b72752951d75a5f6cc5c1d72a89
   languageName: node
   linkType: hard
 
@@ -163,38 +166,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/scanner@npm:^1.56.0":
-  version: 1.56.0
-  resolution: "@appland/scanner@npm:1.56.0"
-  dependencies:
-    "@appland/client": ^1.3.0
-    "@appland/models": ^1.14.5
-    "@appland/sql-parser": ^1.5.0
-    "@types/cli-progress": ^3.9.2
-    ajv: ^8.8.2
-    ansi-escapes: ^5.0.0
-    async: ^3.2.3
-    chalk: ^4.1.2
-    chokidar: ^3.5.3
-    cli-progress: ^3.11.0
-    form-data: ^4.0.0
-    glob: ^7.2.0
-    js-yaml: ^4.1.0
-    lru-cache: ^6.0.0
-    minimatch: ^3.0.4
-    octokat: ^0.10.0
-    openapi-diff: ^0.23.5
-    pretty-format: ^27.4.6
-    supports-hyperlinks: ^2.2.0
-    tar-stream: ^2.2.0
-    yargs: ^17.1.1
-  bin:
-    scanner: built/cli.js
-  checksum: d0190206d425de2795d8b1bd65e10ccfd31a713297efa6f90e20ac7fba5da2a8e965f1588b1f1684ed7be2629b50a7d705e07c317da2122560696aad88ad278e
-  languageName: node
-  linkType: hard
-
-"@appland/scanner@npm:^1.57.0":
+"@appland/scanner@npm:^1.56.0, @appland/scanner@npm:^1.57.0":
   version: 1.57.0
   resolution: "@appland/scanner@npm:1.57.0"
   dependencies:
@@ -3659,7 +3631,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "appmap@workspace:."
   dependencies:
-    "@appland/components": ^2.2.0
+    "@appland/components": ^2.3.0
     "@appland/diagrams": ^1.5.2
     "@appland/models": ^1.15.0
     "@appland/scanner": ^1.57.0
@@ -11807,6 +11779,13 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"pretty-bytes@npm:^5.6.0":
+  version: 5.6.0
+  resolution: "pretty-bytes@npm:5.6.0"
+  checksum: 9c082500d1e93434b5b291bd651662936b8bd6204ec9fa17d563116a192d6d86b98f6d328526b4e8d783c07d5499e2614a807520249692da9ec81564b2f439cd
+  languageName: node
+  linkType: hard
+
 "pretty-format@npm:^23.0.1":
   version: 23.6.0
   resolution: "pretty-format@npm:23.6.0"
@@ -13019,6 +12998,13 @@ resolve@^2.0.0-next.3:
   version: 3.0.3
   resolution: "signal-exit@npm:3.0.3"
   checksum: f0169d3f1263d06df32ca072b0bf33b34c6f8f0341a7a1621558a2444dfbe8f5fec76b35537fcc6f0bc4944bdb5336fe0bdcf41a5422c4e45a1dba3f45475e6c
+  languageName: node
+  linkType: hard
+
+"signal-exit@npm:^3.0.7":
+  version: 3.0.7
+  resolution: "signal-exit@npm:3.0.7"
+  checksum: a2f098f247adc367dffc27845853e9959b9e88b01cb301658cfe4194352d8d2bb32e18467c786a7fe15f1d44b233ea35633d076d5e737870b7139949d1ab6318
   languageName: node
   linkType: hard
 
@@ -15192,6 +15178,16 @@ typescript@^4.1.3:
     signal-exit: ^3.0.2
     typedarray-to-buffer: ^3.1.5
   checksum: c55b24617cc61c3a4379f425fc62a386cc51916a9b9d993f39734d005a09d5a4bb748bc251f1304e7abd71d0a26d339996c275955f527a131b1dcded67878280
+  languageName: node
+  linkType: hard
+
+"write-file-atomic@npm:^4.0.1":
+  version: 4.0.1
+  resolution: "write-file-atomic@npm:4.0.1"
+  dependencies:
+    imurmurhash: ^0.1.4
+    signal-exit: ^3.0.7
+  checksum: 8f780232533ca6223c63c9b9c01c4386ca8c625ebe5017a9ed17d037aec19462ae17109e0aa155bff5966ee4ae7a27b67a99f55caf3f32ffd84155e9da3929fc
   languageName: node
   linkType: hard
 

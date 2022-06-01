@@ -20,7 +20,7 @@ const docsPages: DocPage[] = [
     async isComplete(projectState: ProjectStateServiceInstance): Promise<boolean> {
       return Boolean((await projectState.metadata()).agentInstalled);
     },
-    args: [0],
+    args: ['project-picker'],
   },
   {
     id: 'WALKTHROUGH_RECORD_APPMAPS',
@@ -29,7 +29,16 @@ const docsPages: DocPage[] = [
     async isComplete(projectState: ProjectStateServiceInstance): Promise<boolean> {
       return Boolean((await projectState.metadata()).appMapsRecorded);
     },
-    args: [1],
+    args: ['record-appmaps'],
+  },
+  {
+    id: 'GETTING_STARTED_OPEN_APPMAPS',
+    title: 'Open AppMaps',
+    command: 'appmap.openInstallGuide',
+    async isComplete(projectState: ProjectStateServiceInstance): Promise<boolean> {
+      return Boolean((await projectState.metadata()).appMapOpened);
+    },
+    args: ['open-appmaps'],
   },
   {
     id: 'WALKTHROUGH_INVESTIGATE_FINDINGS',
@@ -38,7 +47,7 @@ const docsPages: DocPage[] = [
     async isComplete(projectState: ProjectStateServiceInstance): Promise<boolean> {
       return Boolean((await projectState.metadata()).analysisPerformed);
     },
-    args: [2],
+    args: ['investigate-findings'],
   },
 ];
 

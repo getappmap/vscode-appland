@@ -38,6 +38,14 @@ export default function mountInstallGuide() {
       messages.rpc('view-problems', projectPath);
     });
 
+    app.$on('openAppmap', (file) => {
+      vscode.postMessage({ command: 'open-file', file });
+    });
+
+    app.$on('open-instruction', (pageId) => {
+      app.$refs.ui.jumpTo(pageId);
+    });
+
     messages.on('page', ({ page }) => {
       app.$refs.ui.jumpTo(page);
     });

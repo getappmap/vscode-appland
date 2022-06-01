@@ -1,12 +1,13 @@
 import { WorkspaceService, WorkspaceServiceInstance } from './workspaceService';
 
 import * as vscode from 'vscode';
-import ExtensionState from '../configuration/extensionState';
+import ExtensionState, { Keys } from '../configuration/extensionState';
 import { FileChangeEmitter } from './fileChangeEmitter';
 import FindingsIndex from './findingsIndex';
 import { ResolvedFinding } from './resolvedFinding';
 import { analyze, scoreValue } from '../analyzers';
 import ProjectMetadata from '../workspace/projectMetadata';
+import AppMapCollection from './appmapCollection';
 
 export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
   protected disposables: vscode.Disposable[] = [];
@@ -21,6 +22,7 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
   constructor(
     public readonly folder: vscode.WorkspaceFolder,
     protected readonly extensionState: ExtensionState,
+    protected readonly appMapCollection: AppMapCollection,
     appMapWatcher: FileChangeEmitter,
     configWatcher: FileChangeEmitter,
     findingsIndex?: FindingsIndex
@@ -46,6 +48,11 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
         if (workspaceFolder === folder) {
           await this.onConfigurationDeleted();
         }
+      }),
+      extensionState.onWorkspaceFlag((e) => {
+        if (e.workspaceFolder === folder && e.key === Keys.Workspace.OPENED_APPMAP) {
+          this.updateMetadata();
+        }
       })
     );
 
@@ -65,6 +72,10 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
 
   private get hasRecordedAppMaps(): boolean {
     return this.extensionState.getWorkspaceRecordedAppMap(this.folder);
+  }
+
+  private get hasOpenedAppMap(): boolean {
+    return this.extensionState.getWorkspaceOpenedAppMap(this.folder);
   }
 
   async metadata(): Promise<Readonly<ProjectMetadata>> {
@@ -133,7 +144,7 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
   }
 
   private async updateMetadata(): Promise<void> {
-    const analysis = await analyze(this.folder);
+    const analysis = await analyze(this.folder, this.appMapCollection);
     this._metadata = {
       name: this.folder.name,
       path: this.folder.uri.fsPath,
@@ -141,12 +152,14 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
       agentInstalled: this.isAgentConfigured || false,
       appMapsRecorded: this.hasRecordedAppMaps || false,
       analysisPerformed: this.analysisPerformed,
+      appMapOpened: this.hasOpenedAppMap || false,
       numFindings: this.numFindings,
       language: {
         name: analysis.features.lang.title,
         score: scoreValue(analysis.features.lang.score) + 1,
         text: analysis.features.lang.text,
       },
+      appMaps: analysis.appMaps,
     };
 
     if (analysis.features.test) {
@@ -178,6 +191,7 @@ export default class ProjectStateService implements WorkspaceService {
     protected extensionState: ExtensionState,
     protected readonly appMapWatcher: FileChangeEmitter,
     protected readonly configWatcher: FileChangeEmitter,
+    protected readonly appMapCollection: AppMapCollection,
     protected readonly findingsIndex?: FindingsIndex
   ) {}
 
@@ -185,6 +199,7 @@ export default class ProjectStateService implements WorkspaceService {
     return new ProjectStateServiceInstance(
       folder,
       this.extensionState,
+      this.appMapCollection,
       this.appMapWatcher,
       this.configWatcher,
       this.findingsIndex
