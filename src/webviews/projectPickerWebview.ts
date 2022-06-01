@@ -99,7 +99,9 @@ async function resultRows(): Promise<string[]> {
 
   const rows: string[] = [];
 
-  const results = (await Promise.all(folders.map(analyze))).sort((a, b) => b.score - a.score);
+  const results = (await Promise.all(folders.map((f) => analyze(f)))).sort(
+    (a, b) => b.score - a.score
+  );
 
   for (const folder of results) {
     const {

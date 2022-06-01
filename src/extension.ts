@@ -45,6 +45,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
   try {
     const extensionState = new ExtensionState(context);
+    context.subscriptions.push(extensionState);
+
     if (extensionState.isNewInstall) {
       Telemetry.reportAction('plugin:install');
     }
@@ -151,6 +153,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
         extensionState,
         appmapWatcher,
         configWatcher,
+        appmapCollectionFile,
         findingsIndex
       );
 

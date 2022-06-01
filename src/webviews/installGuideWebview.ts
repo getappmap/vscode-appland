@@ -69,6 +69,10 @@ export default class InstallGuideWebView {
 
               break;
 
+            case 'open-file':
+              vscode.commands.executeCommand('vscode.open', vscode.Uri.file(message.file));
+              break;
+
             case 'view-problems':
               vscode.commands.executeCommand('workbench.panel.markers.view.focus');
               break;
