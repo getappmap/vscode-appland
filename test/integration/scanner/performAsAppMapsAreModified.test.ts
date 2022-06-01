@@ -6,25 +6,26 @@ import { promisify } from 'util';
 import {
   initializeWorkspace,
   waitFor,
-  waitForExtension,
   ProjectA,
   hasNoDiagnostics,
   getDiagnosticsForAppMap,
   ExampleAppMap,
   ExampleAppMapIndexDir,
-  hasDiagnostics,
   executeWorkspaceOSCommand,
   repeatUntil,
+  waitForAppMapServices,
 } from '../util';
 
 describe('Scanner', () => {
   beforeEach(initializeWorkspace);
-  beforeEach(waitForExtension);
+  beforeEach(() =>
+    waitForAppMapServices(
+      'tmp/appmap/minitest/Microposts_controller_can_get_microposts_as_JSON.appmap.json'
+    )
+  );
   afterEach(initializeWorkspace);
 
   it('is performed as AppMaps are modified', async () => {
-    await waitFor('Diagnostics were not created', hasDiagnostics);
-
     await promisify(rename)(
       join(ProjectA, 'appmap-findings.json'),
       join(ProjectA, 'appmap-findings.json.bak')

@@ -2,7 +2,6 @@ import assert from 'assert';
 import { exists } from 'fs';
 import { join } from 'path';
 import { promisify } from 'util';
-import * as vscode from 'vscode';
 import { CodeObjectEntry } from '../../../src/services/classMapIndex';
 import {
   ExampleAppMap,
@@ -11,17 +10,23 @@ import {
   repeatUntil,
   touch,
   waitFor,
-  waitForExtension,
+  waitForAppMapServices,
 } from '../util';
 
 describe('CodeObjects', () => {
   beforeEach(initializeWorkspace);
-  beforeEach(waitForExtension);
+  beforeEach(() =>
+    waitForAppMapServices(
+      'tmp/appmap/minitest/Microposts_controller_can_get_microposts_as_JSON.appmap.json'
+    )
+  );
   afterEach(initializeWorkspace);
 
   it('index is created on startup', async () => {
-    const extension = vscode.extensions.getExtension('appland.appmap');
-    assert(extension);
+    const appMapService = await waitForAppMapServices(
+      'tmp/appmap/minitest/Microposts_controller_can_get_microposts_as_JSON.appmap.json'
+    );
+    assert.ok(appMapService.classMap);
 
     const classMapFile = join(ExampleAppMapIndexDir, 'classMap.json');
     await repeatUntil(
@@ -30,8 +35,6 @@ describe('CodeObjects', () => {
       async () => promisify(exists)(classMapFile)
     );
 
-    const appMapService = extension.exports;
-    assert.ok(appMapService.classMap);
     await waitFor(`ClassMap not available`, async () => {
       if (!appMapService.classMap) return false;
       return (await appMapService.classMap.classMap()).length > 0;

@@ -2,11 +2,15 @@ import assert from 'assert';
 import { unlink } from 'fs';
 import { promisify } from 'util';
 import * as vscode from 'vscode';
-import { initializeWorkspace, repeatUntil, touch, waitForExtension } from '../util';
+import { initializeWorkspace, repeatUntil, touch, waitForAppMapServices } from '../util';
 
 describe('AppMapIndex', () => {
   beforeEach(initializeWorkspace);
-  beforeEach(waitForExtension);
+  beforeEach(() =>
+    waitForAppMapServices(
+      'tmp/appmap/minitest/Microposts_controller_can_get_microposts_as_JSON.appmap.json'
+    )
+  );
   afterEach(initializeWorkspace);
 
   it('updates as AppMaps are modified', async () => {
