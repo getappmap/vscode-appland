@@ -148,6 +148,10 @@
           "default": "https://app.land",
           "description": "URL of an AppLand cloud instance for AppMap storage"
         },
+        "appMap.indexEnabled": {
+          "type": "boolean",
+          "description": "Enable AppMap indexer and code objects view(preview)"
+        },
         "appMap.findingsEnabled": {
           "type": "boolean",
           "description": "Enable AppMap scanner and findings (preview)"
@@ -209,12 +213,14 @@
         {
           "id": "appmap.views.findings",
           "name": "Findings",
-          "visibility": "collapsed"
+          "visibility": "collapsed",
+          "when": "config.appMap.findingsEnabled == true"
         },
         {
           "id": "appmap.views.codeObjects",
           "name": "Code Objects",
-          "visibility": "collapsed"
+          "visibility": "collapsed",
+          "when": "config.appMap.indexEnabled == true || config.appMap.indexEnabled == true"
         },
         {
           "id": "appmap.views.documentation",

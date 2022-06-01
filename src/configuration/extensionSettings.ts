@@ -8,14 +8,19 @@ export default {
     return vscode.Uri.parse(configUrl);
   },
 
-  inspectEnabled: (): boolean =>
+  indexEnabled: (): boolean =>
     [true, 'true'].includes(
-      vscode.workspace.getConfiguration('appMap').get('inspectEnabled') || false
+      vscode.workspace.getConfiguration('appMap').get('indexEnabled') || false
     ),
 
   findingsEnabled: (): boolean =>
     [true, 'true'].includes(
       vscode.workspace.getConfiguration('appMap').get('findingsEnabled') || false
+    ),
+
+  inspectEnabled: (): boolean =>
+    [true, 'true'].includes(
+      vscode.workspace.getConfiguration('appMap').get('inspectEnabled') || false
     ),
 
   indexCommand: (): string | string[] =>

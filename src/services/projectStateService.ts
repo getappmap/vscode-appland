@@ -23,16 +23,10 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
     protected readonly extensionState: ExtensionState,
     appMapWatcher: FileChangeEmitter,
     configWatcher: FileChangeEmitter,
-    findingsIndex: FindingsIndex
+    findingsIndex?: FindingsIndex
   ) {
     this.disposables.push(
       this._onStateChange,
-      findingsIndex.onChanged((workspaceFolder) => {
-        if (workspaceFolder === folder) {
-          const findings = findingsIndex.findingsForWorkspace(folder);
-          this.onFindingsChanged(findings);
-        }
-      }),
       appMapWatcher.onChange(({ workspaceFolder }) => {
         if (workspaceFolder === folder) {
           this.onAppMapCreated();
@@ -54,6 +48,15 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
         }
       })
     );
+
+    if (findingsIndex) {
+      findingsIndex.onChanged((workspaceFolder) => {
+        if (workspaceFolder === folder) {
+          const findings = findingsIndex.findingsForWorkspace(folder);
+          this.onFindingsChanged(findings);
+        }
+      });
+    }
   }
 
   private get isAgentConfigured(): boolean {
@@ -175,7 +178,7 @@ export default class ProjectStateService implements WorkspaceService {
     protected extensionState: ExtensionState,
     protected readonly appMapWatcher: FileChangeEmitter,
     protected readonly configWatcher: FileChangeEmitter,
-    protected readonly findingsIndex: FindingsIndex
+    protected readonly findingsIndex?: FindingsIndex
   ) {}
 
   public create(folder: vscode.WorkspaceFolder): ProjectStateServiceInstance {

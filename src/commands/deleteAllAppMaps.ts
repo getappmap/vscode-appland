@@ -39,13 +39,13 @@ async function deleteAppMaps(folder: vscode.WorkspaceFolder): Promise<void> {
 
 export default async function deleteAllAppMaps(
   context: vscode.ExtensionContext,
-  findingsIndex: FindingsIndex,
-  classMapIndex: ClassMapIndex
+  classMapIndex?: ClassMapIndex,
+  findingsIndex?: FindingsIndex
 ): Promise<void> {
   const command = vscode.commands.registerCommand('appmap.deleteAllAppMaps', async () => {
     await Promise.all((vscode.workspace.workspaceFolders || []).map(deleteAppMaps));
-    findingsIndex.clear();
-    classMapIndex.clear();
+    if (classMapIndex) classMapIndex.clear();
+    if (findingsIndex) findingsIndex.clear();
   });
   context.subscriptions.push(command);
 }
