@@ -33,13 +33,13 @@ export default function registerTrees(
   context.subscriptions.push(documentationTree);
 
   context.subscriptions.push(
-    vscode.commands.registerCommand('appmap.focus', () => {
+    vscode.commands.registerCommand('appmap.view.focusAppMap', () => {
       localAppMapsTree.reveal(localAppMaps.appMaps[0], { select: false });
     })
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand('appmap.focusInstructions', (index = 0) => {
+    vscode.commands.registerCommand('appmap.view.focusInstructions', (index = 0) => {
       setTimeout(() => {
         // TODO: (KEG) Here is where we would show the repo state to determine which step should be
         // shown by default.

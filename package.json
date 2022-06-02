@@ -80,6 +80,7 @@
       },
       {
         "command": "appmap.openWorkspaceOverview",
+      },
         "title": "AppMap: Open Instructions"
       },
       {
