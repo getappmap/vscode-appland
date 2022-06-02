@@ -8,6 +8,7 @@ async function main(): Promise<void> {
   try {
     const extensionDevelopmentPath = path.resolve(__dirname, '..', '..');
     const userDataDir = path.resolve(__dirname, '..', '..', '.vscode-test', 'user-data');
+    console.log(userDataDir);
     const workspacePath = path.join(
       __dirname,
       '..',
@@ -21,15 +22,32 @@ async function main(): Promise<void> {
     let verbose = false;
     let leaveOpen = false;
     let testPath = path.join(__dirname, 'smoke', 'tests', '**', '*.test.js');
+    const patterns: string[] = [];
     const cliArgs = process.argv.slice(2);
     while (cliArgs.length > 0) {
       const arg = cliArgs.shift() as string;
-      if (arg === '--leave-open') {
-        leaveOpen = true;
-      } else if (arg === '--verbose') {
-        verbose = true;
-      } else {
-        testPath = path.isAbsolute(arg) ? arg : path.resolve(arg);
+      switch (arg) {
+        case '--leave-open':
+          leaveOpen = true;
+          break;
+
+        case '--verbose':
+          verbose = true;
+          break;
+
+        case '--pattern':
+        case '-p':
+          {
+            const pattern = cliArgs.shift();
+            if (!pattern) {
+              throw new Error('Missing pattern');
+            }
+            patterns.push(pattern);
+          }
+          break;
+
+        default:
+          testPath = path.isAbsolute(arg) ? arg : path.resolve(arg);
       }
     }
 
@@ -39,19 +57,6 @@ async function main(): Promise<void> {
     });
 
     const driver = new Driver(app, context, page);
-
-    // await new Promise<void>((resolve, reject) => {
-    //   console.info(`Setting up workspace at ${testWorkspace} ...`);
-    //   const proc = exec(`yarn install`, { cwd: testWorkspace });
-    //   proc.stdout?.on('data', console.log);
-    //   proc.stderr?.on('data', console.log);
-    //   proc.on('exit', (code) => {
-    //     if (code !== 0) return reject(new Error(`process exited with code ${code}`));
-
-    //     resolve();
-    //   });
-    // });
-
     const mocha = new Mocha({
       ui: 'bdd',
       color: true,
@@ -68,6 +73,8 @@ async function main(): Promise<void> {
     mocha.suite.ctx.page = page;
     mocha.suite.ctx.driver = driver;
     mocha.suite.ctx.workspacePath = workspacePath;
+
+    patterns.forEach((pattern) => mocha.grep(pattern));
 
     return new Promise((_, reject) => {
       glob(testPath, { cwd: __dirname }, (err, files) => {
