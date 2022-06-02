@@ -401,7 +401,8 @@
   },
   "workspaces": [
     "test/fixtures/workspaces/project-a",
-    "test/fixtures/workspaces/project-with-echo-command"
+    "test/fixtures/workspaces/project-with-echo-command",
+    "test/fixtures/workspaces/project-uptodate"
   ],
   "__metadata": {
     "id": "41d86b02-68d3-4049-9422-95da6d11cc2e",

@@ -1,0 +1,13 @@
+{
+  "name": "project-uptodate",
+  "packageManager": "yarn@3.1.1",
+  "scripts": {
+    "openapi": "npx @appland/appmap openapi --appmap-dir tmp/appmap",
+    "index": "npx @appland/appmap index",
+    "scan": "npx @appland/scanner scan"
+  },
+  "devDependencies": {
+    "@appland/appmap": "^3.25.4",
+    "@appland/scanner": "^1.56.0"
+  }
+}

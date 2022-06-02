@@ -11844,6 +11844,15 @@ fsevents@^1.2.7:
   languageName: unknown
   linkType: soft
 
+"project-uptodate@workspace:test/fixtures/workspaces/project-uptodate":
+  version: 0.0.0-use.local
+  resolution: "project-uptodate@workspace:test/fixtures/workspaces/project-uptodate"
+  dependencies:
+    "@appland/appmap": ^3.25.4
+    "@appland/scanner": ^1.56.0
+  languageName: unknown
+  linkType: soft
+
 "project-with-echo-command@workspace:test/fixtures/workspaces/project-with-echo-command":
   version: 0.0.0-use.local
   resolution: "project-with-echo-command@workspace:test/fixtures/workspaces/project-with-echo-command"

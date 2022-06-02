@@ -1,0 +1,1751 @@
+{
+  "version": "1.3",
+  "metadata": {
+    "app": "appland/AppLand",
+    "language": {
+      "name": "ruby",
+      "engine": "ruby",
+      "version": "2.6.6"
+    },
+    "client": {
+      "name": "appmap",
+      "url": "https://github.com/applandinc/appmap-ruby",
+      "version": "0.37.2"
+    },
+    "frameworks": [
+      {
+        "name": "rails",
+        "version": "5.2.4.2"
+      },
+      {
+        "name": "rspec",
+        "version": "3.9.1"
+      }
+    ],
+    "source_location": "spec/requests/user_spec.rb:10",
+    "git": {
+      "repository": "git@github.com:applandinc/appland.git",
+      "branch": "add-notifications",
+      "commit": "2e7738908480aeefab818ddd17c91dff57db1ab0",
+      "status_code": [],
+      "git_last_annotated_tag": null,
+      "git_last_tag": "v0.13.0",
+      "git_commits_since_last_annotated_tag": null,
+      "git_commits_since_last_tag": 0
+    },
+    "name": "User page for an admin user organization list has a link to create an organization",
+    "feature": "User page for an admin user",
+    "feature_group": "User page",
+    "recorder": {
+      "name": "rspec"
+    },
+    "fingerprints": [
+      {
+        "appmap_digest": "4a2f6e28befc256c3cdc3ad05f3e51156e0fb805300f095a74f7719cc2bcb650",
+        "canonicalization_algorithm": "classDependencies",
+        "digest": "123a712126f303bbee3204112d808efb229d9a581c7c70ac1307bf8c95c80555",
+        "fingerprint_algorithm": "sha256"
+      },
+      {
+        "appmap_digest": "4a2f6e28befc256c3cdc3ad05f3e51156e0fb805300f095a74f7719cc2bcb650",
+        "canonicalization_algorithm": "classes",
+        "digest": "db03c69ae120bfac6812c1d6b6f0037a86e3477795f3796c7d3a099716f15558",
+        "fingerprint_algorithm": "sha256"
+      },
+      {
+        "appmap_digest": "4a2f6e28befc256c3cdc3ad05f3e51156e0fb805300f095a74f7719cc2bcb650",
+        "canonicalization_algorithm": "httpClientRequests",
+        "digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "fingerprint_algorithm": "sha256"
+      },
+      {
+        "appmap_digest": "4a2f6e28befc256c3cdc3ad05f3e51156e0fb805300f095a74f7719cc2bcb650",
+        "canonicalization_algorithm": "httpServerRequests",
+        "digest": "48915b366ebe761451283900edd502ed786229f6a2336ba953c8fad0dd40d070",
+        "fingerprint_algorithm": "sha256"
+      },
+      {
+        "appmap_digest": "4a2f6e28befc256c3cdc3ad05f3e51156e0fb805300f095a74f7719cc2bcb650",
+        "canonicalization_algorithm": "info",
+        "digest": "19a3423b0e356861454bfe9f5d70663c65c26bc5cac2345bb87d4feef2db9e5b",
+        "fingerprint_algorithm": "sha256"
+      },
+      {
+        "appmap_digest": "4a2f6e28befc256c3cdc3ad05f3e51156e0fb805300f095a74f7719cc2bcb650",
+        "canonicalization_algorithm": "labels",
+        "digest": "7cacc4134df39c297b9e0bf2b39cab4ad953461415a007fd8bfc5e932e7313fa",
+        "fingerprint_algorithm": "sha256"
+      },
+      {
+        "appmap_digest": "4a2f6e28befc256c3cdc3ad05f3e51156e0fb805300f095a74f7719cc2bcb650",
+        "canonicalization_algorithm": "packageDependencies",
+        "digest": "774c0bfa34cfc801226bb5b56eb149cdf1fbe57fb6a3580cb4ffeb3513448206",
+        "fingerprint_algorithm": "sha256"
+      },
+      {
+        "appmap_digest": "4a2f6e28befc256c3cdc3ad05f3e51156e0fb805300f095a74f7719cc2bcb650",
+        "canonicalization_algorithm": "packages",
+        "digest": "3c5a78bd5145121457a6f79ac33c15ec178880dd4104da892ef942e4945905a1",
+        "fingerprint_algorithm": "sha256"
+      },
+      {
+        "appmap_digest": "4a2f6e28befc256c3cdc3ad05f3e51156e0fb805300f095a74f7719cc2bcb650",
+        "canonicalization_algorithm": "sqlNormalized",
+        "digest": "f42217f94b7cbe624dea39ee0289db56da68ebf9cd0a7bb74f53243d7ecd8a63",
+        "fingerprint_algorithm": "sha256"
+      },
+      {
+        "appmap_digest": "4a2f6e28befc256c3cdc3ad05f3e51156e0fb805300f095a74f7719cc2bcb650",
+        "canonicalization_algorithm": "sqlTables",
+        "digest": "155dfea9984015042d2dbb19f93b1e983a068c6946247866d578c2a40dd9a909",
+        "fingerprint_algorithm": "sha256"
+      },
+      {
+        "appmap_digest": "4a2f6e28befc256c3cdc3ad05f3e51156e0fb805300f095a74f7719cc2bcb650",
+        "canonicalization_algorithm": "trace",
+        "digest": "e81230cac63d25a6dfbf24c113964a661044dd01ed661e3cffeb943b41cfc213",
+        "fingerprint_algorithm": "sha256"
+      },
+      {
+        "appmap_digest": "4a2f6e28befc256c3cdc3ad05f3e51156e0fb805300f095a74f7719cc2bcb650",
+        "canonicalization_algorithm": "update",
+        "digest": "2ab423434b33202dc6d67a42db9249a87ad52b4dec60489a996eb8400cd410da",
+        "fingerprint_algorithm": "sha256"
+      }
+    ]
+  },
+  "classMap": [
+    {
+      "name": "json",
+      "type": "package",
+      "children": [
+        {
+          "name": "JSON",
+          "type": "class",
+          "children": [
+            {
+              "name": "Ext",
+              "type": "class",
+              "children": [
+                {
+                  "name": "Generator",
+                  "type": "class",
+                  "children": [
+                    {
+                      "name": "State",
+                      "type": "class",
+                      "children": [
+                        {
+                          "name": "generate",
+                          "type": "function",
+                          "location": "JSON::Ext::Generator::State#generate",
+                          "static": false,
+                          "labels": ["serialization", "json"]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Parser",
+                  "type": "class",
+                  "children": [
+                    {
+                      "name": "parse",
+                      "type": "function",
+                      "location": "JSON::Ext::Parser#parse",
+                      "static": false,
+                      "labels": ["serialization", "json"]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "net/http",
+      "type": "package",
+      "children": [
+        {
+          "name": "Net",
+          "type": "class",
+          "children": [
+            {
+              "name": "HTTP",
+              "type": "class",
+              "children": [
+                {
+                  "name": "request",
+                  "type": "function",
+                  "location": "/Users/kgilpin/source/appland/appmap-ruby/lib/appmap/hook/method.rb:49",
+                  "static": false,
+                  "labels": ["http", "io"]
+                },
+                {
+                  "name": "request",
+                  "type": "function",
+                  "location": "/Users/kgilpin/.rbenv/versions/2.6.6/lib/ruby/2.6.0/net/http.rb:1468",
+                  "static": false,
+                  "labels": ["http", "io"]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "openssl",
+      "type": "package",
+      "children": [
+        {
+          "name": "OpenSSL",
+          "type": "class",
+          "children": [
+            {
+              "name": "Cipher",
+              "type": "class",
+              "children": [
+                {
+                  "name": "decrypt",
+                  "type": "function",
+                  "location": "OpenSSL::Cipher#decrypt",
+                  "static": false,
+                  "labels": ["security", "crypto"]
+                },
+                {
+                  "name": "final",
+                  "type": "function",
+                  "location": "OpenSSL::Cipher#final",
+                  "static": false,
+                  "labels": ["security", "crypto"]
+                },
+                {
+                  "name": "encrypt",
+                  "type": "function",
+                  "location": "OpenSSL::Cipher#encrypt",
+                  "static": false,
+                  "labels": ["security", "crypto"]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Digest",
+          "type": "class",
+          "children": [
+            {
+              "name": "Instance",
+              "type": "class",
+              "children": [
+                {
+                  "name": "digest",
+                  "type": "function",
+                  "location": "Digest::Instance#digest",
+                  "static": false,
+                  "labels": ["security", "crypto"]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "app/models",
+      "type": "package",
+      "children": [
+        {
+          "name": "User",
+          "type": "class",
+          "children": [
+            {
+              "name": "find_by_id!",
+              "type": "function",
+              "location": "app/models/user.rb:31",
+              "static": true
+            },
+            {
+              "name": "Show",
+              "type": "class",
+              "children": [
+                {
+                  "name": "accept_eula?",
+                  "type": "function",
+                  "location": "app/models/user.rb:109",
+                  "static": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Configuration",
+          "type": "class",
+          "children": [
+            {
+              "name": "find",
+              "type": "function",
+              "location": "app/models/configuration.rb:8",
+              "static": true
+            },
+            {
+              "name": "attributes=",
+              "type": "function",
+              "location": "app/models/configuration.rb:33",
+              "static": false
+            },
+            {
+              "name": "attributes",
+              "type": "function",
+              "location": "app/models/configuration.rb:22",
+              "static": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "app/controllers",
+      "type": "package",
+      "children": [
+        {
+          "name": "OrganizationsController",
+          "type": "class",
+          "children": [
+            {
+              "name": "new",
+              "type": "function",
+              "location": "app/controllers/organizations_controller.rb:11",
+              "static": false
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "events": [
+    {
+      "id": 1,
+      "event": "call",
+      "thread_id": 70301203546120,
+      "defined_class": "JSON::Ext::Generator::State",
+      "method_id": "generate",
+      "path": "JSON::Ext::Generator::State#generate",
+      "static": false,
+      "parameters": [
+        {
+          "name": "arg",
+          "class": "Hash",
+          "object_id": 70301205941280,
+          "value": "{:using=>\"xpath\", :value=>\".//a[./@href][((((./@id = 'Create a new organization') or (normalize-spac",
+          "kind": "req"
+        }
+      ],
+      "receiver": {
+        "class": "JSON::Ext::Generator::State",
+        "object_id": 70301205946080,
+        "value": "#<JSON::Ext::Generator::State:0x00007fe08cd0bdc0>"
+      }
+    },
+    {
+      "id": 2,
+      "event": "return",
+      "thread_id": 70301203546120,
+      "parent_id": 1,
+      "elapsed": 0.000025,
+      "return_value": {
+        "class": "String",
+        "value": "{\"using\":\"xpath\",\"value\":\".//a[./@href][((((./@id = 'Create a new organization') or (normalize-space",
+        "object_id": 70301205944080
+      }
+    },
+    {
+      "id": 3,
+      "event": "call",
+      "thread_id": 70301203546120,
+      "defined_class": "Net::HTTP",
+      "method_id": "request",
+      "path": "/Users/kgilpin/source/appland/appmap-ruby/lib/appmap/hook/method.rb",
+      "lineno": 49,
+      "static": false,
+      "parameters": [
+        {
+          "name": "args",
+          "class": "Array",
+          "object_id": 70301205939560,
+          "value": "[#<Net::HTTP::Post POST>]",
+          "kind": "rest"
+        },
+        {
+          "name": "block",
+          "class": "NilClass",
+          "object_id": 8,
+          "value": null,
+          "kind": "block"
+        }
+      ],
+      "receiver": {
+        "class": "Net::HTTP",
+        "object_id": 70301205235520,
+        "value": "Net::HTTP[127.0.0.1:9515]"
+      }
+    },
+    {
+      "id": 4,
+      "event": "call",
+      "thread_id": 70301203546120,
+      "defined_class": "Net::HTTP",
+      "method_id": "request",
+      "path": "/Users/kgilpin/.rbenv/versions/2.6.6/lib/ruby/2.6.0/net/http.rb",
+      "lineno": 1468,
+      "static": false,
+      "parameters": [
+        {
+          "name": "req",
+          "class": "Net::HTTP::Post",
+          "object_id": 70301205943000,
+          "value": "Net::HTTP::Post[POST /session/a6781fa7e36446596e111a62fa53c68f/elements]",
+          "kind": "req"
+        },
+        {
+          "name": "body",
+          "class": "NilClass",
+          "object_id": 8,
+          "value": null,
+          "kind": "opt"
+        },
+        {
+          "name": "block",
+          "class": "NilClass",
+          "object_id": 8,
+          "value": null,
+          "kind": "block"
+        }
+      ],
+      "receiver": {
+        "class": "Net::HTTP",
+        "object_id": 70301205235520,
+        "value": "Net::HTTP[127.0.0.1:9515]"
+      }
+    },
+    {
+      "id": 5,
+      "event": "return",
+      "thread_id": 70301203546120,
+      "parent_id": 4,
+      "elapsed": 0.007965,
+      "return_value": {
+        "class": "Net::HTTPOK",
+        "value": "#<Net::HTTPOK:0x00007fe08cd17210>",
+        "object_id": 70301205969160
+      }
+    },
+    {
+      "id": 6,
+      "event": "return",
+      "thread_id": 70301203546120,
+      "parent_id": 3,
+      "elapsed": 0.008069,
+      "return_value": {
+        "class": "Net::HTTPOK",
+        "value": "#<Net::HTTPOK:0x00007fe08cd17210>",
+        "object_id": 70301205969160
+      }
+    },
+    {
+      "id": 7,
+      "event": "call",
+      "thread_id": 70301203546120,
+      "defined_class": "JSON::Ext::Parser",
+      "method_id": "parse",
+      "path": "JSON::Ext::Parser#parse",
+      "static": false,
+      "parameters": [],
+      "receiver": {
+        "class": "JSON::Ext::Parser",
+        "object_id": 70301222477120,
+        "value": "#<JSON::Ext::Parser:0x00007fe08ec93a80>"
+      }
+    },
+    {
+      "id": 8,
+      "event": "return",
+      "thread_id": 70301203546120,
+      "parent_id": 7,
+      "elapsed": 0.00001,
+      "return_value": {
+        "class": "Hash",
+        "value": "{\"value\"=>[{\"element-6066-11e4-a52e-4f735466cecf\"=>\"e3e572c1-ad74-4ec0-832f-04bf16149693\"}]}",
+        "object_id": 70301222475540
+      }
+    },
+    {
+      "id": 9,
+      "event": "call",
+      "thread_id": 70301203546120,
+      "defined_class": "JSON::Ext::Generator::State",
+      "method_id": "generate",
+      "path": "JSON::Ext::Generator::State#generate",
+      "static": false,
+      "parameters": [
+        {
+          "name": "arg",
+          "class": "Hash",
+          "object_id": 70301222471640,
+          "value": "{:script=>\"return ((function(){function d(t,e,n){function r(t){var e=x(t);if(0<e.height&&0<e.width)r",
+          "kind": "req"
+        }
+      ],
+      "receiver": {
+        "class": "JSON::Ext::Generator::State",
+        "object_id": 70301279887220,
+        "value": "#<JSON::Ext::Generator::State:0x00007fe095a13ee8>"
+      }
+    },
+    {
+      "id": 10,
+      "event": "call",
+      "thread_id": 70301203546120,
+      "defined_class": "JSON::Ext::Generator::State",
+      "method_id": "generate",
+      "path": "JSON::Ext::Generator::State#generate",
+      "static": false,
+      "parameters": [
+        {
+          "name": "arg",
+          "class": "Hash",
+          "object_id": 70301279884560,
+          "value": "{\"element-6066-11e4-a52e-4f735466cecf\"=>\"e3e572c1-ad74-4ec0-832f-04bf16149693\"}",
+          "kind": "req"
+        }
+      ],
+      "receiver": {
+        "class": "JSON::Ext::Generator::State",
+        "object_id": 70301279884540,
+        "value": "#<JSON::Ext::Generator::State:0x00007fe095a129f8>"
+      }
+    },
+    {
+      "id": 11,
+      "event": "return",
+      "thread_id": 70301203546120,
+      "parent_id": 10,
+      "elapsed": 0.000008,
+      "return_value": {
+        "class": "String",
+        "value": "{\"element-6066-11e4-a52e-4f735466cecf\":\"e3e572c1-ad74-4ec0-832f-04bf16149693\"}",
+        "object_id": 70301279882220
+      }
+    },
+    {
+      "id": 12,
+      "event": "return",
+      "thread_id": 70301203546120,
+      "parent_id": 9,
+      "elapsed": 0.000088,
+      "return_value": {
+        "class": "String",
+        "value": "{\"script\":\"return ((function(){function d(t,e,n){function r(t){var e=x(t);if(0<e.height&&0<e.width)r",
+        "object_id": 70301279881800
+      }
+    },
+    {
+      "id": 13,
+      "event": "call",
+      "thread_id": 70301203546120,
+      "defined_class": "Net::HTTP",
+      "method_id": "request",
+      "path": "/Users/kgilpin/source/appland/appmap-ruby/lib/appmap/hook/method.rb",
+      "lineno": 49,
+      "static": false,
+      "parameters": [
+        {
+          "name": "args",
+          "class": "Array",
+          "object_id": 70301226375960,
+          "value": "[#<Net::HTTP::Post POST>]",
+          "kind": "rest"
+        },
+        {
+          "name": "block",
+          "class": "NilClass",
+          "object_id": 8,
+          "value": null,
+          "kind": "block"
+        }
+      ],
+      "receiver": {
+        "class": "Net::HTTP",
+        "object_id": 70301205235520,
+        "value": "Net::HTTP[127.0.0.1:9515]"
+      }
+    },
+    {
+      "id": 14,
+      "event": "call",
+      "thread_id": 70301203546120,
+      "defined_class": "Net::HTTP",
+      "method_id": "request",
+      "path": "/Users/kgilpin/.rbenv/versions/2.6.6/lib/ruby/2.6.0/net/http.rb",
+      "lineno": 1468,
+      "static": false,
+      "parameters": [
+        {
+          "name": "req",
+          "class": "Net::HTTP::Post",
+          "object_id": 70301279880720,
+          "value": "Net::HTTP::Post[POST /session/a6781fa7e36446596e111a62fa53c68f/execute/sync]",
+          "kind": "req"
+        },
+        {
+          "name": "body",
+          "class": "NilClass",
+          "object_id": 8,
+          "value": null,
+          "kind": "opt"
+        },
+        {
+          "name": "block",
+          "class": "NilClass",
+          "object_id": 8,
+          "value": null,
+          "kind": "block"
+        }
+      ],
+      "receiver": {
+        "class": "Net::HTTP",
+        "object_id": 70301205235520,
+        "value": "Net::HTTP[127.0.0.1:9515]"
+      }
+    },
+    {
+      "id": 15,
+      "event": "return",
+      "thread_id": 70301203546120,
+      "parent_id": 14,
+      "elapsed": 0.00345,
+      "return_value": {
+        "class": "Net::HTTPOK",
+        "value": "#<Net::HTTPOK:0x00007fe098d49c68>",
+        "object_id": 70301306736180
+      }
+    },
+    {
+      "id": 16,
+      "event": "return",
+      "thread_id": 70301203546120,
+      "parent_id": 13,
+      "elapsed": 0.003546,
+      "return_value": {
+        "class": "Net::HTTPOK",
+        "value": "#<Net::HTTPOK:0x00007fe098d49c68>",
+        "object_id": 70301306736180
+      }
+    },
+    {
+      "id": 17,
+      "event": "call",
+      "thread_id": 70301203546120,
+      "defined_class": "JSON::Ext::Parser",
+      "method_id": "parse",
+      "path": "JSON::Ext::Parser#parse",
+      "static": false,
+      "parameters": [],
+      "receiver": {
+        "class": "JSON::Ext::Parser",
+        "object_id": 70301306771140,
+        "value": "#<JSON::Ext::Parser:0x00007fe098d5ad88>"
+      }
+    },
+    {
+      "id": 18,
+      "event": "return",
+      "thread_id": 70301203546120,
+      "parent_id": 17,
+      "elapsed": 0.000007,
+      "return_value": {
+        "class": "Hash",
+        "value": "{\"value\"=>true}",
+        "object_id": 70301306769840
+      }
+    },
+    {
+      "id": 19,
+      "event": "call",
+      "thread_id": 70301203546120,
+      "defined_class": "JSON::Ext::Generator::State",
+      "method_id": "generate",
+      "path": "JSON::Ext::Generator::State#generate",
+      "static": false,
+      "parameters": [
+        {
+          "name": "arg",
+          "class": "Hash",
+          "object_id": 70301306768760,
+          "value": "{:script=>\"return arguments[0].matches(':disabled, select:disabled *')\", :args=>[#<Selenium::WebDriv",
+          "kind": "req"
+        }
+      ],
+      "receiver": {
+        "class": "JSON::Ext::Generator::State",
+        "object_id": 70301306767780,
+        "value": "#<JSON::Ext::Generator::State:0x00007fe098d59348>"
+      }
+    },
+    {
+      "id": 20,
+      "event": "call",
+      "thread_id": 70301203546120,
+      "defined_class": "JSON::Ext::Generator::State",
+      "method_id": "generate",
+      "path": "JSON::Ext::Generator::State#generate",
+      "static": false,
+      "parameters": [
+        {
+          "name": "arg",
+          "class": "Hash",
+          "object_id": 70301306805180,
+          "value": "{\"element-6066-11e4-a52e-4f735466cecf\"=>\"e3e572c1-ad74-4ec0-832f-04bf16149693\"}",
+          "kind": "req"
+        }
+      ],
+      "receiver": {
+        "class": "JSON::Ext::Generator::State",
+        "object_id": 70301306805160,
+        "value": "#<JSON::Ext::Generator::State:0x00007fe098d6b750>"
+      }
+    },
+    {
+      "id": 21,
+      "event": "return",
+      "thread_id": 70301203546120,
+      "parent_id": 20,
+      "elapsed": 0.000007,
+      "return_value": {
+        "class": "String",
+        "value": "{\"element-6066-11e4-a52e-4f735466cecf\":\"e3e572c1-ad74-4ec0-832f-04bf16149693\"}",
+        "object_id": 70301306803300
+      }
+    },
+    {
+      "id": 22,
+      "event": "return",
+      "thread_id": 70301203546120,
+      "parent_id": 19,
+      "elapsed": 0.00006,
+      "return_value": {
+        "class": "String",
+        "value": "{\"script\":\"return arguments[0].matches(':disabled, select:disabled *')\",\"args\":[{\"element-6066-11e4-",
+        "object_id": 70301306802740
+      }
+    },
+    {
+      "id": 23,
+      "event": "call",
+      "thread_id": 70301203546120,
+      "defined_class": "Net::HTTP",
+      "method_id": "request",
+      "path": "/Users/kgilpin/source/appland/appmap-ruby/lib/appmap/hook/method.rb",
+      "lineno": 49,
+      "static": false,
+      "parameters": [
+        {
+          "name": "args",
+          "class": "Array",
+          "object_id": 70301306838000,
+          "value": "[#<Net::HTTP::Post POST>]",
+          "kind": "rest"
+        },
+        {
+          "name": "block",
+          "class": "NilClass",
+          "object_id": 8,
+          "value": null,
+          "kind": "block"
+        }
+      ],
+      "receiver": {
+        "class": "Net::HTTP",
+        "object_id": 70301205235520,
+        "value": "Net::HTTP[127.0.0.1:9515]"
+      }
+    },
+    {
+      "id": 24,
+      "event": "call",
+      "thread_id": 70301203546120,
+      "defined_class": "Net::HTTP",
+      "method_id": "request",
+      "path": "/Users/kgilpin/.rbenv/versions/2.6.6/lib/ruby/2.6.0/net/http.rb",
+      "lineno": 1468,
+      "static": false,
+      "parameters": [
+        {
+          "name": "req",
+          "class": "Net::HTTP::Post",
+          "object_id": 70301306801560,
+          "value": "Net::HTTP::Post[POST /session/a6781fa7e36446596e111a62fa53c68f/execute/sync]",
+          "kind": "req"
+        },
+        {
+          "name": "body",
+          "class": "NilClass",
+          "object_id": 8,
+          "value": null,
+          "kind": "opt"
+        },
+        {
+          "name": "block",
+          "class": "NilClass",
+          "object_id": 8,
+          "value": null,
+          "kind": "block"
+        }
+      ],
+      "receiver": {
+        "class": "Net::HTTP",
+        "object_id": 70301205235520,
+        "value": "Net::HTTP[127.0.0.1:9515]"
+      }
+    },
+    {
+      "id": 25,
+      "event": "return",
+      "thread_id": 70301203546120,
+      "parent_id": 24,
+      "elapsed": 0.002601,
+      "return_value": {
+        "class": "Net::HTTPOK",
+        "value": "#<Net::HTTPOK:0x00007fe098d89ae8>",
+        "object_id": 70301306867060
+      }
+    },
+    {
+      "id": 26,
+      "event": "return",
+      "thread_id": 70301203546120,
+      "parent_id": 23,
+      "elapsed": 0.002683,
+      "return_value": {
+        "class": "Net::HTTPOK",
+        "value": "#<Net::HTTPOK:0x00007fe098d89ae8>",
+        "object_id": 70301306867060
+      }
+    },
+    {
+      "id": 27,
+      "event": "call",
+      "thread_id": 70301203546120,
+      "defined_class": "JSON::Ext::Parser",
+      "method_id": "parse",
+      "path": "JSON::Ext::Parser#parse",
+      "static": false,
+      "parameters": [],
+      "receiver": {
+        "class": "JSON::Ext::Parser",
+        "object_id": 70301306900200,
+        "value": "#<JSON::Ext::Parser:0x00007fe098d99dd0>"
+      }
+    },
+    {
+      "id": 28,
+      "event": "return",
+      "thread_id": 70301203546120,
+      "parent_id": 27,
+      "elapsed": 0.000006,
+      "return_value": {
+        "class": "Hash",
+        "value": "{\"value\"=>false}",
+        "object_id": 70301306898540
+      }
+    },
+    {
+      "id": 29,
+      "event": "call",
+      "thread_id": 70301203546120,
+      "defined_class": "Net::HTTP",
+      "method_id": "request",
+      "path": "/Users/kgilpin/source/appland/appmap-ruby/lib/appmap/hook/method.rb",
+      "lineno": 49,
+      "static": false,
+      "parameters": [
+        {
+          "name": "args",
+          "class": "Array",
+          "object_id": 70301306932600,
+          "value": "[#<Net::HTTP::Post POST>]",
+          "kind": "rest"
+        },
+        {
+          "name": "block",
+          "class": "NilClass",
+          "object_id": 8,
+          "value": null,
+          "kind": "block"
+        }
+      ],
+      "receiver": {
+        "class": "Net::HTTP",
+        "object_id": 70301205235520,
+        "value": "Net::HTTP[127.0.0.1:9515]"
+      }
+    },
+    {
+      "id": 30,
+      "event": "call",
+      "thread_id": 70301203546120,
+      "defined_class": "Net::HTTP",
+      "method_id": "request",
+      "path": "/Users/kgilpin/.rbenv/versions/2.6.6/lib/ruby/2.6.0/net/http.rb",
+      "lineno": 1468,
+      "static": false,
+      "parameters": [
+        {
+          "name": "req",
+          "class": "Net::HTTP::Post",
+          "object_id": 70301306936040,
+          "value": "Net::HTTP::Post[POST /session/a6781fa7e36446596e111a62fa53c68f/element/e3e572c1-ad74-4ec0-832f-04bf1",
+          "kind": "req"
+        },
+        {
+          "name": "body",
+          "class": "NilClass",
+          "object_id": 8,
+          "value": null,
+          "kind": "opt"
+        },
+        {
+          "name": "block",
+          "class": "NilClass",
+          "object_id": 8,
+          "value": null,
+          "kind": "block"
+        }
+      ],
+      "receiver": {
+        "class": "Net::HTTP",
+        "object_id": 70301205235520,
+        "value": "Net::HTTP[127.0.0.1:9515]"
+      }
+    },
+    {
+      "id": 31,
+      "event": "call",
+      "thread_id": 70301283309360,
+      "http_server_request": {
+        "request_method": "GET",
+        "path_info": "/organizations/new"
+      },
+      "message": [
+        {
+          "name": "_method",
+          "class": "String",
+          "value": "get",
+          "object_id": 70301206015280
+        },
+        {
+          "name": "controller",
+          "class": "String",
+          "value": "organizations",
+          "object_id": 70301208859520
+        },
+        {
+          "name": "action",
+          "class": "String",
+          "value": "new",
+          "object_id": 70301209377440
+        }
+      ]
+    },
+    {
+      "id": 32,
+      "event": "call",
+      "thread_id": 70301283309360,
+      "defined_class": "OpenSSL::Cipher",
+      "method_id": "decrypt",
+      "path": "OpenSSL::Cipher#decrypt",
+      "static": false,
+      "parameters": [
+        {
+          "name": "arg",
+          "class": "Array",
+          "object_id": 70301209586400,
+          "value": "[]",
+          "kind": "rest"
+        }
+      ],
+      "receiver": {
+        "class": "OpenSSL::Cipher",
+        "object_id": 70301209590380,
+        "value": "#<OpenSSL::Cipher:0x00007fe08d3ff4d8>"
+      }
+    },
+    {
+      "id": 33,
+      "event": "return",
+      "thread_id": 70301283309360,
+      "parent_id": 32,
+      "elapsed": 0.000008,
+      "return_value": {
+        "class": "OpenSSL::Cipher",
+        "value": "#<OpenSSL::Cipher:0x00007fe08d3ff4d8>",
+        "object_id": 70301209590380
+      }
+    },
+    {
+      "id": 34,
+      "event": "call",
+      "thread_id": 70301283309360,
+      "defined_class": "OpenSSL::Cipher",
+      "method_id": "final",
+      "path": "OpenSSL::Cipher#final",
+      "static": false,
+      "parameters": [],
+      "receiver": {
+        "class": "OpenSSL::Cipher",
+        "object_id": 70301209590380,
+        "value": "#<OpenSSL::Cipher:0x00007fe08d3ff4d8>"
+      }
+    },
+    {
+      "id": 35,
+      "event": "return",
+      "thread_id": 70301283309360,
+      "parent_id": 34,
+      "elapsed": 0.000006,
+      "return_value": {
+        "class": "String",
+        "value": "",
+        "object_id": 70301209458780
+      }
+    },
+    {
+      "id": 36,
+      "event": "call",
+      "thread_id": 70301283309360,
+      "defined_class": "JSON::Ext::Parser",
+      "method_id": "parse",
+      "path": "JSON::Ext::Parser#parse",
+      "static": false,
+      "parameters": [],
+      "receiver": {
+        "class": "JSON::Ext::Parser",
+        "object_id": 70301209457180,
+        "value": "#<JSON::Ext::Parser:0x00007fe08d3be438>"
+      }
+    },
+    {
+      "id": 37,
+      "event": "return",
+      "thread_id": 70301283309360,
+      "parent_id": 36,
+      "elapsed": 0.000015,
+      "return_value": {
+        "class": "Hash",
+        "value": "{\"_rails\"=>{\"message\"=>\"eyJzZXNzaW9uX2lkIjoiZDFlN2VjYTI2Mjc3NWQ1ZTRjYmE5MTg0MzNmY2UyMzAiLCJ1c2VyX2lk",
+        "object_id": 70301209453540
+      }
+    },
+    {
+      "id": 38,
+      "event": "call",
+      "thread_id": 70301283309360,
+      "defined_class": "JSON::Ext::Parser",
+      "method_id": "parse",
+      "path": "JSON::Ext::Parser#parse",
+      "static": false,
+      "parameters": [],
+      "receiver": {
+        "class": "JSON::Ext::Parser",
+        "object_id": 70301210245800,
+        "value": "#<JSON::Ext::Parser:0x00007fe08d53f550>"
+      }
+    },
+    {
+      "id": 39,
+      "event": "return",
+      "thread_id": 70301283309360,
+      "parent_id": 38,
+      "elapsed": 0.000012,
+      "return_value": {
+        "class": "Hash",
+        "value": "{\"session_id\"=>\"d1e7eca262775d5e4cba918433fce230\", \"user_id\"=>1, \"configuration\"=>\"{}\"}",
+        "object_id": 70301210241780
+      }
+    },
+    {
+      "id": 40,
+      "event": "call",
+      "thread_id": 70301283309360,
+      "sql_query": {
+        "sql": "BEGIN",
+        "database_type": "postgres",
+        "server_version": 120003
+      }
+    },
+    {
+      "id": 41,
+      "event": "return",
+      "thread_id": 70301283309360,
+      "parent_id": 40,
+      "elapsed": 0.001056
+    },
+    {
+      "id": 42,
+      "event": "call",
+      "thread_id": 70301283309360,
+      "defined_class": "User",
+      "method_id": "find_by_id!",
+      "path": "app/models/user.rb",
+      "lineno": 31,
+      "static": true,
+      "parameters": [
+        {
+          "name": "id",
+          "class": "Integer",
+          "object_id": 3,
+          "value": "1",
+          "kind": "req"
+        }
+      ],
+      "receiver": {
+        "class": "Class",
+        "object_id": 70301244140020,
+        "value": "User"
+      }
+    },
+    {
+      "id": 43,
+      "event": "call",
+      "thread_id": 70301283309360,
+      "sql_query": {
+        "sql": "SELECT * FROM \"users\" WHERE (\"id\" = 1) LIMIT 1",
+        "database_type": "postgres",
+        "server_version": 120003
+      }
+    },
+    {
+      "id": 44,
+      "event": "return",
+      "thread_id": 70301283309360,
+      "parent_id": 43,
+      "elapsed": 0.001443
+    },
+    {
+      "id": 45,
+      "event": "return",
+      "thread_id": 70301283309360,
+      "parent_id": 42,
+      "elapsed": 0.014981,
+      "return_value": {
+        "class": "User::Show",
+        "value": "#<User::Show:0x00007fe09588a608>",
+        "object_id": 70301279081220
+      }
+    },
+    {
+      "id": 46,
+      "event": "call",
+      "thread_id": 70301283309360,
+      "defined_class": "User::Show",
+      "method_id": "accept_eula?",
+      "path": "app/models/user.rb",
+      "lineno": 109,
+      "static": false,
+      "parameters": [],
+      "receiver": {
+        "class": "User::Show",
+        "object_id": 70301279081220,
+        "value": "#<User::Show:0x00007fe09588a608>"
+      }
+    },
+    {
+      "id": 47,
+      "event": "return",
+      "thread_id": 70301283309360,
+      "parent_id": 46,
+      "elapsed": 0.000007,
+      "return_value": {
+        "class": "TrueClass",
+        "value": "true",
+        "object_id": 20
+      }
+    },
+    {
+      "id": 48,
+      "event": "call",
+      "thread_id": 70301283309360,
+      "defined_class": "Configuration",
+      "method_id": "find",
+      "path": "app/models/configuration.rb",
+      "lineno": 8,
+      "static": true,
+      "parameters": [
+        {
+          "name": "session",
+          "class": "ActionDispatch::Request::Session",
+          "object_id": 70301206013280,
+          "value": "#<ActionDispatch::Request::Session:0x00007fe08cd2cac0>",
+          "kind": "req"
+        }
+      ],
+      "receiver": {
+        "class": "Class",
+        "object_id": 70301205343820,
+        "value": "Configuration"
+      }
+    },
+    {
+      "id": 49,
+      "event": "call",
+      "thread_id": 70301283309360,
+      "defined_class": "JSON::Ext::Parser",
+      "method_id": "parse",
+      "path": "JSON::Ext::Parser#parse",
+      "static": false,
+      "parameters": [],
+      "receiver": {
+        "class": "JSON::Ext::Parser",
+        "object_id": 70301279215020,
+        "value": "#<JSON::Ext::Parser:0x00007fe0958cbb58>"
+      }
+    },
+    {
+      "id": 50,
+      "event": "return",
+      "thread_id": 70301283309360,
+      "parent_id": 49,
+      "elapsed": 0.000005,
+      "return_value": {
+        "class": "Hash",
+        "value": "{}",
+        "object_id": 70301279213340
+      }
+    },
+    {
+      "id": 51,
+      "event": "call",
+      "thread_id": 70301283309360,
+      "defined_class": "Configuration",
+      "method_id": "attributes=",
+      "path": "app/models/configuration.rb",
+      "lineno": 33,
+      "static": false,
+      "parameters": [
+        {
+          "name": "attrs",
+          "class": "Hash",
+          "object_id": 70301279213340,
+          "value": "{}",
+          "kind": "req"
+        }
+      ],
+      "receiver": {
+        "class": "Configuration",
+        "object_id": 70301279215080,
+        "value": "#<Configuration:0x00007fe0958cbbd0>"
+      }
+    },
+    {
+      "id": 52,
+      "event": "return",
+      "thread_id": 70301283309360,
+      "parent_id": 51,
+      "elapsed": 0.000005,
+      "return_value": {
+        "class": "Hash",
+        "value": "{}",
+        "object_id": 70301279213340
+      }
+    },
+    {
+      "id": 53,
+      "event": "return",
+      "thread_id": 70301283309360,
+      "parent_id": 48,
+      "elapsed": 0.00017,
+      "return_value": {
+        "class": "Configuration",
+        "value": "#<Configuration:0x00007fe0958cbbd0>",
+        "object_id": 70301279215080
+      }
+    },
+    {
+      "id": 54,
+      "event": "call",
+      "thread_id": 70301283309360,
+      "defined_class": "Configuration",
+      "method_id": "attributes",
+      "path": "app/models/configuration.rb",
+      "lineno": 22,
+      "static": false,
+      "parameters": [],
+      "receiver": {
+        "class": "Configuration",
+        "object_id": 70301279215080,
+        "value": "#<Configuration:0x00007fe0958cbbd0>"
+      }
+    },
+    {
+      "id": 55,
+      "event": "return",
+      "thread_id": 70301283309360,
+      "parent_id": 54,
+      "elapsed": 0.000006,
+      "return_value": {
+        "class": "Hash",
+        "value": "{\"show_search\"=>nil, \"show_codegen\"=>nil, \"show_mini_profiler\"=>nil, \"show_mockups\"=>nil, \"show_noti",
+        "object_id": 70301279182140
+      }
+    },
+    {
+      "id": 56,
+      "event": "call",
+      "thread_id": 70301283309360,
+      "defined_class": "OrganizationsController",
+      "method_id": "new",
+      "path": "app/controllers/organizations_controller.rb",
+      "lineno": 11,
+      "static": false,
+      "parameters": [],
+      "receiver": {
+        "class": "OrganizationsController",
+        "object_id": 70301213376940,
+        "value": "#<OrganizationsController:0x00007fe08db38358>"
+      }
+    },
+    {
+      "id": 57,
+      "event": "return",
+      "thread_id": 70301283309360,
+      "parent_id": 56,
+      "elapsed": 0.000005
+    },
+    {
+      "id": 58,
+      "event": "call",
+      "thread_id": 70301283309360,
+      "defined_class": "Digest::Instance",
+      "method_id": "digest",
+      "path": "Digest::Instance#digest",
+      "static": false,
+      "parameters": [
+        {
+          "name": "arg",
+          "class": "Array",
+          "object_id": 70301284008740,
+          "value": "[\"dataStore.js/b3b290cea6ab572b97ebfaf525b6dc874087082b/eventSource.js/677ac9ebfc7bea61a50046eb4c3c1",
+          "kind": "rest"
+        }
+      ],
+      "receiver": {
+        "class": "Digest::SHA1",
+        "object_id": 70301284010580,
+        "value": "da39a3ee5e6b4b0d3255bfef95601890afd80709"
+      }
+    },
+    {
+      "id": 59,
+      "event": "return",
+      "thread_id": 70301283309360,
+      "parent_id": 58,
+      "elapsed": 0.00002,
+      "return_value": {
+        "class": "String",
+        "value": ";__U__D|__\u0018o__e__t_*",
+        "object_id": 70301283979840
+      }
+    },
+    {
+      "id": 60,
+      "event": "call",
+      "thread_id": 70301283309360,
+      "defined_class": "JSON::Ext::Parser",
+      "method_id": "parse",
+      "path": "JSON::Ext::Parser#parse",
+      "static": false,
+      "parameters": [],
+      "receiver": {
+        "class": "JSON::Ext::Parser",
+        "object_id": 70301284048640,
+        "value": "#<JSON::Ext::Parser:0x00007fe096203e00>"
+      }
+    },
+    {
+      "id": 61,
+      "event": "return",
+      "thread_id": 70301283309360,
+      "parent_id": 60,
+      "elapsed": 0.000647,
+      "return_value": {
+        "class": "Hash",
+        "value": "{\"application.css\"=>\"/packs-test/css/application-1e3921c8.css\", \"application.css.map\"=>\"/packs-test/",
+        "object_id": 70301284046180
+      }
+    },
+    {
+      "id": 62,
+      "event": "call",
+      "thread_id": 70301283309360,
+      "defined_class": "Configuration",
+      "method_id": "attributes",
+      "path": "app/models/configuration.rb",
+      "lineno": 22,
+      "static": false,
+      "parameters": [],
+      "receiver": {
+        "class": "Configuration",
+        "object_id": 70301279215080,
+        "value": "#<Configuration:0x00007fe0958cbbd0>"
+      }
+    },
+    {
+      "id": 63,
+      "event": "return",
+      "thread_id": 70301283309360,
+      "parent_id": 62,
+      "elapsed": 0.000008,
+      "return_value": {
+        "class": "Hash",
+        "value": "{\"show_search\"=>nil, \"show_codegen\"=>nil, \"show_mini_profiler\"=>nil, \"show_mockups\"=>nil, \"show_noti",
+        "object_id": 70301284535720
+      }
+    },
+    {
+      "id": 64,
+      "event": "call",
+      "thread_id": 70301283309360,
+      "sql_query": {
+        "sql": "COMMIT",
+        "database_type": "postgres",
+        "server_version": 120003
+      }
+    },
+    {
+      "id": 65,
+      "event": "return",
+      "thread_id": 70301283309360,
+      "parent_id": 64,
+      "elapsed": 0.002439
+    },
+    {
+      "id": 66,
+      "event": "return",
+      "thread_id": 70301283309360,
+      "parent_id": 31,
+      "elapsed": 0.082122,
+      "http_server_response": {
+        "mime_type": "text/html; charset=utf-8",
+        "status": 200
+      }
+    },
+    {
+      "id": 67,
+      "event": "call",
+      "thread_id": 70301283309360,
+      "defined_class": "JSON::Ext::Generator::State",
+      "method_id": "generate",
+      "path": "JSON::Ext::Generator::State#generate",
+      "static": false,
+      "parameters": [
+        {
+          "name": "arg",
+          "class": "Hash",
+          "object_id": 70301244270060,
+          "value": "{\"session_id\"=>\"d1e7eca262775d5e4cba918433fce230\", \"user_id\"=>1, \"configuration\"=>\"{}\"}",
+          "kind": "req"
+        }
+      ],
+      "receiver": {
+        "class": "JSON::Ext::Generator::State",
+        "object_id": 70301244270020,
+        "value": "#<JSON::Ext::Generator::State:0x00007fe091624b88>"
+      }
+    },
+    {
+      "id": 68,
+      "event": "return",
+      "thread_id": 70301283309360,
+      "parent_id": 67,
+      "elapsed": 0.00064,
+      "return_value": {
+        "class": "String",
+        "value": "{\"session_id\":\"d1e7eca262775d5e4cba918433fce230\",\"user_id\":1,\"configuration\":\"{}\"}",
+        "object_id": 70301244374540
+      }
+    },
+    {
+      "id": 69,
+      "event": "call",
+      "thread_id": 70301283309360,
+      "defined_class": "OpenSSL::Cipher",
+      "method_id": "encrypt",
+      "path": "OpenSSL::Cipher#encrypt",
+      "static": false,
+      "parameters": [
+        {
+          "name": "arg",
+          "class": "Array",
+          "object_id": 70301244373460,
+          "value": "[]",
+          "kind": "rest"
+        }
+      ],
+      "receiver": {
+        "class": "OpenSSL::Cipher",
+        "object_id": 70301244374100,
+        "value": "#<OpenSSL::Cipher:0x00007fe0916578a8>"
+      }
+    },
+    {
+      "id": 70,
+      "event": "return",
+      "thread_id": 70301283309360,
+      "parent_id": 69,
+      "elapsed": 0.000006,
+      "return_value": {
+        "class": "OpenSSL::Cipher",
+        "value": "#<OpenSSL::Cipher:0x00007fe0916578a8>",
+        "object_id": 70301244374100
+      }
+    },
+    {
+      "id": 71,
+      "event": "call",
+      "thread_id": 70301283309360,
+      "defined_class": "JSON::Ext::Generator::State",
+      "method_id": "generate",
+      "path": "JSON::Ext::Generator::State#generate",
+      "static": false,
+      "parameters": [
+        {
+          "name": "arg",
+          "class": "Hash",
+          "object_id": 70301244371800,
+          "value": "{\"_rails\"=>{\"message\"=>\"eyJzZXNzaW9uX2lkIjoiZDFlN2VjYTI2Mjc3NWQ1ZTRjYmE5MTg0MzNmY2UyMzAiLCJ1c2VyX2lk",
+          "kind": "req"
+        }
+      ],
+      "receiver": {
+        "class": "JSON::Ext::Generator::State",
+        "object_id": 70301244371760,
+        "value": "#<JSON::Ext::Generator::State:0x00007fe091656660>"
+      }
+    },
+    {
+      "id": 72,
+      "event": "return",
+      "thread_id": 70301283309360,
+      "parent_id": 71,
+      "elapsed": 0.000029,
+      "return_value": {
+        "class": "String",
+        "value": "{\"_rails\":{\"message\":\"eyJzZXNzaW9uX2lkIjoiZDFlN2VjYTI2Mjc3NWQ1ZTRjYmE5MTg0MzNmY2UyMzAiLCJ1c2VyX2lkIj",
+        "object_id": 70301244369740
+      }
+    },
+    {
+      "id": 73,
+      "event": "call",
+      "thread_id": 70301283309360,
+      "defined_class": "OpenSSL::Cipher",
+      "method_id": "final",
+      "path": "OpenSSL::Cipher#final",
+      "static": false,
+      "parameters": [],
+      "receiver": {
+        "class": "OpenSSL::Cipher",
+        "object_id": 70301244374100,
+        "value": "#<OpenSSL::Cipher:0x00007fe0916578a8>"
+      }
+    },
+    {
+      "id": 74,
+      "event": "return",
+      "thread_id": 70301283309360,
+      "parent_id": 73,
+      "elapsed": 0.000005,
+      "return_value": {
+        "class": "String",
+        "value": "",
+        "object_id": 70301244368360
+      }
+    },
+    {
+      "id": 75,
+      "event": "return",
+      "thread_id": 70301203546120,
+      "parent_id": 30,
+      "elapsed": 0.148859,
+      "return_value": {
+        "class": "Net::HTTPOK",
+        "value": "#<Net::HTTPOK:0x00007fe0916445c8>",
+        "object_id": 70301244334820
+      }
+    },
+    {
+      "id": 76,
+      "event": "return",
+      "thread_id": 70301203546120,
+      "parent_id": 29,
+      "elapsed": 0.148957,
+      "return_value": {
+        "class": "Net::HTTPOK",
+        "value": "#<Net::HTTPOK:0x00007fe0916445c8>",
+        "object_id": 70301244334820
+      }
+    },
+    {
+      "id": 77,
+      "event": "call",
+      "thread_id": 70301203546120,
+      "defined_class": "JSON::Ext::Parser",
+      "method_id": "parse",
+      "path": "JSON::Ext::Parser#parse",
+      "static": false,
+      "parameters": [],
+      "receiver": {
+        "class": "JSON::Ext::Parser",
+        "object_id": 70301244436740,
+        "value": "#<JSON::Ext::Parser:0x00007fe091676208>"
+      }
+    },
+    {
+      "id": 78,
+      "event": "return",
+      "thread_id": 70301203546120,
+      "parent_id": 77,
+      "elapsed": 0.000007,
+      "return_value": {
+        "class": "Hash",
+        "value": "{\"value\"=>nil}",
+        "object_id": 70301244435640
+      }
+    },
+    {
+      "id": 79,
+      "event": "call",
+      "thread_id": 70301203546120,
+      "defined_class": "Net::HTTP",
+      "method_id": "request",
+      "path": "/Users/kgilpin/source/appland/appmap-ruby/lib/appmap/hook/method.rb",
+      "lineno": 49,
+      "static": false,
+      "parameters": [
+        {
+          "name": "args",
+          "class": "Array",
+          "object_id": 70301244405920,
+          "value": "[#<Net::HTTP::Get GET>]",
+          "kind": "rest"
+        },
+        {
+          "name": "block",
+          "class": "NilClass",
+          "object_id": 8,
+          "value": null,
+          "kind": "block"
+        }
+      ],
+      "receiver": {
+        "class": "Net::HTTP",
+        "object_id": 70301205235520,
+        "value": "Net::HTTP[127.0.0.1:9515]"
+      }
+    },
+    {
+      "id": 80,
+      "event": "call",
+      "thread_id": 70301203546120,
+      "defined_class": "Net::HTTP",
+      "method_id": "request",
+      "path": "/Users/kgilpin/.rbenv/versions/2.6.6/lib/ruby/2.6.0/net/http.rb",
+      "lineno": 1468,
+      "static": false,
+      "parameters": [
+        {
+          "name": "req",
+          "class": "Net::HTTP::Get",
+          "object_id": 70301244433160,
+          "value": "Net::HTTP::Get[GET /session/a6781fa7e36446596e111a62fa53c68f/url]",
+          "kind": "req"
+        },
+        {
+          "name": "body",
+          "class": "NilClass",
+          "object_id": 8,
+          "value": null,
+          "kind": "opt"
+        },
+        {
+          "name": "block",
+          "class": "NilClass",
+          "object_id": 8,
+          "value": null,
+          "kind": "block"
+        }
+      ],
+      "receiver": {
+        "class": "Net::HTTP",
+        "object_id": 70301205235520,
+        "value": "Net::HTTP[127.0.0.1:9515]"
+      }
+    },
+    {
+      "id": 81,
+      "event": "return",
+      "thread_id": 70301203546120,
+      "parent_id": 80,
+      "elapsed": 0.002975,
+      "return_value": {
+        "class": "Net::HTTPOK",
+        "value": "#<Net::HTTPOK:0x00007fe091664af8>",
+        "object_id": 70301244401020
+      }
+    },
+    {
+      "id": 82,
+      "event": "return",
+      "thread_id": 70301203546120,
+      "parent_id": 79,
+      "elapsed": 0.003069,
+      "return_value": {
+        "class": "Net::HTTPOK",
+        "value": "#<Net::HTTPOK:0x00007fe091664af8>",
+        "object_id": 70301244401020
+      }
+    },
+    {
+      "id": 83,
+      "event": "call",
+      "thread_id": 70301203546120,
+      "defined_class": "JSON::Ext::Parser",
+      "method_id": "parse",
+      "path": "JSON::Ext::Parser#parse",
+      "static": false,
+      "parameters": [],
+      "receiver": {
+        "class": "JSON::Ext::Parser",
+        "object_id": 70301279736280,
+        "value": "#<JSON::Ext::Parser:0x00007fe0959ca3b0>"
+      }
+    },
+    {
+      "id": 84,
+      "event": "return",
+      "thread_id": 70301203546120,
+      "parent_id": 83,
+      "elapsed": 0.000008,
+      "return_value": {
+        "class": "Hash",
+        "value": "{\"value\"=>\"http://127.0.0.1:52537/organizations/new\"}",
+        "object_id": 70301279735240
+      }
+    }
+  ]
+}

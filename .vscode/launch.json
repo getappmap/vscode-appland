@@ -19,13 +19,13 @@
       "type": "extensionHost",
       "request": "launch",
       "env": {
-        "TEST_FILE": "processService/autoIndex.test.js"
+        "TEST_FILE": "uptodate/outOfDate.test.js"
       },
       "args": [
         "--user-data-dir=${workspaceFolder}/.vscode-test/user-data",
         "--extensionDevelopmentPath=${workspaceFolder}",
         "--extensionTestsPath=${workspaceFolder}/out/test/integration/index",
-        "${workspaceFolder}/test/fixtures/workspaces/project-a"
+        "${workspaceFolder}/test/fixtures/workspaces/project-uptodate"
       ]
     }
   ]

@@ -1,0 +1,885 @@
+{
+  "version": "1.3",
+  "metadata": {
+    "app": "appland/AppLand",
+    "language": {
+      "name": "ruby",
+      "engine": "ruby",
+      "version": "2.6.6"
+    },
+    "client": {
+      "name": "appmap",
+      "url": "https://github.com/applandinc/appmap-ruby",
+      "version": "0.38.1"
+    },
+    "frameworks": [
+      {
+        "name": "rails",
+        "version": "5.2.4.2"
+      },
+      {
+        "name": "rspec",
+        "version": "3.9.1"
+      }
+    ],
+    "source_location": "spec/requests/api_key_spec.rb:12",
+    "git": {
+      "repository": "git@github.com:applandinc/appland.git",
+      "branch": "feature/show-sql-in-source-code-tab",
+      "commit": "d52bd55d5a08f0e9b27760780bf2737829f5f25f",
+      "status_code": ["M Gemfile.lock"],
+      "git_last_annotated_tag": null,
+      "git_last_tag": "v0.17.1",
+      "git_commits_since_last_annotated_tag": null,
+      "git_commits_since_last_tag": 0
+    },
+    "name": "API::APIKeysController revoke an existing api key",
+    "feature": "API::APIKeysController revoke",
+    "feature_group": "API API keys",
+    "labels": ["api key", "api"],
+    "recorder": {
+      "name": "rspec"
+    },
+    "fingerprints": [
+      {
+        "appmap_digest": "7fecdd763d47626364364da02387f1fcbfe805123e806f08bacde96636cfc91d",
+        "canonicalization_algorithm": "classDependencies",
+        "digest": "b03b42964920b123b5c5f1ae158a01b3bbbaad44c4bcb23ff12c7dc50b89f63e",
+        "fingerprint_algorithm": "sha256"
+      },
+      {
+        "appmap_digest": "7fecdd763d47626364364da02387f1fcbfe805123e806f08bacde96636cfc91d",
+        "canonicalization_algorithm": "classes",
+        "digest": "9717f0de0c287764b0504895124418e6360e6114c62ea49cef434943127325b1",
+        "fingerprint_algorithm": "sha256"
+      },
+      {
+        "appmap_digest": "7fecdd763d47626364364da02387f1fcbfe805123e806f08bacde96636cfc91d",
+        "canonicalization_algorithm": "httpClientRequests",
+        "digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "fingerprint_algorithm": "sha256"
+      },
+      {
+        "appmap_digest": "7fecdd763d47626364364da02387f1fcbfe805123e806f08bacde96636cfc91d",
+        "canonicalization_algorithm": "httpServerRequests",
+        "digest": "39d2d586f3afb6c6cc5da0e6c99b07c38561c76cff17badc9fa092d1f3d5e0f5",
+        "fingerprint_algorithm": "sha256"
+      },
+      {
+        "appmap_digest": "7fecdd763d47626364364da02387f1fcbfe805123e806f08bacde96636cfc91d",
+        "canonicalization_algorithm": "info",
+        "digest": "2226ec6817a89e479e2c5c05a929b66325dce33ed58ce27f88be73269f6609c8",
+        "fingerprint_algorithm": "sha256"
+      },
+      {
+        "appmap_digest": "7fecdd763d47626364364da02387f1fcbfe805123e806f08bacde96636cfc91d",
+        "canonicalization_algorithm": "labels",
+        "digest": "e95576d7e3b78f79946291943fd30ae46cdeea011c1ee0fe4f880d80e514e282",
+        "fingerprint_algorithm": "sha256"
+      },
+      {
+        "appmap_digest": "7fecdd763d47626364364da02387f1fcbfe805123e806f08bacde96636cfc91d",
+        "canonicalization_algorithm": "packageDependencies",
+        "digest": "3f108b0a9ca874a5bc90a30f48da9b068269e0a91d01d3eb4d2af3fe25cb09f3",
+        "fingerprint_algorithm": "sha256"
+      },
+      {
+        "appmap_digest": "7fecdd763d47626364364da02387f1fcbfe805123e806f08bacde96636cfc91d",
+        "canonicalization_algorithm": "packages",
+        "digest": "174dff39ae750e61f0eac4933a745eb8059c7e2a98a1c94c34f722037c80a468",
+        "fingerprint_algorithm": "sha256"
+      },
+      {
+        "appmap_digest": "7fecdd763d47626364364da02387f1fcbfe805123e806f08bacde96636cfc91d",
+        "canonicalization_algorithm": "sqlNormalized",
+        "digest": "bcb13a826aa404fa0afbaeae8cea134cf674e599619f14e3864173dd52987ee4",
+        "fingerprint_algorithm": "sha256"
+      },
+      {
+        "appmap_digest": "7fecdd763d47626364364da02387f1fcbfe805123e806f08bacde96636cfc91d",
+        "canonicalization_algorithm": "sqlTables",
+        "digest": "a7daba4152bc0c118de3840f9b02cd3eed9ab4922c96ed5edd33dbdcd71c43e6",
+        "fingerprint_algorithm": "sha256"
+      },
+      {
+        "appmap_digest": "7fecdd763d47626364364da02387f1fcbfe805123e806f08bacde96636cfc91d",
+        "canonicalization_algorithm": "trace",
+        "digest": "77cea3a57ab3ec42453d3317fdab874cff7948c9eb5786a098d9a76a04ac38b0",
+        "fingerprint_algorithm": "sha256"
+      },
+      {
+        "appmap_digest": "7fecdd763d47626364364da02387f1fcbfe805123e806f08bacde96636cfc91d",
+        "canonicalization_algorithm": "update",
+        "digest": "7ee75bda36b126736c56f44209b03e949e7504fa78c3777582f537b2805a2bb6",
+        "fingerprint_algorithm": "sha256"
+      }
+    ]
+  },
+  "classMap": [
+    {
+      "name": "app/models",
+      "type": "package",
+      "children": [
+        {
+          "name": "ApiKey",
+          "type": "class",
+          "children": [
+            {
+              "name": "issue",
+              "type": "function",
+              "location": "app/models/api_key.rb:28",
+              "static": true,
+              "labels": ["security"]
+            },
+            {
+              "name": "encode",
+              "type": "function",
+              "location": "app/models/api_key.rb:20",
+              "static": true
+            },
+            {
+              "name": "authenticate",
+              "type": "function",
+              "location": "app/models/api_key.rb:51",
+              "static": true,
+              "labels": ["security", "provider.authenticate"]
+            },
+            {
+              "name": "decode",
+              "type": "function",
+              "location": "app/models/api_key.rb:24",
+              "static": true
+            },
+            {
+              "name": "touch",
+              "type": "function",
+              "location": "app/models/api_key.rb:11",
+              "static": true
+            },
+            {
+              "name": "revoke",
+              "type": "function",
+              "location": "app/models/api_key.rb:40",
+              "static": true,
+              "labels": ["security"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "app/controllers",
+      "type": "package",
+      "children": [
+        {
+          "name": "API",
+          "type": "class",
+          "children": [
+            {
+              "name": "APIKeysController",
+              "type": "class",
+              "children": [
+                {
+                  "name": "destroy",
+                  "type": "function",
+                  "location": "app/controllers/api/api_keys_controller.rb:15",
+                  "static": false
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "json",
+      "type": "package",
+      "children": [
+        {
+          "name": "JSON",
+          "type": "class",
+          "children": [
+            {
+              "name": "Ext",
+              "type": "class",
+              "children": [
+                {
+                  "name": "Generator",
+                  "type": "class",
+                  "children": [
+                    {
+                      "name": "State",
+                      "type": "class",
+                      "children": [
+                        {
+                          "name": "generate",
+                          "type": "function",
+                          "location": "JSON::Ext::Generator::State#generate",
+                          "static": false,
+                          "labels": ["serialization", "json"]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "events": [
+    {
+      "id": 1,
+      "event": "call",
+      "thread_id": 70143606759380,
+      "defined_class": "ApiKey",
+      "method_id": "issue",
+      "path": "app/models/api_key.rb",
+      "lineno": 28,
+      "static": true,
+      "parameters": [
+        {
+          "name": "login",
+          "class": "String",
+          "object_id": 70143707320560,
+          "value": "admin",
+          "kind": "req"
+        },
+        {
+          "name": "description",
+          "class": "String",
+          "object_id": 70143709034840,
+          "value": "example api key",
+          "kind": "key"
+        },
+        {
+          "name": "encode",
+          "class": "NilClass",
+          "object_id": 8,
+          "value": null,
+          "kind": "key"
+        }
+      ],
+      "receiver": {
+        "class": "Class",
+        "object_id": 70143710327480,
+        "value": "ApiKey"
+      }
+    },
+    {
+      "id": 2,
+      "event": "call",
+      "thread_id": 70143606759380,
+      "sql_query": {
+        "sql": "INSERT INTO \"api_keys\" (\"login\", \"description\") VALUES ('admin', 'example api key') RETURNING *",
+        "database_type": "postgres",
+        "server_version": 120003
+      }
+    },
+    {
+      "id": 3,
+      "event": "return",
+      "thread_id": 70143606759380,
+      "parent_id": 2,
+      "elapsed": 0.001786
+    },
+    {
+      "id": 4,
+      "event": "call",
+      "thread_id": 70143606759380,
+      "defined_class": "ApiKey",
+      "method_id": "encode",
+      "path": "app/models/api_key.rb",
+      "lineno": 20,
+      "static": true,
+      "parameters": [
+        {
+          "name": "api_key",
+          "class": "DAO::ApiKey",
+          "object_id": 70143624613220,
+          "value": "#<DAO::ApiKey:0x00007f972ba81ac8>",
+          "kind": "req"
+        }
+      ],
+      "receiver": {
+        "class": "Class",
+        "object_id": 70143710327480,
+        "value": "ApiKey"
+      }
+    },
+    {
+      "id": 5,
+      "event": "return",
+      "thread_id": 70143606759380,
+      "parent_id": 4,
+      "elapsed": 0.000024,
+      "return_value": {
+        "class": "String",
+        "value": "YWRtaW46ZTU3YTgzMTAtZTcxOC00OTE0LWIzZmEtYjExZDRhMDY4N2Vl",
+        "object_id": 70143608697140
+      }
+    },
+    {
+      "id": 6,
+      "event": "return",
+      "thread_id": 70143606759380,
+      "parent_id": 1,
+      "elapsed": 0.038045,
+      "return_value": {
+        "class": "String",
+        "value": "YWRtaW46ZTU3YTgzMTAtZTcxOC00OTE0LWIzZmEtYjExZDRhMDY4N2Vl",
+        "object_id": 70143608697140
+      }
+    },
+    {
+      "id": 7,
+      "event": "call",
+      "thread_id": 70143606759380,
+      "http_server_request": {
+        "request_method": "DELETE",
+        "path_info": "/api/api_keys"
+      },
+      "message": [
+        {
+          "name": "controller",
+          "class": "String",
+          "value": "api/api_keys",
+          "object_id": 70143625900420
+        },
+        {
+          "name": "action",
+          "class": "String",
+          "value": "destroy",
+          "object_id": 70143625903660
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "event": "call",
+      "thread_id": 70143606759380,
+      "defined_class": "ApiKey",
+      "method_id": "authenticate",
+      "path": "app/models/api_key.rb",
+      "lineno": 51,
+      "static": true,
+      "parameters": [
+        {
+          "name": "api_key",
+          "class": "String",
+          "object_id": 70143626063440,
+          "value": "YWRtaW46ZTU3YTgzMTAtZTcxOC00OTE0LWIzZmEtYjExZDRhMDY4N2Vl",
+          "kind": "req"
+        }
+      ],
+      "receiver": {
+        "class": "Class",
+        "object_id": 70143710327480,
+        "value": "ApiKey"
+      }
+    },
+    {
+      "id": 9,
+      "event": "call",
+      "thread_id": 70143606759380,
+      "defined_class": "ApiKey",
+      "method_id": "decode",
+      "path": "app/models/api_key.rb",
+      "lineno": 24,
+      "static": true,
+      "parameters": [
+        {
+          "name": "api_key",
+          "class": "String",
+          "object_id": 70143626063440,
+          "value": "YWRtaW46ZTU3YTgzMTAtZTcxOC00OTE0LWIzZmEtYjExZDRhMDY4N2Vl",
+          "kind": "req"
+        }
+      ],
+      "receiver": {
+        "class": "Class",
+        "object_id": 70143710327480,
+        "value": "ApiKey"
+      }
+    },
+    {
+      "id": 10,
+      "event": "return",
+      "thread_id": 70143606759380,
+      "parent_id": 9,
+      "elapsed": 0.000019,
+      "return_value": {
+        "class": "Array",
+        "value": "[\"admin\", \"e57a8310-e718-4914-b3fa-b11d4a0687ee\"]",
+        "object_id": 70143626079020
+      }
+    },
+    {
+      "id": 11,
+      "event": "call",
+      "thread_id": 70143606759380,
+      "sql_query": {
+        "sql": "SELECT * FROM \"api_keys\" WHERE (\"login\" = 'admin')",
+        "database_type": "postgres",
+        "server_version": 120003
+      }
+    },
+    {
+      "id": 12,
+      "event": "return",
+      "thread_id": 70143606759380,
+      "parent_id": 11,
+      "elapsed": 0.001087
+    },
+    {
+      "id": 13,
+      "event": "call",
+      "thread_id": 70143606759380,
+      "defined_class": "ApiKey",
+      "method_id": "touch",
+      "path": "app/models/api_key.rb",
+      "lineno": 11,
+      "static": true,
+      "parameters": [
+        {
+          "name": "api_key",
+          "class": "DAO::ApiKey",
+          "object_id": 70143621442700,
+          "value": "#<DAO::ApiKey:0x00007f972b475918>",
+          "kind": "req"
+        }
+      ],
+      "receiver": {
+        "class": "Class",
+        "object_id": 70143710327480,
+        "value": "ApiKey"
+      }
+    },
+    {
+      "id": 14,
+      "event": "call",
+      "thread_id": 70143606759380,
+      "sql_query": {
+        "sql": "UPDATE \"api_keys\" SET \"last_used\" = '2021-01-12 18:48:00.281150+0000' WHERE (\"id\" = 9)",
+        "database_type": "postgres",
+        "server_version": 120003
+      }
+    },
+    {
+      "id": 15,
+      "event": "return",
+      "thread_id": 70143606759380,
+      "parent_id": 14,
+      "elapsed": 0.000805
+    },
+    {
+      "id": 16,
+      "event": "return",
+      "thread_id": 70143606759380,
+      "parent_id": 13,
+      "elapsed": 0.005023,
+      "return_value": {
+        "class": "DAO::ApiKey",
+        "value": "#<DAO::ApiKey:0x00007f972b475918>",
+        "object_id": 70143621442700
+      }
+    },
+    {
+      "id": 17,
+      "event": "call",
+      "thread_id": 70143606759380,
+      "sql_query": {
+        "sql": "SELECT * FROM \"users\" WHERE (\"users\".\"login\" = 'admin') LIMIT 1",
+        "database_type": "postgres",
+        "server_version": 120003
+      }
+    },
+    {
+      "id": 18,
+      "event": "return",
+      "thread_id": 70143606759380,
+      "parent_id": 17,
+      "elapsed": 0.00103
+    },
+    {
+      "id": 19,
+      "event": "call",
+      "thread_id": 70143606759380,
+      "sql_query": {
+        "sql": "SELECT \"pg_type\".\"oid\", \"typrelid\", \"typarray\" FROM \"pg_type\" WHERE ((\"typtype\" = 'c') AND (\"typname\" = 'q_class')) LIMIT 1",
+        "database_type": "postgres",
+        "server_version": 120003
+      }
+    },
+    {
+      "id": 20,
+      "event": "return",
+      "thread_id": 70143606759380,
+      "parent_id": 19,
+      "elapsed": 0.001234
+    },
+    {
+      "id": 21,
+      "event": "call",
+      "thread_id": 70143606759380,
+      "sql_query": {
+        "sql": "SELECT \"attname\", (CASE \"pg_type\".\"typbasetype\" WHEN 0 THEN \"atttypid\" ELSE \"pg_type\".\"typbasetype\" END) AS \"atttypid\" FROM \"pg_attribute\" INNER JOIN \"pg_type\" ON (\"pg_type\".\"oid\" = \"pg_attribute\".\"atttypid\") WHERE ((\"attrelid\" = 223731) AND (\"attnum\" > 0) AND NOT \"attisdropped\") ORDER BY \"attnum\"",
+        "database_type": "postgres",
+        "server_version": 120003
+      }
+    },
+    {
+      "id": 22,
+      "event": "return",
+      "thread_id": 70143606759380,
+      "parent_id": 21,
+      "elapsed": 0.001281
+    },
+    {
+      "id": 23,
+      "event": "call",
+      "thread_id": 70143606759380,
+      "sql_query": {
+        "sql": "SELECT \"pg_type\".\"oid\", \"typrelid\", \"typarray\" FROM \"pg_type\" WHERE ((\"typtype\" = 'c') AND (\"typname\" = 'fn_call')) LIMIT 1",
+        "database_type": "postgres",
+        "server_version": 120003
+      }
+    },
+    {
+      "id": 24,
+      "event": "return",
+      "thread_id": 70143606759380,
+      "parent_id": 23,
+      "elapsed": 0.000838
+    },
+    {
+      "id": 25,
+      "event": "call",
+      "thread_id": 70143606759380,
+      "sql_query": {
+        "sql": "SELECT \"attname\", (CASE \"pg_type\".\"typbasetype\" WHEN 0 THEN \"atttypid\" ELSE \"pg_type\".\"typbasetype\" END) AS \"atttypid\" FROM \"pg_attribute\" INNER JOIN \"pg_type\" ON (\"pg_type\".\"oid\" = \"pg_attribute\".\"atttypid\") WHERE ((\"attrelid\" = 223734) AND (\"attnum\" > 0) AND NOT \"attisdropped\") ORDER BY \"attnum\"",
+        "database_type": "postgres",
+        "server_version": 120003
+      }
+    },
+    {
+      "id": 26,
+      "event": "return",
+      "thread_id": 70143606759380,
+      "parent_id": 25,
+      "elapsed": 0.001017
+    },
+    {
+      "id": 27,
+      "event": "return",
+      "thread_id": 70143606759380,
+      "parent_id": 8,
+      "elapsed": 0.150356,
+      "return_value": {
+        "class": "User::Show",
+        "value": "#<User::Show:0x00007f972cee0d20>",
+        "object_id": 70143635293840
+      }
+    },
+    {
+      "id": 28,
+      "event": "call",
+      "thread_id": 70143606759380,
+      "defined_class": "API::APIKeysController",
+      "method_id": "destroy",
+      "path": "app/controllers/api/api_keys_controller.rb",
+      "lineno": 15,
+      "static": false,
+      "parameters": [],
+      "receiver": {
+        "class": "API::APIKeysController",
+        "object_id": 70143625216500,
+        "value": "#<API::APIKeysController:0x00007f972bba83e8>"
+      }
+    },
+    {
+      "id": 29,
+      "event": "call",
+      "thread_id": 70143606759380,
+      "defined_class": "ApiKey",
+      "method_id": "revoke",
+      "path": "app/models/api_key.rb",
+      "lineno": 40,
+      "static": true,
+      "parameters": [
+        {
+          "name": "api_key",
+          "class": "String",
+          "object_id": 70143626063440,
+          "value": "YWRtaW46ZTU3YTgzMTAtZTcxOC00OTE0LWIzZmEtYjExZDRhMDY4N2Vl",
+          "kind": "req"
+        }
+      ],
+      "receiver": {
+        "class": "Class",
+        "object_id": 70143710327480,
+        "value": "ApiKey"
+      }
+    },
+    {
+      "id": 30,
+      "event": "call",
+      "thread_id": 70143606759380,
+      "defined_class": "ApiKey",
+      "method_id": "decode",
+      "path": "app/models/api_key.rb",
+      "lineno": 24,
+      "static": true,
+      "parameters": [
+        {
+          "name": "api_key",
+          "class": "String",
+          "object_id": 70143626063440,
+          "value": "YWRtaW46ZTU3YTgzMTAtZTcxOC00OTE0LWIzZmEtYjExZDRhMDY4N2Vl",
+          "kind": "req"
+        }
+      ],
+      "receiver": {
+        "class": "Class",
+        "object_id": 70143710327480,
+        "value": "ApiKey"
+      }
+    },
+    {
+      "id": 31,
+      "event": "return",
+      "thread_id": 70143606759380,
+      "parent_id": 30,
+      "elapsed": 0.000011,
+      "return_value": {
+        "class": "Array",
+        "value": "[\"admin\", \"e57a8310-e718-4914-b3fa-b11d4a0687ee\"]",
+        "object_id": 70143613653900
+      }
+    },
+    {
+      "id": 32,
+      "event": "call",
+      "thread_id": 70143606759380,
+      "sql_query": {
+        "sql": "SELECT * FROM \"api_keys\" WHERE (\"login\" = 'admin')",
+        "database_type": "postgres",
+        "server_version": 120003
+      }
+    },
+    {
+      "id": 33,
+      "event": "return",
+      "thread_id": 70143606759380,
+      "parent_id": 32,
+      "elapsed": 0.001134
+    },
+    {
+      "id": 34,
+      "event": "call",
+      "thread_id": 70143606759380,
+      "sql_query": {
+        "sql": "DELETE FROM \"api_keys\" WHERE \"id\" = 9",
+        "database_type": "postgres",
+        "server_version": 120003
+      }
+    },
+    {
+      "id": 35,
+      "event": "return",
+      "thread_id": 70143606759380,
+      "parent_id": 34,
+      "elapsed": 0.001028
+    },
+    {
+      "id": 36,
+      "event": "return",
+      "thread_id": 70143606759380,
+      "parent_id": 29,
+      "elapsed": 0.008962,
+      "return_value": {
+        "class": "DAO::ApiKey",
+        "value": "#<DAO::ApiKey:0x00007f972cfa8de8>",
+        "object_id": 70143635703540
+      }
+    },
+    {
+      "id": 37,
+      "event": "return",
+      "thread_id": 70143606759380,
+      "parent_id": 28,
+      "elapsed": 0.009195,
+      "return_value": {
+        "class": "String",
+        "value": "",
+        "object_id": 70143606590020
+      }
+    },
+    {
+      "id": 38,
+      "event": "return",
+      "thread_id": 70143606759380,
+      "parent_id": 7,
+      "elapsed": 0.163302,
+      "http_server_response": {
+        "mime_type": "application/json; charset=utf-8",
+        "status": 200
+      }
+    },
+    {
+      "id": 39,
+      "event": "call",
+      "thread_id": 70143606759380,
+      "http_server_request": {
+        "request_method": "DELETE",
+        "path_info": "/api/api_keys"
+      },
+      "message": [
+        {
+          "name": "controller",
+          "class": "String",
+          "value": "api/api_keys",
+          "object_id": 70143625900420
+        },
+        {
+          "name": "action",
+          "class": "String",
+          "value": "destroy",
+          "object_id": 70143625903660
+        }
+      ]
+    },
+    {
+      "id": 40,
+      "event": "call",
+      "thread_id": 70143606759380,
+      "defined_class": "ApiKey",
+      "method_id": "authenticate",
+      "path": "app/models/api_key.rb",
+      "lineno": 51,
+      "static": true,
+      "parameters": [
+        {
+          "name": "api_key",
+          "class": "String",
+          "object_id": 70143707623380,
+          "value": "YWRtaW46ZTU3YTgzMTAtZTcxOC00OTE0LWIzZmEtYjExZDRhMDY4N2Vl",
+          "kind": "req"
+        }
+      ],
+      "receiver": {
+        "class": "Class",
+        "object_id": 70143710327480,
+        "value": "ApiKey"
+      }
+    },
+    {
+      "id": 41,
+      "event": "call",
+      "thread_id": 70143606759380,
+      "defined_class": "ApiKey",
+      "method_id": "decode",
+      "path": "app/models/api_key.rb",
+      "lineno": 24,
+      "static": true,
+      "parameters": [
+        {
+          "name": "api_key",
+          "class": "String",
+          "object_id": 70143707623380,
+          "value": "YWRtaW46ZTU3YTgzMTAtZTcxOC00OTE0LWIzZmEtYjExZDRhMDY4N2Vl",
+          "kind": "req"
+        }
+      ],
+      "receiver": {
+        "class": "Class",
+        "object_id": 70143710327480,
+        "value": "ApiKey"
+      }
+    },
+    {
+      "id": 42,
+      "event": "return",
+      "thread_id": 70143606759380,
+      "parent_id": 41,
+      "elapsed": 0.000015,
+      "return_value": {
+        "class": "Array",
+        "value": "[\"admin\", \"e57a8310-e718-4914-b3fa-b11d4a0687ee\"]",
+        "object_id": 70143707620080
+      }
+    },
+    {
+      "id": 43,
+      "event": "call",
+      "thread_id": 70143606759380,
+      "sql_query": {
+        "sql": "SELECT * FROM \"api_keys\" WHERE (\"login\" = 'admin')",
+        "database_type": "postgres",
+        "server_version": 120003
+      }
+    },
+    {
+      "id": 44,
+      "event": "return",
+      "thread_id": 70143606759380,
+      "parent_id": 43,
+      "elapsed": 0.001356
+    },
+    {
+      "id": 45,
+      "event": "return",
+      "thread_id": 70143606759380,
+      "parent_id": 40,
+      "elapsed": 0.005355
+    },
+    {
+      "id": 46,
+      "event": "call",
+      "thread_id": 70143606759380,
+      "defined_class": "JSON::Ext::Generator::State",
+      "method_id": "generate",
+      "path": "JSON::Ext::Generator::State#generate",
+      "static": false,
+      "parameters": [
+        {
+          "name": "arg",
+          "class": "Hash",
+          "object_id": 70143708130600,
+          "value": "{\"error\"=>\"must provide authorization\"}",
+          "kind": "req"
+        }
+      ],
+      "receiver": {
+        "class": "JSON::Ext::Generator::State",
+        "object_id": 70143708130560,
+        "value": "#<JSON::Ext::Generator::State:0x00007f97359cda00>"
+      }
+    },
+    {
+      "id": 47,
+      "event": "return",
+      "thread_id": 70143606759380,
+      "parent_id": 46,
+      "elapsed": 0.00005,
+      "return_value": {
+        "class": "String",
+        "value": "{\"error\":\"must provide authorization\"}",
+        "object_id": 70143708128640
+      }
+    },
+    {
+      "id": 48,
+      "event": "return",
+      "thread_id": 70143606759380,
+      "parent_id": 39,
+      "elapsed": 0.006339,
+      "http_server_response": {
+        "mime_type": "application/json; charset=utf-8",
+        "status": 401
+      }
+    }
+  ]
+}

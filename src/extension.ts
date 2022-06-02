@@ -262,6 +262,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       autoScanService: autoScanServiceImpl,
       findings: findingsIndex,
       classMap: classMapIndex,
+      uptodateService: appmapUptodateService,
     };
   } catch (exception) {
     Telemetry.sendEvent(DEBUG_EXCEPTION, { exception: exception as Error });
