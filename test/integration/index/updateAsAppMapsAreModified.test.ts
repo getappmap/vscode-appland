@@ -2,7 +2,8 @@ import assert from 'assert';
 import { unlink } from 'fs';
 import { promisify } from 'util';
 import * as vscode from 'vscode';
-import { initializeWorkspace, repeatUntil, touch, waitForAppMapServices } from '../util';
+import { touch } from '../../../src/util';
+import { initializeWorkspace, repeatUntil, waitForAppMapServices } from '../util';
 
 describe('AppMapIndex', () => {
   beforeEach(initializeWorkspace);

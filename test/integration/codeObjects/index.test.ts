@@ -3,12 +3,12 @@ import { exists } from 'fs';
 import { join } from 'path';
 import { promisify } from 'util';
 import { CodeObjectEntry } from '../../../src/services/classMapIndex';
+import { touch } from '../../../src/util';
 import {
   ExampleAppMap,
   ExampleAppMapIndexDir,
   initializeWorkspace,
   repeatUntil,
-  touch,
   waitFor,
   waitForAppMapServices,
 } from '../util';

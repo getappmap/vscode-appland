@@ -176,21 +176,6 @@ export async function wait(ms: number): Promise<void> {
   });
 }
 
-export async function touch(path: string): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const time = new Date();
-    utimes(path, time, time, (err) => {
-      if (err) {
-        return open(path, 'w', (err, fd) => {
-          if (err) return reject(err);
-          close(fd, (err) => (err ? reject(err) : resolve()));
-        });
-      }
-      resolve();
-    });
-  });
-}
-
 export async function mtimeFiles(): Promise<vscode.Uri[]> {
   return vscode.workspace.findFiles(`**/mtime`);
 }
