@@ -1,9 +1,9 @@
 // @project project-with-echo-command
 import * as vscode from 'vscode';
 import assert from 'assert';
+import AppMapService from '../../../src/appMapService';
 import extensionSettings from '../../../src/configuration/extensionSettings';
 import { initializeWorkspace, waitFor, waitForExtension } from '../util';
-import AppMapService from '../../../src/appMapService';
 
 describe('AutoIndex', () => {
   beforeEach(initializeWorkspace);

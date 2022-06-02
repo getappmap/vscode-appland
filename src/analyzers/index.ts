@@ -1,4 +1,6 @@
 import { WorkspaceFolder } from 'vscode';
+import AppMapCollection from '../services/appmapCollection';
+import AppMapLoader from '../services/appmapLoader';
 import LanguageResolver from '../services/languageResolver';
 
 export type Score = 'bad' | 'ok' | 'good';
@@ -20,6 +22,14 @@ export type Features = {
   test?: Feature;
 };
 
+export type AppMapSummary = {
+  path: string;
+  name?: string;
+  requests?: number;
+  sqlQueries?: number;
+  functions?: number;
+};
+
 export type Result = {
   features: Features;
   score: number;
@@ -27,11 +37,41 @@ export type Result = {
   path?: string;
 };
 
-export async function analyze(folder: WorkspaceFolder): Promise<Result> {
+export type WithAppMaps = {
+  appMaps: Readonly<Array<AppMapSummary>>;
+};
+
+function getBestAppMaps(appMaps: AppMapLoader[], maxCount = 10): AppMapSummary[] {
+  return appMaps
+    .map(({ descriptor }) => ({
+      path: descriptor.resourceUri.fsPath,
+      name: descriptor.metadata?.name as string,
+      requests: descriptor.numRequests as number,
+      sqlQueries: descriptor.numQueries as number,
+      functions: descriptor.numFunctions as number,
+    }))
+    .sort((a, b) => {
+      const scoreA = a.requests * 100 + a.sqlQueries * 100 + a.functions * 100;
+      const scoreB = b.requests * 100 + b.sqlQueries * 100 + b.functions * 100;
+      return scoreB - scoreA;
+    })
+    .slice(0, maxCount);
+}
+
+export async function analyze(
+  folder: WorkspaceFolder,
+  appMapCollection?: AppMapCollection
+): Promise<Result & Partial<WithAppMaps>> {
   const path = folder.uri.fsPath;
   const language = await LanguageResolver.getLanguage(path);
   const analyzer = (await import(`./${language}`)).default;
   const result = await analyzer(folder);
+
+  if (appMapCollection) {
+    const appMaps = appMapCollection.allAppMapsForWorkspaceFolder(folder);
+    result.appMaps = getBestAppMaps(appMaps);
+  }
+
   result.path = path;
   return result;
 }

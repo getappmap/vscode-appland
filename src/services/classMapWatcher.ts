@@ -28,7 +28,7 @@ class ClassMapWatcherInstance implements WorkspaceServiceInstance {
         new vscode.RelativePattern(this.folder, '**/classMap.json'),
         '**/node_modules/**'
       )
-    ).map(this.handler.onCreate);
+    ).forEach(this.handler.onCreate);
     return this;
   }
 
@@ -38,7 +38,7 @@ class ClassMapWatcherInstance implements WorkspaceServiceInstance {
         new vscode.RelativePattern(this.folder, '**/classMap.json'),
         '**/node_modules/**'
       )
-    ).map(this.handler.onDelete);
+    ).forEach(this.handler.onDelete);
     this.watcher.dispose();
   }
 }

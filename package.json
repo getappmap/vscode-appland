@@ -148,9 +148,17 @@
           "default": "https://app.land",
           "description": "URL of an AppLand cloud instance for AppMap storage"
         },
+        "appMap.indexEnabled": {
+          "type": "boolean",
+          "description": "Enable AppMap indexer and code objects view(preview)"
+        },
         "appMap.findingsEnabled": {
           "type": "boolean",
           "description": "Enable AppMap scanner and findings (preview)"
+        },
+        "appMap.instructionsEnabled": {
+          "type": "boolean",
+          "description": "Enable an experimental version of usage instructions"
         },
         "appMap.inspectEnabled": {
           "type": "boolean",
@@ -209,12 +217,14 @@
         {
           "id": "appmap.views.findings",
           "name": "Findings",
-          "visibility": "collapsed"
+          "visibility": "collapsed",
+          "when": "config.appMap.findingsEnabled == true"
         },
         {
           "id": "appmap.views.codeObjects",
           "name": "Code Objects",
-          "visibility": "collapsed"
+          "visibility": "collapsed",
+          "when": "config.appMap.indexEnabled == true || config.appMap.indexEnabled == true"
         },
         {
           "id": "appmap.views.documentation",
@@ -306,6 +316,7 @@
     "@babel/core": "^7.14.3",
     "@babel/preset-env": "^7.14.2",
     "@babel/preset-typescript": "^7.13.0",
+    "@playwright/test": "^1.22.2",
     "@semantic-release/changelog": "^5.0.1",
     "@semantic-release/exec": "^5.0.0",
     "@semantic-release/git": "^9.0.0",
@@ -321,6 +332,7 @@
     "@vscode/test-electron": "^2.1.3",
     "@vue/cli-plugin-babel": "^4.5.10",
     "babel-loader": "^8.2.2",
+    "clipboardy": "^2.3.0",
     "css-loader": "^5.0.1",
     "eslint": "^7.17.0",
     "eslint-config-airbnb-base": "^14.2.1",
@@ -328,7 +340,7 @@
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-prettier": "^3.4.0",
     "file-loader": "^6.2.0",
-    "glob": "^7.1.6",
+    "glob": "^7.2.3",
     "html-loader": "^1.3.2",
     "ignore": "^5.1.8",
     "mocha": "^8.1.3",
@@ -350,19 +362,18 @@
     "vsce": "^1.83.0",
     "vue-loader": "^15.9.6",
     "vue-style-loader": "^4.1.2",
-    "webpack": "^5.37.0",
+    "webpack": "^5.72.1",
     "webpack-cli": "^4.3.1"
   },
   "dependencies": {
-    "@appland/components": "^2.1.1",
-    "@appland/diagrams": "^1.5.1",
-    "@appland/models": "^1.12.1",
-    "@appland/scanner": "^1.54.1",
+    "@appland/components": "^2.3.0",
+    "@appland/diagrams": "^1.5.2",
+    "@appland/models": "^1.15.0",
+    "@appland/scanner": "^1.57.0",
     "bent": "^7.3.12",
     "bootstrap": "^4.5.3",
     "bootstrap-autocomplete": "^2.3.7",
     "diff": "^5.0.0",
-    "highlight.js": "^11.0.1",
     "jquery": "^3.5.1",
     "js-yaml": "^4.0.0",
     "popper.js": "^1.16.1",

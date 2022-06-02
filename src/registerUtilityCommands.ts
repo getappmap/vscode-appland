@@ -7,11 +7,11 @@ import { AppmapUploader } from './actions/appmapUploader';
 
 export function registerUtilityCommands(
   context: vscode.ExtensionContext,
-  properties: ExtensionState
+  extensionState: ExtensionState
 ): void {
   context.subscriptions.push(
     vscode.commands.registerCommand('appmap.resetUsageState', async () => {
-      properties.resetState();
+      extensionState.resetState();
       AppMapTextEditorProvider.resetState(context);
       LinkTreeDataProvider.resetState(context);
       RemoteRecording.resetState(context);

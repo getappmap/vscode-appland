@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import FileChangeHandler from './fileChangeHandler';
+import { FileChangeHandler, FileChangeEmitter } from './fileChangeEmitter';
 import { WorkspaceService, WorkspaceServiceInstance } from './workspaceService';
 
 class AppMapWatcherInstance implements WorkspaceServiceInstance {
@@ -8,9 +8,15 @@ class AppMapWatcherInstance implements WorkspaceServiceInstance {
   constructor(public folder: vscode.WorkspaceFolder, public handler: FileChangeHandler) {
     const appmapPattern = new vscode.RelativePattern(this.folder, `**/*.appmap.json`);
     this.watcher = vscode.workspace.createFileSystemWatcher(appmapPattern);
-    this.watcher.onDidChange(handler.onChange.bind(handler));
-    this.watcher.onDidCreate(handler.onCreate.bind(handler));
-    this.watcher.onDidDelete(handler.onDelete.bind(handler));
+    this.watcher.onDidChange((uri) => {
+      handler.onChange(uri, this.folder);
+    });
+    this.watcher.onDidCreate((uri) => {
+      handler.onCreate(uri, this.folder);
+    });
+    this.watcher.onDidDelete((uri) => {
+      handler.onDelete(uri, this.folder);
+    });
   }
 
   async initialize() {
@@ -19,7 +25,7 @@ class AppMapWatcherInstance implements WorkspaceServiceInstance {
         new vscode.RelativePattern(this.folder, '**/*.appmap.json'),
         '**/node_modules/**'
       )
-    ).map(this.handler.onCreate);
+    ).map((uri) => this.handler.onCreate(uri, this.folder));
     return this;
   }
 
@@ -29,18 +35,26 @@ class AppMapWatcherInstance implements WorkspaceServiceInstance {
         new vscode.RelativePattern(this.folder, '**/*.appmap.json'),
         '**/node_modules/**'
       )
-    ).map(this.handler.onDelete);
+    ).map((uri) => this.handler.onDelete(uri, this.folder));
     this.watcher.dispose();
   }
 }
 
-export class AppMapWatcher implements WorkspaceService {
-  constructor(public handler: FileChangeHandler) {}
-
+export class AppMapWatcher extends FileChangeEmitter implements WorkspaceService {
   async create(folder: vscode.WorkspaceFolder): Promise<WorkspaceServiceInstance> {
     validateConfiguration();
 
-    const watcher = new AppMapWatcherInstance(folder, this.handler);
+    const watcher = new AppMapWatcherInstance(folder, {
+      onChange: (uri, workspaceFolder) => {
+        this._onChange.fire({ uri, workspaceFolder });
+      },
+      onCreate: (uri, workspaceFolder) => {
+        this._onCreate.fire({ uri, workspaceFolder });
+      },
+      onDelete: (uri, workspaceFolder) => {
+        this._onDelete.fire({ uri, workspaceFolder });
+      },
+    });
     return watcher.initialize();
   }
 }

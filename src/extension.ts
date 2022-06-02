@@ -32,6 +32,10 @@ import registerInspectCodeObject from './commands/inspectCodeObject';
 import openCodeObjectInAppMap from './commands/openCodeObjectInAppMap';
 import ProcessServiceImpl from './processServiceImpl';
 import deleteAllAppMaps from './commands/deleteAllAppMaps';
+import InstallGuideWebView from './webviews/installGuideWebview';
+import InstallationStatusBadge from './workspace/installationStatus';
+import { AppMapConfigWatcher } from './services/appMapConfigWatcher';
+import ProjectStateService, { ProjectStateServiceInstance } from './services/projectStateService';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   const workspaceServices = new WorkspaceServices(context);
@@ -40,31 +44,66 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
   const autoScanServiceImpl = new ProcessServiceImpl();
 
   try {
-    const properties = new ExtensionState(context);
-    if (properties.isNewInstall) {
+    const extensionState = new ExtensionState(context);
+    context.subscriptions.push(extensionState);
+
+    if (extensionState.isNewInstall) {
       Telemetry.reportAction('plugin:install');
     }
 
     const appmapCollectionFile = new AppMapCollectionFile();
     let findingsIndex: FindingsIndex | undefined,
       classMapIndex: ClassMapIndex | undefined,
-      lineInfoIndex: LineInfoIndex | undefined;
+      lineInfoIndex: LineInfoIndex | undefined,
+      projectStates: ProjectStateServiceInstance[] = [];
 
-    {
-      const appmapWatcher = new AppMapWatcher({
-        onCreate: appmapCollectionFile.onCreate.bind(appmapCollectionFile),
-        onDelete: appmapCollectionFile.onDelete.bind(appmapCollectionFile),
-        onChange: appmapCollectionFile.onChange.bind(appmapCollectionFile),
-      });
-      await workspaceServices.enroll(appmapWatcher);
-      await appmapCollectionFile.initialize();
-    }
+    const appmapWatcher = new AppMapWatcher();
+    context.subscriptions.push(
+      appmapWatcher.onCreate(({ uri }) => appmapCollectionFile.onCreate(uri)),
+      appmapWatcher.onDelete(({ uri }) => appmapCollectionFile.onDelete(uri)),
+      appmapWatcher.onChange(({ uri }) => appmapCollectionFile.onChange(uri))
+    );
+
+    await workspaceServices.enroll(appmapWatcher);
+    await appmapCollectionFile.initialize();
+
+    const configWatcher = new AppMapConfigWatcher();
+    await workspaceServices.enroll(configWatcher);
 
     const findingsEnabled = extensionSettings.findingsEnabled();
-    if (findingsEnabled) {
+    const indexEnabled = findingsEnabled || extensionSettings.indexEnabled();
+
+    if (indexEnabled) {
       classMapIndex = new ClassMapIndex();
+      lineInfoIndex = new LineInfoIndex(classMapIndex);
+
+      const classMapProvider = new ClassMapTreeDataProvider(classMapIndex);
+      vscode.window.createTreeView('appmap.views.codeObjects', {
+        treeDataProvider: classMapProvider,
+      });
+
+      registerDecorationProvider(context, lineInfoIndex);
+      openCodeObjectInAppMap(context, classMapIndex);
+      registerHoverProvider(context, lineInfoIndex);
+
+      const classMapWatcher = new ClassMapWatcher({
+        onCreate: classMapIndex.addClassMapFile.bind(classMapIndex),
+        onChange: classMapIndex.addClassMapFile.bind(classMapIndex),
+        onDelete: classMapIndex.removeClassMapFile.bind(classMapIndex),
+      });
+
+      {
+        const autoIndexService = new AutoIndexerService();
+        autoIndexService.on('invoke', (command) => autoIndexServiceImpl.startInvocation(command));
+        autoIndexService.on('message', (message) => autoIndexServiceImpl.addMessage(message));
+        autoIndexService.on('exit', (exitStatus) => autoIndexServiceImpl.endInvocation(exitStatus));
+        await workspaceServices.enroll(autoIndexService);
+      }
+      await workspaceServices.enroll(classMapWatcher);
+    }
+
+    if (findingsEnabled) {
       findingsIndex = new FindingsIndex();
-      lineInfoIndex = new LineInfoIndex(findingsIndex, classMapIndex);
 
       const findingsDiagnosticsProvider = new FindingsDiagnosticsProvider(context);
       findingsIndex.on('added', (uri: vscode.Uri, findings: ResolvedFinding[]) =>
@@ -79,59 +118,70 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
         treeDataProvider: findingsTreeProvider,
       });
 
-      const classMapProvider = new ClassMapTreeDataProvider(classMapIndex);
-      vscode.window.createTreeView('appmap.views.codeObjects', {
-        treeDataProvider: classMapProvider,
-      });
+      const findingWatcher = new FindingWatcher();
+      context.subscriptions.push(
+        findingWatcher.onCreate(({ uri, workspaceFolder }) => {
+          findingsIndex?.addFindingsFile(uri, workspaceFolder);
+        }),
+        findingWatcher.onChange(({ uri, workspaceFolder }) => {
+          findingsIndex?.addFindingsFile(uri, workspaceFolder);
+        }),
+        findingWatcher.onDelete(({ uri, workspaceFolder }) => {
+          findingsIndex?.removeFindingsFile(uri, workspaceFolder);
+        })
+      );
 
-      registerDecorationProvider(context, lineInfoIndex);
-      openCodeObjectInAppMap(context, classMapIndex);
-      deleteAllAppMaps(context, findingsIndex, classMapIndex);
-      registerHoverProvider(context, lineInfoIndex);
-      registerInspectCodeObject(context);
-
-      const classMapWatcher = new ClassMapWatcher({
-        onCreate: classMapIndex.addClassMapFile.bind(classMapIndex),
-        onChange: classMapIndex.addClassMapFile.bind(classMapIndex),
-        onDelete: classMapIndex.removeClassMapFile.bind(classMapIndex),
-      });
-
-      const findingWatcher = new FindingWatcher({
-        onCreate: findingsIndex.addFindingsFile.bind(findingsIndex),
-        onChange: findingsIndex.addFindingsFile.bind(findingsIndex),
-        onDelete: findingsIndex.removeFindingsFile.bind(findingsIndex),
-      });
-
+      const autoScannerService = new AutoScannerService();
       {
-        const autoIndexService = new AutoIndexerService();
-        autoIndexService.on('invoke', (command) => autoIndexServiceImpl.startInvocation(command));
-        autoIndexService.on('message', (message) => autoIndexServiceImpl.addMessage(message));
-        autoIndexService.on('exit', (exitStatus) => autoIndexServiceImpl.endInvocation(exitStatus));
-        await workspaceServices.enroll(autoIndexService);
-      }
-      {
-        const autoScannerService = new AutoScannerService();
         autoScannerService.on('invoke', (command) => autoScanServiceImpl.startInvocation(command));
         autoScannerService.on('message', (message) => autoScanServiceImpl.addMessage(message));
         autoScannerService.on('exit', (exitStatus) =>
           autoScanServiceImpl.endInvocation(exitStatus)
         );
-        await workspaceServices.enroll(autoScannerService);
       }
-      await workspaceServices.enroll(classMapWatcher);
+      await workspaceServices.enroll(autoScannerService);
       await workspaceServices.enroll(findingWatcher);
     }
 
-    const { localTree } = registerTrees(context, appmapCollectionFile);
+    const inspectEnabled = extensionSettings.inspectEnabled();
+    if (inspectEnabled) {
+      registerInspectCodeObject(context);
+    }
+
+    {
+      const projectState = new ProjectStateService(
+        extensionState,
+        appmapWatcher,
+        configWatcher,
+        appmapCollectionFile,
+        findingsIndex
+      );
+
+      projectStates = (await workspaceServices.enroll(
+        projectState
+      )) as ProjectStateServiceInstance[];
+
+      if (extensionSettings.instructionsEnabled()) {
+        const badge = new InstallationStatusBadge('appmap.views.instructions');
+        badge.initialize(projectStates);
+        context.subscriptions.push(badge);
+
+        InstallGuideWebView.register(context, projectStates);
+      }
+    }
+
+    deleteAllAppMaps(context, classMapIndex, findingsIndex);
+
+    const { localTree } = registerTrees(context, appmapCollectionFile, projectStates);
 
     (vscode.workspace.workspaceFolders || []).forEach((workspaceFolder) => {
       Telemetry.sendEvent(PROJECT_OPEN, { rootDirectory: workspaceFolder.uri.fsPath });
     });
 
-    AppMapTextEditorProvider.register(context, properties);
+    AppMapTextEditorProvider.register(context, extensionState);
     RemoteRecording.register(context);
     ContextMenu.register(context);
-    projectPickerWebview(context, properties);
+    projectPickerWebview(context, extensionState);
     OpenAppMapsWebview.register(context, appmapCollectionFile);
 
     context.subscriptions.push(
@@ -192,13 +242,23 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       })
     );
 
-    registerUtilityCommands(context, properties);
+    registerUtilityCommands(context, extensionState);
 
     vscode.env.onDidChangeTelemetryEnabled((enabled: boolean) => {
       Telemetry.sendEvent(TELEMETRY_ENABLED, {
         enabled,
       });
     });
+
+    // Use this notification to track when the extension is activated.
+    if (process.env.APPMAP_TEST) {
+      // It may just be a nightly thing, but showErrorMessage has stopped working when called
+      // immediately after the extension is activated. This is a workaround.
+      const intervalHandle = setInterval(async () => {
+        await vscode.window.showErrorMessage('AppMap: Ready', 'OK');
+        clearInterval(intervalHandle);
+      }, 1000);
+    }
 
     return {
       localAppMaps: appmapCollectionFile,

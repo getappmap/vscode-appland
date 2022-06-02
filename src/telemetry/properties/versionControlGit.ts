@@ -46,7 +46,7 @@ async function ignoresForWorkspaceFolder(wsFolder: string): Promise<Ignore> {
       }
 
       const fullPath = path.join(currentDirectory, file.name);
-      if (!wsIgnore.ignores(file.name)) {
+      if (!wsIgnore.ignores(path.relative(wsFolder, fullPath)) && file.name !== '.git') {
         directories.push(fullPath);
       }
     });

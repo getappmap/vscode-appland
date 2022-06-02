@@ -4,6 +4,8 @@ node_modules
 *.vsix
 *.codekit3
 .DS_Store
+appland.appmap-*.*.*
+.obsolete
 
 # Yarn files
 .yarn/*
