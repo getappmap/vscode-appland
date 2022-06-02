@@ -40,7 +40,10 @@ const docsPages: DocPage[] = [
     },
     args: ['open-appmaps'],
   },
-  {
+];
+
+if (extensionSettings.findingsEnabled()) {
+  docsPages.push({
     id: 'WALKTHROUGH_INVESTIGATE_FINDINGS',
     title: 'Investigate findings',
     command: 'appmap.openInstallGuide',
@@ -48,10 +51,10 @@ const docsPages: DocPage[] = [
       return Boolean((await projectState.metadata()).analysisPerformed);
     },
     args: ['investigate-findings'],
-  },
-];
+  });
+}
 
-if (!extensionSettings.findingsEnabled()) {
+if (!extensionSettings.instructionsEnabled()) {
   docsPages.splice(0);
   docsPages.push(
     {

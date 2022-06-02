@@ -156,6 +156,10 @@
           "type": "boolean",
           "description": "Enable AppMap scanner and findings (preview)"
         },
+        "appMap.instructionsEnabled": {
+          "type": "boolean",
+          "description": "Enable an experimental version of usage instructions"
+        },
         "appMap.inspectEnabled": {
           "type": "boolean",
           "description": "Enable detailed inspection of AppMap code objects (preview)"

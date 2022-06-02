@@ -7,7 +7,7 @@ export default function mountInstallGuide() {
   const vscode = window.acquireVsCodeApi();
   const messages = new MessagePublisher(vscode);
 
-  messages.on('init', ({ projects: startProjects, page: startPage }) => {
+  messages.on('init', ({ projects: startProjects, page: startPage, disabled }) => {
     const app = new Vue({
       el: '#app',
       render(h) {
@@ -15,6 +15,7 @@ export default function mountInstallGuide() {
           ref: 'ui',
           props: {
             projects: this.projects,
+            disabledPages: new Set(disabled),
             editor: 'vscode',
           },
         });
