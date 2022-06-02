@@ -94,6 +94,10 @@ export default class OpenAppMapsWebview {
               vscode.commands.executeCommand('vscode.open', vscode.Uri.file(message.file));
               break;
 
+            case 'openProjectPicker':
+              vscode.commands.executeCommand('appmap.openWorkspaceOverview');
+              break;
+
             case 'clickLink':
               Telemetry.reportOpenUri(message.uri);
               break;

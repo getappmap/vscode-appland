@@ -18,6 +18,11 @@ export default {
       vscode.workspace.getConfiguration('appMap').get('findingsEnabled') || false
     ),
 
+  instructionsEnabled: (): boolean =>
+    [true, 'true'].includes(
+      vscode.workspace.getConfiguration('appMap').get('instructionsEnabled') || false
+    ),
+
   inspectEnabled: (): boolean =>
     [true, 'true'].includes(
       vscode.workspace.getConfiguration('appMap').get('inspectEnabled') || false

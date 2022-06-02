@@ -1,5 +1,6 @@
 import * as path from 'path';
 import * as vscode from 'vscode';
+import extensionSettings from '../configuration/extensionSettings';
 import { ProjectStateServiceInstance } from '../services/projectStateService';
 import { getNonce } from '../util';
 import ProjectMetadata from '../workspace/projectMetadata';
@@ -64,6 +65,7 @@ export default class InstallGuideWebView {
               panel.webview.postMessage({
                 type: 'init',
                 projects: await collectProjects(),
+                disabled: extensionSettings.findingsEnabled() ? [] : ['investigate-findings'],
                 page: pageIndex,
               });
 

@@ -15,7 +15,8 @@ export default function mountQuickstartOpenAppmaps() {
           return h(VOpenAppmaps, {
             ref: 'ui',
             props: {
-              appmaps: this.appmaps,
+              appMaps: this.appmaps,
+              navigationButtons: false,
             },
           });
         },
@@ -35,6 +36,10 @@ export default function mountQuickstartOpenAppmaps() {
 
       app.$on('openAppmap', (file) => {
         vscode.postMessage({ command: 'openFile', file });
+      });
+
+      app.$on('open-instruction', () => {
+        vscode.postMessage({ command: 'openProjectPicker' });
       });
 
       messages.on('appmapSnapshot', ({ appmaps }) => {
