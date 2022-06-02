@@ -2,12 +2,13 @@ import { join } from 'path';
 import * as vscode from 'vscode';
 import LineInfoIndex from '../services/lineInfoIndex';
 
+const contentIconPath = join(__dirname, '../images/appmap_icon_12_12.png');
+
 class DecorationProvider {
   iconDecorationType: vscode.TextEditorDecorationType;
   textDecorationType: vscode.TextEditorDecorationType;
 
   constructor(context: vscode.ExtensionContext, private lineInfoIndex: LineInfoIndex) {
-    const contentIconPath = join(__dirname, '../images/appmap_icon_12_12.png');
     this.iconDecorationType = vscode.window.createTextEditorDecorationType({
       after: {
         contentIconPath,
