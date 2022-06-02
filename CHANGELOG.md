@@ -1,3 +1,21 @@
+# [0.27.0](https://github.com/applandinc/vscode-appland/compare/v0.26.2...v0.27.0) (2022-06-02)
+
+
+### Bug Fixes
+
+* Experimental instructions are toggled behind a feature flag ([fd95295](https://github.com/applandinc/vscode-appland/commit/fd95295d6f8dda60ce7e7b0908a71620428e1a6c))
+* Fix language resolver test ([533424a](https://github.com/applandinc/vscode-appland/commit/533424af5346b4b1ce8d60db5e86dd720bb0aece))
+* Fix scanner test ([2997978](https://github.com/applandinc/vscode-appland/commit/29979783e5f4a4e21fe484b2d2990424f15be58f))
+* Line info depends on code objects only ([bfd8b92](https://github.com/applandinc/vscode-appland/commit/bfd8b925e9b57a1459f8e206cd598c71ad6f4315))
+* Suppress directory removal warning ([6239ed6](https://github.com/applandinc/vscode-appland/commit/6239ed614891d69e210fce3c056a40a58855c504))
+
+
+### Features
+
+* Add 'Open AppMaps' to updated instructions ([6682c68](https://github.com/applandinc/vscode-appland/commit/6682c68d0fe2768e4f9a05f9d298ad619730386e))
+* Add indexEnabled flag ([4736138](https://github.com/applandinc/vscode-appland/commit/4736138eee2ea818973905532157c1e6a9eb1068))
+* AppMap usage guide ([2d7f48b](https://github.com/applandinc/vscode-appland/commit/2d7f48b7760b4142d044d1efd74f12701870a5b2))
+
 ## [0.26.2](https://github.com/applandinc/vscode-appland/compare/v0.26.1...v0.26.2) (2022-05-31)
 
 
