@@ -161,11 +161,13 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
         projectState
       )) as ProjectStateServiceInstance[];
 
-      const badge = new InstallationStatusBadge('appmap.views.instructions');
-      badge.initialize(projectStates);
-      context.subscriptions.push(badge);
+      if (extensionSettings.instructionsEnabled()) {
+        const badge = new InstallationStatusBadge('appmap.views.instructions');
+        badge.initialize(projectStates);
+        context.subscriptions.push(badge);
 
-      InstallGuideWebView.register(context, projectStates);
+        InstallGuideWebView.register(context, projectStates);
+      }
     }
 
     deleteAllAppMaps(context, classMapIndex, findingsIndex);
