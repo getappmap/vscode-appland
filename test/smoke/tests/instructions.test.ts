@@ -21,9 +21,9 @@ describe('Instructions tree view', function() {
     assert(await driver.appMap.pendingBadge.isVisible(), 'badge is visible');
   });
 
-  // it('does not display a badge when AppMap is not installable in the current workspace', async () => {
-  //   // todo
-  // });
+  it('does not display a badge when AppMap is not installable in the current workspace', async () => {
+    // todo
+  });
 
   it('accurately depicts the installation state', async () => {
     await driver.appMap.openActionPanel();
@@ -33,6 +33,10 @@ describe('Instructions tree view', function() {
     );
     await driver.appMap.assertInstructionStepStatus(
       InstructionStep.RecordAppMaps,
+      InstructionStepStatus.Pending
+    );
+    await driver.appMap.assertInstructionStepStatus(
+      InstructionStep.OpenAppMaps,
       InstructionStepStatus.Pending
     );
     await driver.appMap.assertInstructionStepStatus(
@@ -51,6 +55,12 @@ describe('Instructions tree view', function() {
       InstructionStep.RecordAppMaps,
       InstructionStepStatus.Complete
     );
+
+    await driver.appMap.openAppMap();
+    await driver.appMap.assertInstructionStepStatus(
+      InstructionStep.OpenAppMaps,
+      InstructionStepStatus.Complete
+    );
   });
 
   it('opens up the expected web views', async () => {
@@ -65,6 +75,12 @@ describe('Instructions tree view', function() {
     await driver.appMap.openInstruction(InstructionStep.RecordAppMaps);
     assert(
       (await driver.instructionsWebview.pageTitle()) == 'Record AppMaps',
+      'Opens the correct page'
+    );
+
+    await driver.appMap.openInstruction(InstructionStep.OpenAppMaps);
+    assert(
+      (await driver.instructionsWebview.pageTitle()) == 'Open AppMaps',
       'Opens the correct page'
     );
 
@@ -96,6 +112,7 @@ describe('Instructions tree view', function() {
     await driver.appMap.pendingBadge.waitFor({ state: 'visible' });
     await project.simulateAppMapInstall();
     await project.restoreFile('*.appmap.json');
+    await driver.appMap.openAppMap();
     await driver.appMap.pendingBadge.waitFor({ state: 'hidden' });
   });
 
@@ -143,6 +160,9 @@ describe('Instructions tree view', function() {
     }
 
     await project.restoreFile('*.appmap.json');
+    await driver.instructionsWebview.clickButton('Next');
+
+    await driver.appMap.openAppMap();
     await driver.instructionsWebview.clickButton('Next');
 
     await driver.panel.problems.waitFor({ state: 'hidden' });

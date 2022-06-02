@@ -4,6 +4,7 @@ import InstructionsWebview from './instructionsWebview';
 export enum InstructionStep {
   InstallAppMapAgent,
   RecordAppMaps,
+  OpenAppMaps,
   InvestigateFindings,
 }
 
@@ -31,8 +32,16 @@ export default class AppMap {
     return this.page.locator('.pane:has(.title:text("Instructions"))');
   }
 
+  get appMapTree(): Locator {
+    return this.page.locator('.pane:has(.title:text("AppMaps"))');
+  }
+
   public instructionsTreeItem(step: InstructionStep): Locator {
     return this.instructionsTree.locator('.pane-body >> [role="treeitem"]').nth(step);
+  }
+
+  public appMapTreeItem(): Locator {
+    return this.appMapTree.locator('.pane-body >> [role="treeitem"]').first();
   }
 
   public async openActionPanel(): Promise<void> {
@@ -50,6 +59,10 @@ export default class AppMap {
   public async openInstruction(step: InstructionStep): Promise<void> {
     await this.instructionsTreeItem(step).click();
     await this.instructionsWebview.ready();
+  }
+
+  public async openAppMap(): Promise<void> {
+    await this.appMapTreeItem().click();
   }
 
   public async assertInstructionStepStatus(
