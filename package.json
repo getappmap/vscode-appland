@@ -80,7 +80,14 @@
       },
       {
         "command": "appmap.openWorkspaceOverview",
+        "title": "AppMap: Open Instructions View"
       },
+      {
+        "command": "appmap.view.focusAppMap",
+        "title": "AppMap: Open AppMaps View"
+      },
+      {
+        "command": "appmap.view.focusInstructions",
         "title": "AppMap: Open Instructions"
       },
       {
@@ -120,8 +127,8 @@
         "title": "AppMap: Open Code Object in AppMap"
       },
       {
-        "command": "appmap.runOutOfDateTests",
-        "title": "AppMap: Run Out-of-Date Tests"
+        "command": "appmap.touchOutOfDateTestFiles",
+        "title": "AppMap: Touch Out-of-Date Test Files"
       },
       {
         "command": "appmap.copyOutOfDateTestsToClipboard",

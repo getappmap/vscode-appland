@@ -37,7 +37,7 @@ import InstallationStatusBadge from './workspace/installationStatus';
 import { AppMapConfigWatcher } from './services/appMapConfigWatcher';
 import ProjectStateService, { ProjectStateServiceInstance } from './services/projectStateService';
 import { AppmapUptodateService } from './services/appmapUptodateService';
-import { runOutOfDateTests, copyOutOfDateTestsToClipboard } from './commands/outOfDateTests';
+import outOfDateTests from './commands/outOfDateTests';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   const workspaceServices = new WorkspaceServices(context);
@@ -88,8 +88,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       });
 
       registerDecorationProvider(context, lineInfoIndex);
-      runOutOfDateTests(context, appmapUptodateService);
-      copyOutOfDateTestsToClipboard(context, appmapUptodateService);
+      outOfDateTests(context, appmapUptodateService);
       openCodeObjectInAppMap(context, classMapIndex);
       registerHoverProvider(context, lineInfoIndex);
 
@@ -181,7 +180,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
     deleteAllAppMaps(context, classMapIndex, findingsIndex);
 
-    registerTrees(context, appmapCollectionFile, appmapUptodateService, projectStates);
+    registerTrees(context, appmapCollectionFile, projectStates, appmapUptodateService);
 
     (vscode.workspace.workspaceFolders || []).forEach((workspaceFolder) => {
       Telemetry.sendEvent(PROJECT_OPEN, { rootDirectory: workspaceFolder.uri.fsPath });

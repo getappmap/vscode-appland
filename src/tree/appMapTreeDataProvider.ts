@@ -1,3 +1,4 @@
+import { join } from 'path';
 import * as vscode from 'vscode';
 import AppMapCollection from '../services/appmapCollection';
 import AppMapLoader from '../services/appmapLoader';
@@ -5,6 +6,9 @@ import { AppMapDescriptor } from '../services/appmapLoader';
 import { AppmapUptodateService } from '../services/appmapUptodateService';
 
 const LABEL_NO_NAME = 'Untitled AppMap';
+
+const lightChangedIcon = join(__dirname, '../images/modified-file-icon-dark.svg');
+const darkChangedIcon = join(__dirname, '../images/modified-file-icon-light.svg');
 
 class AppMapTreeItem extends vscode.TreeItem {
   descriptor?: AppMapDescriptor;
@@ -48,10 +52,12 @@ export class AppMapTreeDataProvider implements vscode.TreeDataProvider<vscode.Tr
   }
 
   protected buildTreeItem(appmap: AppMapLoader): AppMapTreeItem {
+    const iconPath = this.uptodate(appmap)
+      ? new vscode.ThemeIcon('file')
+      : { light: darkChangedIcon, dark: lightChangedIcon };
+
     return {
-      iconPath: this.uptodate(appmap)
-        ? new vscode.ThemeIcon('file')
-        : new vscode.ThemeIcon('refresh'),
+      iconPath,
       label: (appmap.descriptor.metadata?.name as string) || LABEL_NO_NAME,
       tooltip: (appmap.descriptor.metadata?.name as string) || LABEL_NO_NAME,
       command: {

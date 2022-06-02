@@ -10,6 +10,7 @@ import Command from './command';
 import { WorkspaceService, WorkspaceServiceInstance } from './workspaceService';
 
 // Update as often as every five seconds.
+// TODO: Back off the interval if the depends process is taking too long.
 const UPDATE_INTERVAL = 5 * 1000;
 
 export default class AppmapUptodateServiceInstance extends EventEmitter
@@ -18,6 +19,7 @@ export default class AppmapUptodateServiceInstance extends EventEmitter
   commandArgs: string[];
   interval?: NodeJS.Timeout;
   process?: ChildProcess;
+  outofDateAppMapLocations: Set<string> = new Set();
   outofDateAppMapFiles: Set<string> = new Set();
 
   constructor(public folder: vscode.WorkspaceFolder) {
@@ -32,28 +34,8 @@ export default class AppmapUptodateServiceInstance extends EventEmitter
     this.interval = setInterval(this.update.bind(this), UPDATE_INTERVAL);
   }
 
-  async outOfDateTestFiles(): Promise<Set<string>> {
-    const result = new Set<string>();
-    await Promise.all(
-      [...this.outofDateAppMapFiles].map(async (file) => {
-        let metadataData: string;
-        try {
-          metadataData = await promisify(readFile)(
-            resolve(this.folder.uri.fsPath, file, 'metadata.json'),
-            'utf8'
-          );
-        } catch (err) {
-          console.log(`[appmap-uptodate-service] ${file} has no indexed metadata (${err})`);
-          return;
-        }
-        const metadata = JSON.parse(metadataData);
-        if (metadata.source_location) {
-          const [path, lineNumber] = metadata.source_location.split(':');
-          result.add({ path, lineNumber });
-        }
-      })
-    );
-    return result;
+  async outOfDateTestLocations(): Promise<Set<string>> {
+    return this.outofDateAppMapLocations;
   }
 
   isOutOfDate(appmapFile: string): boolean {
@@ -87,14 +69,45 @@ export default class AppmapUptodateServiceInstance extends EventEmitter
     this.process.once('exit', (code) => {
       this.process = undefined;
       if (code === 0) {
-        this.handleResponse(buffer);
+        this.handleResponse(buffer.trim());
       }
     });
   }
 
   protected async handleResponse(responseData: string): Promise<void> {
-    this.outofDateAppMapFiles = new Set(responseData.split('\n'));
+    const outofDateAppMapFiles = new Set(responseData.split('\n'));
+    const outofDateAppMapLocations = await this.collectOutOfDateTestLocations(outofDateAppMapFiles);
+    this.outofDateAppMapFiles = outofDateAppMapFiles;
+    this.outofDateAppMapLocations = outofDateAppMapLocations;
     this.emit('updated');
+  }
+
+  private async collectOutOfDateTestLocations(
+    outofDateAppMapFiles: Set<string>
+  ): Promise<Set<string>> {
+    const result = new Set<string>();
+    await Promise.all(
+      [...outofDateAppMapFiles].map(async (file) => {
+        let metadataData: string;
+        try {
+          metadataData = await promisify(readFile)(
+            resolve(this.folder.uri.fsPath, file, 'metadata.json'),
+            'utf8'
+          );
+        } catch (err) {
+          console.log(`[appmap-uptodate-service] ${file} has no indexed metadata (${err})`);
+          return;
+        }
+        const metadata = JSON.parse(metadataData);
+        if (metadata.source_location) {
+          const location = metadata.source_location.startsWith(this.folder.uri.fsPath)
+            ? metadata.source_location.slice(this.folder.uri.fsPath.length + 1)
+            : metadata.source_location;
+          result.add(location);
+        }
+      })
+    );
+    return result;
   }
 }
 
@@ -114,16 +127,34 @@ export class AppmapUptodateService implements WorkspaceService {
     return uptodate;
   }
 
-  async outOfDateTestFileUris(): Promise<vscode.Uri[]> {
+  /**
+   * Gets the list of test files, with line numbers if available, that are out of date.
+   *
+   * @param workspaceFolder optional folder to filter by
+   * @returns array of file paths with line numbers, delimited by `:`.
+   * Example: app/models/document.rb, app/models/user.ts:10
+   */
+  async outOfDateTestLocations(workspaceFolder?: vscode.Uri): Promise<string[]> {
     const result = new Set<string>();
+
+    const serviceInstances = workspaceFolder
+      ? [this.serviceInstances[workspaceFolder.toString()]].filter(Boolean)
+      : Object.values(this.serviceInstances);
+    if (serviceInstances.length === 0) return [];
+
     await Promise.all(
-      Object.values(this.serviceInstances).map(async (service) =>
-        (await service.outOfDateTestFiles()).forEach((filePath) => result.add(filePath))
+      Object.values(serviceInstances).map(async (service) =>
+        (await service.outOfDateTestLocations()).forEach((filePath) => result.add(filePath))
       )
     );
-    return [...result].sort().map(vscode.Uri.file);
+    return [...result].sort();
   }
 
+  /**
+   * Determines whether an AppMap is up-to-date with regard to known dependency files.
+   *
+   * @param appmapUri Full path to an AppMap.
+   */
   isUpToDate(appmapUri: vscode.Uri): boolean {
     const serviceInstance = Object.values(this.serviceInstances).find((service) =>
       appmapUri.fsPath.startsWith(service.folder.uri.fsPath)
@@ -137,4 +168,13 @@ export class AppmapUptodateService implements WorkspaceService {
       )
     );
   }
+}
+
+/**
+ * Strip line numbers from an array of `filePath<:location?>.
+ *
+ * @returns sorted, unique file paths.
+ */
+export function fileLocationsToFilePaths(fileLocations: string[]): string[] {
+  return [...new Set(fileLocations.map((fileLocation) => fileLocation.split(':')[0]))].sort();
 }
