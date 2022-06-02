@@ -7,7 +7,7 @@ import Driver from './smoke/src/driver';
 async function main(): Promise<void> {
   try {
     const extensionDevelopmentPath = path.resolve(__dirname, '..', '..');
-    const userDataDir = path.resolve(__dirname, '../.vscode-test/user-data');
+    const userDataDir = path.resolve(__dirname, '..', '..', '.vscode-test', 'user-data');
     const workspacePath = path.join(
       __dirname,
       '..',
