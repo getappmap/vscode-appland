@@ -124,9 +124,11 @@ async function copyOutOfDateTestsToClipboard(
 
         return selection.action();
       })
-      .then((copiedCount) =>
-        vscode.window.showInformationMessage(`Copied ${copiedCount} tests to clipboard`)
-      );
+      .then((copiedCount?: number) => {
+        if (copiedCount !== undefined) {
+          vscode.window.showInformationMessage(`Copied ${copiedCount} tests to clipboard`);
+        }
+      });
   }
 
   context.subscriptions.push(
