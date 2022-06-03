@@ -20,7 +20,7 @@ describe('Findings', () => {
     const diagnostics = vscode.languages.getDiagnostics();
     assert.strictEqual(
       diagnostics[0][0].toString(),
-      `file:///Users/kgilpin/source/appland/vscode-appland/test/fixtures/workspaces/project-a/app/controllers/microposts_controller.rb`
+      `file://${process.cwd()}/test/fixtures/workspaces/project-a/app/controllers/microposts_controller.rb`
     );
     assert.strictEqual(diagnostics[0][1].length, 1);
     assert.strictEqual(

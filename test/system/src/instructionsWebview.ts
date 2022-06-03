@@ -1,4 +1,4 @@
-import { FrameLocator, Page } from '@playwright/test';
+import { FrameLocator, Locator, Page } from '@playwright/test';
 
 export default class InstructionsWebview {
   constructor(protected readonly page: Page) {}
@@ -10,11 +10,16 @@ export default class InstructionsWebview {
       .first();
   }
 
+  public get currentPage(): Locator {
+    return this.frame.locator('.qs:visible').first();
+  }
+
+  public getPageByTitle(title: string): Locator {
+    return this.currentPage.locator(`header:has(:text("${title}"))`).first();
+  }
+
   public async ready(): Promise<void> {
-    await this.frame
-      .locator('.qs')
-      .first()
-      .isVisible();
+    await this.currentPage.waitFor();
   }
 
   public async pageTitle(): Promise<string> {
@@ -26,6 +31,9 @@ export default class InstructionsWebview {
   }
 
   public async clickButton(label: string): Promise<void> {
-    await this.frame.locator(`.qs:visible button:text("${label}")`).click();
+    // This is hacky, but it works for now.
+    // Hit escape to clear any notifications that may hide a button.
+    await this.page.keyboard.press('Escape');
+    await this.frame.locator(`.qs:visible button:text("${label}"):visible`).click();
   }
 }

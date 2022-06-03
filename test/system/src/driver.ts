@@ -28,7 +28,13 @@ export default class Driver {
 
   public async waitForReady(): Promise<void> {
     await this.page
-      .locator('.notification-toast:has(span:text("AppMap: Ready")) >> a[role="button"]:text("OK")')
+      .locator('[id="status.notifications"] a[role="button"][aria-label="Notifications"]')
+      .click();
+
+    await this.page
+      .locator(
+        '.notifications-list-container .monaco-list-row:has(span:text("AppMap: Ready")) >> a[role="button"]:text("OK")'
+      )
       .click();
   }
 

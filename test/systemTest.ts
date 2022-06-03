@@ -1,14 +1,13 @@
 import * as path from 'path';
 import glob from 'glob';
 import Mocha from 'mocha';
-import { launchCode } from './smoke/src/app';
-import Driver from './smoke/src/driver';
+import { launchCode } from './system/src/app';
+import Driver from './system/src/driver';
 
 async function main(): Promise<void> {
   try {
     const extensionDevelopmentPath = path.resolve(__dirname, '..', '..');
     const userDataDir = path.resolve(__dirname, '..', '..', '.vscode-test', 'user-data');
-    console.log(userDataDir);
     const workspacePath = path.join(
       __dirname,
       '..',
@@ -16,12 +15,12 @@ async function main(): Promise<void> {
       'test',
       'fixtures',
       'workspaces',
-      'project-base'
+      'project-system'
     );
 
     let verbose = false;
     let leaveOpen = false;
-    let testPath = path.join(__dirname, 'smoke', 'tests', '**', '*.test.js');
+    let testPath = path.join(__dirname, 'system', 'tests', '**', '*.test.js');
     const patterns: string[] = [];
     const cliArgs = process.argv.slice(2);
     while (cliArgs.length > 0) {
