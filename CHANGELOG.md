@@ -1,3 +1,10 @@
+## [0.28.1](https://github.com/applandinc/vscode-appland/compare/v0.28.0...v0.28.1) (2022-06-06)
+
+
+### Bug Fixes
+
+* Update README ([25d0c46](https://github.com/applandinc/vscode-appland/commit/25d0c467528cd804aa187bffc9c3bbed5bb814f6))
+
 # [0.28.0](https://github.com/applandinc/vscode-appland/compare/v0.27.0...v0.28.0) (2022-06-06)
 
 
