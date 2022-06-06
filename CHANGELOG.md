@@ -1,3 +1,13 @@
+# [0.28.0](https://github.com/applandinc/vscode-appland/compare/v0.27.0...v0.28.0) (2022-06-06)
+
+
+### Features
+
+* Commands appmap.view.* ([acfab07](https://github.com/applandinc/vscode-appland/commit/acfab07e8c4f7a69f7c7ef64e10ea610c64eaa5c))
+* Indicate whether AppMaps are up-to-date ([0213cb6](https://github.com/applandinc/vscode-appland/commit/0213cb66403741b0712de71f3a135d6fb16f8a3e))
+* out-of-date tests ([9d27b53](https://github.com/applandinc/vscode-appland/commit/9d27b53dca956e3959c49bf9ecacfc4116ba8d41))
+* Print out of date test names to the clipboard ([57a29a1](https://github.com/applandinc/vscode-appland/commit/57a29a1bd1e28185ef98373d392d4212accffccf))
+
 # [0.27.0](https://github.com/applandinc/vscode-appland/compare/v0.26.2...v0.27.0) (2022-06-02)
 
 
