@@ -18,6 +18,21 @@ export function getNonce(): string {
   return text;
 }
 
+export async function touch(path: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const time = new Date();
+    fs.utimes(path, time, time, (err) => {
+      if (err) {
+        return fs.open(path, 'w', (err, fd) => {
+          if (err) return reject(err);
+          fs.close(fd, (err) => (err ? reject(err) : resolve()));
+        });
+      }
+      resolve();
+    });
+  });
+}
+
 // Returns an object's string values with an optional key prefix
 // getStringRecords({ a: 'hello', b: [object Object] }, 'myApp') ->
 // { 'myApp.a': 'hello' }

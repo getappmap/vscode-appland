@@ -1,9 +1,9 @@
 import * as vscode from 'vscode';
 import { exec } from 'child_process';
-import { close, open, utimes } from 'fs';
 import { join } from 'path';
 import assert from 'assert';
 import AppMapService from '../../src/appMapService';
+import { touch } from '../../src/util';
 
 export const FixtureDir = join(__dirname, '../../../test/fixtures');
 export const ProjectRuby = join(__dirname, '../../../test/fixtures/workspaces/project-ruby');
@@ -12,6 +12,13 @@ export const ProjectWithEchoCommand = join(
   __dirname,
   '../../../test/fixtures/workspaces/project-with-echo-command'
 );
+export const ProjectUptodate = join(
+  __dirname,
+  '../../../test/fixtures/workspaces/project-uptodate'
+);
+
+const PROJECTS = [ProjectA, ProjectWithEchoCommand, ProjectUptodate];
+
 export const ExampleAppMap = join(
   ProjectA,
   'tmp/appmap/minitest/Microposts_controller_can_get_microposts_as_JSON.appmap.json'
@@ -21,7 +28,7 @@ export const ExampleAppMapIndexDir = join(
   'tmp/appmap/minitest/Microposts_controller_can_get_microposts_as_JSON'
 );
 
-const APP_SERVICES_TIMEOUT = 10000;
+export const APP_SERVICES_TIMEOUT = 10000;
 
 export type DiagnosticForUri = {
   uri: vscode.Uri;
@@ -79,6 +86,18 @@ export async function initializeWorkspace(): Promise<void> {
   await cleanWorkspace();
 }
 
+export async function waitForIndexer(): Promise<void> {
+  const appmapFiles = (await vscode.workspace.findFiles(`**/*.appmap.json`)).map(
+    (uri) => uri.fsPath
+  );
+  const touchAppMaps = async () => Promise.all(appmapFiles.map((filePath) => touch(filePath)));
+  await repeatUntil(
+    touchAppMaps,
+    `mtime files not created for all AppMaps`,
+    async () => (await mtimeFiles()).length === appmapFiles.length
+  );
+}
+
 export async function waitForAppMapServices(touchFile: string): Promise<AppMapService> {
   const appMapService = await waitForExtension();
 
@@ -129,10 +148,13 @@ export async function executeWorkspaceOSCommand(cmd: string, workspaceName: stri
 }
 
 async function cleanWorkspace(): Promise<void> {
-  await executeWorkspaceOSCommand(`git checkout HEAD .`, ProjectA);
-  await executeWorkspaceOSCommand(`git clean -fd .`, ProjectA);
-  await executeWorkspaceOSCommand(`git checkout HEAD .`, ProjectWithEchoCommand);
-  await executeWorkspaceOSCommand(`git clean -fd .`, ProjectWithEchoCommand);
+  async function cleanProject(project: string) {
+    await executeWorkspaceOSCommand(`git checkout HEAD .`, project);
+    await executeWorkspaceOSCommand(`git clean -fd .`, project);
+  }
+  for (const project of PROJECTS) {
+    await cleanProject(project);
+  }
 }
 
 export async function waitForExtension(): Promise<AppMapService> {
@@ -173,21 +195,6 @@ export async function waitFor(
 export async function wait(ms: number): Promise<void> {
   return new Promise((resolve) => {
     setTimeout(resolve, ms);
-  });
-}
-
-export async function touch(path: string): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const time = new Date();
-    utimes(path, time, time, (err) => {
-      if (err) {
-        return open(path, 'w', (err, fd) => {
-          if (err) return reject(err);
-          close(fd, (err) => (err ? reject(err) : resolve()));
-        });
-      }
-      resolve();
-    });
   });
 }
 

@@ -5,11 +5,13 @@ import { InstructionsTreeDataProvider } from './instructionsTreeDataProvider';
 import { AppMapTreeDataProvider } from './appMapTreeDataProvider';
 import { LinkTreeDataProvider } from './linkTreeDataProvider';
 import { ProjectStateServiceInstance } from '../services/projectStateService';
+import { AppmapUptodateService } from '../services/appmapUptodateService';
 
 export default function registerTrees(
   context: vscode.ExtensionContext,
   localAppMaps: AppMapCollectionFile,
-  projectStates: ProjectStateServiceInstance[]
+  projectStates: ProjectStateServiceInstance[],
+  appmapsUptodate?: AppmapUptodateService
 ): Record<string, vscode.TreeView<vscode.TreeItem>> {
   LinkTreeDataProvider.registerCommands(context);
 
@@ -18,8 +20,26 @@ export default function registerTrees(
     treeDataProvider: instructionsTreeProvider,
   });
 
+  const localAppMapsProvider = new AppMapTreeDataProvider(localAppMaps, appmapsUptodate);
+  const localAppMapsTree = vscode.window.createTreeView('appmap.views.local', {
+    treeDataProvider: localAppMapsProvider,
+  });
+  context.subscriptions.push(localAppMapsTree);
+
+  const documentationTreeProvider = new LinkTreeDataProvider(context, Links.Documentation);
+  const documentationTree = vscode.window.createTreeView('appmap.views.documentation', {
+    treeDataProvider: documentationTreeProvider,
+  });
+  context.subscriptions.push(documentationTree);
+
   context.subscriptions.push(
-    vscode.commands.registerCommand('appmap.focusInstructions', (index = 0) => {
+    vscode.commands.registerCommand('appmap.view.focusAppMap', () => {
+      localAppMapsTree.reveal(localAppMaps.appMaps[0], { select: false });
+    })
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand('appmap.view.focusInstructions', (index = 0) => {
       setTimeout(() => {
         // TODO: (KEG) Here is where we would show the repo state to determine which step should be
         // shown by default.
@@ -28,21 +48,17 @@ export default function registerTrees(
     })
   );
 
-  const localAppMapsProvider = new AppMapTreeDataProvider(localAppMaps);
-  const localAppMapsTree = vscode.window.createTreeView('appmap.views.local', {
-    treeDataProvider: localAppMapsProvider,
-  });
-
-  const documentationTreeProvider = new LinkTreeDataProvider(context, Links.Documentation);
-  const documentation = vscode.window.createTreeView('appmap.views.documentation', {
-    treeDataProvider: documentationTreeProvider,
-  });
-
   context.subscriptions.push(
-    vscode.commands.registerCommand('appmap.focus', () => {
+    vscode.commands.registerCommand('appmap.applyFilter', async () => {
+      const filter = await vscode.window.showInputBox({
+        placeHolder:
+          'Enter a case sensitive partial match or leave this input empty to clear an existing filter',
+      });
+
+      localAppMaps.setFilter(filter || '');
       localAppMapsTree.reveal(localAppMaps.appMaps[0], { select: false });
     })
   );
 
-  return { localTree: localAppMapsTree, documentation };
+  return { localTree: localAppMapsTree, documentationTree };
 }

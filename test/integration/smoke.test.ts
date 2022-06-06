@@ -14,6 +14,7 @@ describe('Smoke', () => {
       'autoScanService',
       'findings',
       'classMap',
+      'uptodateService',
     ]);
   });
 });

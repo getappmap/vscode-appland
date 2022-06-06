@@ -36,6 +36,8 @@ import InstallGuideWebView from './webviews/installGuideWebview';
 import InstallationStatusBadge from './workspace/installationStatus';
 import { AppMapConfigWatcher } from './services/appMapConfigWatcher';
 import ProjectStateService, { ProjectStateServiceInstance } from './services/projectStateService';
+import { AppmapUptodateService } from './services/appmapUptodateService';
+import outOfDateTests from './commands/outOfDateTests';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   const workspaceServices = new WorkspaceServices(context);
@@ -55,7 +57,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     let findingsIndex: FindingsIndex | undefined,
       classMapIndex: ClassMapIndex | undefined,
       lineInfoIndex: LineInfoIndex | undefined,
-      projectStates: ProjectStateServiceInstance[] = [];
+      projectStates: ProjectStateServiceInstance[] = [],
+      appmapUptodateService: AppmapUptodateService | undefined;
 
     const appmapWatcher = new AppMapWatcher();
     context.subscriptions.push(
@@ -77,12 +80,15 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       classMapIndex = new ClassMapIndex();
       lineInfoIndex = new LineInfoIndex(classMapIndex);
 
+      appmapUptodateService = new AppmapUptodateService();
+
       const classMapProvider = new ClassMapTreeDataProvider(classMapIndex);
       vscode.window.createTreeView('appmap.views.codeObjects', {
         treeDataProvider: classMapProvider,
       });
 
       registerDecorationProvider(context, lineInfoIndex);
+      outOfDateTests(context, appmapUptodateService);
       openCodeObjectInAppMap(context, classMapIndex);
       registerHoverProvider(context, lineInfoIndex);
 
@@ -99,6 +105,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
         autoIndexService.on('exit', (exitStatus) => autoIndexServiceImpl.endInvocation(exitStatus));
         await workspaceServices.enroll(autoIndexService);
       }
+
+      await workspaceServices.enroll(appmapUptodateService);
       await workspaceServices.enroll(classMapWatcher);
     }
 
@@ -172,7 +180,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
     deleteAllAppMaps(context, classMapIndex, findingsIndex);
 
-    const { localTree } = registerTrees(context, appmapCollectionFile, projectStates);
+    registerTrees(context, appmapCollectionFile, projectStates, appmapUptodateService);
 
     (vscode.workspace.workspaceFolders || []).forEach((workspaceFolder) => {
       Telemetry.sendEvent(PROJECT_OPEN, { rootDirectory: workspaceFolder.uri.fsPath });
@@ -183,18 +191,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     ContextMenu.register(context);
     projectPickerWebview(context, extensionState);
     OpenAppMapsWebview.register(context, appmapCollectionFile);
-
-    context.subscriptions.push(
-      vscode.commands.registerCommand('appmap.applyFilter', async () => {
-        const filter = await vscode.window.showInputBox({
-          placeHolder:
-            'Enter a case sensitive partial match or leave this input empty to clear an existing filter',
-        });
-
-        appmapCollectionFile.setFilter(filter || '');
-        localTree.reveal(appmapCollectionFile.appMaps[0], { select: false });
-      })
-    );
 
     context.subscriptions.push(
       vscode.commands.registerCommand('appmap.findByName', async () => {
@@ -266,6 +262,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       autoScanService: autoScanServiceImpl,
       findings: findingsIndex,
       classMap: classMapIndex,
+      uptodateService: appmapUptodateService,
     };
   } catch (exception) {
     Telemetry.sendEvent(DEBUG_EXCEPTION, { exception: exception as Error });

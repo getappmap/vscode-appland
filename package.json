@@ -80,6 +80,14 @@
       },
       {
         "command": "appmap.openWorkspaceOverview",
+        "title": "AppMap: Open Instructions View"
+      },
+      {
+        "command": "appmap.view.focusAppMap",
+        "title": "AppMap: Open AppMaps View"
+      },
+      {
+        "command": "appmap.view.focusInstructions",
         "title": "AppMap: Open Instructions"
       },
       {
@@ -117,6 +125,14 @@
       {
         "command": "appmap.openCodeObjectInAppMap",
         "title": "AppMap: Open Code Object in AppMap"
+      },
+      {
+        "command": "appmap.touchOutOfDateTestFiles",
+        "title": "AppMap: Touch Out-of-Date Test Files"
+      },
+      {
+        "command": "appmap.copyOutOfDateTestsToClipboard",
+        "title": "AppMap: Copy Out-of-Date Tests to Clipboard"
       },
       {
         "command": "appmap.context.openInFileExplorer",
@@ -385,7 +401,8 @@
   },
   "workspaces": [
     "test/fixtures/workspaces/project-a",
-    "test/fixtures/workspaces/project-with-echo-command"
+    "test/fixtures/workspaces/project-with-echo-command",
+    "test/fixtures/workspaces/project-uptodate"
   ],
   "__metadata": {
     "id": "41d86b02-68d3-4049-9422-95da6d11cc2e",
