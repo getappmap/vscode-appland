@@ -78,16 +78,8 @@ export async function retry(fn: () => Promise<void>, retries = 3, interval = 100
     if (retries === 0) {
       throw e;
     }
-    console.log(e);
-    await new Promise((resolve, reject) =>
-      setTimeout(
-        () =>
-          retry(fn, interval, retries - 1)
-            .then(resolve)
-            .catch(reject),
-        interval
-      )
-    );
+    await new Promise((resolve) => setTimeout(resolve, interval));
+    await retry(fn, retries - 1, interval);
   }
 }
 
