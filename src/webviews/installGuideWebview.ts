@@ -38,25 +38,24 @@ export default class InstallGuideWebView {
 
         this.existingPanel = panel;
 
-        // If the user closes the panel, make sure it's no longer cached
-        panel.onDidDispose(() => {
-          this.existingPanel = undefined;
-        });
-
         panel.webview.html = getWebviewContent(panel.webview, context);
 
         const collectProjects = async (): Promise<Readonly<ProjectMetadata>[]> =>
           await Promise.all(projectStates.map(async (project) => project.metadata()));
 
-        projectStates.forEach((projectState) => {
-          context.subscriptions.push(
-            projectState.onStateChange(async () => {
-              panel.webview.postMessage({
-                type: 'projects',
-                projects: await collectProjects(),
-              });
-            })
-          );
+        const disposables = projectStates.map((projectState) =>
+          projectState.onStateChange(async () => {
+            panel.webview.postMessage({
+              type: 'projects',
+              projects: await collectProjects(),
+            });
+          })
+        );
+
+        // If the user closes the panel, make sure it's no longer cached
+        panel.onDidDispose(() => {
+          this.existingPanel = undefined;
+          disposables.forEach((disposable) => disposable.dispose());
         });
 
         panel.webview.onDidReceiveMessage(async (message) => {
