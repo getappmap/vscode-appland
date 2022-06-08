@@ -46,7 +46,7 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
       }),
       configWatcher.onDelete(async ({ workspaceFolder }) => {
         if (workspaceFolder === folder) {
-          await this.onConfigurationDeleted();
+          await this.syncConfigurationState();
         }
       }),
       extensionState.onWorkspaceFlag((e) => {
@@ -64,6 +64,8 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
         }
       });
     }
+
+    this.syncConfigurationState();
   }
 
   private get isAgentConfigured(): boolean {
@@ -133,7 +135,7 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
     return existingConfigs.length !== 0;
   }
 
-  async onConfigurationDeleted(): Promise<void> {
+  private async syncConfigurationState(): Promise<void> {
     const hasConfigFiles = await this.configurationInWorkspace();
     const hasConfigured = this.extensionState.getWorkspaceConfiguredAgent(this.folder);
 
