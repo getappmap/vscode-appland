@@ -48,10 +48,10 @@ __metadata:
   linkType: hard
 
 "@appland/appmap@npm:^3.25.4":
-  version: 3.27.3
-  resolution: "@appland/appmap@npm:3.27.3"
+  version: 3.28.1
+  resolution: "@appland/appmap@npm:3.28.1"
   dependencies:
-    "@appland/components": 2.2.0
+    "@appland/components": 2.3.1
     "@appland/diagrams": 1.5.2
     "@appland/models": ^1.14.1
     "@appland/openapi": 1.0.1
@@ -89,7 +89,7 @@ __metadata:
     yargs: ^17.1.1
   bin:
     appmap: built/cli.js
-  checksum: 24f538b76ab21db998aafa341212b99542eaa448919628532385d5827603b7fdb4676f54167c79b3a102d926b341e241cd1542dced01f7b061f50e95c211c0d7
+  checksum: 3ae0baa2b8bdd07eb8fe0fcb2c80c76b1d80d5b57e998f1dd0050429fb3509b100d5882bc50545a0766b158ecb041e531d3f7aacac1004f33a284929f1bba917
   languageName: node
   linkType: hard
 
@@ -103,9 +103,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/components@npm:2.2.0":
-  version: 2.2.0
-  resolution: "@appland/components@npm:2.2.0"
+"@appland/components@npm:2.3.1":
+  version: 2.3.1
+  resolution: "@appland/components@npm:2.3.1"
   dependencies:
     "@appland/diagrams": ^1.5.1
     "@appland/models": ^1.9.0
@@ -113,13 +113,13 @@ __metadata:
     sql-formatter: ^4.0.2
     vue: ^2.6.11
     vuex: ^3.6.0
-  checksum: 9cc94ff4f6dbdec638fbf0559950a349843f72febd69505450b5304df42231296c657531f14bf8941e27f313f601912591b411ab3904881869973fff45f6e7df
+  checksum: a7e24aa62be636f76cb347742f692ca4efb489fe09e8d4b8f4b863490e1073fecd1b30fd5a6f0ec5a679b8b2d56c500764256537ee7a1a4502ccb0b5e28ac191
   languageName: node
   linkType: hard
 
-"@appland/components@npm:^2.3.0":
-  version: 2.3.0
-  resolution: "@appland/components@npm:2.3.0"
+"@appland/components@npm:^2.3.2":
+  version: 2.3.2
+  resolution: "@appland/components@npm:2.3.2"
   dependencies:
     "@appland/diagrams": ^1.5.1
     "@appland/models": ^1.9.0
@@ -127,7 +127,7 @@ __metadata:
     sql-formatter: ^4.0.2
     vue: ^2.6.11
     vuex: ^3.6.0
-  checksum: b748147efbbc87cdbdf7b6072cde201a1da0750be24684ee9100677ebce5aefc3f344e2536d4d45871f6cf6b9b86a666653b7b72752951d75a5f6cc5c1d72a89
+  checksum: 92071e4ef12a9762c978e19918f22ee6463a7dd366a74646086029e546181c2c5ac679f2ae68ccf75d4e76b86940cb7a1e596076f41a5bc4e3a058324172f250
   languageName: node
   linkType: hard
 
@@ -146,13 +146,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/models@npm:1.15.0, @appland/models@npm:^1.14.1, @appland/models@npm:^1.14.5, @appland/models@npm:^1.15.0, @appland/models@npm:^1.8.1, @appland/models@npm:^1.9.0":
+"@appland/models@npm:1.15.0":
   version: 1.15.0
   resolution: "@appland/models@npm:1.15.0"
   dependencies:
     "@appland/sql-parser": ^1.5.0
     crypto-js: ^4.0.0
   checksum: 1384c3396b5a9ccfec2ec07e618ee51db01a19db52a462a32eb456b8417941cb40903839cd742bc67a46927b222c8ccaf9d1569a0268e354be8f3095f4ff6d32
+  languageName: node
+  linkType: hard
+
+"@appland/models@npm:^1.14.1, @appland/models@npm:^1.14.5, @appland/models@npm:^1.15.0, @appland/models@npm:^1.8.1, @appland/models@npm:^1.9.0":
+  version: 1.16.0
+  resolution: "@appland/models@npm:1.16.0"
+  dependencies:
+    "@appland/sql-parser": ^1.5.0
+    crypto-js: ^4.0.0
+  checksum: 45e0e054a2ebba85744b4a96bc09b016af7f1b0a832ab34ee76e2f0f815345664e547b6ac057712a0d49dd7f1a3496ddca4b72cbb8cd781d3ca1097abe2b83d4
   languageName: node
   linkType: hard
 
@@ -167,8 +177,8 @@ __metadata:
   linkType: hard
 
 "@appland/scanner@npm:^1.56.0, @appland/scanner@npm:^1.57.0":
-  version: 1.57.0
-  resolution: "@appland/scanner@npm:1.57.0"
+  version: 1.59.0
+  resolution: "@appland/scanner@npm:1.59.0"
   dependencies:
     "@appland/client": ^1.3.0
     "@appland/models": ^1.14.5
@@ -197,7 +207,7 @@ __metadata:
     yargs: ^17.1.1
   bin:
     scanner: built/cli.js
-  checksum: 858b92297fc30b0b682854390601c788be54d27f1aad40c3c627aff94052e4fe4682c3e57e1d3a3e65263dc976fa4df074a18147ca241b9a8ef17f541f550b5c
+  checksum: a5aed5872dd83973065f5ac18bd20ae379eb2de2dd6e3042f38789e0cfe52038d050280bdd7ef1313e4bf54d79c2d6a235973c1413cf1dc47cbf47a472b41777
   languageName: node
   linkType: hard
 
@@ -3631,7 +3641,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "appmap@workspace:."
   dependencies:
-    "@appland/components": ^2.3.0
+    "@appland/components": ^2.3.2
     "@appland/diagrams": ^1.5.2
     "@appland/models": ^1.15.0
     "@appland/scanner": ^1.57.0
