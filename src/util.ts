@@ -71,7 +71,7 @@ export async function fileExists(filename: string): Promise<boolean> {
   return new Promise((resolve) => fs.access(filename, (err) => resolve(err === null)));
 }
 
-export async function retry(fn: () => Promise<void>, retries = 3, timeout = 100): Promise<void> {
+export async function retry(fn: () => Promise<void>, retries = 3, interval = 100): Promise<void> {
   try {
     await fn();
   } catch (e) {
@@ -82,10 +82,10 @@ export async function retry(fn: () => Promise<void>, retries = 3, timeout = 100)
     await new Promise((resolve, reject) =>
       setTimeout(
         () =>
-          retry(fn, timeout, retries - 1)
+          retry(fn, interval, retries - 1)
             .then(resolve)
             .catch(reject),
-        timeout
+        interval
       )
     );
   }
