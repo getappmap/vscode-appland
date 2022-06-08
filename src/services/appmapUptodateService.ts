@@ -75,7 +75,12 @@ export default class AppmapUptodateServiceInstance extends EventEmitter
   }
 
   protected async handleResponse(responseData: string): Promise<void> {
-    const outofDateAppMapFiles = new Set(responseData.split('\n'));
+    const outofDateAppMapFiles = new Set(
+      responseData
+        .split('\n')
+        .map((line) => line.trim())
+        .filter((line) => line.length > 0)
+    );
     const outofDateAppMapLocations = await this.collectOutOfDateTestLocations(outofDateAppMapFiles);
     this.outofDateAppMapFiles = outofDateAppMapFiles;
     this.outofDateAppMapLocations = outofDateAppMapLocations;
