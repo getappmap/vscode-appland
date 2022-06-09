@@ -80,7 +80,11 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
       extensionState.onWorkspaceFlag((e) => {
         if (
           e.workspaceFolder === folder &&
-          (e.key === Keys.Workspace.OPENED_APPMAP || e.key === Keys.Workspace.FINDINGS_INVESTIGATED)
+          [
+            Keys.Workspace.OPENED_APPMAP,
+            Keys.Workspace.FINDINGS_INVESTIGATED,
+            Keys.Workspace.GENERATED_OPENAPI,
+          ].includes(e.key)
         ) {
           this.updateMetadata();
         }
@@ -115,6 +119,10 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
     return this.extensionState.getFindingsInvestigated(this.folder);
   }
 
+  private get hasGeneratedOpenApi(): boolean {
+    return this.extensionState.getWorkspaceGeneratedOpenApi(this.folder);
+  }
+
   async metadata(): Promise<Readonly<ProjectMetadata>> {
     if (!this._metadata) {
       await this.updateMetadata();
@@ -147,7 +155,8 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
     return (
       this.isAgentConfigured &&
       this.hasRecordedAppMaps &&
-      this._metadata?.analysisPerformed === true
+      this._metadata?.analysisPerformed === true &&
+      this.hasGeneratedOpenApi
     );
   }
 
@@ -254,8 +263,11 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
       analysisPerformed: this.analysisPerformed,
       investigatedFindings: this.hasInvestigatedFindings || false,
       appMapOpened: this.hasOpenedAppMap || false,
+      generatedOpenApi: this.hasGeneratedOpenApi || false,
       numFindings: this.numFindings,
       findingsDomainCounts: this.findingsDomainCounts,
+      numHttpRequests: analysis.numHttpRequests,
+      numAppMaps: analysis.numAppMaps,
       language: {
         name: analysis.features.lang.title,
         score: scoreValue(analysis.features.lang.score) + 1,

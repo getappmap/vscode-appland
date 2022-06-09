@@ -41,6 +41,15 @@ const docsPages: DocPage[] = [
     args: ['open-appmaps'],
   },
   {
+    id: 'WALKTHROUGH_GENERATE_OPENAPI',
+    title: 'Generate OpenAPI definitions',
+    command: 'appmap.openInstallGuide',
+    async isComplete(projectState: ProjectStateServiceInstance): Promise<boolean> {
+      return Boolean((await projectState.metadata()).generatedOpenApi);
+    },
+    args: ['openapi'],
+  },
+  {
     id: 'WALKTHROUGH_INVESTIGATE_FINDINGS',
     title: 'Runtime Analysis',
     command: 'appmap.openInstallGuide',

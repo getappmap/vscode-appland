@@ -12,8 +12,11 @@ export default interface ProjectMetadata {
   appMapsRecorded?: boolean;
   analysisPerformed?: boolean;
   investigatedFindings?: boolean;
+  generatedOpenApi?: boolean;
   appMapOpened?: boolean;
   numFindings?: number;
+  numHttpRequests?: number;
+  numAppMaps?: number;
   language?: Feature;
   testFramework?: Feature;
   webFramework?: Feature;

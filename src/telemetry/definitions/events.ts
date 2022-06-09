@@ -109,3 +109,8 @@ export const CTA_INTERACT = new Event({
   name: 'cta:interact',
   properties: [Properties.CTA_ID, Properties.CTA_PLACEMENT],
 });
+
+export const GENERATE_OPENAPI = new Event({
+  name: 'open_api:generate',
+  properties: [Properties.PROJECT_LANGUAGE],
+});
