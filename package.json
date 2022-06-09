@@ -149,6 +149,10 @@
       {
         "command": "appmap.context.inspectCodeObject",
         "title": "AppMap View: Inspect Code Object"
+      },
+      {
+        "command": "appmap.generateOpenApi",
+        "title": "AppMap: Generate OpenAPI definitions"
       }
     ],
     "configuration": {

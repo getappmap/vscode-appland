@@ -34,7 +34,7 @@ export default {
       'index',
       '--watch',
       '--appmap-dir',
-      '.',
+      '${PROJECT_DIR}',
     ],
 
   scanCommand: (): string | string[] =>
@@ -43,7 +43,7 @@ export default {
       'scan',
       '--watch',
       '--appmap-dir',
-      '.',
+      '${PROJECT_DIR}',
     ],
 
   pythonEnabled: (): boolean =>

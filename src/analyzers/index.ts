@@ -39,6 +39,8 @@ export type Result = {
 
 export type WithAppMaps = {
   appMaps: Readonly<Array<AppMapSummary>>;
+  numHttpRequests: number;
+  numAppMaps: number;
 };
 
 function getBestAppMaps(appMaps: AppMapLoader[], maxCount = 10): AppMapSummary[] {
@@ -58,6 +60,10 @@ function getBestAppMaps(appMaps: AppMapLoader[], maxCount = 10): AppMapSummary[]
     .slice(0, maxCount);
 }
 
+function countRoutes(appMaps: AppMapLoader[]): number {
+  return appMaps.reduce((sum, { descriptor }) => sum + (descriptor.numRequests || 0), 0);
+}
+
 export async function analyze(
   folder: WorkspaceFolder,
   appMapCollection?: AppMapCollection
@@ -71,6 +77,8 @@ export async function analyze(
   if (appMapCollection) {
     const appMaps = appMapCollection.allAppMapsForWorkspaceFolder(folder);
     result.appMaps = getBestAppMaps(appMaps);
+    result.numHttpRequests = countRoutes(appMaps);
+    result.numAppMaps = appMaps.length;
   }
 
   result.path = path;

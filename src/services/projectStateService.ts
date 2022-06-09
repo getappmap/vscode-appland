@@ -156,6 +156,8 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
       analysisPerformed: this.analysisPerformed,
       appMapOpened: this.hasOpenedAppMap || false,
       numFindings: this.numFindings,
+      numHttpRequests: analysis.numHttpRequests,
+      numAppMaps: analysis.numAppMaps,
       language: {
         name: analysis.features.lang.title,
         score: scoreValue(analysis.features.lang.score) + 1,

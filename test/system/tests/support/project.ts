@@ -11,6 +11,27 @@ const ignoreExceptions = async (fn: (...args: any[]) => any) => {
   }
 };
 
+const removeGlob = (pattern: string): Promise<void> =>
+  new Promise((resolve, reject) => {
+    glob(pattern, (err: Error | null, matches: string[]) => {
+      if (err) {
+        return reject(err);
+      }
+
+      matches.forEach((match) => {
+        try {
+          unlinkSync(match);
+        } catch (e) {
+          if (e !== 'ENOENT') {
+            console.log(e);
+          }
+        }
+      });
+
+      resolve();
+    });
+  });
+
 export default class ProjectDirectory {
   constructor(protected readonly projectPath: string) {}
 
@@ -46,25 +67,8 @@ export default class ProjectDirectory {
     await ignoreExceptions(
       async () => await fs.unlink(path.join(this.projectPath, 'appmap-findings.yml'))
     );
-
-    glob(
-      path.join(this.appMapDirectoryPath, '**/*.appmap.json'),
-      (err: Error | null, matches: string[]) => {
-        if (err) {
-          throw err;
-        }
-
-        matches.forEach((match) => {
-          try {
-            unlinkSync(match);
-          } catch (e) {
-            if (e !== 'ENOENT') {
-              console.log(e);
-            }
-          }
-        });
-      }
-    );
+    await removeGlob(path.join(this.appMapDirectoryPath, '**/*.appmap.json'));
+    await removeGlob(path.join(this.projectPath, '**/appmap-findings.json'));
   }
 
   async reset(): Promise<void> {

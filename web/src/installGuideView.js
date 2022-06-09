@@ -47,6 +47,10 @@ export default function mountInstallGuide() {
       app.$refs.ui.jumpTo(pageId);
     });
 
+    app.$on('generate-openapi', (projectPath) => {
+      messages.rpc('generate-openapi', { projectPath });
+    });
+
     messages.on('page', ({ page }) => {
       app.$refs.ui.jumpTo(page);
     });

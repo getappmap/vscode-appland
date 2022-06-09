@@ -54,6 +54,13 @@ if (extensionSettings.findingsEnabled()) {
   });
 }
 
+docsPages.push({
+  id: 'WALKTHROUGH_GENERATE_OPENAPI',
+  title: 'Generate OpenAPI',
+  command: 'appmap.openInstallGuide',
+  args: ['openapi'],
+});
+
 if (!extensionSettings.instructionsEnabled()) {
   docsPages.splice(0);
   docsPages.push(
