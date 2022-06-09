@@ -1,3 +1,12 @@
+## [0.28.2](https://github.com/applandinc/vscode-appland/compare/v0.28.1...v0.28.2) (2022-06-09)
+
+
+### Bug Fixes
+
+* Be more robust to AppMap index temp files ([e32978a](https://github.com/applandinc/vscode-appland/commit/e32978aabd68689a4864489b2dce146e91f71169))
+* Filter out blank source locations ([3edb0b7](https://github.com/applandinc/vscode-appland/commit/3edb0b73e99ab397b9d9df2264431a336026c337))
+* Handle code object not found ([247f6c3](https://github.com/applandinc/vscode-appland/commit/247f6c3174d9c65ea079d9a799636f2bfb581ea2))
+
 ## [0.28.1](https://github.com/applandinc/vscode-appland/compare/v0.28.0...v0.28.1) (2022-06-06)
 
 
