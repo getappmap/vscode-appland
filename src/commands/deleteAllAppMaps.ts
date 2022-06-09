@@ -4,7 +4,7 @@ import { promisify } from 'util';
 import * as vscode from 'vscode';
 import ClassMapIndex from '../services/classMapIndex';
 import FindingsIndex from '../services/findingsIndex';
-import { retry } from '../util';
+import { fileExists, retry } from '../util';
 
 async function deleteAppMap(uri: vscode.Uri): Promise<void> {
   await retry(async () => vscode.workspace.fs.delete(uri));
@@ -16,18 +16,18 @@ async function deleteAppMap(uri: vscode.Uri): Promise<void> {
   const filesToDelete = await promisify(glob)(`${indexDir}/*`);
   await Promise.all(
     filesToDelete.map((file) =>
-      retry(async () => vscode.workspace.fs.delete(vscode.Uri.file(file)))
+      retry(async () => {
+        if (!(await fileExists(file))) return;
+
+        await vscode.workspace.fs.delete(vscode.Uri.file(file));
+      })
     )
   );
 
   await retry(async () => {
-    try {
-      promisify(rmdir)(indexDir);
-    } catch (err) {
-      if ((err as any).code !== 'ENOENT') {
-        console.warn(err);
-      }
-    }
+    if (!(await fileExists(indexDir))) return;
+
+    await promisify(rmdir)(indexDir, { recursive: true });
   });
 }
 

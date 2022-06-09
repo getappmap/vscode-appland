@@ -23,7 +23,10 @@ export class ClassMapTreeDataProvider implements vscode.TreeDataProvider<vscode.
   async getTreeItem(element: vscode.TreeItem): Promise<vscode.TreeItem> {
     assert(element.id);
     const codeObject = await this.classMap.lookupCodeObject(element.id);
-    assert(codeObject);
+    if (!codeObject) {
+      console.warn(`Code object ${element.id} not found`);
+      return element;
+    }
 
     return this.buildTreeItem(codeObject);
   }

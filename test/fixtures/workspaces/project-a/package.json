@@ -7,7 +7,7 @@
     "scan": "npx @appland/scanner scan"
   },
   "devDependencies": {
-    "@appland/appmap": "^3.25.4",
-    "@appland/scanner": "^1.56.0"
+    "@appland/appmap": "^3.28.1",
+    "@appland/scanner": "^1.59.0"
   }
 }
