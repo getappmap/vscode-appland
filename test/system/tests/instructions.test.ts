@@ -52,11 +52,10 @@ describe('Instructions tree view', function() {
 
     await project.restoreFile('*.appmap.json');
 
-    // TODO: This appears to have broken
-    // await driver.appMap.assertInstructionStepStatus(
-    //   InstructionStep.RecordAppMaps,
-    //   InstructionStepStatus.Complete
-    // );
+    await driver.appMap.assertInstructionStepStatus(
+      InstructionStep.RecordAppMaps,
+      InstructionStepStatus.Complete
+    );
 
     await driver.appMap.openAppMap();
     await driver.appMap.assertInstructionStepStatus(
@@ -114,7 +113,7 @@ describe('Instructions tree view', function() {
     await driver.appMap.pendingBadge.waitFor({ state: 'visible' });
     await project.simulateAppMapInstall();
     await project.restoreFile('*.appmap.json');
-    // await driver.appMap.openAppMap();
+    await driver.appMap.openAppMap();
     await driver.appMap.pendingBadge.waitFor({ state: 'hidden' });
   });
 
