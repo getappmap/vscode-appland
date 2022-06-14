@@ -113,6 +113,7 @@ describe('Instructions tree view', function() {
     await driver.appMap.pendingBadge.waitFor({ state: 'visible' });
     await project.simulateAppMapInstall();
     await project.restoreFile('*.appmap.json');
+    await driver.appMap.openActionPanel();
     await driver.appMap.openAppMap();
     await driver.appMap.pendingBadge.waitFor({ state: 'hidden' });
   });
