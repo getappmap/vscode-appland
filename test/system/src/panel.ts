@@ -4,7 +4,7 @@ export default class Panel {
   constructor(protected readonly page: Page) {}
 
   private get panel(): Locator {
-    return this.page.locator('.panel#workbench.parts.panel');
+    return this.page.locator('.panel[id="workbench.parts.panel"]');
   }
 
   public get problems(): Locator {

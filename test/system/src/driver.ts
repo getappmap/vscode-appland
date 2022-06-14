@@ -16,19 +16,28 @@ export default class Driver {
   ) {}
 
   public async runCommand(cmd: string, allowMissing?: boolean): Promise<void> {
-    await this.page.keyboard.press(getOsShortcut('Control+Shift+P'));
-    await this.page.waitForSelector('.quick-input-box input', { state: 'visible' });
-    await this.page.keyboard.type(cmd);
-    await this.page.keyboard.press('Enter');
+    await this.page.press('body', getOsShortcut('Control+Shift+P'));
+
+    const input = this.page.locator('.quick-input-box input');
+    await input.type(cmd);
+    await input.press('Enter');
+
     if (allowMissing) {
       await this.page.keyboard.press('Escape');
     }
-    await this.page.waitForSelector('.quick-input-box input', { state: 'hidden' });
+
+    await input.waitFor({ state: 'hidden' });
   }
 
   public async waitForReady(): Promise<void> {
     await this.page
-      .locator('.notification-toast:has(span:text("AppMap: Ready")) >> a[role="button"]:text("OK")')
+      .locator('[id="status.notifications"] a[role="button"][aria-label="Notifications"]')
+      .click();
+
+    await this.page
+      .locator(
+        '.notifications-list-container .monaco-list-row:has(span:text("AppMap: Ready")) >> a[role="button"]:text("OK")'
+      )
       .click();
   }
 
