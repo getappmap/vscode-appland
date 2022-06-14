@@ -1,3 +1,12 @@
+## [0.28.3](https://github.com/applandinc/vscode-appland/compare/v0.28.2...v0.28.3) (2022-06-14)
+
+
+### Bug Fixes
+
+* `Open AppMaps` instructions view now automatically reloads ([09defe1](https://github.com/applandinc/vscode-appland/commit/09defe125833a384d89aa8020a352581d213d6ca))
+* AppMap install state is synchronized at startup ([261f52c](https://github.com/applandinc/vscode-appland/commit/261f52c57f3b6c44710c42946d38d130d787f3f2))
+* Clean up resources when closing the instructions window ([2a14ce1](https://github.com/applandinc/vscode-appland/commit/2a14ce13f64ab75ee72d857de97e65f175718dc4))
+
 ## [0.28.2](https://github.com/applandinc/vscode-appland/compare/v0.28.1...v0.28.2) (2022-06-09)
 
 
