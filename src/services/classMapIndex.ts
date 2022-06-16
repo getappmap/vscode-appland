@@ -4,24 +4,28 @@ import { readFile } from 'fs';
 import ChangeEventDebouncer from './changeEventDebouncer';
 import { Metadata } from '@appland/models';
 
-export enum CodeObjectEntryType {
-  ROOT_ID = '<root>',
-  FOLDER = 'folder',
+const ROOT_ID = '<root>';
+
+export enum CodeObjectEntryRootType {
   HTTP = 'http',
-  ROUTE = 'route',
+  FOLDER = 'folder',
   DATABASE = 'database',
-  QUERY = 'query',
   PACKAGE = 'package',
+}
+
+export enum CodeObjectEntryChildType {
+  ROUTE = 'route',
+  QUERY = 'query',
   CLASS = 'class',
   FUNCTION = 'function',
 }
 
 export const InspectableTypes = [
-  CodeObjectEntryType.PACKAGE,
-  CodeObjectEntryType.CLASS,
-  CodeObjectEntryType.FUNCTION,
-  CodeObjectEntryType.QUERY,
-  CodeObjectEntryType.ROUTE,
+  CodeObjectEntryRootType.PACKAGE,
+  CodeObjectEntryChildType.CLASS,
+  CodeObjectEntryChildType.FUNCTION,
+  CodeObjectEntryChildType.QUERY,
+  CodeObjectEntryChildType.ROUTE,
 ];
 
 const betterNames = {
@@ -33,7 +37,7 @@ type MinimalCodeObject = CodeObjectEntry | ClassMapEntry;
 
 type ClassMapEntry = {
   folder: vscode.WorkspaceFolder;
-  type: CodeObjectEntryType;
+  type: CodeObjectEntryRootType | CodeObjectEntryChildType;
   name: string;
   static: boolean;
   labels: string[];
@@ -51,7 +55,7 @@ export class CodeObjectEntry {
     public folder: vscode.WorkspaceFolder,
     appMapFilePath: string | undefined,
     public fqid: string,
-    public type: CodeObjectEntryType,
+    public type: CodeObjectEntryRootType | CodeObjectEntryChildType,
     public name: string,
     public isStatic = false,
     public labels: Set<string> = new Set(),
@@ -124,17 +128,17 @@ export class CodeObjectEntry {
 
       if (parent) {
         if (
-          (parent.type === CodeObjectEntryType.FOLDER &&
-            codeObject.type !== CodeObjectEntryType.FOLDER) ||
-          parent.type === CodeObjectEntryType.HTTP ||
-          parent.type === CodeObjectEntryType.DATABASE
+          (parent.type === CodeObjectEntryRootType.FOLDER &&
+            codeObject.type !== CodeObjectEntryRootType.FOLDER) ||
+          parent.type === CodeObjectEntryRootType.HTTP ||
+          parent.type === CodeObjectEntryRootType.DATABASE
         ) {
           tokens = [];
         } else {
           let separator: string;
           const co = codeObject as any;
           const isStatic = co.static || co.isStatic;
-          if (codeObject.type === CodeObjectEntryType.FUNCTION) {
+          if (codeObject.type === CodeObjectEntryChildType.FUNCTION) {
             separator = isStatic ? '.' : '#';
           } else {
             separator = CodeObjectEntry.separator(parent.type);
@@ -283,7 +287,7 @@ export default class ClassMapIndex {
       if (betterName) cme.name = betterName;
 
       let result = cme;
-      if (cme.type === CodeObjectEntryType.PACKAGE) {
+      if (cme.type === CodeObjectEntryRootType.PACKAGE) {
         {
           // Some code object entries have a path-delimited package name, but we want
           // each package name token to be its own object.
@@ -310,7 +314,7 @@ export default class ClassMapIndex {
 
         result = {
           folder: cme.folder,
-          type: CodeObjectEntryType.FOLDER,
+          type: CodeObjectEntryRootType.FOLDER,
           name: 'Code',
           static: false,
           location: cme.location,
@@ -325,8 +329,8 @@ export default class ClassMapIndex {
     const root = new CodeObjectEntry(
       {} as vscode.WorkspaceFolder,
       undefined,
-      CodeObjectEntryType.ROOT_ID,
-      CodeObjectEntryType.FOLDER,
+      ROOT_ID,
+      CodeObjectEntryRootType.FOLDER,
       'root'
     );
     await Promise.all(
@@ -370,6 +374,11 @@ export default class ClassMapIndex {
             .forEach(mergeCodeObject.bind(this, folder, appMapFilePath, root));
         })
     );
+    // The classMap loader in @appland/models will build code objects for events whose
+    // proper code object is missing from the classMap. They will appear as new root elements,
+    // which is confusing in the UI. We just drop them here.
+    return root.children
+      .filter((child) => Object.values(CodeObjectEntryRootType).includes(child.type as any))
     return root.children;
   }
 }
