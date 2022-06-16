@@ -3,7 +3,7 @@ import { exec } from 'child_process';
 import { join } from 'path';
 import assert from 'assert';
 import AppMapService from '../../src/appMapService';
-import { touch } from '../../src/util';
+import { touch } from '../../src/lib/touch';
 
 export const FixtureDir = join(__dirname, '../../../test/fixtures');
 export const ProjectRuby = join(__dirname, '../../../test/fixtures/workspaces/project-ruby');

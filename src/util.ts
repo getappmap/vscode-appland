@@ -18,21 +18,6 @@ export function getNonce(): string {
   return text;
 }
 
-export async function touch(path: string): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const time = new Date();
-    fs.utimes(path, time, time, (err) => {
-      if (err) {
-        return fs.open(path, 'w', (err, fd) => {
-          if (err) return reject(err);
-          fs.close(fd, (err) => (err ? reject(err) : resolve()));
-        });
-      }
-      resolve();
-    });
-  });
-}
-
 // Returns an object's string values with an optional key prefix
 // getStringRecords({ a: 'hello', b: [object Object] }, 'myApp') ->
 // { 'myApp.a': 'hello' }
@@ -191,33 +176,6 @@ export async function exec(
 
 export function unreachable(msg: string | undefined): never {
   throw new Error(`Unreachable: ${msg}`);
-}
-
-export function workspaceFolderForDocument(
-  document: vscode.TextDocument
-): vscode.WorkspaceFolder | undefined {
-  const { workspaceFolders } = vscode.workspace;
-  if (!workspaceFolders) {
-    return undefined;
-  }
-
-  let bestMatch;
-  let bestMatchLength = 0;
-  workspaceFolders.forEach((workspaceFolder) => {
-    const { length } = workspaceFolder.name;
-    if (bestMatchLength > length) {
-      // The best match matches more characters than this directory has available.
-      // This folder will never be a best match. Skip.
-      return;
-    }
-
-    if (document.uri.fsPath.startsWith(workspaceFolder.uri.fsPath)) {
-      bestMatch = workspaceFolder;
-      bestMatchLength = length;
-    }
-  });
-
-  return bestMatch;
 }
 
 // Resolve promises serially, one at a time.

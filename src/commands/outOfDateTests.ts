@@ -1,7 +1,7 @@
 import { resolve } from 'path';
 import * as vscode from 'vscode';
 import { AppmapUptodateService, fileLocationsToFilePaths } from '../services/appmapUptodateService';
-import { touch } from '../util';
+import { touch } from '../lib/touch';
 
 const TEST_NAMES = 'File names';
 const TEST_NAMES_LINES = 'File names and line numbers';
