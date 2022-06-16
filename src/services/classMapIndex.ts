@@ -196,6 +196,11 @@ export class CodeObjectEntry {
     }
   }
 
+  finalize(): void {
+    this._children = this._children.sort((a, b) => a.fqid.localeCompare(b.fqid));
+    this._children.forEach((child) => child.finalize());
+  }
+
   static separator(type: string): string {
     let separator: string;
     switch (type) {
@@ -379,6 +384,9 @@ export default class ClassMapIndex {
     // which is confusing in the UI. We just drop them here.
     return root.children
       .filter((child) => Object.values(CodeObjectEntryRootType).includes(child.type as any))
-    return root.children;
+      .map((child) => {
+        child.finalize();
+        return child;
+      });
   }
 }
