@@ -2,7 +2,6 @@ import assert from 'assert';
 import { InstructionStep, InstructionStepStatus } from '../src/appMap';
 import Context from './support/context';
 import ProjectDirectory from './support/project';
-import clipboard from 'clipboardy';
 
 describe('Instructions tree view', function() {
   const { driver, workspacePath } = (this.ctx as unknown) as Context;
