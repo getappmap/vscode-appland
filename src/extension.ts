@@ -27,7 +27,7 @@ import { ResolvedFinding } from './services/resolvedFinding';
 import AppMapService from './appMapService';
 import LineInfoIndex from './services/lineInfoIndex';
 import registerDecorationProvider from './decorations/decorationProvider';
-import registerHoverProvider from './hover/hoverProvider';
+import appmapHoverProvider from './hover/appmapHoverProvider';
 import registerInspectCodeObject from './commands/inspectCodeObject';
 import openCodeObjectInAppMap from './commands/openCodeObjectInAppMap';
 import ProcessServiceImpl from './processServiceImpl';
@@ -38,6 +38,7 @@ import { AppMapConfigWatcher } from './services/appMapConfigWatcher';
 import ProjectStateService, { ProjectStateServiceInstance } from './services/projectStateService';
 import { AppmapUptodateService } from './services/appmapUptodateService';
 import outOfDateTests from './commands/outOfDateTests';
+import appmapLinkProvider from './terminalLink/appmapLinkProvider';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   const workspaceServices = new WorkspaceServices(context);
@@ -90,7 +91,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       registerDecorationProvider(context, lineInfoIndex);
       outOfDateTests(context, appmapUptodateService);
       openCodeObjectInAppMap(context, classMapIndex);
-      registerHoverProvider(context, lineInfoIndex);
+      appmapHoverProvider(context, lineInfoIndex);
 
       const classMapWatcher = new ClassMapWatcher({
         onCreate: classMapIndex.addClassMapFile.bind(classMapIndex),
@@ -186,6 +187,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       Telemetry.sendEvent(PROJECT_OPEN, { rootDirectory: workspaceFolder.uri.fsPath });
     });
 
+    appmapLinkProvider();
     AppMapTextEditorProvider.register(context, extensionState);
     RemoteRecording.register(context);
     ContextMenu.register(context);
