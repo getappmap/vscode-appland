@@ -12,6 +12,7 @@ import { analyze, Feature, Score } from '../analyzers';
 import { randomBytes } from 'crypto';
 import { COPY_INSTALL_COMMAND, OPEN_VIEW, Telemetry } from '../telemetry';
 import ExtensionState from '../configuration/extensionState';
+import extensionSettings from '../configuration/extensionSettings';
 
 const COLUMN = ViewColumn.One;
 
@@ -35,6 +36,10 @@ export default async function projectPickerWebview(
 
     if (!properties.hasViewedInstallGuide) {
       properties.hasViewedInstallGuide = true;
+      if (extensionSettings.instructionsEnabled()) {
+        return commands.executeCommand('appmap.openInstallGuide', 'project-picker');
+      }
+
       return commands.executeCommand('appmap.openWorkspaceOverview');
     }
   }
