@@ -5,6 +5,7 @@ import GitProperties from '../telemetry/properties/versionControlGit';
 import AppMapAgentRuby from '../agent/appMapAgentRuby';
 import AppMapAgentDummy from '../agent/AppMapAgentDummy';
 import extensionSettings from '../configuration/extensionSettings';
+import backgroundJob from '../lib/backgroundJob';
 
 const LANGUAGES = [
   {

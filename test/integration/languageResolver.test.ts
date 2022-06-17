@@ -1,3 +1,4 @@
+// @project project-ruby
 import assert from 'assert';
 import MockExtensionContext from '../mocks/mockExtensionContext';
 import { initializeWorkspace, ProjectRuby } from './util';
