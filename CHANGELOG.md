@@ -1,3 +1,10 @@
+# [0.29.0](https://github.com/applandinc/vscode-appland/compare/v0.28.3...v0.29.0) (2022-06-17)
+
+
+### Features
+
+* AppMap terminal link provider ([e697328](https://github.com/applandinc/vscode-appland/commit/e6973283d4510f024f1bbb6224df1d32291d4dcc))
+
 ## [0.28.3](https://github.com/applandinc/vscode-appland/compare/v0.28.2...v0.28.3) (2022-06-14)
 
 
