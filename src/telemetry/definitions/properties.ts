@@ -82,7 +82,7 @@ export const SCANNER_CONFIG_PRESENT = new TelemetryDataProvider({
 export const PROJECT_LANGUAGE = new TelemetryDataProvider({
   id: 'appmap.project.language',
   cache: true,
-  async value(data: { rootDirectory?: PathLike; metadata?: Record<string, unknown> }) {
+  async value(data: { rootDirectory?: string; metadata?: Record<string, unknown> }) {
     // If metadata is available, use the language property.
     if (data.metadata) {
       const language = data.metadata.language as Record<string, string> | undefined;
@@ -103,7 +103,7 @@ export const PROJECT_LANGUAGE = new TelemetryDataProvider({
 export const PROJECT_LANGUAGE_DISTRIBUTION = new TelemetryDataProvider({
   id: 'appmap.project.language_distribution',
   cache: true,
-  async value({ rootDirectory }: { rootDirectory: PathLike }) {
+  async value({ rootDirectory }: { rootDirectory: string }) {
     const languageDistribution = await LanguageResolver.getLanguageDistribution(rootDirectory);
     return JSON.stringify(languageDistribution);
   },

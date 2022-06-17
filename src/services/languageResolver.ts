@@ -1,7 +1,6 @@
-import { PathLike, promises as fs, Dirent } from 'fs';
-import { extname, join } from 'path';
+import * as vscode from 'vscode';
+import { extname } from 'path';
 import AppMapAgent from '../agent/appMapAgent';
-import GitProperties from '../telemetry/properties/versionControlGit';
 import AppMapAgentRuby from '../agent/appMapAgentRuby';
 import AppMapAgentDummy from '../agent/AppMapAgentDummy';
 import extensionSettings from '../configuration/extensionSettings';
@@ -190,61 +189,55 @@ export const LANGUAGE_AGENTS = [
   return memo;
 }, {});
 
+type LanguageStats = Record<string, number>;
+
+const LANGUAGE_DISTRIBUTION_CACHE: Record<string, LanguageStats> = {};
+
+function folderPath(folder: vscode.WorkspaceFolder | string): string {
+  return typeof folder === 'string' ? folder : folder.uri.fsPath;
+}
+
 /**
  * Provides language identification APIs.
  */
 export default class LanguageResolver {
-  private static readonly LANGUAGE_DISTRIBUTION_CACHE = {};
-  private static readonly LANGUAGE_CACHE = {};
+  static clearCache(): void {
+    Object.keys(LANGUAGE_DISTRIBUTION_CACHE).forEach(
+      (key) => delete LANGUAGE_DISTRIBUTION_CACHE[key]
+    );
+  }
 
-  public static async getLanguageDistribution(
-    rootDirectory: PathLike
-  ): Promise<Record<string, number>> {
-    const cachedValue = this.LANGUAGE_DISTRIBUTION_CACHE[rootDirectory as string];
+  static async getLanguageDistribution(
+    folder: vscode.WorkspaceFolder | string
+  ): Promise<LanguageStats> {
+    const cachedValue = LANGUAGE_DISTRIBUTION_CACHE[folderPath(folder)];
     if (cachedValue) {
       return cachedValue;
     }
 
-    const directories = [rootDirectory];
-    const extensions: Record<string, number> = {};
+    const extensions: LanguageStats = {};
     const gitProperties = new GitProperties();
-    await gitProperties.initialize();
+    await gitProperties.initialize(folderPath(folder));
 
-    for (;;) {
-      const currentDirectory = directories.pop() as string;
-      if (!currentDirectory) {
-        break;
-      }
+    const searchPattern = new vscode.RelativePattern(folderPath(folder), '**');
 
-      let files: Dirent[] = [];
-      try {
-        files = await fs.readdir(currentDirectory, { withFileTypes: true });
-      } catch {
-        continue;
-      }
-
-      files.forEach((f) => {
-        const absPath = join(currentDirectory, f.name);
-
-        if (f.isDirectory()) {
-          if (f.name !== '.git' && !gitProperties.isIgnored(absPath)) {
-            directories.push(absPath);
+    // VSCode will already respect the user's ignore list. We can supplement that with the .gitignore files.
+    await vscode.workspace.findFiles(searchPattern).then((files) => {
+      files
+        .filter((file) => !gitProperties.isIgnored(file.fsPath))
+        .forEach((file) => {
+          const fileExtension = extname(file.fsPath);
+          if (fileExtension !== '' && LANGUAGE_EXTENSIONS[fileExtension]) {
+            extensions[fileExtension] = (extensions[fileExtension] || 0) + 1;
           }
-          return;
-        }
-
-        const fileExtension = extname(f.name);
-        if (fileExtension !== '' && LANGUAGE_EXTENSIONS[fileExtension]) {
-          extensions[fileExtension] = (extensions[fileExtension] || 0) + 1;
-        }
-      });
-    }
+        });
+    });
 
     const languages = Object.entries(extensions).reduce((memo, [ext, count]) => {
       const language = LANGUAGE_EXTENSIONS[ext];
       memo[language] = memo[language] + count || count;
       return memo;
-    }, {} as Record<string, number>);
+    }, {} as LanguageStats);
 
     const totalFiles = Object.values(languages).reduce((a, b) => a + b, 0);
     if (totalFiles > 0) {
@@ -253,7 +246,7 @@ export default class LanguageResolver {
       });
     }
 
-    this.LANGUAGE_DISTRIBUTION_CACHE[rootDirectory as string] = languages;
+    LANGUAGE_DISTRIBUTION_CACHE[folderPath(folder)] = languages;
 
     return languages;
   }
@@ -262,8 +255,12 @@ export default class LanguageResolver {
    * Retrieve the most frequently used language id for a given directory. The language returned must be supported (i.e.,
    * it must be registered in LANGUAGE_AGENTS). If the language is not supported, returns 'unknown'.
    */
-  private static async identifyLanguage(rootDirectory: PathLike): Promise<string> {
-    const languages = await this.getLanguageDistribution(rootDirectory);
+  private static async identifyLanguage(folder: vscode.WorkspaceFolder | string): Promise<string> {
+    const languages = await backgroundJob<LanguageStats>(
+      `appmap.languageDistribution.${folderPath(folder)}`,
+      LanguageResolver.getLanguageDistribution.bind(null, folder),
+      0
+    );
     const best = Object.entries(languages).sort((a, b) => b[1] - a[1])?.[0]?.[0];
     const agent = LANGUAGE_AGENTS[best];
     if (agent && agent.enabled) return best;
@@ -275,18 +272,11 @@ export default class LanguageResolver {
    * language for the full directory tree. Ignores files and directories that are Git ignored. Results are cached for
    * each directory for the lifetime of the extension. If the most used language is not supported, returns 'unknown'.
    */
-  public static async getLanguage(rootDirectory: PathLike): Promise<string> {
-    let language = this.LANGUAGE_CACHE[rootDirectory as string];
-
-    if (!language) {
-      language = await this.identifyLanguage(rootDirectory);
-      this.LANGUAGE_CACHE[rootDirectory as string] = language;
-    }
-
-    return language;
+  public static async getLanguage(folder: vscode.WorkspaceFolder | string): Promise<string> {
+    return await this.identifyLanguage(folder);
   }
 
-  public static async getAgent(rootDirectory: PathLike): Promise<AppMapAgent> {
+  public static async getAgent(rootDirectory: vscode.WorkspaceFolder): Promise<AppMapAgent> {
     const language = await this.getLanguage(rootDirectory);
     return LANGUAGE_AGENTS[language];
   }
