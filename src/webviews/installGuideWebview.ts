@@ -66,6 +66,7 @@ export default class InstallGuideWebView {
                 projects: await collectProjects(),
                 disabled: extensionSettings.findingsEnabled() ? [] : ['investigate-findings'],
                 page: pageIndex,
+                disabledLanguages: extensionSettings.pythonEnabled() ? [] : ['Python'],
               });
 
               break;

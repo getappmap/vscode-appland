@@ -45,4 +45,9 @@ export default {
       '--appmap-dir',
       '.',
     ],
+
+  pythonEnabled: (): boolean =>
+    [true, 'true'].includes(
+      vscode.workspace.getConfiguration('appMap').get('pythonEnabled') || false
+    ),
 };
