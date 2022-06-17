@@ -327,7 +327,6 @@
     "vscode:prepublish": "yarn run compile",
     "lint": "eslint . --ext .ts",
     "pretest": "yarn run lint && tsc",
-    "test:unit": "ts-node ./test/unit/*.test.ts",
     "test:extension": "ts-node ./test/integrationTest.ts",
     "test:web-client": "mocha web/test/*.test.mjs",
     "test:system": "node out/test/systemTest.js",
