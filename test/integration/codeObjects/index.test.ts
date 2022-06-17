@@ -3,7 +3,7 @@ import { exists } from 'fs';
 import { join } from 'path';
 import { promisify } from 'util';
 import { CodeObjectEntry } from '../../../src/services/classMapIndex';
-import { touch } from '../../../src/util';
+import { touch } from '../../../src/lib/touch';
 import {
   ExampleAppMap,
   ExampleAppMapIndexDir,

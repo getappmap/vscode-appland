@@ -1,7 +1,7 @@
 // @project project-uptodate
 import assert from 'assert';
 import * as vscode from 'vscode';
-import { touch } from '../../../src/util';
+import { touch } from '../../../src/lib/touch';
 import { initializeWorkspace, waitForExtension, waitForIndexer } from '../util';
 import { UserFile, UserPageAppMapFile, waitForDependsUpdate } from './util';
 
