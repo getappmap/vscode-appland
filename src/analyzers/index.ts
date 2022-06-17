@@ -68,8 +68,7 @@ export async function analyze(
   folder: WorkspaceFolder,
   appMapCollection?: AppMapCollection
 ): Promise<Result & Partial<WithAppMaps>> {
-  const path = folder.uri.fsPath;
-  const agent = await LanguageResolver.getAgent(path);
+  const agent = await LanguageResolver.getAgent(folder);
   const language = agent.enabled ? agent.language : `${agent.language}.disabled`;
   const analyzer = (await import(`./${language}`)).default;
   const result = await analyzer(folder);
@@ -81,6 +80,6 @@ export async function analyze(
     result.numAppMaps = appMaps.length;
   }
 
-  result.path = path;
+  result.path = folder.uri.fsPath;
   return result;
 }

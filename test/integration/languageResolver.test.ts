@@ -6,11 +6,6 @@ import LanguageResolver from '../../src/services/languageResolver';
 import { promises as fs } from 'fs';
 import { join } from 'path';
 
-interface LanguageResolverPrivateAccess {
-  LANGUAGE_DISTRIBUTION_CACHE: { [key: string]: Record<string, number> };
-  LANGUAGE_CACHE: { [key: string]: string };
-}
-
 const createOrReplace = async (f: () => Promise<void>): Promise<void> => {
   try {
     await f();
@@ -29,16 +24,13 @@ describe('LanguageResolver', () => {
     beforeEach(() => {
       context = new MockExtensionContext();
       initializeWorkspace();
-
-      // Clear the language cache.
-      const languageResolver = (LanguageResolver as unknown) as LanguageResolverPrivateAccess;
-      languageResolver.LANGUAGE_CACHE = {};
-      languageResolver.LANGUAGE_DISTRIBUTION_CACHE = {};
+      LanguageResolver.clearCache();
     });
 
     afterEach(() => {
       context.dispose();
       initializeWorkspace();
+      LanguageResolver.clearCache();
     });
 
     it('correctly identifies the project language', async () => {
