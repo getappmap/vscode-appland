@@ -202,7 +202,7 @@
     "viewsWelcome": [
       {
         "view": "appmap.views.local",
-        "contents": " There are no AppMaps in this project yet.\n[Getting started with AppMap](command:appmap.openWorkspaceOverview)\n",
+        "contents": " There are no AppMaps in this project yet.\n[Install AppMap Agent](command:appmap.openInstallGuide?%5B%22project-picker%22%5D)\n",
         "when": "appmap.initialized && !appmap.hasData"
       },
       {
