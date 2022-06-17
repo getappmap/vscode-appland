@@ -122,7 +122,7 @@ describe('Instructions tree view', function() {
     await driver.appMap.openActionPanel();
     await driver.appMap.ready();
 
-    await driver.appMap.pendingBadge.isVisible();
+    await driver.appMap.pendingBadge.waitFor({ state: 'visible' });
     await driver.appMap.assertInstructionStepStatus(
       InstructionStep.InstallAppMapAgent,
       InstructionStepStatus.Pending
