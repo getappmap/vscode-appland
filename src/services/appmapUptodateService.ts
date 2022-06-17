@@ -93,6 +93,11 @@ export default class AppmapUptodateServiceInstance extends EventEmitter
     const result = new Set<string>();
     await Promise.all(
       [...outofDateAppMapFiles].map(async (file) => {
+        // Handle some anomalous behavior where the file path contains logging output:
+        if (file.startsWith('yarn run v')) return;
+        if (file.startsWith('Done in ')) return;
+        if (file.includes('appmap depends')) return;
+
         let metadataData: string;
         try {
           metadataData = await promisify(readFile)(
