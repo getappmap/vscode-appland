@@ -4,6 +4,7 @@ import AppMapAgent from '../agent/appMapAgent';
 import GitProperties from '../telemetry/properties/versionControlGit';
 import AppMapAgentRuby from '../agent/appMapAgentRuby';
 import AppMapAgentDummy from '../agent/AppMapAgentDummy';
+import extensionSettings from '../configuration/extensionSettings';
 
 const LANGUAGES = [
   {
@@ -177,12 +178,12 @@ const LANGUAGE_EXTENSIONS = LANGUAGES.reduce((memo, lang) => {
 /**
  * Register new AppMap agent CLI interfaces here.
  */
-const LANGUAGE_AGENTS = [
+export const LANGUAGE_AGENTS = [
   new AppMapAgentRuby(),
-  new AppMapAgentDummy('java'),
-  new AppMapAgentDummy('python'),
+  new AppMapAgentDummy('java', 'Java (Spring)'),
+  new AppMapAgentDummy('javascript', 'JavaScript (Node & Express)'),
+  new AppMapAgentDummy('python', 'Python (Django or Flask)', extensionSettings.pythonEnabled()),
   new AppMapAgentDummy('unknown'),
-  new AppMapAgentDummy('javascript'),
 ].reduce((memo, agent) => {
   memo[agent.language] = agent;
   return memo;
@@ -263,7 +264,8 @@ export default class LanguageResolver {
   private static async identifyLanguage(rootDirectory: PathLike): Promise<string> {
     const languages = await this.getLanguageDistribution(rootDirectory);
     const best = Object.entries(languages).sort((a, b) => b[1] - a[1])?.[0]?.[0];
-    if (LANGUAGE_AGENTS[best]) return best;
+    const agent = LANGUAGE_AGENTS[best];
+    if (agent && agent.enabled) return best;
     return UNKNOWN_LANGUAGE;
   }
 
