@@ -1,8 +1,6 @@
 import * as vscode from 'vscode';
 import { WorkspaceService, WorkspaceServiceInstance } from './workspaceService';
 
-type Constructor<T> = new (...args: any[]) => T;
-
 export default class WorkspaceServices {
   workspaceServices: WorkspaceService[] = [];
   workspaceServiceInstances: Record<string, WorkspaceServiceInstance[]> = {};
