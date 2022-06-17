@@ -245,7 +245,7 @@
           "id": "appmap.views.codeObjects",
           "name": "Code Objects",
           "visibility": "collapsed",
-          "when": "config.appMap.indexEnabled == true || config.appMap.indexEnabled == true"
+          "when": "config.appMap.indexEnabled == true"
         },
         {
           "id": "appmap.views.documentation",
