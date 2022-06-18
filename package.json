@@ -202,8 +202,13 @@
     "viewsWelcome": [
       {
         "view": "appmap.views.local",
-        "contents": " There are no AppMaps in this project yet.\n[Getting started with AppMap](command:appmap.openWorkspaceOverview)\n",
-        "when": "appmap.initialized && !appmap.hasData"
+        "contents": " There are no AppMaps in this project yet.\n[Install AppMap Agent](command:appmap.openInstallGuide?%5B%22project-picker%22%5D)\n",
+        "when": "appmap.initialized && !appmap.hasData && config.appMap.instructionsEnabled == true"
+      },
+      {
+        "view": "appmap.views.local",
+        "contents": " There are no AppMaps in this project yet.\n[Getting Started with AppMap](command:appmap.openWorkspaceOverview)\n",
+        "when": "appmap.initialized && !appmap.hasData && config.appMap.instructionsEnabled == false"
       },
       {
         "view": "appmap.views.local",
@@ -240,7 +245,7 @@
           "id": "appmap.views.codeObjects",
           "name": "Code Objects",
           "visibility": "collapsed",
-          "when": "config.appMap.indexEnabled == true || config.appMap.indexEnabled == true"
+          "when": "config.appMap.indexEnabled == true"
         },
         {
           "id": "appmap.views.documentation",
