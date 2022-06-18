@@ -1,3 +1,10 @@
+## [0.29.1](https://github.com/applandinc/vscode-appland/compare/v0.29.0...v0.29.1) (2022-06-18)
+
+
+### Bug Fixes
+
+* AppMap welcome button interaction is now feature flagged ([#395](https://github.com/applandinc/vscode-appland/issues/395)) ([b5f849d](https://github.com/applandinc/vscode-appland/commit/b5f849df93cbf778a760f502f58159622f470ed9))
+
 # [0.29.0](https://github.com/applandinc/vscode-appland/compare/v0.28.3...v0.29.0) (2022-06-17)
 
 
