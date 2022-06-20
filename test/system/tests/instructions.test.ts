@@ -118,7 +118,7 @@ describe('Instructions tree view', function() {
     await driver.appMap.pendingBadge.waitFor({ state: 'hidden' });
   });
 
-  it('can be stepped through as expected', async () => {
+  xit('can be stepped through as expected', async () => {
     await driver.appMap.openActionPanel();
     await driver.appMap.ready();
 
