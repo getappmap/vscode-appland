@@ -1,5 +1,5 @@
 import { exec } from 'child_process';
-import { promises as fs } from 'fs';
+import { promises as fs, unlinkSync } from 'fs';
 import { glob } from 'glob';
 import * as path from 'path';
 
@@ -47,20 +47,24 @@ export default class ProjectDirectory {
       async () => await fs.unlink(path.join(this.projectPath, 'appmap-findings.yml'))
     );
 
-    return new Promise((resolve, reject) => {
-      glob(
-        path.join(this.appMapDirectoryPath, '**/*.appmap.json'),
-        async (err: Error | null, matches: string[]) => {
-          if (err) {
-            reject(err);
-            return;
-          }
-
-          await Promise.all(matches.map((match) => ignoreExceptions(() => fs.unlink(match))));
-          resolve();
+    glob(
+      path.join(this.appMapDirectoryPath, '**/*.appmap.json'),
+      (err: Error | null, matches: string[]) => {
+        if (err) {
+          throw err;
         }
-      );
-    });
+
+        matches.forEach((match) => {
+          try {
+            unlinkSync(match);
+          } catch (e) {
+            if (e !== 'ENOENT') {
+              console.log(e);
+            }
+          }
+        });
+      }
+    );
   }
 
   async reset(): Promise<void> {
