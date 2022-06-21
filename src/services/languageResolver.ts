@@ -5,6 +5,7 @@ import AppMapAgentRuby from '../agent/appMapAgentRuby';
 import AppMapAgentDummy from '../agent/AppMapAgentDummy';
 import extensionSettings from '../configuration/extensionSettings';
 import backgroundJob from '../lib/backgroundJob';
+import GitProperties from '../telemetry/properties/versionControlGit';
 
 const LANGUAGES = [
   {
@@ -259,8 +260,15 @@ export default class LanguageResolver {
     const languages = await backgroundJob<LanguageStats>(
       `appmap.languageDistribution.${folderPath(folder)}`,
       LanguageResolver.getLanguageDistribution.bind(null, folder),
-      0
+      250
     );
+
+    console.log(
+      `[language-resolver] Detected languages ${JSON.stringify(languages)} in project ${folderPath(
+        folder
+      )}`
+    );
+
     const best = Object.entries(languages).sort((a, b) => b[1] - a[1])?.[0]?.[0];
     const agent = LANGUAGE_AGENTS[best];
     if (agent && agent.enabled) return best;

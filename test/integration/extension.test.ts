@@ -12,9 +12,12 @@ describe('Smoke', () => {
       'localAppMaps',
       'autoIndexService',
       'autoScanService',
+      'sourceFileWatcher',
+      'configWatcher',
+      'workspaceServices',
+      'uptodate',
       'findings',
       'classMap',
-      'uptodateService',
     ]);
   });
 });
