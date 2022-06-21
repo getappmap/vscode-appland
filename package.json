@@ -164,29 +164,33 @@
           "default": "https://app.land",
           "description": "URL of an AppLand cloud instance for AppMap storage"
         },
-        "appMap.indexEnabled": {
-          "type": "boolean",
-          "description": "Enable AppMap indexer and code objects view (preview)"
-        },
-        "appMap.findingsEnabled": {
-          "type": "boolean",
-          "description": "Enable AppMap scanner and findings (preview)"
-        },
         "appMap.instructionsEnabled": {
           "type": "boolean",
           "description": "Enable an experimental version of usage instructions"
         },
-        "appMap.inspectEnabled": {
+        "appMap.indexEnabled": {
           "type": "boolean",
-          "description": "Enable detailed inspection of AppMap code objects (preview)"
+          "description": "Enable AppMap indexer and code objects view (preview)"
         },
         "appMap.indexCommand": {
           "type": "string",
           "description": "Command use to run the @appland/appmap index command in watch mode"
         },
+        "appMap.findingsEnabled": {
+          "type": "boolean",
+          "description": "Enable AppMap scanner and findings (preview)"
+        },
         "appMap.scanCommand": {
           "type": "string",
           "description": "Command use to run the @appland/scanner scan command in watch mode (preview)"
+        },
+        "appMap.dependsCommand": {
+          "type": "string",
+          "description": "Command use to run the @appland/appmap depends command"
+        },
+        "appMap.inspectEnabled": {
+          "type": "boolean",
+          "description": "Enable detailed inspection of AppMap code objects (preview)"
         },
         "appMap.pythonEnabled": {
           "type": "boolean",
