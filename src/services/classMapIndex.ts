@@ -264,10 +264,10 @@ export default class ClassMapIndex {
 
   protected async updateClassMap(): Promise<void> {
     if (this._dirty) {
-      this._dirty = false;
       const { codeObjectByFqid, classMap } = await backgroundJob('appmap.updateClassMap', () =>
         buildClassMap(this.classMapFileURLs)
       );
+      this._dirty = false;
       this._codeObjectByFqid = codeObjectByFqid;
       this._classMap = classMap;
     }
