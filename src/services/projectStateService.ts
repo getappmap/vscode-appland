@@ -190,7 +190,7 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
   }
 }
 
-export default class ProjectStateService implements WorkspaceService {
+export default class ProjectStateService implements WorkspaceService<ProjectStateServiceInstance> {
   constructor(
     protected extensionState: ExtensionState,
     protected readonly appMapWatcher: FileChangeEmitter,

@@ -121,7 +121,7 @@ export default class AppmapUptodateServiceInstance extends EventEmitter
   }
 }
 
-export class AppmapUptodateService implements WorkspaceService {
+export class AppmapUptodateService implements WorkspaceService<AppmapUptodateServiceInstance> {
   private _onUpdated: vscode.EventEmitter<AppmapUptodateService> = new ChangeEventDebouncer<
     AppmapUptodateService
   >();
