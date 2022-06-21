@@ -166,7 +166,7 @@
         },
         "appMap.indexEnabled": {
           "type": "boolean",
-          "description": "Enable AppMap indexer and code objects view(preview)"
+          "description": "Enable AppMap indexer and code objects view (preview)"
         },
         "appMap.findingsEnabled": {
           "type": "boolean",
@@ -187,6 +187,10 @@
         "appMap.scanCommand": {
           "type": "string",
           "description": "Command use to run the @appland/scanner scan command in watch mode (preview)"
+        },
+        "appMap.pythonEnabled": {
+          "type": "boolean",
+          "description": "Enable support of Python projects"
         }
       }
     },
