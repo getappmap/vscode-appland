@@ -27,7 +27,7 @@ class ConfigWatcherInstance implements WorkspaceServiceInstance {
   }
 
   async initialize() {
-    (await vscode.workspace.findFiles(this.configPattern, '**/node_modules/**')).forEach((uri) => {
+    (await vscode.workspace.findFiles(this.configPattern)).forEach((uri) => {
       this.onCreate.fire({ uri, workspaceFolder: this.folder });
     });
     return this;

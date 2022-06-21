@@ -32,9 +32,12 @@ async function deleteAppMap(uri: vscode.Uri): Promise<void> {
 }
 
 async function deleteAppMaps(folder: vscode.WorkspaceFolder): Promise<void> {
-  (await vscode.workspace.findFiles(new vscode.RelativePattern(folder, '**/*.appmap.json'))).map(
-    deleteAppMap.bind(null)
-  );
+  (
+    await vscode.workspace.findFiles(
+      new vscode.RelativePattern(folder, '**/*.appmap.json'),
+      `**/node_modules/**`
+    )
+  ).map(deleteAppMap.bind(null));
 }
 
 export default async function deleteAllAppMaps(
