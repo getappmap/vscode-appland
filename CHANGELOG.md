@@ -1,3 +1,15 @@
+# [0.30.0](https://github.com/applandinc/vscode-appland/compare/v0.29.1...v0.30.0) (2022-06-21)
+
+
+### Bug Fixes
+
+* Remove Flask and Django from README.md ([ea86aec](https://github.com/applandinc/vscode-appland/commit/ea86aecb47fe61348875409d61f421f75773cc95))
+
+
+### Features
+
+* Put Python support behind a feature flag ([f611a6d](https://github.com/applandinc/vscode-appland/commit/f611a6d9a7d4bf71bfccd3630d1a46a33b353011))
+
 ## [0.29.1](https://github.com/applandinc/vscode-appland/compare/v0.29.0...v0.29.1) (2022-06-18)
 
 
