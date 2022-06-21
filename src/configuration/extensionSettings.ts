@@ -46,6 +46,16 @@ export default {
       '${PROJECT_DIR}',
     ],
 
+  dependsCommand: (): string | string[] =>
+    vscode.workspace.getConfiguration('appMap').get('dependsCommand') || [
+      'appmap',
+      'depends',
+      '--base-dir',
+      '.',
+      '--appmap-dir',
+      '.',
+    ],
+
   pythonEnabled: (): boolean =>
     [true, 'true'].includes(
       vscode.workspace.getConfiguration('appMap').get('pythonEnabled') || false
