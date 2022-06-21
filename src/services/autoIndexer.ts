@@ -10,7 +10,8 @@ class AutoIndexer extends ProcessService implements WorkspaceServiceInstance {
   }
 }
 
-export default class AutoIndexerService extends EventEmitter implements WorkspaceService {
+export default class AutoIndexerService extends EventEmitter
+  implements WorkspaceService<AutoIndexer> {
   async create(folder: vscode.WorkspaceFolder): Promise<AutoIndexer> {
     const indexer = new AutoIndexer(folder);
     ['invoke', 'message', 'exit'].forEach((event) =>

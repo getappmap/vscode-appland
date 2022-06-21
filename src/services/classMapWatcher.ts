@@ -43,10 +43,10 @@ class ClassMapWatcherInstance implements WorkspaceServiceInstance {
   }
 }
 
-export class ClassMapWatcher implements WorkspaceService {
+export class ClassMapWatcher implements WorkspaceService<ClassMapWatcherInstance> {
   constructor(public handler: FileChangeHandler) {}
 
-  async create(folder: vscode.WorkspaceFolder): Promise<WorkspaceServiceInstance> {
+  async create(folder: vscode.WorkspaceFolder): Promise<ClassMapWatcherInstance> {
     const watcher = new ClassMapWatcherInstance(folder, this.handler);
     return watcher.initialize();
   }
