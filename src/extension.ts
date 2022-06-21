@@ -38,10 +38,12 @@ import { AppmapUptodateService } from './services/appmapUptodateService';
 import outOfDateTests from './commands/outOfDateTests';
 import appmapLinkProvider from './terminalLink/appmapLinkProvider';
 import { NodeProcessService } from './services/nodeProcessService';
+import { initializeWorkspaceServices } from './services/workspaceServices';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
-  const workspaceServices = new WorkspaceServices(context);
   Telemetry.register(context);
+
+  const workspaceServices = initializeWorkspaceServices(context);
   const autoIndexServiceImpl = new ProcessServiceImpl();
   const autoScanServiceImpl = new ProcessServiceImpl();
 
