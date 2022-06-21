@@ -12,7 +12,7 @@ export const UserPageAppMapFile = resolve(
 export async function waitForDependsUpdate(): Promise<AppmapUptodateService> {
   const appMapService = await waitForExtension();
   assert(appMapService);
-  const uptodateService = appMapService.uptodateService;
+  const uptodateService = appMapService.uptodate;
   assert(uptodateService);
   return new Promise((resolve, reject) => {
     const timeout = setTimeout(() => reject('Uptodate service is not alive'), APP_SERVICES_TIMEOUT);

@@ -267,6 +267,9 @@ export default class ClassMapIndex {
       const { codeObjectByFqid, classMap } = await backgroundJob('appmap.updateClassMap', () =>
         buildClassMap(this.classMapFileURLs)
       );
+      console.log(
+        `[class-map] ClassMap updated with ${Object.keys(codeObjectByFqid).length} code objects`
+      );
       this._dirty = false;
       this._codeObjectByFqid = codeObjectByFqid;
       this._classMap = classMap;

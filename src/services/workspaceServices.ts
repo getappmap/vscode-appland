@@ -2,7 +2,7 @@ import assert from 'assert';
 import * as vscode from 'vscode';
 import { WorkspaceService, WorkspaceServiceInstance } from './workspaceService';
 
-class WorkspaceServices {
+export class WorkspaceServices {
   workspaceServices: WorkspaceService<WorkspaceServiceInstance>[] = [];
   workspaceServiceInstances: Map<vscode.WorkspaceFolder, WorkspaceServiceInstance[]> = new Map();
   instanceServices: Map<
