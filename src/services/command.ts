@@ -50,7 +50,11 @@ export default class Command {
     const mainCommand = args.shift();
     if (!mainCommand) throw new Error('No command provided');
 
-    return { mainCommand, args, options };
+    return {
+      mainCommand,
+      args: args.map((arg) => (arg === '${workspaceFolder}' ? folder.uri.fsPath : arg)),
+      options,
+    };
   }
 }
 

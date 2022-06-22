@@ -40,8 +40,6 @@ export default class FindingsIndex extends EventEmitter {
     sourceUri: vscode.Uri,
     workspaceFolder: vscode.WorkspaceFolder
   ): Promise<void> {
-    console.log(`Findings file added: ${sourceUri.fsPath}`);
-
     let findingsData: Buffer;
     let findings: Finding[];
 
@@ -52,12 +50,14 @@ export default class FindingsIndex extends EventEmitter {
       return;
     }
 
+    const findingsDataStr = findingsData.toString();
+
     try {
-      findings = JSON.parse(findingsData.toString()).findings;
+      findings = JSON.parse(findingsDataStr).findings;
     } catch (e) {
       // Malformed JSON file. This is unexpected because findings files should be written atomically.
       // TODO: Retry in a little while?
-      console.warn(e);
+      if (!(e instanceof SyntaxError)) console.warn(e);
       return;
     }
 
@@ -87,8 +87,6 @@ export default class FindingsIndex extends EventEmitter {
     workspaceFolder: vscode.WorkspaceFolder
   ): Promise<void> {
     if (await fileExists(sourceUri.fsPath)) return;
-
-    console.log(`Findings file removed: ${sourceUri.fsPath}`);
 
     const removedFindings = this.findingsBySourceUri[sourceUri.toString()];
     if (removedFindings) {

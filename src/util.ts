@@ -36,20 +36,35 @@ export function notEmpty<TValue>(value: TValue | null | undefined): value is TVa
   return value !== null && value !== undefined;
 }
 
+// It would be weird to have a mono-repo whose sub-projects are nested more deeply than this.
+const MAX_DIR_SEARCH = 3;
+
 export async function resolveFilePath(
   basePath: string,
   filePath: string
 ): Promise<string | undefined> {
-  if (!path.isAbsolute(filePath)) filePath = path.join(basePath, filePath);
+  // If the file is part of a monorepo (project directory with sub-projects), then the first
+  // entry(s) of the AppMap path may be the path to the project directory. So, search up a reasonable
+  // number of directory levels to try and resolve the AppMap path.
 
-  return new Promise<string | undefined>((resolve) => {
-    fs.stat(filePath, (err) => {
-      if (err) {
-        return resolve(undefined);
-      }
-      return resolve(filePath);
-    });
-  });
+  const pathsToSearch: string[] = [];
+  if (path.isAbsolute(filePath)) {
+    pathsToSearch.push(filePath);
+  } else {
+    const basePathTokens = basePath.split(path.sep);
+    for (let pathIndex = 0; pathIndex < MAX_DIR_SEARCH; pathIndex++) {
+      const basePathSub = basePathTokens.slice(0, basePathTokens.length - pathIndex).join(path.sep);
+      if (basePathSub === process.env.HOME) break;
+
+      pathsToSearch.push(path.join(basePathSub, filePath));
+    }
+  }
+
+  for (const pathToSearch of pathsToSearch) {
+    if (await fileExists(pathToSearch)) {
+      return pathToSearch;
+    }
+  }
 }
 
 export async function fileExists(filename: string): Promise<boolean> {

@@ -149,8 +149,14 @@ export async function executeWorkspaceOSCommand(cmd: string, workspaceName: stri
 
 async function cleanWorkspace(): Promise<void> {
   async function cleanProject(project: string) {
-    await executeWorkspaceOSCommand(`git checkout HEAD .`, project);
-    await executeWorkspaceOSCommand(`git clean -fd .`, project);
+    const commands = [`git checkout HEAD .`, `git clean -fd .`];
+    for (const command of commands) {
+      try {
+        await executeWorkspaceOSCommand(command, project);
+      } catch (e) {
+        console.log(e);
+      }
+    }
   }
   for (const project of PROJECTS) {
     await cleanProject(project);

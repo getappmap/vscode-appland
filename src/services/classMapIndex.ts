@@ -3,25 +3,30 @@ import { promisify } from 'util';
 import { readFile } from 'fs';
 import ChangeEventDebouncer from './changeEventDebouncer';
 import { Metadata } from '@appland/models';
+import backgroundJob from '../lib/backgroundJob';
 
-export enum CodeObjectEntryType {
-  ROOT_ID = '<root>',
-  FOLDER = 'folder',
+const ROOT_ID = '<root>';
+
+export enum CodeObjectEntryRootType {
   HTTP = 'http',
-  ROUTE = 'route',
+  FOLDER = 'folder',
   DATABASE = 'database',
-  QUERY = 'query',
   PACKAGE = 'package',
+}
+
+export enum CodeObjectEntryChildType {
+  ROUTE = 'route',
+  QUERY = 'query',
   CLASS = 'class',
   FUNCTION = 'function',
 }
 
 export const InspectableTypes = [
-  CodeObjectEntryType.PACKAGE,
-  CodeObjectEntryType.CLASS,
-  CodeObjectEntryType.FUNCTION,
-  CodeObjectEntryType.QUERY,
-  CodeObjectEntryType.ROUTE,
+  CodeObjectEntryRootType.PACKAGE,
+  CodeObjectEntryChildType.CLASS,
+  CodeObjectEntryChildType.FUNCTION,
+  CodeObjectEntryChildType.QUERY,
+  CodeObjectEntryChildType.ROUTE,
 ];
 
 const betterNames = {
@@ -33,7 +38,7 @@ type MinimalCodeObject = CodeObjectEntry | ClassMapEntry;
 
 type ClassMapEntry = {
   folder: vscode.WorkspaceFolder;
-  type: CodeObjectEntryType;
+  type: CodeObjectEntryRootType | CodeObjectEntryChildType;
   name: string;
   static: boolean;
   labels: string[];
@@ -51,7 +56,7 @@ export class CodeObjectEntry {
     public folder: vscode.WorkspaceFolder,
     appMapFilePath: string | undefined,
     public fqid: string,
-    public type: CodeObjectEntryType,
+    public type: CodeObjectEntryRootType | CodeObjectEntryChildType,
     public name: string,
     public isStatic = false,
     public labels: Set<string> = new Set(),
@@ -124,17 +129,17 @@ export class CodeObjectEntry {
 
       if (parent) {
         if (
-          (parent.type === CodeObjectEntryType.FOLDER &&
-            codeObject.type !== CodeObjectEntryType.FOLDER) ||
-          parent.type === CodeObjectEntryType.HTTP ||
-          parent.type === CodeObjectEntryType.DATABASE
+          (parent.type === CodeObjectEntryRootType.FOLDER &&
+            codeObject.type !== CodeObjectEntryRootType.FOLDER) ||
+          parent.type === CodeObjectEntryRootType.HTTP ||
+          parent.type === CodeObjectEntryRootType.DATABASE
         ) {
           tokens = [];
         } else {
           let separator: string;
           const co = codeObject as any;
           const isStatic = co.static || co.isStatic;
-          if (codeObject.type === CodeObjectEntryType.FUNCTION) {
+          if (codeObject.type === CodeObjectEntryChildType.FUNCTION) {
             separator = isStatic ? '.' : '#';
           } else {
             separator = CodeObjectEntry.separator(parent.type);
@@ -192,6 +197,11 @@ export class CodeObjectEntry {
     }
   }
 
+  finalize(): void {
+    this._children = this._children.sort((a, b) => a.fqid.localeCompare(b.fqid));
+    this._children.forEach((child) => child.finalize());
+  }
+
   static separator(type: string): string {
     let separator: string;
     switch (type) {
@@ -238,8 +248,6 @@ export default class ClassMapIndex {
   }
 
   addClassMapFile(sourceUri: vscode.Uri): void {
-    console.log(`ClassMap file added: ${sourceUri.fsPath}`);
-
     const folder = vscode.workspace.getWorkspaceFolder(sourceUri);
     if (!folder) return;
 
@@ -249,8 +257,6 @@ export default class ClassMapIndex {
   }
 
   removeClassMapFile(sourceUri: vscode.Uri): void {
-    console.log(`ClassMap file removed: ${sourceUri.fsPath}`);
-
     this._dirty = true;
     this.classMapFileURLs.delete(sourceUri.toString());
     this._onChanged.fire(this);
@@ -258,118 +264,138 @@ export default class ClassMapIndex {
 
   protected async updateClassMap(): Promise<void> {
     if (this._dirty) {
+      const { codeObjectByFqid, classMap } = await backgroundJob('appmap.updateClassMap', () =>
+        buildClassMap(this.classMapFileURLs)
+      );
+      console.log(
+        `[class-map] ClassMap updated with ${Object.keys(codeObjectByFqid).length} code objects`
+      );
       this._dirty = false;
-      this._codeObjectByFqid = {};
-      this._classMap = await this.buildClassMap();
+      this._codeObjectByFqid = codeObjectByFqid;
+      this._classMap = classMap;
     }
   }
+}
 
-  protected async buildClassMap(): Promise<CodeObjectEntry[]> {
-    const mergeCodeObject = (
-      folder: vscode.WorkspaceFolder,
-      appMapFilePath: string,
-      parent: CodeObjectEntry,
-      cme: ClassMapEntry
-    ) => {
-      const child = parent.findOrMergeChild(folder, appMapFilePath, cme);
-      this._codeObjectByFqid[child.fqid] = child;
-      (cme.children || []).forEach(mergeCodeObject.bind(this, folder, appMapFilePath, child));
-    };
+async function buildClassMap(
+  classMapFileURLs: Set<string>
+): Promise<{ codeObjectByFqid: Record<string, CodeObjectEntry>; classMap: CodeObjectEntry[] }> {
+  const codeObjectByFqid: Record<string, CodeObjectEntry> = {};
 
-    function normalizeRoot(cme: ClassMapEntry): ClassMapEntry {
-      cme.labels = cme.labels || [];
-      cme.children = cme.children || [];
-      const betterName = betterNames[[cme.type, cme.name].join(' ')];
-      if (betterName) cme.name = betterName;
+  const mergeCodeObject = (
+    folder: vscode.WorkspaceFolder,
+    appMapFilePath: string,
+    parent: CodeObjectEntry,
+    cme: ClassMapEntry
+  ) => {
+    const child = parent.findOrMergeChild(folder, appMapFilePath, cme);
+    codeObjectByFqid[child.fqid] = child;
+    (cme.children || []).forEach(mergeCodeObject.bind(null, folder, appMapFilePath, child));
+  };
 
-      let result = cme;
-      if (cme.type === CodeObjectEntryType.PACKAGE) {
-        {
-          // Some code object entries have a path-delimited package name, but we want
-          // each package name token to be its own object.
-          const chain = cme.name.split('/').map(
-            (name: string) =>
-              ({
-                folder: cme.folder,
-                type: cme.type,
-                name: name,
-                static: cme.static,
-                location: cme.location,
-                children: [],
-                labels: cme.labels,
-              } as ClassMapEntry)
-          );
-          chain.forEach((item, index) => {
-            if (index > 0) {
-              chain[index - 1].children = [item];
-            }
-          });
-          chain[chain.length - 1].children = cme.children;
-          cme = chain[0];
-        }
+  function normalizeRoot(cme: ClassMapEntry): ClassMapEntry {
+    cme.labels = cme.labels || [];
+    cme.children = cme.children || [];
+    const betterName = betterNames[[cme.type, cme.name].join(' ')];
+    if (betterName) cme.name = betterName;
 
-        result = {
-          folder: cme.folder,
-          type: CodeObjectEntryType.FOLDER,
-          name: 'Code',
-          static: false,
-          location: cme.location,
-          children: [cme],
-          labels: [],
-        } as ClassMapEntry;
+    let result = cme;
+    if (cme.type === CodeObjectEntryRootType.PACKAGE) {
+      {
+        // Some code object entries have a path-delimited package name, but we want
+        // each package name token to be its own object.
+        const chain = cme.name.split('/').map(
+          (name: string) =>
+            ({
+              folder: cme.folder,
+              type: cme.type,
+              name: name,
+              static: cme.static,
+              location: cme.location,
+              children: [],
+              labels: cme.labels,
+            } as ClassMapEntry)
+        );
+        chain.forEach((item, index) => {
+          if (index > 0) {
+            chain[index - 1].children = [item];
+          }
+        });
+        chain[chain.length - 1].children = cme.children;
+        cme = chain[0];
       }
 
-      return result;
+      result = {
+        folder: cme.folder,
+        type: CodeObjectEntryRootType.FOLDER,
+        name: 'Code',
+        static: false,
+        location: cme.location,
+        children: [cme],
+        labels: [],
+      } as ClassMapEntry;
     }
 
-    const root = new CodeObjectEntry(
-      {} as vscode.WorkspaceFolder,
-      undefined,
-      CodeObjectEntryType.ROOT_ID,
-      CodeObjectEntryType.FOLDER,
-      'root'
-    );
-    await Promise.all(
-      [...this.classMapFileURLs]
-        .map((urlStr) => vscode.Uri.parse(urlStr, true))
-        .map(async (classMapFileURL) => {
-          let classMapData: Buffer;
-          try {
-            classMapData = await promisify(readFile)(classMapFileURL.fsPath);
-          } catch (e) {
-            if ((e as any).code !== 'ENOENT') console.warn(e);
-            return;
-          }
-
-          const folder = vscode.workspace.getWorkspaceFolder(classMapFileURL);
-          if (!folder) {
-            console.warn(`No workspace folder for ${classMapFileURL.fsPath}`);
-            return;
-          }
-
-          let classMap: ClassMapEntry[];
-          try {
-            classMap = JSON.parse(classMapData.toString());
-          } catch (e) {
-            // Malformed JSON file. This is logged because classMap files should be written atomically.
-            console.warn(e);
-            return;
-          }
-
-          if (!classMap) {
-            console.log(`ClassMap from ${classMapFileURL} is falsey`);
-            return;
-          }
-
-          const classMapFileTokens = classMapFileURL.fsPath.split('/');
-          classMapFileTokens.pop();
-          const indexDir = classMapFileTokens.join('/');
-          const appMapFilePath = [indexDir, 'appmap.json'].join('.');
-          classMap
-            .map(normalizeRoot.bind(this))
-            .forEach(mergeCodeObject.bind(this, folder, appMapFilePath, root));
-        })
-    );
-    return root.children;
+    return result;
   }
+
+  const root = new CodeObjectEntry(
+    {} as vscode.WorkspaceFolder,
+    undefined,
+    ROOT_ID,
+    CodeObjectEntryRootType.FOLDER,
+    'root'
+  );
+  await Promise.all(
+    [...classMapFileURLs]
+      .map((urlStr) => vscode.Uri.parse(urlStr, true))
+      .map(async (classMapFileURL) => {
+        let classMapData: Buffer;
+        try {
+          classMapData = await promisify(readFile)(classMapFileURL.fsPath);
+        } catch (e) {
+          if ((e as any).code !== 'ENOENT') console.warn(e);
+          return;
+        }
+
+        const folder = vscode.workspace.getWorkspaceFolder(classMapFileURL);
+        if (!folder) {
+          console.warn(`No workspace folder for ${classMapFileURL.fsPath}`);
+          return;
+        }
+
+        let classMap: ClassMapEntry[];
+        try {
+          classMap = JSON.parse(classMapData.toString());
+        } catch (e) {
+          // Malformed JSON file. This is logged because classMap files should be written atomically.
+          console.warn(e);
+          return;
+        }
+
+        if (!classMap) {
+          console.log(`ClassMap from ${classMapFileURL} is falsey`);
+          return;
+        }
+
+        const classMapFileTokens = classMapFileURL.fsPath.split('/');
+        classMapFileTokens.pop();
+        const indexDir = classMapFileTokens.join('/');
+        const appMapFilePath = [indexDir, 'appmap.json'].join('.');
+        classMap
+          .map(normalizeRoot)
+          .forEach(mergeCodeObject.bind(null, folder, appMapFilePath, root));
+      })
+  );
+  // The classMap loader in @appland/models will build code objects for events whose
+  // proper code object is missing from the classMap. They will appear as new root elements,
+  // which is confusing in the UI. We just drop them here.
+  const classMap = root.children
+    .filter((child) => Object.values(CodeObjectEntryRootType).includes(child.type as any))
+    .map((child) => {
+      child.finalize();
+      return child;
+    });
+
+  return { codeObjectByFqid, classMap };
 }

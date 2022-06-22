@@ -22,7 +22,7 @@ async function obtainOutOfDateTestLocations(
   const workspace = await selectWorkspace();
   if (!workspace) return;
 
-  const testLocations = await uptodateService.outOfDateTestLocations(workspace.uri);
+  const testLocations = await uptodateService.outOfDateTestLocations(workspace);
   if (testLocations.length === 0) {
     vscode.window.showInformationMessage(`AppMap: No test are out of date in ${workspace.name}`);
     return;

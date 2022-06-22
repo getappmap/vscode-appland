@@ -40,8 +40,9 @@ class AppMapWatcherInstance implements WorkspaceServiceInstance {
   }
 }
 
-export class AppMapWatcher extends FileChangeEmitter implements WorkspaceService {
-  async create(folder: vscode.WorkspaceFolder): Promise<WorkspaceServiceInstance> {
+export class AppMapWatcher extends FileChangeEmitter
+  implements WorkspaceService<AppMapWatcherInstance> {
+  async create(folder: vscode.WorkspaceFolder): Promise<AppMapWatcherInstance> {
     validateConfiguration();
 
     const watcher = new AppMapWatcherInstance(folder, {

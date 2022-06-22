@@ -10,7 +10,8 @@ class AutoScanner extends ProcessService implements WorkspaceServiceInstance {
   }
 }
 
-export default class AutoScannerService extends EventEmitter implements WorkspaceService {
+export default class AutoScannerService extends EventEmitter
+  implements WorkspaceService<AutoScanner> {
   async create(folder: vscode.WorkspaceFolder): Promise<AutoScanner> {
     const scanner = new AutoScanner(folder);
     ['invoke', 'message', 'exit'].forEach((event) =>
