@@ -28,8 +28,8 @@ export default class AppmapUptodateServiceInstance extends EventEmitter
     let command: Command;
     if (typeof commandSetting === 'string') {
       const commandArgs = commandSetting
-        .split(' ')
-        .map((arg) => (arg === '$folder' ? this.folder.uri.fsPath : arg));
+        .replaceAll('${workspaceFolder}', this.folder.uri.fsPath)
+        .split(' ');
       const mainCommand = commandArgs.shift();
       assert(mainCommand);
       command = new Command(mainCommand as string, commandArgs, {});

@@ -33,8 +33,6 @@ export default {
       'appmap',
       'index',
       '--watch',
-      '--appmap-dir',
-      '.',
     ],
 
   scanCommand: (): string | string[] =>
@@ -42,8 +40,6 @@ export default {
       'scanner',
       'scan',
       '--watch',
-      '--appmap-dir',
-      '.',
     ],
 
   dependsCommand: (): string | string[] =>
@@ -51,9 +47,9 @@ export default {
       'appmap',
       'depends',
       '--base-dir',
-      '.',
+      '${workspaceFolder}',
       '--appmap-dir',
-      '.',
+      '${workspaceFolder}',
     ],
 
   pythonEnabled: (): boolean =>
