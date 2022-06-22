@@ -192,6 +192,8 @@ export const LANGUAGE_AGENTS = [
 
 type LanguageStats = Record<string, number>;
 
+const LANGUAGE_CACHE: Record<string, LanguageStats> = {};
+const LANGUAGE_CACHE_EXPIRY = 60 * 1000;
 const LANGUAGE_DISTRIBUTION_CACHE: Record<string, LanguageStats> = {};
 
 function folderPath(folder: vscode.WorkspaceFolder | string): string {
@@ -206,6 +208,7 @@ export default class LanguageResolver {
     Object.keys(LANGUAGE_DISTRIBUTION_CACHE).forEach(
       (key) => delete LANGUAGE_DISTRIBUTION_CACHE[key]
     );
+    Object.keys(LANGUAGE_CACHE).forEach((key) => delete LANGUAGE_CACHE[key]);
   }
 
   static async getLanguageDistribution(
@@ -257,28 +260,35 @@ export default class LanguageResolver {
    * it must be registered in LANGUAGE_AGENTS). If the language is not supported, returns 'unknown'.
    */
   private static async identifyLanguage(folder: vscode.WorkspaceFolder | string): Promise<string> {
-    const languages = await backgroundJob<LanguageStats>(
-      `appmap.languageDistribution.${folderPath(folder)}`,
-      LanguageResolver.getLanguageDistribution.bind(null, folder),
-      250
-    );
+    let languageStats = LANGUAGE_CACHE[folderPath(folder)];
+    if (!languageStats) {
+      languageStats = await backgroundJob<LanguageStats>(
+        `appmap.languageDistribution.${folderPath(folder)}`,
+        LanguageResolver.getLanguageDistribution.bind(null, folder),
+        250
+      );
 
-    console.log(
-      `[language-resolver] Detected languages ${JSON.stringify(languages)} in project ${folderPath(
-        folder
-      )}`
-    );
+      console.log(
+        `[language-resolver] Detected languages ${JSON.stringify(
+          languageStats
+        )} in project ${folderPath(folder)}`
+      );
 
-    const best = Object.entries(languages).sort((a, b) => b[1] - a[1])?.[0]?.[0];
+      LANGUAGE_CACHE[folderPath(folder)] = languageStats;
+      setTimeout(() => delete LANGUAGE_CACHE[folderPath(folder)], LANGUAGE_CACHE_EXPIRY);
+    }
+
+    const best = Object.entries(languageStats).sort((a, b) => b[1] - a[1])?.[0]?.[0];
     const agent = LANGUAGE_AGENTS[best];
     if (agent && agent.enabled) return best;
     return UNKNOWN_LANGUAGE;
   }
 
   /**
-   * Recursively walk the given `rootDirectory` for known source code files and returns the best-guess SUPPORTED
-   * language for the full directory tree. Ignores files and directories that are Git ignored. Results are cached for
-   * each directory for the lifetime of the extension. If the most used language is not supported, returns 'unknown'.
+   * Recursively inspects a folder for known source code files and returns the best-guess SUPPORTED
+   * language for the full directory tree. Ignores files and directories that are Git-ignored.
+   *
+   * @returns unknown if the most used language is not supported
    */
   public static async getLanguage(folder: vscode.WorkspaceFolder | string): Promise<string> {
     return await this.identifyLanguage(folder);
