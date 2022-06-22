@@ -16,6 +16,7 @@ export default class AppmapUptodateServiceInstance extends EventEmitter
   command?: Command;
   interval?: NodeJS.Timeout;
   process?: ChildProcess;
+  updatedAt?: number;
   outofDateAppMapLocations: Set<string> = new Set();
   outofDateAppMapFiles: Set<string> = new Set();
 
@@ -47,7 +48,6 @@ export default class AppmapUptodateServiceInstance extends EventEmitter
   isOutOfDate(appmapFile: string): boolean {
     const resolvedFile = resolve(this.folder.uri.fsPath, appmapFile);
     const isOutOfDate = this.outofDateAppMapFiles.has(resolvedFile);
-    console.log(`[uptodate] ${resolvedFile} ${isOutOfDate ? 'is' : 'is not'} out of date`);
     return isOutOfDate;
   }
 
@@ -59,6 +59,8 @@ export default class AppmapUptodateServiceInstance extends EventEmitter
   }
 
   async update(): Promise<void> {
+    const updateRequestedAt = Date.now();
+
     const processCompletion = async (): Promise<void> => {
       return new Promise<void>((resolve) => {
         // eslint-disable-next-line prefer-const
@@ -76,9 +78,14 @@ export default class AppmapUptodateServiceInstance extends EventEmitter
 
     while (this.process) await processCompletion();
 
+    // We are queued up to wait, but another job is already running that started after the time that
+    // we began our update request.
+    if (this.updatedAt && this.updatedAt > updateRequestedAt) return;
+
     assert(this.command);
 
     const process = spawn(this.command.mainCommand, this.command.args, this.command.options);
+    this.updatedAt = Date.now();
     assert(process.stdout);
     assert(process.stderr);
     this.process = process;
