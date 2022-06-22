@@ -42,7 +42,6 @@ import { NodeProcessService } from './services/nodeProcessService';
 import { SourceFileWatcher } from './services/sourceFileWatcher';
 import assert from 'assert';
 import { initializeWorkspaceServices } from './services/workspaceServices';
-import AutoIndexerService from './services/autoIndexer';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   Telemetry.register(context);
@@ -118,14 +117,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
         appmapWatcher.onCreate(updateUptodate),
         appmapWatcher.onChange(updateUptodate)
       );
-
-      {
-        const autoIndexService = new AutoIndexerService();
-        autoIndexService.on('invoke', (command) => autoIndexServiceImpl.startInvocation(command));
-        autoIndexService.on('message', (message) => autoIndexServiceImpl.addMessage(message));
-        autoIndexService.on('exit', (exitStatus) => autoIndexServiceImpl.endInvocation(exitStatus));
-        await workspaceServices.enroll(autoIndexService);
-      }
 
       registerDecorationProvider(context, lineInfoIndex);
       outOfDateTests(context, appmapUptodateService);
