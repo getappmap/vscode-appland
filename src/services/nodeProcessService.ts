@@ -1,16 +1,16 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
-import NodeRunner, { ProcessOutput } from './nodeRunner';
+import NodeRunner from './nodeRunner';
 import { DEBUG_EXCEPTION, Telemetry } from '../telemetry';
 import { promises as fs } from 'fs';
-import { WorkspaceService, WorkspaceServiceInstance } from './workspaceService';
+import { WorkspaceService } from './workspaceService';
 import NodeProcessServiceInstance from './nodeProcessServiceInstance';
 import { ProcessWatcher } from './processWatcher';
 import ExtensionSettings from '../configuration/extensionSettings';
 
 const YARN_JS = 'yarn.js';
 
-export class NodeProcessService implements WorkspaceService {
+export class NodeProcessService implements WorkspaceService<NodeProcessServiceInstance> {
   protected node: NodeRunner;
   protected externDir: string;
   protected globalStorageDir: string;
