@@ -20,6 +20,8 @@ describe('Extension API', () => {
       'findings',
       'classMap',
       'processService',
+      'extensionState',
+      'runtimeAnalysisCta',
     ]);
   });
 });

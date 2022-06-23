@@ -35,6 +35,20 @@ export const TEXT = new TelemetryDataProvider({
   },
 });
 
+export const CTA_ID = new TelemetryDataProvider({
+  id: 'appmap.cta.id',
+  async value({ id }: { id: string }): Promise<string> {
+    return id;
+  },
+});
+
+export const CTA_PLACEMENT = new TelemetryDataProvider({
+  id: 'appmap.cta.placement',
+  async value({ placement }: { placement: 'notification' | 'sidebar' }): Promise<string> {
+    return placement;
+  },
+});
+
 export const FILE_PATH = new TelemetryDataProvider({
   id: 'appmap.file.path',
   async value({ uri, rootDirectory }: { uri: Uri; rootDirectory?: PathLike }) {

@@ -40,6 +40,8 @@ import { SourceFileWatcher } from './services/sourceFileWatcher';
 import assert from 'assert';
 import { initializeWorkspaceServices } from './services/workspaceServices';
 import { NodeProcessService } from './services/nodeProcessService';
+import getEarlyAccess from './commands/getEarlyAccess';
+import { RuntimeAnalysisCtaService } from './services/runtimeAnalysisCtaService';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   Telemetry.register(context);
@@ -128,9 +130,10 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       findingsIndex = new FindingsIndex();
 
       const findingsDiagnosticsProvider = new FindingsDiagnosticsProvider(context);
-      findingsIndex.on('added', (uri: vscode.Uri, findings: ResolvedFinding[]) =>
-        findingsDiagnosticsProvider.updateFindings(uri, findings)
-      );
+      findingsIndex.on('added', (uri: vscode.Uri, findings: ResolvedFinding[]) => {
+        findingsDiagnosticsProvider.updateFindings(uri, findings);
+        vscode.commands.executeCommand('setContext', 'appmap.numFindings', findings.length);
+      });
       findingsIndex.on('removed', (uri: vscode.Uri) =>
         findingsDiagnosticsProvider.updateFindings(uri, [])
       );
@@ -162,6 +165,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     }
 
     let processService: NodeProcessService | undefined;
+    let runtimeAnalysisCta: RuntimeAnalysisCtaService | undefined;
     {
       const projectState = new ProjectStateService(
         extensionState,
@@ -190,6 +194,9 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
         await processService.install();
         await workspaceServices.enroll(processService);
       })();
+
+      runtimeAnalysisCta = new RuntimeAnalysisCtaService(projectStates, extensionState);
+      await workspaceServices.enroll(runtimeAnalysisCta);
     }
 
     deleteAllAppMaps(context, classMapIndex, findingsIndex);
@@ -204,6 +211,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     const editorProvider = AppMapEditorProvider.register(context, extensionState);
     RemoteRecording.register(context);
     ContextMenu.register(context);
+    getEarlyAccess(context);
 
     context.subscriptions.push(
       vscode.commands.registerCommand('appmap.findByName', async () => {
@@ -281,6 +289,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       findings: findingsIndex,
       classMap: classMapIndex,
       processService,
+      extensionState,
+      runtimeAnalysisCta,
     };
   } catch (exception) {
     Telemetry.sendEvent(DEBUG_EXCEPTION, { exception: exception as Error });

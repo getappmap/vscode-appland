@@ -94,3 +94,18 @@ export const COPY_COMMAND = new Event({
   name: 'copy_command',
   properties: [Properties.VIEW_ID, Properties.TEXT, Properties.PROJECT_LANGUAGE],
 });
+
+export const CTA_VIEW = new Event({
+  name: 'cta:view',
+  properties: [Properties.CTA_ID, Properties.CTA_PLACEMENT],
+});
+
+export const CTA_DISMISS = new Event({
+  name: 'cta:dismiss',
+  properties: [Properties.CTA_ID, Properties.CTA_PLACEMENT],
+});
+
+export const CTA_INTERACT = new Event({
+  name: 'cta:interact',
+  properties: [Properties.CTA_ID, Properties.CTA_PLACEMENT],
+});
