@@ -7,6 +7,7 @@ import { WorkspaceService } from './workspaceService';
 import NodeProcessServiceInstance from './nodeProcessServiceInstance';
 import { ProcessWatcher } from './processWatcher';
 import ExtensionSettings from '../configuration/extensionSettings';
+import ErrorCode from '../telemetry/definitions/errorCodes';
 
 const YARN_JS = 'yarn.js';
 
@@ -36,7 +37,10 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
           })
         );
       } catch (e) {
-        Telemetry.sendEvent(DEBUG_EXCEPTION, { exception: e as Error });
+        Telemetry.sendEvent(DEBUG_EXCEPTION, {
+          exception: e as Error,
+          errorCode: ErrorCode.DependencyPathNotResolved,
+        });
       }
     }
 
@@ -51,7 +55,10 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
           })
         );
       } catch (e) {
-        Telemetry.sendEvent(DEBUG_EXCEPTION, { exception: e as Error });
+        Telemetry.sendEvent(DEBUG_EXCEPTION, {
+          exception: e as Error,
+          errorCode: ErrorCode.DependencyPathNotResolved,
+        });
       }
     }
 
@@ -128,7 +135,10 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
     } catch (e) {
       const err =
         e instanceof Error ? e : new Error(`failed to install node dependencies: ${String(e)}`);
-      Telemetry.sendEvent(DEBUG_EXCEPTION, { exception: err });
+      Telemetry.sendEvent(DEBUG_EXCEPTION, {
+        exception: err,
+        errorCode: ErrorCode.DependencyInstallFailure,
+      });
     }
   }
 }
