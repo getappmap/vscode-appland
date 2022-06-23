@@ -1,6 +1,6 @@
 /**
  * The main interface for requesting telemetry data. A new instance of this class should be created for each unique
- * telemetry event. Some results will be cached between data prodivers, while others may be globally cached for the
+ * telemetry event. Some results will be cached between data providers, while others may be globally cached for the
  * entirety of the session.
  *
  * ```typescript

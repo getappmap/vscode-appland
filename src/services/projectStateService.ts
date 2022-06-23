@@ -131,7 +131,7 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
 
   private async configurationInWorkspace(): Promise<boolean> {
     const pattern = new vscode.RelativePattern(this.folder, '**/appmap.yml');
-    const existingConfigs = await vscode.workspace.findFiles(pattern, '**/node_modules/**', 1);
+    const existingConfigs = await vscode.workspace.findFiles(pattern, undefined, 1);
     return existingConfigs.length !== 0;
   }
 
@@ -188,7 +188,7 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
   }
 }
 
-export default class ProjectStateService implements WorkspaceService {
+export default class ProjectStateService implements WorkspaceService<ProjectStateServiceInstance> {
   constructor(
     protected extensionState: ExtensionState,
     protected readonly appMapWatcher: FileChangeEmitter,

@@ -13,6 +13,9 @@ import { randomBytes } from 'crypto';
 import { COPY_INSTALL_COMMAND, OPEN_VIEW, Telemetry } from '../telemetry';
 import ExtensionState from '../configuration/extensionState';
 import extensionSettings from '../configuration/extensionSettings';
+import { LANGUAGE_AGENTS } from '../services/languageResolver';
+import AppMapAgent from '../agent/appMapAgent';
+
 
 const COLUMN = ViewColumn.One;
 
@@ -140,6 +143,16 @@ async function refresh(): Promise<void> {
 
   const rows = await resultRows();
   const nonce = randomBytes(18).toString('base64');
+  const projectTypes = Object.values(LANGUAGE_AGENTS)
+    .map((v) => {
+      const agent = v as AppMapAgent;
+      if (!agent.enabled) {
+        return '';
+      }
+      const projects: string | undefined = agent.projectTypes;
+      return projects ? `<li>${projects}</li>` : '';
+    })
+    .join('\n');
 
   panel.webview.html = `
     <head>
@@ -349,8 +362,9 @@ async function refresh(): Promise<void> {
             <p>For your first AppMap, we recommend a project that:</p>
             <ul>
               <li>is a web application or a web service</li>
-              <li>is written in Python (Django or Flask), Ruby (Rails), Java (Spring), or JavaScript (Node & Express)</li>
-              <li>has reasonably comprehensive integration test suite
+              <li>is written in
+                <ul>${projectTypes}</ul>
+              <li>has a reasonably comprehensive integration test suite
             </ul>
             <p><b>Please open a project meeting these recommendations to proceed.</b></p>
             <!-- let's do this later

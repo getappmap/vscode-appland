@@ -1,3 +1,57 @@
+# [0.31.0](https://github.com/applandinc/vscode-appland/compare/v0.30.0...v0.31.0) (2022-06-22)
+
+
+### Bug Fixes
+
+* Anticipate partially written findings files ([fd53351](https://github.com/applandinc/vscode-appland/commit/fd5335160e3b80831fef3d76046f8c645a901fd5))
+* Don't reset dirty flag too early ([be80cf4](https://github.com/applandinc/vscode-appland/commit/be80cf4eddfa81cdd7923260283f2b34bb14ba58))
+* Don't update uptodate more than necessary ([595970d](https://github.com/applandinc/vscode-appland/commit/595970d51b1d45b6bec606bccd5f216d35b8db85))
+* Filter out un-rooted code objects ([a2c30ed](https://github.com/applandinc/vscode-appland/commit/a2c30ed79a3588025ae309f8317a643d517180a3))
+* Leverage built-in search to find .gitignore files ([2e8f930](https://github.com/applandinc/vscode-appland/commit/2e8f930cbedf39dc0fec54e8c7a9fc0a5b385cc5))
+* Make AppMap index test more robust ([c8245be](https://github.com/applandinc/vscode-appland/commit/c8245beebd273732570cb459ed9dfdb952c306c7))
+* Move classMap update to background job ([6f5fec7](https://github.com/applandinc/vscode-appland/commit/6f5fec70065e55efd74c617faa3b8694de135834))
+* Only resolve languages every 60 seconds ([c97a598](https://github.com/applandinc/vscode-appland/commit/c97a5980132d8c00f3ed2eff774ad8657f6a347f))
+* Respect user's Find Exclude settings ([a675d57](https://github.com/applandinc/vscode-appland/commit/a675d57dfd26f22d179ce1ba2d0f348898e3b7df))
+* Sort code object children ([03fd15c](https://github.com/applandinc/vscode-appland/commit/03fd15c06449e77097029d1f3cb98978a886eedf))
+* Sort findings by description ([462a170](https://github.com/applandinc/vscode-appland/commit/462a17096fd14ed80d3c88f954b0a44615cd2358))
+* Suppress harmless depends errors ([296e9d2](https://github.com/applandinc/vscode-appland/commit/296e9d2b2d08079e4d29cf63c6c2bc7f97f9b175))
+* Try harder to resolve file paths within monorepos ([0cd8f7b](https://github.com/applandinc/vscode-appland/commit/0cd8f7be746784bc7f2664ca45246d79820c00fc))
+* Update base-dir and appmap-dir options ([2bbc255](https://github.com/applandinc/vscode-appland/commit/2bbc255261a9382fe5158e545af92838590e3a06))
+
+
+### Features
+
+* Add dependsCommand setting ([4735e15](https://github.com/applandinc/vscode-appland/commit/4735e15aa8f6bf10950a10f8118d157377bfdf84))
+* Batch up expensive background jobs ([c076ae5](https://github.com/applandinc/vscode-appland/commit/c076ae594d39e0960e02b97bf123bfae6df2f65a))
+* Selectively update up-to-date ([5868fcf](https://github.com/applandinc/vscode-appland/commit/5868fcfdf6c23da94e05d11ddecb1117ca4db390))
+* WorkspaceServices is a singleton ([eab066c](https://github.com/applandinc/vscode-appland/commit/eab066cf5fb1764b1899e2aa6aeb5ecc8ad969d7))
+
+# [0.30.0](https://github.com/applandinc/vscode-appland/compare/v0.29.1...v0.30.0) (2022-06-21)
+
+
+### Bug Fixes
+
+* Remove Flask and Django from README.md ([ea86aec](https://github.com/applandinc/vscode-appland/commit/ea86aecb47fe61348875409d61f421f75773cc95))
+
+
+### Features
+
+* Put Python support behind a feature flag ([f611a6d](https://github.com/applandinc/vscode-appland/commit/f611a6d9a7d4bf71bfccd3630d1a46a33b353011))
+
+## [0.29.1](https://github.com/applandinc/vscode-appland/compare/v0.29.0...v0.29.1) (2022-06-18)
+
+
+### Bug Fixes
+
+* AppMap welcome button interaction is now feature flagged ([#395](https://github.com/applandinc/vscode-appland/issues/395)) ([b5f849d](https://github.com/applandinc/vscode-appland/commit/b5f849df93cbf778a760f502f58159622f470ed9))
+
+# [0.29.0](https://github.com/applandinc/vscode-appland/compare/v0.28.3...v0.29.0) (2022-06-17)
+
+
+### Features
+
+* AppMap terminal link provider ([e697328](https://github.com/applandinc/vscode-appland/commit/e6973283d4510f024f1bbb6224df1d32291d4dcc))
+
 ## [0.28.3](https://github.com/applandinc/vscode-appland/compare/v0.28.2...v0.28.3) (2022-06-14)
 
 

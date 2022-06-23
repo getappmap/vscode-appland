@@ -21,7 +21,7 @@ applications and frameworks!
 
 ## Requirements
 
-Currently, AppMap supports Spring, Django, Flask, Rails and Express projects
+Currently, AppMap supports Spring, Rails, and Express projects
 ([AppMap for JavaScript](https://appland.com/docs/reference/appmap-javascript.html) is now available
 in beta!). The most up-to-date list of frameworks and languages we support is
 [here](https://appland.com/docs/integrations.html).

@@ -18,21 +18,6 @@ export function getNonce(): string {
   return text;
 }
 
-export async function touch(path: string): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const time = new Date();
-    fs.utimes(path, time, time, (err) => {
-      if (err) {
-        return fs.open(path, 'w', (err, fd) => {
-          if (err) return reject(err);
-          fs.close(fd, (err) => (err ? reject(err) : resolve()));
-        });
-      }
-      resolve();
-    });
-  });
-}
-
 // Returns an object's string values with an optional key prefix
 // getStringRecords({ a: 'hello', b: [object Object] }, 'myApp') ->
 // { 'myApp.a': 'hello' }
@@ -51,20 +36,35 @@ export function notEmpty<TValue>(value: TValue | null | undefined): value is TVa
   return value !== null && value !== undefined;
 }
 
+// It would be weird to have a mono-repo whose sub-projects are nested more deeply than this.
+const MAX_DIR_SEARCH = 3;
+
 export async function resolveFilePath(
   basePath: string,
   filePath: string
 ): Promise<string | undefined> {
-  if (!path.isAbsolute(filePath)) filePath = path.join(basePath, filePath);
+  // If the file is part of a monorepo (project directory with sub-projects), then the first
+  // entry(s) of the AppMap path may be the path to the project directory. So, search up a reasonable
+  // number of directory levels to try and resolve the AppMap path.
 
-  return new Promise<string | undefined>((resolve) => {
-    fs.stat(filePath, (err) => {
-      if (err) {
-        return resolve(undefined);
-      }
-      return resolve(filePath);
-    });
-  });
+  const pathsToSearch: string[] = [];
+  if (path.isAbsolute(filePath)) {
+    pathsToSearch.push(filePath);
+  } else {
+    const basePathTokens = basePath.split(path.sep);
+    for (let pathIndex = 0; pathIndex < MAX_DIR_SEARCH; pathIndex++) {
+      const basePathSub = basePathTokens.slice(0, basePathTokens.length - pathIndex).join(path.sep);
+      if (basePathSub === process.env.HOME) break;
+
+      pathsToSearch.push(path.join(basePathSub, filePath));
+    }
+  }
+
+  for (const pathToSearch of pathsToSearch) {
+    if (await fileExists(pathToSearch)) {
+      return pathToSearch;
+    }
+  }
 }
 
 export async function fileExists(filename: string): Promise<boolean> {
@@ -191,33 +191,6 @@ export async function exec(
 
 export function unreachable(msg: string | undefined): never {
   throw new Error(`Unreachable: ${msg}`);
-}
-
-export function workspaceFolderForDocument(
-  document: vscode.TextDocument
-): vscode.WorkspaceFolder | undefined {
-  const { workspaceFolders } = vscode.workspace;
-  if (!workspaceFolders) {
-    return undefined;
-  }
-
-  let bestMatch;
-  let bestMatchLength = 0;
-  workspaceFolders.forEach((workspaceFolder) => {
-    const { length } = workspaceFolder.name;
-    if (bestMatchLength > length) {
-      // The best match matches more characters than this directory has available.
-      // This folder will never be a best match. Skip.
-      return;
-    }
-
-    if (document.uri.fsPath.startsWith(workspaceFolder.uri.fsPath)) {
-      bestMatch = workspaceFolder;
-      bestMatchLength = length;
-    }
-  });
-
-  return bestMatch;
 }
 
 // Resolve promises serially, one at a time.

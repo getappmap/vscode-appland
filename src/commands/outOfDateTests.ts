@@ -1,7 +1,7 @@
 import { resolve } from 'path';
 import * as vscode from 'vscode';
 import { AppmapUptodateService, fileLocationsToFilePaths } from '../services/appmapUptodateService';
-import { touch } from '../util';
+import { touch } from '../lib/touch';
 
 const TEST_NAMES = 'File names';
 const TEST_NAMES_LINES = 'File names and line numbers';
@@ -22,7 +22,7 @@ async function obtainOutOfDateTestLocations(
   const workspace = await selectWorkspace();
   if (!workspace) return;
 
-  const testLocations = await uptodateService.outOfDateTestLocations(workspace.uri);
+  const testLocations = await uptodateService.outOfDateTestLocations(workspace);
   if (testLocations.length === 0) {
     vscode.window.showInformationMessage(`AppMap: No test are out of date in ${workspace.name}`);
     return;

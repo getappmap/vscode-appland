@@ -33,8 +33,6 @@ export default {
       'appmap',
       'index',
       '--watch',
-      '--appmap-dir',
-      '.',
     ],
 
   scanCommand: (): string | string[] =>
@@ -42,7 +40,20 @@ export default {
       'scanner',
       'scan',
       '--watch',
-      '--appmap-dir',
-      '.',
     ],
+
+  dependsCommand: (): string | string[] =>
+    vscode.workspace.getConfiguration('appMap').get('dependsCommand') || [
+      'appmap',
+      'depends',
+      '--base-dir',
+      '${workspaceFolder}',
+      '--appmap-dir',
+      '${workspaceFolder}',
+    ],
+
+  pythonEnabled: (): boolean =>
+    [true, 'true'].includes(
+      vscode.workspace.getConfiguration('appMap').get('pythonEnabled') || false
+    ),
 };

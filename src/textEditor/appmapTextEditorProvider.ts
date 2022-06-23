@@ -1,10 +1,12 @@
-import { isAbsolute, join } from 'path';
+import { join } from 'path';
 import * as vscode from 'vscode';
 import { Telemetry, APPMAP_OPEN, APPMAP_UPLOAD } from '../telemetry';
-import { getNonce, getRecords, workspaceFolderForDocument } from '../util';
+import { getNonce, getRecords } from '../util';
+import { workspaceFolderForDocument } from '../lib/workspaceFolderForDocument';
 import { version } from '../../package.json';
 import ExtensionState from '../configuration/extensionState';
 import { AppmapUploader } from '../actions/appmapUploader';
+import { bestFilePath } from '../lib/bestFilePath';
 
 /**
  * Provider for AppLand scenario files.
@@ -217,7 +219,7 @@ export class AppMapTextEditorProvider implements vscode.CustomTextEditorProvider
       vscode.commands.executeCommand('vscode.open', uri, showOptions);
     }
 
-    function viewSource(location: string) {
+    async function viewSource(location: string): Promise<void> {
       const tokens = location.split(':', 2);
       const path = tokens[0];
       const lineNumberStr = tokens[1];
@@ -226,45 +228,8 @@ export class AppMapTextEditorProvider implements vscode.CustomTextEditorProvider
         lineNumber = Number.parseInt(lineNumberStr, 10);
       }
 
-      let searchPath;
-      if (vscode.workspace.workspaceFolders) {
-        for (let i = 0; !searchPath && i < vscode.workspace.workspaceFolders?.length; ++i) {
-          const folder = vscode.workspace.workspaceFolders[i];
-          // findFiles is not tolerant of absolute paths, even if the absolute path matches the
-          // path of the file in the workspace.
-          if (folder.uri.scheme === 'file' && path.startsWith(folder.uri.path)) {
-            searchPath = path.slice(folder.uri.path.length + 1);
-          }
-        }
-      }
-      searchPath = searchPath || path;
-      if (!isAbsolute(path)) {
-        searchPath = join('**', path);
-      }
-
-      vscode.workspace.findFiles(searchPath).then((uris) => {
-        if (uris.length === 0) {
-          return;
-        } else if (uris.length === 1) {
-          openFile(uris[0], lineNumber);
-        } else {
-          const options: vscode.QuickPickOptions = {
-            canPickMany: false,
-            placeHolder: 'Choose file to open',
-          };
-          vscode.window
-            .showQuickPick(
-              uris.map((uri) => uri.toString()),
-              options
-            )
-            .then((fileName) => {
-              if (!fileName) {
-                return false;
-              }
-              openFile(vscode.Uri.parse(fileName), lineNumber);
-            });
-        }
-      });
+      const fileUri = await bestFilePath(path, workspaceFolderForDocument(document));
+      if (fileUri) openFile(fileUri, lineNumber);
     }
   }
 

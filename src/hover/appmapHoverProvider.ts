@@ -3,7 +3,7 @@ import extensionSettings from '../configuration/extensionSettings';
 import { CodeObjectEntry } from '../services/classMapIndex';
 import LineInfoIndex from '../services/lineInfoIndex';
 
-export default function registerHoverProvider(
+export default function appmapHoverProvider(
   context: vscode.ExtensionContext,
   lineInfoIndex: LineInfoIndex
 ): void {

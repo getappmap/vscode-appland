@@ -62,8 +62,9 @@ export async function analyze(
   folder: WorkspaceFolder,
   appMapCollection?: AppMapCollection
 ): Promise<Result & Partial<WithAppMaps>> {
-  const path = folder.uri.fsPath;
-  const language = await LanguageResolver.getLanguage(path);
+  // TODO: Use the 'language' field in appmap.yml instead
+  const agent = await LanguageResolver.getAgent(folder);
+  const language = agent.enabled ? agent.language : `${agent.language}.disabled`;
   const analyzer = (await import(`./${language}`)).default;
   const result = await analyzer(folder);
 
@@ -72,6 +73,6 @@ export async function analyze(
     result.appMaps = getBestAppMaps(appMaps);
   }
 
-  result.path = path;
+  result.path = folder.uri.fsPath;
   return result;
 }

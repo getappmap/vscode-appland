@@ -27,7 +27,7 @@ class ConfigWatcherInstance implements WorkspaceServiceInstance {
   }
 
   async initialize() {
-    (await vscode.workspace.findFiles(this.configPattern, '**/node_modules/**')).forEach((uri) => {
+    (await vscode.workspace.findFiles(this.configPattern)).forEach((uri) => {
       this.onCreate.fire({ uri, workspaceFolder: this.folder });
     });
     return this;
@@ -47,8 +47,9 @@ class ConfigWatcherInstance implements WorkspaceServiceInstance {
   }
 }
 
-export class AppMapConfigWatcher extends FileChangeEmitter implements WorkspaceService {
-  async create(folder: vscode.WorkspaceFolder): Promise<WorkspaceServiceInstance> {
+export class AppMapConfigWatcher extends FileChangeEmitter
+  implements WorkspaceService<ConfigWatcherInstance> {
+  async create(folder: vscode.WorkspaceFolder): Promise<ConfigWatcherInstance> {
     const watcher = new ConfigWatcherInstance(
       folder,
       this._onChange,
