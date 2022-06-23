@@ -280,7 +280,7 @@ export default class LanguageResolver {
 
     const best = Object.entries(languageStats).sort((a, b) => b[1] - a[1])?.[0]?.[0];
     const agent = LANGUAGE_AGENTS[best];
-    if (agent && agent.enabled) return best;
+    if (agent) return best;
     return UNKNOWN_LANGUAGE;
   }
 
