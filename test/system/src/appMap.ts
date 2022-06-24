@@ -32,6 +32,10 @@ export default class AppMap {
     return this.page.locator('.pane:has(.title:text("Instructions"))');
   }
 
+  get findingsTree(): Locator {
+    return this.page.locator('.pane:has(.title:text("Findings"))');
+  }
+
   get appMapTree(): Locator {
     return this.page.locator('.pane:has(.title:text("AppMaps"))');
   }
@@ -40,8 +44,18 @@ export default class AppMap {
     return this.instructionsTree.locator('.pane-body >> [role="treeitem"]').nth(step);
   }
 
+  public findingsTreeItem(nth?: number): Locator {
+    return this.findingsTree.locator('.pane-body >> [role="treeitem"]').nth(nth || 0);
+  }
+
   public appMapTreeItem(): Locator {
     return this.appMapTree.locator('.pane-body >> [role="treeitem"]').first();
+  }
+
+  public async expandFindings(): Promise<void> {
+    if (await this.findingsTree.locator('.pane-body').isHidden()) {
+      await this.findingsTree.click();
+    }
   }
 
   public async openActionPanel(): Promise<void> {

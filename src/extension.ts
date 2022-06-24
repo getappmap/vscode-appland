@@ -16,8 +16,6 @@ import FindingsDiagnosticsProvider from './diagnostics/findingsDiagnosticsProvid
 import extensionSettings from './configuration/extensionSettings';
 import { FindingsTreeDataProvider } from './tree/findingsTreeDataProvider';
 import { AppMapWatcher } from './services/appmapWatcher';
-import AutoIndexerService from './services/autoIndexer';
-import AutoScannerService from './services/autoScanner';
 import { FindingWatcher } from './services/findingWatcher';
 import ClassMapIndex from './services/classMapIndex';
 import { ClassMapWatcher } from './services/classMapWatcher';
@@ -43,6 +41,7 @@ import appmapLinkProvider from './terminalLink/appmapLinkProvider';
 import { SourceFileWatcher } from './services/sourceFileWatcher';
 import assert from 'assert';
 import { initializeWorkspaceServices } from './services/workspaceServices';
+import { NodeProcessService } from './services/nodeProcessService';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   Telemetry.register(context);
@@ -119,14 +118,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
         appmapWatcher.onChange(updateUptodate)
       );
 
-      {
-        const autoIndexService = new AutoIndexerService();
-        autoIndexService.on('invoke', (command) => autoIndexServiceImpl.startInvocation(command));
-        autoIndexService.on('message', (message) => autoIndexServiceImpl.addMessage(message));
-        autoIndexService.on('exit', (exitStatus) => autoIndexServiceImpl.endInvocation(exitStatus));
-        await workspaceServices.enroll(autoIndexService);
-      }
-
       registerDecorationProvider(context, lineInfoIndex);
       outOfDateTests(context, appmapUptodateService);
       openCodeObjectInAppMap(context, classMapIndex);
@@ -166,15 +157,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
         })
       );
 
-      const autoScannerService = new AutoScannerService();
-      {
-        autoScannerService.on('invoke', (command) => autoScanServiceImpl.startInvocation(command));
-        autoScannerService.on('message', (message) => autoScanServiceImpl.addMessage(message));
-        autoScannerService.on('exit', (exitStatus) =>
-          autoScanServiceImpl.endInvocation(exitStatus)
-        );
-      }
-      await workspaceServices.enroll(autoScannerService);
       await workspaceServices.enroll(findingWatcher);
     }
 
@@ -267,6 +249,14 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     );
 
     registerUtilityCommands(context, extensionState);
+
+    // The node dependencies may take some time to retrieve. As a result, the initialization sequence is
+    // wrapped in an async function but we won't wait for it to resolve.
+    (async function() {
+      const nodeProcessService = new NodeProcessService(context);
+      await nodeProcessService.install();
+      await workspaceServices.enroll(nodeProcessService);
+    })();
 
     vscode.env.onDidChangeTelemetryEnabled((enabled: boolean) => {
       Telemetry.sendEvent(TELEMETRY_ENABLED, {
