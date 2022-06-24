@@ -1,15 +1,7 @@
-import { ChildProcess, spawn } from 'child_process';
 import * as vscode from 'vscode';
+import { ChildProcess, OutputStream, spawn, SpawnOptions } from './nodeDependencyProcess';
 
-export type ProcessWatcherOptions = {
-  args: string[];
-
-  // The directory to run the process in.
-  cwd?: string;
-
-  // The environment to run the process with.
-  env?: NodeJS.ProcessEnv;
-
+export type RetryOptions = {
   // The number of retries made before declaring the process as failed.
   retryTimes?: number;
 
@@ -20,7 +12,9 @@ export type ProcessWatcherOptions = {
   retryBackoff?: (retryNumber: number) => number;
 };
 
-const PROCESS_WATCHER_OPTIONS_DEFAULTS: Partial<ProcessWatcherOptions> = {
+export type ProcessWatcherOptions = RetryOptions & SpawnOptions;
+
+const DEFAULT_RETRY_OPTIONS: Required<RetryOptions> = {
   retryTimes: 3,
   retryThreshold: 3 * 60 * 1000,
   retryBackoff: (retryNumber: number) => Math.pow(2, retryNumber) * 1000,
@@ -28,8 +22,7 @@ const PROCESS_WATCHER_OPTIONS_DEFAULTS: Partial<ProcessWatcherOptions> = {
 
 export class ProcessWatcher implements vscode.Disposable {
   public process?: ChildProcess;
-  protected options: Required<ProcessWatcherOptions>;
-  protected static outputChannel = vscode.window.createOutputChannel('AppMap: Services');
+  protected options: ProcessWatcherOptions & Required<RetryOptions>;
   protected _onError: vscode.EventEmitter<Error> = new vscode.EventEmitter<Error>();
   protected _onAbort: vscode.EventEmitter<Error> = new vscode.EventEmitter<Error>();
 
@@ -55,17 +48,9 @@ export class ProcessWatcher implements vscode.Disposable {
 
   constructor(options: ProcessWatcherOptions) {
     this.options = {
-      ...PROCESS_WATCHER_OPTIONS_DEFAULTS,
+      ...DEFAULT_RETRY_OPTIONS,
       ...options,
-    } as Required<ProcessWatcherOptions>;
-
-    if (!this.options.args.length) {
-      throw new Error('command arguments must be provided');
-    }
-  }
-
-  protected log(channel: 'stdout' | 'stderr', message: string): void {
-    ProcessWatcher.outputChannel.appendLine(`${this.process?.pid} [${channel}] ${message}`);
+    };
   }
 
   protected async retry(): Promise<void> {
@@ -80,15 +65,15 @@ export class ProcessWatcher implements vscode.Disposable {
 
     this.crashCount++;
     if (this.crashCount > this.options.retryTimes) {
-      this.log('stderr', 'too many crashes - aborting');
+      this.process?.log.append('too many crashes - aborting', OutputStream.Stderr);
       this._onAbort.fire(new Error(`${this.process?.spawnargs.join(' ')} crashed too many times.`));
       return;
     }
 
     const backoffTime = this.options.retryBackoff(this.crashCount);
-    this.log(
-      'stderr',
-      `backing off for ${(backoffTime / 1000).toFixed(0)} seconds before restarting`
+    this.process?.log.append(
+      `backing off for ${(backoffTime / 1000).toFixed(0)} seconds before restarting`,
+      OutputStream.Stderr
     );
     await new Promise((resolve) => setTimeout(resolve, backoffTime));
     this.crashTimeout = setTimeout(() => (this.crashCount = 0), this.options.retryThreshold);
@@ -97,7 +82,7 @@ export class ProcessWatcher implements vscode.Disposable {
     this.start();
   }
 
-  start(): void {
+  async start(): Promise<void> {
     if (this.process) {
       throw new Error(`process (${this.process.pid}) already running`);
     }
@@ -106,23 +91,8 @@ export class ProcessWatcher implements vscode.Disposable {
       throw new Error('the process has already been aborted');
     }
 
-    this.process = spawn(this.options.args[0], this.options.args.slice(1), {
-      cwd: this.options.cwd,
-      env: this.options.env,
-    });
-
-    this.log('stdout', `spawned ${this.process.spawnargs.join(' ')}`);
-
-    const { stdout, stderr } = this.process;
-    if (stdout) {
-      stdout.setEncoding('utf8');
-      stdout.on('data', (data) => this.log('stdout', data));
-    }
-
-    if (stderr) {
-      stderr.setEncoding('utf8');
-      stderr.on('data', (data) => this.log('stderr', data));
-    }
+    this.process = await spawn(this.options);
+    this.process.log.append(`spawned ${this.process.spawnargs.join(' ')}`);
 
     this.process.once('error', (err) => {
       this._onError.fire(err);
@@ -132,11 +102,9 @@ export class ProcessWatcher implements vscode.Disposable {
     this.process.once('exit', (code, signal) => {
       if (code && code !== 0) {
         const msg = `${this.process?.spawnargs.join(' ')} exited with code ${code}`;
-        this.log('stderr', msg);
         this._onError.fire(new Error(msg));
       } else if (signal) {
         const msg = `${this.process?.spawnargs.join(' ')} exited with signal ${signal}`;
-        this.log('stderr', msg);
         this._onError.fire(new Error(msg));
       }
       this.retry();
