@@ -29,18 +29,10 @@ export default {
     ),
 
   indexCommand: (): string | string[] =>
-    vscode.workspace.getConfiguration('appMap').get('indexCommand') || [
-      'appmap',
-      'index',
-      '--watch',
-    ],
+    vscode.workspace.getConfiguration('appMap').get('indexCommand') || ['index', '--watch'],
 
   scanCommand: (): string | string[] =>
-    vscode.workspace.getConfiguration('appMap').get('scanCommand') || [
-      'scanner',
-      'scan',
-      '--watch',
-    ],
+    vscode.workspace.getConfiguration('appMap').get('scanCommand') || ['scan', '--watch'],
 
   dependsCommand: (): string | string[] =>
     vscode.workspace.getConfiguration('appMap').get('dependsCommand') || [
