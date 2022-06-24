@@ -1,5 +1,11 @@
 import assert from 'assert';
-import { ChildProcess, spawn } from 'child_process';
+import {
+  ChildProcess,
+  Dependency,
+  OutputStream,
+  ProcessLogItem,
+  spawn,
+} from './nodeDependencyProcess';
 import EventEmitter from 'events';
 import { readFile } from 'fs';
 import { resolve } from 'path';
@@ -13,32 +19,20 @@ import { workspaceServices } from './workspaceServices';
 
 export default class AppmapUptodateServiceInstance extends EventEmitter
   implements WorkspaceServiceInstance {
-  command?: Command;
   interval?: NodeJS.Timeout;
   process?: ChildProcess;
   updatedAt?: number;
   outofDateAppMapLocations: Set<string> = new Set();
   outofDateAppMapFiles: Set<string> = new Set();
 
-  constructor(public folder: vscode.WorkspaceFolder) {
+  constructor(public folder: vscode.WorkspaceFolder, protected readonly globalStoragePath: string) {
     super();
   }
 
-  async initialize(): Promise<void> {
-    const commandSetting = extensionSettings.dependsCommand();
-    let command: Command;
-    if (typeof commandSetting === 'string') {
-      const commandArgs = commandSetting
-        .replaceAll('${workspaceFolder}', this.folder.uri.fsPath)
-        .split(' ');
-      const mainCommand = commandArgs.shift();
-      assert(mainCommand);
-      command = new Command(mainCommand as string, commandArgs, {});
-    } else {
-      command = await Command.commandArgs(this.folder, commandSetting, {});
-    }
-    this.command = command;
-    this.update();
+  protected get commandArgs(): string[] {
+    return [extensionSettings.dependsCommand()]
+      .flat()
+      .map((arg) => arg.replace('${workspaceFolder}', this.folder.uri.fsPath));
   }
 
   outOfDateTestLocations(): Set<string> {
@@ -82,37 +76,27 @@ export default class AppmapUptodateServiceInstance extends EventEmitter
     // we began our update request.
     if (this.updatedAt && this.updatedAt > updateRequestedAt) return;
 
-    assert(this.command);
-
-    const process = spawn(this.command.mainCommand, this.command.args, this.command.options);
+    this.process = await spawn({
+      bin: { dependency: Dependency.Appmap, globalStoragePath: this.globalStoragePath },
+      args: this.commandArgs,
+      cwd: this.folder.uri.fsPath,
+      cacheLog: true,
+    });
     this.updatedAt = Date.now();
-    assert(process.stdout);
-    assert(process.stderr);
-    this.process = process;
-    let buffer = '';
-    process.stdout.setEncoding('utf8');
-    process.stdout.on('data', (data) => {
-      buffer += data;
-    });
-    process.stderr.setEncoding('utf8');
-    process.stderr.on('data', (data) => {
-      console.warn(`[appmap-uptodate-service] ${data}`);
-    });
     this.process.once('exit', (code) => {
+      const processLog = this.process?.log || [];
       this.process = undefined;
       if (code === 0) {
-        this.handleResponse(buffer.trim());
+        this.handleResponse(processLog);
       }
     });
   }
 
-  protected async handleResponse(responseData: string): Promise<void> {
+  protected async handleResponse(processLog: Readonly<ProcessLogItem[]>): Promise<void> {
     const outofDateAppMapFiles = new Set(
-      responseData
-        .split('\n')
-        .map((line) => line.trim())
-        .filter((line) => line.length > 0)
-        .map((line) => resolve(this.folder.uri.fsPath, line))
+      processLog
+        .filter((line) => line.stream === OutputStream.Stdout && line.data.length > 0)
+        .map((line) => resolve(this.folder.uri.fsPath, line.data))
     );
     const outofDateAppMapLocations = await this.collectOutOfDateTestLocations(outofDateAppMapFiles);
     console.log(
@@ -162,11 +146,16 @@ export class AppmapUptodateService implements WorkspaceService<AppmapUptodateSer
     AppmapUptodateService
   >();
   public readonly onUpdated: vscode.Event<AppmapUptodateService> = this._onUpdated.event;
+  protected readonly globalStoragePath: string;
+
+  constructor(context: vscode.ExtensionContext) {
+    this.globalStoragePath = context.globalStorageUri.fsPath;
+  }
 
   async create(folder: vscode.WorkspaceFolder): Promise<AppmapUptodateServiceInstance> {
-    const uptodate = new AppmapUptodateServiceInstance(folder);
+    const uptodate = new AppmapUptodateServiceInstance(folder, this.globalStoragePath);
     uptodate.on('updated', () => this._onUpdated.fire(this));
-    await uptodate.initialize();
+    await uptodate.update();
     return uptodate;
   }
 

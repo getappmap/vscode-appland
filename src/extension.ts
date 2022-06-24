@@ -86,7 +86,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       classMapIndex = new ClassMapIndex();
       lineInfoIndex = new LineInfoIndex(classMapIndex);
 
-      appmapUptodateService = new AppmapUptodateService();
+      appmapUptodateService = new AppmapUptodateService(context);
 
       const classMapProvider = new ClassMapTreeDataProvider(classMapIndex);
       vscode.window.createTreeView('appmap.views.codeObjects', {
