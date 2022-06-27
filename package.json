@@ -322,7 +322,7 @@
     "test:extension": "ts-node ./test/integrationTest.ts",
     "test:web-client": "mocha web/test/*.test.mjs",
     "test:system": "node out/test/systemTest.js",
-    "test": "yarn test:web-client && yarn test:system",
+    "test": "yarn test:web-client ; yarn test:extension ; yarn test:system",
     "compile": "webpack --mode=production",
     "watch": "webpack --watch --mode=development",
     "package": "vsce package --no-yarn",
