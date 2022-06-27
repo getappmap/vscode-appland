@@ -1,7 +1,7 @@
 // @project project-ruby
 import assert from 'assert';
 import MockExtensionContext from '../mocks/mockExtensionContext';
-import { initializeWorkspace, ProjectRuby } from './util';
+import { closeWorkspace, initializeWorkspace, ProjectRuby } from './util';
 import LanguageResolver from '../../src/services/languageResolver';
 import { promises as fs } from 'fs';
 import { join } from 'path';
@@ -21,15 +21,15 @@ describe('LanguageResolver', () => {
   describe('getLanguage', () => {
     let context: MockExtensionContext;
 
-    beforeEach(() => {
+    beforeEach(async () => {
       context = new MockExtensionContext();
-      initializeWorkspace();
+      await initializeWorkspace();
       LanguageResolver.clearCache();
     });
 
-    afterEach(() => {
+    afterEach(async () => {
       context.dispose();
-      initializeWorkspace();
+      await closeWorkspace();
       LanguageResolver.clearCache();
     });
 

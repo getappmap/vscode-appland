@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { exec } from 'child_process';
+import { exec, ExecException } from 'child_process';
 import { join } from 'path';
 import assert from 'assert';
 import AppMapService from '../../src/appMapService';
@@ -84,6 +84,23 @@ export function hasNoDiagnostics(): boolean {
 export async function initializeWorkspace(): Promise<void> {
   await closeAllEditors();
   await cleanWorkspace();
+}
+
+export async function closeWorkspace(): Promise<void> {
+  await initializeWorkspace();
+  const catchNoProcess = async (cmd: string): Promise<void> => {
+    try {
+      await executeWorkspaceOSCommand(cmd, ProjectA);
+    } catch (e) {
+      // code 1 means no matching process, ignore
+      if ((e as ExecException).code !== 1) {
+        console.log(e);
+      }
+    }
+  };
+
+  await catchNoProcess(`pkill -f 'run scanner scan'`);
+  await catchNoProcess(`pkill -f 'run appmap index'`);
 }
 
 export async function waitForIndexer(): Promise<void> {

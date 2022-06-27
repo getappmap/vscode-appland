@@ -3,7 +3,13 @@ import { unlink } from 'fs';
 import { promisify } from 'util';
 import * as vscode from 'vscode';
 import { touch } from '../../../src/lib/touch';
-import { initializeWorkspace, repeatUntil, waitFor, waitForAppMapServices } from '../util';
+import {
+  closeWorkspace,
+  initializeWorkspace,
+  repeatUntil,
+  waitFor,
+  waitForAppMapServices,
+} from '../util';
 
 describe('AppMapIndex', () => {
   beforeEach(initializeWorkspace);
@@ -12,7 +18,7 @@ describe('AppMapIndex', () => {
       'tmp/appmap/minitest/Microposts_controller_can_get_microposts_as_JSON.appmap.json'
     )
   );
-  afterEach(initializeWorkspace);
+  afterEach(closeWorkspace);
 
   it('updates as AppMaps are modified', async () => {
     const appmapFiles = (await vscode.workspace.findFiles(`**/*.appmap.json`)).map(

@@ -5,6 +5,7 @@ import { promisify } from 'util';
 import { CodeObjectEntry } from '../../../src/services/classMapIndex';
 import { touch } from '../../../src/lib/touch';
 import {
+  closeWorkspace,
   ExampleAppMap,
   ExampleAppMapIndexDir,
   initializeWorkspace,
@@ -15,12 +16,13 @@ import {
 
 describe('CodeObjects', () => {
   beforeEach(initializeWorkspace);
+
   beforeEach(() =>
     waitForAppMapServices(
       'tmp/appmap/minitest/Microposts_controller_can_get_microposts_as_JSON.appmap.json'
     )
   );
-  afterEach(initializeWorkspace);
+  afterEach(closeWorkspace);
 
   it('index is created on startup', async () => {
     const appMapService = await waitForAppMapServices(

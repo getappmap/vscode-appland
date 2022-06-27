@@ -1,11 +1,17 @@
 import assert from 'assert';
 import * as vscode from 'vscode';
-import { hasDiagnostics, initializeWorkspace, waitFor, waitForExtension } from '../util';
+import {
+  closeWorkspace,
+  hasDiagnostics,
+  initializeWorkspace,
+  waitFor,
+  waitForExtension,
+} from '../util';
 
 describe('Findings', () => {
   beforeEach(initializeWorkspace);
   beforeEach(waitForExtension);
-  afterEach(initializeWorkspace);
+  afterEach(closeWorkspace);
 
   it('are populated in the Problems view', async () => {
     const controllerFile = await vscode.workspace.findFiles(

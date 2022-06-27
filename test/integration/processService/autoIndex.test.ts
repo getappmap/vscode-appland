@@ -3,12 +3,12 @@ import * as vscode from 'vscode';
 import assert from 'assert';
 import AppMapService from '../../../src/appMapService';
 import extensionSettings from '../../../src/configuration/extensionSettings';
-import { initializeWorkspace, waitFor, waitForExtension } from '../util';
+import { closeWorkspace, initializeWorkspace, waitFor, waitForExtension } from '../util';
 
 describe('AutoIndex', () => {
   beforeEach(initializeWorkspace);
   beforeEach(waitForExtension);
-  afterEach(initializeWorkspace);
+  afterEach(closeWorkspace);
 
   it('picks up a custom index command setting', async () => {
     assert.strictEqual(extensionSettings.indexCommand(), `echo 'hello world'`);

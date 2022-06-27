@@ -14,6 +14,7 @@ import {
   executeWorkspaceOSCommand,
   repeatUntil,
   waitForAppMapServices,
+  closeWorkspace,
 } from '../util';
 
 describe('Scanner', () => {
@@ -23,7 +24,7 @@ describe('Scanner', () => {
       'tmp/appmap/minitest/Microposts_controller_can_get_microposts_as_JSON.appmap.json'
     )
   );
-  afterEach(initializeWorkspace);
+  afterEach(closeWorkspace);
 
   it('is performed as AppMaps are modified', async () => {
     await promisify(rename)(

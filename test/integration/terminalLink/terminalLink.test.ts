@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import assert from 'assert';
-import { initializeWorkspace, ProjectA, waitForExtension } from '../util';
+import { closeWorkspace, initializeWorkspace, ProjectA, waitForExtension } from '../util';
 import {
   AppMapTerminalLink,
   AppMapTerminalLinkProvider,
@@ -12,7 +12,7 @@ import { join, resolve } from 'path';
 describe('TerminalLink', () => {
   beforeEach(initializeWorkspace);
   beforeEach(waitForExtension);
-  afterEach(initializeWorkspace);
+  afterEach(closeWorkspace);
 
   const firstLink = {
     startIndex: 22,

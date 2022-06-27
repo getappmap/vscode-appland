@@ -154,5 +154,8 @@ const testWorkspaces = [PROJECT_A, PROJECT_WITH_ECHO_COMMAND, PROJECT_UPTODATE];
       console.warn(`Test ${testFile} failed: ${e}`);
     }
   }
-  process.exit(succeeded ? 0 : 1);
+
+  // Set the exit code, rather than calling process.exit. The latter will mask errors that cause subprocceses (e.g.
+  // index or scan) to linger.
+  process.exitCode = succeeded ? 0 : 1;
 })();

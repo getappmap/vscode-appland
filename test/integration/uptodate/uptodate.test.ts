@@ -3,6 +3,7 @@ import assert from 'assert';
 import * as vscode from 'vscode';
 import { touch } from '../../../src/lib/touch';
 import {
+  closeWorkspace,
   initializeWorkspace,
   repeatUntil,
   waitFor,
@@ -15,7 +16,7 @@ describe('Uptodate', () => {
   beforeEach(initializeWorkspace);
   beforeEach(waitForExtension);
   beforeEach(waitForIndexer);
-  afterEach(initializeWorkspace);
+  afterEach(closeWorkspace);
 
   it('detects when the AppMap is up to date again', async () => {
     const uptodateService = await waitForDependsUpdate();
