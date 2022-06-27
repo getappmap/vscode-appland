@@ -16,7 +16,6 @@ import extensionSettings from '../configuration/extensionSettings';
 import { LANGUAGE_AGENTS } from '../services/languageResolver';
 import AppMapAgent from '../agent/appMapAgent';
 
-
 const COLUMN = ViewColumn.One;
 
 let panel: WebviewPanel | null = null;
