@@ -152,7 +152,6 @@ export class AppmapUptodateService implements WorkspaceService<AppmapUptodateSer
   async create(folder: vscode.WorkspaceFolder): Promise<AppmapUptodateServiceInstance> {
     const uptodate = new AppmapUptodateServiceInstance(folder, this.globalStoragePath);
     uptodate.on('updated', () => this._onUpdated.fire(this));
-    await uptodate.update();
     return uptodate;
   }
 

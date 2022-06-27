@@ -17,6 +17,11 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
   protected COPY_FILES: string[] = ['package.json', 'yarn.lock', YARN_JS];
   protected static outputChannel = vscode.window.createOutputChannel('AppMap: Services');
 
+  protected _onReady = new vscode.EventEmitter<void>();
+  get onReady(): vscode.Event<void> {
+    return this._onReady.event;
+  }
+
   constructor(context: vscode.ExtensionContext) {
     this.globalStorageDir = context.globalStorageUri.fsPath;
     this.externDir = path.join(context.extensionPath, 'extern');
@@ -114,6 +119,7 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
           }
 
           installProcess.log.append('AppMap services are up to date.');
+          this._onReady.fire();
           resolve();
         });
       });
