@@ -1,3 +1,11 @@
+## [0.31.1](https://github.com/applandinc/vscode-appland/compare/v0.31.0...v0.31.1) (2022-06-27)
+
+
+### Bug Fixes
+
+* Update @appland/components v2.5.0 ([7f87ddb](https://github.com/applandinc/vscode-appland/commit/7f87ddb4b3b2f4e73bf7a17467539f0c5c530cb7))
+* Updated instructions will appear upon a new installation if flagged ([#398](https://github.com/applandinc/vscode-appland/issues/398)) ([bc72eff](https://github.com/applandinc/vscode-appland/commit/bc72eff2eb9d2ccec458a6f7dea7c56ec8140a46))
+
 # [0.31.0](https://github.com/applandinc/vscode-appland/compare/v0.30.0...v0.31.0) (2022-06-22)
 
 
