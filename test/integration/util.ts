@@ -28,7 +28,7 @@ export const ExampleAppMapIndexDir = join(
   'tmp/appmap/minitest/Microposts_controller_can_get_microposts_as_JSON'
 );
 
-export const APP_SERVICES_TIMEOUT = 10000;
+export const APP_SERVICES_TIMEOUT = 30000;
 
 export type DiagnosticForUri = {
   uri: vscode.Uri;
@@ -106,26 +106,33 @@ export async function waitForAppMapServices(touchFile: string): Promise<AppMapSe
     500
   );
 
-  return new Promise<AppMapService>((resolve, reject) => {
-    const complete = (): boolean => {
-      if (!repeater) return false;
+  assert(appMapService.classMap, `Expected classMap service to be available`);
+  assert(appMapService.findings, `Expected findings service to be available`);
+  const services = [appMapService.classMap, appMapService.findings];
 
-      clearInterval(repeater);
-      repeater = undefined;
-      return true;
-    };
+  return await new Promise<AppMapService>((resolve, reject) => {
+    let completionCount = 0;
 
-    const succeeded = () => {
-      if (!complete()) return;
-      resolve(appMapService);
+    const succeeded = (serviceName: string) => {
+      if (!repeater) return;
+
+      console.log(`Service ${serviceName} is available`);
+      completionCount += 1;
+
+      if (completionCount === services.length) {
+        clearInterval(repeater);
+        repeater = undefined;
+        resolve(appMapService);
+      }
     };
     const failed = () => {
-      if (!complete()) return;
-      reject();
+      if (!repeater) return;
+
+      reject(`classMap and findings services are not available`);
     };
 
-    appMapService.classMap?.onChanged(succeeded);
-    appMapService.findings?.onChanged(succeeded);
+    appMapService.classMap?.onChanged(succeeded.bind(null, 'classMap'));
+    appMapService.findings?.onChanged(succeeded.bind(null, 'findings'));
     setTimeout(failed, APP_SERVICES_TIMEOUT);
   });
 }
