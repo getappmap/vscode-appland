@@ -28,21 +28,6 @@ export default {
       vscode.workspace.getConfiguration('appMap').get('inspectEnabled') || false
     ),
 
-  indexCommand: (): string | string[] =>
-    vscode.workspace.getConfiguration('appMap').get('indexCommand') || ['index', '--watch'],
-
-  scanCommand: (): string | string[] =>
-    vscode.workspace.getConfiguration('appMap').get('scanCommand') || ['scan', '--watch'],
-
-  dependsCommand: (): string | string[] =>
-    vscode.workspace.getConfiguration('appMap').get('dependsCommand') || [
-      'depends',
-      '--base-dir',
-      '${workspaceFolder}',
-      '--appmap-dir',
-      '${workspaceFolder}',
-    ],
-
   pythonEnabled: (): boolean =>
     [true, 'true'].includes(
       vscode.workspace.getConfiguration('appMap').get('pythonEnabled') || false

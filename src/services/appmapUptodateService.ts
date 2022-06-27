@@ -11,9 +11,7 @@ import { readFile } from 'fs';
 import { resolve } from 'path';
 import { promisify } from 'util';
 import * as vscode from 'vscode';
-import extensionSettings from '../configuration/extensionSettings';
 import ChangeEventDebouncer from './changeEventDebouncer';
-import Command from './command';
 import { WorkspaceService, WorkspaceServiceInstance } from './workspaceService';
 import { workspaceServices } from './workspaceServices';
 
@@ -30,9 +28,8 @@ export default class AppmapUptodateServiceInstance extends EventEmitter
   }
 
   protected get commandArgs(): string[] {
-    return [extensionSettings.dependsCommand()]
-      .flat()
-      .map((arg) => arg.replace('${workspaceFolder}', this.folder.uri.fsPath));
+    const { fsPath: workspaceFolder } = this.folder.uri;
+    return ['depends', '--base-dir', workspaceFolder, '--appmap-dir', workspaceFolder];
   }
 
   outOfDateTestLocations(): Set<string> {

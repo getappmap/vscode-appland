@@ -34,7 +34,7 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
               globalStoragePath: this.globalStorageDir,
             },
             log: NodeProcessService.outputChannel,
-            args: [ExtensionSettings.indexCommand()].flat(),
+            args: ['index', '--watch'],
             cwd: folder.uri.fsPath,
           })
         );
@@ -55,7 +55,7 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
               globalStoragePath: this.globalStorageDir,
             },
             log: NodeProcessService.outputChannel,
-            args: [ExtensionSettings.scanCommand()].flat(),
+            args: ['scan', '--watch'],
             cwd: folder.uri.fsPath,
           })
         );

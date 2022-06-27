@@ -172,21 +172,9 @@
           "type": "boolean",
           "description": "Enable AppMap indexer and code objects view (preview)"
         },
-        "appMap.indexCommand": {
-          "type": "string",
-          "description": "Command use to run the @appland/appmap index command in watch mode"
-        },
         "appMap.findingsEnabled": {
           "type": "boolean",
           "description": "Enable AppMap scanner and findings (preview)"
-        },
-        "appMap.scanCommand": {
-          "type": "string",
-          "description": "Command use to run the @appland/scanner scan command in watch mode (preview)"
-        },
-        "appMap.dependsCommand": {
-          "type": "string",
-          "description": "Command use to run the @appland/appmap depends command"
         },
         "appMap.inspectEnabled": {
           "type": "boolean",
