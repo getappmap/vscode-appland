@@ -41,16 +41,21 @@ describe('Scanner', () => {
     );
 
     await repeatUntil(
-      async () =>
-        await executeWorkspaceOSCommand(
-          `git show HEAD:./tmp/appmap/minitest/Microposts_controller_can_get_microposts_as_JSON.appmap.json > ./tmp/appmap/minitest/Microposts_controller_can_get_microposts_as_JSON.appmap.json`,
-          ProjectA
-        ),
+      executeWorkspaceOSCommand.bind(
+        null,
+        `git show HEAD:./tmp/appmap/minitest/Microposts_controller_can_get_microposts_as_JSON.appmap.json > ./tmp/appmap/minitest/Microposts_controller_can_get_microposts_as_JSON.appmap.json`,
+        ProjectA
+      ),
       `AppMap should be reindexed`,
       async () => promisify(exists)(join(ExampleAppMapIndexDir, 'mtime'))
     );
 
-    await waitFor(
+    await repeatUntil(
+      executeWorkspaceOSCommand.bind(
+        null,
+        `git show HEAD:./tmp/appmap/minitest/Microposts_controller_can_get_microposts_as_JSON.appmap.json > ./tmp/appmap/minitest/Microposts_controller_can_get_microposts_as_JSON.appmap.json`,
+        ProjectA
+      ),
       'No Diagnostics were created for Microposts_controller_can_get_microposts_as_JSON',
       async () => {
         return getDiagnosticsForAppMap(ExampleAppMap).length > 0;
