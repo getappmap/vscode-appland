@@ -86,8 +86,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       classMapIndex = new ClassMapIndex();
       lineInfoIndex = new LineInfoIndex(classMapIndex);
 
-      appmapUptodateService = new AppmapUptodateService(context);
-
       const classMapProvider = new ClassMapTreeDataProvider(classMapIndex);
       vscode.window.createTreeView('appmap.views.codeObjects', {
         treeDataProvider: classMapProvider,
@@ -99,6 +97,24 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
         onDelete: classMapIndex.removeClassMapFile.bind(classMapIndex),
       });
 
+      appmapUptodateService = new AppmapUptodateService(context);
+      sourceFileWatcher = new SourceFileWatcher(classMapIndex);
+
+      registerDecorationProvider(context, lineInfoIndex);
+      outOfDateTests(context, appmapUptodateService);
+      openCodeObjectInAppMap(context, classMapIndex);
+      appmapHoverProvider(context, lineInfoIndex);
+
+      await workspaceServices.enroll(appmapUptodateService);
+      await workspaceServices.enroll(sourceFileWatcher);
+      await workspaceServices.enroll(classMapWatcher);
+    }
+
+    const activateUptodateService = async () => {
+      if (!(appmapUptodateService && sourceFileWatcher)) return;
+
+      // Update the uptodate status whenever a source file or AppMap changes.
+      // AppMap deletion does not trigger this.
       const updateUptodate = ({ uri, workspaceFolder }) => {
         console.log(`[source-file-watcher] ${uri.fsPath} updated in ${workspaceFolder.name}`);
         assert(appmapUptodateService);
@@ -109,24 +125,16 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
         if (uptodateService) uptodateService.update();
       };
 
-      // Update the uptodate status whenever a source file or AppMap changes.
-      // AppMap deletion does not trigger this.
-      sourceFileWatcher = new SourceFileWatcher(classMapIndex);
       context.subscriptions.push(sourceFileWatcher.onChange(updateUptodate));
       context.subscriptions.push(
         appmapWatcher.onCreate(updateUptodate),
         appmapWatcher.onChange(updateUptodate)
       );
 
-      registerDecorationProvider(context, lineInfoIndex);
-      outOfDateTests(context, appmapUptodateService);
-      openCodeObjectInAppMap(context, classMapIndex);
-      appmapHoverProvider(context, lineInfoIndex);
-
-      await workspaceServices.enroll(sourceFileWatcher);
-      await workspaceServices.enroll(appmapUptodateService);
-      await workspaceServices.enroll(classMapWatcher);
-    }
+      workspaceServices
+        .getServiceInstances(appmapUptodateService)
+        .forEach((service) => (service as AppmapUptodateServiceInstance).update());
+    };
 
     if (findingsEnabled) {
       findingsIndex = new FindingsIndex();
@@ -159,6 +167,15 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
       await workspaceServices.enroll(findingWatcher);
     }
+
+    // The node dependencies may take some time to retrieve. As a result, the initialization sequence is
+    // wrapped in an async function but we won't wait for it to resolve.
+    (async function() {
+      const nodeProcessService = new NodeProcessService(context);
+      nodeProcessService.onReady(activateUptodateService);
+      await nodeProcessService.install();
+      await workspaceServices.enroll(nodeProcessService);
+    })();
 
     const inspectEnabled = extensionSettings.inspectEnabled();
     if (inspectEnabled) {
@@ -249,14 +266,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     );
 
     registerUtilityCommands(context, extensionState);
-
-    // The node dependencies may take some time to retrieve. As a result, the initialization sequence is
-    // wrapped in an async function but we won't wait for it to resolve.
-    (async function() {
-      const nodeProcessService = new NodeProcessService(context);
-      await nodeProcessService.install();
-      await workspaceServices.enroll(nodeProcessService);
-    })();
 
     vscode.env.onDidChangeTelemetryEnabled((enabled: boolean) => {
       Telemetry.sendEvent(TELEMETRY_ENABLED, {
