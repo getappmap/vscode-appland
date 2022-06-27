@@ -97,15 +97,12 @@ describe('Instructions tree view', function() {
       assert(numTabs === expectedCount, `Expected ${expectedCount} tabs, got ${numTabs}`);
     };
 
-    const baseTabCount = await driver.tabCount();
-    const expectedTabCount = baseTabCount + 1;
-
     await driver.appMap.openActionPanel();
     await driver.appMap.openInstruction(InstructionStep.InstallAppMapAgent);
-    await assertTabs(expectedTabCount);
+    await assertTabs(1);
 
     await driver.appMap.openInstruction(InstructionStep.InstallAppMapAgent);
-    await assertTabs(expectedTabCount);
+    await assertTabs(1);
   });
 
   it('hides the pending badge upon completing the installation steps', async () => {
