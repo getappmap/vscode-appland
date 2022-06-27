@@ -7,7 +7,7 @@ import NodeProcessServiceInstance from './nodeProcessServiceInstance';
 import { ProcessWatcher } from './processWatcher';
 import ExtensionSettings from '../configuration/extensionSettings';
 import ErrorCode from '../telemetry/definitions/errorCodes';
-import { Dependency, spawn } from './nodeDependencyProcess';
+import { getBinPath, ProgramName, spawn } from './nodeDependencyProcess';
 
 const YARN_JS = 'yarn.js';
 
@@ -34,10 +34,10 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
       try {
         services.push(
           new ProcessWatcher({
-            bin: {
-              dependency: Dependency.Appmap,
+            binPath: await getBinPath({
+              dependency: ProgramName.Appmap,
               globalStoragePath: this.globalStorageDir,
-            },
+            }),
             log: NodeProcessService.outputChannel,
             args: ['index', '--watch'],
             cwd: folder.uri.fsPath,
@@ -55,10 +55,10 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
       try {
         services.push(
           new ProcessWatcher({
-            bin: {
-              dependency: Dependency.Scanner,
+            binPath: await getBinPath({
+              dependency: ProgramName.Scanner,
               globalStoragePath: this.globalStorageDir,
-            },
+            }),
             log: NodeProcessService.outputChannel,
             args: ['scan', '--watch'],
             cwd: folder.uri.fsPath,

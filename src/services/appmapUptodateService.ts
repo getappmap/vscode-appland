@@ -1,10 +1,11 @@
 import assert from 'assert';
 import {
   ChildProcess,
-  Dependency,
+  ProgramName,
   OutputStream,
   ProcessLogItem,
   spawn,
+  getBinPath,
 } from './nodeDependencyProcess';
 import EventEmitter from 'events';
 import { readFile } from 'fs';
@@ -17,6 +18,7 @@ import { workspaceServices } from './workspaceServices';
 
 export default class AppmapUptodateServiceInstance extends EventEmitter
   implements WorkspaceServiceInstance {
+  binPath: string | undefined;
   interval?: NodeJS.Timeout;
   process?: ChildProcess;
   updatedAt?: number;
@@ -50,6 +52,14 @@ export default class AppmapUptodateServiceInstance extends EventEmitter
   }
 
   async update(): Promise<void> {
+    if (!this.binPath) {
+      this.binPath = await getBinPath({
+        dependency: ProgramName.Appmap,
+        globalStoragePath: this.globalStoragePath,
+      });
+    }
+
+    // Run only one uptodate job at a time.
     const updateRequestedAt = Date.now();
 
     const processCompletion = async (): Promise<void> => {
@@ -67,14 +77,17 @@ export default class AppmapUptodateServiceInstance extends EventEmitter
       });
     };
 
+    // Do not await between here and where this.process is set to a concrete value.
+    // Otherwise the guard that this variable is designed to provide will not work.
     while (this.process) await processCompletion();
 
     // We are queued up to wait, but another job is already running that started after the time that
     // we began our update request.
     if (this.updatedAt && this.updatedAt > updateRequestedAt) return;
 
-    this.process = await spawn({
-      bin: { dependency: Dependency.Appmap, globalStoragePath: this.globalStoragePath },
+    assert(this.binPath, `binPath is not initialized`);
+    this.process = spawn({
+      binPath: this.binPath,
       args: this.commandArgs,
       cwd: this.folder.uri.fsPath,
       cacheLog: true,
@@ -151,6 +164,7 @@ export class AppmapUptodateService implements WorkspaceService<AppmapUptodateSer
 
   async create(folder: vscode.WorkspaceFolder): Promise<AppmapUptodateServiceInstance> {
     const uptodate = new AppmapUptodateServiceInstance(folder, this.globalStoragePath);
+    await uptodate.update();
     uptodate.on('updated', () => this._onUpdated.fire(this));
     return uptodate;
   }

@@ -105,7 +105,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       openCodeObjectInAppMap(context, classMapIndex);
       appmapHoverProvider(context, lineInfoIndex);
 
-      await workspaceServices.enroll(appmapUptodateService);
       await workspaceServices.enroll(sourceFileWatcher);
       await workspaceServices.enroll(classMapWatcher);
     }
@@ -131,9 +130,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
         appmapWatcher.onChange(updateUptodate)
       );
 
-      workspaceServices
-        .getServiceInstances(appmapUptodateService)
-        .forEach((service) => (service as AppmapUptodateServiceInstance).update());
+      await workspaceServices.enroll(appmapUptodateService);
     };
 
     if (findingsEnabled) {

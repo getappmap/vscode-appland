@@ -2,7 +2,7 @@ import * as childProcess from 'child_process';
 import * as vscode from 'vscode';
 import * as path from 'path';
 
-export enum Dependency {
+export enum ProgramName {
   Appmap = 'appmap',
   Scanner = 'scanner',
 }
@@ -14,9 +14,9 @@ export type WithLogCache = {
 export type ChildProcess = childProcess.ChildProcessWithoutNullStreams & WithLogCache;
 
 export type SpawnOptions = {
-  // If specified, resolves the path to a bin script installed via yarn and adds it to the command args
+  // Path to a bin script installed via yarn. If specified, it will be shifted into the command args
   // to be run via `node`
-  bin?: DependencyOptions;
+  binPath?: string;
 
   // Command line args given to `node` or the `bin` script specified
   args?: string[];
@@ -28,9 +28,9 @@ export type SpawnOptions = {
   cacheLog?: boolean;
 } & Exclude<childProcess.SpawnOptionsWithoutStdio, 'argv0'>;
 
-export type DependencyOptions = {
+export type ProgramOptions = {
   // Name of the dependency to be resolved to a bin script path
-  dependency: Dependency;
+  dependency: ProgramName;
 
   // This is neccesary for `yarn` to locate the bin script
   globalStoragePath: string;
@@ -106,7 +106,7 @@ export class ProcessLog extends Array<ProcessLogItem> {
   }
 }
 
-async function getBinPath(options: DependencyOptions): Promise<string> {
+export async function getBinPath(options: ProgramOptions): Promise<string> {
   const yarnPath = path.join(options.globalStoragePath, 'yarn.js');
   const process = await spawn({
     args: [yarnPath, 'bin', options.dependency],
@@ -138,7 +138,7 @@ async function getBinPath(options: DependencyOptions): Promise<string> {
   });
 }
 
-export async function spawn(options: SpawnOptions): Promise<ChildProcess> {
+export function spawn(options: SpawnOptions): ChildProcess {
   const nodePath: string = process.argv0;
   const additionalEnv: NodeJS.ProcessEnv = process.env;
   const additionalArgs: string[] = [];
@@ -149,9 +149,8 @@ export async function spawn(options: SpawnOptions): Promise<ChildProcess> {
     additionalArgs.push('--ms-enable-electron-run-as-node');
   }
 
-  if (options.bin) {
-    const binPath = await getBinPath(options.bin);
-    additionalArgs.push(binPath);
+  if (options.binPath) {
+    additionalArgs.push(options.binPath);
   }
 
   const args = [...additionalArgs, ...(options.args || [])];
