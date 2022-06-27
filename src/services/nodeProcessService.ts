@@ -118,7 +118,7 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
             reject(new Error(message));
           }
 
-          installProcess.log.append('AppMap services are up to date.');
+          installProcess.log.append('Installation of AppMap services is complete.');
           this._onReady.fire();
           resolve();
         });
