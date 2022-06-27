@@ -4,6 +4,8 @@ import { join } from 'path';
 import assert from 'assert';
 import AppMapService from '../../src/appMapService';
 import { touch } from '../../src/lib/touch';
+import AutoScannerService from '../../src/services/autoScanner';
+import ProcessService from '../../src/services/processService';
 
 export const FixtureDir = join(__dirname, '../../../test/fixtures');
 export const ProjectRuby = join(__dirname, '../../../test/fixtures/workspaces/project-ruby');
@@ -87,20 +89,32 @@ export async function initializeWorkspace(): Promise<void> {
 }
 
 export async function closeWorkspace(): Promise<void> {
-  await initializeWorkspace();
-  const catchNoProcess = async (cmd: string): Promise<void> => {
+  const appMapService = await waitForExtension();
+  const catchNoProcess = async (cmd: string, msg?: string): Promise<void> => {
     try {
+      if (msg) {
+        console.log(msg);
+      }
       await executeWorkspaceOSCommand(cmd, ProjectA);
     } catch (e) {
       // code 1 means no matching process, ignore
       if ((e as ExecException).code !== 1) {
+        console.log(`${JSON.stringify(e)}`);
         console.log(e);
       }
     }
   };
 
-  await catchNoProcess(`pkill -f 'run scanner scan'`);
+  const pgrep = 'ps -ef | grep';
+  await catchNoProcess(`${pgrep} 'run appmap index'`, 'before kill');
   await catchNoProcess(`pkill -f 'run appmap index'`);
+  await catchNoProcess(`${pgrep} 'run appmap index'`, 'after disposing');
+
+  await catchNoProcess(`${pgrep} 'run scanner scan'`, 'before disposing');
+  await catchNoProcess(`pkill -f 'run scanner scan'`);
+  await catchNoProcess(`${pgrep} 'run scanner scan'`, 'after disposing');
+
+  await initializeWorkspace();
 }
 
 export async function waitForIndexer(): Promise<void> {
@@ -154,9 +168,9 @@ async function closeAllEditors(): Promise<void> {
 export async function executeWorkspaceOSCommand(cmd: string, workspaceName: string): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     exec(cmd, { cwd: workspaceName }, (err, stdout, stderr) => {
+      console.log(stdout);
+      console.warn(stderr);
       if (err) {
-        console.log(stdout);
-        console.warn(stderr);
         return reject(err);
       }
       resolve();

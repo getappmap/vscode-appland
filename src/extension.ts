@@ -44,7 +44,12 @@ import { SourceFileWatcher } from './services/sourceFileWatcher';
 import assert from 'assert';
 import { initializeWorkspaceServices } from './services/workspaceServices';
 
+export async function deactivate() {
+  console.log('extension.deactivate');
+}
+
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
+  console.log('extension.activate');
   Telemetry.register(context);
 
   const workspaceServices = initializeWorkspaceServices(context);
