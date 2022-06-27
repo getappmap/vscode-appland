@@ -131,13 +131,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/models@npm:1.16.1, @appland/models@npm:^1.14.1, @appland/models@npm:^1.16.1, @appland/models@npm:^1.8.1, @appland/models@npm:^1.9.0":
-  version: 1.16.1
-  resolution: "@appland/models@npm:1.16.1"
+"@appland/models@npm:^1.16.2":
+  version: 1.16.2
+  resolution: "@appland/models@npm:1.16.2"
   dependencies:
     "@appland/sql-parser": ^1.5.0
     crypto-js: ^4.0.0
-  checksum: c3f933b793d38f82f42e6f31bd353410e530bf4dc3e5fe0b1350366c041dba2e8a4c93c20a819526e1c484269d111199a4f207137e81736ad33968238c3b5132
+  checksum: 87d8359b314005cff9e9be0eb20c4267c8e7cd3a0d14f1fe49b52fbf6a6bc3fa69bf48f5831951b3b0d25036f7655b9c0f6b1d71220fc3b365a97281310526bb
   languageName: node
   linkType: hard
 
