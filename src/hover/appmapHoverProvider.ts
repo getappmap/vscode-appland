@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import extensionSettings from '../configuration/extensionSettings';
-import { CodeObjectEntry } from '../services/classMapIndex';
+import { CodeObjectEntry } from '../lib/CodeObjectEntry';
 import LineInfoIndex from '../services/lineInfoIndex';
 
 export default function appmapHoverProvider(

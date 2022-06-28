@@ -1,7 +1,8 @@
 import assert from 'assert';
 import { basename, isAbsolute } from 'path';
 import * as vscode from 'vscode';
-import ClassMapIndex, { CodeObjectEntry, InspectableTypes } from '../services/classMapIndex';
+import ClassMapIndex from '../services/classMapIndex';
+import { CodeObjectEntry, InspectableTypes } from '../lib/CodeObjectEntry';
 
 export interface CodeObjectTreeItem extends vscode.TreeItem {
   codeObjectFqid: string;

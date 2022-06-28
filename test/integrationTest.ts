@@ -14,7 +14,7 @@ const PROJECT_A = 'test/fixtures/workspaces/project-a';
 const PROJECT_UPTODATE = 'test/fixtures/workspaces/project-uptodate';
 const testWorkspaces = [PROJECT_A, PROJECT_UPTODATE];
 
-(async function() {
+async function integrationTest() {
   const projectRootDir = resolve(__dirname, '..');
   const testDir = resolve(__dirname, '../out/test/integration');
 
@@ -69,6 +69,8 @@ const testWorkspaces = [PROJECT_A, PROJECT_UPTODATE];
       testWorkspaces.map(async (testWorkspace) => {
         await new Promise<void>((resolve, reject) => {
           const proc = cp.exec(`yarn install`, { cwd: testWorkspace });
+          proc.on('message', console.log);
+          proc.on('error', console.warn);
           proc.on('exit', (code) => {
             if (code !== 0) return reject(code);
 
@@ -154,4 +156,9 @@ const testWorkspaces = [PROJECT_A, PROJECT_UPTODATE];
     }
   }
   process.exit(succeeded ? 0 : 1);
-})();
+}
+
+integrationTest().catch((e) => {
+  console.warn(e);
+  process.exit(1);
+});

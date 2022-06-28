@@ -1,0 +1,1330 @@
+[
+  {
+    "name": "json",
+    "type": "package",
+    "children": [
+      {
+        "name": "JSON",
+        "type": "class",
+        "children": [
+          {
+            "name": "Ext",
+            "type": "class",
+            "children": [
+              {
+                "name": "Parser",
+                "type": "class",
+                "children": [
+                  {
+                    "name": "parse",
+                    "type": "function",
+                    "labels": [
+                      "format.json.parse",
+                      "deserialize.safe"
+                    ],
+                    "static": false,
+                    "location": "JSON::Ext::Parser#parse"
+                  }
+                ]
+              },
+              {
+                "name": "Generator",
+                "type": "class",
+                "children": [
+                  {
+                    "name": "State",
+                    "type": "class",
+                    "children": [
+                      {
+                        "name": "generate",
+                        "type": "function",
+                        "labels": [
+                          "format.json.generate",
+                          "serialize"
+                        ],
+                        "static": false,
+                        "location": "JSON::Ext::Generator::State#generate"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "logger",
+    "type": "package",
+    "children": [
+      {
+        "name": "Logger",
+        "type": "class",
+        "children": [
+          {
+            "name": "LogDevice",
+            "type": "class",
+            "children": [
+              {
+                "name": "write",
+                "type": "function",
+                "labels": [
+                  "log"
+                ],
+                "static": false,
+                "location": "/Users/kgilpin/.rbenv/versions/3.0.1/lib/ruby/3.0.0/logger/log_device.rb:31"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "app",
+    "type": "package",
+    "children": [
+      {
+        "name": "models",
+        "type": "package",
+        "children": [
+          {
+            "name": "dao",
+            "type": "package",
+            "children": [
+              {
+                "name": "DAO",
+                "type": "class",
+                "children": [
+                  {
+                    "name": "ToModel",
+                    "type": "class",
+                    "children": [
+                      {
+                        "name": "to_model",
+                        "type": "function",
+                        "static": false,
+                        "location": "app/models/dao/to_model.rb:5"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Scenario",
+                    "type": "class",
+                    "children": [
+                      {
+                        "name": "validate",
+                        "type": "function",
+                        "static": false,
+                        "location": "app/models/dao/scenario.rb:149"
+                      },
+                      {
+                        "name": "raw_data",
+                        "type": "function",
+                        "static": false,
+                        "location": "app/models/dao/scenario.rb:123"
+                      },
+                      {
+                        "name": "before_save",
+                        "type": "function",
+                        "static": false,
+                        "location": "app/models/dao/scenario.rb:170"
+                      },
+                      {
+                        "name": "store_raw_data",
+                        "type": "function",
+                        "static": false,
+                        "location": "app/models/dao/scenario.rb:155"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Mapset",
+                    "type": "class",
+                    "children": [
+                      {
+                        "name": "vacuum",
+                        "type": "function",
+                        "static": false,
+                        "location": "app/models/dao/mapset.rb:24"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "PublicResource",
+                    "type": "class",
+                    "children": [
+                      {
+                        "name": "coerce",
+                        "type": "function",
+                        "static": true,
+                        "location": "app/models/dao/public_resource.rb:18"
+                      },
+                      {
+                        "name": "scope",
+                        "type": "function",
+                        "static": true,
+                        "location": "app/models/dao/public_resource.rb:26"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "SequelUtil",
+                    "type": "class",
+                    "children": [
+                      {
+                        "name": "build_where_clause",
+                        "type": "function",
+                        "static": true,
+                        "location": "app/models/dao/sequel_util.rb:6"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "name": "scanner",
+                "type": "package",
+                "children": [
+                  {
+                    "name": "DAO",
+                    "type": "class",
+                    "children": [
+                      {
+                        "name": "Scanner",
+                        "type": "class",
+                        "children": [
+                          {
+                            "name": "Finding",
+                            "type": "class",
+                            "children": [
+                              {
+                                "name": "to_model",
+                                "type": "function",
+                                "static": false,
+                                "location": "app/models/dao/scanner/finding.rb:14"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "scenario",
+            "type": "package",
+            "children": [
+              {
+                "name": "Scenario",
+                "type": "class",
+                "children": [
+                  {
+                    "name": "Build",
+                    "type": "class",
+                    "children": [
+                      {
+                        "name": "save!",
+                        "type": "function",
+                        "labels": [
+                          "crud.create"
+                        ],
+                        "static": false,
+                        "location": "app/models/scenario/build.rb:68"
+                      },
+                      {
+                        "name": "build",
+                        "type": "function",
+                        "static": false,
+                        "location": "app/models/scenario/build.rb:54"
+                      },
+                      {
+                        "name": "valid?",
+                        "type": "function",
+                        "static": false,
+                        "location": "app/models/scenario/build.rb:48"
+                      },
+                      {
+                        "name": "validate",
+                        "type": "function",
+                        "labels": [
+                          "crud.validate"
+                        ],
+                        "static": false,
+                        "location": "app/models/scenario/build.rb:33"
+                      },
+                      {
+                        "name": "validate_data",
+                        "type": "function",
+                        "labels": [
+                          "crud.validate"
+                        ],
+                        "static": false,
+                        "location": "app/models/scenario/build.rb:41"
+                      },
+                      {
+                        "name": "apply_default_metadata",
+                        "type": "function",
+                        "static": false,
+                        "location": "app/models/scenario/build.rb:83"
+                      },
+                      {
+                        "name": "normalize_events",
+                        "type": "function",
+                        "static": false,
+                        "location": "app/models/scenario/build.rb:92"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "ScenarioData",
+                    "type": "class",
+                    "children": [
+                      {
+                        "name": "scenario_data",
+                        "type": "function",
+                        "static": false,
+                        "location": "app/models/scenario/scenario_data.rb:15"
+                      },
+                      {
+                        "name": "metadata",
+                        "type": "function",
+                        "static": false,
+                        "location": "app/models/scenario/scenario_data.rb:5"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "SaveScenario",
+                    "type": "class",
+                    "children": [
+                      {
+                        "name": "save_scenario",
+                        "type": "function",
+                        "static": false,
+                        "location": "app/models/scenario/save_scenario.rb:11"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "normalize",
+            "type": "package",
+            "children": [
+              {
+                "name": "Normalize",
+                "type": "class",
+                "children": [
+                  {
+                    "name": "HTTPServerRequest",
+                    "type": "class",
+                    "children": [
+                      {
+                        "name": "normalize",
+                        "type": "function",
+                        "static": false,
+                        "location": "app/models/normalize/http_server_request.rb:12"
+                      },
+                      {
+                        "name": "write_client_normalized_path_info",
+                        "type": "function",
+                        "static": false,
+                        "location": "app/models/normalize/http_server_request.rb:67"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "SQL",
+                    "type": "class",
+                    "children": [
+                      {
+                        "name": "normalize",
+                        "type": "function",
+                        "static": false,
+                        "location": "app/models/normalize/sql.rb:11"
+                      },
+                      {
+                        "name": "normalize_sql",
+                        "type": "function",
+                        "static": false,
+                        "location": "app/models/normalize/sql.rb:30"
+                      },
+                      {
+                        "name": "normalize_sql_default",
+                        "type": "function",
+                        "static": false,
+                        "location": "app/models/normalize/sql.rb:37"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "mapset",
+            "type": "package",
+            "children": [
+              {
+                "name": "Mapset",
+                "type": "class",
+                "children": [
+                  {
+                    "name": "Build",
+                    "type": "class",
+                    "children": [
+                      {
+                        "name": "save!",
+                        "type": "function",
+                        "static": false,
+                        "location": "app/models/mapset/build.rb:64"
+                      },
+                      {
+                        "name": "valid?",
+                        "type": "function",
+                        "static": false,
+                        "location": "app/models/mapset/build.rb:58"
+                      },
+                      {
+                        "name": "validate",
+                        "type": "function",
+                        "static": false,
+                        "location": "app/models/mapset/build.rb:39"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Vacuum",
+                    "type": "class",
+                    "children": [
+                      {
+                        "name": "perform",
+                        "type": "function",
+                        "static": false,
+                        "location": "app/models/mapset/vacuum.rb:11"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Show",
+                    "type": "class",
+                    "children": [
+                      {
+                        "name": "app",
+                        "type": "function",
+                        "static": false,
+                        "location": "app/models/mapset/show.rb:32"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "app",
+            "type": "package",
+            "children": [
+              {
+                "name": "App",
+                "type": "class",
+                "children": [
+                  {
+                    "name": "Show",
+                    "type": "class",
+                    "children": [
+                      {
+                        "name": "org",
+                        "type": "function",
+                        "static": false,
+                        "location": "app/models/app/show.rb:54"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Search",
+                    "type": "class",
+                    "children": [
+                      {
+                        "name": "find_by_id!",
+                        "type": "function",
+                        "static": false,
+                        "location": "app/models/app/search.rb:97"
+                      },
+                      {
+                        "name": "base_dataset",
+                        "type": "function",
+                        "static": false,
+                        "location": "app/models/app/search.rb:160"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "user",
+            "type": "package",
+            "children": [
+              {
+                "name": "User",
+                "type": "class",
+                "children": [
+                  {
+                    "name": "Show",
+                    "type": "class",
+                    "children": [
+                      {
+                        "name": "member_of?",
+                        "type": "function",
+                        "static": false,
+                        "location": "app/models/user/show.rb:38"
+                      },
+                      {
+                        "name": "accept_eula?",
+                        "type": "function",
+                        "static": false,
+                        "location": "app/models/user/show.rb:54"
+                      },
+                      {
+                        "name": "admin?",
+                        "type": "function",
+                        "static": false,
+                        "location": "app/models/user/show.rb:50"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "scanner_job",
+            "type": "package",
+            "children": [
+              {
+                "name": "ScannerJob",
+                "type": "class",
+                "children": [
+                  {
+                    "name": "Build",
+                    "type": "class",
+                    "children": [
+                      {
+                        "name": "save!",
+                        "type": "function",
+                        "static": false,
+                        "location": "app/models/scanner_job/build.rb:47"
+                      },
+                      {
+                        "name": "valid?",
+                        "type": "function",
+                        "static": false,
+                        "location": "app/models/scanner_job/build.rb:41"
+                      },
+                      {
+                        "name": "validate",
+                        "type": "function",
+                        "static": false,
+                        "location": "app/models/scanner_job/build.rb:20"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Show",
+                    "type": "class",
+                    "children": [
+                      {
+                        "name": "findings",
+                        "type": "function",
+                        "static": false,
+                        "location": "app/models/scanner_job/show.rb:25"
+                      },
+                      {
+                        "name": "mapset",
+                        "type": "function",
+                        "static": false,
+                        "location": "app/models/scanner_job/show.rb:21"
+                      },
+                      {
+                        "name": "app",
+                        "type": "function",
+                        "static": false,
+                        "location": "app/models/scanner_job/show.rb:17"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "User",
+            "type": "class",
+            "children": [
+              {
+                "name": "find_by_id!",
+                "type": "function",
+                "static": true,
+                "location": "app/models/user.rb:31"
+              }
+            ]
+          },
+          {
+            "name": "Configuration",
+            "type": "class",
+            "children": [
+              {
+                "name": "find",
+                "type": "function",
+                "static": true,
+                "location": "app/models/configuration.rb:8"
+              },
+              {
+                "name": "attributes=",
+                "type": "function",
+                "static": false,
+                "location": "app/models/configuration.rb:44"
+              },
+              {
+                "name": "attributes",
+                "type": "function",
+                "static": false,
+                "location": "app/models/configuration.rb:30"
+              }
+            ]
+          },
+          {
+            "name": "ScannerJob",
+            "type": "class",
+            "children": [
+              {
+                "name": "fetch",
+                "type": "function",
+                "static": true,
+                "location": "app/models/scanner_job.rb:33"
+              }
+            ]
+          },
+          {
+            "name": "Search",
+            "type": "class",
+            "children": [
+              {
+                "name": "filter",
+                "type": "function",
+                "static": false,
+                "location": "app/models/search.rb:34"
+              }
+            ]
+          },
+          {
+            "name": "ScannerFinding",
+            "type": "class",
+            "children": [
+              {
+                "name": "defer",
+                "type": "function",
+                "static": true,
+                "location": "app/models/scanner_finding.rb:205"
+              }
+            ]
+          },
+          {
+            "name": "ThirdPartyIntegration",
+            "type": "class",
+            "children": [
+              {
+                "name": "get_installation_ids",
+                "type": "function",
+                "static": true,
+                "location": "app/models/third_party_integration.rb:6"
+              },
+              {
+                "name": "get_repositories",
+                "type": "function",
+                "static": true,
+                "location": "app/models/third_party_integration.rb:22"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "controllers",
+        "type": "package",
+        "children": [
+          {
+            "name": "concerns",
+            "type": "package",
+            "children": [
+              {
+                "name": "MuteLogging",
+                "type": "class",
+                "children": [
+                  {
+                    "name": "mute_logging",
+                    "type": "function",
+                    "static": false,
+                    "location": "app/controllers/concerns/mute_logging.rb:4"
+                  }
+                ]
+              },
+              {
+                "name": "InTransaction",
+                "type": "class",
+                "children": [
+                  {
+                    "name": "in_transaction",
+                    "type": "function",
+                    "static": false,
+                    "location": "app/controllers/concerns/in_transaction.rb:8"
+                  }
+                ]
+              },
+              {
+                "name": "CurrentUser",
+                "type": "class",
+                "children": [
+                  {
+                    "name": "check_current_user",
+                    "type": "function",
+                    "static": false,
+                    "location": "app/controllers/concerns/current_user.rb:34"
+                  },
+                  {
+                    "name": "current_user",
+                    "type": "function",
+                    "static": false,
+                    "location": "app/controllers/concerns/current_user.rb:64"
+                  },
+                  {
+                    "name": "Memo",
+                    "type": "class",
+                    "children": [
+                      {
+                        "name": "get",
+                        "type": "function",
+                        "static": false,
+                        "location": "app/controllers/concerns/current_user.rb:11"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "lookup_session_user",
+                    "type": "function",
+                    "labels": [
+                      "security.authentication"
+                    ],
+                    "static": false,
+                    "location": "app/controllers/concerns/current_user.rb:71"
+                  },
+                  {
+                    "name": "ensure_early_access",
+                    "type": "function",
+                    "static": false,
+                    "location": "app/controllers/concerns/current_user.rb:46"
+                  },
+                  {
+                    "name": "early_access_enabled?",
+                    "type": "function",
+                    "static": false,
+                    "location": "app/controllers/concerns/current_user.rb:42"
+                  },
+                  {
+                    "name": "ensure_eula_accepted",
+                    "type": "function",
+                    "static": false,
+                    "location": "app/controllers/concerns/current_user.rb:55"
+                  }
+                ]
+              },
+              {
+                "name": "AnonymousAccess",
+                "type": "class",
+                "children": [
+                  {
+                    "name": "anonymous_access?",
+                    "type": "function",
+                    "static": false,
+                    "location": "app/controllers/concerns/anonymous_access.rb:9"
+                  }
+                ]
+              },
+              {
+                "name": "WithAuthentication",
+                "type": "class",
+                "children": [
+                  {
+                    "name": "with_authentication",
+                    "type": "function",
+                    "static": false,
+                    "location": "app/controllers/concerns/with_authentication.rb:6"
+                  }
+                ]
+              },
+              {
+                "name": "UpdateCommitStatus",
+                "type": "class",
+                "children": [
+                  {
+                    "name": "update_commit_status",
+                    "type": "function",
+                    "static": false,
+                    "location": "app/controllers/concerns/update_commit_status.rb:8"
+                  }
+                ]
+              },
+              {
+                "name": "ThirdPartyClients",
+                "type": "class",
+                "children": [
+                  {
+                    "name": "build_installation_clients",
+                    "type": "function",
+                    "static": false,
+                    "location": "app/controllers/concerns/third_party_clients.rb:22"
+                  }
+                ]
+              },
+              {
+                "name": "ThirdPartyRepository",
+                "type": "class",
+                "children": [
+                  {
+                    "name": "repositories",
+                    "type": "function",
+                    "static": false,
+                    "location": "app/controllers/concerns/third_party_repository.rb:47"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "ApplicationController",
+            "type": "class",
+            "children": [
+              {
+                "name": "current_user?",
+                "type": "function",
+                "static": false,
+                "location": "app/controllers/application_controller.rb:59"
+              },
+              {
+                "name": "configuration",
+                "type": "function",
+                "static": false,
+                "location": "app/controllers/application_controller.rb:55"
+              },
+              {
+                "name": "authorize_mini_profiler",
+                "type": "function",
+                "static": false,
+                "location": "app/controllers/application_controller.rb:49"
+              }
+            ]
+          },
+          {
+            "name": "ScannerJobsController",
+            "type": "class",
+            "children": [
+              {
+                "name": "defer",
+                "type": "function",
+                "static": false,
+                "location": "app/controllers/scanner_jobs_controller.rb:44"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "services",
+        "type": "package",
+        "children": [
+          {
+            "name": "git_hub/clients",
+            "type": "package",
+            "children": [
+              {
+                "name": "GitHub",
+                "type": "class",
+                "children": [
+                  {
+                    "name": "Clients",
+                    "type": "class",
+                    "children": [
+                      {
+                        "name": "App",
+                        "type": "class",
+                        "children": [
+                          {
+                            "name": "installation_client",
+                            "type": "function",
+                            "static": false,
+                            "location": "app/services/git_hub/clients/app.rb:31"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "GitHub",
+            "type": "class",
+            "children": [
+              {
+                "name": "Clients",
+                "type": "class",
+                "children": [
+                  {
+                    "name": "App",
+                    "type": "class",
+                    "children": [
+                      {
+                        "name": "authenticate_installation",
+                        "type": "function",
+                        "static": false,
+                        "location": "app/services/application_service_client.rb:4"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "ApplicationServiceClient",
+            "type": "class",
+            "children": [
+              {
+                "name": "client",
+                "type": "function",
+                "static": false,
+                "location": "app/services/application_service_client.rb:7"
+              }
+            ]
+          },
+          {
+            "name": "ApplicationService",
+            "type": "class",
+            "children": [
+              {
+                "name": "client=",
+                "type": "function",
+                "static": false,
+                "location": "app/services/application_service.rb:25"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "lib/appland",
+    "type": "package",
+    "children": [
+      {
+        "name": "Appland",
+        "type": "class",
+        "children": [
+          {
+            "name": "Util",
+            "type": "class",
+            "children": [
+              {
+                "name": "version_match?",
+                "type": "function",
+                "static": true,
+                "location": "lib/appland/util.rb:8"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ruby",
+    "type": "package",
+    "children": [
+      {
+        "name": "String",
+        "type": "class",
+        "children": [
+          {
+            "name": "unpack",
+            "type": "function",
+            "labels": [
+              "string.unpack"
+            ],
+            "static": false,
+            "location": "<internal:pack>:256"
+          },
+          {
+            "name": "unpack1",
+            "type": "function",
+            "labels": [
+              "string.unpack"
+            ],
+            "static": false,
+            "location": "<internal:pack>:280"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "activesupport",
+    "type": "package",
+    "children": [
+      {
+        "name": "ActiveSupport",
+        "type": "class",
+        "children": [
+          {
+            "name": "Callbacks",
+            "type": "class",
+            "children": [
+              {
+                "name": "CallbackSequence",
+                "type": "class",
+                "children": [
+                  {
+                    "name": "invoke_before",
+                    "type": "function",
+                    "labels": [
+                      "mvc.before_action"
+                    ],
+                    "static": false,
+                    "location": "/Users/kgilpin/.rbenv/versions/3.0.1/lib/ruby/gems/3.0.0/gems/activesupport-6.1.4.1/lib/active_support/callbacks.rb:511"
+                  },
+                  {
+                    "name": "invoke_after",
+                    "type": "function",
+                    "labels": [
+                      "mvc.after_action"
+                    ],
+                    "static": false,
+                    "location": "/Users/kgilpin/.rbenv/versions/3.0.1/lib/ruby/gems/3.0.0/gems/activesupport-6.1.4.1/lib/active_support/callbacks.rb:515"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "actionpack",
+    "type": "package",
+    "children": [
+      {
+        "name": "ActionController",
+        "type": "class",
+        "children": [
+          {
+            "name": "Instrumentation",
+            "type": "class",
+            "children": [
+              {
+                "name": "process_action",
+                "type": "function",
+                "labels": [
+                  "mvc.controller"
+                ],
+                "static": false,
+                "location": "/Users/kgilpin/.rbenv/versions/3.0.1/lib/ruby/gems/3.0.0/gems/actionpack-6.1.4.1/lib/action_controller/metal/instrumentation.rb:19"
+              }
+            ]
+          },
+          {
+            "name": "Renderers",
+            "type": "class",
+            "children": [
+              {
+                "name": "render_to_body",
+                "type": "function",
+                "labels": [
+                  "mvc.render"
+                ],
+                "static": false,
+                "location": "/Users/kgilpin/.rbenv/versions/3.0.1/lib/ruby/gems/3.0.0/gems/actionpack-6.1.4.1/lib/action_controller/metal/renderers.rb:141"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "ActionDispatch",
+        "type": "class",
+        "children": [
+          {
+            "name": "Request",
+            "type": "class",
+            "children": [
+              {
+                "name": "Session",
+                "type": "class",
+                "children": [
+                  {
+                    "name": "[]",
+                    "type": "function",
+                    "labels": [
+                      "http.session.read"
+                    ],
+                    "static": false,
+                    "location": "/Users/kgilpin/.rbenv/versions/3.0.1/lib/ruby/gems/3.0.0/gems/actionpack-6.1.4.1/lib/action_dispatch/request/session.rb:91"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Cookies",
+            "type": "class",
+            "children": [
+              {
+                "name": "CookieJar",
+                "type": "class",
+                "children": [
+                  {
+                    "name": "update",
+                    "type": "function",
+                    "labels": [
+                      "http.session.write"
+                    ],
+                    "static": false,
+                    "location": "/Users/kgilpin/.rbenv/versions/3.0.1/lib/ruby/gems/3.0.0/gems/actionpack-6.1.4.1/lib/action_dispatch/middleware/cookies.rb:345"
+                  },
+                  {
+                    "name": "[]",
+                    "type": "function",
+                    "labels": [
+                      "http.session.read"
+                    ],
+                    "static": false,
+                    "location": "/Users/kgilpin/.rbenv/versions/3.0.1/lib/ruby/gems/3.0.0/gems/actionpack-6.1.4.1/lib/action_dispatch/middleware/cookies.rb:329"
+                  },
+                  {
+                    "name": "[]=",
+                    "type": "function",
+                    "labels": [
+                      "http.session.write"
+                    ],
+                    "static": false,
+                    "location": "/Users/kgilpin/.rbenv/versions/3.0.1/lib/ruby/gems/3.0.0/gems/actionpack-6.1.4.1/lib/action_dispatch/middleware/cookies.rb:363"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "openssl",
+    "type": "package",
+    "children": [
+      {
+        "name": "OpenSSL",
+        "type": "class",
+        "children": [
+          {
+            "name": "Cipher",
+            "type": "class",
+            "children": [
+              {
+                "name": "decrypt",
+                "type": "function",
+                "labels": [
+                  "crypto.decrypt"
+                ],
+                "static": false,
+                "location": "OpenSSL::Cipher#decrypt"
+              },
+              {
+                "name": "encrypt",
+                "type": "function",
+                "labels": [
+                  "crypto.encrypt"
+                ],
+                "static": false,
+                "location": "OpenSSL::Cipher#encrypt"
+              }
+            ]
+          },
+          {
+            "name": "PKey",
+            "type": "class",
+            "children": [
+              {
+                "name": "PKey",
+                "type": "class",
+                "children": [
+                  {
+                    "name": "sign",
+                    "type": "function",
+                    "labels": [
+                      "crypto.pkey"
+                    ],
+                    "static": false,
+                    "location": "OpenSSL::PKey::PKey#sign"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "octokit",
+    "type": "package",
+    "children": [
+      {
+        "name": "Octokit",
+        "type": "class",
+        "children": [
+          {
+            "name": "Configurable",
+            "type": "class",
+            "children": [
+              {
+                "name": "keys",
+                "type": "function",
+                "static": true,
+                "location": "/Users/kgilpin/.rbenv/versions/3.0.1/lib/ruby/gems/3.0.0/gems/octokit-4.21.0/lib/octokit/configurable.rb:67"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "database",
+    "name": "Database",
+    "children": [
+      {
+        "type": "query",
+        "name": "SELECT * FROM \"orgs\" WHERE \"id\" = 76"
+      },
+      {
+        "type": "query",
+        "name": "SELECT \"data\" FROM \"scenario_data\" WHERE (\"sha_256\" IS NULL) LIMIT 1"
+      },
+      {
+        "type": "query",
+        "name": "SAVEPOINT autopoint_1"
+      },
+      {
+        "type": "query",
+        "name": "INSERT INTO \"scenarios\" (\"data\", \"org_id\", \"mapset_id\") VALUES ('{\"version\":\"1.4\",\"metadata\":{\"language\":{\"name\":\"python\",\"engine\":\"CPython\",\"version\":\"3.7.12\"},\"client\":{\"name\":\"appmap\",\"url\":\"https://github.com/applandinc/appmap-python\"},\"frameworks\":[{\"name\":\"Django\",\"version\":\"2.2.12\"}],\"recording\":{\"source_location\":\"misago/users/admin/tests/test_users_mass_actions.py:47\"},\"name\":\"activating multiple users sends email notifications to them\",\"feature\":\"Activating multiple users sends email notifications to them\",\"app\":\"misago\",\"recorder\":{\"name\":\"pytest\"},\"test_status\":\"succeeded\",\"fingerprints\":[{\"appmap_digest\":\"b806b3c32c38a7f87196acf7e673ef412cb0defbdb13e06d8fcac18bbec718ff\",\"canonicalization_algorithm\":\"classDependencies\",\"digest\":\"22914e0b0cf6aaea57f26bb33df37c7ee5d9c5a7751be5334a05bc8009bc4f67\",\"fingerprint_algorithm\":\"sha256\"},{\"appmap_digest\":\"b806b3c32c38a7f87196acf7e673ef412cb0defbdb13e06d8fcac18bbec718ff\",\"canonicalization_algorithm\":\"classes\",\"digest\":\"45e74d36b4b4f9bbeb71f937b2f9be4fa97bf0984f868aec72f98d1237e0cbec\",\"fingerprint_algorithm\":\"sha256\"},{\"appmap_digest\":\"b806b3c32c38a7f87196acf7e673ef412cb0defbdb13e06d8fcac18bbec718ff\",\"canonicalization_algorithm\":\"httpClientRequests\",\"digest\":\"4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945\",\"fingerprint_algorithm\":\"sha256\"},{\"appmap_digest\":\"b806b3c32c38a7f87196acf7e673ef412cb0defbdb13e06d8fcac18bbec718ff\",\"canonicalization_algorithm\":\"httpServerRequests\",\"digest\":\"29d8a2a8de0cf8627c558ff290cf94fa4274c3db31bf46f1129d2774df61c91e\",\"fingerprint_algorithm\":\"sha256\"},{\"appmap_digest\":\"b806b3c32c38a7f87196acf7e673ef412cb0defbdb13e06d8fcac18bbec718ff\",\"canonicalization_algorithm\":\"info\",\"digest\":\"0cf744f7ef9da381deddcc6d060c1a0cf096aaf1a1f51775c3ee497df7a95733\",\"fingerprint_algorithm\":\"sha256\"},{\"appmap_digest\":\"b806b3c32c38a7f87196acf7e673ef412cb0defbdb13e06d8fcac18bbec718ff\",\"canonicalization_algorithm\":\"labels\",\"digest\":\"4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945\",\"fingerprint_algorithm\":\"sha256\"},{\"appmap_di..."
+      },
+      {
+        "type": "query",
+        "name": "RELEASE SAVEPOINT autopoint_1"
+      },
+      {
+        "type": "query",
+        "name": "INSERT INTO \"scenarios\" (\"data\", \"org_id\", \"mapset_id\") VALUES ('{\"version\":\"1.4\",\"metadata\":{\"language\":{\"name\":\"python\",\"engine\":\"CPython\",\"version\":\"3.7.12\"},\"client\":{\"name\":\"appmap\",\"url\":\"https://github.com/applandinc/appmap-python\"},\"frameworks\":[{\"name\":\"Django\",\"version\":\"2.2.12\"}],\"recording\":{\"source_location\":\"misago/themes/tests/test_styles_are_included_on_page.py:3\"},\"name\":\"active theme styles are included in page html\",\"feature\":\"Active theme styles are included in page html\",\"app\":\"misago\",\"recorder\":{\"name\":\"pytest\"},\"test_status\":\"succeeded\"},\"events\":[{\"static\":true,\"parameters\":[{\"name\":\"client\",\"kind\":\"req\",\"class\":\"misago.test.MisagoClient\",\"object_id\":140273023216208,\"value\":\"<misago.test.MisagoClient object at 0x7f93dbb86a50>\"},{\"name\":\"active_theme\",\"kind\":\"req\",\"class\":\"misago.themes.models.Theme\",\"object_id\":140273023215952,\"value\":\"<Theme: Custom theme>\"}],\"id\":2,\"event\":\"call\",\"thread_id\":1,\"defined_class\":\"misago.themes.tests.test_styles_are_included_on_page\",\"method_id\":\"test_active_theme_styles_are_included_in_page_html\",\"path\":\"misago/themes/tests/test_styles_are_included_on_page.py\",\"lineno\":4},{\"sql_query\":{\"sql\":\"INSERT INTO \\\"misago_themes_css\\\" (\\\"theme_id\\\", \\\"name\\\", \\\"url\\\", \\\"source_file\\\", \\\"source_hash\\\", \\\"source_needs_building\\\", \\\"build_file\\\", \\\"build_hash\\\", \\\"size\\\", \\\"order\\\", \\\"modified_on\\\") VALUES (279, ''test'', ''https://cdn.example.com/style.css'', '''', NULL, false, '''', NULL, 0, 0, ''2021-11-18T04:32:10.691674+00:00''::timestamptz) RETURNING \\\"misago_themes_css\\\".\\\"id\\\"\",\"database_type\":\"postgresql\",\"server_version\":\"10.0.19\",\"normalized_sql\":\"INSERT INTO \\\"misago_themes_css\\\" (\\\"theme_id\\\", \\\"name\\\", \\\"url\\\", \\\"source_file\\\", \\\"source_hash\\\", \\\"source_needs_building\\\", \\\"build_file\\\", \\\"build_hash\\\", \\\"size\\\", \\\"order\\\", \\\"modified_on\\\") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11::timestamptz) RETURNING \\\"misago_themes_css\\\".\\\"id\\\"\",\"normalized\":true},\"id\":3,\"event\":\"call\",\"thread_id\":1},{\"parent_id\":3,\"elapsed\":0.00030598000000736647,\"id\"..."
+      },
+      {
+        "type": "query",
+        "name": "SELECT \"id\", \"org_id\" FROM \"scenarios\" WHERE (\"uuid\" IN ('01d3b696-8328-4b3d-93e5-3586555fe6fd', '7bacf166-4510-4831-a036-41db76c7996d'))"
+      },
+      {
+        "type": "query",
+        "name": "SELECT * FROM \"users_orgs\" WHERE ((\"user_id\" = 47) AND (\"org_id\" = 76))"
+      },
+      {
+        "type": "query",
+        "name": "INSERT INTO \"mapsets\" (\"branch\", \"commit\", \"user_id\", \"app_id\") VALUES ('master', 'dd7f86b05aace69ae6767c8b83443cb1107f3a7e', 47, 57) RETURNING *"
+      },
+      {
+        "type": "query",
+        "name": "UPDATE \"scenarios\" SET \"mapset_id\" = 26 WHERE (\"id\" IN (51, 52))"
+      },
+      {
+        "type": "query",
+        "name": "SELECT \"id\", \"uuid\" FROM \"scenarios\" WHERE ((\"uuid\" IN ('01d3b696-8328-4b3d-93e5-3586555fe6fd', '7bacf166-4510-4831-a036-41db76c7996d')) AND (\"mapset_id\" = 26))"
+      },
+      {
+        "type": "query",
+        "name": "INSERT INTO \"scanner_jobs\" (\"summary\", \"checks\", \"configuration\", \"mapset_id\", \"merge_key\") VALUES ('{\"numChecks\":5,\"numAppMaps\":10,\"appMapMetadata\":{\"git\":[{\"commit\":\"d7fb6ffb8e296915c85b24339b33645b5c8f927c\",\"branch\":\"master\",\"repository\":\"https://github.com/applandinc/appmap-server.git\"}]}}'::jsonb, '[{\"id\":\"authz-before-authn\",\"rule\":{\"id\":\"authz-before-authn\",\"url\":\"https://appland.com/docs/analysis/rules-reference.html#authz-before-authn\",\"scope\":\"http_server_request\",\"title\":\"Authorization performed before authentication\",\"labels\":[\"security.authorization\",\"security.authentication\"],\"references\":{\"CWE-863\":\"https://cwe.mitre.org/data/definitions/863.html\"},\"description\":\"Determines when authorization logic is applied to a user identity that has not been properly verified. Because the the user''s identity has not been verified yet, the outcome of the authorization check cannot be trusted. A malicious user might be able to get themselves authorized as a different user than they really are - or they may not be logged in at all.\",\"impactDomain\":\"Security\",\"enumerateScope\":false},\"scope\":\"http_server_request\",\"options\":{},\"excludeEvent\":[],\"excludeScope\":[],\"includeEvent\":[],\"includeScope\":[]},{\"id\":\"circular-dependency\",\"rule\":{\"id\":\"circular-dependency\",\"url\":\"https://appland.com/docs/analysis/rules-reference.html#circular-dependency\",\"scope\":\"command\",\"title\":\"Circular package dependency\",\"references\":{\"CWE-1047\":\"https://cwe.mitre.org/data/definitions/1047.html\"},\"description\":\"Finds cycles in the package dependency graph. Cyclic dependencies make code hard to maintain, because all the code in the cycle is inter-dependent. While it might look like the code in the different packages has separate functions, in essence all the code in the cycle acts like one big package.\",\"impactDomain\":\"Maintainability\",\"enumerateScope\":false},\"scope\":\"command\",\"options\":{\"depth\":4,\"ignoredPackages\":[{\"equal\":\"app/models/concerns\"},{\"equal\":\"app/controllers/concerns\"}]},\"excludeEvent\":[],\"excludeScope\":[],\"includeEvent\":[]..."
+      },
+      {
+        "type": "query",
+        "name": "INSERT INTO \"scanner_findings\" (\"scanner_job_id\", \"scenario_id\", \"data\") VALUES (26, 51, '{\"appMapName\":\"activating multiple users sends email notifications to them\",\"checkId\":\"too-many-updates\",\"ruleId\":\"too-many-updates\",\"ruleTitle\":\"Too many SQL and RPC updates performed in one command\",\"event\":{\"sql_query\":{\"sql\":\"UPDATE \\\"django_session\\\" SET \\\"session_data\\\" = ''NTc1MmU5YjU5OTg2ZmEyOWJhMjNmMmZhZDc0NTE5MzA2YjNjZWZiMzp7Il9hdXRoX3VzZXJfaWQiOiIyMjE0IiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoibWlzYWdvLnVzZXJzLmF1dGhiYWNrZW5kcy5NaXNhZ29CYWNrZW5kIiwiX2F1dGhfdXNlcl9oYXNoIjoiYzM2NWJlMGFiYmJlNTJkYTJlYzMzOThiOTFjNDQzZTkyYzgyNTVlOCIsIm1pc2Fnb19hZG1pbl9zZXNzaW9uX3Rva2VuIjoiMjk3MTYwZWMzNDUxYjQyMjBmMzlkNWUzNjFlZjhhODEiLCJtaXNhZ29fYWRtaW5fc2Vzc2lvbl91cGRhdGVkIjoxNjM3MjEwMTc0fQ=='', \\\"expire_date\\\" = ''2021-12-02T04:36:14.381083+00:00''::timestamptz WHERE \\\"django_session\\\".\\\"session_key\\\" = ''ofkw0znvj5pgesc7zds74l232h4ipale''\",\"database_type\":\"postgresql\",\"server_version\":\"10.0.19\"},\"id\":940,\"event\":\"call\",\"thread_id\":1},\"hash\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\"scope\":{\"static\":true,\"id\":1,\"event\":\"call\",\"thread_id\":1,\"defined_class\":\"misago.users.admin.tests.test_users_mass_actions\",\"method_id\":\"test_activating_multiple_users_sends_email_notifications_to_them\",\"path\":\"misago/users/admin/tests/test_users_mass_actions.py\",\"lineno\":48},\"message\":\"Command performs 23 SQL and RPC updates\",\"relatedEvents\":[{\"sql_query\":{\"sql\":\"UPDATE \\\"django_session\\\" SET \\\"session_data\\\" = ''NTc1MmU5YjU5OTg2ZmEyOWJhMjNmMmZhZDc0NTE5MzA2YjNjZWZiMzp7Il9hdXRoX3VzZXJfaWQiOiIyMjE0IiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoibWlzYWdvLnVzZXJzLmF1dGhiYWNrZW5kcy5NaXNhZ29CYWNrZW5kIiwiX2F1dGhfdXNlcl9oYXNoIjoiYzM2NWJlMGFiYmJlNTJkYTJlYzMzOThiOTFjNDQzZTkyYzgyNTVlOCIsIm1pc2Fnb19hZG1pbl9zZXNzaW9uX3Rva2VuIjoiMjk3MTYwZWMzNDUxYjQyMjBmMzlkNWUzNjFlZjhhODEiLCJtaXNhZ29fYWRtaW5fc2Vzc2lvbl91cGRhdGVkIjoxNjM3MjEwMTc0fQ=='', \\\"expire_date\\\" = ''2021-12-02T04:36:14.381083+00:00''::timestamptz WHERE \\\"django_session\\\".\\\"session_key\\\" = ''ofkw0znvj5pgesc7zds74l..."
+      },
+      {
+        "type": "query",
+        "name": "SELECT * FROM \"scanner_findings\" WHERE (\"scanner_findings\".\"scanner_job_id\" = 26)"
+      },
+      {
+        "type": "query",
+        "name": "SELECT * FROM \"users\" WHERE (\"id\" = 47) LIMIT 1"
+      },
+      {
+        "type": "query",
+        "name": "SELECT * FROM \"scanner_jobs\" WHERE (\"id\" = '26') LIMIT 1"
+      },
+      {
+        "type": "query",
+        "name": "SELECT * FROM \"mapsets\" WHERE \"id\" = 26"
+      },
+      {
+        "type": "query",
+        "name": "SELECT * FROM \"apps\" WHERE \"id\" = 57"
+      },
+      {
+        "type": "query",
+        "name": "SELECT * FROM \"users\" WHERE \"id\" = 47"
+      },
+      {
+        "type": "query",
+        "name": "SELECT \"apps\".* FROM \"apps\" WHERE (((\"apps\".\"org_id\" IN (SELECT \"orgs\".\"id\" FROM \"orgs\" INNER JOIN \"users_orgs\" ON (\"users_orgs\".\"org_id\" = \"orgs\".\"id\") WHERE ((\"users_orgs\".\"user_id\" = 47) AND (\"orgs\".\"id\" IS NOT NULL)))) OR (\"public\" IS TRUE)) AND (\"id\" = 57)) LIMIT 1"
+      },
+      {
+        "type": "query",
+        "name": "UPDATE \"scanner_finding_statuses\" SET \"status\" = 'deferred', \"user_id\" = 47, \"updated_at\" = '2022-06-28 16:45:56.276765+0000' WHERE ((\"app_id\" = 57) AND (\"identity_hash\" IN ('e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855', 'b89a2fd3adcdbccbe5bdf3e021073bee5e3c82593e9b6ecc1a3fca724e4e1971')) AND (\"status\" != 'deferred'))"
+      },
+      {
+        "type": "query",
+        "name": "SELECT \"installation_id\", \"provider\" FROM \"third_party_integrations\" WHERE (\"org_id\" = 76)"
+      },
+      {
+        "type": "query",
+        "name": "SELECT \"provider\", \"repository_id\", \"installation_id\" FROM \"third_party_repositories\" INNER JOIN \"third_party_integrations\" ON (\"third_party_integrations\".\"id\" = \"third_party_repositories\".\"integration_id\") WHERE (\"app_id\" = 57)"
+      }
+    ]
+  },
+  {
+    "type": "http",
+    "name": "HTTP server requests",
+    "children": [
+      {
+        "type": "route",
+        "name": "PUT /scanner_jobs/{id}/status/deferred"
+      }
+    ]
+  }
+]

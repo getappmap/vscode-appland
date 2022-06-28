@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
-import ClassMapIndex, { CodeObjectEntry } from './classMapIndex';
+import ClassMapIndex from './classMapIndex';
+import { CodeObjectEntry } from '../lib/CodeObjectEntry';
 import { FileChangeEvent } from './fileChangeEmitter';
 import { WorkspaceService, WorkspaceServiceInstance } from './workspaceService';
 

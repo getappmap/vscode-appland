@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
-import ClassMapIndex, { CodeObjectEntry } from '../services/classMapIndex';
+import ClassMapIndex from '../services/classMapIndex';
+import { CodeObjectEntry } from '../lib/CodeObjectEntry';
 
 export default async function openCodeObjectInAppMap(
   context: vscode.ExtensionContext,
