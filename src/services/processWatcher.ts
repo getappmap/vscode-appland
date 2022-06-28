@@ -26,11 +26,10 @@ export class ProcessWatcher implements vscode.Disposable {
   protected _onError: vscode.EventEmitter<Error> = new vscode.EventEmitter<Error>();
   protected _onAbort: vscode.EventEmitter<Error> = new vscode.EventEmitter<Error>();
 
+  protected shouldRun = false;
+
   // The number of times this process has crashed.
   protected crashCount = 0;
-
-  // Indicates the process has crashed more than the `retryTimes` threshold.
-  protected aborted = false;
 
   // A timeout period in which the crash count is to be reset if the timer is fulfilled.
   protected crashTimeout?: NodeJS.Timeout;
@@ -53,11 +52,12 @@ export class ProcessWatcher implements vscode.Disposable {
     };
   }
 
-  protected async retry(): Promise<void> {
-    if (this.aborted) {
-      throw new Error('the process has already been aborted');
-    }
+  get running(): boolean {
+    return this.process !== undefined;
+  }
 
+  protected async retry(): Promise<void> {
+    if (!this.shouldRun) return;
     if (this.crashTimeout) {
       clearTimeout(this.crashTimeout);
       this.crashTimeout = undefined;
@@ -67,6 +67,7 @@ export class ProcessWatcher implements vscode.Disposable {
     if (this.crashCount > this.options.retryTimes) {
       this.process?.log.append('too many crashes - aborting', OutputStream.Stderr);
       this._onAbort.fire(new Error(`${this.process?.spawnargs.join(' ')} crashed too many times.`));
+      this.process = undefined;
       return;
     }
 
@@ -78,20 +79,16 @@ export class ProcessWatcher implements vscode.Disposable {
     await new Promise((resolve) => setTimeout(resolve, backoffTime));
     this.crashTimeout = setTimeout(() => (this.crashCount = 0), this.options.retryThreshold);
     this.process = undefined;
-
-    this.start();
+    if (this.shouldRun) this.start();
   }
 
-  async start(): Promise<void> {
+  start(): void {
     if (this.process) {
       throw new Error(`process (${this.process.pid}) already running`);
     }
 
-    if (this.aborted) {
-      throw new Error('the process has already been aborted');
-    }
-
-    this.process = await spawn(this.options);
+    this.shouldRun = true;
+    this.process = spawn(this.options);
     this.process.log.append(`spawned ${this.process.spawnargs.join(' ')}`);
 
     this.process.once('error', (err) => {
@@ -111,17 +108,19 @@ export class ProcessWatcher implements vscode.Disposable {
     });
   }
 
-  dispose(): void {
+  async stop(reason?: string): Promise<void> {
+    this.crashCount = 0;
+    this.shouldRun = false;
+    if (this.crashTimeout) clearTimeout(this.crashTimeout);
     if (this.process) {
-      this.aborted = true;
+      this.process.log.append('process has been stopped' + (reason ? `: ${reason}` : ''));
       this.process.kill();
       this.process = undefined;
     }
+  }
 
-    if (this.crashTimeout) {
-      clearInterval(this.crashTimeout);
-    }
-
+  dispose(): void {
+    this.stop();
     this._onAbort.dispose();
     this._onError.dispose();
   }

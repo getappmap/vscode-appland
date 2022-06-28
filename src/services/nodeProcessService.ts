@@ -8,6 +8,7 @@ import { ProcessWatcher } from './processWatcher';
 import ExtensionSettings from '../configuration/extensionSettings';
 import ErrorCode from '../telemetry/definitions/errorCodes';
 import { getBinPath, ProgramName, spawn } from './nodeDependencyProcess';
+import { ProjectStateServiceInstance } from './projectStateService';
 
 const YARN_JS = 'yarn.js';
 
@@ -22,13 +23,20 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
     return this._onReady.event;
   }
 
-  constructor(context: vscode.ExtensionContext) {
+  constructor(
+    context: vscode.ExtensionContext,
+    protected projectStates: Readonly<Array<ProjectStateServiceInstance>>
+  ) {
     this.globalStorageDir = context.globalStorageUri.fsPath;
     this.externDir = path.join(context.extensionPath, 'extern');
   }
 
   async create(folder: vscode.WorkspaceFolder): Promise<NodeProcessServiceInstance> {
     const services: ProcessWatcher[] = [];
+    const projectState = this.projectStates.find((projectState) => projectState.folder === folder);
+    if (!projectState) {
+      throw new Error(`failed to resolve a project state for ${folder.name}`);
+    }
 
     if (ExtensionSettings.indexEnabled()) {
       try {
@@ -72,7 +80,10 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
       }
     }
 
-    return new NodeProcessServiceInstance(folder, services);
+    const instance = new NodeProcessServiceInstance(folder, services, projectState);
+    await instance.initialize();
+
+    return instance;
   }
 
   protected get yarnPath(): string {

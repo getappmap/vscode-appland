@@ -165,15 +165,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       await workspaceServices.enroll(findingWatcher);
     }
 
-    // The node dependencies may take some time to retrieve. As a result, the initialization sequence is
-    // wrapped in an async function but we won't wait for it to resolve.
-    (async function() {
-      const nodeProcessService = new NodeProcessService(context);
-      nodeProcessService.onReady(activateUptodateService);
-      await nodeProcessService.install();
-      await workspaceServices.enroll(nodeProcessService);
-    })();
-
     const inspectEnabled = extensionSettings.inspectEnabled();
     if (inspectEnabled) {
       registerInspectCodeObject(context);
@@ -199,6 +190,15 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
         InstallGuideWebView.register(context, projectStates);
       }
+
+      // The node dependencies may take some time to retrieve. As a result, the initialization sequence is
+      // wrapped in an async function but we won't wait for it to resolve.
+      (async function() {
+        const nodeProcessService = new NodeProcessService(context, projectStates);
+        nodeProcessService.onReady(activateUptodateService);
+        await nodeProcessService.install();
+        await workspaceServices.enroll(nodeProcessService);
+      })();
     }
 
     deleteAllAppMaps(context, classMapIndex, findingsIndex);
