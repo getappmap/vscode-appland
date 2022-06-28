@@ -9,6 +9,14 @@ import { analyze, scoreValue } from '../analyzers';
 import ProjectMetadata from '../workspace/projectMetadata';
 import AppMapCollection from './appmapCollection';
 
+interface DomainCounts {
+  total: number;
+  Security?: number;
+  Performance?: number;
+  Maintainability?: number;
+  Stability?: number;
+}
+
 export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
   protected disposables: vscode.Disposable[] = [];
   protected _onStateChange = new vscode.EventEmitter<ProjectStateServiceInstance>();
@@ -18,6 +26,8 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
   protected numFindings = 0;
 
   public onStateChange = this._onStateChange.event;
+
+  protected domains: DomainCounts = { total: 0 };
 
   constructor(
     public readonly folder: vscode.WorkspaceFolder,
@@ -107,10 +117,34 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
     );
   }
 
+  countDomainsFromFindings(findings: ResolvedFinding[]): void {
+    const tempDomains = new Map<string, Set<string>>();
+
+    findings.forEach((finding) => {
+      const domain: string = finding.finding.impactDomain;
+      let hashArray = tempDomains.get(domain);
+
+      if (hashArray == undefined) {
+        const newSet = new Set<string>();
+        tempDomains.set(domain, newSet);
+        hashArray = newSet;
+      }
+      hashArray.add(finding.finding.hash);
+    });
+
+    this.domains.Maintainability = tempDomains.get('Maintainability')?.size;
+    this.domains.Performance = tempDomains.get('Performance')?.size;
+    this.domains.Stability = tempDomains.get('Stability')?.size;
+    this.domains.Security = tempDomains.get('Security')?.size;
+    this.domains.total = findings.length;
+  }
+
   onFindingsChanged(findings: ResolvedFinding[]): void {
     this.analysisPerformed = true;
     this.numFindings = findings.length;
     this.updateMetadata();
+
+    this.countDomainsFromFindings(findings);
   }
 
   onAppMapCreated(): void {
