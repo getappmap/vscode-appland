@@ -3,7 +3,6 @@ import { extname } from 'path';
 import AppMapAgent from '../agent/appMapAgent';
 import AppMapAgentRuby from '../agent/appMapAgentRuby';
 import AppMapAgentDummy from '../agent/AppMapAgentDummy';
-import extensionSettings from '../configuration/extensionSettings';
 import backgroundJob from '../lib/backgroundJob';
 import GitProperties from '../telemetry/properties/versionControlGit';
 
@@ -181,9 +180,9 @@ const LANGUAGE_EXTENSIONS = LANGUAGES.reduce((memo, lang) => {
  */
 export const LANGUAGE_AGENTS = [
   new AppMapAgentRuby(),
-  new AppMapAgentDummy('java', 'Java (Spring)'),
-  new AppMapAgentDummy('javascript', 'JavaScript (Node & Express)'),
-  new AppMapAgentDummy('python', 'Python (Django or Flask)', extensionSettings.pythonEnabled()),
+  new AppMapAgentDummy('java'),
+  new AppMapAgentDummy('javascript'),
+  new AppMapAgentDummy('python'),
   new AppMapAgentDummy('unknown'),
 ].reduce((memo, agent) => {
   memo[agent.language] = agent;

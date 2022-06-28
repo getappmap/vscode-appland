@@ -80,7 +80,7 @@ export async function analyze(
 ): Promise<Result & Partial<WithAppMaps>> {
   // TODO: Use the 'language' field in appmap.yml instead
   const agent = await LanguageResolver.getAgent(folder);
-  const language = agent.enabled ? agent.language : `${agent.language}.disabled`;
+  const language = agent.language;
   const analyzer = (await import(`./${language}`)).default;
   const result = await analyzer(folder);
 

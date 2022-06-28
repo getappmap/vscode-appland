@@ -12,8 +12,6 @@ import { agents as agentVersions } from '../../package.json';
 
 export default class AppMapAgentRuby implements AppMapAgent {
   readonly language = 'ruby';
-  readonly projectTypes = 'Ruby (Rails)';
-  readonly enabled = true;
 
   private static readonly REGEX_GEM_DECLARATION = /(?!\s)(?:gem|group|require)\s/m;
   private static readonly REGEX_GEM_DEPENDENCY = /^\s*gem\s+['|"]appmap['|"].*$/m;

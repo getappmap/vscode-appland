@@ -13,11 +13,11 @@ export class ErrorUnsupportedLanguage extends Error {
 }
 
 export default class AppMapAgentJavaDummy implements AppMapAgent {
-  constructor(
-    readonly language: string,
-    readonly projectTypes?: string,
-    readonly enabled: boolean = true
-  ) {}
+  language: string;
+
+  constructor(language: string) {
+    this.language = language;
+  }
 
   isInstalled(): Promise<boolean> {
     throw new ErrorUnsupportedLanguage(this.language);

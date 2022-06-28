@@ -179,10 +179,6 @@
         "appMap.inspectEnabled": {
           "type": "boolean",
           "description": "Enable detailed inspection of AppMap code objects (preview)"
-        },
-        "appMap.pythonEnabled": {
-          "type": "boolean",
-          "description": "Enable support of Python projects"
         }
       }
     },
