@@ -182,6 +182,8 @@ export async function waitForExtension(): Promise<AppMapService> {
 
   const extension = vscode.extensions.getExtension('appland.appmap');
   assert(extension);
+  assert(extension.isActive);
+  assert(extension.exports);
   return extension.exports;
 }
 
