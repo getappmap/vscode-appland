@@ -39,7 +39,7 @@ export default async function analyze(folder: WorkspaceFolder): Promise<Result |
     features.lang = {
       title: 'Ruby',
       score: 'ok',
-      text: `This project looks like Ruby. It's one of the languages supported by AppMap, but we couldn't find a Gemfile.`,
+      text: `This project looks like Ruby. It's one of the languages supported by AppMap, but no Gemfile was detected.`,
     };
   }
 
