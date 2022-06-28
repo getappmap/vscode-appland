@@ -1,5 +1,6 @@
 import { AppMapsService } from './appMapsService';
 import { ClassMapService } from './classMapService';
+import AppMapEditorProvider from './editor/appmapEditorProvider';
 import { FindingsService } from './findingsService';
 import { AppMapConfigWatcher } from './services/appMapConfigWatcher';
 import { AppmapUptodateService } from './services/appmapUptodateService';
@@ -18,6 +19,7 @@ export interface AppMapProcessService {
 }
 
 export default interface AppMapService {
+  editorProvider: AppMapEditorProvider;
   localAppMaps: AppMapsService;
   autoIndexService: AppMapProcessService;
   autoScanService: AppMapProcessService;
