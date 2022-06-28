@@ -78,7 +78,13 @@ async function openWorkspaceOverview(): Promise<void> {
   );
 
   console.log(`projectPickerWebview, calling refresh`);
-  await refresh();
+  try {
+    await refresh();
+  } catch (e) {
+    console.log('projectPickerWebview.refresh failed');
+    console.log(e);
+    throw e;
+  }
   Telemetry.sendEvent(OPEN_VIEW, { viewId: VIEW_ID });
 }
 
