@@ -27,7 +27,7 @@ export default async function analyze(folder: WorkspaceFolder): Promise<Result |
         title: 'express.js',
         score: 'ok',
         text:
-          'This project uses express.js. AppMap enables recording web requests and remote recording.',
+          'This project uses express. AppMap will automatically recognize web requests, SQL queries, and key framework functions during recording.',
       };
     }
     if (pkg.devDependencies?.mocha) {
