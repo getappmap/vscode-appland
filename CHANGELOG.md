@@ -1,3 +1,11 @@
+## [0.31.2](https://github.com/applandinc/vscode-appland/compare/v0.31.1...v0.31.2) (2022-06-28)
+
+
+### Bug Fixes
+
+* Allow opening AppMaps larger than 50 MiB ([2aad9ca](https://github.com/applandinc/vscode-appland/commit/2aad9cae9ec7dbd2f55e255489c115b546fdbbad))
+* More robust workspace folder path matching ([5193989](https://github.com/applandinc/vscode-appland/commit/5193989e28c9bb7d68ae5813826ca13b04457278))
+
 ## [0.31.1](https://github.com/applandinc/vscode-appland/compare/v0.31.0...v0.31.1) (2022-06-27)
 
 
