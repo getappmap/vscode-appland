@@ -19,6 +19,7 @@ import AppMapAgent from '../agent/appMapAgent';
 const COLUMN = ViewColumn.One;
 
 let panel: WebviewPanel | null = null;
+console.log(`projectPickerWebview.ts, here we go, panel ${panel}`);
 
 const VIEW_ID: Readonly<string> = 'appmap.views.openWorkspaceOverview';
 
@@ -26,6 +27,8 @@ export default async function projectPickerWebview(
   context: ExtensionContext,
   properties: ExtensionState
 ): Promise<void> {
+  console.log('projectPickerWebview.default');
+
   context.subscriptions.push(
     commands.registerCommand('appmap.openWorkspaceOverview', openWorkspaceOverview)
   );
@@ -64,13 +67,17 @@ async function openWorkspaceOverview(): Promise<void> {
 
   panel.onDidDispose(
     () => {
-      for (const s of subscriptions) s.dispose();
+      for (const s of subscriptions) {
+        console.log(`projectPickerWebview, panel.onDidDispose, ${JSON.stringify(s, null, 2)}`);
+        s.dispose();
+      }
       panel = null;
     },
     null,
     subscriptions
   );
 
+  console.log(`projectPickerWebview, calling refresh`);
   await refresh();
   Telemetry.sendEvent(OPEN_VIEW, { viewId: VIEW_ID });
 }
@@ -139,6 +146,7 @@ async function resultRows(): Promise<string[]> {
 
 async function refresh(): Promise<void> {
   if (!panel) return;
+  console.log(`projectPickerWebview.refresh, panel.webview: ${panel.webview}`);
 
   const rows = await resultRows();
   const nonce = randomBytes(18).toString('base64');
