@@ -16,6 +16,13 @@ module.exports = {
   devtool: 'source-map',
   externals: {
     vscode: 'commonjs vscode', // the vscode-module is created on-the-fly and must be excluded. Add other modules that cannot be webpack'ed, 📖 -> https://webpack.js.org/configuration/externals/
+
+    // These are optional packages that can be used by the telemetry library
+    // however, webpack raises a warning when it cannot find them.
+    // The following squashes the warnings.
+    // cf. https://github.com/microsoft/vscode-extension-telemetry/issues/41#issuecomment-598852991
+    'applicationinsights-native-metrics': 'commonjs applicationinsights-native-metrics',
+    '@opentelemetry/tracing': 'commonjs @opentelemetry/tracing'
   },
   resolve: {
     extensions: ['.ts', '.js'],

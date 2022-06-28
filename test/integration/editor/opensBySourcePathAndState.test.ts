@@ -1,23 +1,22 @@
 import * as vscode from 'vscode';
 import { initializeWorkspace, waitFor, ExampleAppMap, waitForExtension } from '../util';
 import assert, { AssertionError } from 'assert';
+import AppMapService from '../../../src/appMapService';
 
-describe('AppMapTextEditor', () => {
+describe('AppMapEditorProvider', () => {
   beforeEach(initializeWorkspace);
   beforeEach(waitForExtension);
   afterEach(initializeWorkspace);
 
   it('opens an AppMap by source path and initial state', async () => {
-    await waitFor(
-      'All text editors should be closed',
-      () => vscode.window.visibleTextEditors.length === 0
-    );
+    const extension = vscode.extensions.getExtension<AppMapService>('appland.appmap');
+    assert(extension);
+    const { editorProvider } = extension.exports;
 
-    let appmapOpened = false;
-    vscode.workspace.onDidOpenTextDocument((doc) => {
-      if (doc.fileName.endsWith('appmap.json')) {
-        appmapOpened = true;
-      }
+    await waitFor('All text editors should be closed', () => {
+      return (
+        vscode.window.visibleTextEditors.length === 0 && editorProvider.openDocuments.length === 0
+      );
     });
 
     const state = {
@@ -35,7 +34,7 @@ describe('AppMapTextEditor', () => {
 
     await vscode.commands.executeCommand('vscode.open', uri);
 
-    await waitFor('AppMap diagram should be opened', () => appmapOpened);
+    await waitFor('AppMap diagram should be opened', () => editorProvider.openDocuments.length > 0);
 
     let clipboardContents: string | undefined;
     await waitFor(

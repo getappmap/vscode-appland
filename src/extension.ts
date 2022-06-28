@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-import { AppMapTextEditorProvider } from './textEditor/appmapTextEditorProvider';
+import AppMapEditorProvider from './editor/appmapEditorProvider';
 import { Telemetry, DEBUG_EXCEPTION, TELEMETRY_ENABLED, PROJECT_OPEN } from './telemetry';
 import registerTrees from './tree';
 import AppMapCollectionFile from './services/appmapCollectionFile';
@@ -214,7 +214,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     });
 
     appmapLinkProvider();
-    AppMapTextEditorProvider.register(context, extensionState);
+    const editorProvider = AppMapEditorProvider.register(context, extensionState);
     RemoteRecording.register(context);
     ContextMenu.register(context);
     projectPickerWebview(context, extensionState);
@@ -257,7 +257,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
             if (queryParams.get('state')) {
               context.globalState.update(
-                AppMapTextEditorProvider.INITIAL_STATE,
+                AppMapEditorProvider.INITIAL_STATE,
                 queryParams.get('state')
               );
             }
@@ -285,6 +285,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     }
 
     return {
+      editorProvider,
       localAppMaps: appmapCollectionFile,
       autoIndexService: autoIndexServiceImpl,
       autoScanService: autoScanServiceImpl,

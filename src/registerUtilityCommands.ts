@@ -1,4 +1,4 @@
-import { AppMapTextEditorProvider } from './textEditor/appmapTextEditorProvider';
+import AppMapEditorProvider from './editor/appmapEditorProvider';
 import * as vscode from 'vscode';
 import { LinkTreeDataProvider } from './tree/linkTreeDataProvider';
 import RemoteRecording from './actions/remoteRecording';
@@ -12,7 +12,7 @@ export function registerUtilityCommands(
   context.subscriptions.push(
     vscode.commands.registerCommand('appmap.resetUsageState', async () => {
       extensionState.resetState();
-      AppMapTextEditorProvider.resetState(context);
+      AppMapEditorProvider.resetState(context);
       LinkTreeDataProvider.resetState(context);
       RemoteRecording.resetState(context);
       AppmapUploader.resetState(context);

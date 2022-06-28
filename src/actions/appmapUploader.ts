@@ -1,12 +1,13 @@
 import * as vscode from 'vscode';
 import bent from 'bent';
 import extensionSettings from '../configuration/extensionSettings';
+import AppMapDocument from '../editor/AppMapDocument';
 
 export class AppmapUploader {
   private static DIALOG_KEY = 'applandinc.appmap.uploadDialog';
 
   public static async upload(
-    appMapFile: vscode.TextDocument,
+    appMapFile: AppMapDocument,
     context: vscode.ExtensionContext
   ): Promise<boolean> {
     const acceptedPreviously = context.globalState.get<boolean>(this.DIALOG_KEY);
@@ -34,7 +35,7 @@ export class AppmapUploader {
 
     try {
       const response = (await post('api/appmaps/create_upload', {
-        data: appMapFile.getText(),
+        data: appMapFile.raw,
       })) as {
         id: number;
         token: string;

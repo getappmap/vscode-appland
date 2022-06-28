@@ -2,20 +2,24 @@ import { join } from 'path';
 import * as vscode from 'vscode';
 import { Telemetry, APPMAP_OPEN, APPMAP_UPLOAD } from '../telemetry';
 import { getNonce, getRecords } from '../util';
-import { workspaceFolderForDocument } from '../lib/workspaceFolderForDocument';
 import { version } from '../../package.json';
 import ExtensionState from '../configuration/extensionState';
 import { AppmapUploader } from '../actions/appmapUploader';
 import { bestFilePath } from '../lib/bestFilePath';
+import AppMapDocument from './AppMapDocument';
 
 /**
  * Provider for AppLand scenario files.
  */
-export class AppMapTextEditorProvider implements vscode.CustomTextEditorProvider {
-  public static register(context: vscode.ExtensionContext, extensionState: ExtensionState): void {
-    const provider = new AppMapTextEditorProvider(context, extensionState);
+export default class AppMapEditorProvider
+  implements vscode.CustomReadonlyEditorProvider<AppMapDocument> {
+  public static register(
+    context: vscode.ExtensionContext,
+    extensionState: ExtensionState
+  ): AppMapEditorProvider {
+    const provider = new AppMapEditorProvider(context, extensionState);
     const providerRegistration = vscode.window.registerCustomEditorProvider(
-      AppMapTextEditorProvider.viewType,
+      AppMapEditorProvider.viewType,
       provider
     );
     context.subscriptions.push(providerRegistration);
@@ -56,6 +60,8 @@ export class AppMapTextEditorProvider implements vscode.CustomTextEditorProvider
         }
       })
     );
+
+    return provider;
   }
 
   private static readonly viewType = 'appmap.views.appMapFile';
@@ -70,11 +76,25 @@ export class AppMapTextEditorProvider implements vscode.CustomTextEditorProvider
     private readonly extensionState: ExtensionState
   ) {}
 
+  async openCustomDocument(uri: vscode.Uri): Promise<AppMapDocument> {
+    const data = await vscode.workspace.fs.readFile(uri);
+    return new AppMapDocument(uri, data);
+  }
+
+  private documents = new Array<AppMapDocument>();
+
+  /**
+   * The currently open documents or an empty array.
+   */
+  public get openDocuments(): readonly AppMapDocument[] {
+    return this.documents;
+  }
+
   /**
    * Called when our custom editor is opened.
    */
-  public async resolveCustomTextEditor(
-    document: vscode.TextDocument,
+  public async resolveCustomEditor(
+    document: AppMapDocument,
     webviewPanel: vscode.WebviewPanel
     /* _token: vscode.CancellationToken */
   ): Promise<void> {
@@ -99,22 +119,22 @@ export class AppMapTextEditorProvider implements vscode.CustomTextEditorProvider
     })();
 
     if (initialState)
-      this.context.globalState.update(AppMapTextEditorProvider.INITIAL_STATE, initialState);
+      this.context.globalState.update(AppMapEditorProvider.INITIAL_STATE, initialState);
 
     const updateWebview = () => {
       webviewPanel.webview.postMessage({
         type: 'update',
-        text: document.getText(),
+        text: document.data,
       });
 
-      const workspaceFolder = workspaceFolderForDocument(document);
+      const { workspaceFolder } = document;
       if (workspaceFolder) {
         this.extensionState.setWorkspaceOpenedAppMap(workspaceFolder, true);
       }
 
-      const lastVersion = this.context.globalState.get(AppMapTextEditorProvider.RELEASE_KEY);
+      const lastVersion = this.context.globalState.get(AppMapEditorProvider.RELEASE_KEY);
       if (!lastVersion) {
-        this.context.globalState.update(AppMapTextEditorProvider.RELEASE_KEY, version);
+        this.context.globalState.update(AppMapEditorProvider.RELEASE_KEY, version);
       } else if (lastVersion !== version) {
         webviewPanel.webview.postMessage({
           type: 'displayUpdateNotification',
@@ -122,10 +142,10 @@ export class AppMapTextEditorProvider implements vscode.CustomTextEditorProvider
         });
       }
 
-      const initialState = this.context.globalState.get(AppMapTextEditorProvider.INITIAL_STATE);
+      const initialState = this.context.globalState.get(AppMapEditorProvider.INITIAL_STATE);
       if (initialState) {
         vscode.commands.executeCommand('appmap.setAppmapStateNoPrompt', initialState);
-        this.context.globalState.update(AppMapTextEditorProvider.INITIAL_STATE, null);
+        this.context.globalState.update(AppMapEditorProvider.INITIAL_STATE, null);
       }
     };
 
@@ -144,10 +164,11 @@ export class AppMapTextEditorProvider implements vscode.CustomTextEditorProvider
           vscode.window.setStatusBarMessage('AppMap state was copied to clipboard', 5000);
           break;
         case 'onLoadComplete':
+          this.documents.push(document);
           Telemetry.sendEvent(APPMAP_OPEN, {
-            rootDirectory: workspaceFolderForDocument(document)?.uri.fsPath,
+            rootDirectory: document.workspaceFolder?.uri.fsPath,
             uri: document.uri,
-            metadata: JSON.parse(document.getText()).metadata,
+            metadata: document.metadata,
             metrics: message.metrics,
           });
           break;
@@ -161,7 +182,7 @@ export class AppMapTextEditorProvider implements vscode.CustomTextEditorProvider
           Telemetry.reportWebviewError(message.error);
           break;
         case 'closeUpdateNotification':
-          this.context.globalState.update(AppMapTextEditorProvider.RELEASE_KEY, version);
+          this.context.globalState.update(AppMapEditorProvider.RELEASE_KEY, version);
           break;
         case 'appmapOpenUrl':
           vscode.env.openExternal(message.url);
@@ -172,9 +193,9 @@ export class AppMapTextEditorProvider implements vscode.CustomTextEditorProvider
             const uploadResult = await AppmapUploader.upload(document, this.context);
             if (uploadResult) {
               Telemetry.sendEvent(APPMAP_UPLOAD, {
-                rootDirectory: workspaceFolderForDocument(document)?.uri.fsPath,
+                rootDirectory: document.workspaceFolder?.uri.fsPath,
                 uri: document.uri,
-                metadata: JSON.parse(document.getText()).metadata,
+                metadata: document.metadata,
                 metrics: message.metrics,
               });
             }
@@ -189,23 +210,9 @@ export class AppMapTextEditorProvider implements vscode.CustomTextEditorProvider
     };
     webviewPanel.webview.html = this.getHtmlForWebview(webviewPanel.webview);
 
-    // Hook up event handlers so that we can synchronize the webview with the text document.
-    //
-    // The text document acts as our model, so we have to sync change in the document to our
-    // editor and sync changes in the editor back to the document.
-    //
-    // Remember that a single text document can also be shared between multiple custom
-    // editors (this happens for example when you split a custom editor)
-    const changeDocumentSubscription = vscode.workspace.onDidChangeTextDocument((e) => {
-      if (e.document.uri.toString() === document.uri.toString()) {
-        updateWebview();
-      }
-    });
-
-    // Make sure we get rid of the listener when our editor is closed.
     webviewPanel.onDidDispose(() => {
-      changeDocumentSubscription.dispose();
       this.currentWebView = undefined;
+      removeOne(this.documents, document);
     });
 
     function openFile(uri: vscode.Uri, lineNumber: number) {
@@ -228,7 +235,7 @@ export class AppMapTextEditorProvider implements vscode.CustomTextEditorProvider
         lineNumber = Number.parseInt(lineNumberStr, 10);
       }
 
-      const fileUri = await bestFilePath(path, workspaceFolderForDocument(document));
+      const fileUri = await bestFilePath(path, document.workspaceFolder);
       if (fileUri) openFile(fileUri, lineNumber);
     }
   }
@@ -267,9 +274,17 @@ export class AppMapTextEditorProvider implements vscode.CustomTextEditorProvider
 
   //forget usage state set by this class
   public static resetState(context: vscode.ExtensionContext): void {
-    context.globalState.update(AppMapTextEditorProvider.INSTRUCTIONS_VIEWED, null);
-    context.globalState.update(AppMapTextEditorProvider.RELEASE_KEY, null);
-    context.globalState.update(AppMapTextEditorProvider.APPMAP_OPENED, null);
-    context.globalState.update(AppMapTextEditorProvider.INITIAL_STATE, null);
+    context.globalState.update(AppMapEditorProvider.INSTRUCTIONS_VIEWED, null);
+    context.globalState.update(AppMapEditorProvider.RELEASE_KEY, null);
+    context.globalState.update(AppMapEditorProvider.APPMAP_OPENED, null);
+    context.globalState.update(AppMapEditorProvider.INITIAL_STATE, null);
   }
+}
+
+/**
+ * Removes at most one instance of value from array.
+ */
+function removeOne<T>(array: Array<T>, value: T): void {
+  const position = array.indexOf(value);
+  if (position >= 0) array.splice(position, 1);
 }
