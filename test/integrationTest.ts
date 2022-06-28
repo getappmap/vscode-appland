@@ -15,6 +15,9 @@ const PROJECT_WITH_ECHO_COMMAND = 'test/fixtures/workspaces/project-with-echo-co
 const PROJECT_UPTODATE = 'test/fixtures/workspaces/project-uptodate';
 const testWorkspaces = [PROJECT_A, PROJECT_WITH_ECHO_COMMAND, PROJECT_UPTODATE];
 
+const FAIL_FAST = true;
+// const FAIL_FAST = false;
+
 (async function() {
   const projectRootDir = resolve(__dirname, '..');
   const testDir = resolve(__dirname, '../out/test/integration');
@@ -150,9 +153,15 @@ const testWorkspaces = [PROJECT_A, PROJECT_WITH_ECHO_COMMAND, PROJECT_UPTODATE];
     try {
       await runTests(testFile, projectName || PROJECT_A);
     } catch (e) {
+      console.log(e);
       succeeded = false;
-      console.warn(`Test ${testFile} failed: ${e}`);
+      const msg = `Test ${testFile} failed: ${e}`;
+      if (FAIL_FAST) {
+        throw msg;
+      } else {
+        console.warn(msg);
+      }
     }
   }
-  process.exit(succeeded ? 0 : 1);
+  process.exitCode = succeeded ? 0 : 1;
 })();
