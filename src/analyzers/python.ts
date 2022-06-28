@@ -34,8 +34,8 @@ export default async function analyze(folder: WorkspaceFolder): Promise<Result |
   const features: Features = {
     lang: {
       title: 'Python',
-      score: 'good',
-      text: "This project looks like Python. It's one of languages supported by AppMap!",
+      score: 'ok',
+      text: `Python is currently in Open Beta and is not fully supported. Please read the docs before proceeding.`,
     },
   };
 
@@ -45,16 +45,15 @@ export default async function analyze(folder: WorkspaceFolder): Promise<Result |
     if (dependency('django')) {
       features.web = {
         title: 'Django',
-        score: 'good',
+        score: 'ok',
         text:
-          'This project uses Django. AppMap enables recording web requests and remote recording.',
+          'This project uses Django. AppMap will automatically recognize web requests, SQL queries, and key framework functions during recording.',
       };
     } else if (dependency('flask')) {
       features.web = {
         title: 'flask',
-        score: 'good',
-        text:
-          'This project uses flask. AppMap enables recording web requests and remote recording.',
+        score: 'bad',
+        text: 'Flask is not currently supported.',
       };
     } else {
       features.web = {
@@ -66,13 +65,13 @@ export default async function analyze(folder: WorkspaceFolder): Promise<Result |
 
     if (dependency('pytest')) {
       features.test = {
-        score: 'good',
+        score: 'ok',
         title: 'pytest',
-        text: 'This project uses Pytest. Test execution can be automatically recorded.',
+        text: 'This project uses pytest. Test execution can be automatically recorded.',
       };
     } else if (await grepFiles('unittest', folder)) {
       features.test = {
-        score: 'good',
+        score: 'ok',
         title: 'unittest',
         text: 'This project uses unittest. Test execution can be automatically recorded.',
       };
@@ -87,7 +86,7 @@ export default async function analyze(folder: WorkspaceFolder): Promise<Result |
     features.lang = {
       title: 'Python',
       score: 'ok',
-      text: `This project is written in Python, but we couldn't find a supported package manager config file in the project.`,
+      text: `This looks like a Python project without a package manager. Python is currently in Open Beta and is not fully supported. Please read the docs before proceeding.`,
     };
   }
 
