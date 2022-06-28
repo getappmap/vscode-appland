@@ -1,6 +1,0 @@
-{
-  "appMap.inspectEnabled": true,
-  "appMap.indexEnabled": true,
-  "appMap.findingsEnabled": true,
-  "appMap.indexCommand": "echo 'hello world'"
-}

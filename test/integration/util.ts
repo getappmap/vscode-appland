@@ -8,16 +8,12 @@ import { touch } from '../../src/lib/touch';
 export const FixtureDir = join(__dirname, '../../../test/fixtures');
 export const ProjectRuby = join(__dirname, '../../../test/fixtures/workspaces/project-ruby');
 export const ProjectA = join(__dirname, '../../../test/fixtures/workspaces/project-a');
-export const ProjectWithEchoCommand = join(
-  __dirname,
-  '../../../test/fixtures/workspaces/project-with-echo-command'
-);
 export const ProjectUptodate = join(
   __dirname,
   '../../../test/fixtures/workspaces/project-uptodate'
 );
 
-const PROJECTS = [ProjectA, ProjectWithEchoCommand, ProjectUptodate];
+const PROJECTS = [ProjectA, ProjectUptodate];
 
 export const ExampleAppMap = join(
   ProjectA,

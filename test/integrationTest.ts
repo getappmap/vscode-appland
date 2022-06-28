@@ -11,9 +11,8 @@ import { resolve } from 'path';
 import assert from 'assert';
 
 const PROJECT_A = 'test/fixtures/workspaces/project-a';
-const PROJECT_WITH_ECHO_COMMAND = 'test/fixtures/workspaces/project-with-echo-command';
 const PROJECT_UPTODATE = 'test/fixtures/workspaces/project-uptodate';
-const testWorkspaces = [PROJECT_A, PROJECT_WITH_ECHO_COMMAND, PROJECT_UPTODATE];
+const testWorkspaces = [PROJECT_A, PROJECT_UPTODATE];
 
 (async function() {
   const projectRootDir = resolve(__dirname, '..');

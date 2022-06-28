@@ -9976,15 +9976,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"project-with-echo-command@workspace:test/fixtures/workspaces/project-with-echo-command":
-  version: 0.0.0-use.local
-  resolution: "project-with-echo-command@workspace:test/fixtures/workspaces/project-with-echo-command"
-  dependencies:
-    "@appland/appmap": ^3.25.4
-    "@appland/scanner": ^1.56.0
-  languageName: unknown
-  linkType: soft
-
 "promise-all-reject-late@npm:^1.0.0":
   version: 1.0.1
   resolution: "promise-all-reject-late@npm:1.0.1"
