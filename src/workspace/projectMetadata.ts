@@ -10,6 +10,10 @@ export default interface ProjectMetadata {
   analysisPerformed?: boolean;
   appMapOpened?: boolean;
   numFindings?: number;
+  numSecurity?: number;
+  numPerformance?: number;
+  numMaintainability?: number;
+  numStability?: number;
   language?: Feature;
   testFramework?: Feature;
   webFramework?: Feature;
