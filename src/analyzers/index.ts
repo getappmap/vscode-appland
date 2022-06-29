@@ -12,9 +12,9 @@ export function scoreValue(...scores: Score[]): number {
 }
 
 export function overallScore(result: Features): number {
-  const languageScore: string = result.lang.score;
-  const webFrameworkScore: string = result?.web?.score || 'bad';
-  const testFrameworkScore: string = result?.test?.score || 'bad';
+  const languageScore = result.lang.score;
+  const webFrameworkScore = result?.web?.score || 'bad';
+  const testFrameworkScore = result?.test?.score || 'bad';
 
   // score edge cases
   if (languageScore === 'bad') return OVERALL_SCORE_VALUES['bad'];
