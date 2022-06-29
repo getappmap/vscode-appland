@@ -19,6 +19,7 @@ describe('Extension API', () => {
       'uptodate',
       'findings',
       'classMap',
+      'processService',
     ]);
   });
 });

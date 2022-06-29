@@ -170,6 +170,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       registerInspectCodeObject(context);
     }
 
+    let processService: NodeProcessService | undefined;
     {
       const projectState = new ProjectStateService(
         extensionState,
@@ -191,13 +192,13 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
         InstallGuideWebView.register(context, projectStates);
       }
 
+      processService = new NodeProcessService(context, projectStates);
       // The node dependencies may take some time to retrieve. As a result, the initialization sequence is
       // wrapped in an async function but we won't wait for it to resolve.
       (async function() {
-        const nodeProcessService = new NodeProcessService(context, projectStates);
-        nodeProcessService.onReady(activateUptodateService);
-        await nodeProcessService.install();
-        await workspaceServices.enroll(nodeProcessService);
+        processService.onReady(activateUptodateService);
+        await processService.install();
+        await workspaceServices.enroll(processService);
       })();
     }
 
@@ -291,6 +292,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       uptodate: appmapUptodateService,
       findings: findingsIndex,
       classMap: classMapIndex,
+      processService,
     };
   } catch (exception) {
     Telemetry.sendEvent(DEBUG_EXCEPTION, { exception: exception as Error });

@@ -18,6 +18,11 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
   protected COPY_FILES: string[] = ['package.json', 'yarn.lock', YARN_JS];
   protected static outputChannel = vscode.window.createOutputChannel('AppMap: Services');
 
+  protected _ready = false;
+  get ready(): boolean {
+    return this._ready;
+  }
+
   protected _onReady = new vscode.EventEmitter<void>();
   get onReady(): vscode.Event<void> {
     return this._onReady.event;
@@ -130,6 +135,7 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
           }
 
           installProcess.log.append('Installation of AppMap services is complete.');
+          this._ready = true;
           this._onReady.fire();
           resolve();
         });
