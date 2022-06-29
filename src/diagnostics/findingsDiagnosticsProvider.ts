@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { ResolvedFinding } from '../services/resolvedFinding';
+import generateTitle from '../lib/generateDisplayTitle';
 
 type DiagnosticWithProblemLocation = {
   diagnostic: vscode.Diagnostic;
@@ -48,7 +49,7 @@ export default class FindingsDiagnosticsProvider {
       const problemUri = finding.problemLocation.uri;
       updatedProblemUriStrings.add(problemUri.toString());
       const diagnostic = {
-        message: finding.finding.message,
+        message: generateTitle(finding),
         source: 'appmap',
         range: finding.problemLocation.range,
         relatedInformation,

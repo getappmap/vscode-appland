@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import FindingsIndex from '../services/findingsIndex';
 import { ResolvedFinding } from '../services/resolvedFinding';
+import generateTitle from '../lib/generateDisplayTitle';
 
 export class FindingsTreeDataProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
   private _onDidChangeTreeData = new vscode.EventEmitter<undefined>();
@@ -31,7 +32,7 @@ export class FindingsTreeDataProvider implements vscode.TreeDataProvider<vscode.
     return Object.values(uniqueFindings)
       .map(
         (finding: ResolvedFinding): vscode.TreeItem => {
-          const item = new vscode.TreeItem(finding.finding.message);
+          const item = new vscode.TreeItem(generateTitle(finding));
           item.id = finding.finding.hash;
           if (finding.problemLocation) {
             item.command = {
