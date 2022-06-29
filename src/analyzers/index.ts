@@ -5,9 +5,25 @@ import LanguageResolver from '../services/languageResolver';
 
 export type Score = 'bad' | 'ok' | 'good';
 const SCORE_VALUES = { bad: 0, ok: 1, good: 2 };
+const OVERALL_SCORE_VALUES = { bad: 1, ok: 2, good: 3 };
 
 export function scoreValue(...scores: Score[]): number {
   return scores.reduce((s, x) => s + SCORE_VALUES[x], 0);
+}
+
+export function overallScore(result: Features): number {
+  const languageScore = result.lang.score;
+  const webFrameworkScore = result?.web?.score || 'bad';
+  const testFrameworkScore = result?.test?.score || 'bad';
+
+  // score edge cases
+  if (languageScore === 'bad') return OVERALL_SCORE_VALUES['bad'];
+  if (languageScore === 'ok' && webFrameworkScore === 'ok' && testFrameworkScore === 'ok') {
+    return OVERALL_SCORE_VALUES['ok'];
+  }
+
+  // standard scoring
+  return scoreValue(...Object.entries(result).map(([, t]) => t.score));
 }
 
 export type Feature = {

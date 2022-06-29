@@ -1,5 +1,5 @@
 import { WorkspaceFolder } from 'vscode';
-import { Features, Result, scoreValue } from '.';
+import { Features, Result, overallScore } from '.';
 import { fileWordScanner } from './deps';
 
 const scanGemfile = fileWordScanner('Gemfile');
@@ -46,6 +46,6 @@ export default async function analyze(folder: WorkspaceFolder): Promise<Result |
   return {
     name: folder.name,
     features: features,
-    score: scoreValue(...Object.entries(features).map(([, t]) => t.score)),
+    score: overallScore(features),
   };
 }

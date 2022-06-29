@@ -1,5 +1,5 @@
 import { Uri, workspace, WorkspaceFolder } from 'vscode';
-import { Features, Result, scoreValue } from '.';
+import { Features, Result, overallScore } from '.';
 import utfDecoder from '../utfDecoder';
 import semverIntersects from 'semver/ranges/intersects';
 
@@ -57,6 +57,6 @@ export default async function analyze(folder: WorkspaceFolder): Promise<Result |
   return {
     name: folder.name,
     features: features,
-    score: scoreValue(...Object.entries(features).map(([, t]) => t.score)),
+    score: overallScore(features),
   };
 }

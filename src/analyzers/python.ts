@@ -1,5 +1,5 @@
 import { RelativePattern, Uri, workspace, WorkspaceFolder } from 'vscode';
-import { Result, scoreValue, Features } from '.';
+import { Result, overallScore, Features } from '.';
 import { fileWordScanner, DependencyFinder } from './deps';
 import utfDecoder from '../utfDecoder';
 const fs = workspace.fs;
@@ -94,6 +94,6 @@ export default async function analyze(folder: WorkspaceFolder): Promise<Result |
   return {
     name: folder.name,
     features: features,
-    score: scoreValue(...Object.entries(features).map(([, t]) => t.score)),
+    score: overallScore(features),
   };
 }
