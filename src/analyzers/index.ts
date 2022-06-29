@@ -3,7 +3,6 @@ import AppMapCollection from '../services/appmapCollection';
 import AppMapLoader from '../services/appmapLoader';
 import LanguageResolver from '../services/languageResolver';
 import { systemNodeVersion, nvmNodeVersion } from '../services/command';
-// import { resolveFilePath } from '../util';
 
 export type Score = 'bad' | 'ok' | 'good';
 const SCORE_VALUES = { bad: 0, ok: 1, good: 2 };
