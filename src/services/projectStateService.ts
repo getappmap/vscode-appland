@@ -11,10 +11,10 @@ import AppMapCollection from './appmapCollection';
 
 interface DomainCounts {
   total: number;
-  Security?: number;
-  Performance?: number;
-  Maintainability?: number;
-  Stability?: number;
+  security: number;
+  performance: number;
+  maintainability: number;
+  stability: number;
 }
 
 export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
@@ -27,7 +27,13 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
 
   public onStateChange = this._onStateChange.event;
 
-  protected domains: DomainCounts = { total: 0 };
+  protected domains: DomainCounts = {
+    total: 0,
+    security: 0,
+    performance: 0,
+    maintainability: 0,
+    stability: 0,
+  };
 
   constructor(
     public readonly folder: vscode.WorkspaceFolder,
@@ -117,26 +123,32 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
     );
   }
 
+  // Counts unique findings for each category: Maintainability | Performance | Stability | Security
+  // Determines uniqueness by hash
   countDomainsFromFindings(findings: ResolvedFinding[]): void {
-    const tempDomains = new Map<string, Set<string>>();
+    const uniqueDomainMap = new Map<string, Set<string>>();
 
+    // Adds each finding hash to the set corrisponding to its domain
     findings.forEach((finding) => {
       const domain: string = finding.finding.impactDomain;
-      let hashArray = tempDomains.get(domain);
+      let hashArray = uniqueDomainMap.get(domain);
 
       if (hashArray == undefined) {
         const newSet = new Set<string>();
-        tempDomains.set(domain, newSet);
+        uniqueDomainMap.set(domain, newSet);
         hashArray = newSet;
       }
       hashArray.add(finding.finding.hash);
     });
 
-    this.domains.Maintainability = tempDomains.get('Maintainability')?.size;
-    this.domains.Performance = tempDomains.get('Performance')?.size;
-    this.domains.Stability = tempDomains.get('Stability')?.size;
-    this.domains.Security = tempDomains.get('Security')?.size;
+    // Sets this.domain to corresponding values in uniqueDomainMap
+    this.domains.maintainability = uniqueDomainMap.get('Maintainability')?.size || 0;
+    this.domains.performance = uniqueDomainMap.get('Performance')?.size || 0;
+    this.domains.stability = uniqueDomainMap.get('Stability')?.size || 0;
+    this.domains.security = uniqueDomainMap.get('Security')?.size || 0;
     this.domains.total = findings.length;
+
+    vscode.window.showInformationMessage(JSON.stringify(this.domains));
   }
 
   onFindingsChanged(findings: ResolvedFinding[]): void {
