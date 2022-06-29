@@ -2,6 +2,8 @@ import { WorkspaceFolder } from 'vscode';
 import AppMapCollection from '../services/appmapCollection';
 import AppMapLoader from '../services/appmapLoader';
 import LanguageResolver from '../services/languageResolver';
+import { systemNodeVersion, nvmNodeVersion } from '../services/command';
+// import { resolveFilePath } from '../util';
 
 export type Score = 'bad' | 'ok' | 'good';
 const SCORE_VALUES = { bad: 0, ok: 1, good: 2 };
@@ -35,10 +37,17 @@ export type Result = {
   score: number;
   name: string;
   path?: string;
+  nodeVersion?: NodeVersion;
 };
 
 export type WithAppMaps = {
   appMaps: Readonly<Array<AppMapSummary>>;
+};
+
+export type NodeVersion = {
+  major: number;
+  minor: number;
+  patch: number;
 };
 
 function getBestAppMaps(appMaps: AppMapLoader[], maxCount = 10): AppMapSummary[] {
@@ -73,6 +82,43 @@ export async function analyze(
     result.appMaps = getBestAppMaps(appMaps);
   }
 
+  const nodeVersionString = await getNodeVersion(folder);
+  result.nodeVersion = parseNodeVersion(nodeVersionString);
+
   result.path = folder.uri.fsPath;
+
   return result;
+}
+
+async function getNodeVersion(folder: WorkspaceFolder): Promise<string> {
+  const nvmVersion = await nvmNodeVersion(folder);
+  if (nvmVersion) {
+    return nvmVersion;
+  }
+
+  const systemVersion = await systemNodeVersion();
+  if (systemVersion instanceof Error) {
+    return '';
+  }
+
+  return systemVersion;
+}
+
+function parseNodeVersion(versionString: string): NodeVersion {
+  const digitStrings = versionString.replace(/[^0-9.]/g, '').split('.');
+  const digits = digitStrings.map((digitString) => Number(digitString));
+
+  if (digits.length !== 3) {
+    return {
+      major: 0,
+      minor: 0,
+      patch: 0,
+    };
+  }
+
+  return {
+    major: digits[0],
+    minor: digits[1],
+    patch: digits[2],
+  };
 }

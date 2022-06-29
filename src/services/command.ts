@@ -20,12 +20,11 @@ export default class Command {
 
     (await packageManagerCommand(folder.uri)).reverse().forEach((cmd) => args.unshift(cmd));
 
-    const nvmrcPath = await resolveFilePath(folder.uri.fsPath, '.nvmrc');
-    if (nvmrcPath) {
+    const nvmVersion = await nvmNodeVersion(folder);
+    if (nvmVersion) {
       args.unshift([home, '.nvm/nvm-exec'].join('/'));
-      const version = (await promisify(readFile)(nvmrcPath)).toString().trim();
-      environment.NODE_VERSION = version;
-      error = validateNodeVersion('nvm', version);
+      environment.NODE_VERSION = nvmVersion;
+      error = validateNodeVersion('nvm', nvmVersion);
     } else {
       const availableVersion = await systemNodeVersion();
       if (availableVersion instanceof Error) {
@@ -72,7 +71,7 @@ function validateNodeVersion(versionType: string, version: string): string | und
   return `${versionType} Node.js version ${version} should be an even major version number >= 14`;
 }
 
-async function systemNodeVersion(): Promise<string | Error> {
+export async function systemNodeVersion(): Promise<string | Error> {
   return new Promise((resolve) => {
     exec('node -v', (err, stdout) => {
       if (err) {
@@ -82,4 +81,12 @@ async function systemNodeVersion(): Promise<string | Error> {
       }
     });
   });
+}
+
+export async function nvmNodeVersion(folder: vscode.WorkspaceFolder): Promise<string | undefined> {
+  const nvmrcPath = await resolveFilePath(folder.uri.fsPath, '.nvmrc');
+  if (nvmrcPath) {
+    return (await promisify(readFile)(nvmrcPath)).toString().trim();
+  }
+  return undefined;
 }
