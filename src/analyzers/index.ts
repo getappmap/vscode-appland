@@ -17,7 +17,7 @@ export function overallScore(result: Features): number {
   const testFrameworkScore: string = result?.test?.score || 'bad';
 
   // score edge cases
-  if (languageScore === 'bad' || webFrameworkScore === 'bad') return OVERALL_SCORE_VALUES['bad'];
+  if (languageScore === 'bad') return OVERALL_SCORE_VALUES['bad'];
   if (languageScore === 'ok' && webFrameworkScore === 'ok' && testFrameworkScore === 'ok') {
     return OVERALL_SCORE_VALUES['ok'];
   }
