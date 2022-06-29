@@ -5,6 +5,7 @@ export default interface ProjectMetadata {
   name: string;
   path: string;
   score?: number;
+  hasNode: boolean;
   agentInstalled?: boolean;
   appMapsRecorded?: boolean;
   analysisPerformed?: boolean;
