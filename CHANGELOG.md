@@ -1,3 +1,10 @@
+## [0.31.3](https://github.com/applandinc/vscode-appland/compare/v0.31.2...v0.31.3) (2022-06-29)
+
+
+### Bug Fixes
+
+* Create getTreeName function to format tree name ([a643b78](https://github.com/applandinc/vscode-appland/commit/a643b78041e8b6d570bd2d995b01e594b8d53059))
+
 ## [0.31.2](https://github.com/applandinc/vscode-appland/compare/v0.31.1...v0.31.2) (2022-06-28)
 
 
