@@ -52,8 +52,8 @@ export default async function analyze(folder: WorkspaceFolder): Promise<Result |
     } else if (dependency('flask')) {
       features.web = {
         title: 'flask',
-        score: 'bad',
-        text: 'Flask is not currently supported.',
+        score: 'ok',
+        text: 'Flask support is currently in Beta. Please read the docs.',
       };
     } else {
       features.web = {
