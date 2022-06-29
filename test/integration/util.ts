@@ -1,9 +1,12 @@
 import * as vscode from 'vscode';
 import { exec } from 'child_process';
-import { join } from 'path';
+import { join, basename } from 'path';
 import assert from 'assert';
 import AppMapService from '../../src/appMapService';
 import { touch } from '../../src/lib/touch';
+import * as tmp from 'tmp';
+import { promisify } from 'util';
+import { promises as fs } from 'fs';
 
 export const FixtureDir = join(__dirname, '../../../test/fixtures');
 export const ProjectRuby = join(__dirname, '../../../test/fixtures/workspaces/project-ruby');
@@ -14,6 +17,22 @@ export const ProjectUptodate = join(
 );
 
 const PROJECTS = [ProjectA, ProjectUptodate];
+
+export async function withTmpDir(fn: (tmpDir: string) => void | Promise<void>): Promise<void> {
+  const tmpDir = await promisify(tmp.dir)();
+  let createdByUs = false;
+
+  try {
+    await fs.access(tmpDir);
+  } catch (e) {
+    await fs.mkdir(tmpDir);
+    createdByUs = true;
+  }
+
+  await fn(tmpDir);
+
+  if (createdByUs) await fs.rmdir(tmpDir);
+}
 
 export const ExampleAppMap = join(
   ProjectA,
@@ -32,7 +51,7 @@ export type DiagnosticForUri = {
 };
 
 export async function repeatUntil(
-  fn: () => Promise<void | void[]>,
+  fn: () => void | void[] | Promise<void> | Promise<void | void[]>,
   message: string,
   test: () => boolean | Promise<boolean>
 ): Promise<void> {
@@ -94,11 +113,19 @@ export async function waitForIndexer(): Promise<void> {
   );
 }
 
+export async function restoreFile(filePath: string, workspaceDir = ProjectA): Promise<void> {
+  await withTmpDir(async (tmpDir) => {
+    const tmpPath = join(tmpDir, basename(filePath));
+    const dstPath = join(ProjectA, filePath);
+    await executeWorkspaceOSCommand(`git show HEAD:./${filePath} > ${tmpPath}`, workspaceDir);
+    await fs.rename(tmpPath, dstPath);
+  });
+}
+
 export async function waitForAppMapServices(touchFile: string): Promise<AppMapService> {
   const appMapService = await waitForExtension();
-
   let repeater: NodeJS.Timeout | undefined = setInterval(
-    () => executeWorkspaceOSCommand(`git show HEAD:./${touchFile} > ./${touchFile}`, ProjectA),
+    async () => await restoreFile(touchFile),
     500
   );
 

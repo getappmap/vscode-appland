@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import assert from 'assert';
 import { exists, rename } from 'fs';
-import { join } from 'path';
+import { join, relative } from 'path';
 import { promisify } from 'util';
 import {
   initializeWorkspace,
@@ -11,9 +11,9 @@ import {
   getDiagnosticsForAppMap,
   ExampleAppMap,
   ExampleAppMapIndexDir,
-  executeWorkspaceOSCommand,
   repeatUntil,
   waitForAppMapServices,
+  restoreFile,
 } from '../util';
 
 describe('Scanner', () => {
@@ -40,22 +40,15 @@ describe('Scanner', () => {
       async () => !(await promisify(exists)(ExampleAppMapIndexDir))
     );
 
+    const appMapPath = relative(ProjectA, ExampleAppMap);
     await repeatUntil(
-      executeWorkspaceOSCommand.bind(
-        null,
-        `git show HEAD:./tmp/appmap/minitest/Microposts_controller_can_get_microposts_as_JSON.appmap.json > ./tmp/appmap/minitest/Microposts_controller_can_get_microposts_as_JSON.appmap.json`,
-        ProjectA
-      ),
+      async () => await restoreFile(appMapPath),
       `AppMap should be reindexed`,
       async () => promisify(exists)(join(ExampleAppMapIndexDir, 'mtime'))
     );
 
     await repeatUntil(
-      executeWorkspaceOSCommand.bind(
-        null,
-        `git show HEAD:./tmp/appmap/minitest/Microposts_controller_can_get_microposts_as_JSON.appmap.json > ./tmp/appmap/minitest/Microposts_controller_can_get_microposts_as_JSON.appmap.json`,
-        ProjectA
-      ),
+      async () => await restoreFile(appMapPath),
       'No Diagnostics were created for Microposts_controller_can_get_microposts_as_JSON',
       async () => {
         return getDiagnosticsForAppMap(ExampleAppMap).length > 0;
