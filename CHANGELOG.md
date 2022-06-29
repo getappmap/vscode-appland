@@ -1,3 +1,10 @@
+## [0.31.4](https://github.com/applandinc/vscode-appland/compare/v0.31.3...v0.31.4) (2022-06-29)
+
+
+### Bug Fixes
+
+* update project picker scoring ([b2ff073](https://github.com/applandinc/vscode-appland/commit/b2ff073feb65b6a903c7f7df43877035d3beb802))
+
 ## [0.31.3](https://github.com/applandinc/vscode-appland/compare/v0.31.2...v0.31.3) (2022-06-29)
 
 
