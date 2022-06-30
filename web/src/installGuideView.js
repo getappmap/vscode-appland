@@ -8,6 +8,9 @@ export default function mountInstallGuide() {
   const messages = new MessagePublisher(vscode);
 
   messages.on('init', ({ projects: startProjects, page: startPage, disabled }) => {
+    let currentPage = startPage;
+    let currentProject;
+
     const app = new Vue({
       el: '#app',
       render(h) {
@@ -25,14 +28,41 @@ export default function mountInstallGuide() {
           projects: startProjects,
         };
       },
+      beforeCreate() {
+        this.$on('open-page', async (pageId) => {
+          // Wait until next frame if there's no current project. It may take some time for the
+          // view to catch up.
+          if (!currentProject) await new Promise((resolve) => requestAnimationFrame(resolve));
+
+          currentPage = pageId;
+          vscode.postMessage({
+            command: 'open-page',
+            page: currentPage,
+            project: currentProject,
+          });
+        });
+      },
       mounted() {
         document.querySelectorAll('a[href]').forEach((el) => {
           el.addEventListener('click', (e) => {
-            vscode.postMessage({ command: 'clickLink', uri: e.target.href });
+            vscode.postMessage({ command: 'click-link', uri: e.target.href });
           });
         });
         this.$refs.ui.jumpTo(startPage);
       },
+    });
+
+    app.$on('clipboard', (text) => {
+      vscode.postMessage({
+        command: 'clipboard',
+        page: currentPage,
+        project: currentProject,
+        text,
+      });
+    });
+
+    app.$on('select-project', (project) => {
+      currentProject = project;
     });
 
     app.$on('view-problems', (projectPath) => {
@@ -41,10 +71,6 @@ export default function mountInstallGuide() {
 
     app.$on('openAppmap', (file) => {
       vscode.postMessage({ command: 'open-file', file });
-    });
-
-    app.$on('open-instruction', (pageId) => {
-      app.$refs.ui.jumpTo(pageId);
     });
 
     messages.on('page', ({ page }) => {

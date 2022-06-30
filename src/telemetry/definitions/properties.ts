@@ -28,6 +28,13 @@ export const VIEW_ID = new TelemetryDataProvider({
   },
 });
 
+export const TEXT = new TelemetryDataProvider({
+  id: 'appmap.text',
+  async value({ text }: { text: string }): Promise<string> {
+    return text;
+  },
+});
+
 export const FILE_PATH = new TelemetryDataProvider({
   id: 'appmap.file.path',
   async value({ uri, rootDirectory }: { uri: Uri; rootDirectory?: PathLike }) {
