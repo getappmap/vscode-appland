@@ -1,3 +1,11 @@
+## [0.32.1](https://github.com/applandinc/vscode-appland/compare/v0.32.0...v0.32.1) (2022-06-30)
+
+
+### Bug Fixes
+
+* Fix fqid conflicts in the Code Objects view ([6358d7a](https://github.com/applandinc/vscode-appland/commit/6358d7a09dc53350f88f8b0a3b33e62cf3327840))
+* Set exitCode instead of calling exit ([bc4be1c](https://github.com/applandinc/vscode-appland/commit/bc4be1c93367fd946d08d957f6623810c1a3cc95))
+
 # [0.32.0](https://github.com/applandinc/vscode-appland/compare/v0.31.4...v0.32.0) (2022-06-30)
 
 
