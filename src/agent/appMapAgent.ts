@@ -63,14 +63,6 @@ export default interface AppMapAgent {
    * languageResolver.ts under the LANGUAGES array.
    */
   readonly language: string;
-  /**
-   * Whether or not the language agent for this language should be used for a project.
-   */
-  readonly enabled: boolean;
-  /**
-   * The types of projects this agent supports
-   */
-  readonly projectTypes?: string;
 
   isInstalled(path: PathLike): Promise<boolean>;
   /**

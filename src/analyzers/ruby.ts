@@ -9,7 +9,7 @@ export default async function analyze(folder: WorkspaceFolder): Promise<Result |
     lang: {
       title: 'Ruby',
       score: 'good',
-      text: "This project looks like Ruby. It's one of languages supported by AppMap!",
+      text: "This project looks like Ruby. It's one of the languages supported by AppMap.",
     },
   };
 
@@ -21,7 +21,7 @@ export default async function analyze(folder: WorkspaceFolder): Promise<Result |
         title: 'Rails',
         score: 'good',
         text:
-          'This project uses Rails. AppMap enables recording web requests and remote recording.',
+          'This project uses Rails. AppMap will automatically recognize web requests, SQL queries, and key framework functions during recording.',
       };
     }
 
@@ -39,7 +39,7 @@ export default async function analyze(folder: WorkspaceFolder): Promise<Result |
     features.lang = {
       title: 'Ruby',
       score: 'ok',
-      text: `This project looks like Ruby, but we couldn't find a Gemfile.`,
+      text: `This project looks like Ruby. It's one of the languages supported by AppMap, but no Gemfile was detected.`,
     };
   }
 

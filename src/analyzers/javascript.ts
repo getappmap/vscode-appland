@@ -9,8 +9,8 @@ export default async function analyze(folder: WorkspaceFolder): Promise<Result |
   const features: Features = {
     lang: {
       title: 'JavaScript',
-      score: 'good',
-      text: "This project looks like JavaScript. It's one of languages supported by AppMap!",
+      score: 'ok',
+      text: `JavaScript is currently in Open Beta and is not fully supported. Please read the docs before proceeding.`,
       depFile: 'package.json',
       plugin: '@appland/appmap-agent-js',
       pluginType: 'package',
@@ -25,16 +25,16 @@ export default async function analyze(folder: WorkspaceFolder): Promise<Result |
     if (pkg.dependencies?.express) {
       features.web = {
         title: 'express.js',
-        score: 'good',
+        score: 'ok',
         text:
-          'This project uses express.js. AppMap enables recording web requests and remote recording.',
+          'This project uses express. AppMap will automatically recognize web requests, SQL queries, and key framework functions during recording.',
       };
     }
     if (pkg.devDependencies?.mocha) {
       if (semverIntersects('>=8', pkg.devDependencies.mocha)) {
         features.test = {
           title: 'mocha',
-          score: 'good',
+          score: 'ok',
           text: `This project uses mocha. Test execution can be automatically recorded.`,
         };
       } else {
@@ -42,7 +42,7 @@ export default async function analyze(folder: WorkspaceFolder): Promise<Result |
           title: 'mocha',
           score: 'bad',
           text:
-            'This project uses mocha, but the version is too old. You need at least version 8 to automatically record test execution.',
+            'This project uses an unsupported version of mocha. You need at least version 8 to automatically record test execution.',
         };
       }
     }
@@ -50,7 +50,7 @@ export default async function analyze(folder: WorkspaceFolder): Promise<Result |
     features.lang = {
       title: 'JavaScript',
       score: 'ok',
-      text: `This project looks like JavaScript, but we couldn't read a supported dependency file.`,
+      text: `This looks like a JavaScript project without a dependency file. JavaScript is currently in Open Beta and is not fully supported. Please read the docs before proceeding.`,
     };
   }
 

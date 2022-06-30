@@ -7,7 +7,7 @@ export default async function analyze(folder: WorkspaceFolder): Promise<Result |
     lang: {
       title: 'Java',
       score: 'good',
-      text: "This project looks like Java. It's one of languages supported by AppMap!",
+      text: "This project looks like Java. It's one of the languages supported by AppMap.",
     },
   };
 
@@ -28,7 +28,7 @@ export default async function analyze(folder: WorkspaceFolder): Promise<Result |
         title: 'Spring',
         score: 'good',
         text:
-          'This project uses Spring. AppMap enables recording web requests and remote recording.',
+          'This project uses Spring. AppMap will automatically recognize web requests, SQL queries, and key framework functions during recording.',
       };
     }
 
@@ -46,7 +46,7 @@ export default async function analyze(folder: WorkspaceFolder): Promise<Result |
     features.lang = {
       title: 'Java',
       score: 'ok',
-      text: `This project looks like Java, but we couldn't find a supported dependency file.`,
+      text: `This project looks like Java. It's one of the languages supported by AppMap, but no supported dependency file was found.`,
     };
   }
 
