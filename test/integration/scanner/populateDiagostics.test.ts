@@ -25,7 +25,7 @@ describe('Findings', () => {
     assert.strictEqual(diagnostics[0][1].length, 1);
     assert.strictEqual(
       diagnostics[0][1][0].message,
-      `Unbatched materialized SQL query: SELECT "microposts".* FROM "microposts" WHERE "microposts"."user_id" = ? ORDER BY "microposts"."created_at" DESC`
+      `Unbatched materialized SQL query: SELECT "microposts".* FROM "microposts" WHERE "microposts"."user_id" = ? ORDER BY "microposts"."created_at" DESC, app/controllers/microposts_controller.rb:5`
     );
   });
 });
