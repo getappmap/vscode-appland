@@ -1,8 +1,9 @@
 import * as path from 'path';
 import glob from 'glob';
-import Mocha from 'mocha';
+import Mocha, { Test } from 'mocha';
 import { launchCode } from './system/src/app';
 import Driver from './system/src/driver';
+import { TestStatus } from './TestStatus';
 
 async function main(): Promise<void> {
   try {
@@ -86,10 +87,10 @@ async function main(): Promise<void> {
           mocha.addFile(f);
         });
 
-        mocha.run(async (failures) => {
+        mocha.run((failures) => {
           if (!leaveOpen) {
-            await app.process().kill();
-            process.exit(failures === 0 ? 0 : 1);
+            app.process().kill();
+            process.exitCode = failures === 0 ? TestStatus.Ok : TestStatus.Failed;
           }
         });
 
@@ -103,7 +104,7 @@ async function main(): Promise<void> {
     });
   } catch (err) {
     console.error(err);
-    process.exit(1);
+    process.exitCode = TestStatus.Error;
   }
 }
 
