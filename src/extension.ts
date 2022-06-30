@@ -8,9 +8,7 @@ import ContextMenu from './tree/contextMenu';
 import RemoteRecording from './actions/remoteRecording';
 import { notEmpty } from './util';
 import { registerUtilityCommands } from './registerUtilityCommands';
-import OpenAppMapsWebview from './webviews/openAppmapsWebview';
 import ExtensionState from './configuration/extensionState';
-import projectPickerWebview from './webviews/projectPickerWebview';
 import FindingsIndex from './services/findingsIndex';
 import FindingsDiagnosticsProvider from './diagnostics/findingsDiagnosticsProvider';
 import extensionSettings from './configuration/extensionSettings';
@@ -60,11 +58,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
     const appmapCollectionFile = new AppMapCollectionFile();
     let findingsIndex: FindingsIndex | undefined,
-      classMapIndex: ClassMapIndex | undefined,
-      lineInfoIndex: LineInfoIndex | undefined,
-      projectStates: ProjectStateServiceInstance[] = [],
-      appmapUptodateService: AppmapUptodateService | undefined,
-      sourceFileWatcher: SourceFileWatcher | undefined;
+      projectStates: ProjectStateServiceInstance[] = [];
 
     const appmapWatcher = new AppMapWatcher();
     context.subscriptions.push(
@@ -80,34 +74,31 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     await workspaceServices.enroll(configWatcher);
 
     const findingsEnabled = extensionSettings.findingsEnabled();
-    const indexEnabled = findingsEnabled || extensionSettings.indexEnabled();
 
-    if (indexEnabled) {
-      classMapIndex = new ClassMapIndex();
-      lineInfoIndex = new LineInfoIndex(classMapIndex);
+    const classMapIndex = new ClassMapIndex();
+    const lineInfoIndex = new LineInfoIndex(classMapIndex);
 
-      const classMapProvider = new ClassMapTreeDataProvider(classMapIndex);
-      vscode.window.createTreeView('appmap.views.codeObjects', {
-        treeDataProvider: classMapProvider,
-      });
+    const classMapProvider = new ClassMapTreeDataProvider(classMapIndex);
+    vscode.window.createTreeView('appmap.views.codeObjects', {
+      treeDataProvider: classMapProvider,
+    });
 
-      const classMapWatcher = new ClassMapWatcher({
-        onCreate: classMapIndex.addClassMapFile.bind(classMapIndex),
-        onChange: classMapIndex.addClassMapFile.bind(classMapIndex),
-        onDelete: classMapIndex.removeClassMapFile.bind(classMapIndex),
-      });
+    const classMapWatcher = new ClassMapWatcher({
+      onCreate: classMapIndex.addClassMapFile.bind(classMapIndex),
+      onChange: classMapIndex.addClassMapFile.bind(classMapIndex),
+      onDelete: classMapIndex.removeClassMapFile.bind(classMapIndex),
+    });
 
-      appmapUptodateService = new AppmapUptodateService(context);
-      sourceFileWatcher = new SourceFileWatcher(classMapIndex);
+    const appmapUptodateService = new AppmapUptodateService(context);
+    const sourceFileWatcher = new SourceFileWatcher(classMapIndex);
 
-      registerDecorationProvider(context, lineInfoIndex);
-      outOfDateTests(context, appmapUptodateService);
-      openCodeObjectInAppMap(context, classMapIndex);
-      appmapHoverProvider(context, lineInfoIndex);
+    registerDecorationProvider(context, lineInfoIndex);
+    outOfDateTests(context, appmapUptodateService);
+    openCodeObjectInAppMap(context, classMapIndex);
+    appmapHoverProvider(context, lineInfoIndex);
 
-      await workspaceServices.enroll(sourceFileWatcher);
-      await workspaceServices.enroll(classMapWatcher);
-    }
+    await workspaceServices.enroll(sourceFileWatcher);
+    await workspaceServices.enroll(classMapWatcher);
 
     const activateUptodateService = async () => {
       if (!(appmapUptodateService && sourceFileWatcher)) return;
@@ -184,13 +175,12 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
         projectState
       )) as ProjectStateServiceInstance[];
 
-      if (extensionSettings.instructionsEnabled()) {
-        const badge = new InstallationStatusBadge('appmap.views.instructions');
-        badge.initialize(projectStates);
-        context.subscriptions.push(badge);
+      const badge = new InstallationStatusBadge('appmap.views.instructions');
+      badge.initialize(projectStates);
+      context.subscriptions.push(badge);
 
-        InstallGuideWebView.register(context, projectStates);
-      }
+      InstallGuideWebView.register(context, projectStates);
+      InstallGuideWebView.tryOpen(extensionState);
 
       processService = new NodeProcessService(context, projectStates);
       // The node dependencies may take some time to retrieve. As a result, the initialization sequence is
@@ -214,8 +204,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     const editorProvider = AppMapEditorProvider.register(context, extensionState);
     RemoteRecording.register(context);
     ContextMenu.register(context);
-    projectPickerWebview(context, extensionState);
-    OpenAppMapsWebview.register(context, appmapCollectionFile);
 
     context.subscriptions.push(
       vscode.commands.registerCommand('appmap.findByName', async () => {

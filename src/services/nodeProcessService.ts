@@ -43,25 +43,23 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
       throw new Error(`failed to resolve a project state for ${folder.name}`);
     }
 
-    if (ExtensionSettings.indexEnabled()) {
-      try {
-        services.push(
-          new ProcessWatcher({
-            binPath: await getBinPath({
-              dependency: ProgramName.Appmap,
-              globalStoragePath: this.globalStorageDir,
-            }),
-            log: NodeProcessService.outputChannel,
-            args: ['index', '--watch'],
-            cwd: folder.uri.fsPath,
-          })
-        );
-      } catch (e) {
-        Telemetry.sendEvent(DEBUG_EXCEPTION, {
-          exception: e as Error,
-          errorCode: ErrorCode.DependencyPathNotResolved,
-        });
-      }
+    try {
+      services.push(
+        new ProcessWatcher({
+          binPath: await getBinPath({
+            dependency: ProgramName.Appmap,
+            globalStoragePath: this.globalStorageDir,
+          }),
+          log: NodeProcessService.outputChannel,
+          args: ['index', '--watch'],
+          cwd: folder.uri.fsPath,
+        })
+      );
+    } catch (e) {
+      Telemetry.sendEvent(DEBUG_EXCEPTION, {
+        exception: e as Error,
+        errorCode: ErrorCode.DependencyPathNotResolved,
+      });
     }
 
     if (ExtensionSettings.findingsEnabled()) {

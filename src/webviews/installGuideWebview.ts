@@ -4,11 +4,27 @@ import extensionSettings from '../configuration/extensionSettings';
 import { ProjectStateServiceInstance } from '../services/projectStateService';
 import { getNonce } from '../util';
 import ProjectMetadata from '../workspace/projectMetadata';
+import * as semver from 'semver';
+import ExtensionState from '../configuration/extensionState';
 
 export default class InstallGuideWebView {
   public static readonly viewType = 'appmap.views.installGuide';
   public static readonly command = 'appmap.openInstallGuide';
   private static existingPanel?: vscode.WebviewPanel;
+
+  public static tryOpen(extensionState: ExtensionState): Thenable<void | undefined> | undefined {
+    const firstVersionInstalled = semver.coerce(extensionState.firstVersionInstalled);
+    if (firstVersionInstalled && semver.gte(firstVersionInstalled, '0.15.0')) {
+      // Logic within this block will only be executed if the extension was installed after we began tracking the
+      // time of installation. We will use this to determine whether or not our UX improvements are effective, without
+      // before rolling them out to our existing user base.
+
+      if (!extensionState.hasViewedInstallGuide) {
+        extensionState.hasViewedInstallGuide = true;
+        return vscode.commands.executeCommand('appmap.openInstallGuide', 'project-picker');
+      }
+    }
+  }
 
   public static register(
     context: vscode.ExtensionContext,
