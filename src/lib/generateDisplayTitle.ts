@@ -11,7 +11,8 @@ export default (finding: ResolvedFinding): string => {
   const lineno = finding.problemLocation?.range.start.line;
 
   // If rule and context are the same, only display one
-  const ruleAndContext = rule !== context ? `${rule}: ${context}` : rule;
+  const ruleAndContext =
+    rule !== context && !context.startsWith(rule) ? `${rule}: ${context}` : context;
 
   // Only display problemLocation if it exists
   const fullPathString = finding.problemLocation ? `, ${relPath}:${lineno}` : '';
