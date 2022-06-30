@@ -2,8 +2,18 @@ import * as path from 'path';
 import * as vscode from 'vscode';
 import extensionSettings from '../configuration/extensionSettings';
 import { ProjectStateServiceInstance } from '../services/projectStateService';
+import { COPY_COMMAND, OPEN_VIEW, Telemetry } from '../telemetry';
 import { getNonce } from '../util';
 import ProjectMetadata from '../workspace/projectMetadata';
+
+type PageMessage = {
+  page: string;
+  project?: ProjectMetadata;
+};
+
+type ClipboardMessage = {
+  text: string;
+} & PageMessage;
 
 export default class InstallGuideWebView {
   public static readonly viewType = 'appmap.views.installGuide';
@@ -72,6 +82,24 @@ export default class InstallGuideWebView {
 
             case 'open-file':
               vscode.commands.executeCommand('vscode.open', vscode.Uri.file(message.file));
+              break;
+
+            case 'open-page':
+              {
+                const { page, project } = message as PageMessage;
+                Telemetry.sendEvent(OPEN_VIEW, { viewId: page, rootDirectory: project?.path });
+              }
+              break;
+
+            case 'clipboard':
+              {
+                const { page, project, text } = message as ClipboardMessage;
+                Telemetry.sendEvent(COPY_COMMAND, {
+                  viewId: page,
+                  text: text,
+                  rootDirectory: project?.path,
+                });
+              }
               break;
 
             case 'view-problems':

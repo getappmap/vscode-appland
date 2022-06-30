@@ -39,7 +39,7 @@ export const PROJECT_CONFIG_WRITE = new Event({
 
 export const OPEN_VIEW = new Event({
   name: 'view:open',
-  properties: [Properties.VIEW_ID],
+  properties: [Properties.VIEW_ID, Properties.PROJECT_LANGUAGE],
 });
 
 export const APPMAP_OPEN = new Event({
@@ -88,4 +88,9 @@ export const TELEMETRY_ENABLED = new Event({
 export const COPY_INSTALL_COMMAND = new Event({
   name: 'copy_install_command',
   properties: [Properties.PROJECT_LANGUAGE],
+});
+
+export const COPY_COMMAND = new Event({
+  name: 'copy_command',
+  properties: [Properties.VIEW_ID, Properties.TEXT, Properties.PROJECT_LANGUAGE],
 });
