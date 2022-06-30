@@ -5,7 +5,7 @@ import ExtensionState, { Keys } from '../configuration/extensionState';
 import { FileChangeEmitter } from './fileChangeEmitter';
 import FindingsIndex from './findingsIndex';
 import { ResolvedFinding } from './resolvedFinding';
-import { analyze, scoreValue } from '../analyzers';
+import { analyze, scoreValue, NodeVersion } from '../analyzers';
 import ProjectMetadata from '../workspace/projectMetadata';
 import AppMapCollection from './appmapCollection';
 
@@ -18,6 +18,8 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
   protected numFindings = 0;
 
   public onStateChange = this._onStateChange.event;
+
+  private SUPPORTED_NODE_VERSIONS = [14, 16, 18];
 
   constructor(
     public readonly folder: vscode.WorkspaceFolder,
@@ -151,6 +153,7 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
       name: this.folder.name,
       path: this.folder.uri.fsPath,
       score: analysis.score,
+      hasNode: this.hasNode(analysis.nodeVersion),
       agentInstalled: this.isAgentConfigured || false,
       appMapsRecorded: this.hasRecordedAppMaps || false,
       analysisPerformed: this.analysisPerformed,
@@ -185,6 +188,14 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
 
   dispose(): void {
     this.disposables.forEach((d) => d.dispose());
+  }
+
+  private hasNode(nodeVersion: NodeVersion | undefined): boolean {
+    return !!(
+      nodeVersion &&
+      nodeVersion.major !== 0 &&
+      this.SUPPORTED_NODE_VERSIONS.includes(nodeVersion.major)
+    );
   }
 }
 
