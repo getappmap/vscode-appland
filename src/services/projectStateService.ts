@@ -19,7 +19,7 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
 
   public onStateChange = this._onStateChange.event;
 
-  private SUPPORTED_NODE_VERSIONS = [14, 16, 17];
+  private SUPPORTED_NODE_VERSIONS = [14, 16, 18];
 
   constructor(
     public readonly folder: vscode.WorkspaceFolder,
