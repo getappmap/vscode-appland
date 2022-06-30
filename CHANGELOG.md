@@ -1,3 +1,19 @@
+# [0.32.0](https://github.com/applandinc/vscode-appland/compare/v0.31.4...v0.32.0) (2022-06-30)
+
+
+### Bug Fixes
+
+* Add version constraint for @appland/models ([e223ce0](https://github.com/applandinc/vscode-appland/commit/e223ce096fd2b0740bcd4051bd87052e06013ee6))
+* Remove duplicate titles from some findings ([d47f541](https://github.com/applandinc/vscode-appland/commit/d47f54142bf4c89342418900831f37880776be3a))
+* Run only one uptodate process at a time ([00b8ec0](https://github.com/applandinc/vscode-appland/commit/00b8ec019e36629cc748d111bcbe5f5dd454c2a7))
+
+
+### Features
+
+* Configurable index/scan/depends commands have been removed ([52135ff](https://github.com/applandinc/vscode-appland/commit/52135ff5908b51c2bd2419829383e302b0dce3f8))
+* Run background node processes with Electron node ([dcf90a1](https://github.com/applandinc/vscode-appland/commit/dcf90a1b0e42867baef4aa84bbd49604cc9c43e9))
+* Uptodate service now runs via Electron node ([8f91058](https://github.com/applandinc/vscode-appland/commit/8f91058d558340c4b57f717398f6565df92cfff1))
+
 ## [0.31.4](https://github.com/applandinc/vscode-appland/compare/v0.31.3...v0.31.4) (2022-06-29)
 
 
