@@ -6,7 +6,7 @@ import { systemNodeVersion, nvmNodeVersion } from '../services/command';
 
 export type Score = 'bad' | 'ok' | 'good';
 const SCORE_VALUES = { bad: 0, ok: 1, good: 2 };
-const OVERALL_SCORE_VALUES = { bad: 1, ok: 2, good: 3 };
+export const OVERALL_SCORE_VALUES = { bad: 1, ok: 2, good: 3 };
 
 export function scoreValue(...scores: Score[]): number {
   return scores.reduce((s, x) => s + SCORE_VALUES[x], 0);

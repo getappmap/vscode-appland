@@ -1,11 +1,13 @@
 import { AppMapsService } from './appMapsService';
 import { ClassMapService } from './classMapService';
+import ExtensionState from './configuration/extensionState';
 import AppMapEditorProvider from './editor/appmapEditorProvider';
 import { FindingsService } from './findingsService';
 import { AppMapConfigWatcher } from './services/appMapConfigWatcher';
 import { AppmapUptodateService } from './services/appmapUptodateService';
 import Command from './services/command';
 import { NodeProcessService } from './services/nodeProcessService';
+import { RuntimeAnalysisCtaService } from './services/runtimeAnalysisCtaService';
 import { SourceFileWatcher } from './services/sourceFileWatcher';
 import { WorkspaceServices } from './services/workspaceServices';
 
@@ -31,4 +33,6 @@ export default interface AppMapService {
   findings?: FindingsService;
   classMap?: ClassMapService;
   processService: NodeProcessService;
+  extensionState: ExtensionState;
+  runtimeAnalysisCta: RuntimeAnalysisCtaService;
 }
