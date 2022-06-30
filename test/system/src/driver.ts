@@ -1,4 +1,5 @@
 import { BrowserContext, ElectronApplication, Page } from '@playwright/test';
+import { glob } from 'glob';
 import AppMap from './appMap';
 import InstructionsWebview from './instructionsWebview';
 import Panel from './panel';
@@ -39,6 +40,29 @@ export default class Driver {
         '.notifications-list-container .monaco-list-row:has(span:text("AppMap: Ready")) >> a[role="button"]:text("OK")'
       )
       .click();
+  }
+
+  public async waitForFile(pattern: string): Promise<void> {
+    let retryCount = 0;
+    for (;;) {
+      if (retryCount > 30) {
+        throw new Error(`timed out waiting for file ${pattern}`);
+      }
+
+      const fileFound = await new Promise((resolve) =>
+        glob(pattern, (err, matches) => {
+          if (err) {
+            throw err;
+          }
+          resolve(matches.length > 0);
+        })
+      );
+
+      if (fileFound) return;
+
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      retryCount += 1;
+    }
   }
 
   public async closeAllEditorWindows(): Promise<void> {

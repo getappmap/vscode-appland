@@ -172,21 +172,9 @@
           "type": "boolean",
           "description": "Enable AppMap indexer and code objects view (preview)"
         },
-        "appMap.indexCommand": {
-          "type": "string",
-          "description": "Command use to run the @appland/appmap index command in watch mode"
-        },
         "appMap.findingsEnabled": {
           "type": "boolean",
           "description": "Enable AppMap scanner and findings (preview)"
-        },
-        "appMap.scanCommand": {
-          "type": "string",
-          "description": "Command use to run the @appland/scanner scan command in watch mode (preview)"
-        },
-        "appMap.dependsCommand": {
-          "type": "string",
-          "description": "Command use to run the @appland/appmap depends command"
         },
         "appMap.inspectEnabled": {
           "type": "boolean",
@@ -334,7 +322,7 @@
     "test:extension": "ts-node ./test/integrationTest.ts",
     "test:web-client": "mocha web/test/*.test.mjs",
     "test:system": "node out/test/systemTest.js",
-    "test": "yarn test:web-client && yarn test:system",
+    "test": "yarn test:web-client ; yarn test:extension ; yarn test:system",
     "compile": "webpack --mode=production",
     "watch": "webpack --watch --mode=development",
     "package": "vsce package --no-yarn",
@@ -355,6 +343,7 @@
     "@types/node": "^12.19.12",
     "@types/semver": "^7.3.9",
     "@types/sinon": "^10.0.2",
+    "@types/tmp": "^0.2.3",
     "@types/vscode": "^1.55.0",
     "@typescript-eslint/eslint-plugin": "^4.22.1",
     "@typescript-eslint/parser": "^4.22.1",
@@ -384,6 +373,7 @@
     "tape": "^5.1.1",
     "temp": "^0.9.4",
     "terser-webpack-plugin": "^5.1.2",
+    "tmp": "^0.2.1",
     "ts-loader": "^8.0.14",
     "ts-node": "^10.0.0",
     "tslib": "^2.1.0",

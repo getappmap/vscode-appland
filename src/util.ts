@@ -71,7 +71,11 @@ export async function fileExists(filename: string): Promise<boolean> {
   return new Promise((resolve) => fs.access(filename, (err) => resolve(err === null)));
 }
 
-export async function retry(fn: () => Promise<void>, retries = 3, interval = 100): Promise<void> {
+export async function retry(
+  fn: () => void | Promise<void>,
+  retries = 3,
+  interval = 100
+): Promise<void> {
   try {
     await fn();
   } catch (e) {

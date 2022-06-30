@@ -157,12 +157,12 @@ __metadata:
   linkType: hard
 
 "@appland/models@npm:^1.14.1, @appland/models@npm:^1.14.5, @appland/models@npm:^1.15.0, @appland/models@npm:^1.8.1, @appland/models@npm:^1.9.0":
-  version: 1.16.0
-  resolution: "@appland/models@npm:1.16.0"
+  version: 1.16.1
+  resolution: "@appland/models@npm:1.16.1"
   dependencies:
     "@appland/sql-parser": ^1.5.0
     crypto-js: ^4.0.0
-  checksum: 45e0e054a2ebba85744b4a96bc09b016af7f1b0a832ab34ee76e2f0f815345664e547b6ac057712a0d49dd7f1a3496ddca4b72cbb8cd781d3ca1097abe2b83d4
+  checksum: c3f933b793d38f82f42e6f31bd353410e530bf4dc3e5fe0b1350366c041dba2e8a4c93c20a819526e1c484269d111199a4f207137e81736ad33968238c3b5132
   languageName: node
   linkType: hard
 
@@ -2380,6 +2380,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/tmp@npm:^0.2.3":
+  version: 0.2.3
+  resolution: "@types/tmp@npm:0.2.3"
+  checksum: 0ca45e99b3b3c6959d5c4f4555f73c8007db540cfb0fbbb9373217f9ab85e67eef75193f51a1d6564b0ee6c6f5ffa259d1034d7f7530a5b7ce80acb94cfc4daa
+  languageName: node
+  linkType: hard
+
 "@types/tunnel@npm:^0.0.3":
   version: 0.0.3
   resolution: "@types/tunnel@npm:0.0.3"
@@ -3220,6 +3227,7 @@ __metadata:
     "@types/node": ^12.19.12
     "@types/semver": ^7.3.9
     "@types/sinon": ^10.0.2
+    "@types/tmp": ^0.2.3
     "@types/vscode": ^1.55.0
     "@typescript-eslint/eslint-plugin": ^4.22.1
     "@typescript-eslint/parser": ^4.22.1
@@ -3257,6 +3265,7 @@ __metadata:
     tape: ^5.1.1
     temp: ^0.9.4
     terser-webpack-plugin: ^5.1.2
+    tmp: ^0.2.1
     ts-loader: ^8.0.14
     ts-node: ^10.0.0
     tslib: ^2.1.0
@@ -9970,15 +9979,6 @@ __metadata:
 "project-uptodate@workspace:test/fixtures/workspaces/project-uptodate":
   version: 0.0.0-use.local
   resolution: "project-uptodate@workspace:test/fixtures/workspaces/project-uptodate"
-  dependencies:
-    "@appland/appmap": ^3.25.4
-    "@appland/scanner": ^1.56.0
-  languageName: unknown
-  linkType: soft
-
-"project-with-echo-command@workspace:test/fixtures/workspaces/project-with-echo-command":
-  version: 0.0.0-use.local
-  resolution: "project-with-echo-command@workspace:test/fixtures/workspaces/project-with-echo-command"
   dependencies:
     "@appland/appmap": ^3.25.4
     "@appland/scanner": ^1.56.0

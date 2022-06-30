@@ -11,7 +11,7 @@ import AppMapCollection from './appmapCollection';
 
 export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
   protected disposables: vscode.Disposable[] = [];
-  protected _onStateChange = new vscode.EventEmitter<ProjectStateServiceInstance>();
+  protected _onStateChange = new vscode.EventEmitter<ProjectMetadata>();
   protected _metadata?: ProjectMetadata;
   protected initialized = false;
   protected analysisPerformed = false;
@@ -180,7 +180,7 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
       };
     }
 
-    this._onStateChange.fire(this);
+    this._onStateChange.fire(this._metadata);
   }
 
   dispose(): void {

@@ -15,8 +15,9 @@ import {
 
 describe('CodeObjects', () => {
   beforeEach(initializeWorkspace);
-  beforeEach(() =>
-    waitForAppMapServices(
+  beforeEach(
+    waitForAppMapServices.bind(
+      null,
       'tmp/appmap/minitest/Microposts_controller_can_get_microposts_as_JSON.appmap.json'
     )
   );

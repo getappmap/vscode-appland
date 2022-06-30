@@ -145,10 +145,7 @@
                       "type": "function",
                       "location": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/testing/integration.rb:320",
                       "static": false,
-                      "labels": [
-                        "deserialize.safe",
-                        "lang.eval.safe"
-                      ]
+                      "labels": ["deserialize.safe", "lang.eval.safe"]
                     }
                   ]
                 }
@@ -167,9 +164,7 @@
                       "type": "function",
                       "location": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb:91",
                       "static": false,
-                      "labels": [
-                        "http.session.read"
-                      ],
+                      "labels": ["http.session.read"],
                       "comment": "# Returns value of the key stored in the session or\n# +nil+ if the given key is not found in the session.\n"
                     },
                     {
@@ -177,19 +172,14 @@
                       "type": "function",
                       "location": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb:79",
                       "static": false,
-                      "labels": [
-                        "http.session.write"
-                      ]
+                      "labels": ["http.session.write"]
                     },
                     {
                       "name": "clear",
                       "type": "function",
                       "location": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb:137",
                       "static": false,
-                      "labels": [
-                        "http.session.write",
-                        "http.session.clear"
-                      ],
+                      "labels": ["http.session.write", "http.session.clear"],
                       "comment": "# Clears the session.\n"
                     },
                     {
@@ -197,9 +187,7 @@
                       "type": "function",
                       "location": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb:131",
                       "static": false,
-                      "labels": [
-                        "http.session.write"
-                      ],
+                      "labels": ["http.session.write"],
                       "comment": "# Writes given value to given key of the session.\n"
                     },
                     {
@@ -207,9 +195,7 @@
                       "type": "function",
                       "location": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb:165",
                       "static": false,
-                      "labels": [
-                        "http.session.write"
-                      ],
+                      "labels": ["http.session.write"],
                       "comment": "# Deletes given key from the session.\n"
                     }
                   ]
@@ -229,18 +215,14 @@
                       "type": "function",
                       "location": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/middleware/cookies.rb:333",
                       "static": false,
-                      "labels": [
-                        "http.session.write"
-                      ]
+                      "labels": ["http.session.write"]
                     },
                     {
                       "name": "[]",
                       "type": "function",
                       "location": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/middleware/cookies.rb:317",
                       "static": false,
-                      "labels": [
-                        "http.session.read"
-                      ],
+                      "labels": ["http.session.read"],
                       "comment": "# Returns the value of the cookie by +name+, or +nil+ if no such cookie exists.\n"
                     },
                     {
@@ -248,9 +230,7 @@
                       "type": "function",
                       "location": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/middleware/cookies.rb:373",
                       "static": false,
-                      "labels": [
-                        "http.session.write"
-                      ],
+                      "labels": ["http.session.write"],
                       "comment": "# Sets the cookie named +name+. The second argument may be the cookie's\n# value or a hash of options as documented above.\n"
                     }
                   ]
@@ -272,18 +252,14 @@
                   "type": "function",
                   "location": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_controller/metal/instrumentation.rb:19",
                   "static": false,
-                  "labels": [
-                    "mvc.controller"
-                  ]
+                  "labels": ["mvc.controller"]
                 },
                 {
                   "name": "redirect_to",
                   "type": "function",
                   "location": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_controller/metal/instrumentation.rb:62",
                   "static": false,
-                  "labels": [
-                    "mvc.controller"
-                  ]
+                  "labels": ["mvc.controller"]
                 }
               ]
             },
@@ -296,9 +272,7 @@
                   "type": "function",
                   "location": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_controller/metal/renderers.rb:141",
                   "static": false,
-                  "labels": [
-                    "mvc.render"
-                  ],
+                  "labels": ["mvc.render"],
                   "comment": "# Called by +render+ in <tt>AbstractController::Rendering</tt>\n# which sets the return value as the +response_body+.\n#\n# If no renderer is found, +super+ returns control to\n# <tt>ActionView::Rendering.render_to_body</tt>, if present.\n"
                 }
               ]
@@ -328,18 +302,14 @@
                       "type": "function",
                       "location": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb:512",
                       "static": false,
-                      "labels": [
-                        "mvc.before_action"
-                      ]
+                      "labels": ["mvc.before_action"]
                     },
                     {
                       "name": "invoke_after",
                       "type": "function",
                       "location": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb:516",
                       "static": false,
-                      "labels": [
-                        "mvc.after_action"
-                      ]
+                      "labels": ["mvc.after_action"]
                     }
                   ]
                 }
@@ -354,9 +324,7 @@
                   "type": "function",
                   "location": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/lazy_load_hooks.rb:49",
                   "static": true,
-                  "labels": [
-                    "deserialize.safe"
-                  ]
+                  "labels": ["deserialize.safe"]
                 }
               ]
             }
@@ -381,9 +349,7 @@
                   "type": "function",
                   "location": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb:31",
                   "static": false,
-                  "labels": [
-                    "log"
-                  ]
+                  "labels": ["log"]
                 }
               ]
             }
@@ -408,9 +374,7 @@
                   "type": "function",
                   "location": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activerecord-6.0.4.1/lib/active_record/relation.rb:249",
                   "static": false,
-                  "labels": [
-                    "dao.materialize"
-                  ]
+                  "labels": ["dao.materialize"]
                 }
               ]
             }
@@ -431,18 +395,14 @@
               "type": "function",
               "location": "<internal:pack>:256",
               "static": false,
-              "labels": [
-                "string.unpack"
-              ]
+              "labels": ["string.unpack"]
             },
             {
               "name": "unpack1",
               "type": "function",
               "location": "<internal:pack>:280",
               "static": false,
-              "labels": [
-                "string.unpack"
-              ]
+              "labels": ["string.unpack"]
             }
           ]
         },
@@ -455,9 +415,7 @@
               "type": "function",
               "location": "Kernel#eval",
               "static": false,
-              "labels": [
-                "lang.eval"
-              ]
+              "labels": ["lang.eval"]
             }
           ]
         },
@@ -470,9 +428,7 @@
               "type": "function",
               "location": "Marshal.dump",
               "static": true,
-              "labels": [
-                "serialize"
-              ]
+              "labels": ["serialize"]
             }
           ]
         }
@@ -495,10 +451,7 @@
                   "type": "function",
                   "location": "app/controllers/sessions_controller.rb:9",
                   "static": false,
-                  "labels": [
-                    "access.public",
-                    "security.login"
-                  ],
+                  "labels": ["access.public", "security.login"],
                   "comment": "# Login a new user.\n# @label access.public security.login\n"
                 }
               ]
@@ -512,9 +465,7 @@
                   "type": "function",
                   "location": "app/controllers/static_pages_controller.rb:4",
                   "static": false,
-                  "labels": [
-                    "access.public"
-                  ],
+                  "labels": ["access.public"],
                   "comment": "# @label access.public\n"
                 }
               ]
@@ -585,9 +536,7 @@
                   "type": "function",
                   "location": "app/helpers/sessions_helper.rb:35",
                   "static": false,
-                  "labels": [
-                    "security.authentication"
-                  ],
+                  "labels": ["security.authentication"],
                   "comment": "# Returns true if the user is logged in, false otherwise.\n# @label security.authentication\n"
                 },
                 {
@@ -641,9 +590,7 @@
                   "type": "function",
                   "location": "app/helpers/logged_in_helper.rb:10",
                   "static": false,
-                  "labels": [
-                    "security.require_login"
-                  ],
+                  "labels": ["security.require_login"],
                   "comment": "# Confirms a logged-in user.\n# @label security.require_login\n"
                 }
               ]
@@ -670,9 +617,7 @@
                   "type": "function",
                   "location": "app/models/user.rb:30",
                   "static": true,
-                  "labels": [
-                    "secret"
-                  ],
+                  "labels": ["secret"],
                   "comment": "# @label secret\n"
                 },
                 {
@@ -726,9 +671,7 @@
                   "type": "function",
                   "location": "app/views/static_pages/home.html.erb",
                   "static": true,
-                  "labels": [
-                    "mvc.template"
-                  ]
+                  "labels": ["mvc.template"]
                 }
               ]
             },
@@ -741,9 +684,7 @@
                   "type": "function",
                   "location": "app/views/layouts/application.html.erb",
                   "static": true,
-                  "labels": [
-                    "mvc.template"
-                  ]
+                  "labels": ["mvc.template"]
                 }
               ]
             },
@@ -756,9 +697,7 @@
                   "type": "function",
                   "location": "app/views/shared/_user_info.html.erb",
                   "static": true,
-                  "labels": [
-                    "mvc.template"
-                  ]
+                  "labels": ["mvc.template"]
                 }
               ]
             },
@@ -771,9 +710,7 @@
                   "type": "function",
                   "location": "app/views/shared/_stats.html.erb",
                   "static": true,
-                  "labels": [
-                    "mvc.template"
-                  ]
+                  "labels": ["mvc.template"]
                 }
               ]
             },
@@ -786,9 +723,7 @@
                   "type": "function",
                   "location": "app/views/shared/_micropost_form.html.erb",
                   "static": true,
-                  "labels": [
-                    "mvc.template"
-                  ]
+                  "labels": ["mvc.template"]
                 }
               ]
             },
@@ -801,9 +736,7 @@
                   "type": "function",
                   "location": "app/views/shared/_error_messages.html.erb",
                   "static": true,
-                  "labels": [
-                    "mvc.template"
-                  ]
+                  "labels": ["mvc.template"]
                 }
               ]
             },
@@ -816,9 +749,7 @@
                   "type": "function",
                   "location": "app/views/shared/_feed.html.erb",
                   "static": true,
-                  "labels": [
-                    "mvc.template"
-                  ]
+                  "labels": ["mvc.template"]
                 }
               ]
             },
@@ -831,9 +762,7 @@
                   "type": "function",
                   "location": "app/views/microposts/_micropost.html.erb",
                   "static": true,
-                  "labels": [
-                    "mvc.template"
-                  ]
+                  "labels": ["mvc.template"]
                 }
               ]
             },
@@ -846,9 +775,7 @@
                   "type": "function",
                   "location": "app/views/layouts/_shim.html.erb",
                   "static": true,
-                  "labels": [
-                    "mvc.template"
-                  ]
+                  "labels": ["mvc.template"]
                 }
               ]
             },
@@ -861,9 +788,7 @@
                   "type": "function",
                   "location": "app/views/layouts/_header.html.erb",
                   "static": true,
-                  "labels": [
-                    "mvc.template"
-                  ]
+                  "labels": ["mvc.template"]
                 }
               ]
             },
@@ -876,9 +801,7 @@
                   "type": "function",
                   "location": "app/views/layouts/_footer.html.erb",
                   "static": true,
-                  "labels": [
-                    "mvc.template"
-                  ]
+                  "labels": ["mvc.template"]
                 }
               ]
             },
@@ -891,9 +814,7 @@
                   "type": "function",
                   "location": "app/views/users/show.html.erb",
                   "static": true,
-                  "labels": [
-                    "mvc.template"
-                  ]
+                  "labels": ["mvc.template"]
                 }
               ]
             },
@@ -906,9 +827,7 @@
                   "type": "function",
                   "location": "app/views/users/_follow_form.html.erb",
                   "static": true,
-                  "labels": [
-                    "mvc.template"
-                  ]
+                  "labels": ["mvc.template"]
                 }
               ]
             },
@@ -921,9 +840,7 @@
                   "type": "function",
                   "location": "app/views/users/_follow.html.erb",
                   "static": true,
-                  "labels": [
-                    "mvc.template"
-                  ]
+                  "labels": ["mvc.template"]
                 }
               ]
             }
@@ -956,10 +873,7 @@
                           "type": "function",
                           "location": "JSON::Ext::Generator::State#generate",
                           "static": false,
-                          "labels": [
-                            "format.json.generate",
-                            "serialize"
-                          ]
+                          "labels": ["format.json.generate", "serialize"]
                         }
                       ]
                     }
@@ -974,10 +888,7 @@
                       "type": "function",
                       "location": "JSON::Ext::Parser#parse",
                       "static": false,
-                      "labels": [
-                        "format.json.parse",
-                        "deserialize.safe"
-                      ]
+                      "labels": ["format.json.parse", "deserialize.safe"]
                     }
                   ]
                 }
@@ -1004,18 +915,14 @@
                   "type": "function",
                   "location": "OpenSSL::Cipher#encrypt",
                   "static": false,
-                  "labels": [
-                    "crypto.encrypt"
-                  ]
+                  "labels": ["crypto.encrypt"]
                 },
                 {
                   "name": "decrypt",
                   "type": "function",
                   "location": "OpenSSL::Cipher#decrypt",
                   "static": false,
-                  "labels": [
-                    "crypto.decrypt"
-                  ]
+                  "labels": ["crypto.decrypt"]
                 }
               ]
             }
@@ -1040,9 +947,7 @@
                   "type": "function",
                   "location": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionview-6.0.4.1/lib/action_view/template/resolver.rb:116",
                   "static": false,
-                  "labels": [
-                    "mvc.template.resolver"
-                  ],
+                  "labels": ["mvc.template.resolver"],
                   "comment": "# Normalizes the arguments and passes it on to find_templates.\n"
                 }
               ]
@@ -1055,9 +960,7 @@
                   "name": "render",
                   "type": "function",
                   "location": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionview-6.0.4.1/lib/action_view/renderer/template_renderer.rb:7",
-                  "labels": [
-                    "mvc.view"
-                  ]
+                  "labels": ["mvc.view"]
                 }
               ]
             },
@@ -1069,9 +972,7 @@
                   "name": "render",
                   "type": "function",
                   "location": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionview-6.0.4.1/lib/action_view/renderer/partial_renderer.rb:294",
-                  "labels": [
-                    "mvc.view"
-                  ]
+                  "labels": ["mvc.view"]
                 }
               ]
             }
@@ -1092,9 +993,7 @@
               "type": "function",
               "location": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/psych.rb:274",
               "static": true,
-              "labels": [
-                "deserialize.unsafe"
-              ],
+              "labels": ["deserialize.unsafe"],
               "comment": "###\n# Load +yaml+ in to a Ruby data structure.  If multiple documents are\n# provided, the object contained in the first document will be returned.\n# +filename+ will be used in the exception message if any exception\n# is raised while parsing.  If +yaml+ is empty, it returns\n# the specified +fallback+ return value, which defaults to +false+.\n#\n# Raises a Psych::SyntaxError when a YAML syntax error is detected.\n#\n# Example:\n#\n#   Psych.load(\"--- a\")             # => 'a'\n#   Psych.load(\"---\\n - a\\n - b\")   # => ['a', 'b']\n#\n#   begin\n#     Psych.load(\"--- `\", filename: \"file.txt\")\n#   rescue Psych::SyntaxError => ex\n#     ex.file    # => 'file.txt'\n#     ex.message # => \"(file.txt): found character that cannot start any token\"\n#   end\n#\n# When the optional +symbolize_names+ keyword argument is set to a\n# true value, returns symbols for keys in Hash objects (default: strings).\n#\n#   Psych.load(\"---\\n foo: bar\")                         # => {\"foo\"=>\"bar\"}\n#   Psych.load(\"---\\n foo: bar\", symbolize_names: true)  # => {:foo=>\"bar\"}\n#\n# Raises a TypeError when `yaml` parameter is NilClass\n#\n# NOTE: This method *should not* be used to parse untrusted documents, such as\n# YAML documents that are supplied via user input.  Instead, please use the\n# safe_load method.\n#\n"
             },
             {
@@ -1102,9 +1001,7 @@
               "type": "function",
               "location": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/psych.rb:386",
               "static": true,
-              "labels": [
-                "format.yaml.parse"
-              ],
+              "labels": ["format.yaml.parse"],
               "comment": "###\n# Parse a YAML string in +yaml+.  Returns the Psych::Nodes::Document.\n# +filename+ is used in the exception message if a Psych::SyntaxError is\n# raised.\n#\n# Raises a Psych::SyntaxError when a YAML syntax error is detected.\n#\n# Example:\n#\n#   Psych.parse(\"---\\n - a\\n - b\") # => #<Psych::Nodes::Document:0x00>\n#\n#   begin\n#     Psych.parse(\"--- `\", filename: \"file.txt\")\n#   rescue Psych::SyntaxError => ex\n#     ex.file    # => 'file.txt'\n#     ex.message # => \"(file.txt): found character that cannot start any token\"\n#   end\n#\n# See Psych::Nodes for more information about YAML AST.\n"
             },
             {
@@ -1112,9 +1009,7 @@
               "type": "function",
               "location": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/psych.rb:450",
               "static": true,
-              "labels": [
-                "format.yaml.parse"
-              ],
+              "labels": ["format.yaml.parse"],
               "comment": "###\n# Parse a YAML string in +yaml+.  Returns the Psych::Nodes::Stream.\n# This method can handle multiple YAML documents contained in +yaml+.\n# +filename+ is used in the exception message if a Psych::SyntaxError is\n# raised.\n#\n# If a block is given, a Psych::Nodes::Document node will be yielded to the\n# block as it's being parsed.\n#\n# Raises a Psych::SyntaxError when a YAML syntax error is detected.\n#\n# Example:\n#\n#   Psych.parse_stream(\"---\\n - a\\n - b\") # => #<Psych::Nodes::Stream:0x00>\n#\n#   Psych.parse_stream(\"--- a\\n--- b\") do |node|\n#     node # => #<Psych::Nodes::Document:0x00>\n#   end\n#\n#   begin\n#     Psych.parse_stream(\"--- `\", filename: \"file.txt\")\n#   rescue Psych::SyntaxError => ex\n#     ex.file    # => 'file.txt'\n#     ex.message # => \"(file.txt): found character that cannot start any token\"\n#   end\n#\n# Raises a TypeError when NilClass is passed.\n#\n# See Psych::Nodes for more information about YAML AST.\n"
             }
           ]
@@ -1138,9 +1033,7 @@
                   "type": "function",
                   "location": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activejob-6.0.4.1/lib/active_job/enqueuing.rb:48",
                   "static": false,
-                  "labels": [
-                    "job.create"
-                  ],
+                  "labels": ["job.create"],
                   "comment": "# Enqueues the job to be performed by the queue adapter.\n#\n# ==== Options\n# * <tt>:wait</tt> - Enqueues the job with the specified delay\n# * <tt>:wait_until</tt> - Enqueues the job at the time specified\n# * <tt>:queue</tt> - Enqueues the job on the specified queue\n# * <tt>:priority</tt> - Enqueues the job with the specified priority\n#\n# ==== Examples\n#\n#    my_job_instance.enqueue\n#    my_job_instance.enqueue wait: 5.minutes\n#    my_job_instance.enqueue queue: :important\n#    my_job_instance.enqueue wait_until: Date.tomorrow.midnight\n#    my_job_instance.enqueue priority: 10\n"
                 }
               ]
@@ -1555,6 +1448,176 @@
       "event": "return",
       "thread_id": 5220,
       "parent_id": 7966,
+      "elapsed": 0.00016
+    },
+    {
+      "id": 9999900,
+      "event": "call",
+      "thread_id": 5220,
+      "sql_query": {
+        "sql": "SELECT \"users\".* FROM \"users\" WHERE \"users\".\"id\" = ? LIMIT ?",
+        "database_type": "sqlite",
+        "server_version": "3.38.5"
+      }
+    },
+    {
+      "id": 9999901,
+      "event": "return",
+      "thread_id": 5220,
+      "parent_id": 9999900,
+      "elapsed": 0.00016
+    },
+    {
+      "id": 9999902,
+      "event": "call",
+      "thread_id": 5220,
+      "sql_query": {
+        "sql": "SELECT \"users\".* FROM \"users\" WHERE \"users\".\"id\" = ? LIMIT ?",
+        "database_type": "sqlite",
+        "server_version": "3.38.5"
+      }
+    },
+    {
+      "id": 9999903,
+      "event": "return",
+      "thread_id": 5220,
+      "parent_id": 9999902,
+      "elapsed": 0.00016
+    },
+    {
+      "id": 9999904,
+      "event": "call",
+      "thread_id": 5220,
+      "sql_query": {
+        "sql": "SELECT \"users\".* FROM \"users\" WHERE \"users\".\"id\" = ? LIMIT ?",
+        "database_type": "sqlite",
+        "server_version": "3.38.5"
+      }
+    },
+    {
+      "id": 9999905,
+      "event": "return",
+      "thread_id": 5220,
+      "parent_id": 9999904,
+      "elapsed": 0.00016
+    },
+    {
+      "id": 9999906,
+      "event": "call",
+      "thread_id": 5220,
+      "sql_query": {
+        "sql": "SELECT \"users\".* FROM \"users\" WHERE \"users\".\"id\" = ? LIMIT ?",
+        "database_type": "sqlite",
+        "server_version": "3.38.5"
+      }
+    },
+    {
+      "id": 9999907,
+      "event": "return",
+      "thread_id": 5220,
+      "parent_id": 9999906,
+      "elapsed": 0.00016
+    },
+    {
+      "id": 9999908,
+      "event": "call",
+      "thread_id": 5220,
+      "sql_query": {
+        "sql": "SELECT \"users\".* FROM \"users\" WHERE \"users\".\"id\" = ? LIMIT ?",
+        "database_type": "sqlite",
+        "server_version": "3.38.5"
+      }
+    },
+    {
+      "id": 9999909,
+      "event": "return",
+      "thread_id": 5220,
+      "parent_id": 9999908,
+      "elapsed": 0.00016
+    },
+    {
+      "id": 9999910,
+      "event": "call",
+      "thread_id": 5220,
+      "sql_query": {
+        "sql": "SELECT \"users\".* FROM \"users\" WHERE \"users\".\"id\" = ? LIMIT ?",
+        "database_type": "sqlite",
+        "server_version": "3.38.5"
+      }
+    },
+    {
+      "id": 9999911,
+      "event": "return",
+      "thread_id": 5220,
+      "parent_id": 9999910,
+      "elapsed": 0.00016
+    },
+    {
+      "id": 9999912,
+      "event": "call",
+      "thread_id": 5220,
+      "sql_query": {
+        "sql": "SELECT \"users\".* FROM \"users\" WHERE \"users\".\"id\" = ? LIMIT ?",
+        "database_type": "sqlite",
+        "server_version": "3.38.5"
+      }
+    },
+    {
+      "id": 9999913,
+      "event": "return",
+      "thread_id": 5220,
+      "parent_id": 9999912,
+      "elapsed": 0.00016
+    },
+    {
+      "id": 9999914,
+      "event": "call",
+      "thread_id": 5220,
+      "sql_query": {
+        "sql": "SELECT \"users\".* FROM \"users\" WHERE \"users\".\"id\" = ? LIMIT ?",
+        "database_type": "sqlite",
+        "server_version": "3.38.5"
+      }
+    },
+    {
+      "id": 9999915,
+      "event": "return",
+      "thread_id": 5220,
+      "parent_id": 9999914,
+      "elapsed": 0.00016
+    },
+    {
+      "id": 9999916,
+      "event": "call",
+      "thread_id": 5220,
+      "sql_query": {
+        "sql": "SELECT \"users\".* FROM \"users\" WHERE \"users\".\"id\" = ? LIMIT ?",
+        "database_type": "sqlite",
+        "server_version": "3.38.5"
+      }
+    },
+    {
+      "id": 9999917,
+      "event": "return",
+      "thread_id": 5220,
+      "parent_id": 9999916,
+      "elapsed": 0.00016
+    },
+    {
+      "id": 9999918,
+      "event": "call",
+      "thread_id": 5220,
+      "sql_query": {
+        "sql": "SELECT \"users\".* FROM \"users\" WHERE \"users\".\"id\" = ? LIMIT ?",
+        "database_type": "sqlite",
+        "server_version": "3.38.5"
+      }
+    },
+    {
+      "id": 9999919,
+      "event": "return",
+      "thread_id": 5220,
+      "parent_id": 9999918,
       "elapsed": 0.00016
     },
     {

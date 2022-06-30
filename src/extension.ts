@@ -16,8 +16,6 @@ import FindingsDiagnosticsProvider from './diagnostics/findingsDiagnosticsProvid
 import extensionSettings from './configuration/extensionSettings';
 import { FindingsTreeDataProvider } from './tree/findingsTreeDataProvider';
 import { AppMapWatcher } from './services/appmapWatcher';
-import AutoIndexerService from './services/autoIndexer';
-import AutoScannerService from './services/autoScanner';
 import { FindingWatcher } from './services/findingWatcher';
 import ClassMapIndex from './services/classMapIndex';
 import { ClassMapWatcher } from './services/classMapWatcher';
@@ -43,6 +41,7 @@ import appmapLinkProvider from './terminalLink/appmapLinkProvider';
 import { SourceFileWatcher } from './services/sourceFileWatcher';
 import assert from 'assert';
 import { initializeWorkspaceServices } from './services/workspaceServices';
+import { NodeProcessService } from './services/nodeProcessService';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   Telemetry.register(context);
@@ -87,8 +86,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       classMapIndex = new ClassMapIndex();
       lineInfoIndex = new LineInfoIndex(classMapIndex);
 
-      appmapUptodateService = new AppmapUptodateService();
-
       const classMapProvider = new ClassMapTreeDataProvider(classMapIndex);
       vscode.window.createTreeView('appmap.views.codeObjects', {
         treeDataProvider: classMapProvider,
@@ -100,6 +97,23 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
         onDelete: classMapIndex.removeClassMapFile.bind(classMapIndex),
       });
 
+      appmapUptodateService = new AppmapUptodateService(context);
+      sourceFileWatcher = new SourceFileWatcher(classMapIndex);
+
+      registerDecorationProvider(context, lineInfoIndex);
+      outOfDateTests(context, appmapUptodateService);
+      openCodeObjectInAppMap(context, classMapIndex);
+      appmapHoverProvider(context, lineInfoIndex);
+
+      await workspaceServices.enroll(sourceFileWatcher);
+      await workspaceServices.enroll(classMapWatcher);
+    }
+
+    const activateUptodateService = async () => {
+      if (!(appmapUptodateService && sourceFileWatcher)) return;
+
+      // Update the uptodate status whenever a source file or AppMap changes.
+      // AppMap deletion does not trigger this.
       const updateUptodate = ({ uri, workspaceFolder }) => {
         console.log(`[source-file-watcher] ${uri.fsPath} updated in ${workspaceFolder.name}`);
         assert(appmapUptodateService);
@@ -110,32 +124,14 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
         if (uptodateService) uptodateService.update();
       };
 
-      // Update the uptodate status whenever a source file or AppMap changes.
-      // AppMap deletion does not trigger this.
-      sourceFileWatcher = new SourceFileWatcher(classMapIndex);
       context.subscriptions.push(sourceFileWatcher.onChange(updateUptodate));
       context.subscriptions.push(
         appmapWatcher.onCreate(updateUptodate),
         appmapWatcher.onChange(updateUptodate)
       );
 
-      {
-        const autoIndexService = new AutoIndexerService();
-        autoIndexService.on('invoke', (command) => autoIndexServiceImpl.startInvocation(command));
-        autoIndexService.on('message', (message) => autoIndexServiceImpl.addMessage(message));
-        autoIndexService.on('exit', (exitStatus) => autoIndexServiceImpl.endInvocation(exitStatus));
-        await workspaceServices.enroll(autoIndexService);
-      }
-
-      registerDecorationProvider(context, lineInfoIndex);
-      outOfDateTests(context, appmapUptodateService);
-      openCodeObjectInAppMap(context, classMapIndex);
-      appmapHoverProvider(context, lineInfoIndex);
-
-      await workspaceServices.enroll(sourceFileWatcher);
       await workspaceServices.enroll(appmapUptodateService);
-      await workspaceServices.enroll(classMapWatcher);
-    }
+    };
 
     if (findingsEnabled) {
       findingsIndex = new FindingsIndex();
@@ -166,15 +162,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
         })
       );
 
-      const autoScannerService = new AutoScannerService();
-      {
-        autoScannerService.on('invoke', (command) => autoScanServiceImpl.startInvocation(command));
-        autoScannerService.on('message', (message) => autoScanServiceImpl.addMessage(message));
-        autoScannerService.on('exit', (exitStatus) =>
-          autoScanServiceImpl.endInvocation(exitStatus)
-        );
-      }
-      await workspaceServices.enroll(autoScannerService);
       await workspaceServices.enroll(findingWatcher);
     }
 
@@ -183,6 +170,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       registerInspectCodeObject(context);
     }
 
+    let processService: NodeProcessService | undefined;
     {
       const projectState = new ProjectStateService(
         extensionState,
@@ -203,6 +191,15 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
         InstallGuideWebView.register(context, projectStates);
       }
+
+      processService = new NodeProcessService(context, projectStates);
+      // The node dependencies may take some time to retrieve. As a result, the initialization sequence is
+      // wrapped in an async function but we won't wait for it to resolve.
+      (async function() {
+        processService.onReady(activateUptodateService);
+        await processService.install();
+        await workspaceServices.enroll(processService);
+      })();
     }
 
     deleteAllAppMaps(context, classMapIndex, findingsIndex);
@@ -295,6 +292,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       uptodate: appmapUptodateService,
       findings: findingsIndex,
       classMap: classMapIndex,
+      processService,
     };
   } catch (exception) {
     Telemetry.sendEvent(DEBUG_EXCEPTION, { exception: exception as Error });

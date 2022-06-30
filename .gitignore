@@ -7,6 +7,8 @@ node_modules
 appland.appmap-*.*.*
 .obsolete
 
+extern/.yarn
+
 # Yarn files
 .yarn/*
 !.yarn/patches

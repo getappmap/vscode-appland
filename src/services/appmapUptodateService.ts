@@ -1,44 +1,37 @@
 import assert from 'assert';
-import { ChildProcess, spawn } from 'child_process';
+import {
+  ChildProcess,
+  ProgramName,
+  OutputStream,
+  ProcessLogItem,
+  spawn,
+  getBinPath,
+} from './nodeDependencyProcess';
 import EventEmitter from 'events';
 import { readFile } from 'fs';
 import { resolve } from 'path';
 import { promisify } from 'util';
 import * as vscode from 'vscode';
-import extensionSettings from '../configuration/extensionSettings';
 import ChangeEventDebouncer from './changeEventDebouncer';
-import Command from './command';
 import { WorkspaceService, WorkspaceServiceInstance } from './workspaceService';
 import { workspaceServices } from './workspaceServices';
 
 export default class AppmapUptodateServiceInstance extends EventEmitter
   implements WorkspaceServiceInstance {
-  command?: Command;
+  binPath: string | undefined;
   interval?: NodeJS.Timeout;
   process?: ChildProcess;
   updatedAt?: number;
   outofDateAppMapLocations: Set<string> = new Set();
   outofDateAppMapFiles: Set<string> = new Set();
 
-  constructor(public folder: vscode.WorkspaceFolder) {
+  constructor(public folder: vscode.WorkspaceFolder, protected readonly globalStoragePath: string) {
     super();
   }
 
-  async initialize(): Promise<void> {
-    const commandSetting = extensionSettings.dependsCommand();
-    let command: Command;
-    if (typeof commandSetting === 'string') {
-      const commandArgs = commandSetting
-        .replaceAll('${workspaceFolder}', this.folder.uri.fsPath)
-        .split(' ');
-      const mainCommand = commandArgs.shift();
-      assert(mainCommand);
-      command = new Command(mainCommand as string, commandArgs, {});
-    } else {
-      command = await Command.commandArgs(this.folder, commandSetting, {});
-    }
-    this.command = command;
-    this.update();
+  protected get commandArgs(): string[] {
+    const { fsPath: workspaceFolder } = this.folder.uri;
+    return ['depends', '--base-dir', workspaceFolder, '--appmap-dir', workspaceFolder];
   }
 
   outOfDateTestLocations(): Set<string> {
@@ -59,6 +52,14 @@ export default class AppmapUptodateServiceInstance extends EventEmitter
   }
 
   async update(): Promise<void> {
+    if (!this.binPath) {
+      this.binPath = await getBinPath({
+        dependency: ProgramName.Appmap,
+        globalStoragePath: this.globalStoragePath,
+      });
+    }
+
+    // Run only one uptodate job at a time.
     const updateRequestedAt = Date.now();
 
     const processCompletion = async (): Promise<void> => {
@@ -76,43 +77,36 @@ export default class AppmapUptodateServiceInstance extends EventEmitter
       });
     };
 
+    // Do not await between here and where this.process is set to a concrete value.
+    // Otherwise the guard that this variable is designed to provide will not work.
     while (this.process) await processCompletion();
 
     // We are queued up to wait, but another job is already running that started after the time that
     // we began our update request.
     if (this.updatedAt && this.updatedAt > updateRequestedAt) return;
 
-    assert(this.command);
-
-    const process = spawn(this.command.mainCommand, this.command.args, this.command.options);
+    assert(this.binPath, `binPath is not initialized`);
+    this.process = spawn({
+      binPath: this.binPath,
+      args: this.commandArgs,
+      cwd: this.folder.uri.fsPath,
+      cacheLog: true,
+    });
     this.updatedAt = Date.now();
-    assert(process.stdout);
-    assert(process.stderr);
-    this.process = process;
-    let buffer = '';
-    process.stdout.setEncoding('utf8');
-    process.stdout.on('data', (data) => {
-      buffer += data;
-    });
-    process.stderr.setEncoding('utf8');
-    process.stderr.on('data', (data) => {
-      console.warn(`[appmap-uptodate-service] ${data}`);
-    });
     this.process.once('exit', (code) => {
+      const processLog = this.process?.log || [];
       this.process = undefined;
       if (code === 0) {
-        this.handleResponse(buffer.trim());
+        this.handleResponse(processLog);
       }
     });
   }
 
-  protected async handleResponse(responseData: string): Promise<void> {
+  protected async handleResponse(processLog: Readonly<ProcessLogItem[]>): Promise<void> {
     const outofDateAppMapFiles = new Set(
-      responseData
-        .split('\n')
-        .map((line) => line.trim())
-        .filter((line) => line.length > 0)
-        .map((line) => resolve(this.folder.uri.fsPath, line))
+      processLog
+        .filter((line) => line.stream === OutputStream.Stdout && line.data.length > 0)
+        .map((line) => resolve(this.folder.uri.fsPath, line.data))
     );
     const outofDateAppMapLocations = await this.collectOutOfDateTestLocations(outofDateAppMapFiles);
     console.log(
@@ -162,11 +156,16 @@ export class AppmapUptodateService implements WorkspaceService<AppmapUptodateSer
     AppmapUptodateService
   >();
   public readonly onUpdated: vscode.Event<AppmapUptodateService> = this._onUpdated.event;
+  protected readonly globalStoragePath: string;
+
+  constructor(context: vscode.ExtensionContext) {
+    this.globalStoragePath = context.globalStorageUri.fsPath;
+  }
 
   async create(folder: vscode.WorkspaceFolder): Promise<AppmapUptodateServiceInstance> {
-    const uptodate = new AppmapUptodateServiceInstance(folder);
+    const uptodate = new AppmapUptodateServiceInstance(folder, this.globalStoragePath);
+    await uptodate.update();
     uptodate.on('updated', () => this._onUpdated.fire(this));
-    await uptodate.initialize();
     return uptodate;
   }
 

@@ -1,23 +1,38 @@
 import * as vscode from 'vscode';
 import { exec } from 'child_process';
-import { join } from 'path';
+import { join, basename } from 'path';
 import assert from 'assert';
 import AppMapService from '../../src/appMapService';
 import { touch } from '../../src/lib/touch';
+import * as tmp from 'tmp';
+import { promisify } from 'util';
+import { promises as fs } from 'fs';
 
 export const FixtureDir = join(__dirname, '../../../test/fixtures');
 export const ProjectRuby = join(__dirname, '../../../test/fixtures/workspaces/project-ruby');
 export const ProjectA = join(__dirname, '../../../test/fixtures/workspaces/project-a');
-export const ProjectWithEchoCommand = join(
-  __dirname,
-  '../../../test/fixtures/workspaces/project-with-echo-command'
-);
 export const ProjectUptodate = join(
   __dirname,
   '../../../test/fixtures/workspaces/project-uptodate'
 );
 
-const PROJECTS = [ProjectA, ProjectWithEchoCommand, ProjectUptodate];
+const PROJECTS = [ProjectA, ProjectUptodate];
+
+export async function withTmpDir(fn: (tmpDir: string) => void | Promise<void>): Promise<void> {
+  const tmpDir = await promisify(tmp.dir)();
+  let createdByUs = false;
+
+  try {
+    await fs.access(tmpDir);
+  } catch (e) {
+    await fs.mkdir(tmpDir);
+    createdByUs = true;
+  }
+
+  await fn(tmpDir);
+
+  if (createdByUs) await fs.rmdir(tmpDir);
+}
 
 export const ExampleAppMap = join(
   ProjectA,
@@ -28,7 +43,7 @@ export const ExampleAppMapIndexDir = join(
   'tmp/appmap/minitest/Microposts_controller_can_get_microposts_as_JSON'
 );
 
-export const APP_SERVICES_TIMEOUT = 10000;
+export const APP_SERVICES_TIMEOUT = 30000;
 
 export type DiagnosticForUri = {
   uri: vscode.Uri;
@@ -36,7 +51,7 @@ export type DiagnosticForUri = {
 };
 
 export async function repeatUntil(
-  fn: () => Promise<void | void[]>,
+  fn: () => void | void[] | Promise<void> | Promise<void | void[]>,
   message: string,
   test: () => boolean | Promise<boolean>
 ): Promise<void> {
@@ -98,34 +113,49 @@ export async function waitForIndexer(): Promise<void> {
   );
 }
 
+export async function restoreFile(filePath: string, workspaceDir = ProjectA): Promise<void> {
+  await withTmpDir(async (tmpDir) => {
+    const tmpPath = join(tmpDir, basename(filePath));
+    const dstPath = join(ProjectA, filePath);
+    await executeWorkspaceOSCommand(`git show HEAD:./${filePath} > ${tmpPath}`, workspaceDir);
+    await fs.rename(tmpPath, dstPath);
+  });
+}
+
 export async function waitForAppMapServices(touchFile: string): Promise<AppMapService> {
   const appMapService = await waitForExtension();
-
   let repeater: NodeJS.Timeout | undefined = setInterval(
-    () => executeWorkspaceOSCommand(`git show HEAD:./${touchFile} > ./${touchFile}`, ProjectA),
+    async () => await restoreFile(touchFile),
     500
   );
 
-  return new Promise<AppMapService>((resolve, reject) => {
-    const complete = (): boolean => {
-      if (!repeater) return false;
+  assert(appMapService.classMap, `Expected classMap service to be available`);
+  assert(appMapService.findings, `Expected findings service to be available`);
+  const services = [appMapService.classMap, appMapService.findings];
 
-      clearInterval(repeater);
-      repeater = undefined;
-      return true;
-    };
+  return await new Promise<AppMapService>((resolve, reject) => {
+    let completionCount = 0;
 
-    const succeeded = () => {
-      if (!complete()) return;
-      resolve(appMapService);
+    const succeeded = (serviceName: string) => {
+      if (!repeater) return;
+
+      console.log(`Service ${serviceName} is available`);
+      completionCount += 1;
+
+      if (completionCount === services.length) {
+        clearInterval(repeater);
+        repeater = undefined;
+        resolve(appMapService);
+      }
     };
     const failed = () => {
-      if (!complete()) return;
-      reject();
+      if (!repeater) return;
+
+      reject(`classMap and findings services are not available`);
     };
 
-    appMapService.classMap?.onChanged(succeeded);
-    appMapService.findings?.onChanged(succeeded);
+    appMapService.classMap?.onChanged(succeeded.bind(null, 'classMap'));
+    appMapService.findings?.onChanged(succeeded.bind(null, 'findings'));
     setTimeout(failed, APP_SERVICES_TIMEOUT);
   });
 }

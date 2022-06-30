@@ -5,6 +5,7 @@ import { FindingsService } from './findingsService';
 import { AppMapConfigWatcher } from './services/appMapConfigWatcher';
 import { AppmapUptodateService } from './services/appmapUptodateService';
 import Command from './services/command';
+import { NodeProcessService } from './services/nodeProcessService';
 import { SourceFileWatcher } from './services/sourceFileWatcher';
 import { WorkspaceServices } from './services/workspaceServices';
 
@@ -29,4 +30,5 @@ export default interface AppMapService {
   workspaceServices: WorkspaceServices;
   findings?: FindingsService;
   classMap?: ClassMapService;
+  processService: NodeProcessService;
 }
