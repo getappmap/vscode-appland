@@ -97,26 +97,24 @@ export async function analyze(
     result.appMaps = getBestAppMaps(appMaps);
   }
 
-  const nodeVersionString = await getNodeVersion(folder);
-  result.nodeVersion = parseNodeVersion(nodeVersionString);
-
+  result.nodeVersion = await getNodeVersion(folder);
   result.path = folder.uri.fsPath;
 
   return result;
 }
 
-async function getNodeVersion(folder: WorkspaceFolder): Promise<string> {
+async function getNodeVersion(folder: WorkspaceFolder): Promise<NodeVersion> {
   const nvmVersion = await nvmNodeVersion(folder);
   if (nvmVersion) {
-    return nvmVersion;
+    return parseNodeVersion(nvmVersion);
   }
 
   const systemVersion = await systemNodeVersion();
   if (systemVersion instanceof Error) {
-    return '';
+    return parseNodeVersion('');
   }
 
-  return systemVersion;
+  return parseNodeVersion(systemVersion);
 }
 
 function parseNodeVersion(versionString: string): NodeVersion {
