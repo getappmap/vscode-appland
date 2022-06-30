@@ -9,12 +9,13 @@ import { promisify } from 'util';
 import { glob } from 'glob';
 import { resolve } from 'path';
 import assert from 'assert';
+import { TestStatus } from './TestStatus';
 
 const PROJECT_A = 'test/fixtures/workspaces/project-a';
 const PROJECT_UPTODATE = 'test/fixtures/workspaces/project-uptodate';
 const testWorkspaces = [PROJECT_A, PROJECT_UPTODATE];
 
-(async function() {
+async function integrationTest() {
   const projectRootDir = resolve(__dirname, '..');
   const testDir = resolve(__dirname, '../out/test/integration');
 
@@ -69,6 +70,8 @@ const testWorkspaces = [PROJECT_A, PROJECT_UPTODATE];
       testWorkspaces.map(async (testWorkspace) => {
         await new Promise<void>((resolve, reject) => {
           const proc = cp.exec(`yarn install`, { cwd: testWorkspace });
+          proc.on('message', console.log);
+          proc.on('error', console.warn);
           proc.on('exit', (code) => {
             if (code !== 0) return reject(code);
 
@@ -142,7 +145,7 @@ const testWorkspaces = [PROJECT_A, PROJECT_UPTODATE];
     let projectName: string | undefined;
     if (projectNameMatch) {
       projectName = resolve(__dirname, 'fixtures/workspaces', projectNameMatch[1]);
-      assert(await promisify(exists)(projectName));
+      assert(await promisify(exists)(projectName), `Project ${projectName} does not exist`);
       console.log(`Using workspace ${projectName}`);
     }
 
@@ -153,5 +156,10 @@ const testWorkspaces = [PROJECT_A, PROJECT_UPTODATE];
       console.warn(`Test ${testFile} failed: ${e}`);
     }
   }
-  process.exit(succeeded ? 0 : 1);
-})();
+  process.exitCode = succeeded ? TestStatus.Ok : TestStatus.Failed;
+}
+
+integrationTest().catch((e) => {
+  console.warn(e);
+  process.exitCode = TestStatus.Error;
+});

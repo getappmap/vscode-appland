@@ -7,6 +7,7 @@ import { touch } from '../../src/lib/touch';
 import * as tmp from 'tmp';
 import { promisify } from 'util';
 import { promises as fs } from 'fs';
+import { CodeObjectEntry } from '../../src/lib/CodeObjectEntry';
 
 export const FixtureDir = join(__dirname, '../../../test/fixtures');
 export const ProjectRuby = join(__dirname, '../../../test/fixtures/workspaces/project-ruby');
@@ -69,6 +70,16 @@ function makeDiagnosticForUri(d: [vscode.Uri, vscode.Diagnostic[]]): DiagnosticF
     uri: d[0],
     diagnostics: d[1],
   };
+}
+
+export function printCodeObject(
+  buffer: string[],
+  depth: number,
+  codeObject: CodeObjectEntry
+): string[] {
+  buffer.push(['  '.repeat(depth), codeObject.fqid].join(''));
+  codeObject.children.forEach(printCodeObject.bind(null, buffer, depth + 1));
+  return buffer;
 }
 
 export function diagnosticAppMap(diagnostic: vscode.Diagnostic): string | undefined {

@@ -27,7 +27,7 @@ export default class NodeProcessServiceInstance implements WorkspaceServiceInsta
     });
   }
 
-  protected onReceiveProjectMetadata(metadata: Readonly<ProjectMetadata>) {
+  protected onReceiveProjectMetadata(metadata: Readonly<ProjectMetadata>): void {
     metadata.agentInstalled ? this.start() : this.stop('appmap.yml has been deleted or moved');
   }
 

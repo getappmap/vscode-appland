@@ -2,12 +2,12 @@ import assert from 'assert';
 import { exists } from 'fs';
 import { join } from 'path';
 import { promisify } from 'util';
-import { CodeObjectEntry } from '../../../src/services/classMapIndex';
 import { touch } from '../../../src/lib/touch';
 import {
   ExampleAppMap,
   ExampleAppMapIndexDir,
   initializeWorkspace,
+  printCodeObject,
   repeatUntil,
   waitFor,
   waitForAppMapServices,
@@ -42,14 +42,10 @@ describe('CodeObjects', () => {
     });
 
     const classMap = await appMapService.classMap.classMap();
-    const printCodeObject = (buffer: string[], depth: number, codeObject: CodeObjectEntry) => {
-      buffer.push(['  '.repeat(depth), codeObject.fqid].join(''));
-      codeObject.children.forEach(printCodeObject.bind(this, buffer, depth + 1));
-      return buffer;
-    };
     const classMapDescription: string[] = [];
-    classMap.forEach(printCodeObject.bind(this, classMapDescription, 0));
+    classMap.forEach(printCodeObject.bind(null, classMapDescription, 0));
     assert.strictEqual(
+      classMapDescription.join('\n'),
       `folder:root->Code
   package:actionpack
     class:actionpack/ActionController
@@ -136,8 +132,7 @@ database:Queries
 http:HTTP server requests
   route:GET /microposts
   route:POST /login
-`.trim(),
-      classMapDescription.join('\n')
+`.trim()
     );
   });
 });

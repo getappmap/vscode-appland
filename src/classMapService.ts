@@ -1,4 +1,4 @@
-import { CodeObjectEntry } from './services/classMapIndex';
+import { CodeObjectEntry } from './lib/CodeObjectEntry';
 
 export interface ClassMapService {
   classMap: () => Promise<CodeObjectEntry[]>;

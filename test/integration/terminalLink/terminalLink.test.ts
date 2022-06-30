@@ -7,7 +7,7 @@ import {
 } from '../../../src/terminalLink/appmapLinkProvider';
 import Sinon from 'sinon';
 import { expect } from '@playwright/test';
-import { join, resolve } from 'path';
+import { join } from 'path';
 
 describe('TerminalLink', () => {
   beforeEach(initializeWorkspace);

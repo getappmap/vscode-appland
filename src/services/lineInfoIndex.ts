@@ -1,6 +1,7 @@
 import { isAbsolute } from 'path';
 import * as vscode from 'vscode';
-import ClassMapIndex, { CodeObjectEntry } from './classMapIndex';
+import ClassMapIndex from './classMapIndex';
+import { CodeObjectEntry } from '../lib/CodeObjectEntry';
 
 class LineInfo {
   public codeObjects?: CodeObjectEntry[];
