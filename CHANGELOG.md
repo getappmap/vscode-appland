@@ -1,3 +1,17 @@
+## [0.32.2](https://github.com/applandinc/vscode-appland/compare/v0.32.1...v0.32.2) (2022-06-30)
+
+
+### Bug Fixes
+
+* remove python feature flag ([1d8d36e](https://github.com/applandinc/vscode-appland/commit/1d8d36e92b9f67f876001276a17556b68164c294))
+* tweaked wording when no Gemfile is detected ([b2f1737](https://github.com/applandinc/vscode-appland/commit/b2f17376cc30a87549798ccff1206eb7f153481d))
+* update flask scoring and messaging ([a009b83](https://github.com/applandinc/vscode-appland/commit/a009b83e8efee6e86bb8c976e61d73fe131291b5))
+* update Ruby analyzer language ([db432fd](https://github.com/applandinc/vscode-appland/commit/db432fd1b81aa89da18429059ddee263b32df529))
+* updated JS messages ([4c701e8](https://github.com/applandinc/vscode-appland/commit/4c701e8fdeb169553e1712c43b968b5fa6ebb4b9))
+* updated language for java ([bac15da](https://github.com/applandinc/vscode-appland/commit/bac15da7c8c522f47523765602ed078ef6cf071b))
+* updated language when express is found ([e975d91](https://github.com/applandinc/vscode-appland/commit/e975d913dc303b205672ff37dabb69f37755d33a))
+* updated python messages ([63a7518](https://github.com/applandinc/vscode-appland/commit/63a7518d29d42ef408b2f749eec4722905a68c0e))
+
 ## [0.32.1](https://github.com/applandinc/vscode-appland/compare/v0.32.0...v0.32.1) (2022-06-30)
 
 
