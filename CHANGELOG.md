@@ -1,3 +1,10 @@
+## [0.32.3](https://github.com/applandinc/vscode-appland/compare/v0.32.2...v0.32.3) (2022-06-30)
+
+
+### Bug Fixes
+
+* send node status to frontend ([5fac197](https://github.com/applandinc/vscode-appland/commit/5fac197ca934f8ed9e53212fabbaa04442fdc0e6))
+
 ## [0.32.2](https://github.com/applandinc/vscode-appland/compare/v0.32.1...v0.32.2) (2022-06-30)
 
 
