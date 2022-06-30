@@ -1,8 +1,8 @@
 import { WorkspaceFolder } from 'vscode';
-import { Features, Result, overallScore } from '.';
+import { Features, ProjectAnalysis, overallScore } from '.';
 import { fileWordScanner } from './deps';
 
-export default async function analyze(folder: WorkspaceFolder): Promise<Result | null> {
+export default async function analyze(folder: WorkspaceFolder): Promise<ProjectAnalysis | null> {
   const features: Features = {
     lang: {
       title: 'Java',

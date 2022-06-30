@@ -47,7 +47,7 @@ export type AppMapSummary = {
   functions?: number;
 };
 
-export type Result = {
+export type ProjectAnalysis = {
   features: Features;
   score: number;
   name: string;
@@ -85,7 +85,7 @@ function getBestAppMaps(appMaps: AppMapLoader[], maxCount = 10): AppMapSummary[]
 export async function analyze(
   folder: WorkspaceFolder,
   appMapCollection?: AppMapCollection
-): Promise<Result & Partial<WithAppMaps>> {
+): Promise<ProjectAnalysis & Partial<WithAppMaps>> {
   // TODO: Use the 'language' field in appmap.yml instead
   const agent = await LanguageResolver.getAgent(folder);
   const language = agent.language;
@@ -103,7 +103,7 @@ export async function analyze(
   return result;
 }
 
-async function getNodeVersion(folder: WorkspaceFolder): Promise<NodeVersion> {
+async function getNodeVersion(folder: WorkspaceFolder): Promise<NodeVersion | undefined> {
   const nvmVersion = await nvmNodeVersion(folder);
   if (nvmVersion) {
     return parseNodeVersion(nvmVersion);
@@ -111,23 +111,19 @@ async function getNodeVersion(folder: WorkspaceFolder): Promise<NodeVersion> {
 
   const systemVersion = await systemNodeVersion();
   if (systemVersion instanceof Error) {
-    return parseNodeVersion('');
+    return undefined;
   }
 
   return parseNodeVersion(systemVersion);
 }
 
-function parseNodeVersion(versionString: string): NodeVersion {
-  const digitStrings = versionString.replace(/[^0-9.]/g, '').split('.');
-  const digits = digitStrings.map((digitString) => Number(digitString));
+function parseNodeVersion(versionString: string): NodeVersion | undefined {
+  const digits = versionString
+    .replace(/[^0-9.]/g, '')
+    .split('.')
+    .map(Number);
 
-  if (digits.length !== 3) {
-    return {
-      major: 0,
-      minor: 0,
-      patch: 0,
-    };
-  }
+  while (digits.length < 3) digits.push(0);
 
   return {
     major: digits[0],

@@ -1,11 +1,11 @@
 import { Uri, workspace, WorkspaceFolder } from 'vscode';
-import { Features, Result, overallScore } from '.';
+import { Features, ProjectAnalysis, overallScore } from '.';
 import utfDecoder from '../utfDecoder';
 import semverIntersects from 'semver/ranges/intersects';
 
 const fs = workspace.fs;
 
-export default async function analyze(folder: WorkspaceFolder): Promise<Result | null> {
+export default async function analyze(folder: WorkspaceFolder): Promise<ProjectAnalysis | null> {
   const features: Features = {
     lang: {
       title: 'JavaScript',
