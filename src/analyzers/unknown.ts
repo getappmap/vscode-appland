@@ -1,7 +1,7 @@
 import { WorkspaceFolder } from 'vscode';
-import { Result } from '.';
+import { ProjectAnalysis } from '.';
 
-export default function analyze(folder: WorkspaceFolder): Result {
+export default function analyze(folder: WorkspaceFolder): ProjectAnalysis {
   return {
     features: {
       lang: {

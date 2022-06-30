@@ -1,5 +1,5 @@
 import { RelativePattern, Uri, workspace, WorkspaceFolder } from 'vscode';
-import { Result, overallScore, Features } from '.';
+import { ProjectAnalysis, overallScore, Features } from '.';
 import { fileWordScanner, DependencyFinder } from './deps';
 import utfDecoder from '../utfDecoder';
 const fs = workspace.fs;
@@ -30,7 +30,7 @@ async function grepFiles(pattern: string, folder: WorkspaceFolder) {
   );
 }
 
-export default async function analyze(folder: WorkspaceFolder): Promise<Result | null> {
+export default async function analyze(folder: WorkspaceFolder): Promise<ProjectAnalysis | null> {
   const features: Features = {
     lang: {
       title: 'Python',
