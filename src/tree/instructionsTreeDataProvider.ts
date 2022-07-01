@@ -54,22 +54,6 @@ if (extensionSettings.findingsEnabled()) {
   });
 }
 
-if (!extensionSettings.instructionsEnabled()) {
-  docsPages.splice(0);
-  docsPages.push(
-    {
-      id: 'GETTING_STARTED_WORKSPACE_OVERVIEW',
-      title: 'Getting started with AppMap',
-      command: 'appmap.openWorkspaceOverview',
-    },
-    {
-      id: 'GETTING_STARTED_OPEN_APPMAPS',
-      title: 'Open AppMaps',
-      command: 'appmap.openOpenAppmaps',
-    }
-  );
-}
-
 async function getIcon(
   page: DocPage,
   projectState?: ProjectStateServiceInstance

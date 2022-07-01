@@ -164,14 +164,6 @@
           "default": "https://app.land",
           "description": "URL of an AppLand cloud instance for AppMap storage"
         },
-        "appMap.instructionsEnabled": {
-          "type": "boolean",
-          "description": "Enable an experimental version of usage instructions"
-        },
-        "appMap.indexEnabled": {
-          "type": "boolean",
-          "description": "Enable AppMap indexer and code objects view (preview)"
-        },
         "appMap.findingsEnabled": {
           "type": "boolean",
           "description": "Enable AppMap scanner and findings (preview)"
@@ -211,6 +203,11 @@
         "view": "appmap.views.local",
         "contents": "Filter matched 0 results.\n[Apply a new filter](command:appmap.applyFilter)",
         "when": "appmap.initialized && appmap.hasData && appmap.numResults == 0"
+      },
+      {
+        "view": "appmap.views.findings",
+        "contents": "Issues found by runtime analysis of your code\n[Get Early Access](command:appmap.getEarlyAccess?%5B%22sidebar%22%5D)",
+        "when": "appmap.displayAnalysisBetaCtas && !config.appMap.findingsEnabled"
       }
     ],
     "views": {
@@ -229,15 +226,14 @@
         },
         {
           "id": "appmap.views.findings",
-          "name": "Findings",
-          "visibility": "collapsed",
-          "when": "config.appMap.findingsEnabled == true"
+          "name": "Runtime Analysis",
+          "visibility": "visible",
+          "when": "appmap.displayAnalysisBetaCtas || config.appMap.findingsEnabled"
         },
         {
           "id": "appmap.views.codeObjects",
           "name": "Code Objects",
-          "visibility": "collapsed",
-          "when": "config.appMap.indexEnabled == true"
+          "visibility": "collapsed"
         },
         {
           "id": "appmap.views.documentation",
@@ -381,7 +377,7 @@
     "webpack-cli": "^4.3.1"
   },
   "dependencies": {
-    "@appland/components": "^2.5.0",
+    "@appland/components": "^2.6.0",
     "@appland/diagrams": "^1.5.2",
     "@appland/models": "^1.15.0",
     "@appland/scanner": "^1.57.0",

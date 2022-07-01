@@ -2,13 +2,39 @@ import * as path from 'path';
 import * as vscode from 'vscode';
 import extensionSettings from '../configuration/extensionSettings';
 import { ProjectStateServiceInstance } from '../services/projectStateService';
+import { COPY_COMMAND, OPEN_VIEW, Telemetry } from '../telemetry';
 import { getNonce } from '../util';
 import ProjectMetadata from '../workspace/projectMetadata';
+import * as semver from 'semver';
+import ExtensionState from '../configuration/extensionState';
+
+type PageMessage = {
+  page: string;
+  project?: ProjectMetadata;
+};
+
+type ClipboardMessage = {
+  text: string;
+} & PageMessage;
 
 export default class InstallGuideWebView {
   public static readonly viewType = 'appmap.views.installGuide';
   public static readonly command = 'appmap.openInstallGuide';
   private static existingPanel?: vscode.WebviewPanel;
+
+  public static tryOpen(extensionState: ExtensionState): Thenable<void | undefined> | undefined {
+    const firstVersionInstalled = semver.coerce(extensionState.firstVersionInstalled);
+    if (firstVersionInstalled && semver.gte(firstVersionInstalled, '0.15.0')) {
+      // Logic within this block will only be executed if the extension was installed after we began tracking the
+      // time of installation. We will use this to determine whether or not our UX improvements are effective, without
+      // before rolling them out to our existing user base.
+
+      if (!extensionState.hasViewedInstallGuide) {
+        extensionState.hasViewedInstallGuide = true;
+        return vscode.commands.executeCommand('appmap.openInstallGuide', 'project-picker');
+      }
+    }
+  }
 
   public static register(
     context: vscode.ExtensionContext,
@@ -72,6 +98,24 @@ export default class InstallGuideWebView {
 
             case 'open-file':
               vscode.commands.executeCommand('vscode.open', vscode.Uri.file(message.file));
+              break;
+
+            case 'open-page':
+              {
+                const { page, project } = message as PageMessage;
+                Telemetry.sendEvent(OPEN_VIEW, { viewId: page, rootDirectory: project?.path });
+              }
+              break;
+
+            case 'clipboard':
+              {
+                const { page, project, text } = message as ClipboardMessage;
+                Telemetry.sendEvent(COPY_COMMAND, {
+                  viewId: page,
+                  text: text,
+                  rootDirectory: project?.path,
+                });
+              }
               break;
 
             case 'view-problems':

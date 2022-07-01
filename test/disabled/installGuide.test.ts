@@ -6,7 +6,7 @@ import MockExtensionContext from '../mocks/mockExtensionContext';
 import MockFileSystemWatcher from '../mocks/mockFileSystemWatcher';
 import { mockSingleProjectWorkspace } from '../mocks/mockWorkspace';
 import * as util from '../../src/util';
-import registerWorkspaceOverview from '../../src/webviews/projectPickerWebview';
+import InstallGuideWebView from '../../src/webviews/installGuideWebview';
 
 // KEG: These tests are not being run currently, because they directly run operations
 // like registerWorkspaceOverview that are already run by vscode when the extension loads.
@@ -41,7 +41,7 @@ describe('Install guide', () => {
       mockSingleProjectWorkspace(sinon);
 
       assert(properties.hasViewedInstallGuide === false);
-      await registerWorkspaceOverview(context, properties);
+      await InstallGuideWebView.tryOpen(properties);
       assert(executeCommand.calledWith('appmap.openWorkspaceOverview'));
       assert(properties.hasViewedInstallGuide);
     });
@@ -53,7 +53,7 @@ describe('Install guide', () => {
       mockSingleProjectWorkspace(sinon);
 
       assert(properties.hasViewedInstallGuide === false);
-      await registerWorkspaceOverview(context, properties);
+      await InstallGuideWebView.tryOpen(properties);
       assert(executeCommand.calledWith('appmap.openWorkspaceOverview') === false);
       assert(properties.hasViewedInstallGuide === false);
     });
@@ -65,7 +65,7 @@ describe('Install guide', () => {
       mockSingleProjectWorkspace(sinon);
 
       assert(properties.hasViewedInstallGuide === false);
-      await registerWorkspaceOverview(context, properties);
+      await InstallGuideWebView.tryOpen(properties);
 
       assert(executeCommand.calledWith('appmap.openWorkspaceOverview') === shouldOpen);
       assert(properties.hasViewedInstallGuide === shouldOpen);
