@@ -9,7 +9,7 @@ import { analyze, scoreValue } from '../analyzers';
 import ProjectMetadata from '../workspace/projectMetadata';
 import AppMapCollection from './appmapCollection';
 
-interface DomainCounts {
+export interface DomainCounts {
   total: number;
   security: number;
   performance: number;
@@ -27,13 +27,7 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
 
   public onStateChange = this._onStateChange.event;
 
-  protected domains: DomainCounts = {
-    total: 0,
-    security: 0,
-    performance: 0,
-    maintainability: 0,
-    stability: 0,
-  };
+  protected domains?: DomainCounts;
 
   constructor(
     public readonly folder: vscode.WorkspaceFolder,
@@ -142,13 +136,13 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
     });
 
     // Sets this.domain to corresponding values in uniqueDomainMap
-    this.domains.maintainability = uniqueDomainMap.get('Maintainability')?.size || 0;
-    this.domains.performance = uniqueDomainMap.get('Performance')?.size || 0;
-    this.domains.stability = uniqueDomainMap.get('Stability')?.size || 0;
-    this.domains.security = uniqueDomainMap.get('Security')?.size || 0;
-    this.domains.total = findings.length;
-
-    vscode.window.showInformationMessage(JSON.stringify(this.domains));
+    this.domains = {
+      maintainability: uniqueDomainMap.get('Maintainability')?.size || 0,
+      performance: uniqueDomainMap.get('Performance')?.size || 0,
+      stability: uniqueDomainMap.get('Stability')?.size || 0,
+      security: uniqueDomainMap.get('Security')?.size || 0,
+      total: findings.length,
+    };
   }
 
   onFindingsChanged(findings: ResolvedFinding[]): void {
@@ -202,10 +196,7 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
       analysisPerformed: this.analysisPerformed,
       appMapOpened: this.hasOpenedAppMap || false,
       numFindings: this.numFindings,
-      numMaintainability: this.domains.maintainability,
-      numPerformance: this.domains.performance,
-      numSecurity: this.domains.security,
-      numStability: this.domains.stability,
+      impactDomainCounts: this.domains,
       language: {
         name: analysis.features.lang.title,
         score: scoreValue(analysis.features.lang.score) + 1,

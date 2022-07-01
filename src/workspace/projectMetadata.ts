@@ -1,4 +1,5 @@
 import { AppMapSummary } from '../analyzers';
+import { DomainCounts } from '../services/projectStateService';
 import Feature from './feature';
 
 export default interface ProjectMetadata {
@@ -10,10 +11,7 @@ export default interface ProjectMetadata {
   analysisPerformed?: boolean;
   appMapOpened?: boolean;
   numFindings?: number;
-  numSecurity?: number;
-  numPerformance?: number;
-  numMaintainability?: number;
-  numStability?: number;
+  impactDomainCounts?: DomainCounts;
   language?: Feature;
   testFramework?: Feature;
   webFramework?: Feature;
