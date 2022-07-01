@@ -1,3 +1,17 @@
+# [0.33.0](https://github.com/applandinc/vscode-appland/compare/v0.32.3...v0.33.0) (2022-07-01)
+
+
+### Bug Fixes
+
+* Add debug information for instructions steps ([3eeb794](https://github.com/applandinc/vscode-appland/commit/3eeb7941f40444633a674da55bb469a3a482f5bf))
+* Tolerate partial node version in .nvmrc ([9620a24](https://github.com/applandinc/vscode-appland/commit/9620a24003d26b5071325229c1eae9c2bda21a4f))
+
+
+### Features
+
+* Add runtime analysis early access prompts for eligible projects ([f95a375](https://github.com/applandinc/vscode-appland/commit/f95a375206d8a1553655b3e3a13ced6c93a3a00c))
+* Release automatic indexing and updated instructions ([70ff951](https://github.com/applandinc/vscode-appland/commit/70ff951fc39981a5b716b48d31fb82b9a72d3323))
+
 ## [0.32.3](https://github.com/applandinc/vscode-appland/compare/v0.32.2...v0.32.3) (2022-06-30)
 
 
