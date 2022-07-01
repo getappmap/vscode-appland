@@ -6,16 +6,8 @@ import { FileChangeEmitter } from './fileChangeEmitter';
 import FindingsIndex from './findingsIndex';
 import { ResolvedFinding } from './resolvedFinding';
 import { analyze, scoreValue } from '../analyzers';
-import ProjectMetadata from '../workspace/projectMetadata';
+import ProjectMetadata, { DomainCounts } from '../workspace/projectMetadata';
 import AppMapCollection from './appmapCollection';
-
-export interface DomainCounts {
-  total: number;
-  security: number;
-  performance: number;
-  maintainability: number;
-  stability: number;
-}
 
 export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
   protected disposables: vscode.Disposable[] = [];

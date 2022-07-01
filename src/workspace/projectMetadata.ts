@@ -1,6 +1,13 @@
 import { AppMapSummary } from '../analyzers';
-import { DomainCounts } from '../services/projectStateService';
 import Feature from './feature';
+
+export interface DomainCounts {
+  total: number;
+  security: number;
+  performance: number;
+  maintainability: number;
+  stability: number;
+}
 
 export default interface ProjectMetadata {
   name: string;
