@@ -1,6 +1,6 @@
+import { BrowserContext, ElectronApplication, Page, _electron as Electron } from '@playwright/test';
+import { ConsoleReporter, downloadAndUnzipVSCode } from '@vscode/test-electron';
 import * as path from 'path';
-import { downloadAndUnzipVSCode } from '@vscode/test-electron';
-import { _electron as Electron, ElectronApplication, BrowserContext, Page } from '@playwright/test';
 
 async function getElectronPath(installDirectory: string): Promise<string> {
   const os = process.platform;
@@ -28,12 +28,19 @@ interface LaunchOptions {
   verbose?: boolean;
 }
 
+export async function downloadCode(): Promise<string> {
+  return await downloadAndUnzipVSCode({
+    version: 'insiders',
+    reporter: new ConsoleReporter(false),
+  });
+}
+
 export async function launchCode(
+  codePath: string,
   extensionDevelopmentPath: string,
   userDataDir: string,
   options: LaunchOptions
 ): Promise<CodeHarness> {
-  const codePath = await downloadAndUnzipVSCode('insiders');
   const baseCodePath = path.join(codePath, '..');
   const executablePath = await getElectronPath(baseCodePath);
   const app = await Electron.launch({

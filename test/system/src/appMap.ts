@@ -33,7 +33,7 @@ export default class AppMap {
   }
 
   get findingsTree(): Locator {
-    return this.page.locator('.pane:has(.title:text("Findings"))');
+    return this.page.locator('.pane:has(.title:text("Runtime Analysis"))');
   }
 
   get appMapTree(): Locator {

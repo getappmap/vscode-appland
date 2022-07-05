@@ -33,3 +33,13 @@ export function timeout<T>(fn: () => T, options?: TimeoutOptions): Promise<T> {
     }, timeoutMs);
   });
 }
+
+export async function ignoreNotFound(fn: (...args: any[]) => any): Promise<void> {
+  try {
+    return await fn();
+  } catch (e) {
+    if ((e as any).code !== 'ENOENT') {
+      throw e;
+    }
+  }
+}

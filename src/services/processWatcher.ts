@@ -89,7 +89,9 @@ export class ProcessWatcher implements vscode.Disposable {
 
     this.shouldRun = true;
     this.process = spawn(this.options);
-    this.process.log.append(`spawned ${this.process.spawnargs.join(' ')}`);
+    this.process.log.append(
+      `spawned ${this.process.spawnargs.join(' ')} with options ${JSON.stringify(this.options)}`
+    );
 
     this.process.once('error', (err) => {
       this._onError.fire(err);

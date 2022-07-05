@@ -44,6 +44,9 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
     }
 
     try {
+      const env = process.env.APPMAP_TEST
+        ? { ...process.env, APPMAP_WRITE_PIDFILE: 'true' }
+        : undefined;
       services.push(
         new ProcessWatcher({
           binPath: await getBinPath({
@@ -53,6 +56,7 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
           log: NodeProcessService.outputChannel,
           args: ['index', '--watch'],
           cwd: folder.uri.fsPath,
+          env,
         })
       );
     } catch (e) {
@@ -133,6 +137,7 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
           }
 
           installProcess.log.append('Installation of AppMap services is complete.');
+
           this._ready = true;
           this._onReady.fire();
           resolve();
