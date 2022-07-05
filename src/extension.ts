@@ -65,6 +65,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       lineInfoIndex: LineInfoIndex | undefined,
       projectStates: ProjectStateServiceInstance[] = [],
       appmapUptodateService: AppmapUptodateService | undefined,
+      projectState: ProjectStateService | undefined,
       sourceFileWatcher: SourceFileWatcher | undefined;
 
     const appmapWatcher = new AppMapWatcher();
@@ -184,7 +185,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     }
 
     {
-      const projectState = new ProjectStateService(
+      projectState = new ProjectStateService(
         extensionState,
         appmapWatcher,
         configWatcher,
@@ -295,6 +296,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       uptodate: appmapUptodateService,
       findings: findingsIndex,
       classMap: classMapIndex,
+      projectState: projectState,
     };
   } catch (exception) {
     Telemetry.sendEvent(DEBUG_EXCEPTION, { exception: exception as Error });
