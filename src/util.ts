@@ -8,6 +8,7 @@ import {
   ExecOptions as ProcessExecOptions,
 } from 'child_process';
 import * as vscode from 'vscode';
+import { ProjectStateServiceInstance } from './services/projectStateService';
 
 export function getNonce(): string {
   let text = '';
@@ -242,6 +243,26 @@ export function hasPreviouslyInstalledExtension(extensionPath: string): boolean 
   }
 
   return false;
+}
+
+export async function getWorkspaceFolderFromPath(
+  projectStates: ProjectStateServiceInstance[],
+  path: string
+): Promise<vscode.WorkspaceFolder | undefined> {
+  // generate an array of promises that resolve to a project path
+  const promises = projectStates.map(async (projectState) => {
+    const metadata = await projectState.metadata();
+    return metadata?.path;
+  });
+
+  // convert the array of promises to an array of project paths
+  const projectPaths = await Promise.all(promises);
+
+  const projectIndex = projectPaths.findIndex((projectPath) => {
+    return path.includes(projectPath);
+  });
+
+  return projectStates[projectIndex]?.folder;
 }
 
 export function shellescape(...command: string[]): string {

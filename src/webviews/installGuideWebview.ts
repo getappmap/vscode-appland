@@ -3,7 +3,7 @@ import * as vscode from 'vscode';
 import extensionSettings from '../configuration/extensionSettings';
 import { ProjectStateServiceInstance } from '../services/projectStateService';
 import { COPY_COMMAND, OPEN_VIEW, Telemetry } from '../telemetry';
-import { getNonce } from '../util';
+import { getNonce, getWorkspaceFolderFromPath } from '../util';
 import ProjectMetadata from '../workspace/projectMetadata';
 import * as semver from 'semver';
 import ExtensionState from '../configuration/extensionState';
@@ -38,7 +38,8 @@ export default class InstallGuideWebView {
 
   public static register(
     context: vscode.ExtensionContext,
-    projectStates: ProjectStateServiceInstance[]
+    projectStates: ProjectStateServiceInstance[],
+    extensionState: ExtensionState
   ): void {
     context.subscriptions.push(
       vscode.commands.registerCommand(this.command, async (pageIndex: number) => {
@@ -119,9 +120,19 @@ export default class InstallGuideWebView {
               break;
 
             case 'view-problems':
-              vscode.commands.executeCommand('workbench.panel.markers.view.focus');
-              break;
+              {
+                const workspaceFolder = await getWorkspaceFolderFromPath(
+                  projectStates,
+                  message.data
+                );
 
+                if (workspaceFolder) {
+                  extensionState.setFindingsInvestigated(workspaceFolder, true);
+                }
+
+                vscode.commands.executeCommand('workbench.panel.markers.view.focus');
+              }
+              break;
             default:
               break;
           }

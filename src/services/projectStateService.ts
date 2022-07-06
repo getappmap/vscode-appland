@@ -52,7 +52,10 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
         }
       }),
       extensionState.onWorkspaceFlag((e) => {
-        if (e.workspaceFolder === folder && e.key === Keys.Workspace.OPENED_APPMAP) {
+        if (
+          e.workspaceFolder === folder &&
+          (e.key === Keys.Workspace.OPENED_APPMAP || e.key === Keys.Workspace.FINDINGS_INVESTIGATED)
+        ) {
           this.updateMetadata();
         }
       })
@@ -80,6 +83,10 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
 
   private get hasOpenedAppMap(): boolean {
     return this.extensionState.getWorkspaceOpenedAppMap(this.folder);
+  }
+
+  private get hasInvestigatedFindings(): boolean {
+    return this.extensionState.getFindingsInvestigated(this.folder);
   }
 
   async metadata(): Promise<Readonly<ProjectMetadata>> {
@@ -166,6 +173,7 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
       agentInstalled: this.isAgentConfigured || false,
       appMapsRecorded: this.hasRecordedAppMaps || false,
       analysisPerformed: this.analysisPerformed,
+      investigatedFindings: this.hasInvestigatedFindings || false,
       appMapOpened: this.hasOpenedAppMap || false,
       numFindings: this.numFindings,
       language: {

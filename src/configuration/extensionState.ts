@@ -12,6 +12,7 @@ export const Keys = {
     CONFIGURED_AGENT: 'appmap.applandinc.agentConfigured',
     RECORDED_APPMAP: 'appmap.applandinc.recordedAppMap',
     OPENED_APPMAP: 'appmap.applandinc.workspaces_opened_appmap',
+    FINDINGS_INVESTIGATED: 'appmap.applandinc.findingsInvestigated',
   },
 };
 
@@ -137,6 +138,15 @@ export default class ExtensionState {
 
   setWorkspaceConfiguredAgent(workspaceFolder: vscode.WorkspaceFolder, value: boolean): void {
     this.setWorkspaceFlag(Keys.Workspace.CONFIGURED_AGENT, value, workspaceFolder);
+  }
+
+  /** Returns whether or not the user has looked at findings */
+  getFindingsInvestigated(workspaceFolder: vscode.WorkspaceFolder): boolean {
+    return this.getWorkspaceFlag(Keys.Workspace.FINDINGS_INVESTIGATED, workspaceFolder.uri.fsPath);
+  }
+
+  setFindingsInvestigated(workspaceFolder: vscode.WorkspaceFolder, value: boolean): void {
+    this.setWorkspaceFlag(Keys.Workspace.FINDINGS_INVESTIGATED, value, workspaceFolder);
   }
 
   resetState(): void {
