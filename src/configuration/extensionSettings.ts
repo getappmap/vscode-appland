@@ -17,4 +17,7 @@ export default {
     [true, 'true'].includes(
       vscode.workspace.getConfiguration('appMap').get('inspectEnabled') || false
     ),
+
+  viewConfiguration: (): string | undefined =>
+    vscode.workspace.getConfiguration('appMap').get('viewConfiguration'),
 };

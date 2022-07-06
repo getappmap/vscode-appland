@@ -4,6 +4,7 @@ import { Telemetry, APPMAP_OPEN, APPMAP_UPLOAD } from '../telemetry';
 import { getNonce, getRecords } from '../util';
 import { version } from '../../package.json';
 import ExtensionState from '../configuration/extensionState';
+import extensionSettings from '../configuration/extensionSettings';
 import { AppmapUploader } from '../actions/appmapUploader';
 import { bestFilePath } from '../lib/bestFilePath';
 import AppMapDocument from './AppMapDocument';
@@ -107,8 +108,8 @@ export default class AppMapEditorProvider
     });
 
     const initialState = (() => {
-      const state = document.uri.fragment;
-      if (state !== '') {
+      const state = document.uri.fragment || extensionSettings.viewConfiguration();
+      if (state !== undefined && state !== '') {
         try {
           JSON.parse(state);
           return state;
