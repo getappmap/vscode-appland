@@ -1,3 +1,10 @@
+# [0.34.0](https://github.com/applandinc/vscode-appland/compare/v0.33.0...v0.34.0) (2022-07-06)
+
+
+### Features
+
+* Default view configuration setting ([ee17599](https://github.com/applandinc/vscode-appland/commit/ee175991f042adaa4612b672cdc6f51ea496d606))
+
 # [0.33.0](https://github.com/applandinc/vscode-appland/compare/v0.32.3...v0.33.0) (2022-07-01)
 
 
