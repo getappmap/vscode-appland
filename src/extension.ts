@@ -174,50 +174,43 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       registerInspectCodeObject(context);
     }
 
-    let processService: NodeProcessService | undefined;
-    let runtimeAnalysisCta: RuntimeAnalysisCtaService | undefined;
-    let projectState: ProjectStateService;
-    {
-      projectState = new ProjectStateService(
-        extensionState,
-        appmapWatcher,
-        configWatcher,
-        appmapCollectionFile,
-        classMapIndex,
-        findingsIndex
-      );
+    const projectState = new ProjectStateService(
+      extensionState,
+      appmapWatcher,
+      configWatcher,
+      appmapCollectionFile,
+      classMapIndex,
+      findingsIndex
+    );
 
-      projectStates = (await workspaceServices.enroll(
-        projectState
-      )) as ProjectStateServiceInstance[];
+    projectStates = (await workspaceServices.enroll(projectState)) as ProjectStateServiceInstance[];
 
-      const badge = new InstallationStatusBadge('appmap.views.instructions');
-      badge.initialize(projectStates);
-      context.subscriptions.push(badge);
+    const badge = new InstallationStatusBadge('appmap.views.instructions');
+    badge.initialize(projectStates);
+    context.subscriptions.push(badge);
 
-      const uriHandler = new UriHandler();
-      const openAppMapUriHandler = new OpenAppMapUriHandler(context);
-      const earlyAccessUriHandler = new EarlyAccessUriHandler(context);
-      uriHandler.registerHandlers(openAppMapUriHandler, earlyAccessUriHandler);
-      context.subscriptions.push(vscode.window.registerUriHandler(uriHandler));
+    const uriHandler = new UriHandler();
+    const openAppMapUriHandler = new OpenAppMapUriHandler(context);
+    const earlyAccessUriHandler = new EarlyAccessUriHandler(context);
+    uriHandler.registerHandlers(openAppMapUriHandler, earlyAccessUriHandler);
+    context.subscriptions.push(vscode.window.registerUriHandler(uriHandler));
 
-      tryDisplayEarlyAccessWelcome(context);
+    tryDisplayEarlyAccessWelcome(context);
 
-      InstallGuideWebView.register(context, projectStates, extensionState);
-      InstallGuideWebView.tryOpen(extensionState);
+    InstallGuideWebView.register(context, projectStates, extensionState);
+    InstallGuideWebView.tryOpen(extensionState);
 
-      processService = new NodeProcessService(context, projectStates);
-      // The node dependencies may take some time to retrieve. As a result, the initialization sequence is
-      // wrapped in an async function but we won't wait for it to resolve.
-      (async function() {
-        processService.onReady(activateUptodateService);
-        await processService.install();
-        await workspaceServices.enroll(processService);
-      })();
+    const processService = new NodeProcessService(context, projectStates);
+    // The node dependencies may take some time to retrieve. As a result, the initialization sequence is
+    // wrapped in an async function but we won't wait for it to resolve.
+    (async function() {
+      processService.onReady(activateUptodateService);
+      await processService.install();
+      await workspaceServices.enroll(processService);
+    })();
 
-      runtimeAnalysisCta = new RuntimeAnalysisCtaService(projectStates, extensionState);
-      await workspaceServices.enroll(runtimeAnalysisCta);
-    }
+    const runtimeAnalysisCta = new RuntimeAnalysisCtaService(projectStates, extensionState);
+    await workspaceServices.enroll(runtimeAnalysisCta);
 
     deleteAllAppMaps(context, classMapIndex, findingsIndex);
 
