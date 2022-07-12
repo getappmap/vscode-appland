@@ -40,7 +40,7 @@ describe('Instructions tree view', function() {
     );
     await driver.appMap.assertInstructionStepStatus(
       InstructionStep.InvestigateFindings,
-      InstructionStepStatus.Complete
+      InstructionStepStatus.Pending
     );
 
     await project.simulateAppMapInstall();
@@ -53,6 +53,15 @@ describe('Instructions tree view', function() {
 
     await driver.appMap.assertInstructionStepStatus(
       InstructionStep.RecordAppMaps,
+      InstructionStepStatus.Complete
+    );
+
+    await project.restoreFile('**/appmap-findings.json');
+    await driver.appMap.openInstruction(InstructionStep.InvestigateFindings);
+    await driver.instructionsWebview.clickButton('View problems');
+
+    await driver.appMap.assertInstructionStepStatus(
+      InstructionStep.InvestigateFindings,
       InstructionStepStatus.Complete
     );
 
@@ -108,9 +117,13 @@ describe('Instructions tree view', function() {
   it('hides the pending badge upon completing the installation steps', async () => {
     await driver.appMap.pendingBadge.waitFor({ state: 'visible' });
     await project.simulateAppMapInstall();
-    await project.restoreFile('*.appmap.json');
     await driver.appMap.openActionPanel();
+    await project.restoreFile('*.appmap.json');
     await driver.appMap.openAppMap();
+    await project.restoreFile('**/appmap-findings.json');
+    await driver.appMap.openActionPanel();
+    await driver.appMap.openInstruction(InstructionStep.InvestigateFindings);
+    await driver.instructionsWebview.clickButton('View problems');
     await driver.appMap.pendingBadge.waitFor({ state: 'hidden' });
   });
 
@@ -129,7 +142,7 @@ describe('Instructions tree view', function() {
     );
     await driver.appMap.assertInstructionStepStatus(
       InstructionStep.InvestigateFindings,
-      InstructionStepStatus.Complete
+      InstructionStepStatus.Pending
     );
 
     await driver.appMap.openInstruction(InstructionStep.InstallAppMapAgent);

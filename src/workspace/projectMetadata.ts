@@ -9,6 +9,7 @@ export default interface ProjectMetadata {
   agentInstalled?: boolean;
   appMapsRecorded?: boolean;
   analysisPerformed?: boolean;
+  investigatedFindings?: boolean;
   appMapOpened?: boolean;
   numFindings?: number;
   language?: Feature;

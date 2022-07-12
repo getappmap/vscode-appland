@@ -48,7 +48,7 @@ if (extensionSettings.findingsEnabled()) {
     title: 'Investigate findings',
     command: 'appmap.openInstallGuide',
     async isComplete(projectState: ProjectStateServiceInstance): Promise<boolean> {
-      return Boolean((await projectState.metadata()).analysisPerformed);
+      return Boolean((await projectState.metadata()).investigatedFindings);
     },
     args: ['investigate-findings'],
   });

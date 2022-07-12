@@ -6,7 +6,7 @@ import registerTrees from './tree';
 import AppMapCollectionFile from './services/appmapCollectionFile';
 import ContextMenu from './tree/contextMenu';
 import RemoteRecording from './actions/remoteRecording';
-import { notEmpty } from './util';
+import { getWorkspaceFolderFromPath, notEmpty } from './util';
 import { registerUtilityCommands } from './registerUtilityCommands';
 import ExtensionState from './configuration/extensionState';
 import FindingsIndex from './services/findingsIndex';
@@ -41,6 +41,7 @@ import assert from 'assert';
 import { initializeWorkspaceServices } from './services/workspaceServices';
 import { NodeProcessService } from './services/nodeProcessService';
 import getEarlyAccess from './commands/getEarlyAccess';
+import openFinding from './commands/openFinding';
 import { RuntimeAnalysisCtaService } from './services/runtimeAnalysisCtaService';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
@@ -183,7 +184,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       badge.initialize(projectStates);
       context.subscriptions.push(badge);
 
-      InstallGuideWebView.register(context, projectStates);
+      InstallGuideWebView.register(context, projectStates, extensionState);
       InstallGuideWebView.tryOpen(extensionState);
 
       processService = new NodeProcessService(context, projectStates);
@@ -202,6 +203,10 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     deleteAllAppMaps(context, classMapIndex, findingsIndex);
 
     registerTrees(context, appmapCollectionFile, projectStates, appmapUptodateService);
+
+    if (findingsEnabled) {
+      openFinding(context, projectStates, extensionState);
+    }
 
     (vscode.workspace.workspaceFolders || []).forEach((workspaceFolder) => {
       Telemetry.sendEvent(PROJECT_OPEN, { rootDirectory: workspaceFolder.uri.fsPath });

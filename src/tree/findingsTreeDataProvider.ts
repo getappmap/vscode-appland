@@ -37,7 +37,7 @@ export class FindingsTreeDataProvider implements vscode.TreeDataProvider<vscode.
           if (finding.problemLocation) {
             item.command = {
               title: 'Open',
-              command: 'vscode.open',
+              command: 'appmap.openFinding',
               arguments: [finding.problemLocation.uri],
             };
           }
