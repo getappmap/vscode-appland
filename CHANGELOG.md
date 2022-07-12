@@ -1,3 +1,10 @@
+# [0.35.0](https://github.com/applandinc/vscode-appland/compare/v0.34.1...v0.35.0) (2022-07-12)
+
+
+### Features
+
+* Update the marketplace readme ([19e8aac](https://github.com/applandinc/vscode-appland/commit/19e8aac6b04f30d8adc76c2d3f83cd40332079b7))
+
 ## [0.34.1](https://github.com/applandinc/vscode-appland/compare/v0.34.0...v0.34.1) (2022-07-12)
 
 
