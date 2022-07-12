@@ -1,3 +1,10 @@
+## [0.34.1](https://github.com/applandinc/vscode-appland/compare/v0.34.0...v0.34.1) (2022-07-12)
+
+
+### Bug Fixes
+
+* green check appears upon investigating findings ([#433](https://github.com/applandinc/vscode-appland/issues/433)) ([2484487](https://github.com/applandinc/vscode-appland/commit/2484487956b2ff537ad4016b1fd77b5184556f84))
+
 # [0.34.0](https://github.com/applandinc/vscode-appland/compare/v0.33.0...v0.34.0) (2022-07-06)
 
 
