@@ -57,8 +57,7 @@ export class RuntimeAnalysisCtaServiceInstance implements WorkspaceServiceInstan
       metadata.agentInstalled &&
         metadata.appMapsRecorded &&
         (metadata.language?.score || 0) >= OVERALL_SCORE_VALUES.good &&
-        (metadata.webFramework?.score || 0) >= OVERALL_SCORE_VALUES.good &&
-        (metadata.testFramework?.score || 0) >= OVERALL_SCORE_VALUES.good
+        (metadata.webFramework?.score || 0) >= OVERALL_SCORE_VALUES.good
     );
     this._onCheckEligibility.fire(this.eligible as boolean);
 
