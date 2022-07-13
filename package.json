@@ -210,8 +210,7 @@
       },
       {
         "view": "appmap.views.findings",
-        "contents": "Issues found by runtime analysis of your code\n[Get Early Access](command:appmap.getEarlyAccess?%5B%22sidebar%22%5D)",
-        "when": "appmap.displayAnalysisBetaCtas && !config.appMap.findingsEnabled"
+        "contents": "AppMap runtime analysis works right in your code editor, to help you find and fix problems in your code.\n[Learn More](command:appmap.getEarlyAccess?%5B%22sidebar%22%5D)"
       }
     ],
     "views": {
