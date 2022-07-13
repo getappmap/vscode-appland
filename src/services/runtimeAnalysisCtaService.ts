@@ -19,7 +19,8 @@ enum CtaPlacement {
 
 export class RuntimeAnalysisCtaServiceInstance implements WorkspaceServiceInstance {
   protected disposables: vscode.Disposable[] = [];
-  protected static FINDINGS_TREE_VIEW?: vscode.TreeView<vscode.TreeItem>;
+
+  protected static popupPromptDisplayed = false;
 
   protected _eligible?: boolean | undefined;
   get eligible(): boolean | undefined {
@@ -63,9 +64,13 @@ export class RuntimeAnalysisCtaServiceInstance implements WorkspaceServiceInstan
 
     if (!this.eligible) return;
 
-    RuntimeAnalysisCtaServiceInstance.displaySidebarCta();
+    RuntimeAnalysisCtaServiceInstance.displayPrompt(delay);
+  }
 
-    if (!this.extensionState.shouldViewBetaCta) return;
+  protected static async displayPrompt(delay: number | undefined): Promise<void> {
+    if (this.popupPromptDisplayed) return;
+
+    this.popupPromptDisplayed = true;
 
     if (delay !== undefined) {
       await new Promise((resolve) => setTimeout(resolve, delay));
@@ -76,19 +81,12 @@ export class RuntimeAnalysisCtaServiceInstance implements WorkspaceServiceInstan
       placement: CtaPlacement.Notification,
     });
 
-    const projectMsg =
-      vscode.workspace.workspaceFolders?.length === 1
-        ? 'this project'
-        : `the project '${metadata.name}'`;
-
-    const BUTTON_CONVERT = 'Get Early Access';
+    const BUTTON_CONVERT = 'Learn More';
     const result = await vscode.window.showInformationMessage(
-      `Runtime analysis is now supported for ${projectMsg}. Sign up for early access.`,
+      `AppMap runtime analysis works right in your code editor, to help you find and fix problems in your code.`,
       BUTTON_CONVERT,
-      'Dismiss'
+      'Later'
     );
-
-    this.extensionState.setShouldViewBetaCta(false);
 
     if (result === BUTTON_CONVERT) {
       vscode.commands.executeCommand(COMMAND_EARLY_ACCESS, CtaPlacement.Notification);
@@ -106,7 +104,8 @@ export class RuntimeAnalysisCtaServiceInstance implements WorkspaceServiceInstan
 }
 
 export class RuntimeAnalysisCtaService implements WorkspaceService<WorkspaceServiceInstance> {
-  protected _onCheckEligibility = new ChangeEventDebouncer<boolean>();
+  private _onCheckEligibility = new ChangeEventDebouncer<boolean>();
+
   get onCheckEligibility(): vscode.Event<boolean> {
     return this._onCheckEligibility.event;
   }
