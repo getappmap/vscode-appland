@@ -129,6 +129,11 @@ export class RuntimeAnalysisCtaServiceInstance implements WorkspaceServiceInstan
 }
 
 export class RuntimeAnalysisCtaService implements WorkspaceService<WorkspaceServiceInstance> {
+  protected _onCheckEligibility = new ChangeEventDebouncer<boolean>();
+  get onCheckEligibility(): vscode.Event<boolean> {
+    return this._onCheckEligibility.event;
+  }
+
   constructor(
     protected projectStates: ReadonlyArray<ProjectStateServiceInstance>,
     protected extensionState: ExtensionState
@@ -140,6 +145,12 @@ export class RuntimeAnalysisCtaService implements WorkspaceService<WorkspaceServ
       throw new Error(`failed to resolve a project state for ${folder.name}`);
     }
 
-    return new RuntimeAnalysisCtaServiceInstance(folder, projectState, this.extensionState);
+    const instance = new RuntimeAnalysisCtaServiceInstance(
+      folder,
+      projectState,
+      this.extensionState
+    );
+    instance.onCheckEligibility(this._onCheckEligibility.fire.bind(this));
+    return instance;
   }
 }
