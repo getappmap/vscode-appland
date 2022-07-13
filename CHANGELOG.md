@@ -1,3 +1,22 @@
+# [0.36.0](https://github.com/applandinc/vscode-appland/compare/v0.35.0...v0.36.0) (2022-07-13)
+
+
+### Bug Fixes
+
+* Debounce metadata and CTA events ([c40cab7](https://github.com/applandinc/vscode-appland/commit/c40cab7b4aa48621f2d9fe659aebc28d90dc1254))
+* Don't mark a project bad ([83528b7](https://github.com/applandinc/vscode-appland/commit/83528b7577799a7beb77eee3cd32abf4f674a214))
+* Handle exception in the proper place ([168ef11](https://github.com/applandinc/vscode-appland/commit/168ef115d4ebad52177543fe4f46ee9c6674b3c9))
+* Remove CONTEXT_FLAG_BETA_ACCESS ([84ec593](https://github.com/applandinc/vscode-appland/commit/84ec59382e5804467fba8485eae777d3cabab351))
+
+
+### Features
+
+* Change CTA prompt text and action ([dbbec52](https://github.com/applandinc/vscode-appland/commit/dbbec52a8580147fad09f6b785d3a2e169842320))
+* Findings view is always visible ([3358e10](https://github.com/applandinc/vscode-appland/commit/3358e1035e4abb1ef9fe10c1fc2c51857c150f12))
+* Remove test framework as a CTA criterion ([dce14e3](https://github.com/applandinc/vscode-appland/commit/dce14e3afe82321716653fbef776f38832d1df82))
+* Stop popups after user follows CTA ([f52e8fa](https://github.com/applandinc/vscode-appland/commit/f52e8faef832bdf2ce0df7d855d6cc76b7dde1e5))
+* Update the findings view info text ([7b35f91](https://github.com/applandinc/vscode-appland/commit/7b35f9167e96582be2d17b00143de9894a66f5e3))
+
 # [0.35.0](https://github.com/applandinc/vscode-appland/compare/v0.34.1...v0.35.0) (2022-07-12)
 
 
