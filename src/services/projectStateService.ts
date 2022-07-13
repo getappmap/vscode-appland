@@ -8,10 +8,11 @@ import { ResolvedFinding } from './resolvedFinding';
 import { analyze, scoreValue, OVERALL_SCORE_VALUES, NodeVersion } from '../analyzers';
 import ProjectMetadata from '../workspace/projectMetadata';
 import AppMapCollection from './appmapCollection';
+import ChangeEventDebouncer from './changeEventDebouncer';
 
 export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
   protected disposables: vscode.Disposable[] = [];
-  protected _onStateChange = new vscode.EventEmitter<ProjectMetadata>();
+  protected _onStateChange = new ChangeEventDebouncer<ProjectMetadata>(1000);
   protected _metadata?: ProjectMetadata;
   protected initialized = false;
   protected analysisPerformed = false;

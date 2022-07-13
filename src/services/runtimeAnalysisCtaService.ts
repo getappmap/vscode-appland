@@ -4,12 +4,11 @@ import { COMMAND_EARLY_ACCESS } from '../commands/getEarlyAccess';
 import ExtensionSettings from '../configuration/extensionSettings';
 import ExtensionState from '../configuration/extensionState';
 import { CTA_DISMISS, CTA_VIEW, Telemetry } from '../telemetry';
-import { NoopTreeDataProvider } from '../tree/noopTreeDataProvider';
 import ProjectMetadata from '../workspace/projectMetadata';
+import ChangeEventDebouncer from './changeEventDebouncer';
 import { ProjectStateServiceInstance } from './projectStateService';
 import { WorkspaceService, WorkspaceServiceInstance } from './workspaceService';
 
-export const CONTEXT_FLAG_BETA_ACCESS = 'appmap.displayAnalysisBetaCtas';
 export const CTA_ID_EARLY_ACCESS_RT_ANALYSIS = 'early-access-runtime-analysis';
 
 enum CtaPlacement {
@@ -19,14 +18,15 @@ enum CtaPlacement {
 
 export class RuntimeAnalysisCtaServiceInstance implements WorkspaceServiceInstance {
   protected disposables: vscode.Disposable[] = [];
-  protected static FINDINGS_TREE_VIEW?: vscode.TreeView<vscode.TreeItem>;
+
+  protected static popupPromptDisplayed = false;
 
   protected _eligible?: boolean | undefined;
   get eligible(): boolean | undefined {
     return this._eligible;
   }
 
-  protected _onCheckEligibility = new vscode.EventEmitter<boolean>();
+  protected _onCheckEligibility = new ChangeEventDebouncer<boolean>();
   get onCheckEligibility(): vscode.Event<boolean> {
     return this._onCheckEligibility.event;
   }
@@ -47,29 +47,9 @@ export class RuntimeAnalysisCtaServiceInstance implements WorkspaceServiceInstan
     this.initialize();
   }
 
-  async initialize() {
-    await this.notifyBetaEligibility(await this.projectState.metadata(), 20 * 1000);
-  }
-
-  protected static displaySidebarCta(): void {
-    if (this.FINDINGS_TREE_VIEW) return;
-
-    vscode.commands.executeCommand('setContext', CONTEXT_FLAG_BETA_ACCESS, true);
-
-    this.FINDINGS_TREE_VIEW = vscode.window.createTreeView('appmap.views.findings', {
-      treeDataProvider: new NoopTreeDataProvider(),
-    });
-
-    // this.FINDINGS_TREE_VIEW.message =
-    //   'Issues found by runtime analysis of your code\n[Get Early Access](command:appmap.getEarlyAccess?%5B%22sidebar%22%5D)';
-
-    this.FINDINGS_TREE_VIEW.onDidChangeVisibility((e) => {
-      const telemetryEvent = e.visible ? CTA_VIEW : CTA_DISMISS;
-      Telemetry.sendEvent(telemetryEvent, {
-        id: CTA_ID_EARLY_ACCESS_RT_ANALYSIS,
-        placement: CtaPlacement.Sidebar,
-      });
-    });
+  async initialize(): Promise<void> {
+    // TODO: Not sure why we introduce a delay here?
+    await this.notifyBetaEligibility(await this.projectState.metadata(), 5 * 1000);
   }
 
   protected async notifyBetaEligibility(metadata: ProjectMetadata, delay?: number): Promise<void> {
@@ -77,16 +57,20 @@ export class RuntimeAnalysisCtaServiceInstance implements WorkspaceServiceInstan
       metadata.agentInstalled &&
         metadata.appMapsRecorded &&
         (metadata.language?.score || 0) >= OVERALL_SCORE_VALUES.good &&
-        (metadata.webFramework?.score || 0) >= OVERALL_SCORE_VALUES.good &&
-        (metadata.testFramework?.score || 0) >= OVERALL_SCORE_VALUES.good
+        (metadata.webFramework?.score || 0) >= OVERALL_SCORE_VALUES.good
     );
     this._onCheckEligibility.fire(this.eligible as boolean);
 
     if (!this.eligible) return;
 
-    RuntimeAnalysisCtaServiceInstance.displaySidebarCta();
+    this.displayPrompt(delay);
+  }
 
-    if (!this.extensionState.shouldViewBetaCta) return;
+  protected async displayPrompt(delay: number | undefined): Promise<void> {
+    if (RuntimeAnalysisCtaServiceInstance.popupPromptDisplayed) return;
+    if (this.extensionState.hasDismissedAnalysisCTA) return;
+
+    RuntimeAnalysisCtaServiceInstance.popupPromptDisplayed = true;
 
     if (delay !== undefined) {
       await new Promise((resolve) => setTimeout(resolve, delay));
@@ -97,19 +81,12 @@ export class RuntimeAnalysisCtaServiceInstance implements WorkspaceServiceInstan
       placement: CtaPlacement.Notification,
     });
 
-    const projectMsg =
-      vscode.workspace.workspaceFolders?.length === 1
-        ? 'this project'
-        : `the project '${metadata.name}'`;
-
-    const BUTTON_CONVERT = 'Get Early Access';
+    const BUTTON_CONVERT = 'Learn More';
     const result = await vscode.window.showInformationMessage(
-      `Runtime analysis is now supported for ${projectMsg}. Sign up for early access.`,
+      `AppMap runtime analysis works right in your code editor, to help you find and fix problems in your code.`,
       BUTTON_CONVERT,
-      'Dismiss'
+      'Later'
     );
-
-    this.extensionState.setShouldViewBetaCta(false);
 
     if (result === BUTTON_CONVERT) {
       vscode.commands.executeCommand(COMMAND_EARLY_ACCESS, CtaPlacement.Notification);
@@ -123,20 +100,20 @@ export class RuntimeAnalysisCtaServiceInstance implements WorkspaceServiceInstan
 
   dispose(): void {
     this.disposables.forEach((d) => d.dispose());
-    if (RuntimeAnalysisCtaServiceInstance.FINDINGS_TREE_VIEW) {
-      RuntimeAnalysisCtaServiceInstance.FINDINGS_TREE_VIEW.dispose();
-      RuntimeAnalysisCtaServiceInstance.FINDINGS_TREE_VIEW = undefined;
-    }
   }
 }
 
 export class RuntimeAnalysisCtaService implements WorkspaceService<WorkspaceServiceInstance> {
+  private _onCheckEligibility = new ChangeEventDebouncer<boolean>();
+
+  get onCheckEligibility(): vscode.Event<boolean> {
+    return this._onCheckEligibility.event;
+  }
+
   constructor(
     protected projectStates: ReadonlyArray<ProjectStateServiceInstance>,
     protected extensionState: ExtensionState
-  ) {
-    vscode.commands.executeCommand('setContext', CONTEXT_FLAG_BETA_ACCESS, false);
-  }
+  ) {}
 
   async create(folder: vscode.WorkspaceFolder): Promise<WorkspaceServiceInstance> {
     const projectState = this.projectStates.find((projectState) => projectState.folder === folder);
@@ -144,6 +121,12 @@ export class RuntimeAnalysisCtaService implements WorkspaceService<WorkspaceServ
       throw new Error(`failed to resolve a project state for ${folder.name}`);
     }
 
-    return new RuntimeAnalysisCtaServiceInstance(folder, projectState, this.extensionState);
+    const instance = new RuntimeAnalysisCtaServiceInstance(
+      folder,
+      projectState,
+      this.extensionState
+    );
+    instance.onCheckEligibility(this._onCheckEligibility.fire.bind(this));
+    return instance;
   }
 }

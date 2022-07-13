@@ -6,7 +6,7 @@ export const Keys = {
     INSTALL_GUIDE_VIEWED: 'appmap.applandinc.quickstartDocsSeen',
     INSTALL_TIMESTAMP: 'appmap.applandinc.installTimestamp',
     INSTALL_VERSION: 'appmap.applandinc.installVersion',
-    SHOULD_VIEW_BETA_CTA: 'appmap.applandinc.shouldViewBetaCta',
+    ANALYSIS_CTA_DISMISSED: 'appmap.applandinc.analysisCTADismissed',
   },
   Workspace: {
     CONFIGURED_AGENT: 'appmap.applandinc.agentConfigured',
@@ -93,6 +93,14 @@ export default class ExtensionState {
     this.context.globalState.update(Keys.Global.INSTALL_GUIDE_VIEWED, value);
   }
 
+  get hasDismissedAnalysisCTA(): boolean {
+    return Boolean(this.context.globalState.get(Keys.Global.ANALYSIS_CTA_DISMISSED, false));
+  }
+
+  set hasDismissedAnalysisCTA(value: boolean) {
+    this.context.globalState.update(Keys.Global.ANALYSIS_CTA_DISMISSED, value);
+  }
+
   get installTime(): Date {
     return this._installTime;
   }
@@ -103,14 +111,6 @@ export default class ExtensionState {
 
   get firstVersionInstalled(): string {
     return this.context.globalState.get(Keys.Global.INSTALL_VERSION, 'unknown');
-  }
-
-  get shouldViewBetaCta(): boolean {
-    return this.context.globalState.get<boolean>(Keys.Global.SHOULD_VIEW_BETA_CTA, true);
-  }
-
-  setShouldViewBetaCta(val: boolean): void {
-    this.context.globalState.update(Keys.Global.SHOULD_VIEW_BETA_CTA, val);
   }
 
   /** Returns whether or not the user has recorded an AppMap from within the given workspace folder. */

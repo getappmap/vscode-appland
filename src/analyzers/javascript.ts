@@ -10,48 +10,52 @@ export default async function analyze(folder: WorkspaceFolder): Promise<ProjectA
     lang: {
       title: 'JavaScript',
       score: 'ok',
-      text: `JavaScript is currently in Open Beta and is not fully supported. Please read the docs before proceeding.`,
+      text: `JavaScript is currently in Open Beta. Please read the docs before proceeding.`,
       depFile: 'package.json',
       plugin: '@appland/appmap-agent-js',
       pluginType: 'package',
     },
   };
 
+  let pkg: any;
   try {
     const file = await fs.readFile(Uri.joinPath(folder.uri, 'package.json'));
     const json = utfDecoder(file);
-    const pkg = JSON.parse(json);
+    pkg = JSON.parse(json);
+  } catch (_) {
+    features.lang = {
+      title: 'JavaScript',
+      score: 'ok',
+      text: `This looks like a JavaScript project without a dependency file. JavaScript is currently in Open Beta. Please read the docs before proceeding.`,
+    };
+  }
 
+  if (pkg) {
     if (pkg.dependencies?.express) {
       features.web = {
         title: 'express.js',
         score: 'ok',
         text:
-          'This project uses express. AppMap will automatically recognize web requests, SQL queries, and key framework functions during recording.',
+          'This project uses Express. AppMap will automatically recognize web requests, SQL queries, and key framework functions during recording.',
       };
     }
+
     if (pkg.devDependencies?.mocha) {
       if (semverIntersects('>=8', pkg.devDependencies.mocha)) {
         features.test = {
           title: 'mocha',
           score: 'ok',
-          text: `This project uses mocha. Test execution can be automatically recorded.`,
+          text: `This project uses Mocha. Test execution can be automatically recorded.`,
         };
       } else {
         features.test = {
           title: 'mocha',
           score: 'bad',
           text:
-            'This project uses an unsupported version of mocha. You need at least version 8 to automatically record test execution.',
+            'This project uses an unsupported version of Mocha. You need at least version 8 to automatically record test execution.',
         };
       }
     }
-  } catch (_) {
-    features.lang = {
-      title: 'JavaScript',
-      score: 'ok',
-      text: `This looks like a JavaScript project without a dependency file. JavaScript is currently in Open Beta and is not fully supported. Please read the docs before proceeding.`,
-    };
   }
 
   return {
