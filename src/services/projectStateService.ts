@@ -9,6 +9,18 @@ import { analyze, scoreValue, OVERALL_SCORE_VALUES, NodeVersion } from '../analy
 import ProjectMetadata from '../workspace/projectMetadata';
 import AppMapCollection from './appmapCollection';
 import ChangeEventDebouncer from './changeEventDebouncer';
+import ClassMapIndex from './classMapIndex';
+import { CodeObjectEntry } from '../lib/CodeObjectEntry';
+
+type SimpleCodeObject = {
+  name: string;
+  path: string;
+};
+
+export type SampleCodeObjects = {
+  httpRequests: SimpleCodeObject[];
+  queries: SimpleCodeObject[];
+};
 
 export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
   protected disposables: vscode.Disposable[] = [];
@@ -21,11 +33,13 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
   public onStateChange = this._onStateChange.event;
 
   private SUPPORTED_NODE_VERSIONS = [14, 16, 18];
+  private NUMBER_OF_SAMPLE_CODE_OBJECTS = 5;
 
   constructor(
     public readonly folder: vscode.WorkspaceFolder,
     protected readonly extensionState: ExtensionState,
     protected readonly appMapCollection: AppMapCollection,
+    protected readonly classMapIndex: ClassMapIndex,
     appMapWatcher: FileChangeEmitter,
     configWatcher: FileChangeEmitter,
     findingsIndex?: FindingsIndex
@@ -164,8 +178,45 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
     }
   }
 
+  private async classMapSelection(): Promise<SampleCodeObjects> {
+    const classMap = await this.classMapIndex.classMap();
+    const httpRequests = classMap.find((entry) => entry.fqid.includes('HTTP'))?.children || [];
+    const queries = classMap.find((entry) => entry.fqid.includes('Queries'))?.children || [];
+    const sampleHTTPRequests = this.getSampleCodeObjects(httpRequests);
+    const sampleQueries = this.getSampleCodeObjects(queries);
+
+    return {
+      httpRequests: sampleHTTPRequests,
+      queries: sampleQueries,
+    } as SampleCodeObjects;
+  }
+
+  private getSampleCodeObjects(classMap: CodeObjectEntry[]): SimpleCodeObject[] {
+    const requestsWithOneAssociatedAppMap = classMap.filter((request) => {
+      return request.appMapFiles.length === 1;
+    });
+
+    if (requestsWithOneAssociatedAppMap.length >= this.NUMBER_OF_SAMPLE_CODE_OBJECTS) {
+      return this.simplifyCodeObjectEntries(
+        requestsWithOneAssociatedAppMap.slice(0, this.NUMBER_OF_SAMPLE_CODE_OBJECTS)
+      );
+    }
+
+    return this.simplifyCodeObjectEntries(classMap.slice(0, this.NUMBER_OF_SAMPLE_CODE_OBJECTS));
+  }
+
+  private simplifyCodeObjectEntries(classMap: CodeObjectEntry[]): Array<SimpleCodeObject> {
+    return classMap.map((entry) => {
+      return {
+        name: entry.name.split(';')[0],
+        path: entry.appMapFiles[0],
+      } as SimpleCodeObject;
+    });
+  }
+
   private async updateMetadata(): Promise<void> {
     const analysis = await analyze(this.folder, this.appMapCollection);
+    const sampleCodeObjects = await this.classMapSelection();
     this._metadata = {
       name: this.folder.name,
       path: this.folder.uri.fsPath,
@@ -183,6 +234,7 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
         text: analysis.features.lang.text,
       },
       appMaps: analysis.appMaps,
+      sampleCodeObjects,
     };
 
     if (analysis.features.test) {
@@ -223,6 +275,7 @@ export default class ProjectStateService implements WorkspaceService<ProjectStat
     protected readonly appMapWatcher: FileChangeEmitter,
     protected readonly configWatcher: FileChangeEmitter,
     protected readonly appMapCollection: AppMapCollection,
+    protected readonly classMapIndex: ClassMapIndex,
     protected readonly findingsIndex?: FindingsIndex
   ) {}
 
@@ -231,6 +284,7 @@ export default class ProjectStateService implements WorkspaceService<ProjectStat
       folder,
       this.extensionState,
       this.appMapCollection,
+      this.classMapIndex,
       this.appMapWatcher,
       this.configWatcher,
       this.findingsIndex

@@ -1,4 +1,5 @@
 import { AppMapSummary } from '../analyzers';
+import { SampleCodeObjects } from '../services/projectStateService';
 import Feature from './feature';
 
 export default interface ProjectMetadata {
@@ -16,4 +17,5 @@ export default interface ProjectMetadata {
   testFramework?: Feature;
   webFramework?: Feature;
   appMaps?: Readonly<Array<AppMapSummary>>;
+  sampleCodeObjects?: SampleCodeObjects;
 }
