@@ -230,8 +230,7 @@
         {
           "id": "appmap.views.findings",
           "name": "Runtime Analysis",
-          "visibility": "visible",
-          "when": "appmap.displayAnalysisBetaCtas || config.appMap.findingsEnabled"
+          "visibility": "visible"
         },
         {
           "id": "appmap.views.codeObjects",

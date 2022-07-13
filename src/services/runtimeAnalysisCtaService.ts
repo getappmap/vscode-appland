@@ -47,27 +47,9 @@ export class RuntimeAnalysisCtaServiceInstance implements WorkspaceServiceInstan
     this.initialize();
   }
 
-  async initialize() {
-    await this.notifyBetaEligibility(await this.projectState.metadata(), 20 * 1000);
-  }
-
-  protected static displaySidebarCta(): void {
-    if (this.FINDINGS_TREE_VIEW) return;
-
-    this.FINDINGS_TREE_VIEW = vscode.window.createTreeView('appmap.views.findings', {
-      treeDataProvider: new NoopTreeDataProvider(),
-    });
-
-    // this.FINDINGS_TREE_VIEW.message =
-    //   'Issues found by runtime analysis of your code\n[Get Early Access](command:appmap.getEarlyAccess?%5B%22sidebar%22%5D)';
-
-    this.FINDINGS_TREE_VIEW.onDidChangeVisibility((e) => {
-      const telemetryEvent = e.visible ? CTA_VIEW : CTA_DISMISS;
-      Telemetry.sendEvent(telemetryEvent, {
-        id: CTA_ID_EARLY_ACCESS_RT_ANALYSIS,
-        placement: CtaPlacement.Sidebar,
-      });
-    });
+  async initialize(): Promise<void> {
+    // TODO: Not sure why we introduce a delay here?
+    await this.notifyBetaEligibility(await this.projectState.metadata(), 5 * 1000);
   }
 
   protected async notifyBetaEligibility(metadata: ProjectMetadata, delay?: number): Promise<void> {
@@ -121,10 +103,6 @@ export class RuntimeAnalysisCtaServiceInstance implements WorkspaceServiceInstan
 
   dispose(): void {
     this.disposables.forEach((d) => d.dispose());
-    if (RuntimeAnalysisCtaServiceInstance.FINDINGS_TREE_VIEW) {
-      RuntimeAnalysisCtaServiceInstance.FINDINGS_TREE_VIEW.dispose();
-      RuntimeAnalysisCtaServiceInstance.FINDINGS_TREE_VIEW = undefined;
-    }
   }
 }
 
