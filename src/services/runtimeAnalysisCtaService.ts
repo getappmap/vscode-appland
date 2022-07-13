@@ -10,7 +10,6 @@ import ChangeEventDebouncer from './changeEventDebouncer';
 import { ProjectStateServiceInstance } from './projectStateService';
 import { WorkspaceService, WorkspaceServiceInstance } from './workspaceService';
 
-export const CONTEXT_FLAG_BETA_ACCESS = 'appmap.displayAnalysisBetaCtas';
 export const CTA_ID_EARLY_ACCESS_RT_ANALYSIS = 'early-access-runtime-analysis';
 
 enum CtaPlacement {
@@ -54,8 +53,6 @@ export class RuntimeAnalysisCtaServiceInstance implements WorkspaceServiceInstan
 
   protected static displaySidebarCta(): void {
     if (this.FINDINGS_TREE_VIEW) return;
-
-    vscode.commands.executeCommand('setContext', CONTEXT_FLAG_BETA_ACCESS, true);
 
     this.FINDINGS_TREE_VIEW = vscode.window.createTreeView('appmap.views.findings', {
       treeDataProvider: new NoopTreeDataProvider(),
@@ -135,9 +132,7 @@ export class RuntimeAnalysisCtaService implements WorkspaceService<WorkspaceServ
   constructor(
     protected projectStates: ReadonlyArray<ProjectStateServiceInstance>,
     protected extensionState: ExtensionState
-  ) {
-    vscode.commands.executeCommand('setContext', CONTEXT_FLAG_BETA_ACCESS, false);
-  }
+  ) {}
 
   async create(folder: vscode.WorkspaceFolder): Promise<WorkspaceServiceInstance> {
     const projectState = this.projectStates.find((projectState) => projectState.folder === folder);
