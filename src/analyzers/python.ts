@@ -55,12 +55,6 @@ export default async function analyze(folder: WorkspaceFolder): Promise<ProjectA
         score: 'ok',
         text: 'Flask support is currently in Beta. Please read the docs.',
       };
-    } else {
-      features.web = {
-        score: 'bad',
-        text:
-          "This project doesn't seem to use a supported web framework. Remote recording won't be possible.",
-      };
     }
 
     if (dependency('pytest')) {
