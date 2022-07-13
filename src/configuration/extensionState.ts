@@ -6,6 +6,7 @@ export const Keys = {
     INSTALL_GUIDE_VIEWED: 'appmap.applandinc.quickstartDocsSeen',
     INSTALL_TIMESTAMP: 'appmap.applandinc.installTimestamp',
     INSTALL_VERSION: 'appmap.applandinc.installVersion',
+    ANALYSIS_CTA_DISMISSED: 'appmap.applandinc.analysisCTADismissed',
   },
   Workspace: {
     CONFIGURED_AGENT: 'appmap.applandinc.agentConfigured',
@@ -90,6 +91,14 @@ export default class ExtensionState {
 
   set hasViewedInstallGuide(value: boolean) {
     this.context.globalState.update(Keys.Global.INSTALL_GUIDE_VIEWED, value);
+  }
+
+  get hasDismissedAnalysisCTA(): boolean {
+    return Boolean(this.context.globalState.get(Keys.Global.ANALYSIS_CTA_DISMISSED, false));
+  }
+
+  set hasDismissedAnalysisCTA(value: boolean) {
+    this.context.globalState.update(Keys.Global.ANALYSIS_CTA_DISMISSED, value);
   }
 
   get installTime(): Date {

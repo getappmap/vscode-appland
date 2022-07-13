@@ -6,7 +6,7 @@ import registerTrees from './tree';
 import AppMapCollectionFile from './services/appmapCollectionFile';
 import ContextMenu from './tree/contextMenu';
 import RemoteRecording from './actions/remoteRecording';
-import { getWorkspaceFolderFromPath, notEmpty } from './util';
+import { notEmpty } from './util';
 import { registerUtilityCommands } from './registerUtilityCommands';
 import ExtensionState from './configuration/extensionState';
 import FindingsIndex from './services/findingsIndex';
@@ -216,7 +216,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     const editorProvider = AppMapEditorProvider.register(context, extensionState);
     RemoteRecording.register(context);
     ContextMenu.register(context);
-    getEarlyAccess(context);
+    getEarlyAccess(context, extensionState);
 
     context.subscriptions.push(
       vscode.commands.registerCommand('appmap.findByName', async () => {

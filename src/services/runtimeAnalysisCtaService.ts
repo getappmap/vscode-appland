@@ -4,7 +4,6 @@ import { COMMAND_EARLY_ACCESS } from '../commands/getEarlyAccess';
 import ExtensionSettings from '../configuration/extensionSettings';
 import ExtensionState from '../configuration/extensionState';
 import { CTA_DISMISS, CTA_VIEW, Telemetry } from '../telemetry';
-import { NoopTreeDataProvider } from '../tree/noopTreeDataProvider';
 import ProjectMetadata from '../workspace/projectMetadata';
 import ChangeEventDebouncer from './changeEventDebouncer';
 import { ProjectStateServiceInstance } from './projectStateService';
@@ -64,13 +63,14 @@ export class RuntimeAnalysisCtaServiceInstance implements WorkspaceServiceInstan
 
     if (!this.eligible) return;
 
-    RuntimeAnalysisCtaServiceInstance.displayPrompt(delay);
+    this.displayPrompt(delay);
   }
 
-  protected static async displayPrompt(delay: number | undefined): Promise<void> {
-    if (this.popupPromptDisplayed) return;
+  protected async displayPrompt(delay: number | undefined): Promise<void> {
+    if (RuntimeAnalysisCtaServiceInstance.popupPromptDisplayed) return;
+    if (this.extensionState.hasDismissedAnalysisCTA) return;
 
-    this.popupPromptDisplayed = true;
+    RuntimeAnalysisCtaServiceInstance.popupPromptDisplayed = true;
 
     if (delay !== undefined) {
       await new Promise((resolve) => setTimeout(resolve, delay));
