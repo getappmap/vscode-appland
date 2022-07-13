@@ -6,6 +6,7 @@ import ExtensionState from '../configuration/extensionState';
 import { CTA_DISMISS, CTA_VIEW, Telemetry } from '../telemetry';
 import { NoopTreeDataProvider } from '../tree/noopTreeDataProvider';
 import ProjectMetadata from '../workspace/projectMetadata';
+import ChangeEventDebouncer from './changeEventDebouncer';
 import { ProjectStateServiceInstance } from './projectStateService';
 import { WorkspaceService, WorkspaceServiceInstance } from './workspaceService';
 
@@ -26,7 +27,7 @@ export class RuntimeAnalysisCtaServiceInstance implements WorkspaceServiceInstan
     return this._eligible;
   }
 
-  protected _onCheckEligibility = new vscode.EventEmitter<boolean>();
+  protected _onCheckEligibility = new ChangeEventDebouncer<boolean>();
   get onCheckEligibility(): vscode.Event<boolean> {
     return this._onCheckEligibility.event;
   }
