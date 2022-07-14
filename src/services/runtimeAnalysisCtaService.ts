@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import semver from 'semver';
 import { OVERALL_SCORE_VALUES } from '../analyzers';
 import { COMMAND_EARLY_ACCESS } from '../commands/getEarlyAccess';
 import ExtensionSettings from '../configuration/extensionSettings';
@@ -10,6 +11,8 @@ import { ProjectStateServiceInstance } from './projectStateService';
 import { WorkspaceService, WorkspaceServiceInstance } from './workspaceService';
 
 export const CTA_ID_EARLY_ACCESS_RT_ANALYSIS = 'early-access-runtime-analysis';
+
+const CTA_ACTIVATION_VERSION = '0.36.0';
 
 enum CtaPlacement {
   Sidebar = 'sidebar',
@@ -53,12 +56,28 @@ export class RuntimeAnalysisCtaServiceInstance implements WorkspaceServiceInstan
   }
 
   protected async notifyBetaEligibility(metadata: ProjectMetadata, delay?: number): Promise<void> {
-    this._eligible = Boolean(
-      metadata.agentInstalled &&
+    const isEligibleVersion = () => {
+      const versionStr = this.extensionState.firstVersionInstalled;
+      // If firstVersionInstalled is unknown, then the version must be old and therefore not eligible at this time.
+      // Why this returns 'unknown' instead of undefined is beyond me.
+      if (!versionStr || versionStr === 'unknown') return false;
+
+      const versionToTest = semver.coerce(versionStr);
+      if (!versionToTest) return false;
+
+      return semver.gte(versionToTest, CTA_ACTIVATION_VERSION);
+    };
+
+    const eligible = Boolean(
+      isEligibleVersion() &&
+        metadata.agentInstalled &&
         metadata.appMapsRecorded &&
         (metadata.language?.score || 0) >= OVERALL_SCORE_VALUES.good &&
         (metadata.webFramework?.score || 0) >= OVERALL_SCORE_VALUES.good
     );
+    if (eligible === this._eligible) return;
+
+    this._eligible = eligible;
     this._onCheckEligibility.fire(this.eligible as boolean);
 
     if (!this.eligible) return;

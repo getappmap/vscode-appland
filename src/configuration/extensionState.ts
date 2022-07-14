@@ -39,15 +39,15 @@ export default class ExtensionState {
 
     if (timestamp) {
       this._installTime = new Date(parseInt(timestamp, 10));
+      if (!this.context.globalState.get(Keys.Global.INSTALL_VERSION)) {
+        this.context.globalState.update(Keys.Global.INSTALL_VERSION, this.packageVersion);
+      }
     } else {
       this._installTime = new Date();
       this._isNewInstall = !hasPreviouslyInstalledExtension(context.extensionPath);
 
       if (this._isNewInstall) {
-        this.context.globalState.update(
-          Keys.Global.INSTALL_VERSION,
-          this.context.extension.packageJSON.version
-        );
+        this.context.globalState.update(Keys.Global.INSTALL_VERSION, this.packageVersion);
       }
 
       this.context.globalState.update(Keys.Global.INSTALL_TIMESTAMP, this._installTime.valueOf());
@@ -82,6 +82,13 @@ export default class ExtensionState {
   private getWorkspaceFlag(key: string, fsPath: string): boolean {
     const workspaceFolders = new Set<string>(this.context.globalState.get(key, []));
     return workspaceFolders.has(fsPath);
+  }
+
+  /**
+   * Gets the current version of this extension.
+   */
+  get packageVersion(): string {
+    return this.context.extension.packageJSON.version;
   }
 
   /** Returns whether or not the user has viewed the install guide. */
