@@ -1,9 +1,9 @@
-import * as vscode from 'vscode';
+import assert from 'assert';
 import { join } from 'path';
+import * as vscode from 'vscode';
 import { buildClassMap } from '../../src/lib/buildClassMap';
-import { FixtureDir, printCodeObject } from './util';
-import assert, { AssertionError } from 'assert';
 import { CodeObjectEntry, CodeObjectEntryRootType } from '../../src/lib/CodeObjectEntry';
+import { FixtureDir, printCodeObject } from './util';
 
 describe('buildClassMap', () => {
   it('normalizes embedded package names', async () => {

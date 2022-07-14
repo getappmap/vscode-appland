@@ -97,6 +97,7 @@ export async function buildClassMap(
         try {
           classMapData = await promisify(readFile)(classMapFileURL.fsPath);
         } catch (e) {
+          /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
           if ((e as any).code !== 'ENOENT') console.warn(e);
           return;
         }
@@ -132,6 +133,7 @@ export async function buildClassMap(
   // proper code object is missing from the classMap. They will appear as new root elements,
   // which is confusing in the UI. We just drop them here.
   const classMap = root.children
+    /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
     .filter((child) => Object.values(CodeObjectEntryRootType).includes(child.type as any))
     .map((child) => {
       child.finalize();

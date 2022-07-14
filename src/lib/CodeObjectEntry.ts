@@ -128,7 +128,7 @@ export class CodeObjectEntry {
           tokens = [];
         } else {
           let separator: string;
-          const co = codeObject as any;
+          const co = codeObject as any; // eslint-disable-line @typescript-eslint/no-explicit-any
           const isStatic = co.static || co.isStatic;
           if (codeObject.type === CodeObjectEntryChildType.FUNCTION) {
             separator = isStatic ? '.' : '#';

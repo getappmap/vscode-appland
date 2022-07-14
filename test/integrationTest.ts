@@ -126,6 +126,7 @@ async function integrationTest() {
     if (await promisify(exists)(preconfigureFile)) {
       console.log(`Running preconfiguration script ${preconfigureFile}`);
       try {
+        /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
         const preconfigurationScript = (await import(resolve(preconfigureFile))) as any;
         await preconfigurationScript.default();
       } catch (e) {

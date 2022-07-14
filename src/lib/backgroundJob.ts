@@ -30,7 +30,7 @@ class Job<T> extends EventEmitter {
   }
 }
 
-const jobs: Record<string, Job<any>> = {};
+const jobs: Record<string, Job<any>> = {}; // eslint-disable-line @typescript-eslint/no-explicit-any
 
 /**
  * Runs a background function and returns the output. There is a deliberate waiting period

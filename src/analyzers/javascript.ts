@@ -17,7 +17,7 @@ export default async function analyze(folder: WorkspaceFolder): Promise<ProjectA
     },
   };
 
-  let pkg: any;
+  let pkg: any; // eslint-disable-line @typescript-eslint/no-explicit-any
   try {
     const file = await fs.readFile(Uri.joinPath(folder.uri, 'package.json'));
     const json = utfDecoder(file);

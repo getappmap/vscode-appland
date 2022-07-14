@@ -46,6 +46,7 @@ export default class FindingsIndex extends EventEmitter {
     try {
       findingsData = await promisify(readFile)(sourceUri.fsPath);
     } catch (e) {
+      /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
       if ((e as any).code !== 'ENOENT') console.warn(e);
       return;
     }
