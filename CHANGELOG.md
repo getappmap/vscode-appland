@@ -1,3 +1,10 @@
+# [0.37.0](https://github.com/applandinc/vscode-appland/compare/v0.36.0...v0.37.0) (2022-07-14)
+
+
+### Features
+
+* CTA is conditional on extension version ([3d0c76a](https://github.com/applandinc/vscode-appland/commit/3d0c76a4cef35fcb7759b182ab137cfd502c2aae))
+
 # [0.36.0](https://github.com/applandinc/vscode-appland/compare/v0.35.0...v0.36.0) (2022-07-13)
 
 
