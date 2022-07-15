@@ -22,6 +22,7 @@ describe('Extension API', () => {
       'processService',
       'extensionState',
       'runtimeAnalysisCta',
+      'projectState',
     ]);
   });
 });
