@@ -1,12 +1,12 @@
 import * as path from 'path';
 import * as vscode from 'vscode';
-import extensionSettings from '../configuration/extensionSettings';
 import { ProjectStateServiceInstance } from '../services/projectStateService';
 import { COPY_COMMAND, OPEN_VIEW, Telemetry } from '../telemetry';
 import { getNonce, getWorkspaceFolderFromPath } from '../util';
 import ProjectMetadata from '../workspace/projectMetadata';
 import * as semver from 'semver';
 import ExtensionState from '../configuration/extensionState';
+import extensionSettings from '../configuration/extensionSettings';
 
 type PageMessage = {
   page: string;
@@ -85,19 +85,15 @@ export default class InstallGuideWebView {
           disposables.forEach((disposable) => disposable.dispose());
         });
 
-        const disabledPages = ['openapi'];
-        if (!extensionSettings.findingsEnabled()) {
-          disabledPages.push('investigate-findings');
-        }
-
         panel.webview.onDidReceiveMessage(async (message) => {
           switch (message.command) {
             case 'ready':
               panel.webview.postMessage({
                 type: 'init',
                 projects: await collectProjects(),
-                disabled: disabledPages,
+                disabled: ['openapi'],
                 page: pageIndex,
+                findingsEnabled: extensionSettings.findingsEnabled(),
               });
 
               break;

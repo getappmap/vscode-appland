@@ -7,7 +7,7 @@ export default function mountInstallGuide() {
   const vscode = window.acquireVsCodeApi();
   const messages = new MessagePublisher(vscode);
 
-  messages.on('init', ({ projects: startProjects, page: startPage, disabled }) => {
+  messages.on('init', ({ projects: startProjects, page: startPage, disabled, findingsEnabled }) => {
     let currentPage = startPage;
     let currentProject;
 
@@ -20,6 +20,7 @@ export default function mountInstallGuide() {
             projects: this.projects,
             disabledPages: new Set(disabled),
             editor: 'vscode',
+            findingsEnabled,
           },
         });
       },
