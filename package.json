@@ -379,7 +379,7 @@
     "webpack-cli": "^4.3.1"
   },
   "dependencies": {
-    "@appland/components": "^2.6.0",
+    "@appland/components": "^2.9.0",
     "@appland/diagrams": "^1.5.2",
     "@appland/models": "^1.15.0",
     "@appland/scanner": "^1.57.0",
