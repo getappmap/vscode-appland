@@ -1,3 +1,10 @@
+# [0.38.0](https://github.com/applandinc/vscode-appland/compare/v0.37.0...v0.38.0) (2022-07-20)
+
+
+### Features
+
+* send selected code objects to frontend ([dd05e62](https://github.com/applandinc/vscode-appland/commit/dd05e625296d31d726a057f3f99342045b5f4731))
+
 # [0.37.0](https://github.com/applandinc/vscode-appland/compare/v0.36.0...v0.37.0) (2022-07-14)
 
 
