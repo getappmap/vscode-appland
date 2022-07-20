@@ -33,7 +33,7 @@ const docsPages: DocPage[] = [
   },
   {
     id: 'GETTING_STARTED_OPEN_APPMAPS',
-    title: 'Open AppMaps',
+    title: 'Explore AppMaps',
     command: 'appmap.openInstallGuide',
     async isComplete(projectState: ProjectStateServiceInstance): Promise<boolean> {
       return Boolean((await projectState.metadata()).appMapOpened);

@@ -82,9 +82,15 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     const lineInfoIndex = new LineInfoIndex(classMapIndex);
 
     const classMapProvider = new ClassMapTreeDataProvider(classMapIndex);
-    vscode.window.createTreeView('appmap.views.codeObjects', {
+    const codeObjectsTree = vscode.window.createTreeView('appmap.views.codeObjects', {
       treeDataProvider: classMapProvider,
     });
+
+    context.subscriptions.push(
+      vscode.commands.registerCommand('appmap.view.focusCodeObjects', () => {
+        codeObjectsTree.reveal(undefined, { expand: true, focus: true, select: true });
+      })
+    );
 
     const classMapWatcher = new ClassMapWatcher({
       onCreate: classMapIndex.addClassMapFile.bind(classMapIndex),
@@ -167,12 +173,14 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
     let processService: NodeProcessService | undefined;
     let runtimeAnalysisCta: RuntimeAnalysisCtaService | undefined;
+    let projectState: ProjectStateService;
     {
-      const projectState = new ProjectStateService(
+      projectState = new ProjectStateService(
         extensionState,
         appmapWatcher,
         configWatcher,
         appmapCollectionFile,
+        classMapIndex,
         findingsIndex
       );
 
@@ -296,6 +304,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       processService,
       extensionState,
       runtimeAnalysisCta,
+      projectState,
     };
   } catch (exception) {
     Telemetry.sendEvent(DEBUG_EXCEPTION, { exception: exception as Error });

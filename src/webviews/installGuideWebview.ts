@@ -105,6 +105,9 @@ export default class InstallGuideWebView {
               {
                 const { page, project } = message as PageMessage;
                 Telemetry.sendEvent(OPEN_VIEW, { viewId: page, rootDirectory: project?.path });
+                if (page === 'open-appmaps') {
+                  vscode.commands.executeCommand('appmap.view.focusCodeObjects');
+                }
               }
               break;
 
