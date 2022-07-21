@@ -1,3 +1,10 @@
+## [0.38.1](https://github.com/applandinc/vscode-appland/compare/v0.38.0...v0.38.1) (2022-07-21)
+
+
+### Bug Fixes
+
+* Disable the 'next' button on the last instructions page ([bf40a8d](https://github.com/applandinc/vscode-appland/commit/bf40a8d73229ce57b6f33db67783e917495d3534))
+
 # [0.38.0](https://github.com/applandinc/vscode-appland/compare/v0.37.0...v0.38.0) (2022-07-20)
 
 
