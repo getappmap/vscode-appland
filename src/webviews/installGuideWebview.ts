@@ -85,13 +85,18 @@ export default class InstallGuideWebView {
           disposables.forEach((disposable) => disposable.dispose());
         });
 
+        const disabledPages = ['openapi'];
+        if (!extensionSettings.findingsEnabled()) {
+          disabledPages.push('investigate-findings');
+        }
+
         panel.webview.onDidReceiveMessage(async (message) => {
           switch (message.command) {
             case 'ready':
               panel.webview.postMessage({
                 type: 'init',
                 projects: await collectProjects(),
-                disabled: extensionSettings.findingsEnabled() ? [] : ['investigate-findings'],
+                disabled: disabledPages,
                 page: pageIndex,
               });
 
