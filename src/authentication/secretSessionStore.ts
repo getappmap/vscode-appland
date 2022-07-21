@@ -33,7 +33,7 @@ export default class SecretSessionStore {
   async delete(id: string): Promise<boolean> {
     const allSessions = await this.sessions();
     const index = allSessions.findIndex((s) => s.id === id);
-    if (index >= 0) {
+    if (index < 0) {
       return false;
     }
 
