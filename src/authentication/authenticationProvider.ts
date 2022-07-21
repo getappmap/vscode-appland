@@ -109,11 +109,13 @@ export default class AuthenticationProvider implements vscode.AuthenticationProv
 
     const message = await this.authSuccessMessage(session);
     vscode.window.showInformationMessage(message);
+    this._onDidChangeSessions.fire({});
 
     return session;
   }
 
   async removeSession(sessionId: string): Promise<void> {
     this.store.delete(sessionId);
+    this._onDidChangeSessions.fire({});
   }
 }

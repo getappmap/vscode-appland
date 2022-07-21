@@ -46,7 +46,10 @@ import { RuntimeAnalysisCtaService } from './services/runtimeAnalysisCtaService'
 import UriHandler from './uri/uriHandler';
 import AuthenticateSlackUriHandler from './uri/authenticateSlackUriHandler';
 import OpenAppMapUriHandler from './uri/openAppMapUriHandler';
-import AuthenticationProvider from './authentication/authenticationProvider';
+import {
+  register as registerSlackAuthenticationProvider,
+  getSession as getSlackSession,
+} from './authentication/slack';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   Telemetry.register(context);
@@ -196,7 +199,18 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       badge.initialize(projectStates);
       context.subscriptions.push(badge);
 
-      InstallGuideWebView.register(context, projectStates, extensionState);
+      const uriHandler = new UriHandler();
+      const authenicateSlackUriHandler = new AuthenticateSlackUriHandler();
+      const openAppMapUriHandler = new OpenAppMapUriHandler(context);
+      uriHandler.registerHandlers(authenicateSlackUriHandler, openAppMapUriHandler);
+      context.subscriptions.push(vscode.window.registerUriHandler(uriHandler));
+
+      const authProvider = registerSlackAuthenticationProvider(context);
+
+      // Add a badge indicating 'sign in requested'
+      getSlackSession();
+
+      InstallGuideWebView.register(context, projectStates, extensionState, authProvider);
       InstallGuideWebView.tryOpen(extensionState);
 
       processService = new NodeProcessService(context, projectStates);
@@ -251,30 +265,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
         vscode.commands.executeCommand('vscode.open', loader.descriptor.resourceUri);
       })
     );
-
-    const uriHandler = new UriHandler();
-    const authenicateSlackUriHandler = new AuthenticateSlackUriHandler();
-    const openAppMapUriHandler = new OpenAppMapUriHandler(context);
-    uriHandler.registerHandlers(authenicateSlackUriHandler, openAppMapUriHandler);
-    context.subscriptions.push(vscode.window.registerUriHandler(uriHandler));
-
-    const authnProviderSlack = new AuthenticationProvider({
-      provider: 'slack',
-      label: 'AppMap Community Slack',
-      authUrl: 'https://slack-app.appland.com/oauth/inbound/vscode',
-      context,
-    });
-
-    context.subscriptions.push(
-      vscode.authentication.registerAuthenticationProvider(
-        'appland.appmap.slack',
-        'AppMap Community Slack',
-        authnProviderSlack,
-        { supportsMultipleAccounts: true }
-      )
-    );
-
-    vscode.authentication.getSession('appland.appmap.slack', []);
 
     registerUtilityCommands(context, extensionState);
 

@@ -25,7 +25,7 @@ export default class SecretSessionStore {
     }
 
     allSessions.push(session);
-    this.save(allSessions);
+    await this.save(allSessions);
 
     return true;
   }
@@ -38,7 +38,7 @@ export default class SecretSessionStore {
     }
 
     allSessions.splice(index, 1);
-    this.save(allSessions);
+    await this.save(allSessions);
     return true;
   }
 }

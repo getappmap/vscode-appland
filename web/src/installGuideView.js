@@ -7,7 +7,7 @@ export default function mountInstallGuide() {
   const vscode = window.acquireVsCodeApi();
   const messages = new MessagePublisher(vscode);
 
-  messages.on('init', ({ projects: startProjects, page: startPage, disabled }) => {
+  messages.on('init', ({ projects: startProjects, page: startPage, disabled, authenticated }) => {
     let currentPage = startPage;
     let currentProject;
 
@@ -20,12 +20,14 @@ export default function mountInstallGuide() {
             projects: this.projects,
             disabledPages: new Set(disabled),
             editor: 'vscode',
+            authenticated: this.authenticated,
           },
         });
       },
       data() {
         return {
           projects: startProjects,
+          authenticated,
         };
       },
       beforeCreate() {
@@ -80,6 +82,10 @@ export default function mountInstallGuide() {
     messages.on('projects', ({ projects }) => {
       app.projects = projects;
       app.$forceUpdate();
+    });
+
+    messages.on('authenticated', ({ authenticated: authState }) => {
+      app.authenticated = authState;
     });
   });
 

@@ -7,6 +7,7 @@ import { getNonce, getWorkspaceFolderFromPath } from '../util';
 import ProjectMetadata from '../workspace/projectMetadata';
 import * as semver from 'semver';
 import ExtensionState from '../configuration/extensionState';
+import AuthenticationProvider from '../authentication/authenticationProvider';
 
 type PageMessage = {
   page: string;
@@ -39,7 +40,8 @@ export default class InstallGuideWebView {
   public static register(
     context: vscode.ExtensionContext,
     projectStates: ProjectStateServiceInstance[],
-    extensionState: ExtensionState
+    extensionState: ExtensionState,
+    authProvider: AuthenticationProvider
   ): void {
     context.subscriptions.push(
       vscode.commands.registerCommand(this.command, async (pageIndex: number) => {
@@ -79,6 +81,18 @@ export default class InstallGuideWebView {
           })
         );
 
+        const isAuthenticated = async () => (await authProvider.getSessions()).length > 0;
+        let authenticated = await isAuthenticated();
+        disposables.push(
+          authProvider.onDidChangeSessions(async () => {
+            const currentAuthStatus = await isAuthenticated();
+            if (authenticated !== currentAuthStatus) {
+              authenticated = currentAuthStatus;
+              panel.webview.postMessage({ type: 'authenticated', authenticated });
+            }
+          })
+        );
+
         // If the user closes the panel, make sure it's no longer cached
         panel.onDidDispose(() => {
           this.existingPanel = undefined;
@@ -93,6 +107,7 @@ export default class InstallGuideWebView {
                 projects: await collectProjects(),
                 disabled: extensionSettings.findingsEnabled() ? [] : ['investigate-findings'],
                 page: pageIndex,
+                authenticated,
               });
 
               break;
