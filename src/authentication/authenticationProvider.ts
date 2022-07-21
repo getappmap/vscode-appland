@@ -35,8 +35,9 @@ export default class AuthenticationProvider implements vscode.AuthenticationProv
     this.store = new SecretSessionStore(this.options.provider, this.options.context);
     const command = vscode.commands.registerCommand(
       `appmap.${this.options.provider}.performSignIn`,
-      async () => await this.performSignIn()
+      () => this.createSession()
     );
+
     this.options.context.subscriptions.push(command);
   }
 
@@ -89,7 +90,16 @@ export default class AuthenticationProvider implements vscode.AuthenticationProv
   }
 
   async createSession(): Promise<vscode.AuthenticationSession> {
-    vscode.env.openExternal(vscode.Uri.parse(this.options.authUrl));
+    const callbackUri = await vscode.env.asExternalUri(
+      vscode.Uri.parse(`${vscode.env.uriScheme}://appland.appmap/authenticate`)
+    );
+
+    const authUrl = vscode.Uri.parse(
+      `${this.options.authUrl}?${callbackUri.query}&protocol=${vscode.env.uriScheme}`
+    );
+    const uri = await vscode.env.asExternalUri(authUrl);
+    vscode.env.openExternal(uri);
+
     const session = await this.performSignIn();
     if (!session) {
       throw new Error('authentication cancelled');
