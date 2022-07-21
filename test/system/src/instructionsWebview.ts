@@ -28,7 +28,8 @@ export default class InstructionsWebview {
   public async pageTitle(): Promise<string> {
     return this.frame
       .locator('.qs:visible')
-      .locator('header, .qs-step__head')
+      .locator('header h1, [data-cy="title"]')
+      .first()
       .innerText();
   }
 
