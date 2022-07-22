@@ -104,7 +104,7 @@ describe('Instructions tree view', function() {
 
     await driver.appMap.openInstruction(InstructionStep.InvestigateFindings);
     assert(
-      (await driver.instructionsWebview.pageTitle()) == 'Investigate findings',
+      (await driver.instructionsWebview.pageTitle()) == 'AppMap Runtime Analysis',
       'Opens the correct page'
     );
   });
@@ -202,7 +202,7 @@ describe('Instructions tree view', function() {
     await driver.instructionsWebview.getPageByTitle('Explore AppMaps').waitFor();
 
     await driver.instructionsWebview.clickButton('Next');
-    await driver.instructionsWebview.getPageByTitle('Investigate findings').waitFor();
+    await driver.instructionsWebview.getPageByTitle('AppMap Runtime Analysis').waitFor();
 
     await driver.panel.problems.waitFor({ state: 'hidden' });
     await driver.instructionsWebview.clickButton('Open the PROBLEMS tab');

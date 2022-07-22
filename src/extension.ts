@@ -43,6 +43,9 @@ import { FindingsTreeDataProvider } from './tree/findingsTreeDataProvider';
 import { notEmpty } from './util';
 import InstallGuideWebView from './webviews/installGuideWebview';
 import InstallationStatusBadge from './workspace/installationStatus';
+import UriHandler from './uri/uriHandler';
+import OpenAppMapUriHandler from './uri/openAppMapUriHandler';
+import EarlyAccessUriHandler, { tryDisplayEarlyAccessWelcome } from './uri/earlyAccessUriHandler';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   Telemetry.register(context);
@@ -171,42 +174,43 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       registerInspectCodeObject(context);
     }
 
-    let processService: NodeProcessService | undefined;
-    let runtimeAnalysisCta: RuntimeAnalysisCtaService | undefined;
-    let projectState: ProjectStateService;
-    {
-      projectState = new ProjectStateService(
-        extensionState,
-        appmapWatcher,
-        configWatcher,
-        appmapCollectionFile,
-        classMapIndex,
-        findingsIndex
-      );
+    const projectState = new ProjectStateService(
+      extensionState,
+      appmapWatcher,
+      configWatcher,
+      appmapCollectionFile,
+      classMapIndex,
+      findingsIndex
+    );
 
-      projectStates = (await workspaceServices.enroll(
-        projectState
-      )) as ProjectStateServiceInstance[];
+    projectStates = (await workspaceServices.enroll(projectState)) as ProjectStateServiceInstance[];
 
-      const badge = new InstallationStatusBadge('appmap.views.instructions');
-      badge.initialize(projectStates);
-      context.subscriptions.push(badge);
+    const badge = new InstallationStatusBadge('appmap.views.instructions');
+    badge.initialize(projectStates);
+    context.subscriptions.push(badge);
 
-      InstallGuideWebView.register(context, projectStates, extensionState);
-      InstallGuideWebView.tryOpen(extensionState);
+    const uriHandler = new UriHandler();
+    const openAppMapUriHandler = new OpenAppMapUriHandler(context);
+    const earlyAccessUriHandler = new EarlyAccessUriHandler(context);
+    uriHandler.registerHandlers(openAppMapUriHandler, earlyAccessUriHandler);
+    context.subscriptions.push(vscode.window.registerUriHandler(uriHandler));
 
-      processService = new NodeProcessService(context, projectStates);
-      // The node dependencies may take some time to retrieve. As a result, the initialization sequence is
-      // wrapped in an async function but we won't wait for it to resolve.
-      (async function() {
-        processService.onReady(activateUptodateService);
-        await processService.install();
-        await workspaceServices.enroll(processService);
-      })();
+    tryDisplayEarlyAccessWelcome(context);
 
-      runtimeAnalysisCta = new RuntimeAnalysisCtaService(projectStates, extensionState);
-      await workspaceServices.enroll(runtimeAnalysisCta);
-    }
+    InstallGuideWebView.register(context, projectStates, extensionState);
+    InstallGuideWebView.tryOpen(extensionState);
+
+    const processService = new NodeProcessService(context, projectStates);
+    // The node dependencies may take some time to retrieve. As a result, the initialization sequence is
+    // wrapped in an async function but we won't wait for it to resolve.
+    (async function() {
+      processService.onReady(activateUptodateService);
+      await processService.install();
+      await workspaceServices.enroll(processService);
+    })();
+
+    const runtimeAnalysisCta = new RuntimeAnalysisCtaService(projectStates, extensionState);
+    await workspaceServices.enroll(runtimeAnalysisCta);
 
     deleteAllAppMaps(context, classMapIndex, findingsIndex);
 
@@ -245,30 +249,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
         }
 
         vscode.commands.executeCommand('vscode.open', loader.descriptor.resourceUri);
-      })
-    );
-
-    context.subscriptions.push(
-      vscode.window.registerUriHandler({
-        handleUri(uri: vscode.Uri) {
-          if (uri.path === '/open') {
-            const queryParams = new URLSearchParams(uri.query);
-
-            if (queryParams.get('uri')) {
-              vscode.commands.executeCommand(
-                'vscode.open',
-                vscode.Uri.parse(queryParams.get('uri') as string)
-              );
-            }
-
-            if (queryParams.get('state')) {
-              context.globalState.update(
-                AppMapEditorProvider.INITIAL_STATE,
-                queryParams.get('state')
-              );
-            }
-          }
-        },
       })
     );
 

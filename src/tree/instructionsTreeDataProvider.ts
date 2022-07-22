@@ -40,10 +40,7 @@ const docsPages: DocPage[] = [
     },
     args: ['open-appmaps'],
   },
-];
-
-if (extensionSettings.findingsEnabled()) {
-  docsPages.push({
+  {
     id: 'WALKTHROUGH_INVESTIGATE_FINDINGS',
     title: 'Investigate findings',
     command: 'appmap.openInstallGuide',
@@ -51,13 +48,17 @@ if (extensionSettings.findingsEnabled()) {
       return Boolean((await projectState.metadata()).investigatedFindings);
     },
     args: ['investigate-findings'],
-  });
-}
+  },
+];
 
 async function getIcon(
   page: DocPage,
   projectState?: ProjectStateServiceInstance
 ): Promise<string | vscode.ThemeIcon> {
+  if (!extensionSettings.findingsEnabled() && page.id === 'WALKTHROUGH_INVESTIGATE_FINDINGS') {
+    return new vscode.ThemeIcon('lock');
+  }
+
   if (!projectState || !page.isComplete) {
     return new vscode.ThemeIcon('circle-large-outline');
   }
