@@ -22,6 +22,13 @@ export type SampleCodeObjects = {
   queries: SimpleCodeObject[];
 };
 
+export type FindingsDomainCounts = {
+  maintainability: number;
+  performance: number;
+  stability: number;
+  security: number;
+};
+
 export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
   protected disposables: vscode.Disposable[] = [];
   protected _onStateChange = new ChangeEventDebouncer<ProjectMetadata>(1000);
@@ -29,6 +36,7 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
   protected initialized = false;
   protected analysisPerformed = false;
   protected numFindings = 0;
+  protected findingsDomainCounts?: FindingsDomainCounts;
 
   public onStateChange = this._onStateChange.event;
 
@@ -143,7 +151,24 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
   onFindingsChanged(findings: ResolvedFinding[]): void {
     this.analysisPerformed = true;
     this.numFindings = findings.length;
+    this.findingsDomainCounts = this.countDomainsFromFindings(findings);
     this.updateMetadata();
+  }
+
+  countDomainsFromFindings(findings: ResolvedFinding[]): FindingsDomainCounts {
+    const findingsDomainCounts = {
+      maintainability: 0,
+      performance: 0,
+      stability: 0,
+      security: 0,
+    } as FindingsDomainCounts;
+
+    findings.forEach((resolvedFinding) => {
+      const domain = resolvedFinding.finding.impactDomain.toLowerCase();
+      findingsDomainCounts[domain]++;
+    });
+
+    return findingsDomainCounts;
   }
 
   onAppMapCreated(): void {
@@ -228,6 +253,7 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
       investigatedFindings: this.hasInvestigatedFindings || false,
       appMapOpened: this.hasOpenedAppMap || false,
       numFindings: this.numFindings,
+      findingsDomainCounts: this.findingsDomainCounts,
       language: {
         name: analysis.features.lang.title,
         score: scoreValue(analysis.features.lang.score) + 1,

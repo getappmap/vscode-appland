@@ -1,5 +1,6 @@
 import { AppMapSummary } from '../analyzers';
 import { SampleCodeObjects } from '../services/projectStateService';
+import { FindingsDomainCounts } from '../services/projectStateService';
 import Feature from './feature';
 
 export default interface ProjectMetadata {
@@ -18,4 +19,5 @@ export default interface ProjectMetadata {
   webFramework?: Feature;
   appMaps?: Readonly<Array<AppMapSummary>>;
   sampleCodeObjects?: SampleCodeObjects;
+  findingsDomainCounts?: FindingsDomainCounts;
 }
