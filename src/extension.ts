@@ -50,6 +50,7 @@ import {
   register as registerSlackAuthenticationProvider,
   getSession as getSlackSession,
 } from './authentication/slack';
+import EarlyAccessUriHandler, { tryDisplayEarlyAccessWelcome } from './uri/earlyAccessUriHandler';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   Telemetry.register(context);
@@ -202,13 +203,20 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       const uriHandler = new UriHandler();
       const authenicateSlackUriHandler = new AuthenticateSlackUriHandler();
       const openAppMapUriHandler = new OpenAppMapUriHandler(context);
-      uriHandler.registerHandlers(authenicateSlackUriHandler, openAppMapUriHandler);
+      const earlyAccessUriHandler = new EarlyAccessUriHandler(context);
+      uriHandler.registerHandlers(
+        authenicateSlackUriHandler,
+        openAppMapUriHandler,
+        earlyAccessUriHandler
+      );
       context.subscriptions.push(vscode.window.registerUriHandler(uriHandler));
 
       const authProvider = registerSlackAuthenticationProvider(context);
 
       // Add a badge indicating 'sign in requested'
       getSlackSession();
+
+      tryDisplayEarlyAccessWelcome(context);
 
       InstallGuideWebView.register(context, projectStates, extensionState, authProvider);
       InstallGuideWebView.tryOpen(extensionState);
