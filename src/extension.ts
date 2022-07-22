@@ -43,6 +43,9 @@ import { FindingsTreeDataProvider } from './tree/findingsTreeDataProvider';
 import { notEmpty } from './util';
 import InstallGuideWebView from './webviews/installGuideWebview';
 import InstallationStatusBadge from './workspace/installationStatus';
+import UriHandler from './uri/uriHandler';
+import OpenAppMapUriHandler from './uri/openAppMapUriHandler';
+import EarlyAccessUriHandler, { tryDisplayEarlyAccessWelcome } from './uri/earlyAccessUriHandler';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   Telemetry.register(context);
@@ -192,6 +195,14 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       badge.initialize(projectStates);
       context.subscriptions.push(badge);
 
+      const uriHandler = new UriHandler();
+      const openAppMapUriHandler = new OpenAppMapUriHandler(context);
+      const earlyAccessUriHandler = new EarlyAccessUriHandler(context);
+      uriHandler.registerHandlers(openAppMapUriHandler, earlyAccessUriHandler);
+      context.subscriptions.push(vscode.window.registerUriHandler(uriHandler));
+
+      tryDisplayEarlyAccessWelcome(context);
+
       InstallGuideWebView.register(context, projectStates, extensionState);
       InstallGuideWebView.tryOpen(extensionState);
 
@@ -245,30 +256,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
         }
 
         vscode.commands.executeCommand('vscode.open', loader.descriptor.resourceUri);
-      })
-    );
-
-    context.subscriptions.push(
-      vscode.window.registerUriHandler({
-        handleUri(uri: vscode.Uri) {
-          if (uri.path === '/open') {
-            const queryParams = new URLSearchParams(uri.query);
-
-            if (queryParams.get('uri')) {
-              vscode.commands.executeCommand(
-                'vscode.open',
-                vscode.Uri.parse(queryParams.get('uri') as string)
-              );
-            }
-
-            if (queryParams.get('state')) {
-              context.globalState.update(
-                AppMapEditorProvider.INITIAL_STATE,
-                queryParams.get('state')
-              );
-            }
-          }
-        },
       })
     );
 
