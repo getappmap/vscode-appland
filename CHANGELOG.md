@@ -1,3 +1,12 @@
+# [0.39.0](https://github.com/applandinc/vscode-appland/compare/v0.38.1...v0.39.0) (2022-07-22)
+
+
+### Features
+
+* Add a URI handler to enable early access ([22e323f](https://github.com/applandinc/vscode-appland/commit/22e323fee05cf1028767aad657f2ccabec0b1eff))
+* investigate findings shows signup info when findings not enabled ([18017d5](https://github.com/applandinc/vscode-appland/commit/18017d5f01dff2d94f4236333e3b1d4c8d6b486a))
+* send findings domain counts to frontend webview ([2d085e4](https://github.com/applandinc/vscode-appland/commit/2d085e41520eef7a0f6f709ad330705033d96771))
+
 ## [0.38.1](https://github.com/applandinc/vscode-appland/compare/v0.38.0...v0.38.1) (2022-07-21)
 
 
