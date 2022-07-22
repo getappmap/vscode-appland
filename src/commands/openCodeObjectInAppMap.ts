@@ -63,7 +63,7 @@ export default async function openCodeObjectInAppMap(
     const state = {
       currentView: 'viewComponent',
       selectedObject: codeObject.fqid,
-    } as any;
+    } as any; // eslint-disable-line @typescript-eslint/no-explicit-any
     const uri = vscode.Uri.parse(`file://${appMapFileName}#${JSON.stringify(state)}`);
     vscode.commands.executeCommand('vscode.open', uri);
   });

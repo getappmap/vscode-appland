@@ -1,30 +1,34 @@
 import assert from 'assert';
+import * as path from 'path';
 import { InstructionStep, InstructionStepStatus } from '../src/appMap';
-import Context from './support/context';
+import Driver from '../src/driver';
 import ProjectDirectory from './support/project';
 
-describe('Instructions tree view', function() {
-  const { driver, workspacePath } = (this.ctx as unknown) as Context;
-  const project = new ProjectDirectory(workspacePath);
+type DriverContext = { driver: Driver; project: ProjectDirectory };
 
-  beforeEach(async () => {
+describe('Instructions tree view', function() {
+  beforeEach(async function() {
+    const { driver, project }: DriverContext = this as any;
+    await project.reset('**/*.appmap.json', 'appmap.yml', 'appmap-findings.json');
+
     await driver.closePanel();
-    await project.reset();
-    await project.removeAppMapFiles();
     await driver.resetUsage();
     await driver.reload();
   });
 
-  it('displays a badge when AppMap installation is pending for an installable project', async () => {
+  it('displays a badge when AppMap installation is pending for an installable project', async function() {
+    const { driver }: DriverContext = this as any;
+
     await driver.appMap.pendingBadge.waitFor({ state: 'visible' });
     assert(await driver.appMap.pendingBadge.isVisible(), 'badge is visible');
   });
 
-  it('does not display a badge when AppMap is not installable in the current workspace', async () => {
+  it('does not display a badge when AppMap is not installable in the current workspace', async function() {
     // todo
   });
 
-  it('accurately depicts the installation state', async () => {
+  it('accurately depicts the installation state', async function() {
+    const { driver, project }: DriverContext = this as any;
     await driver.appMap.openActionPanel();
     await driver.appMap.assertInstructionStepStatus(
       InstructionStep.InstallAppMapAgent,
@@ -38,6 +42,7 @@ describe('Instructions tree view', function() {
       InstructionStep.OpenAppMaps,
       InstructionStepStatus.Pending
     );
+
     await driver.appMap.assertInstructionStepStatus(
       InstructionStep.InvestigateFindings,
       InstructionStepStatus.Pending
@@ -48,31 +53,35 @@ describe('Instructions tree view', function() {
       InstructionStep.InstallAppMapAgent,
       InstructionStepStatus.Complete
     );
+    const pidfile = path.join(project.appMapDirectoryPath, 'index.pid');
+    await driver.waitForFile(pidfile);
 
-    await project.restoreFile('*.appmap.json');
+    await project.restoreFiles('**/*.appmap.json');
 
     await driver.appMap.assertInstructionStepStatus(
       InstructionStep.RecordAppMaps,
       InstructionStepStatus.Complete
     );
 
-    await project.restoreFile('**/appmap-findings.json');
+    await project.restoreFiles('**/appmap-findings.json');
     await driver.appMap.openInstruction(InstructionStep.InvestigateFindings);
-    await driver.instructionsWebview.clickButton('View problems');
-
-    await driver.appMap.assertInstructionStepStatus(
-      InstructionStep.InvestigateFindings,
-      InstructionStepStatus.Complete
-    );
+    await driver.instructionsWebview.clickButton('Open the PROBLEMS tab');
 
     await driver.appMap.openAppMap();
     await driver.appMap.assertInstructionStepStatus(
       InstructionStep.OpenAppMaps,
       InstructionStepStatus.Complete
     );
+
+    await driver.appMap.assertInstructionStepStatus(
+      InstructionStep.InvestigateFindings,
+      InstructionStepStatus.Complete
+    );
   });
 
-  it('opens up the expected web views', async () => {
+  it('opens up the expected web views', async function() {
+    const { driver }: DriverContext = this as any;
+
     await driver.appMap.openActionPanel();
 
     await driver.appMap.openInstruction(InstructionStep.InstallAppMapAgent);
@@ -89,7 +98,7 @@ describe('Instructions tree view', function() {
 
     await driver.appMap.openInstruction(InstructionStep.OpenAppMaps);
     assert(
-      (await driver.instructionsWebview.pageTitle()) == 'Open AppMaps',
+      (await driver.instructionsWebview.pageTitle()) == 'Explore AppMaps',
       'Opens the correct page'
     );
 
@@ -100,7 +109,9 @@ describe('Instructions tree view', function() {
     );
   });
 
-  it('re-uses web views', async () => {
+  it('re-uses web views', async function() {
+    const { driver }: DriverContext = this as any;
+
     const assertTabs = async (expectedCount: number): Promise<void> => {
       const numTabs = await driver.tabCount();
       assert(numTabs === expectedCount, `Expected ${expectedCount} tabs, got ${numTabs}`);
@@ -114,20 +125,25 @@ describe('Instructions tree view', function() {
     await assertTabs(1);
   });
 
-  it('hides the pending badge upon completing the installation steps', async () => {
+  it('hides the pending badge upon completing the installation steps', async function() {
+    const { driver, project }: DriverContext = this as any;
+
     await driver.appMap.pendingBadge.waitFor({ state: 'visible' });
     await project.simulateAppMapInstall();
+    const pidfile = path.join(project.appMapDirectoryPath, 'index.pid');
+    await driver.waitForFile(pidfile);
     await driver.appMap.openActionPanel();
-    await project.restoreFile('*.appmap.json');
+    await project.restoreFiles('**/*.appmap.json');
     await driver.appMap.openAppMap();
-    await project.restoreFile('**/appmap-findings.json');
-    await driver.appMap.openActionPanel();
+    await project.restoreFiles('**/appmap-findings.json');
     await driver.appMap.openInstruction(InstructionStep.InvestigateFindings);
-    await driver.instructionsWebview.clickButton('View problems');
+    await driver.instructionsWebview.clickButton('Open the PROBLEMS tab');
     await driver.appMap.pendingBadge.waitFor({ state: 'hidden' });
   });
 
-  xit('can be stepped through as expected', async () => {
+  it('can be stepped through as expected', async function() {
+    const { driver, project }: DriverContext = this as any;
+
     await driver.appMap.openActionPanel();
     await driver.appMap.ready();
 
@@ -162,6 +178,8 @@ describe('Instructions tree view', function() {
     // }
 
     await project.simulateAppMapInstall();
+    const pidfile = path.join(project.appMapDirectoryPath, 'index.pid');
+    await driver.waitForFile(pidfile);
 
     await driver.instructionsWebview.clickButton('Next');
     await driver.instructionsWebview.getPageByTitle('Record AppMaps').waitFor();
@@ -179,15 +197,15 @@ describe('Instructions tree view', function() {
     //   );
     // }
 
-    await project.restoreFile('*.appmap.json');
+    await project.restoreFiles('**/*.appmap.json');
     await driver.instructionsWebview.clickButton('Next');
-    await driver.instructionsWebview.getPageByTitle('Open AppMaps').waitFor();
+    await driver.instructionsWebview.getPageByTitle('Explore AppMaps').waitFor();
 
     await driver.instructionsWebview.clickButton('Next');
     await driver.instructionsWebview.getPageByTitle('Investigate findings').waitFor();
 
     await driver.panel.problems.waitFor({ state: 'hidden' });
-    await driver.instructionsWebview.clickButton('View problems');
+    await driver.instructionsWebview.clickButton('Open the PROBLEMS tab');
     await driver.panel.problems.waitFor({ state: 'visible' });
   });
 });

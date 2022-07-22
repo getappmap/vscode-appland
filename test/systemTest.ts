@@ -1,15 +1,16 @@
-import * as path from 'path';
 import glob from 'glob';
-import Mocha, { Test } from 'mocha';
-import { launchCode } from './system/src/app';
+import Mocha from 'mocha';
+import * as path from 'path';
+import { downloadCode, launchCode } from './system/src/app';
 import Driver from './system/src/driver';
+import ProjectDirectory from './system/tests/support/project';
 import { TestStatus } from './TestStatus';
 
 async function main(): Promise<void> {
   try {
     const extensionDevelopmentPath = path.resolve(__dirname, '..', '..');
     const userDataDir = path.resolve(__dirname, '..', '..', '.vscode-test', 'user-data');
-    const workspacePath = path.join(
+    const projectPath = path.join(
       __dirname,
       '..',
       '..',
@@ -20,17 +21,12 @@ async function main(): Promise<void> {
     );
 
     let verbose = false;
-    let leaveOpen = false;
     let testPath = path.join(__dirname, 'system', 'tests', '**', '*.test.js');
     const patterns: string[] = [];
     const cliArgs = process.argv.slice(2);
     while (cliArgs.length > 0) {
       const arg = cliArgs.shift() as string;
       switch (arg) {
-        case '--leave-open':
-          leaveOpen = true;
-          break;
-
         case '--verbose':
           verbose = true;
           break;
@@ -51,29 +47,45 @@ async function main(): Promise<void> {
       }
     }
 
-    const { app, context, page } = await launchCode(extensionDevelopmentPath, userDataDir, {
-      workspacePath,
-      verbose,
-    });
+    const TIMEOUT = 30000;
+    const beforeAll: Mocha.Func = async function() {
+      this.codePath = await downloadCode();
+    };
+    const beforeEach: Mocha.Func = async function() {
+      const project = new ProjectDirectory(projectPath);
 
-    const driver = new Driver(app, context, page);
+      const { app, context, page } = await launchCode(
+        this.codePath,
+        extensionDevelopmentPath,
+        userDataDir,
+        {
+          workspacePath: project.workspacePath,
+          verbose,
+        }
+      );
+      const driver = new Driver(app, context, page);
+      context.setDefaultTimeout(TIMEOUT);
+
+      await driver.waitForReady();
+      this.app = app;
+      this.driver = driver;
+      this.project = project;
+    };
+    const afterEach: Mocha.Func = async function() {
+      await Promise.all([this.app.waitForEvent('close'), this.app.close()]);
+    };
+
     const mocha = new Mocha({
       ui: 'bdd',
       color: true,
-      timeout: '120s',
+      timeout: TIMEOUT,
+      reporter: Mocha.reporters.Spec,
       rootHooks: {
-        async beforeAll() {
-          await driver.waitForReady();
-        },
+        beforeAll,
+        beforeEach,
+        afterEach,
       },
     });
-
-    mocha.suite.ctx.app = app;
-    mocha.suite.ctx.context = context;
-    mocha.suite.ctx.page = page;
-    mocha.suite.ctx.driver = driver;
-    mocha.suite.ctx.workspacePath = workspacePath;
-
     patterns.forEach((pattern) => mocha.grep(pattern));
 
     return new Promise((_, reject) => {
@@ -88,18 +100,8 @@ async function main(): Promise<void> {
         });
 
         mocha.run((failures) => {
-          if (!leaveOpen) {
-            app.process().kill();
-            process.exitCode = failures === 0 ? TestStatus.Ok : TestStatus.Failed;
-          }
+          process.exitCode = failures === 0 ? TestStatus.Ok : TestStatus.Failed;
         });
-
-        try {
-          // Run the mocha test
-        } catch (exception) {
-          console.error(exception);
-          reject(exception);
-        }
       });
     });
   } catch (err) {

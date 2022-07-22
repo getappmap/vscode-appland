@@ -43,10 +43,11 @@ export default class Driver {
   }
 
   public async waitForFile(pattern: string): Promise<void> {
+    const cwd = process.cwd();
     let retryCount = 0;
     for (;;) {
       if (retryCount > 30) {
-        throw new Error(`timed out waiting for file ${pattern}`);
+        throw new Error(`timed out waiting for ${pattern} in ${cwd}`);
       }
 
       const fileFound = await new Promise((resolve) =>

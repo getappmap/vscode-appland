@@ -15,7 +15,10 @@ export default class InstructionsWebview {
   }
 
   public getPageByTitle(title: string): Locator {
-    return this.currentPage.locator(`header:has(:text("${title}"))`).first();
+    return this.currentPage
+      .locator('header, .qs-step__head')
+      .locator(`text="${title}"`)
+      .first();
   }
 
   public async ready(): Promise<void> {
@@ -23,7 +26,10 @@ export default class InstructionsWebview {
   }
 
   public async pageTitle(): Promise<string> {
-    return this.frame.locator('.qs:visible header').innerText();
+    return this.frame
+      .locator('.qs:visible')
+      .locator('header, .qs-step__head')
+      .innerText();
   }
 
   public async copyClipboardText(): Promise<void> {

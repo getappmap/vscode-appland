@@ -84,7 +84,7 @@ export class ResolvedFinding {
     const state = {
       currentView: 'viewFlow',
       selectedObject: `event:${finding.event.id}`,
-    } as any;
+    } as any; // eslint-disable-line @typescript-eslint/no-explicit-any
 
     if (finding.relatedEvents) {
       state.traceFilter = finding.relatedEvents.map((evt) => ['id', evt.id].join(':')).join(' ');
