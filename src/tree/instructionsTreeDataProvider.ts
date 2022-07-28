@@ -42,7 +42,7 @@ const docsPages: DocPage[] = [
   },
   {
     id: 'WALKTHROUGH_INVESTIGATE_FINDINGS',
-    title: 'Investigate findings',
+    title: 'Runtime Analysis',
     command: 'appmap.openInstallGuide',
     async isComplete(projectState: ProjectStateServiceInstance): Promise<boolean> {
       return Boolean((await projectState.metadata()).investigatedFindings);
