@@ -85,28 +85,20 @@ describe('Instructions tree view', function() {
     await driver.appMap.openActionPanel();
 
     await driver.appMap.openInstruction(InstructionStep.InstallAppMapAgent);
-    assert(
-      (await driver.instructionsWebview.pageTitle()) == 'Install AppMap agent',
-      'Opens the correct page'
-    );
+    let actualTitle = await driver.instructionsWebview.pageTitle();
+    assert.strictEqual(actualTitle, 'Install AppMap agent', 'Opens the correct page');
 
     await driver.appMap.openInstruction(InstructionStep.RecordAppMaps);
-    assert(
-      (await driver.instructionsWebview.pageTitle()) == 'Record AppMaps',
-      'Opens the correct page'
-    );
+    actualTitle = await driver.instructionsWebview.pageTitle();
+    assert.strictEqual(actualTitle, 'Record AppMaps', 'Opens the correct page');
 
     await driver.appMap.openInstruction(InstructionStep.OpenAppMaps);
-    assert(
-      (await driver.instructionsWebview.pageTitle()) == 'Explore AppMaps',
-      'Opens the correct page'
-    );
+    actualTitle = await driver.instructionsWebview.pageTitle();
+    assert.strictEqual(actualTitle, 'Explore AppMaps', 'Opens the correct page');
 
     await driver.appMap.openInstruction(InstructionStep.InvestigateFindings);
-    assert(
-      (await driver.instructionsWebview.pageTitle()) == 'AppMap Runtime Analysis',
-      'Opens the correct page'
-    );
+    actualTitle = await driver.instructionsWebview.pageTitle();
+    assert.strictEqual(actualTitle, 'AppMap Runtime Analysis', 'Opens the correct page');
   });
 
   it('re-uses web views', async function() {
@@ -114,7 +106,7 @@ describe('Instructions tree view', function() {
 
     const assertTabs = async (expectedCount: number): Promise<void> => {
       const numTabs = await driver.tabCount();
-      assert(numTabs === expectedCount, `Expected ${expectedCount} tabs, got ${numTabs}`);
+      assert.strictEqual(numTabs, expectedCount, 'Wrong number of tabs');
     };
 
     await driver.appMap.openActionPanel();
