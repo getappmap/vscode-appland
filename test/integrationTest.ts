@@ -10,6 +10,7 @@ import { glob } from 'glob';
 import { resolve } from 'path';
 import assert from 'assert';
 import { TestStatus } from './TestStatus';
+import { spawnSync } from 'child_process';
 
 const PROJECT_A = 'test/fixtures/workspaces/project-a';
 const PROJECT_UPTODATE = 'test/fixtures/workspaces/project-uptodate';
@@ -107,6 +108,7 @@ async function integrationTest() {
       extensionTestsPath: resolve(testDir, 'index.js'),
       extensionTestsEnv: {
         TEST_FILE: testFile,
+        APPMAP_WRITE_PIDFILE: 'true',
       },
       launchArgs: [
         '--user-data-dir',
@@ -155,12 +157,17 @@ async function integrationTest() {
     } catch (e) {
       succeeded = false;
       console.warn(`Test ${testFile} failed: ${e}`);
+      const logs = glob.sync('.vscode-test/user-data/logs/**/?-AppMap Services.log');
+      logs.forEach((f) => {
+        console.log(`${f}:`);
+        console.log(spawnSync('cat', [f]).stdout.toString());
+      });
     }
   }
-  process.exitCode = succeeded ? TestStatus.Ok : TestStatus.Failed;
+  process.exit(succeeded ? TestStatus.Ok : TestStatus.Failed);
 }
 
 integrationTest().catch((e) => {
   console.warn(e);
-  process.exitCode = TestStatus.Error;
+  process.exit(TestStatus.Error);
 });

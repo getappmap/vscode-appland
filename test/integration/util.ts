@@ -1,13 +1,15 @@
-import * as vscode from 'vscode';
-import { exec } from 'child_process';
-import { join, basename } from 'path';
 import assert from 'assert';
-import AppMapService from '../../src/appMapService';
-import { touch } from '../../src/lib/touch';
+import { exec, spawnSync } from 'child_process';
+import { promises as fs } from 'fs';
+import * as fse from 'fs-extra';
+import glob from 'glob';
+import { basename, join } from 'path';
 import * as tmp from 'tmp';
 import { promisify } from 'util';
-import { promises as fs } from 'fs';
+import * as vscode from 'vscode';
+import AppMapService from '../../src/appMapService';
 import { CodeObjectEntry } from '../../src/lib/CodeObjectEntry';
+import { touch } from '../../src/lib/touch';
 
 export const FixtureDir = join(__dirname, '../../../test/fixtures');
 export const ProjectRuby = join(__dirname, '../../../test/fixtures/workspaces/project-ruby');
@@ -135,6 +137,27 @@ export async function restoreFile(filePath: string, workspaceDir = ProjectA): Pr
 
 export async function waitForAppMapServices(touchFile: string): Promise<AppMapService> {
   const appMapService = await waitForExtension();
+  const wsPath = vscode.workspace.workspaceFolders![0].uri.fsPath;
+  const pidPath = join(wsPath, 'tmp', 'appmap', 'index.pid');
+  // Make sure the indexer is all the way up before we ask it to do anything.
+  try {
+    await waitFor('Indexer starting', async () => {
+      const touchPath = join(wsPath, 'appmap.yml');
+      await touch(touchPath);
+      return fse.existsSync(pidPath);
+    });
+  } catch (e) {
+    const wsFiles = glob.sync(`${vscode.workspace.workspaceFolders![0].uri.fsPath}/**`);
+    console.log(`wsFiles: ${JSON.stringify(wsFiles, null, 2)}`);
+    console.log(e);
+    const logs = glob.sync('.vscode-test/user-data/logs/**/?-AppMap Services.log');
+    logs.forEach((f) => {
+      console.log(`${f}:`);
+      console.log(spawnSync('cat', [f]).stdout.toString());
+    });
+    throw e;
+  }
+
   let repeater: NodeJS.Timeout | undefined = setInterval(
     async () => await restoreFile(touchFile),
     500
