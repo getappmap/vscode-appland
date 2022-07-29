@@ -12,6 +12,9 @@ import ChangeEventDebouncer from './changeEventDebouncer';
 import ClassMapIndex from './classMapIndex';
 import { CodeObjectEntry } from '../lib/CodeObjectEntry';
 
+import glob from 'glob';
+import { promisify } from 'util';
+
 type SimpleCodeObject = {
   name: string;
   path: string;
@@ -188,8 +191,7 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
   }
 
   private async configurationInWorkspace(): Promise<boolean> {
-    const pattern = new vscode.RelativePattern(this.folder, '**/appmap.yml');
-    const existingConfigs = await vscode.workspace.findFiles(pattern, undefined, 1);
+    const existingConfigs = await promisify(glob)(`${this.folder.uri.fsPath}/**/appmap.yml`);
     return existingConfigs.length !== 0;
   }
 
