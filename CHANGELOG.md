@@ -1,3 +1,11 @@
+## [0.39.1](https://github.com/applandinc/vscode-appland/compare/v0.39.0...v0.39.1) (2022-07-31)
+
+
+### Bug Fixes
+
+* Use glob to find appmap.yml ([3c1c5e7](https://github.com/applandinc/vscode-appland/commit/3c1c5e70e76c9b47dfeda825ee0bb15463f07724))
+* Use unlink when deleting AppMaps ([5ad4c11](https://github.com/applandinc/vscode-appland/commit/5ad4c11ce34f5427ba5cb36016a1727ff53bcee1))
+
 # [0.39.0](https://github.com/applandinc/vscode-appland/compare/v0.38.1...v0.39.0) (2022-07-22)
 
 
