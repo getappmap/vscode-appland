@@ -53,13 +53,5 @@ describe('AppMapEditorProvider', () => {
         }
       }
     );
-
-    clipboardContents = await vscode.env.clipboard.readText();
-    if (!clipboardContents)
-      throw new AssertionError({
-        message: 'Clipboard text is null or undefined',
-      });
-
-    assert.deepStrictEqual(JSON.parse(clipboardContents), state);
   });
 });

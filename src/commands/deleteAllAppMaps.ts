@@ -1,4 +1,4 @@
-import { rmdir } from 'fs';
+import { unlink, rmdir } from 'fs';
 import { glob } from 'glob';
 import { promisify } from 'util';
 import * as vscode from 'vscode';
@@ -7,19 +7,21 @@ import FindingsIndex from '../services/findingsIndex';
 import { fileExists, retry } from '../util';
 
 async function deleteAppMap(uri: vscode.Uri): Promise<void> {
-  await retry(async () => vscode.workspace.fs.delete(uri));
-
   // Remove AppMap file, remove index directory contents, then remove index directory.
   // In this order, we expect that the file change events will be reliable.
+
+  // Need to use native filesystem operations here here, for some reason. vscode.findAllFiles isn't returning the index
+  // contents, and fs.delete doesn't remove files.
+  await retry(async () => promisify(unlink)(uri.fsPath));
+
   const indexDir = uri.fsPath.substring(0, uri.fsPath.lastIndexOf('.appmap.json'));
-  // Need to use native glob here for some reason; vscode.findAllFiles isn't returning the index contents.
   const filesToDelete = await promisify(glob)(`${indexDir}/*`);
   await Promise.all(
     filesToDelete.map((file) =>
       retry(async () => {
         if (!(await fileExists(file))) return;
 
-        await vscode.workspace.fs.delete(vscode.Uri.file(file));
+        await promisify(unlink)(file);
       })
     )
   );
@@ -31,8 +33,8 @@ async function deleteAppMap(uri: vscode.Uri): Promise<void> {
   });
 }
 
-async function deleteAppMaps(folder: vscode.WorkspaceFolder): Promise<void> {
-  (
+async function deleteAppMaps(folder: vscode.WorkspaceFolder) {
+  return (
     await vscode.workspace.findFiles(
       new vscode.RelativePattern(folder, '**/*.appmap.json'),
       `**/node_modules/**`
