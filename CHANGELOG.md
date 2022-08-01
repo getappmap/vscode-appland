@@ -1,3 +1,10 @@
+## [0.39.2](https://github.com/applandinc/vscode-appland/compare/v0.39.1...v0.39.2) (2022-08-01)
+
+
+### Bug Fixes
+
+* Investigate findings instruction page changed to Runtime Analysis ([d803f70](https://github.com/applandinc/vscode-appland/commit/d803f70347b478adb850f81fe0cc16387829a628))
+
 ## [0.39.1](https://github.com/applandinc/vscode-appland/compare/v0.39.0...v0.39.1) (2022-07-31)
 
 
