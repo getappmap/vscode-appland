@@ -3,11 +3,13 @@ import { FrameLocator, Locator, Page } from '@playwright/test';
 export default class InstructionsWebview {
   constructor(protected readonly page: Page) {}
 
+  private frameSelector = 'iframe.webview.ready';
+
   private get frame(): FrameLocator {
     return this.page
-      .frameLocator('iframe.webview.ready')
-      .frameLocator('iframe#active-frame')
-      .first();
+      .frameLocator(this.frameSelector)
+      .first()
+      .frameLocator('#active-frame');
   }
 
   public get currentPage(): Locator {
@@ -22,6 +24,12 @@ export default class InstructionsWebview {
   }
 
   public async ready(): Promise<void> {
+    const webviewId = await this.page
+      .locator('[title="Using AppMap"][data-resource-name]')
+      .getAttribute('data-resource-name');
+    if (webviewId) {
+      this.frameSelector = `#${webviewId} iframe`;
+    }
     await this.currentPage.waitFor();
   }
 

@@ -21,7 +21,8 @@ export default class AppMapEditorProvider
     const provider = new AppMapEditorProvider(context, extensionState);
     const providerRegistration = vscode.window.registerCustomEditorProvider(
       AppMapEditorProvider.viewType,
-      provider
+      provider,
+      { webviewOptions: { retainContextWhenHidden: true } }
     );
     context.subscriptions.push(providerRegistration);
 
