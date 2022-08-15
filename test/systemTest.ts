@@ -5,15 +5,14 @@ import { downloadCode, launchCode } from './system/src/app';
 import Driver from './system/src/driver';
 import ProjectDirectory from './system/tests/support/project';
 import { TestStatus } from './TestStatus';
+import projectRootDirectory from 'project-root-directory';
 
 async function main(): Promise<void> {
   try {
-    const extensionDevelopmentPath = path.resolve(__dirname, '..', '..');
-    const userDataDir = path.resolve(__dirname, '..', '..', '.vscode-test', 'user-data');
+    const extensionDevelopmentPath = projectRootDirectory;
+    const userDataDir = path.resolve(projectRootDirectory, '.vscode-test', 'user-data');
     const projectPath = path.join(
-      __dirname,
-      '..',
-      '..',
+      projectRootDirectory,
       'test',
       'fixtures',
       'workspaces',
@@ -21,7 +20,7 @@ async function main(): Promise<void> {
     );
 
     let verbose = false;
-    let testPath = path.join(__dirname, 'system', 'tests', '**', '*.test.js');
+    let testPath = path.join(__dirname, 'system', 'tests', '**', '*.test.[jt]s');
     const patterns: string[] = [];
     const cliArgs = process.argv.slice(2);
     while (cliArgs.length > 0) {
