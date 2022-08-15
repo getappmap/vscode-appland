@@ -1,9 +1,17 @@
-import { BrowserContext, ElectronApplication, Page } from '@playwright/test';
+import { BrowserContext, ElectronApplication, Locator, Page } from '@playwright/test';
 import { glob } from 'glob';
 import AppMap from './appMap';
 import InstructionsWebview from './instructionsWebview';
 import Panel from './panel';
 import { getOsShortcut } from './util';
+
+async function tryClick(elem: Locator) {
+  try {
+    await elem.click({ timeout: 5000 });
+  } catch (err) {
+    console.warn(`problem clicking ${elem}: ${err}`);
+  }
+}
 
 export default class Driver {
   public readonly instructionsWebview = new InstructionsWebview(this.page);
@@ -31,15 +39,14 @@ export default class Driver {
   }
 
   public async waitForReady(): Promise<void> {
-    await this.page
-      .locator('[id="status.notifications"] a[role="button"][aria-label="Notifications"]')
-      .click();
-
-    await this.page
-      .locator(
+    await tryClick(
+      this.page.locator('[id="status.notifications"] a[role="button"][aria-label="Notifications"]')
+    );
+    await tryClick(
+      this.page.locator(
         '.notifications-list-container .monaco-list-row:has(span:text("AppMap: Ready")) >> a[role="button"]:text("OK")'
       )
-      .click();
+    );
   }
 
   public async waitForFile(pattern: string): Promise<void> {
