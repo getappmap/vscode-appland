@@ -15,6 +15,15 @@
       }
     },
     {
+      "name": "Run system tests",
+      "type": "node",
+      "request": "launch",
+      "args": ["test/systemTest.ts"],
+      "program": "ts-node",
+      "runtimeExecutable": "yarn",
+      "runtimeArgs": ["run"]
+    },
+    {
       "name": "Extension Tests",
       "type": "extensionHost",
       "request": "launch",
