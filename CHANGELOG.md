@@ -1,3 +1,15 @@
+# [0.40.0](https://github.com/applandinc/vscode-appland/compare/v0.39.2...v0.40.0) (2022-08-19)
+
+
+### Bug Fixes
+
+* Don't trim the start of log messages ([6b8b94f](https://github.com/applandinc/vscode-appland/commit/6b8b94f12be08a42cb6e1a6dd0df0a94591904e9))
+
+
+### Features
+
+* Add an instructions page for generating OpenAPI definitions ([4d8e3e9](https://github.com/applandinc/vscode-appland/commit/4d8e3e98aa235fd3e9b3b936443027b794c4a71e))
+
 ## [0.39.2](https://github.com/applandinc/vscode-appland/compare/v0.39.1...v0.39.2) (2022-08-01)
 
 
