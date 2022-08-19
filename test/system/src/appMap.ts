@@ -5,6 +5,7 @@ export enum InstructionStep {
   InstallAppMapAgent,
   RecordAppMaps,
   OpenAppMaps,
+  GenerateOpenApi,
   InvestigateFindings,
 }
 

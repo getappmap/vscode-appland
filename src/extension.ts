@@ -46,6 +46,7 @@ import InstallationStatusBadge from './workspace/installationStatus';
 import UriHandler from './uri/uriHandler';
 import OpenAppMapUriHandler from './uri/openAppMapUriHandler';
 import EarlyAccessUriHandler, { tryDisplayEarlyAccessWelcome } from './uri/earlyAccessUriHandler';
+import generateOpenApi from './commands/generateOpenApi';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   Telemetry.register(context);
@@ -229,6 +230,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     RemoteRecording.register(context);
     ContextMenu.register(context);
     getEarlyAccess(context, extensionState);
+    generateOpenApi(context, extensionState);
 
     context.subscriptions.push(
       vscode.commands.registerCommand('appmap.findByName', async () => {

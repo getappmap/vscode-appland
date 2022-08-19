@@ -74,6 +74,14 @@ export default function mountInstallGuide() {
       vscode.postMessage({ command: 'open-file', file });
     });
 
+    app.$on('open-instruction', (pageId) => {
+      app.$refs.ui.jumpTo(pageId);
+    });
+
+    app.$on('generate-openapi', (projectPath) => {
+      messages.rpc('generate-openapi', { projectPath });
+    });
+
     messages.on('page', ({ page }) => {
       app.$refs.ui.jumpTo(page);
     });

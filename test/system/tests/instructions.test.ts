@@ -42,7 +42,10 @@ describe('Instructions tree view', function() {
       InstructionStep.OpenAppMaps,
       InstructionStepStatus.Pending
     );
-
+    await driver.appMap.assertInstructionStepStatus(
+      InstructionStep.GenerateOpenApi,
+      InstructionStepStatus.Pending
+    );
     await driver.appMap.assertInstructionStepStatus(
       InstructionStep.InvestigateFindings,
       InstructionStepStatus.Pending
@@ -66,6 +69,10 @@ describe('Instructions tree view', function() {
     await project.restoreFiles('**/appmap-findings.json');
     await driver.appMap.openInstruction(InstructionStep.InvestigateFindings);
     await driver.instructionsWebview.clickButton('Open the PROBLEMS tab');
+    await driver.appMap.assertInstructionStepStatus(
+      InstructionStep.InvestigateFindings,
+      InstructionStepStatus.Complete
+    );
 
     await driver.appMap.openAppMap();
     await driver.appMap.assertInstructionStepStatus(
@@ -73,8 +80,9 @@ describe('Instructions tree view', function() {
       InstructionStepStatus.Complete
     );
 
+    await driver.runCommand('AppMap: Generate OpenAPI definitions');
     await driver.appMap.assertInstructionStepStatus(
-      InstructionStep.InvestigateFindings,
+      InstructionStep.GenerateOpenApi,
       InstructionStepStatus.Complete
     );
   });
@@ -96,6 +104,10 @@ describe('Instructions tree view', function() {
     actualTitle = await driver.instructionsWebview.pageTitle();
     assert.strictEqual(actualTitle, 'Explore AppMaps', 'Opens the correct page');
 
+    await driver.appMap.openInstruction(InstructionStep.GenerateOpenApi);
+    actualTitle = await driver.instructionsWebview.pageTitle();
+    assert.strictEqual(actualTitle, 'Generate OpenAPI', 'Opens the correct page');
+
     await driver.appMap.openInstruction(InstructionStep.InvestigateFindings);
     actualTitle = await driver.instructionsWebview.pageTitle();
     assert.strictEqual(actualTitle, 'AppMap Runtime Analysis', 'Opens the correct page');
@@ -113,7 +125,7 @@ describe('Instructions tree view', function() {
     await driver.appMap.openInstruction(InstructionStep.InstallAppMapAgent);
     await assertTabs(1);
 
-    await driver.appMap.openInstruction(InstructionStep.InstallAppMapAgent);
+    await driver.appMap.openInstruction(InstructionStep.RecordAppMaps);
     await assertTabs(1);
   });
 
@@ -130,6 +142,7 @@ describe('Instructions tree view', function() {
     await project.restoreFiles('**/appmap-findings.json');
     await driver.appMap.openInstruction(InstructionStep.InvestigateFindings);
     await driver.instructionsWebview.clickButton('Open the PROBLEMS tab');
+    await driver.runCommand('AppMap: Generate OpenAPI definitions');
     await driver.appMap.pendingBadge.waitFor({ state: 'hidden' });
   });
 
@@ -192,6 +205,9 @@ describe('Instructions tree view', function() {
     await project.restoreFiles('**/*.appmap.json');
     await driver.instructionsWebview.clickButton('Next');
     await driver.instructionsWebview.getPageByTitle('Explore AppMaps').waitFor();
+
+    await driver.instructionsWebview.clickButton('Next');
+    await driver.instructionsWebview.getPageByTitle('Generate OpenAPI').waitFor();
 
     await driver.instructionsWebview.clickButton('Next');
     await driver.instructionsWebview.getPageByTitle('AppMap Runtime Analysis').waitFor();

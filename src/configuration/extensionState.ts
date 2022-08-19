@@ -13,6 +13,7 @@ export const Keys = {
     RECORDED_APPMAP: 'appmap.applandinc.recordedAppMap',
     OPENED_APPMAP: 'appmap.applandinc.workspaces_opened_appmap',
     FINDINGS_INVESTIGATED: 'appmap.applandinc.findingsInvestigated',
+    GENERATED_OPENAPI: 'appmap.applandinc.generatedOpenApi',
   },
 };
 
@@ -154,6 +155,14 @@ export default class ExtensionState {
 
   setFindingsInvestigated(workspaceFolder: vscode.WorkspaceFolder, value: boolean): void {
     this.setWorkspaceFlag(Keys.Workspace.FINDINGS_INVESTIGATED, value, workspaceFolder);
+  }
+
+  getWorkspaceGeneratedOpenApi(workspaceFolder: vscode.WorkspaceFolder): boolean {
+    return this.getWorkspaceFlag(Keys.Workspace.GENERATED_OPENAPI, workspaceFolder.uri.fsPath);
+  }
+
+  setWorkspaceGeneratedOpenApi(workspaceFolder: vscode.WorkspaceFolder, value: boolean): void {
+    this.setWorkspaceFlag(Keys.Workspace.GENERATED_OPENAPI, value, workspaceFolder);
   }
 
   resetState(): void {

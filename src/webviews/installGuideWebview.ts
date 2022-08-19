@@ -1,5 +1,6 @@
 import * as path from 'path';
 import * as vscode from 'vscode';
+import { GenerateOpenApi } from '../commands/generateOpenApi';
 import extensionSettings from '../configuration/extensionSettings';
 import { ProjectStateServiceInstance } from '../services/projectStateService';
 import { COPY_COMMAND, OPEN_VIEW, Telemetry } from '../telemetry';
@@ -91,7 +92,7 @@ export default class InstallGuideWebView {
               panel.webview.postMessage({
                 type: 'init',
                 projects: await collectProjects(),
-                disabled: ['openapi'],
+                disabled: [],
                 page: pageIndex,
                 findingsEnabled: extensionSettings.findingsEnabled(),
               });
@@ -137,6 +138,15 @@ export default class InstallGuideWebView {
                 vscode.commands.executeCommand('workbench.panel.markers.view.focus');
               }
               break;
+
+            case 'generate-openapi':
+              vscode.commands.executeCommand(
+                GenerateOpenApi,
+                vscode.ViewColumn.Beside,
+                message.projectPath
+              );
+              break;
+
             default:
               break;
           }

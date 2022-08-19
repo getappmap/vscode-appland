@@ -87,9 +87,9 @@ export class ProcessLog extends Array<ProcessLogItem> {
 
   protected appendLines(data: string, stream = OutputStream.Stdout, cache = false): void {
     data
-      .trim()
+      .trimEnd()
       .split('\n')
-      .forEach((l) => this.append(l.trim(), stream, cache));
+      .forEach((l) => this.append(l.trimEnd(), stream, cache));
   }
 
   append(data: string, stream = OutputStream.Stdout, cache = false): void {
