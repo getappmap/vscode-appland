@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import AppMapCollectionFile from '../services/appmapCollectionFile';
 import Links from './links';
-import { InstructionsTreeDataProvider } from './instructionsTreeDataProvider';
+import { DocsPages, InstructionsTreeDataProvider } from './instructionsTreeDataProvider';
 import { AppMapTreeDataProvider } from './appMapTreeDataProvider';
 import { LinkTreeDataProvider } from './linkTreeDataProvider';
 import { ProjectStateServiceInstance } from '../services/projectStateService';
@@ -43,7 +43,7 @@ export default function registerTrees(
       setTimeout(() => {
         // TODO: (KEG) Here is where we would show the repo state to determine which step should be
         // shown by default.
-        instructionsTree.reveal(instructionsTreeProvider.items[index]);
+        instructionsTree.reveal(DocsPages[index]);
       }, 0);
     })
   );
