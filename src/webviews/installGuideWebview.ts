@@ -8,6 +8,7 @@ import { getNonce, getWorkspaceFolderFromPath } from '../util';
 import ProjectMetadata from '../workspace/projectMetadata';
 import * as semver from 'semver';
 import ExtensionState from '../configuration/extensionState';
+import { DocPageId, DocsPages } from '../tree/instructionsTreeDataProvider';
 
 type PageMessage = {
   page: string;
@@ -17,6 +18,13 @@ type PageMessage = {
 type ClipboardMessage = {
   text: string;
 } & PageMessage;
+
+async function defaultPageId(projectStates: ProjectStateServiceInstance[]): Promise<DocPageId> {
+  const fallback = DocsPages[0].id;
+  if (projectStates.length !== 1) return fallback;
+  const metadata = await projectStates[0].metadata();
+  return DocsPages.find(({ completion }) => !metadata[completion])?.id || fallback;
+}
 
 export default class InstallGuideWebView {
   public static readonly viewType = 'appmap.views.installGuide';
@@ -32,7 +40,7 @@ export default class InstallGuideWebView {
 
       if (!extensionState.hasViewedInstallGuide) {
         extensionState.hasViewedInstallGuide = true;
-        return vscode.commands.executeCommand('appmap.openInstallGuide', 'project-picker');
+        return vscode.commands.executeCommand(InstallGuideWebView.command, 'project-picker');
       }
     }
   }
@@ -43,13 +51,15 @@ export default class InstallGuideWebView {
     extensionState: ExtensionState
   ): void {
     context.subscriptions.push(
-      vscode.commands.registerCommand(this.command, async (pageIndex: number) => {
+      vscode.commands.registerCommand(this.command, async (page?: DocPageId) => {
+        if (!page) page = await defaultPageId(projectStates);
+
         // Attempt to re-use an existing webview for this project if one exists
         if (this.existingPanel) {
           this.existingPanel.reveal(vscode.ViewColumn.One);
           this.existingPanel.webview.postMessage({
             type: 'page',
-            page: pageIndex,
+            page,
           });
           return;
         }
@@ -93,7 +103,7 @@ export default class InstallGuideWebView {
                 type: 'init',
                 projects: await collectProjects(),
                 disabled: [],
-                page: pageIndex,
+                page,
                 findingsEnabled: extensionSettings.findingsEnabled(),
               });
 
