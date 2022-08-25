@@ -15,6 +15,7 @@ import { spawnSync } from 'child_process';
 const PROJECT_A = 'test/fixtures/workspaces/project-a';
 const PROJECT_UPTODATE = 'test/fixtures/workspaces/project-uptodate';
 const testWorkspaces = [PROJECT_A, PROJECT_UPTODATE];
+const failFast = process.argv.includes('--fail-fast');
 
 async function integrationTest() {
   const projectRootDir = resolve(__dirname, '..');
@@ -162,6 +163,7 @@ async function integrationTest() {
         console.log(`${f}:`);
         console.log(spawnSync('cat', [f]).stdout.toString());
       });
+      if (failFast) break;
     }
   }
   process.exit(succeeded ? TestStatus.Ok : TestStatus.Failed);
