@@ -11,11 +11,30 @@ import { resolve } from 'path';
 import assert from 'assert';
 import { TestStatus } from './TestStatus';
 import { spawnSync } from 'child_process';
+import { stat } from 'fs/promises';
 
 const PROJECT_A = 'test/fixtures/workspaces/project-a';
 const PROJECT_UPTODATE = 'test/fixtures/workspaces/project-uptodate';
 const testWorkspaces = [PROJECT_A, PROJECT_UPTODATE];
 const failFast = process.argv.includes('--fail-fast');
+
+const startTime = new Date();
+
+async function asyncFilter<T>(
+  collection: Iterable<T>,
+  predicate: (x: T) => Promise<boolean>
+): Promise<T[]> {
+  const results: T[] = [];
+  const checks: Promise<void>[] = [];
+  const maybePush = async (x: T) => {
+    if (await predicate(x)) results.push(x);
+  };
+
+  for (const x of collection) checks.push(maybePush(x));
+
+  await Promise.all(checks);
+  return results;
+}
 
 async function integrationTest() {
   const projectRootDir = resolve(__dirname, '..');
@@ -158,7 +177,11 @@ async function integrationTest() {
     } catch (e) {
       succeeded = false;
       console.warn(`Test ${testFile} failed: ${e}`);
-      const logs = glob.sync('.vscode-test/user-data/logs/**/?-AppMap Services.log');
+      const logs = await asyncFilter(
+        glob.sync('.vscode-test/user-data/logs/**/?-AppMap Services.log'),
+        async (path) => (await stat(path)).mtime > startTime
+      );
+
       logs.forEach((f) => {
         console.log(`${f}:`);
         console.log(spawnSync('cat', [f]).stdout.toString());

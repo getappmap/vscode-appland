@@ -150,11 +150,6 @@ export async function waitForAppMapServices(touchFile: string): Promise<AppMapSe
     const wsFiles = glob.sync(`${vscode.workspace.workspaceFolders![0].uri.fsPath}/**`);
     console.log(`wsFiles: ${JSON.stringify(wsFiles, null, 2)}`);
     console.log(e);
-    const logs = glob.sync('.vscode-test/user-data/logs/**/?-AppMap Services.log');
-    logs.forEach((f) => {
-      console.log(`${f}:`);
-      console.log(spawnSync('cat', [f]).stdout.toString());
-    });
     throw e;
   }
 
