@@ -1,3 +1,10 @@
+# [0.41.0](https://github.com/applandinc/vscode-appland/compare/v0.40.0...v0.41.0) (2022-08-26)
+
+
+### Features
+
+* Keep viewer state when switching tabs ([c46be25](https://github.com/applandinc/vscode-appland/commit/c46be250190ebac3befb350a2be62aa71b622c48))
+
 # [0.40.0](https://github.com/applandinc/vscode-appland/compare/v0.39.2...v0.40.0) (2022-08-19)
 
 
