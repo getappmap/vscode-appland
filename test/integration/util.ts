@@ -135,6 +135,11 @@ export async function restoreFile(filePath: string, workspaceDir = ProjectA): Pr
   });
 }
 
+/**
+ * Touches a file, then waits for appmap services to react.
+ * @param touchFile file to touch
+ * @returns current state of services
+ */
 export async function waitForAppMapServices(touchFile: string): Promise<AppMapService> {
   const appMapService = await waitForExtension();
   const wsPath = vscode.workspace.workspaceFolders![0].uri.fsPath;
