@@ -18,7 +18,7 @@ const PROJECT_UPTODATE = 'test/fixtures/workspaces/project-uptodate';
 const testWorkspaces = [PROJECT_A, PROJECT_UPTODATE];
 const failFast = process.argv.includes('--fail-fast');
 
-const startTime = new Date();
+let startTime = new Date();
 
 async function asyncFilter<T>(
   collection: Iterable<T>,
@@ -121,6 +121,7 @@ async function integrationTest() {
   );
 
   const runTests = async (testFile: string, workspaceDir: string) => {
+    startTime = new Date();
     await runTestsInElectron({
       vscodeExecutablePath,
       extensionDevelopmentPath,
