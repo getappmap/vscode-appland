@@ -89,10 +89,20 @@ export async function retry(
 }
 
 interface ExecOptions {
-  encoding?: string | null;
   output?: boolean | null;
   userCanTerminate?: boolean | null;
   progressMessage?: string | null;
+}
+
+function removeExecOptions<T extends ExecOptions>(
+  options?: T | null
+): Exclude<T, ExecOptions> | undefined | null {
+  if (!options) return options;
+  const result = { ...options };
+  delete result.output;
+  delete result.userCanTerminate;
+  delete result.progressMessage;
+  return result as Exclude<T, ExecOptions>;
 }
 
 async function handleExecChildProcess(
@@ -126,7 +136,8 @@ async function handleExecChildProcess(
       });
 
       childProcess.on('close', (exitCode) => {
-        resolve({ exitCode, stdout, stderr });
+        if (!exitCode) reject(`child process ${childProcess.spawnfile} failed`);
+        else resolve({ exitCode, stdout, stderr });
       });
 
       childProcess.on('error', (e) => {
@@ -168,7 +179,7 @@ export async function execFile(
   args?: ReadonlyArray<string> | null,
   options?: (ExecOptions & ExecFileOptions) | undefined | null
 ): Promise<{ exitCode: number; stdout: string; stderr: string }> {
-  const childProcess = processExecFile(file, args, options);
+  const childProcess = processExecFile(file, args, removeExecOptions(options));
   return await handleExecChildProcess(childProcess, options, (output) => {
     output.append(`Executing: ${file} ${args?.join(' ')}\n`);
 
@@ -188,7 +199,7 @@ export async function exec(
   command: string,
   options?: (ExecOptions & ProcessExecOptions) | undefined | null
 ): Promise<{ exitCode: number; stdout: string; stderr: string }> {
-  const childProcess = processExec(command, options);
+  const childProcess = processExec(command, removeExecOptions(options));
   return await handleExecChildProcess(childProcess, options, (output) => {
     output.append(`Executing: ${command}\n\n`);
   });
