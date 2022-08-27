@@ -189,10 +189,10 @@ async function integrationTest() {
       if (failFast) break;
     }
   }
-  process.exit(succeeded ? TestStatus.Ok : TestStatus.Failed);
+  process.exitCode = succeeded ? TestStatus.Ok : TestStatus.Failed;
 }
 
 integrationTest().catch((e) => {
   console.warn(e);
-  process.exit(TestStatus.Error);
+  process.exitCode = TestStatus.Error;
 });
