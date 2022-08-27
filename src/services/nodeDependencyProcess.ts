@@ -1,6 +1,7 @@
 import * as childProcess from 'child_process';
 import * as vscode from 'vscode';
 import * as path from 'path';
+import { readFile } from 'fs/promises';
 
 export enum ProgramName {
   Appmap = 'appmap',
@@ -107,35 +108,9 @@ export class ProcessLog extends Array<ProcessLogItem> {
 }
 
 export async function getBinPath(options: ProgramOptions): Promise<string> {
-  const yarnPath = path.join(options.globalStoragePath, 'yarn.js');
-  const process = await spawn({
-    args: [yarnPath, 'bin', options.dependency],
-    cwd: options.globalStoragePath,
-    cacheLog: true,
-  });
-  return new Promise((resolve, reject) => {
-    process.once('error', (err) => reject(err));
-    process.once('exit', async (code) => {
-      // There seem to be intermittent times where `exit` is handled before `data`,
-      // meaning the output of this command will not yet have been recorded by the
-      // time this event was fired. Push this handler to the back of the async queue.
-      await new Promise((resolve) => setTimeout(resolve, 0));
-
-      if (code && code !== 0) {
-        const message = [
-          `failed to fetch bin path for ${options.dependency}`,
-          process.log.toString(),
-        ].join('\n');
-        throw new Error(message);
-      }
-
-      const result = process.log
-        .filter((l) => l.stream === OutputStream.Stdout)
-        .map((l) => l.data)
-        .join('\n');
-      resolve(result);
-    });
-  });
+  const base = path.join(options.globalStoragePath, 'node_modules', '@appland', options.dependency);
+  const bin = JSON.parse(await readFile(path.join(base, 'package.json'), 'utf8')).bin;
+  return path.join(base, bin);
 }
 
 export function spawn(options: SpawnOptions): ChildProcess {
