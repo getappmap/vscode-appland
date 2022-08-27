@@ -127,12 +127,12 @@ export async function waitForIndexer(): Promise<void> {
 }
 
 export async function restoreFile(filePath: string, workspaceDir = ProjectA): Promise<void> {
-  await withTmpDir(async (tmpDir) => {
-    const tmpPath = join(tmpDir, basename(filePath));
-    const dstPath = join(ProjectA, filePath);
-    await executeWorkspaceOSCommand(`git show HEAD:./${filePath} > ${tmpPath}`, workspaceDir);
-    await fs.rename(tmpPath, dstPath);
-  });
+  // note: git checkout filePath doesn't work here since it doesn't replace the file atomically
+  // which is currently required for the indexer to work correctly
+  const dstPath = join(ProjectA, filePath);
+  const tmpPath = dstPath + '.orig';
+  await executeWorkspaceOSCommand(`git show HEAD:./${filePath} > ${tmpPath}`, workspaceDir);
+  await fs.rename(tmpPath, dstPath);
 }
 
 /**
