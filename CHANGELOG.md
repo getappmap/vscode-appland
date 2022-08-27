@@ -1,3 +1,11 @@
+## [0.41.1](https://github.com/applandinc/vscode-appland/compare/v0.41.0...v0.41.1) (2022-08-27)
+
+
+### Bug Fixes
+
+* Getting started button with no appmaps now opens instructions ([29dc5a2](https://github.com/applandinc/vscode-appland/commit/29dc5a2ac769d5ab3a2ce0e1f8efce1950fcbb24))
+* Remove traces of obsolete appMap.instructionsEnabled config ([eaa1c6b](https://github.com/applandinc/vscode-appland/commit/eaa1c6b86697f7d13723f5b5a2317bf8e10db9df))
+
 # [0.41.0](https://github.com/applandinc/vscode-appland/compare/v0.40.0...v0.41.0) (2022-08-26)
 
 
