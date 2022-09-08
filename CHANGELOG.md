@@ -1,3 +1,10 @@
+## [0.41.2](https://github.com/applandinc/vscode-appland/compare/v0.41.1...v0.41.2) (2022-09-08)
+
+
+### Bug Fixes
+
+* Prevent a case where OpenAPI would generate invalid YAML ([f55b440](https://github.com/applandinc/vscode-appland/commit/f55b440ffac6bd0264e5715051554b2396cac0a4))
+
 ## [0.41.1](https://github.com/applandinc/vscode-appland/compare/v0.41.0...v0.41.1) (2022-08-27)
 
 
