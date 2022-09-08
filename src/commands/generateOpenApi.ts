@@ -83,7 +83,7 @@ export default async function generateOpenApi(
             content: openApiCmd.log
               .filter((line) => line.stream === OutputStream.Stdout)
               .map((line) => line.data)
-              .join('\n'),
+              .join(''),
           });
 
           vscode.window.showTextDocument(document, viewColumn);

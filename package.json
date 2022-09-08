@@ -380,7 +380,8 @@
     "vue-loader": "^15.9.6",
     "vue-style-loader": "^4.1.2",
     "webpack": "^5.72.1",
-    "webpack-cli": "^4.3.1"
+    "webpack-cli": "^4.3.1",
+    "yaml": "^2.1.1"
   },
   "dependencies": {
     "@appland/components": "^2.11.1",

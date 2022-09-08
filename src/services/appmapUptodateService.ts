@@ -106,7 +106,7 @@ export default class AppmapUptodateServiceInstance extends EventEmitter
     const outofDateAppMapFiles = new Set(
       processLog
         .filter((line) => line.stream === OutputStream.Stdout && line.data.length > 0)
-        .map((line) => resolve(this.folder.uri.fsPath, line.data))
+        .map((line) => resolve(this.folder.uri.fsPath, line.data.trim()))
     );
     const outofDateAppMapLocations = await this.collectOutOfDateTestLocations(outofDateAppMapFiles);
     console.log(
