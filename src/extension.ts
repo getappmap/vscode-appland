@@ -47,6 +47,8 @@ import UriHandler from './uri/uriHandler';
 import OpenAppMapUriHandler from './uri/openAppMapUriHandler';
 import EarlyAccessUriHandler, { tryDisplayEarlyAccessWelcome } from './uri/earlyAccessUriHandler';
 import generateOpenApi from './commands/generateOpenApi';
+import LiveRemoteRecordingService from './services/liveRemoteRecordingService';
+import { LiveRecordingTreeDataProvider } from './tree/liveRecordingTreeDataProvider';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   Telemetry.register(context);
@@ -224,6 +226,16 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     (vscode.workspace.workspaceFolders || []).forEach((workspaceFolder) => {
       Telemetry.sendEvent(PROJECT_OPEN, { rootDirectory: workspaceFolder.uri.fsPath });
     });
+
+    const liveAppMapsProvider = new LiveRecordingTreeDataProvider();
+    context.subscriptions.push(
+      vscode.window.createTreeView('appmap.views.live-appmaps', {
+        treeDataProvider: liveAppMapsProvider,
+      })
+    );
+
+    const liveAppMap = new LiveRemoteRecordingService(liveAppMapsProvider);
+    liveAppMap.start(context);
 
     appmapLinkProvider();
     const editorProvider = AppMapEditorProvider.register(context, extensionState);

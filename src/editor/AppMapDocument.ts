@@ -4,8 +4,8 @@ export default class AppMapDocument implements vscode.CustomDocument {
   public data: Record<string, unknown>;
   public metadata: Record<string, unknown> = {};
 
-  constructor(public uri: vscode.Uri, public raw: Uint8Array) {
-    this.data = JSON.parse(raw.toString());
+  constructor(public uri: vscode.Uri, public raw: string) {
+    this.data = JSON.parse(raw);
     if ('metadata' in this.data) this.metadata = this.data.metadata as Record<string, unknown>;
   }
 

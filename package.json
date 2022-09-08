@@ -153,6 +153,10 @@
       {
         "command": "appmap.generateOpenApi",
         "title": "AppMap: Generate OpenAPI definitions"
+      },
+      {
+        "command": "appmap.clearLiveAppMaps",
+        "title": "AppMap: Clear live AppMaps"
       }
     ],
     "configuration": {
@@ -225,6 +229,12 @@
           "contextualTitle": "AppMap",
           "visibility": "visible",
           "icon": "images/logo.svg"
+        },
+        {
+          "id": "appmap.views.live-appmaps",
+          "name": "Requests",
+          "contextualTitle": "AppMap",
+          "visibility": "visible"
         },
         {
           "id": "appmap.views.findings",

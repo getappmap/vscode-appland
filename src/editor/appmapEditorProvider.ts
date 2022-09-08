@@ -79,8 +79,8 @@ export default class AppMapEditorProvider
   ) {}
 
   async openCustomDocument(uri: vscode.Uri): Promise<AppMapDocument> {
-    const data = await vscode.workspace.fs.readFile(uri);
-    return new AppMapDocument(uri, data);
+    const document = await vscode.workspace.openTextDocument(uri);
+    return new AppMapDocument(uri, document.getText());
   }
 
   private documents = new Array<AppMapDocument>();
