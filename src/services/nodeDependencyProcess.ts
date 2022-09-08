@@ -65,8 +65,8 @@ export class ProcessLog extends Array<ProcessLogItem> {
 
     process.stdout.setEncoding('utf8');
     process.stderr.setEncoding('utf8');
-    process.stdout.on('data', (data) => log.appendLines(data, OutputStream.Stdout, true));
-    process.stderr.on('data', (data) => log.appendLines(data, OutputStream.Stderr, true));
+    process.stdout.on('data', (data) => log.append(data, OutputStream.Stdout, true));
+    process.stderr.on('data', (data) => log.append(data, OutputStream.Stderr, true));
     process.once('error', (err) =>
       log.append(`an error occurred: ${String(err)}`, OutputStream.Stderr)
     );
@@ -86,19 +86,19 @@ export class ProcessLog extends Array<ProcessLogItem> {
     return modifiedProcess;
   }
 
-  protected appendLines(data: string, stream = OutputStream.Stdout, cache = false): void {
-    data
-      .trimEnd()
-      .split('\n')
-      .forEach((l) => this.append(l.trimEnd(), stream, cache));
-  }
-
   append(data: string, stream = OutputStream.Stdout, cache = false): void {
     if (this.shouldCache && cache) {
       this.push({ stream, data });
     }
+
     if (this.outputChannel) {
-      this.outputChannel.appendLine(`${this.process?.pid} [${OutputStream[stream]}] ${data}`);
+      const { outputChannel } = this;
+      data
+        .trimEnd()
+        .split('\n')
+        .forEach((line) => {
+          outputChannel.appendLine(`${this.process?.pid} [${OutputStream[stream]}] ${line}`);
+        });
     }
   }
 
