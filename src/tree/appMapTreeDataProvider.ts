@@ -1,5 +1,6 @@
 import assert from 'assert';
 import { join } from 'path';
+import { isDeepStrictEqual } from 'util';
 import * as vscode from 'vscode';
 import AppMapCollection from '../services/appmapCollection';
 import AppMapLoader from '../services/appmapLoader';
@@ -15,12 +16,34 @@ class AppMapTreeItem extends vscode.TreeItem {
   descriptor?: AppMapDescriptor;
 }
 
+class RootTreeItem extends vscode.TreeItem {
+  folderProperties?: FolderProperties;
+}
+
+class FolderProperties {
+  constructor(
+    public recorderName: string,
+    public recorderType?: string,
+    public language?: string
+  ) {}
+}
+
+type SortFunction = (a: AppMapLoader, b: AppMapLoader) => number;
+
 export class AppMapTreeDataProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
   private appmaps: AppMapCollection;
   private appmapsUpToDate?: AppmapUptodateService;
 
   private _onDidChangeTreeData = new vscode.EventEmitter<undefined>();
   public readonly onDidChangeTreeData = this._onDidChangeTreeData.event;
+
+  // Here you can specify the sort function used for different recording types.
+  // Typical choices are alphabetical and chronological.
+  static SortMethod: Record<string, SortFunction> = {
+    requests: AppMapTreeDataProvider.sortByTimestamp,
+    remote: AppMapTreeDataProvider.sortByName,
+    tests: AppMapTreeDataProvider.sortByName,
+  };
 
   constructor(appmaps: AppMapCollection, appmapsUptodate?: AppmapUptodateService) {
     this.appmaps = appmaps;
@@ -43,52 +66,82 @@ export class AppMapTreeDataProvider implements vscode.TreeDataProvider<vscode.Tr
     if (!element) {
       return this.getRoots();
     } else {
-      const folderName = element.label;
-      assert(folderName);
-      return this.getAppMapsForRecordingMethod(folderName.toString());
+      const folderProperties = (element as any).properties;
+      assert(folderProperties);
+      return this.getAppMapsForRecordingMethod(folderProperties);
     }
   }
 
-  protected getRoots(): Thenable<vscode.TreeItem[]> {
+  protected getRoots(): Thenable<RootTreeItem[]> {
     const folderNames = new Set<string>();
+    const folderProperties = new Map<string, FolderProperties>();
 
-    this.appmaps
-      .appMaps()
-      .forEach((appMap) => folderNames.add(AppMapTreeDataProvider.appMapFolderName(appMap)));
+    this.appmaps.appMaps().forEach((appMap) => {
+      const properties = AppMapTreeDataProvider.appMapFolderProperties(appMap);
+      const folderName = AppMapTreeDataProvider.folderName(properties);
+      if (!folderNames.has(folderName)) {
+        folderProperties.set(folderName, properties);
+      }
+      folderNames.add(folderName);
+    });
 
     return Promise.resolve(
       [...folderNames].sort().map((name) => ({
         label: name,
         collapsibleState: vscode.TreeItemCollapsibleState.Expanded,
+        properties: folderProperties.get(name),
       }))
     );
   }
 
-  protected static appMapFolderName(appMap: AppMapLoader): string {
-    const metadata = appMap.descriptor.metadata as any;
-    const recorderType = metadata?.recorder?.type as string | undefined;
-    const recorder = metadata?.recorder?.name || 'unknown';
-    const language = metadata?.language?.name || 'unknown';
+  protected static sortByTimestamp(a: AppMapLoader, b: AppMapLoader): number {
+    return b.descriptor.timestamp - a.descriptor.timestamp;
+  }
+
+  protected static sortByName(a: AppMapLoader, b: AppMapLoader): number {
+    const aName = (a.descriptor.metadata?.name as string) || LABEL_NO_NAME;
+    const bName = (b.descriptor.metadata?.name as string) || LABEL_NO_NAME;
+    return aName.localeCompare(bName);
+  }
+
+  protected static folderName(properties: FolderProperties): string {
     let name: string;
-    if (recorderType && recorderType.length > 1) {
-      name = `${recorderType[0].toLocaleUpperCase()}${recorderType.slice(
+    if (properties.recorderType && properties.recorderType.length > 1) {
+      name = `${properties.recorderType[0].toLocaleUpperCase()}${properties.recorderType.slice(
         1
-      )} (${language} + ${recorder})`;
+      )} (${properties.language} + ${properties.recorderName})`;
     } else {
-      name = recorder;
+      name = properties.recorderName;
     }
     return name;
   }
 
-  protected getAppMapsForRecordingMethod(recordingMethod: string): Thenable<vscode.TreeItem[]> {
+  protected static appMapFolderProperties(appMap: AppMapLoader): FolderProperties {
+    // Not my fault; it's declared as a Record.
+    const metadata = appMap.descriptor.metadata as any;
+
+    const name = metadata?.recorder?.name;
+    const type = metadata?.recorder?.type;
+    const language = metadata?.language?.name;
+    return new FolderProperties(name || 'unknown recorder', type, language);
+  }
+
+  protected getAppMapsForRecordingMethod(
+    folderProperties: FolderProperties
+  ): Thenable<vscode.TreeItem[]> {
     if (!this.appmaps) {
       return Promise.resolve([]);
     }
 
+    const sortFunction =
+      AppMapTreeDataProvider.SortMethod[folderProperties.recorderType || 'unknown recorder type'] ||
+      AppMapTreeDataProvider.sortByName;
     const listItems = this.appmaps
       .appMaps()
-      .filter((appMap) => AppMapTreeDataProvider.appMapFolderName(appMap) === recordingMethod)
-      .sort((a, b) => b.descriptor.timestamp - a.descriptor.timestamp)
+      .filter((appMap) =>
+        isDeepStrictEqual(AppMapTreeDataProvider.appMapFolderProperties(appMap), folderProperties)
+      )
+      .sort(sortFunction)
       .map(this.buildTreeItem.bind(this));
 
     return Promise.resolve(listItems);
