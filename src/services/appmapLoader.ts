@@ -3,6 +3,7 @@ import { AppMap } from '@appland/models';
 
 export interface AppMapDescriptor {
   resourceUri: vscode.Uri;
+  timestamp: number;
   metadata?: Record<string, unknown>;
   numRequests?: number;
   numQueries?: number;

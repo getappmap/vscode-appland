@@ -1,3 +1,4 @@
+import assert from 'assert';
 import { join } from 'path';
 import * as vscode from 'vscode';
 import AppMapCollection from '../services/appmapCollection';
@@ -38,15 +39,57 @@ export class AppMapTreeDataProvider implements vscode.TreeDataProvider<vscode.Tr
     return Promise.resolve(null);
   }
 
-  public getChildren(): Thenable<vscode.TreeItem[]> {
+  public getChildren(element?: vscode.TreeItem): Thenable<vscode.TreeItem[]> {
+    if (!element) {
+      return this.getRoots();
+    } else {
+      const folderName = element.label;
+      assert(folderName);
+      return this.getAppMapsForRecordingMethod(folderName.toString());
+    }
+  }
+
+  protected getRoots(): Thenable<vscode.TreeItem[]> {
+    const folderNames = new Set<string>();
+
+    this.appmaps
+      .appMaps()
+      .forEach((appMap) => folderNames.add(AppMapTreeDataProvider.appMapFolderName(appMap)));
+
+    return Promise.resolve(
+      [...folderNames].sort().map((name) => ({
+        label: name,
+        collapsibleState: vscode.TreeItemCollapsibleState.Expanded,
+      }))
+    );
+  }
+
+  protected static appMapFolderName(appMap: AppMapLoader): string {
+    const metadata = appMap.descriptor.metadata as any;
+    const recorderType = metadata?.recorder?.type as string | undefined;
+    const recorder = metadata?.recorder?.name || 'unknown';
+    const language = metadata?.language?.name || 'unknown';
+    let name: string;
+    if (recorderType && recorderType.length > 1) {
+      name = `${recorderType[0].toLocaleUpperCase()}${recorderType.slice(
+        1
+      )} (${language} + ${recorder})`;
+    } else {
+      name = recorder;
+    }
+    return name;
+  }
+
+  protected getAppMapsForRecordingMethod(recordingMethod: string): Thenable<vscode.TreeItem[]> {
     if (!this.appmaps) {
       return Promise.resolve([]);
     }
 
     const listItems = this.appmaps
       .appMaps()
-      .map(this.buildTreeItem.bind(this))
-      .sort((a, b) => (a.label || '').toString().localeCompare((b.label || '').toString()));
+      .filter((appMap) => AppMapTreeDataProvider.appMapFolderName(appMap) === recordingMethod)
+      .sort((a, b) => b.descriptor.timestamp - a.descriptor.timestamp)
+      .map(this.buildTreeItem.bind(this));
 
     return Promise.resolve(listItems);
   }

@@ -47,6 +47,7 @@ export default class AppMapCollectionFile implements AppMapCollection, AppMapsSe
   static async collectAppMapDescriptor(uri: vscode.Uri): Promise<AppMapDescriptor | undefined> {
     try {
       const buf = await fs.readFile(uri.fsPath);
+      const timestamp = (await fs.stat(uri.fsPath)).mtimeMs;
       const appmap = JSON.parse(buf.toString());
       let numRequests = 0;
       let numQueries = 0;
@@ -71,7 +72,14 @@ export default class AppMapCollectionFile implements AppMapCollection, AppMapsSe
         (obj.children || []).forEach((child) => stack.push(child));
       }
 
-      return { metadata: appmap.metadata, numRequests, numQueries, numFunctions, resourceUri: uri };
+      return {
+        metadata: appmap.metadata,
+        timestamp: timestamp,
+        numRequests,
+        numQueries,
+        numFunctions,
+        resourceUri: uri,
+      };
     } catch (e) {
       console.error(e);
       console.trace();
