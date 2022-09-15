@@ -23,6 +23,7 @@ describe('Extension API', () => {
       'extensionState',
       'runtimeAnalysisCta',
       'projectState',
+      'trees',
     ]);
   });
 });

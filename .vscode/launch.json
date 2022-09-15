@@ -6,7 +6,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Run Extension",
+      "name": "Run extension",
       "type": "extensionHost",
       "request": "launch",
       "args": ["--extensionDevelopmentPath=${workspaceFolder}"],
@@ -15,7 +15,7 @@
       }
     },
     {
-      "name": "Run system tests",
+      "name": "System tests",
       "type": "node",
       "request": "launch",
       "args": ["test/systemTest.ts"],
@@ -24,11 +24,11 @@
       "runtimeArgs": ["run"]
     },
     {
-      "name": "Extension Tests",
+      "name": "Extension tests",
       "type": "extensionHost",
       "request": "launch",
       "env": {
-        "TEST_FILE": "scanner/performAsAppMapsAreModified.test.js"
+        "TEST_FILE": "appmaps/appmapsTree.test.js"
       },
       "args": [
         "--user-data-dir=${workspaceFolder}/.vscode-test/user-data",

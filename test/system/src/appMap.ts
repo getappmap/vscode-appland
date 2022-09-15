@@ -50,7 +50,7 @@ export default class AppMap {
   }
 
   public appMapTreeItem(): Locator {
-    return this.appMapTree.locator('.pane-body >> [role="treeitem"]').first();
+    return this.appMapTree.locator('.pane-body >> [role="treeitem"]:not([aria-expanded])').first();
   }
 
   public async expandFindings(): Promise<void> {
