@@ -6,13 +6,14 @@ import { AppMapTreeDataProvider } from './appMapTreeDataProvider';
 import { LinkTreeDataProvider } from './linkTreeDataProvider';
 import { ProjectStateServiceInstance } from '../services/projectStateService';
 import { AppmapUptodateService } from '../services/appmapUptodateService';
+import { AppMapTreeDataProviders } from '../appMapService';
 
 export default function registerTrees(
   context: vscode.ExtensionContext,
   localAppMaps: AppMapCollectionFile,
   projectStates: ProjectStateServiceInstance[],
   appmapsUptodate?: AppmapUptodateService
-): Record<string, vscode.TreeView<vscode.TreeItem>> {
+): AppMapTreeDataProviders {
   LinkTreeDataProvider.registerCommands(context);
 
   const instructionsTreeProvider = new InstructionsTreeDataProvider(context, projectStates);
@@ -60,5 +61,5 @@ export default function registerTrees(
     })
   );
 
-  return { localTree: localAppMapsTree, documentationTree };
+  return { appmaps: localAppMapsProvider };
 }

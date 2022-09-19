@@ -215,7 +215,12 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
     deleteAllAppMaps(context, classMapIndex, findingsIndex);
 
-    registerTrees(context, appmapCollectionFile, projectStates, appmapUptodateService);
+    const trees = registerTrees(
+      context,
+      appmapCollectionFile,
+      projectStates,
+      appmapUptodateService
+    );
 
     if (findingsEnabled) {
       openFinding(context, projectStates, extensionState);
@@ -287,6 +292,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       extensionState,
       runtimeAnalysisCta,
       projectState,
+      trees,
     };
   } catch (exception) {
     Telemetry.sendEvent(DEBUG_EXCEPTION, { exception: exception as Error });

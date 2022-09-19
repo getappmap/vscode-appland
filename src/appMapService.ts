@@ -1,3 +1,5 @@
+import * as vscode from 'vscode';
+
 import { AppMapsService } from './appMapsService';
 import { ClassMapService } from './classMapService';
 import ExtensionState from './configuration/extensionState';
@@ -22,6 +24,10 @@ export interface AppMapProcessService {
   invocations: Invocation[];
 }
 
+export type AppMapTreeDataProviders = {
+  appmaps: vscode.TreeDataProvider<vscode.TreeItem>;
+};
+
 export default interface AppMapService {
   editorProvider: AppMapEditorProvider;
   localAppMaps: AppMapsService;
@@ -37,4 +43,5 @@ export default interface AppMapService {
   extensionState: ExtensionState;
   runtimeAnalysisCta: RuntimeAnalysisCtaService;
   projectState: ProjectStateService;
+  trees: AppMapTreeDataProviders;
 }
