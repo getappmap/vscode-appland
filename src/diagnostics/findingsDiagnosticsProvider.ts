@@ -57,7 +57,7 @@ export default class FindingsDiagnosticsProvider {
         code: {
           value: finding.finding.ruleId,
           target: vscode.Uri.parse(
-            `https://appland.com/docs/analysis/rules-reference#${finding.finding.ruleId}`
+            `https://appmap.io/docs/analysis/rules-reference#${finding.finding.ruleId}`
           ),
         },
       } as vscode.Diagnostic;
