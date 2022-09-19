@@ -13,6 +13,7 @@ import { DocPageId, DocsPages } from '../tree/instructionsTreeDataProvider';
 type PageMessage = {
   page: string;
   project?: ProjectMetadata;
+  projects?: ProjectMetadata[];
 };
 
 type ClipboardMessage = {
@@ -115,8 +116,13 @@ export default class InstallGuideWebView {
 
             case 'open-page':
               {
-                const { page, project } = message as PageMessage;
-                Telemetry.sendEvent(OPEN_VIEW, { viewId: page, rootDirectory: project?.path });
+                const { page, project, projects } = message as PageMessage;
+                Telemetry.sendEvent(OPEN_VIEW, {
+                  viewId: page,
+                  rootDirectory: project?.path,
+                  projects: projects || [],
+                  project: project || ({} as ProjectMetadata),
+                });
                 if (page === 'open-appmaps') {
                   vscode.commands.executeCommand('appmap.view.focusCodeObjects');
                 }

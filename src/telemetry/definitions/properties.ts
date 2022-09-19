@@ -6,6 +6,7 @@ import TelemetryDataProvider from '../telemetryDataProvider';
 import LanguageResolver, { UNKNOWN_LANGUAGE } from '../../services/languageResolver';
 import { fileExists } from '../../util';
 import ErrorCode from './errorCodes';
+import ProjectMetadata from '../../workspace/projectMetadata';
 
 export const DEBUG_EXCEPTION = new TelemetryDataProvider({
   id: 'appmap.debug.exception',
@@ -148,5 +149,21 @@ export const IS_TELEMETRY_ENABLED = new TelemetryDataProvider({
   id: 'appmap.enabled',
   async value({ enabled }: { enabled: boolean }) {
     return String(enabled);
+  },
+});
+
+export const IS_INSTALLABLE = new TelemetryDataProvider({
+  id: 'appmap.project.is_installable',
+  async value({ project }: { project: ProjectMetadata }) {
+    const isInstallable = project?.score && project.score > 1;
+    return String(isInstallable);
+  },
+});
+
+export const HAS_INSTALLABLE_PROJECT = new TelemetryDataProvider({
+  id: 'appmap.project.has_installable_project',
+  async value({ projects }: { projects: ProjectMetadata[] }) {
+    const isInstallable = projects.some((project) => project?.score && project.score > 1);
+    return String(isInstallable);
   },
 });
