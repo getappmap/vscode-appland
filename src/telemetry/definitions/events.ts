@@ -39,7 +39,12 @@ export const PROJECT_CONFIG_WRITE = new Event({
 
 export const OPEN_VIEW = new Event({
   name: 'view:open',
-  properties: [Properties.VIEW_ID, Properties.PROJECT_LANGUAGE],
+  properties: [
+    Properties.VIEW_ID,
+    Properties.PROJECT_LANGUAGE,
+    Properties.IS_INSTALLABLE,
+    Properties.HAS_INSTALLABLE_PROJECT,
+  ],
 });
 
 export const APPMAP_OPEN = new Event({
