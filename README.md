@@ -1,7 +1,7 @@
 [![Version](https://img.shields.io/visual-studio-marketplace/v/appland.appmap)](https://marketplace.visualstudio.com/items?itemName=appland.appmap)
 [![Avg Stars](https://img.shields.io/visual-studio-marketplace/stars/appland.appmap)](https://marketplace.visualstudio.com/items?itemName=appland.appmap)
 [![GitHub Stars](https://img.shields.io/github/stars/applandinc/vscode-appland?style=social)](https://marketplace.visualstudio.com/items?itemName=appland.appmap)
-[![Slack](https://img.shields.io/badge/Slack-Join%20the%20community-green)](https://appland.com/slack)
+[![Slack](https://img.shields.io/badge/Slack-Join%20the%20community-green)](https://appmap.io/slack)
 
 # AppMap for Visual Studio Code
 
@@ -59,15 +59,15 @@ dynamic security analysis (**DAST**).
 
 ## Resources
 
-- [Documentation](https://appland.com/docs/appmap-overview.html)
+- [Documentation](https://appmap.io/docs/appmap-overview.html)
 - [GitHub](https://github.com/applandinc)
-- [Blog](https://appland.com/blog/)
-- [1:1 support with our dev team on Slack](https://appland.com/slack)
-- Email support: [support@app.land](mailto:support@app.land)
+- [Blog](https://appmap.io/blog/)
+- [1:1 support with our dev team on Slack](https://appmap.io/slack)
+- Email support: [support@app.land](mailto:support@appmap.io)
 
 ## Twitter
 
-- [@LandOfApps](https://twitter.com/landofapps)
+- [@GetAppMap](https://twitter.com/getappmap)
 
 ## YouTube
 

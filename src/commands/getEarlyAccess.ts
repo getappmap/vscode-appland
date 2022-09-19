@@ -15,7 +15,7 @@ export default function registerCommand(
       async (placement: 'sidebar' | 'notification') => {
         extensionState.hasDismissedAnalysisCTA = true;
         Telemetry.sendEvent(CTA_INTERACT, { id: CTA_ID_EARLY_ACCESS_RT_ANALYSIS, placement });
-        vscode.env.openExternal(vscode.Uri.parse('https://appland.com/appmap-analysis.html'));
+        vscode.env.openExternal(vscode.Uri.parse('https://appmap.io/appmap-analysis.html'));
       }
     )
   );
