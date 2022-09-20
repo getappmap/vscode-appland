@@ -63,7 +63,7 @@ dynamic security analysis (**DAST**).
 - [GitHub](https://github.com/applandinc)
 - [Blog](https://appmap.io/blog/)
 - [1:1 support with our dev team on Slack](https://appmap.io/slack)
-- Email support: [support@app.land](mailto:support@appmap.io)
+- Email support: [support@appmap.io](mailto:support@appmap.io)
 
 ## Twitter
 
