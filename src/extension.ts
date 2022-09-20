@@ -55,6 +55,7 @@ import EarlyAccessUriHandler, { tryDisplayEarlyAccessWelcome } from './uri/early
 import generateOpenApi from './commands/generateOpenApi';
 import AppMapServerConfiguration from './services/appmapServerConfiguration';
 import AppMapServerAuthenticationProvider from './authentication/appmapServerAuthenticationProvider';
+import installAgent from './commands/installAgent';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   Telemetry.register(context);
@@ -231,17 +232,14 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     InstallGuideWebView.tryOpen(extensionState);
 
     const processService = new NodeProcessService(context, projectStates);
-    // The node dependencies may take some time to retrieve. As a result, the initialization sequence is
-    // wrapped in an async function but we won't wait for it to resolve.
-    (async function() {
-      processService.onReady(activateUptodateService);
-      await processService.install();
-      await workspaceServices.enroll(processService);
-    })();
+    processService.onReady(activateUptodateService);
+    await processService.install();
+    await workspaceServices.enroll(processService);
 
     const runtimeAnalysisCta = new RuntimeAnalysisCtaService(projectStates, extensionState);
     await workspaceServices.enroll(runtimeAnalysisCta);
 
+    installAgent(context);
     deleteAllAppMaps(context, classMapIndex, findingsIndex);
 
     const trees = registerTrees(

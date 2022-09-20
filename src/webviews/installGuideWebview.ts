@@ -1,6 +1,7 @@
 import * as path from 'path';
 import * as vscode from 'vscode';
 import { GenerateOpenApi } from '../commands/generateOpenApi';
+import { InstallAgent } from '../commands/installAgent';
 import extensionSettings from '../configuration/extensionSettings';
 import { ProjectStateServiceInstance } from '../services/projectStateService';
 import { COPY_COMMAND, OPEN_VIEW, Telemetry } from '../telemetry';
@@ -161,6 +162,10 @@ export default class InstallGuideWebView {
                 vscode.ViewColumn.Beside,
                 message.projectPath
               );
+              break;
+
+            case 'install-agent':
+              vscode.commands.executeCommand(InstallAgent, message.data);
               break;
 
             default:
