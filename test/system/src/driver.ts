@@ -5,9 +5,9 @@ import InstructionsWebview from './instructionsWebview';
 import Panel from './panel';
 import { getOsShortcut } from './util';
 
-async function tryClick(elem: Locator) {
+async function tryClick(elem: Locator, timeout = 5000) {
   try {
-    await elem.click({ timeout: 5000 });
+    await elem.click({ timeout });
   } catch (err) {
     console.warn(`problem clicking ${elem}: ${err}`);
   }
