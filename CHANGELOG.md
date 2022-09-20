@@ -1,3 +1,11 @@
+# [0.42.0](https://github.com/applandinc/vscode-appland/compare/v0.41.2...v0.42.0) (2022-09-20)
+
+
+### Features
+
+* Apply different sorting to AppMap subtrees ([5f66af7](https://github.com/applandinc/vscode-appland/commit/5f66af76e30bbcee59f0343ead93ed2c7308929f))
+* Categorize AppMaps ([fbc46ec](https://github.com/applandinc/vscode-appland/commit/fbc46ec514000fe372dd0279f143b4b9386e673f))
+
 ## [0.41.2](https://github.com/applandinc/vscode-appland/compare/v0.41.1...v0.41.2) (2022-09-08)
 
 
