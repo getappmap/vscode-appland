@@ -40,6 +40,7 @@ export default function mountInstallGuide() {
             command: 'open-page',
             page: currentPage,
             project: currentProject,
+            projects: this.projects,
           });
         });
       },
