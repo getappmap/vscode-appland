@@ -153,7 +153,7 @@ export const IS_TELEMETRY_ENABLED = new TelemetryDataProvider({
 });
 
 export const IS_INSTALLABLE = new TelemetryDataProvider({
-  id: 'appmap.project.is_installable',
+  id: 'appmap.project.installable',
   async value({ project }: { project: ProjectMetadata }) {
     const isInstallable = project?.score && project.score > 1;
     return String(isInstallable);
@@ -161,7 +161,7 @@ export const IS_INSTALLABLE = new TelemetryDataProvider({
 });
 
 export const HAS_INSTALLABLE_PROJECT = new TelemetryDataProvider({
-  id: 'appmap.project.has_installable_project',
+  id: 'appmap.project.any_installable',
   async value({ projects }: { projects: ProjectMetadata[] }) {
     const isInstallable = projects.some((project) => project?.score && project.score > 1);
     return String(isInstallable);
