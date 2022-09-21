@@ -1,3 +1,16 @@
+# [0.43.0](https://github.com/applandinc/vscode-appland/compare/v0.42.0...v0.43.0) (2022-09-21)
+
+
+### Bug Fixes
+
+* Filter 'uptodate' lines which are empty after trim ([3b38fc1](https://github.com/applandinc/vscode-appland/commit/3b38fc102681b7cd0de22b3f2780fc01e0ec8469))
+* Update project properties for installable status ([09c1408](https://github.com/applandinc/vscode-appland/commit/09c1408cdbd9c8950f58889e6e47c5a7df42b93d))
+
+
+### Features
+
+* add telemetry info from project picker ([9888085](https://github.com/applandinc/vscode-appland/commit/988808578ca74ec66f517c56c1ef35927651bd34))
+
 # [0.42.0](https://github.com/applandinc/vscode-appland/compare/v0.41.2...v0.42.0) (2022-09-20)
 
 
