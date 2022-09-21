@@ -105,8 +105,15 @@ export default class AppmapUptodateServiceInstance extends EventEmitter
   protected async handleResponse(processLog: Readonly<ProcessLogItem[]>): Promise<void> {
     const outofDateAppMapFiles = new Set(
       processLog
-        .filter((line) => line.stream === OutputStream.Stdout && line.data.length > 0)
-        .map((line) => resolve(this.folder.uri.fsPath, line.data.trim()))
+        .filter((line) => line.stream === OutputStream.Stdout)
+        .map((line) => line.data.trim())
+        .filter((line) => line.length > 0)
+        // Begin: Handle some anomalous behavior where the file path contains logging output:
+        .filter((line) => !line.startsWith('yarn run v'))
+        .filter((line) => !line.startsWith('Done in '))
+        .filter((line) => !line.includes('appmap depends'))
+        // End: anomalous output filters
+        .map((line) => resolve(this.folder.uri.fsPath, line))
     );
     const outofDateAppMapLocations = await this.collectOutOfDateTestLocations(outofDateAppMapFiles);
     console.log(
@@ -123,11 +130,6 @@ export default class AppmapUptodateServiceInstance extends EventEmitter
     const result = new Set<string>();
     await Promise.all(
       [...outofDateAppMapFiles].map(async (file) => {
-        // Handle some anomalous behavior where the file path contains logging output:
-        if (file.startsWith('yarn run v')) return;
-        if (file.startsWith('Done in ')) return;
-        if (file.includes('appmap depends')) return;
-
         let metadataData: string;
         try {
           metadataData = await promisify(readFile)(

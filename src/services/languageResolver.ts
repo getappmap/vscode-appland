@@ -1,10 +1,11 @@
 import * as vscode from 'vscode';
 import { extname } from 'path';
-import AppMapAgent from '../agent/appMapAgent';
-import AppMapAgentRuby from '../agent/appMapAgentRuby';
-import AppMapAgentDummy from '../agent/AppMapAgentDummy';
 import backgroundJob from '../lib/backgroundJob';
 import GitProperties from '../telemetry/properties/versionControlGit';
+
+export const SUPPORTED_LANGUAGES = ['ruby', 'python', 'java', 'javascript'];
+
+export const UNKNOWN_LANGUAGE = 'unknown';
 
 const LANGUAGES = [
   {
@@ -160,8 +161,6 @@ const LANGUAGES = [
   },
 ];
 
-export const UNKNOWN_LANGUAGE = 'unknown';
-
 /**
  * Reverse mapping of file extensions to language id
  */
@@ -172,20 +171,6 @@ const LANGUAGE_EXTENSIONS = LANGUAGES.reduce((memo, lang) => {
     memo[ext] = lang.id;
   });
 
-  return memo;
-}, {});
-
-/**
- * Register new AppMap agent CLI interfaces here.
- */
-export const LANGUAGE_AGENTS = [
-  new AppMapAgentRuby(),
-  new AppMapAgentDummy('java'),
-  new AppMapAgentDummy('javascript'),
-  new AppMapAgentDummy('python'),
-  new AppMapAgentDummy('unknown'),
-].reduce((memo, agent) => {
-  memo[agent.language] = agent;
   return memo;
 }, {});
 
@@ -278,8 +263,9 @@ export default class LanguageResolver {
     }
 
     const best = Object.entries(languageStats).sort((a, b) => b[1] - a[1])?.[0]?.[0];
-    const agent = LANGUAGE_AGENTS[best];
-    if (agent) return best;
+    if (SUPPORTED_LANGUAGES.indexOf(best) !== -1) {
+      return best;
+    }
     return UNKNOWN_LANGUAGE;
   }
 
@@ -291,10 +277,5 @@ export default class LanguageResolver {
    */
   public static async getLanguage(folder: vscode.WorkspaceFolder | string): Promise<string> {
     return await this.identifyLanguage(folder);
-  }
-
-  public static async getAgent(rootDirectory: vscode.WorkspaceFolder): Promise<AppMapAgent> {
-    const language = await this.getLanguage(rootDirectory);
-    return LANGUAGE_AGENTS[language];
   }
 }

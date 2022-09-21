@@ -1,15 +1,18 @@
 import assert from 'assert';
-import { exec, spawnSync } from 'child_process';
+import { exec } from 'child_process';
 import { promises as fs } from 'fs';
 import * as fse from 'fs-extra';
 import glob from 'glob';
-import { basename, join } from 'path';
+import { join } from 'path';
 import * as tmp from 'tmp';
 import { promisify } from 'util';
 import * as vscode from 'vscode';
 import AppMapService from '../../src/appMapService';
 import { CodeObjectEntry } from '../../src/lib/CodeObjectEntry';
 import { touch } from '../../src/lib/touch';
+import { repeatUntil, wait, waitFor } from '../waitFor';
+
+export { repeatUntil, wait, waitFor };
 
 export const FixtureDir = join(__dirname, '../../../test/fixtures');
 export const ProjectRuby = join(__dirname, '../../../test/fixtures/workspaces/project-ruby');
@@ -52,20 +55,6 @@ export type DiagnosticForUri = {
   uri: vscode.Uri;
   diagnostics: vscode.Diagnostic[];
 };
-
-export async function repeatUntil(
-  fn: () => void | void[] | Promise<void> | Promise<void | void[]>,
-  message: string,
-  test: () => boolean | Promise<boolean>
-): Promise<void> {
-  const actionInterval = setInterval(fn, 1000);
-
-  try {
-    await waitFor(message, test);
-  } finally {
-    clearInterval(actionInterval);
-  }
-}
 
 function makeDiagnosticForUri(d: [vscode.Uri, vscode.Diagnostic[]]): DiagnosticForUri {
   return {
@@ -240,32 +229,6 @@ export async function waitForExtension(): Promise<AppMapService> {
   const extension = vscode.extensions.getExtension('appland.appmap');
   assert(extension);
   return extension.exports;
-}
-
-export async function waitFor(
-  message: string,
-  test: () => boolean | Promise<boolean>,
-  timeout = 30000
-): Promise<void> {
-  const startTime = Date.now();
-  let delay = 100;
-  console.log(`Waiting because: ${message}`);
-  while (!(await test())) {
-    const elapsed = Date.now() - startTime;
-    if (elapsed > timeout) {
-      throw new Error(message);
-    }
-
-    delay = delay * 2;
-    console.log(`Waiting ${delay}ms because: ${message}`);
-    await wait(delay);
-  }
-}
-
-export async function wait(ms: number): Promise<void> {
-  return new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
 }
 
 export async function mtimeFiles(): Promise<vscode.Uri[]> {

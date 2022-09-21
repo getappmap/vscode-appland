@@ -1,5 +1,6 @@
 import assert from 'assert';
 import * as path from 'path';
+import { waitFor } from '../../waitFor';
 import { InstructionStep, InstructionStepStatus } from '../src/appMap';
 import Driver from '../src/driver';
 import ProjectDirectory from './support/project';
@@ -21,10 +22,6 @@ describe('Instructions tree view', function() {
 
     await driver.appMap.pendingBadge.waitFor({ state: 'visible' });
     assert(await driver.appMap.pendingBadge.isVisible(), 'badge is visible');
-  });
-
-  it('does not display a badge when AppMap is not installable in the current workspace', async function() {
-    // todo
   });
 
   it('accurately depicts the installation state', async function() {
@@ -92,25 +89,33 @@ describe('Instructions tree view', function() {
 
     await driver.appMap.openActionPanel();
 
-    await driver.appMap.openInstruction(InstructionStep.InstallAppMapAgent);
-    let actualTitle = await driver.instructionsWebview.pageTitle();
-    assert.strictEqual(actualTitle, 'Install AppMap agent', 'Opens the correct page');
-
-    await driver.appMap.openInstruction(InstructionStep.RecordAppMaps);
-    actualTitle = await driver.instructionsWebview.pageTitle();
-    assert.strictEqual(actualTitle, 'Record AppMaps', 'Opens the correct page');
-
-    await driver.appMap.openInstruction(InstructionStep.OpenAppMaps);
-    actualTitle = await driver.instructionsWebview.pageTitle();
-    assert.strictEqual(actualTitle, 'Explore AppMaps', 'Opens the correct page');
-
-    await driver.appMap.openInstruction(InstructionStep.GenerateOpenApi);
-    actualTitle = await driver.instructionsWebview.pageTitle();
-    assert.strictEqual(actualTitle, 'Generate OpenAPI', 'Opens the correct page');
-
-    await driver.appMap.openInstruction(InstructionStep.InvestigateFindings);
-    actualTitle = await driver.instructionsWebview.pageTitle();
-    assert.strictEqual(actualTitle, 'AppMap Runtime Analysis', 'Opens the correct page');
+    const pages = [
+      { step: InstructionStep.InstallAppMapAgent, title: 'Install AppMap agent' },
+      {
+        step: InstructionStep.RecordAppMaps,
+        title: 'Record AppMaps',
+      },
+      {
+        step: InstructionStep.OpenAppMaps,
+        title: 'Explore AppMaps',
+      },
+      {
+        step: InstructionStep.GenerateOpenApi,
+        title: 'Generate OpenAPI',
+      },
+      {
+        step: InstructionStep.InvestigateFindings,
+        title: 'AppMap Runtime Analysis',
+      },
+    ];
+    for (let i = 0; i < pages.length; i++) {
+      const page = pages[i];
+      await driver.appMap.openInstruction(page.step);
+      waitFor(
+        `Expected page '${page.title}' to be visible`,
+        async (): Promise<boolean> => (await driver.instructionsWebview.pageTitle()) === page.title
+      );
+    }
   });
 
   it('re-uses web views', async function() {

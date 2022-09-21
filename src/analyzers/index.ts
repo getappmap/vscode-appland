@@ -93,8 +93,7 @@ export async function analyze(
   appMapCollection?: AppMapCollection
 ): Promise<ProjectAnalysis & Partial<WithAppMaps>> {
   // TODO: Use the 'language' field in appmap.yml instead
-  const agent = await LanguageResolver.getAgent(folder);
-  const language = agent.language;
+  const language = await LanguageResolver.getLanguage(folder);
   const analyzer = (await import(`./${language}`)).default;
   const result = await analyzer(folder);
 
