@@ -318,9 +318,10 @@
     "test": "yarn test:web-client && yarn test:system && yarn test:extension",
     "compile": "webpack --mode=production",
     "watch": "webpack --watch --mode=development",
-    "package": "vsce package --no-yarn",
-    "publish": "vsce publish --no-yarn",
-    "semantic-release": "semantic-release"
+    "package": "vsce package",
+    "publish": "vsce publish",
+    "semantic-release": "semantic-release",
+    "list": "yarn info --json --recursive | build/translateInfo.js"
   },
   "devDependencies": {
     "@babel/core": "^7.14.3",
