@@ -1,6 +1,6 @@
 [![Version](https://img.shields.io/visual-studio-marketplace/v/appland.appmap)](https://marketplace.visualstudio.com/items?itemName=appland.appmap)
 [![Avg Stars](https://img.shields.io/visual-studio-marketplace/stars/appland.appmap)](https://marketplace.visualstudio.com/items?itemName=appland.appmap)
-[![GitHub Stars](https://img.shields.io/github/stars/applandinc/vscode-appland?style=social)](https://marketplace.visualstudio.com/items?itemName=appland.appmap)
+[![GitHub Stars](https://img.shields.io/github/stars/getappmap/vscode-appland?style=social)](https://marketplace.visualstudio.com/items?itemName=appland.appmap)
 [![Slack](https://img.shields.io/badge/Slack-Join%20the%20community-green)](https://appmap.io/slack)
 
 # AppMap for Visual Studio Code
@@ -60,7 +60,7 @@ dynamic security analysis (**DAST**).
 ## Resources
 
 - [Documentation](https://appmap.io/docs/appmap-overview.html)
-- [GitHub](https://github.com/applandinc)
+- [GitHub](https://github.com/getappmap)
 - [Blog](https://appmap.io/blog/)
 - [1:1 support with our dev team on Slack](https://appmap.io/slack)
 - Email support: [support@appmap.io](mailto:support@appmap.io)

@@ -46,7 +46,7 @@ $ yarn run package
 ## Running in development with a local version of `@appland/components`
 
 Where `$APPMAP_JS_PATH` is the path to a clone of
-[`applandinc/appmap-js`](https://github.com/applandinc/appmap-js):
+[`getappmap/appmap-js`](https://github.com/getappmap/appmap-js):
 
 ```sh
 $ yarn link --all $APPMAP_JS_PATH

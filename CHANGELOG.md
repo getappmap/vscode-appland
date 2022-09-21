@@ -1,909 +1,909 @@
-# [0.43.0](https://github.com/applandinc/vscode-appland/compare/v0.42.0...v0.43.0) (2022-09-21)
+# [0.43.0](https://github.com/getappmap/vscode-appland/compare/v0.42.0...v0.43.0) (2022-09-21)
 
 
 ### Bug Fixes
 
-* Filter 'uptodate' lines which are empty after trim ([3b38fc1](https://github.com/applandinc/vscode-appland/commit/3b38fc102681b7cd0de22b3f2780fc01e0ec8469))
-* Update project properties for installable status ([09c1408](https://github.com/applandinc/vscode-appland/commit/09c1408cdbd9c8950f58889e6e47c5a7df42b93d))
-
-
-### Features
-
-* add telemetry info from project picker ([9888085](https://github.com/applandinc/vscode-appland/commit/988808578ca74ec66f517c56c1ef35927651bd34))
-
-# [0.42.0](https://github.com/applandinc/vscode-appland/compare/v0.41.2...v0.42.0) (2022-09-20)
+* Filter 'uptodate' lines which are empty after trim ([3b38fc1](https://github.com/getappmap/vscode-appland/commit/3b38fc102681b7cd0de22b3f2780fc01e0ec8469))
+* Update project properties for installable status ([09c1408](https://github.com/getappmap/vscode-appland/commit/09c1408cdbd9c8950f58889e6e47c5a7df42b93d))
 
 
 ### Features
 
-* Apply different sorting to AppMap subtrees ([5f66af7](https://github.com/applandinc/vscode-appland/commit/5f66af76e30bbcee59f0343ead93ed2c7308929f))
-* Categorize AppMaps ([fbc46ec](https://github.com/applandinc/vscode-appland/commit/fbc46ec514000fe372dd0279f143b4b9386e673f))
+* add telemetry info from project picker ([9888085](https://github.com/getappmap/vscode-appland/commit/988808578ca74ec66f517c56c1ef35927651bd34))
 
-## [0.41.2](https://github.com/applandinc/vscode-appland/compare/v0.41.1...v0.41.2) (2022-09-08)
-
-
-### Bug Fixes
-
-* Prevent a case where OpenAPI would generate invalid YAML ([f55b440](https://github.com/applandinc/vscode-appland/commit/f55b440ffac6bd0264e5715051554b2396cac0a4))
-
-## [0.41.1](https://github.com/applandinc/vscode-appland/compare/v0.41.0...v0.41.1) (2022-08-27)
-
-
-### Bug Fixes
-
-* Getting started button with no appmaps now opens instructions ([29dc5a2](https://github.com/applandinc/vscode-appland/commit/29dc5a2ac769d5ab3a2ce0e1f8efce1950fcbb24))
-* Remove traces of obsolete appMap.instructionsEnabled config ([eaa1c6b](https://github.com/applandinc/vscode-appland/commit/eaa1c6b86697f7d13723f5b5a2317bf8e10db9df))
-
-# [0.41.0](https://github.com/applandinc/vscode-appland/compare/v0.40.0...v0.41.0) (2022-08-26)
+# [0.42.0](https://github.com/getappmap/vscode-appland/compare/v0.41.2...v0.42.0) (2022-09-20)
 
 
 ### Features
 
-* Keep viewer state when switching tabs ([c46be25](https://github.com/applandinc/vscode-appland/commit/c46be250190ebac3befb350a2be62aa71b622c48))
+* Apply different sorting to AppMap subtrees ([5f66af7](https://github.com/getappmap/vscode-appland/commit/5f66af76e30bbcee59f0343ead93ed2c7308929f))
+* Categorize AppMaps ([fbc46ec](https://github.com/getappmap/vscode-appland/commit/fbc46ec514000fe372dd0279f143b4b9386e673f))
 
-# [0.40.0](https://github.com/applandinc/vscode-appland/compare/v0.39.2...v0.40.0) (2022-08-19)
-
-
-### Bug Fixes
-
-* Don't trim the start of log messages ([6b8b94f](https://github.com/applandinc/vscode-appland/commit/6b8b94f12be08a42cb6e1a6dd0df0a94591904e9))
-
-
-### Features
-
-* Add an instructions page for generating OpenAPI definitions ([4d8e3e9](https://github.com/applandinc/vscode-appland/commit/4d8e3e98aa235fd3e9b3b936443027b794c4a71e))
-
-## [0.39.2](https://github.com/applandinc/vscode-appland/compare/v0.39.1...v0.39.2) (2022-08-01)
+## [0.41.2](https://github.com/getappmap/vscode-appland/compare/v0.41.1...v0.41.2) (2022-09-08)
 
 
 ### Bug Fixes
 
-* Investigate findings instruction page changed to Runtime Analysis ([d803f70](https://github.com/applandinc/vscode-appland/commit/d803f70347b478adb850f81fe0cc16387829a628))
+* Prevent a case where OpenAPI would generate invalid YAML ([f55b440](https://github.com/getappmap/vscode-appland/commit/f55b440ffac6bd0264e5715051554b2396cac0a4))
 
-## [0.39.1](https://github.com/applandinc/vscode-appland/compare/v0.39.0...v0.39.1) (2022-07-31)
+## [0.41.1](https://github.com/getappmap/vscode-appland/compare/v0.41.0...v0.41.1) (2022-08-27)
 
 
 ### Bug Fixes
 
-* Use glob to find appmap.yml ([3c1c5e7](https://github.com/applandinc/vscode-appland/commit/3c1c5e70e76c9b47dfeda825ee0bb15463f07724))
-* Use unlink when deleting AppMaps ([5ad4c11](https://github.com/applandinc/vscode-appland/commit/5ad4c11ce34f5427ba5cb36016a1727ff53bcee1))
+* Getting started button with no appmaps now opens instructions ([29dc5a2](https://github.com/getappmap/vscode-appland/commit/29dc5a2ac769d5ab3a2ce0e1f8efce1950fcbb24))
+* Remove traces of obsolete appMap.instructionsEnabled config ([eaa1c6b](https://github.com/getappmap/vscode-appland/commit/eaa1c6b86697f7d13723f5b5a2317bf8e10db9df))
 
-# [0.39.0](https://github.com/applandinc/vscode-appland/compare/v0.38.1...v0.39.0) (2022-07-22)
+# [0.41.0](https://github.com/getappmap/vscode-appland/compare/v0.40.0...v0.41.0) (2022-08-26)
 
 
 ### Features
 
-* Add a URI handler to enable early access ([22e323f](https://github.com/applandinc/vscode-appland/commit/22e323fee05cf1028767aad657f2ccabec0b1eff))
-* investigate findings shows signup info when findings not enabled ([18017d5](https://github.com/applandinc/vscode-appland/commit/18017d5f01dff2d94f4236333e3b1d4c8d6b486a))
-* send findings domain counts to frontend webview ([2d085e4](https://github.com/applandinc/vscode-appland/commit/2d085e41520eef7a0f6f709ad330705033d96771))
+* Keep viewer state when switching tabs ([c46be25](https://github.com/getappmap/vscode-appland/commit/c46be250190ebac3befb350a2be62aa71b622c48))
 
-## [0.38.1](https://github.com/applandinc/vscode-appland/compare/v0.38.0...v0.38.1) (2022-07-21)
+# [0.40.0](https://github.com/getappmap/vscode-appland/compare/v0.39.2...v0.40.0) (2022-08-19)
 
 
 ### Bug Fixes
 
-* Disable the 'next' button on the last instructions page ([bf40a8d](https://github.com/applandinc/vscode-appland/commit/bf40a8d73229ce57b6f33db67783e917495d3534))
-
-# [0.38.0](https://github.com/applandinc/vscode-appland/compare/v0.37.0...v0.38.0) (2022-07-20)
+* Don't trim the start of log messages ([6b8b94f](https://github.com/getappmap/vscode-appland/commit/6b8b94f12be08a42cb6e1a6dd0df0a94591904e9))
 
 
 ### Features
 
-* send selected code objects to frontend ([dd05e62](https://github.com/applandinc/vscode-appland/commit/dd05e625296d31d726a057f3f99342045b5f4731))
+* Add an instructions page for generating OpenAPI definitions ([4d8e3e9](https://github.com/getappmap/vscode-appland/commit/4d8e3e98aa235fd3e9b3b936443027b794c4a71e))
 
-# [0.37.0](https://github.com/applandinc/vscode-appland/compare/v0.36.0...v0.37.0) (2022-07-14)
-
-
-### Features
-
-* CTA is conditional on extension version ([3d0c76a](https://github.com/applandinc/vscode-appland/commit/3d0c76a4cef35fcb7759b182ab137cfd502c2aae))
-
-# [0.36.0](https://github.com/applandinc/vscode-appland/compare/v0.35.0...v0.36.0) (2022-07-13)
+## [0.39.2](https://github.com/getappmap/vscode-appland/compare/v0.39.1...v0.39.2) (2022-08-01)
 
 
 ### Bug Fixes
 
-* Debounce metadata and CTA events ([c40cab7](https://github.com/applandinc/vscode-appland/commit/c40cab7b4aa48621f2d9fe659aebc28d90dc1254))
-* Don't mark a project bad ([83528b7](https://github.com/applandinc/vscode-appland/commit/83528b7577799a7beb77eee3cd32abf4f674a214))
-* Handle exception in the proper place ([168ef11](https://github.com/applandinc/vscode-appland/commit/168ef115d4ebad52177543fe4f46ee9c6674b3c9))
-* Remove CONTEXT_FLAG_BETA_ACCESS ([84ec593](https://github.com/applandinc/vscode-appland/commit/84ec59382e5804467fba8485eae777d3cabab351))
+* Investigate findings instruction page changed to Runtime Analysis ([d803f70](https://github.com/getappmap/vscode-appland/commit/d803f70347b478adb850f81fe0cc16387829a628))
+
+## [0.39.1](https://github.com/getappmap/vscode-appland/compare/v0.39.0...v0.39.1) (2022-07-31)
 
 
-### Features
+### Bug Fixes
 
-* Change CTA prompt text and action ([dbbec52](https://github.com/applandinc/vscode-appland/commit/dbbec52a8580147fad09f6b785d3a2e169842320))
-* Findings view is always visible ([3358e10](https://github.com/applandinc/vscode-appland/commit/3358e1035e4abb1ef9fe10c1fc2c51857c150f12))
-* Remove test framework as a CTA criterion ([dce14e3](https://github.com/applandinc/vscode-appland/commit/dce14e3afe82321716653fbef776f38832d1df82))
-* Stop popups after user follows CTA ([f52e8fa](https://github.com/applandinc/vscode-appland/commit/f52e8faef832bdf2ce0df7d855d6cc76b7dde1e5))
-* Update the findings view info text ([7b35f91](https://github.com/applandinc/vscode-appland/commit/7b35f9167e96582be2d17b00143de9894a66f5e3))
+* Use glob to find appmap.yml ([3c1c5e7](https://github.com/getappmap/vscode-appland/commit/3c1c5e70e76c9b47dfeda825ee0bb15463f07724))
+* Use unlink when deleting AppMaps ([5ad4c11](https://github.com/getappmap/vscode-appland/commit/5ad4c11ce34f5427ba5cb36016a1727ff53bcee1))
 
-# [0.35.0](https://github.com/applandinc/vscode-appland/compare/v0.34.1...v0.35.0) (2022-07-12)
+# [0.39.0](https://github.com/getappmap/vscode-appland/compare/v0.38.1...v0.39.0) (2022-07-22)
 
 
 ### Features
 
-* Update the marketplace readme ([19e8aac](https://github.com/applandinc/vscode-appland/commit/19e8aac6b04f30d8adc76c2d3f83cd40332079b7))
+* Add a URI handler to enable early access ([22e323f](https://github.com/getappmap/vscode-appland/commit/22e323fee05cf1028767aad657f2ccabec0b1eff))
+* investigate findings shows signup info when findings not enabled ([18017d5](https://github.com/getappmap/vscode-appland/commit/18017d5f01dff2d94f4236333e3b1d4c8d6b486a))
+* send findings domain counts to frontend webview ([2d085e4](https://github.com/getappmap/vscode-appland/commit/2d085e41520eef7a0f6f709ad330705033d96771))
 
-## [0.34.1](https://github.com/applandinc/vscode-appland/compare/v0.34.0...v0.34.1) (2022-07-12)
-
-
-### Bug Fixes
-
-* green check appears upon investigating findings ([#433](https://github.com/applandinc/vscode-appland/issues/433)) ([2484487](https://github.com/applandinc/vscode-appland/commit/2484487956b2ff537ad4016b1fd77b5184556f84))
-
-# [0.34.0](https://github.com/applandinc/vscode-appland/compare/v0.33.0...v0.34.0) (2022-07-06)
-
-
-### Features
-
-* Default view configuration setting ([ee17599](https://github.com/applandinc/vscode-appland/commit/ee175991f042adaa4612b672cdc6f51ea496d606))
-
-# [0.33.0](https://github.com/applandinc/vscode-appland/compare/v0.32.3...v0.33.0) (2022-07-01)
+## [0.38.1](https://github.com/getappmap/vscode-appland/compare/v0.38.0...v0.38.1) (2022-07-21)
 
 
 ### Bug Fixes
 
-* Add debug information for instructions steps ([3eeb794](https://github.com/applandinc/vscode-appland/commit/3eeb7941f40444633a674da55bb469a3a482f5bf))
-* Tolerate partial node version in .nvmrc ([9620a24](https://github.com/applandinc/vscode-appland/commit/9620a24003d26b5071325229c1eae9c2bda21a4f))
+* Disable the 'next' button on the last instructions page ([bf40a8d](https://github.com/getappmap/vscode-appland/commit/bf40a8d73229ce57b6f33db67783e917495d3534))
+
+# [0.38.0](https://github.com/getappmap/vscode-appland/compare/v0.37.0...v0.38.0) (2022-07-20)
 
 
 ### Features
 
-* Add runtime analysis early access prompts for eligible projects ([f95a375](https://github.com/applandinc/vscode-appland/commit/f95a375206d8a1553655b3e3a13ced6c93a3a00c))
-* Release automatic indexing and updated instructions ([70ff951](https://github.com/applandinc/vscode-appland/commit/70ff951fc39981a5b716b48d31fb82b9a72d3323))
+* send selected code objects to frontend ([dd05e62](https://github.com/getappmap/vscode-appland/commit/dd05e625296d31d726a057f3f99342045b5f4731))
 
-## [0.32.3](https://github.com/applandinc/vscode-appland/compare/v0.32.2...v0.32.3) (2022-06-30)
-
-
-### Bug Fixes
-
-* send node status to frontend ([5fac197](https://github.com/applandinc/vscode-appland/commit/5fac197ca934f8ed9e53212fabbaa04442fdc0e6))
-
-## [0.32.2](https://github.com/applandinc/vscode-appland/compare/v0.32.1...v0.32.2) (2022-06-30)
-
-
-### Bug Fixes
-
-* remove python feature flag ([1d8d36e](https://github.com/applandinc/vscode-appland/commit/1d8d36e92b9f67f876001276a17556b68164c294))
-* tweaked wording when no Gemfile is detected ([b2f1737](https://github.com/applandinc/vscode-appland/commit/b2f17376cc30a87549798ccff1206eb7f153481d))
-* update flask scoring and messaging ([a009b83](https://github.com/applandinc/vscode-appland/commit/a009b83e8efee6e86bb8c976e61d73fe131291b5))
-* update Ruby analyzer language ([db432fd](https://github.com/applandinc/vscode-appland/commit/db432fd1b81aa89da18429059ddee263b32df529))
-* updated JS messages ([4c701e8](https://github.com/applandinc/vscode-appland/commit/4c701e8fdeb169553e1712c43b968b5fa6ebb4b9))
-* updated language for java ([bac15da](https://github.com/applandinc/vscode-appland/commit/bac15da7c8c522f47523765602ed078ef6cf071b))
-* updated language when express is found ([e975d91](https://github.com/applandinc/vscode-appland/commit/e975d913dc303b205672ff37dabb69f37755d33a))
-* updated python messages ([63a7518](https://github.com/applandinc/vscode-appland/commit/63a7518d29d42ef408b2f749eec4722905a68c0e))
-
-## [0.32.1](https://github.com/applandinc/vscode-appland/compare/v0.32.0...v0.32.1) (2022-06-30)
-
-
-### Bug Fixes
-
-* Fix fqid conflicts in the Code Objects view ([6358d7a](https://github.com/applandinc/vscode-appland/commit/6358d7a09dc53350f88f8b0a3b33e62cf3327840))
-* Set exitCode instead of calling exit ([bc4be1c](https://github.com/applandinc/vscode-appland/commit/bc4be1c93367fd946d08d957f6623810c1a3cc95))
-
-# [0.32.0](https://github.com/applandinc/vscode-appland/compare/v0.31.4...v0.32.0) (2022-06-30)
-
-
-### Bug Fixes
-
-* Add version constraint for @appland/models ([e223ce0](https://github.com/applandinc/vscode-appland/commit/e223ce096fd2b0740bcd4051bd87052e06013ee6))
-* Remove duplicate titles from some findings ([d47f541](https://github.com/applandinc/vscode-appland/commit/d47f54142bf4c89342418900831f37880776be3a))
-* Run only one uptodate process at a time ([00b8ec0](https://github.com/applandinc/vscode-appland/commit/00b8ec019e36629cc748d111bcbe5f5dd454c2a7))
+# [0.37.0](https://github.com/getappmap/vscode-appland/compare/v0.36.0...v0.37.0) (2022-07-14)
 
 
 ### Features
 
-* Configurable index/scan/depends commands have been removed ([52135ff](https://github.com/applandinc/vscode-appland/commit/52135ff5908b51c2bd2419829383e302b0dce3f8))
-* Run background node processes with Electron node ([dcf90a1](https://github.com/applandinc/vscode-appland/commit/dcf90a1b0e42867baef4aa84bbd49604cc9c43e9))
-* Uptodate service now runs via Electron node ([8f91058](https://github.com/applandinc/vscode-appland/commit/8f91058d558340c4b57f717398f6565df92cfff1))
+* CTA is conditional on extension version ([3d0c76a](https://github.com/getappmap/vscode-appland/commit/3d0c76a4cef35fcb7759b182ab137cfd502c2aae))
 
-## [0.31.4](https://github.com/applandinc/vscode-appland/compare/v0.31.3...v0.31.4) (2022-06-29)
+# [0.36.0](https://github.com/getappmap/vscode-appland/compare/v0.35.0...v0.36.0) (2022-07-13)
 
 
 ### Bug Fixes
 
-* update project picker scoring ([b2ff073](https://github.com/applandinc/vscode-appland/commit/b2ff073feb65b6a903c7f7df43877035d3beb802))
-
-## [0.31.3](https://github.com/applandinc/vscode-appland/compare/v0.31.2...v0.31.3) (2022-06-29)
-
-
-### Bug Fixes
-
-* Create getTreeName function to format tree name ([a643b78](https://github.com/applandinc/vscode-appland/commit/a643b78041e8b6d570bd2d995b01e594b8d53059))
-
-## [0.31.2](https://github.com/applandinc/vscode-appland/compare/v0.31.1...v0.31.2) (2022-06-28)
-
-
-### Bug Fixes
-
-* Allow opening AppMaps larger than 50 MiB ([2aad9ca](https://github.com/applandinc/vscode-appland/commit/2aad9cae9ec7dbd2f55e255489c115b546fdbbad))
-* More robust workspace folder path matching ([5193989](https://github.com/applandinc/vscode-appland/commit/5193989e28c9bb7d68ae5813826ca13b04457278))
-
-## [0.31.1](https://github.com/applandinc/vscode-appland/compare/v0.31.0...v0.31.1) (2022-06-27)
-
-
-### Bug Fixes
-
-* Update @appland/components v2.5.0 ([7f87ddb](https://github.com/applandinc/vscode-appland/commit/7f87ddb4b3b2f4e73bf7a17467539f0c5c530cb7))
-* Updated instructions will appear upon a new installation if flagged ([#398](https://github.com/applandinc/vscode-appland/issues/398)) ([bc72eff](https://github.com/applandinc/vscode-appland/commit/bc72eff2eb9d2ccec458a6f7dea7c56ec8140a46))
-
-# [0.31.0](https://github.com/applandinc/vscode-appland/compare/v0.30.0...v0.31.0) (2022-06-22)
-
-
-### Bug Fixes
-
-* Anticipate partially written findings files ([fd53351](https://github.com/applandinc/vscode-appland/commit/fd5335160e3b80831fef3d76046f8c645a901fd5))
-* Don't reset dirty flag too early ([be80cf4](https://github.com/applandinc/vscode-appland/commit/be80cf4eddfa81cdd7923260283f2b34bb14ba58))
-* Don't update uptodate more than necessary ([595970d](https://github.com/applandinc/vscode-appland/commit/595970d51b1d45b6bec606bccd5f216d35b8db85))
-* Filter out un-rooted code objects ([a2c30ed](https://github.com/applandinc/vscode-appland/commit/a2c30ed79a3588025ae309f8317a643d517180a3))
-* Leverage built-in search to find .gitignore files ([2e8f930](https://github.com/applandinc/vscode-appland/commit/2e8f930cbedf39dc0fec54e8c7a9fc0a5b385cc5))
-* Make AppMap index test more robust ([c8245be](https://github.com/applandinc/vscode-appland/commit/c8245beebd273732570cb459ed9dfdb952c306c7))
-* Move classMap update to background job ([6f5fec7](https://github.com/applandinc/vscode-appland/commit/6f5fec70065e55efd74c617faa3b8694de135834))
-* Only resolve languages every 60 seconds ([c97a598](https://github.com/applandinc/vscode-appland/commit/c97a5980132d8c00f3ed2eff774ad8657f6a347f))
-* Respect user's Find Exclude settings ([a675d57](https://github.com/applandinc/vscode-appland/commit/a675d57dfd26f22d179ce1ba2d0f348898e3b7df))
-* Sort code object children ([03fd15c](https://github.com/applandinc/vscode-appland/commit/03fd15c06449e77097029d1f3cb98978a886eedf))
-* Sort findings by description ([462a170](https://github.com/applandinc/vscode-appland/commit/462a17096fd14ed80d3c88f954b0a44615cd2358))
-* Suppress harmless depends errors ([296e9d2](https://github.com/applandinc/vscode-appland/commit/296e9d2b2d08079e4d29cf63c6c2bc7f97f9b175))
-* Try harder to resolve file paths within monorepos ([0cd8f7b](https://github.com/applandinc/vscode-appland/commit/0cd8f7be746784bc7f2664ca45246d79820c00fc))
-* Update base-dir and appmap-dir options ([2bbc255](https://github.com/applandinc/vscode-appland/commit/2bbc255261a9382fe5158e545af92838590e3a06))
+* Debounce metadata and CTA events ([c40cab7](https://github.com/getappmap/vscode-appland/commit/c40cab7b4aa48621f2d9fe659aebc28d90dc1254))
+* Don't mark a project bad ([83528b7](https://github.com/getappmap/vscode-appland/commit/83528b7577799a7beb77eee3cd32abf4f674a214))
+* Handle exception in the proper place ([168ef11](https://github.com/getappmap/vscode-appland/commit/168ef115d4ebad52177543fe4f46ee9c6674b3c9))
+* Remove CONTEXT_FLAG_BETA_ACCESS ([84ec593](https://github.com/getappmap/vscode-appland/commit/84ec59382e5804467fba8485eae777d3cabab351))
 
 
 ### Features
 
-* Add dependsCommand setting ([4735e15](https://github.com/applandinc/vscode-appland/commit/4735e15aa8f6bf10950a10f8118d157377bfdf84))
-* Batch up expensive background jobs ([c076ae5](https://github.com/applandinc/vscode-appland/commit/c076ae594d39e0960e02b97bf123bfae6df2f65a))
-* Selectively update up-to-date ([5868fcf](https://github.com/applandinc/vscode-appland/commit/5868fcfdf6c23da94e05d11ddecb1117ca4db390))
-* WorkspaceServices is a singleton ([eab066c](https://github.com/applandinc/vscode-appland/commit/eab066cf5fb1764b1899e2aa6aeb5ecc8ad969d7))
+* Change CTA prompt text and action ([dbbec52](https://github.com/getappmap/vscode-appland/commit/dbbec52a8580147fad09f6b785d3a2e169842320))
+* Findings view is always visible ([3358e10](https://github.com/getappmap/vscode-appland/commit/3358e1035e4abb1ef9fe10c1fc2c51857c150f12))
+* Remove test framework as a CTA criterion ([dce14e3](https://github.com/getappmap/vscode-appland/commit/dce14e3afe82321716653fbef776f38832d1df82))
+* Stop popups after user follows CTA ([f52e8fa](https://github.com/getappmap/vscode-appland/commit/f52e8faef832bdf2ce0df7d855d6cc76b7dde1e5))
+* Update the findings view info text ([7b35f91](https://github.com/getappmap/vscode-appland/commit/7b35f9167e96582be2d17b00143de9894a66f5e3))
 
-# [0.30.0](https://github.com/applandinc/vscode-appland/compare/v0.29.1...v0.30.0) (2022-06-21)
-
-
-### Bug Fixes
-
-* Remove Flask and Django from README.md ([ea86aec](https://github.com/applandinc/vscode-appland/commit/ea86aecb47fe61348875409d61f421f75773cc95))
+# [0.35.0](https://github.com/getappmap/vscode-appland/compare/v0.34.1...v0.35.0) (2022-07-12)
 
 
 ### Features
 
-* Put Python support behind a feature flag ([f611a6d](https://github.com/applandinc/vscode-appland/commit/f611a6d9a7d4bf71bfccd3630d1a46a33b353011))
+* Update the marketplace readme ([19e8aac](https://github.com/getappmap/vscode-appland/commit/19e8aac6b04f30d8adc76c2d3f83cd40332079b7))
 
-## [0.29.1](https://github.com/applandinc/vscode-appland/compare/v0.29.0...v0.29.1) (2022-06-18)
+## [0.34.1](https://github.com/getappmap/vscode-appland/compare/v0.34.0...v0.34.1) (2022-07-12)
 
 
 ### Bug Fixes
 
-* AppMap welcome button interaction is now feature flagged ([#395](https://github.com/applandinc/vscode-appland/issues/395)) ([b5f849d](https://github.com/applandinc/vscode-appland/commit/b5f849df93cbf778a760f502f58159622f470ed9))
+* green check appears upon investigating findings ([#433](https://github.com/getappmap/vscode-appland/issues/433)) ([2484487](https://github.com/getappmap/vscode-appland/commit/2484487956b2ff537ad4016b1fd77b5184556f84))
 
-# [0.29.0](https://github.com/applandinc/vscode-appland/compare/v0.28.3...v0.29.0) (2022-06-17)
+# [0.34.0](https://github.com/getappmap/vscode-appland/compare/v0.33.0...v0.34.0) (2022-07-06)
 
 
 ### Features
 
-* AppMap terminal link provider ([e697328](https://github.com/applandinc/vscode-appland/commit/e6973283d4510f024f1bbb6224df1d32291d4dcc))
+* Default view configuration setting ([ee17599](https://github.com/getappmap/vscode-appland/commit/ee175991f042adaa4612b672cdc6f51ea496d606))
 
-## [0.28.3](https://github.com/applandinc/vscode-appland/compare/v0.28.2...v0.28.3) (2022-06-14)
-
-
-### Bug Fixes
-
-* `Open AppMaps` instructions view now automatically reloads ([09defe1](https://github.com/applandinc/vscode-appland/commit/09defe125833a384d89aa8020a352581d213d6ca))
-* AppMap install state is synchronized at startup ([261f52c](https://github.com/applandinc/vscode-appland/commit/261f52c57f3b6c44710c42946d38d130d787f3f2))
-* Clean up resources when closing the instructions window ([2a14ce1](https://github.com/applandinc/vscode-appland/commit/2a14ce13f64ab75ee72d857de97e65f175718dc4))
-
-## [0.28.2](https://github.com/applandinc/vscode-appland/compare/v0.28.1...v0.28.2) (2022-06-09)
+# [0.33.0](https://github.com/getappmap/vscode-appland/compare/v0.32.3...v0.33.0) (2022-07-01)
 
 
 ### Bug Fixes
 
-* Be more robust to AppMap index temp files ([e32978a](https://github.com/applandinc/vscode-appland/commit/e32978aabd68689a4864489b2dce146e91f71169))
-* Filter out blank source locations ([3edb0b7](https://github.com/applandinc/vscode-appland/commit/3edb0b73e99ab397b9d9df2264431a336026c337))
-* Handle code object not found ([247f6c3](https://github.com/applandinc/vscode-appland/commit/247f6c3174d9c65ea079d9a799636f2bfb581ea2))
-
-## [0.28.1](https://github.com/applandinc/vscode-appland/compare/v0.28.0...v0.28.1) (2022-06-06)
-
-
-### Bug Fixes
-
-* Update README ([25d0c46](https://github.com/applandinc/vscode-appland/commit/25d0c467528cd804aa187bffc9c3bbed5bb814f6))
-
-# [0.28.0](https://github.com/applandinc/vscode-appland/compare/v0.27.0...v0.28.0) (2022-06-06)
+* Add debug information for instructions steps ([3eeb794](https://github.com/getappmap/vscode-appland/commit/3eeb7941f40444633a674da55bb469a3a482f5bf))
+* Tolerate partial node version in .nvmrc ([9620a24](https://github.com/getappmap/vscode-appland/commit/9620a24003d26b5071325229c1eae9c2bda21a4f))
 
 
 ### Features
 
-* Commands appmap.view.* ([acfab07](https://github.com/applandinc/vscode-appland/commit/acfab07e8c4f7a69f7c7ef64e10ea610c64eaa5c))
-* Indicate whether AppMaps are up-to-date ([0213cb6](https://github.com/applandinc/vscode-appland/commit/0213cb66403741b0712de71f3a135d6fb16f8a3e))
-* out-of-date tests ([9d27b53](https://github.com/applandinc/vscode-appland/commit/9d27b53dca956e3959c49bf9ecacfc4116ba8d41))
-* Print out of date test names to the clipboard ([57a29a1](https://github.com/applandinc/vscode-appland/commit/57a29a1bd1e28185ef98373d392d4212accffccf))
+* Add runtime analysis early access prompts for eligible projects ([f95a375](https://github.com/getappmap/vscode-appland/commit/f95a375206d8a1553655b3e3a13ced6c93a3a00c))
+* Release automatic indexing and updated instructions ([70ff951](https://github.com/getappmap/vscode-appland/commit/70ff951fc39981a5b716b48d31fb82b9a72d3323))
 
-# [0.27.0](https://github.com/applandinc/vscode-appland/compare/v0.26.2...v0.27.0) (2022-06-02)
+## [0.32.3](https://github.com/getappmap/vscode-appland/compare/v0.32.2...v0.32.3) (2022-06-30)
 
 
 ### Bug Fixes
 
-* Experimental instructions are toggled behind a feature flag ([fd95295](https://github.com/applandinc/vscode-appland/commit/fd95295d6f8dda60ce7e7b0908a71620428e1a6c))
-* Fix language resolver test ([533424a](https://github.com/applandinc/vscode-appland/commit/533424af5346b4b1ce8d60db5e86dd720bb0aece))
-* Fix scanner test ([2997978](https://github.com/applandinc/vscode-appland/commit/29979783e5f4a4e21fe484b2d2990424f15be58f))
-* Line info depends on code objects only ([bfd8b92](https://github.com/applandinc/vscode-appland/commit/bfd8b925e9b57a1459f8e206cd598c71ad6f4315))
-* Suppress directory removal warning ([6239ed6](https://github.com/applandinc/vscode-appland/commit/6239ed614891d69e210fce3c056a40a58855c504))
+* send node status to frontend ([5fac197](https://github.com/getappmap/vscode-appland/commit/5fac197ca934f8ed9e53212fabbaa04442fdc0e6))
+
+## [0.32.2](https://github.com/getappmap/vscode-appland/compare/v0.32.1...v0.32.2) (2022-06-30)
+
+
+### Bug Fixes
+
+* remove python feature flag ([1d8d36e](https://github.com/getappmap/vscode-appland/commit/1d8d36e92b9f67f876001276a17556b68164c294))
+* tweaked wording when no Gemfile is detected ([b2f1737](https://github.com/getappmap/vscode-appland/commit/b2f17376cc30a87549798ccff1206eb7f153481d))
+* update flask scoring and messaging ([a009b83](https://github.com/getappmap/vscode-appland/commit/a009b83e8efee6e86bb8c976e61d73fe131291b5))
+* update Ruby analyzer language ([db432fd](https://github.com/getappmap/vscode-appland/commit/db432fd1b81aa89da18429059ddee263b32df529))
+* updated JS messages ([4c701e8](https://github.com/getappmap/vscode-appland/commit/4c701e8fdeb169553e1712c43b968b5fa6ebb4b9))
+* updated language for java ([bac15da](https://github.com/getappmap/vscode-appland/commit/bac15da7c8c522f47523765602ed078ef6cf071b))
+* updated language when express is found ([e975d91](https://github.com/getappmap/vscode-appland/commit/e975d913dc303b205672ff37dabb69f37755d33a))
+* updated python messages ([63a7518](https://github.com/getappmap/vscode-appland/commit/63a7518d29d42ef408b2f749eec4722905a68c0e))
+
+## [0.32.1](https://github.com/getappmap/vscode-appland/compare/v0.32.0...v0.32.1) (2022-06-30)
+
+
+### Bug Fixes
+
+* Fix fqid conflicts in the Code Objects view ([6358d7a](https://github.com/getappmap/vscode-appland/commit/6358d7a09dc53350f88f8b0a3b33e62cf3327840))
+* Set exitCode instead of calling exit ([bc4be1c](https://github.com/getappmap/vscode-appland/commit/bc4be1c93367fd946d08d957f6623810c1a3cc95))
+
+# [0.32.0](https://github.com/getappmap/vscode-appland/compare/v0.31.4...v0.32.0) (2022-06-30)
+
+
+### Bug Fixes
+
+* Add version constraint for @appland/models ([e223ce0](https://github.com/getappmap/vscode-appland/commit/e223ce096fd2b0740bcd4051bd87052e06013ee6))
+* Remove duplicate titles from some findings ([d47f541](https://github.com/getappmap/vscode-appland/commit/d47f54142bf4c89342418900831f37880776be3a))
+* Run only one uptodate process at a time ([00b8ec0](https://github.com/getappmap/vscode-appland/commit/00b8ec019e36629cc748d111bcbe5f5dd454c2a7))
 
 
 ### Features
 
-* Add 'Open AppMaps' to updated instructions ([6682c68](https://github.com/applandinc/vscode-appland/commit/6682c68d0fe2768e4f9a05f9d298ad619730386e))
-* Add indexEnabled flag ([4736138](https://github.com/applandinc/vscode-appland/commit/4736138eee2ea818973905532157c1e6a9eb1068))
-* AppMap usage guide ([2d7f48b](https://github.com/applandinc/vscode-appland/commit/2d7f48b7760b4142d044d1efd74f12701870a5b2))
+* Configurable index/scan/depends commands have been removed ([52135ff](https://github.com/getappmap/vscode-appland/commit/52135ff5908b51c2bd2419829383e302b0dce3f8))
+* Run background node processes with Electron node ([dcf90a1](https://github.com/getappmap/vscode-appland/commit/dcf90a1b0e42867baef4aa84bbd49604cc9c43e9))
+* Uptodate service now runs via Electron node ([8f91058](https://github.com/getappmap/vscode-appland/commit/8f91058d558340c4b57f717398f6565df92cfff1))
 
-## [0.26.2](https://github.com/applandinc/vscode-appland/compare/v0.26.1...v0.26.2) (2022-05-31)
-
-
-### Bug Fixes
-
-* Migrate Discord to Slack ([a5f6475](https://github.com/applandinc/vscode-appland/commit/a5f6475df0083405e8f69d9e31a6bc29332fbe8b))
-
-## [0.26.1](https://github.com/applandinc/vscode-appland/compare/v0.26.0...v0.26.1) (2022-05-26)
+## [0.31.4](https://github.com/getappmap/vscode-appland/compare/v0.31.3...v0.31.4) (2022-06-29)
 
 
 ### Bug Fixes
 
-* Update @appland/components ([adac18b](https://github.com/applandinc/vscode-appland/commit/adac18b1ba33174fe9348e842cc5dbf0a1dfe4a9))
+* update project picker scoring ([b2ff073](https://github.com/getappmap/vscode-appland/commit/b2ff073feb65b6a903c7f7df43877035d3beb802))
 
-# [0.26.0](https://github.com/applandinc/vscode-appland/compare/v0.25.1...v0.26.0) (2022-05-24)
+## [0.31.3](https://github.com/getappmap/vscode-appland/compare/v0.31.2...v0.31.3) (2022-06-29)
 
 
 ### Bug Fixes
 
-* Absolute file paths don't decorate ([a068b40](https://github.com/applandinc/vscode-appland/commit/a068b40e56187db2303c7e69beac62959d2a17a4))
-* Add ~/.yarn/bin to path ([009b512](https://github.com/applandinc/vscode-appland/commit/009b512f4ab179f1bbd5c2c107112a66857b0bfc))
-* Add missing openapi-types ([959cc4d](https://github.com/applandinc/vscode-appland/commit/959cc4de4d2c46d154ed2e1485b32827d2657973))
-* Add some Disposable subscriptions ([caeedbe](https://github.com/applandinc/vscode-appland/commit/caeedbe32680ce23181716249fc597734152dde9))
-* autoIndexer|Scanner returns process Promise ([936207c](https://github.com/applandinc/vscode-appland/commit/936207c5649dc28288a2bbbdf1e2e78d379c35bc))
-* Decorations show on initial editor ([54bd374](https://github.com/applandinc/vscode-appland/commit/54bd3743a05c351fcf24c0f3a654afc36e96275a))
-* Fix casing in file name ([c18122e](https://github.com/applandinc/vscode-appland/commit/c18122e21d5ee8edfcc23cea01d8be34a2fd98e9))
-* Fixups to rebase ([bd6a247](https://github.com/applandinc/vscode-appland/commit/bd6a247dc52f98c50663f7eb6c3343c438fe6bfa))
-* Handle missing findings file ([f418c51](https://github.com/applandinc/vscode-appland/commit/f418c51f3de14ab8fc78d50039974a816ea5b420))
-* Hide context menus from the command palette ([fba2a0d](https://github.com/applandinc/vscode-appland/commit/fba2a0db50286f21c1d05f4db46eaa8c924cf87d))
-* Increase timeout on process service retry ([e46820a](https://github.com/applandinc/vscode-appland/commit/e46820a62789cdc835a7d94ed53a27f238ab0456))
-* Path-delimited package names in the classMap ([c71ef55](https://github.com/applandinc/vscode-appland/commit/c71ef5544e048195ca4d4cec6782027c75ef5c68))
-* Remove AppMap count as it's usuall wrong ([ba2b34e](https://github.com/applandinc/vscode-appland/commit/ba2b34ec128e2d4f3cd7c370cb473275bb8b12d7))
-* Respond to workspace add/remove events ([564c1be](https://github.com/applandinc/vscode-appland/commit/564c1be907fadcf99b9cf50f6605291aaa662b35))
-* Run service command with yarn run or npm exec ([ffee49a](https://github.com/applandinc/vscode-appland/commit/ffee49acbce1491f9738b24319c6df5c5753c5da))
-* Search parent folders for npm/yarn lock files ([496b2cf](https://github.com/applandinc/vscode-appland/commit/496b2cf974634dde882f3714a06e61d45c73d707))
+* Create getTreeName function to format tree name ([a643b78](https://github.com/getappmap/vscode-appland/commit/a643b78041e8b6d570bd2d995b01e594b8d53059))
+
+## [0.31.2](https://github.com/getappmap/vscode-appland/compare/v0.31.1...v0.31.2) (2022-06-28)
+
+
+### Bug Fixes
+
+* Allow opening AppMaps larger than 50 MiB ([2aad9ca](https://github.com/getappmap/vscode-appland/commit/2aad9cae9ec7dbd2f55e255489c115b546fdbbad))
+* More robust workspace folder path matching ([5193989](https://github.com/getappmap/vscode-appland/commit/5193989e28c9bb7d68ae5813826ca13b04457278))
+
+## [0.31.1](https://github.com/getappmap/vscode-appland/compare/v0.31.0...v0.31.1) (2022-06-27)
+
+
+### Bug Fixes
+
+* Update @appland/components v2.5.0 ([7f87ddb](https://github.com/getappmap/vscode-appland/commit/7f87ddb4b3b2f4e73bf7a17467539f0c5c530cb7))
+* Updated instructions will appear upon a new installation if flagged ([#398](https://github.com/getappmap/vscode-appland/issues/398)) ([bc72eff](https://github.com/getappmap/vscode-appland/commit/bc72eff2eb9d2ccec458a6f7dea7c56ec8140a46))
+
+# [0.31.0](https://github.com/getappmap/vscode-appland/compare/v0.30.0...v0.31.0) (2022-06-22)
+
+
+### Bug Fixes
+
+* Anticipate partially written findings files ([fd53351](https://github.com/getappmap/vscode-appland/commit/fd5335160e3b80831fef3d76046f8c645a901fd5))
+* Don't reset dirty flag too early ([be80cf4](https://github.com/getappmap/vscode-appland/commit/be80cf4eddfa81cdd7923260283f2b34bb14ba58))
+* Don't update uptodate more than necessary ([595970d](https://github.com/getappmap/vscode-appland/commit/595970d51b1d45b6bec606bccd5f216d35b8db85))
+* Filter out un-rooted code objects ([a2c30ed](https://github.com/getappmap/vscode-appland/commit/a2c30ed79a3588025ae309f8317a643d517180a3))
+* Leverage built-in search to find .gitignore files ([2e8f930](https://github.com/getappmap/vscode-appland/commit/2e8f930cbedf39dc0fec54e8c7a9fc0a5b385cc5))
+* Make AppMap index test more robust ([c8245be](https://github.com/getappmap/vscode-appland/commit/c8245beebd273732570cb459ed9dfdb952c306c7))
+* Move classMap update to background job ([6f5fec7](https://github.com/getappmap/vscode-appland/commit/6f5fec70065e55efd74c617faa3b8694de135834))
+* Only resolve languages every 60 seconds ([c97a598](https://github.com/getappmap/vscode-appland/commit/c97a5980132d8c00f3ed2eff774ad8657f6a347f))
+* Respect user's Find Exclude settings ([a675d57](https://github.com/getappmap/vscode-appland/commit/a675d57dfd26f22d179ce1ba2d0f348898e3b7df))
+* Sort code object children ([03fd15c](https://github.com/getappmap/vscode-appland/commit/03fd15c06449e77097029d1f3cb98978a886eedf))
+* Sort findings by description ([462a170](https://github.com/getappmap/vscode-appland/commit/462a17096fd14ed80d3c88f954b0a44615cd2358))
+* Suppress harmless depends errors ([296e9d2](https://github.com/getappmap/vscode-appland/commit/296e9d2b2d08079e4d29cf63c6c2bc7f97f9b175))
+* Try harder to resolve file paths within monorepos ([0cd8f7b](https://github.com/getappmap/vscode-appland/commit/0cd8f7be746784bc7f2664ca45246d79820c00fc))
+* Update base-dir and appmap-dir options ([2bbc255](https://github.com/getappmap/vscode-appland/commit/2bbc255261a9382fe5158e545af92838590e3a06))
 
 
 ### Features
 
-* Add a Code Objects tree view ([27b0d71](https://github.com/applandinc/vscode-appland/commit/27b0d716e3aaeb23e86ae7c17d71156aa4037089))
-* Add AppMap 12px icon ([49ee452](https://github.com/applandinc/vscode-appland/commit/49ee452b547e773c1904d8b9e41830721872eeb8))
-* Add command appmap.deleteAllAppMaps ([dd0ea7d](https://github.com/applandinc/vscode-appland/commit/dd0ea7d01f5bb68e23924c2926f8ca94faff2860))
-* Context menu + click for Code Objects ([a41b05d](https://github.com/applandinc/vscode-appland/commit/a41b05d30eaaa853f30bd958348146d736732782))
-* Decoration provider ([d23a0a7](https://github.com/applandinc/vscode-appland/commit/d23a0a70082cec0e37ebdb7954791c833f5b2435))
-* Export extension interfaces ([70bbe69](https://github.com/applandinc/vscode-appland/commit/70bbe690ad0ba80a07f058a6c0d29ac3bdf08d97))
-* Extend CodeObjectEntry fields ([2dc839e](https://github.com/applandinc/vscode-appland/commit/2dc839e71ebac9be74dc5305d9356616661d74ba))
-* Feature flag for 'inspect' CLI command ([b4a7532](https://github.com/applandinc/vscode-appland/commit/b4a75328ce77afe056c3ecaa33214b2da0dfcf7f))
-* Hover provider ([2b089e9](https://github.com/applandinc/vscode-appland/commit/2b089e90e924822c2a6cea1f554afc20c9fed142))
-* Inspect code object via CLI shell-out ([16b45eb](https://github.com/applandinc/vscode-appland/commit/16b45ebc5b27b48bcfa61a892569270f1560cd87))
-* Inspect hover shows links to ancestors ([34773c9](https://github.com/applandinc/vscode-appland/commit/34773c9c83e01f92e67e3b17a2cfdfac962c99d2))
-* Line-index, hover, decoration provider ([e72de09](https://github.com/applandinc/vscode-appland/commit/e72de09f7a35aa4658523b8a6b7eb93e4e33ba5f))
-* LineInfoIndex ([875c696](https://github.com/applandinc/vscode-appland/commit/875c6968925065859f56a84063e008753a4ce6e4))
-* Open AppMaps from code object tree ([981bd58](https://github.com/applandinc/vscode-appland/commit/981bd58030eea677527926de628726f6e422b210))
-* Open code object in AppMap ([d0c4751](https://github.com/applandinc/vscode-appland/commit/d0c4751f3da87ea2ae8f26c860ed40cc31663778))
-* Simplify hover ([7bfccf1](https://github.com/applandinc/vscode-appland/commit/7bfccf13e2ce102b1a1e84254675d9cefac26104))
+* Add dependsCommand setting ([4735e15](https://github.com/getappmap/vscode-appland/commit/4735e15aa8f6bf10950a10f8118d157377bfdf84))
+* Batch up expensive background jobs ([c076ae5](https://github.com/getappmap/vscode-appland/commit/c076ae594d39e0960e02b97bf123bfae6df2f65a))
+* Selectively update up-to-date ([5868fcf](https://github.com/getappmap/vscode-appland/commit/5868fcfdf6c23da94e05d11ddecb1117ca4db390))
+* WorkspaceServices is a singleton ([eab066c](https://github.com/getappmap/vscode-appland/commit/eab066cf5fb1764b1899e2aa6aeb5ecc8ad969d7))
 
-## [0.25.1](https://github.com/applandinc/vscode-appland/compare/v0.25.0...v0.25.1) (2022-05-24)
+# [0.30.0](https://github.com/getappmap/vscode-appland/compare/v0.29.1...v0.30.0) (2022-06-21)
 
 
 ### Bug Fixes
 
-* Process service now inherits user environment ([021b777](https://github.com/applandinc/vscode-appland/commit/021b777f6e86316ac87a19a84d76d2a6257579d2))
-
-# [0.25.0](https://github.com/applandinc/vscode-appland/compare/v0.24.2...v0.25.0) (2022-05-15)
-
-
-### Bug Fixes
-
-* Fix command titles ([3a33841](https://github.com/applandinc/vscode-appland/commit/3a3384179d971a32aa50a79ca1b7778a7e21398d))
-* Number.MAX_VALUE shows marker to end-of-line ([b60bef7](https://github.com/applandinc/vscode-appland/commit/b60bef775a457cf0e42c86ddf877057385dab2b8))
-* Try re-adding launch args ([3b85580](https://github.com/applandinc/vscode-appland/commit/3b85580738a1102c0673fa33e9d6ed06dee41249))
+* Remove Flask and Django from README.md ([ea86aec](https://github.com/getappmap/vscode-appland/commit/ea86aecb47fe61348875409d61f421f75773cc95))
 
 
 ### Features
 
-* Enable/disable findings via setting ([48bee0a](https://github.com/applandinc/vscode-appland/commit/48bee0a0a4ca852be6efbf206b7fd96494499f8b))
-* Identify and display Findings ([b622eaa](https://github.com/applandinc/vscode-appland/commit/b622eaab9130accbe09d005eab76d3a86040ec75))
-* Index and scan AppMaps continuously ([85852f4](https://github.com/applandinc/vscode-appland/commit/85852f4b497d77b33a0a162907cfd99bde40b6c6))
-* Make sure child processes are not detached ([02d1d57](https://github.com/applandinc/vscode-appland/commit/02d1d579d196e4e50c4e98bb9a01b5dc7f0b0812))
-* Show error message when a dependent process can't be spawned ([a78f7d5](https://github.com/applandinc/vscode-appland/commit/a78f7d5ee0ce3fd8839d606e6246fa8e99482f72))
-* Verify project Node.js version ([70b6986](https://github.com/applandinc/vscode-appland/commit/70b698637ef3e93945ba1792393a803d4230e0b2))
-* Wait for child processes to terminate ([88c8792](https://github.com/applandinc/vscode-appland/commit/88c879211d3668511588799191e51fa422bc6e0d))
+* Put Python support behind a feature flag ([f611a6d](https://github.com/getappmap/vscode-appland/commit/f611a6d9a7d4bf71bfccd3630d1a46a33b353011))
 
-## [0.24.2](https://github.com/applandinc/vscode-appland/compare/v0.24.1...v0.24.2) (2022-05-13)
+## [0.29.1](https://github.com/getappmap/vscode-appland/compare/v0.29.0...v0.29.1) (2022-06-18)
 
 
 ### Bug Fixes
 
-* Non-root level gitignores will no longer be treated as root ([112998d](https://github.com/applandinc/vscode-appland/commit/112998d90ef51e9f8dd93b14a339d44f385dc79c))
+* AppMap welcome button interaction is now feature flagged ([#395](https://github.com/getappmap/vscode-appland/issues/395)) ([b5f849d](https://github.com/getappmap/vscode-appland/commit/b5f849df93cbf778a760f502f58159622f470ed9))
 
-## [0.24.1](https://github.com/applandinc/vscode-appland/compare/v0.24.0...v0.24.1) (2022-05-09)
-
-
-### Bug Fixes
-
-* Remove project watcher, milestones and quickstart ([ef2b135](https://github.com/applandinc/vscode-appland/commit/ef2b135d0023c1604d0864477cbc5977c7dda282))
-
-# [0.24.0](https://github.com/applandinc/vscode-appland/compare/v0.23.6...v0.24.0) (2022-05-04)
+# [0.29.0](https://github.com/getappmap/vscode-appland/compare/v0.28.3...v0.29.0) (2022-06-17)
 
 
 ### Features
 
-* Ensure the editor is configured to watch AppMaps ([a7e3aa5](https://github.com/applandinc/vscode-appland/commit/a7e3aa5b1469f82d7eeea9d882b98c578fda58fb))
+* AppMap terminal link provider ([e697328](https://github.com/getappmap/vscode-appland/commit/e6973283d4510f024f1bbb6224df1d32291d4dcc))
 
-## [0.23.6](https://github.com/applandinc/vscode-appland/compare/v0.23.5...v0.23.6) (2022-05-04)
-
-
-### Bug Fixes
-
-* AppMap count responds to project add/remove ([eb50ac1](https://github.com/applandinc/vscode-appland/commit/eb50ac12b640668d849f84dafd61d98a9247a74c))
-* Fix appmap.findByName ([9065f32](https://github.com/applandinc/vscode-appland/commit/9065f32413128262e2fe59bc367964d81eeb1e3d))
-* Remove broken doc links ([e2f1364](https://github.com/applandinc/vscode-appland/commit/e2f136490d2aebfd2471c150d27f4a363fcc7efb))
-
-## [0.23.5](https://github.com/applandinc/vscode-appland/compare/v0.23.4...v0.23.5) (2022-02-12)
+## [0.28.3](https://github.com/getappmap/vscode-appland/compare/v0.28.2...v0.28.3) (2022-06-14)
 
 
 ### Bug Fixes
 
-* Update dependencies ([cb0e9b0](https://github.com/applandinc/vscode-appland/commit/cb0e9b054024776e89c937bd4261dc4ecfe2ad8b))
+* `Open AppMaps` instructions view now automatically reloads ([09defe1](https://github.com/getappmap/vscode-appland/commit/09defe125833a384d89aa8020a352581d213d6ca))
+* AppMap install state is synchronized at startup ([261f52c](https://github.com/getappmap/vscode-appland/commit/261f52c57f3b6c44710c42946d38d130d787f3f2))
+* Clean up resources when closing the instructions window ([2a14ce1](https://github.com/getappmap/vscode-appland/commit/2a14ce13f64ab75ee72d857de97e65f175718dc4))
 
-## [0.23.4](https://github.com/applandinc/vscode-appland/compare/v0.23.3...v0.23.4) (2022-02-10)
-
-
-### Bug Fixes
-
-* Clarify installation instructions ([#371](https://github.com/applandinc/vscode-appland/issues/371)) ([19c15ca](https://github.com/applandinc/vscode-appland/commit/19c15ca8b0ec08ed5075db9489de08fdcc19948b))
-
-## [0.23.3](https://github.com/applandinc/vscode-appland/compare/v0.23.2...v0.23.3) (2022-02-08)
+## [0.28.2](https://github.com/getappmap/vscode-appland/compare/v0.28.1...v0.28.2) (2022-06-09)
 
 
 ### Bug Fixes
 
-* Upgrade @appland/components to v1.23.0 ([5e99a48](https://github.com/applandinc/vscode-appland/commit/5e99a481f2572fb8c968d86f9f47758f0dc6f149))
+* Be more robust to AppMap index temp files ([e32978a](https://github.com/getappmap/vscode-appland/commit/e32978aabd68689a4864489b2dce146e91f71169))
+* Filter out blank source locations ([3edb0b7](https://github.com/getappmap/vscode-appland/commit/3edb0b73e99ab397b9d9df2264431a336026c337))
+* Handle code object not found ([247f6c3](https://github.com/getappmap/vscode-appland/commit/247f6c3174d9c65ea079d9a799636f2bfb581ea2))
 
-## [0.23.2](https://github.com/applandinc/vscode-appland/compare/v0.23.1...v0.23.2) (2022-01-13)
-
-
-### Bug Fixes
-
-* Update README ([aa09ba4](https://github.com/applandinc/vscode-appland/commit/aa09ba41eb577c70ce264bc3346757bfc917ce4f))
-
-## [0.23.1](https://github.com/applandinc/vscode-appland/compare/v0.23.0...v0.23.1) (2022-01-12)
+## [0.28.1](https://github.com/getappmap/vscode-appland/compare/v0.28.0...v0.28.1) (2022-06-06)
 
 
 ### Bug Fixes
 
-* Document availability of AppMap for JavaScript ([#370](https://github.com/applandinc/vscode-appland/issues/370)) ([591b8f0](https://github.com/applandinc/vscode-appland/commit/591b8f012a1824193e3c1dc97bf01ca88087d0cc))
+* Update README ([25d0c46](https://github.com/getappmap/vscode-appland/commit/25d0c467528cd804aa187bffc9c3bbed5bb814f6))
 
-# [0.23.0](https://github.com/applandinc/vscode-appland/compare/v0.22.4...v0.23.0) (2021-12-02)
+# [0.28.0](https://github.com/getappmap/vscode-appland/compare/v0.27.0...v0.28.0) (2022-06-06)
 
 
 ### Features
 
-* JavaScript support in the project picker ([5b7e648](https://github.com/applandinc/vscode-appland/commit/5b7e64811362032593c25d84a5068145d8cdfa80)), closes [#366](https://github.com/applandinc/vscode-appland/issues/366)
+* Commands appmap.view.* ([acfab07](https://github.com/getappmap/vscode-appland/commit/acfab07e8c4f7a69f7c7ef64e10ea610c64eaa5c))
+* Indicate whether AppMaps are up-to-date ([0213cb6](https://github.com/getappmap/vscode-appland/commit/0213cb66403741b0712de71f3a135d6fb16f8a3e))
+* out-of-date tests ([9d27b53](https://github.com/getappmap/vscode-appland/commit/9d27b53dca956e3959c49bf9ecacfc4116ba8d41))
+* Print out of date test names to the clipboard ([57a29a1](https://github.com/getappmap/vscode-appland/commit/57a29a1bd1e28185ef98373d392d4212accffccf))
 
-## [0.22.4](https://github.com/applandinc/vscode-appland/compare/v0.22.3...v0.22.4) (2021-11-08)
-
-
-### Bug Fixes
-
-* Don't attempt to index undefined when no languages are available ([4a6c2de](https://github.com/applandinc/vscode-appland/commit/4a6c2dea6c83262ba46c2576a2f3bd7f3eb99fae))
-
-## [0.22.3](https://github.com/applandinc/vscode-appland/compare/v0.22.2...v0.22.3) (2021-11-05)
+# [0.27.0](https://github.com/getappmap/vscode-appland/compare/v0.26.2...v0.27.0) (2022-06-02)
 
 
 ### Bug Fixes
 
-* More robust language detection in project overview ([6313233](https://github.com/applandinc/vscode-appland/commit/63132334d0cb83fd3195017068e31373fadeba9a))
-
-## [0.22.2](https://github.com/applandinc/vscode-appland/compare/v0.22.1...v0.22.2) (2021-11-02)
-
-
-### Bug Fixes
-
-* Send telemetry event on manual command copy ([4fad9d2](https://github.com/applandinc/vscode-appland/commit/4fad9d2edaaeba8c8420df725319db3c667d54fc))
-
-## [0.22.1](https://github.com/applandinc/vscode-appland/compare/v0.22.0...v0.22.1) (2021-10-28)
-
-
-### Bug Fixes
-
-* Quote paths with spaces in "getting started" ([61612ad](https://github.com/applandinc/vscode-appland/commit/61612ad9fc9311984a487346c3ff88ef22ab4421))
-
-# [0.22.0](https://github.com/applandinc/vscode-appland/compare/v0.21.6...v0.22.0) (2021-10-28)
+* Experimental instructions are toggled behind a feature flag ([fd95295](https://github.com/getappmap/vscode-appland/commit/fd95295d6f8dda60ce7e7b0908a71620428e1a6c))
+* Fix language resolver test ([533424a](https://github.com/getappmap/vscode-appland/commit/533424af5346b4b1ce8d60db5e86dd720bb0aece))
+* Fix scanner test ([2997978](https://github.com/getappmap/vscode-appland/commit/29979783e5f4a4e21fe484b2d2990424f15be58f))
+* Line info depends on code objects only ([bfd8b92](https://github.com/getappmap/vscode-appland/commit/bfd8b925e9b57a1459f8e206cd598c71ad6f4315))
+* Suppress directory removal warning ([6239ed6](https://github.com/getappmap/vscode-appland/commit/6239ed614891d69e210fce3c056a40a58855c504))
 
 
 ### Features
 
-* Replace quickstart screens with project picker ([73ab5ac](https://github.com/applandinc/vscode-appland/commit/73ab5ac4615a8ddd2a206fa074ae7475ad06eb3c))
+* Add 'Open AppMaps' to updated instructions ([6682c68](https://github.com/getappmap/vscode-appland/commit/6682c68d0fe2768e4f9a05f9d298ad619730386e))
+* Add indexEnabled flag ([4736138](https://github.com/getappmap/vscode-appland/commit/4736138eee2ea818973905532157c1e6a9eb1068))
+* AppMap usage guide ([2d7f48b](https://github.com/getappmap/vscode-appland/commit/2d7f48b7760b4142d044d1efd74f12701870a5b2))
 
-## [0.21.6](https://github.com/applandinc/vscode-appland/compare/v0.21.5...v0.21.6) (2021-10-25)
-
-
-### Bug Fixes
-
-* Update extension description in README ([#359](https://github.com/applandinc/vscode-appland/issues/359)) ([00a2270](https://github.com/applandinc/vscode-appland/commit/00a22703262bbf02336aef8042461d9fa303ce28))
-
-## [0.21.5](https://github.com/applandinc/vscode-appland/compare/v0.21.4...v0.21.5) (2021-10-21)
+## [0.26.2](https://github.com/getappmap/vscode-appland/compare/v0.26.1...v0.26.2) (2022-05-31)
 
 
 ### Bug Fixes
 
-* Add the project path to the installer command ([#356](https://github.com/applandinc/vscode-appland/issues/356)) ([69de4b9](https://github.com/applandinc/vscode-appland/commit/69de4b9ba96e7c562897dd4a97d4afa8c9dfba34))
+* Migrate Discord to Slack ([a5f6475](https://github.com/getappmap/vscode-appland/commit/a5f6475df0083405e8f69d9e31a6bc29332fbe8b))
 
-## [0.21.4](https://github.com/applandinc/vscode-appland/compare/v0.21.3...v0.21.4) (2021-10-08)
-
-
-### Bug Fixes
-
-* Ignore file access errors where possible ([8b7ac90](https://github.com/applandinc/vscode-appland/commit/8b7ac9020a01a89bb1c12ff8f1017bd1aaed6a67))
-
-## [0.21.3](https://github.com/applandinc/vscode-appland/compare/v0.21.2...v0.21.3) (2021-10-05)
+## [0.26.1](https://github.com/getappmap/vscode-appland/compare/v0.26.0...v0.26.1) (2022-05-26)
 
 
 ### Bug Fixes
 
-* Update social media section in README ([#355](https://github.com/applandinc/vscode-appland/issues/355)) ([74049c0](https://github.com/applandinc/vscode-appland/commit/74049c00752f9dcc65bc0dd101964dada41132bd))
+* Update @appland/components ([adac18b](https://github.com/getappmap/vscode-appland/commit/adac18b1ba33174fe9348e842cc5dbf0a1dfe4a9))
 
-## [0.21.2](https://github.com/applandinc/vscode-appland/compare/v0.21.1...v0.21.2) (2021-10-04)
-
-
-### Bug Fixes
-
-* Update Marketplace description ([a22ca47](https://github.com/applandinc/vscode-appland/commit/a22ca47ff077a22f2a6303411f2a587d9b41f263))
-
-## [0.21.1](https://github.com/applandinc/vscode-appland/compare/v0.21.0...v0.21.1) (2021-09-24)
+# [0.26.0](https://github.com/getappmap/vscode-appland/compare/v0.25.1...v0.26.0) (2022-05-24)
 
 
 ### Bug Fixes
 
-* Capture debug information on number of workspace folders ([ede0c1c](https://github.com/applandinc/vscode-appland/commit/ede0c1caf48a2aca1830672a0ecaf966114043f1))
-
-# [0.21.0](https://github.com/applandinc/vscode-appland/compare/v0.20.0...v0.21.0) (2021-09-22)
+* Absolute file paths don't decorate ([a068b40](https://github.com/getappmap/vscode-appland/commit/a068b40e56187db2303c7e69beac62959d2a17a4))
+* Add ~/.yarn/bin to path ([009b512](https://github.com/getappmap/vscode-appland/commit/009b512f4ab179f1bbd5c2c107112a66857b0bfc))
+* Add missing openapi-types ([959cc4d](https://github.com/getappmap/vscode-appland/commit/959cc4de4d2c46d154ed2e1485b32827d2657973))
+* Add some Disposable subscriptions ([caeedbe](https://github.com/getappmap/vscode-appland/commit/caeedbe32680ce23181716249fc597734152dde9))
+* autoIndexer|Scanner returns process Promise ([936207c](https://github.com/getappmap/vscode-appland/commit/936207c5649dc28288a2bbbdf1e2e78d379c35bc))
+* Decorations show on initial editor ([54bd374](https://github.com/getappmap/vscode-appland/commit/54bd3743a05c351fcf24c0f3a654afc36e96275a))
+* Fix casing in file name ([c18122e](https://github.com/getappmap/vscode-appland/commit/c18122e21d5ee8edfcc23cea01d8be34a2fd98e9))
+* Fixups to rebase ([bd6a247](https://github.com/getappmap/vscode-appland/commit/bd6a247dc52f98c50663f7eb6c3343c438fe6bfa))
+* Handle missing findings file ([f418c51](https://github.com/getappmap/vscode-appland/commit/f418c51f3de14ab8fc78d50039974a816ea5b420))
+* Hide context menus from the command palette ([fba2a0d](https://github.com/getappmap/vscode-appland/commit/fba2a0db50286f21c1d05f4db46eaa8c924cf87d))
+* Increase timeout on process service retry ([e46820a](https://github.com/getappmap/vscode-appland/commit/e46820a62789cdc835a7d94ed53a27f238ab0456))
+* Path-delimited package names in the classMap ([c71ef55](https://github.com/getappmap/vscode-appland/commit/c71ef5544e048195ca4d4cec6782027c75ef5c68))
+* Remove AppMap count as it's usuall wrong ([ba2b34e](https://github.com/getappmap/vscode-appland/commit/ba2b34ec128e2d4f3cd7c370cb473275bb8b12d7))
+* Respond to workspace add/remove events ([564c1be](https://github.com/getappmap/vscode-appland/commit/564c1be907fadcf99b9cf50f6605291aaa662b35))
+* Run service command with yarn run or npm exec ([ffee49a](https://github.com/getappmap/vscode-appland/commit/ffee49acbce1491f9738b24319c6df5c5753c5da))
+* Search parent folders for npm/yarn lock files ([496b2cf](https://github.com/getappmap/vscode-appland/commit/496b2cf974634dde882f3714a06e61d45c73d707))
 
 
 ### Features
 
-* Load AppMaps from a URI ([#232](https://github.com/applandinc/vscode-appland/issues/232)) ([2d38e4e](https://github.com/applandinc/vscode-appland/commit/2d38e4e30c3686836ae24e540e92cb3f7ad5cb8c))
+* Add a Code Objects tree view ([27b0d71](https://github.com/getappmap/vscode-appland/commit/27b0d716e3aaeb23e86ae7c17d71156aa4037089))
+* Add AppMap 12px icon ([49ee452](https://github.com/getappmap/vscode-appland/commit/49ee452b547e773c1904d8b9e41830721872eeb8))
+* Add command appmap.deleteAllAppMaps ([dd0ea7d](https://github.com/getappmap/vscode-appland/commit/dd0ea7d01f5bb68e23924c2926f8ca94faff2860))
+* Context menu + click for Code Objects ([a41b05d](https://github.com/getappmap/vscode-appland/commit/a41b05d30eaaa853f30bd958348146d736732782))
+* Decoration provider ([d23a0a7](https://github.com/getappmap/vscode-appland/commit/d23a0a70082cec0e37ebdb7954791c833f5b2435))
+* Export extension interfaces ([70bbe69](https://github.com/getappmap/vscode-appland/commit/70bbe690ad0ba80a07f058a6c0d29ac3bdf08d97))
+* Extend CodeObjectEntry fields ([2dc839e](https://github.com/getappmap/vscode-appland/commit/2dc839e71ebac9be74dc5305d9356616661d74ba))
+* Feature flag for 'inspect' CLI command ([b4a7532](https://github.com/getappmap/vscode-appland/commit/b4a75328ce77afe056c3ecaa33214b2da0dfcf7f))
+* Hover provider ([2b089e9](https://github.com/getappmap/vscode-appland/commit/2b089e90e924822c2a6cea1f554afc20c9fed142))
+* Inspect code object via CLI shell-out ([16b45eb](https://github.com/getappmap/vscode-appland/commit/16b45ebc5b27b48bcfa61a892569270f1560cd87))
+* Inspect hover shows links to ancestors ([34773c9](https://github.com/getappmap/vscode-appland/commit/34773c9c83e01f92e67e3b17a2cfdfac962c99d2))
+* Line-index, hover, decoration provider ([e72de09](https://github.com/getappmap/vscode-appland/commit/e72de09f7a35aa4658523b8a6b7eb93e4e33ba5f))
+* LineInfoIndex ([875c696](https://github.com/getappmap/vscode-appland/commit/875c6968925065859f56a84063e008753a4ce6e4))
+* Open AppMaps from code object tree ([981bd58](https://github.com/getappmap/vscode-appland/commit/981bd58030eea677527926de628726f6e422b210))
+* Open code object in AppMap ([d0c4751](https://github.com/getappmap/vscode-appland/commit/d0c4751f3da87ea2ae8f26c860ed40cc31663778))
+* Simplify hover ([7bfccf1](https://github.com/getappmap/vscode-appland/commit/7bfccf13e2ce102b1a1e84254675d9cefac26104))
 
-# [0.20.0](https://github.com/applandinc/vscode-appland/compare/v0.19.0...v0.20.0) (2021-09-21)
+## [0.25.1](https://github.com/getappmap/vscode-appland/compare/v0.25.0...v0.25.1) (2022-05-24)
 
 
 ### Bug Fixes
 
-* Disable uploading AppMaps from within the app ([3fb2d4e](https://github.com/applandinc/vscode-appland/commit/3fb2d4ef0389c420814ed5fcf4fa5e1fcae33268))
-* Upgrade @appland/components to v1.12.2 ([e8d6bba](https://github.com/applandinc/vscode-appland/commit/e8d6bbaa470d3d0f1d27222abf03709cc18fa564))
+* Process service now inherits user environment ([021b777](https://github.com/getappmap/vscode-appland/commit/021b777f6e86316ac87a19a84d76d2a6257579d2))
+
+# [0.25.0](https://github.com/getappmap/vscode-appland/compare/v0.24.2...v0.25.0) (2022-05-15)
+
+
+### Bug Fixes
+
+* Fix command titles ([3a33841](https://github.com/getappmap/vscode-appland/commit/3a3384179d971a32aa50a79ca1b7778a7e21398d))
+* Number.MAX_VALUE shows marker to end-of-line ([b60bef7](https://github.com/getappmap/vscode-appland/commit/b60bef775a457cf0e42c86ddf877057385dab2b8))
+* Try re-adding launch args ([3b85580](https://github.com/getappmap/vscode-appland/commit/3b85580738a1102c0673fa33e9d6ed06dee41249))
 
 
 ### Features
 
-* Welcome and install views have merged ([1644d43](https://github.com/applandinc/vscode-appland/commit/1644d43dabe9cfdffce351e70b7779e224e69b5e))
+* Enable/disable findings via setting ([48bee0a](https://github.com/getappmap/vscode-appland/commit/48bee0a0a4ca852be6efbf206b7fd96494499f8b))
+* Identify and display Findings ([b622eaa](https://github.com/getappmap/vscode-appland/commit/b622eaab9130accbe09d005eab76d3a86040ec75))
+* Index and scan AppMaps continuously ([85852f4](https://github.com/getappmap/vscode-appland/commit/85852f4b497d77b33a0a162907cfd99bde40b6c6))
+* Make sure child processes are not detached ([02d1d57](https://github.com/getappmap/vscode-appland/commit/02d1d579d196e4e50c4e98bb9a01b5dc7f0b0812))
+* Show error message when a dependent process can't be spawned ([a78f7d5](https://github.com/getappmap/vscode-appland/commit/a78f7d5ee0ce3fd8839d606e6246fa8e99482f72))
+* Verify project Node.js version ([70b6986](https://github.com/getappmap/vscode-appland/commit/70b698637ef3e93945ba1792393a803d4230e0b2))
+* Wait for child processes to terminate ([88c8792](https://github.com/getappmap/vscode-appland/commit/88c879211d3668511588799191e51fa422bc6e0d))
 
-# [0.19.0](https://github.com/applandinc/vscode-appland/compare/v0.18.1...v0.19.0) (2021-09-17)
+## [0.24.2](https://github.com/getappmap/vscode-appland/compare/v0.24.1...v0.24.2) (2022-05-13)
+
+
+### Bug Fixes
+
+* Non-root level gitignores will no longer be treated as root ([112998d](https://github.com/getappmap/vscode-appland/commit/112998d90ef51e9f8dd93b14a339d44f385dc79c))
+
+## [0.24.1](https://github.com/getappmap/vscode-appland/compare/v0.24.0...v0.24.1) (2022-05-09)
+
+
+### Bug Fixes
+
+* Remove project watcher, milestones and quickstart ([ef2b135](https://github.com/getappmap/vscode-appland/commit/ef2b135d0023c1604d0864477cbc5977c7dda282))
+
+# [0.24.0](https://github.com/getappmap/vscode-appland/compare/v0.23.6...v0.24.0) (2022-05-04)
 
 
 ### Features
 
-* Show progress notification when remote recording is in progress ([#350](https://github.com/applandinc/vscode-appland/issues/350)) ([9854030](https://github.com/applandinc/vscode-appland/commit/98540303ed0642f8b87323623af2393b80833e8d))
+* Ensure the editor is configured to watch AppMaps ([a7e3aa5](https://github.com/getappmap/vscode-appland/commit/a7e3aa5b1469f82d7eeea9d882b98c578fda58fb))
 
-## [0.18.1](https://github.com/applandinc/vscode-appland/compare/v0.18.0...v0.18.1) (2021-09-15)
-
-
-### Bug Fixes
-
-* Update README ([f3e1ee0](https://github.com/applandinc/vscode-appland/commit/f3e1ee07a02cb6f9f8ded7ed2d28b8a7576cb32a))
-
-# [0.18.0](https://github.com/applandinc/vscode-appland/compare/v0.17.2...v0.18.0) (2021-09-07)
+## [0.23.6](https://github.com/getappmap/vscode-appland/compare/v0.23.5...v0.23.6) (2022-05-04)
 
 
 ### Bug Fixes
 
-* Better support for `.gitignore` while identifying project language ([#334](https://github.com/applandinc/vscode-appland/issues/334)) ([92d175d](https://github.com/applandinc/vscode-appland/commit/92d175d32b814edaaff7908c3a4a6a3bb57d1053))
+* AppMap count responds to project add/remove ([eb50ac1](https://github.com/getappmap/vscode-appland/commit/eb50ac12b640668d849f84dafd61d98a9247a74c))
+* Fix appmap.findByName ([9065f32](https://github.com/getappmap/vscode-appland/commit/9065f32413128262e2fe59bc367964d81eeb1e3d))
+* Remove broken doc links ([e2f1364](https://github.com/getappmap/vscode-appland/commit/e2f136490d2aebfd2471c150d27f4a363fcc7efb))
+
+## [0.23.5](https://github.com/getappmap/vscode-appland/compare/v0.23.4...v0.23.5) (2022-02-12)
+
+
+### Bug Fixes
+
+* Update dependencies ([cb0e9b0](https://github.com/getappmap/vscode-appland/commit/cb0e9b054024776e89c937bd4261dc4ecfe2ad8b))
+
+## [0.23.4](https://github.com/getappmap/vscode-appland/compare/v0.23.3...v0.23.4) (2022-02-10)
+
+
+### Bug Fixes
+
+* Clarify installation instructions ([#371](https://github.com/getappmap/vscode-appland/issues/371)) ([19c15ca](https://github.com/getappmap/vscode-appland/commit/19c15ca8b0ec08ed5075db9489de08fdcc19948b))
+
+## [0.23.3](https://github.com/getappmap/vscode-appland/compare/v0.23.2...v0.23.3) (2022-02-08)
+
+
+### Bug Fixes
+
+* Upgrade @appland/components to v1.23.0 ([5e99a48](https://github.com/getappmap/vscode-appland/commit/5e99a481f2572fb8c968d86f9f47758f0dc6f149))
+
+## [0.23.2](https://github.com/getappmap/vscode-appland/compare/v0.23.1...v0.23.2) (2022-01-13)
+
+
+### Bug Fixes
+
+* Update README ([aa09ba4](https://github.com/getappmap/vscode-appland/commit/aa09ba41eb577c70ce264bc3346757bfc917ce4f))
+
+## [0.23.1](https://github.com/getappmap/vscode-appland/compare/v0.23.0...v0.23.1) (2022-01-12)
+
+
+### Bug Fixes
+
+* Document availability of AppMap for JavaScript ([#370](https://github.com/getappmap/vscode-appland/issues/370)) ([591b8f0](https://github.com/getappmap/vscode-appland/commit/591b8f012a1824193e3c1dc97bf01ca88087d0cc))
+
+# [0.23.0](https://github.com/getappmap/vscode-appland/compare/v0.22.4...v0.23.0) (2021-12-02)
 
 
 ### Features
 
-* Add additional telemetry events ([#328](https://github.com/applandinc/vscode-appland/issues/328)) ([21a8839](https://github.com/applandinc/vscode-appland/commit/21a883952de42a86f9ac943c53e8c510d7584ab8))
-* Add CLI installer flow ([#325](https://github.com/applandinc/vscode-appland/issues/325)) ([882767f](https://github.com/applandinc/vscode-appland/commit/882767f696299a936d3e332813bfa30961282844))
-* Add context menu to AppMap panel ([#344](https://github.com/applandinc/vscode-appland/issues/344)) ([14492c5](https://github.com/applandinc/vscode-appland/commit/14492c5080ade2a67042e814ceafebc847bc2727))
+* JavaScript support in the project picker ([5b7e648](https://github.com/getappmap/vscode-appland/commit/5b7e64811362032593c25d84a5068145d8cdfa80)), closes [#366](https://github.com/getappmap/vscode-appland/issues/366)
 
-## [0.17.2](https://github.com/applandinc/vscode-appland/compare/v0.17.1...v0.17.2) (2021-08-11)
+## [0.22.4](https://github.com/getappmap/vscode-appland/compare/v0.22.3...v0.22.4) (2021-11-08)
 
 
 ### Bug Fixes
 
-* Do not show instructions popup automatically ([f62a93a](https://github.com/applandinc/vscode-appland/commit/f62a93a5a04cef7bf6ff4ef8e35bba2286b8f7c7))
+* Don't attempt to index undefined when no languages are available ([4a6c2de](https://github.com/getappmap/vscode-appland/commit/4a6c2dea6c83262ba46c2576a2f3bd7f3eb99fae))
 
-## [0.17.1](https://github.com/applandinc/vscode-appland/compare/v0.17.0...v0.17.1) (2021-08-10)
-
-
-### Bug Fixes
-
-* Don't coerce arbitrary types into strings ([53800dc](https://github.com/applandinc/vscode-appland/commit/53800dc30dd6e62700c735d5967b201f7002aa79))
-
-# [0.17.0](https://github.com/applandinc/vscode-appland/compare/v0.16.0...v0.17.0) (2021-08-06)
+## [0.22.3](https://github.com/getappmap/vscode-appland/compare/v0.22.2...v0.22.3) (2021-11-05)
 
 
 ### Bug Fixes
 
-* Don't open a webview upon initialization ([a44ce5b](https://github.com/applandinc/vscode-appland/commit/a44ce5b81a48a5ff0a0ee547d60b1ed6169ad842))
+* More robust language detection in project overview ([6313233](https://github.com/getappmap/vscode-appland/commit/63132334d0cb83fd3195017068e31373fadeba9a))
+
+## [0.22.2](https://github.com/getappmap/vscode-appland/compare/v0.22.1...v0.22.2) (2021-11-02)
+
+
+### Bug Fixes
+
+* Send telemetry event on manual command copy ([4fad9d2](https://github.com/getappmap/vscode-appland/commit/4fad9d2edaaeba8c8420df725319db3c667d54fc))
+
+## [0.22.1](https://github.com/getappmap/vscode-appland/compare/v0.22.0...v0.22.1) (2021-10-28)
+
+
+### Bug Fixes
+
+* Quote paths with spaces in "getting started" ([61612ad](https://github.com/getappmap/vscode-appland/commit/61612ad9fc9311984a487346c3ff88ef22ab4421))
+
+# [0.22.0](https://github.com/getappmap/vscode-appland/compare/v0.21.6...v0.22.0) (2021-10-28)
 
 
 ### Features
 
-* Add the ability to upload AppMaps to AppLand cloud ([#182](https://github.com/applandinc/vscode-appland/issues/182)) ([5b5b35f](https://github.com/applandinc/vscode-appland/commit/5b5b35fd8d1809b6df1f80023142198a655741bc))
+* Replace quickstart screens with project picker ([73ab5ac](https://github.com/getappmap/vscode-appland/commit/73ab5ac4615a8ddd2a206fa074ae7475ad06eb3c))
 
-# [0.16.0](https://github.com/applandinc/vscode-appland/compare/v0.15.2...v0.16.0) (2021-08-05)
+## [0.21.6](https://github.com/getappmap/vscode-appland/compare/v0.21.5...v0.21.6) (2021-10-25)
+
+
+### Bug Fixes
+
+* Update extension description in README ([#359](https://github.com/getappmap/vscode-appland/issues/359)) ([00a2270](https://github.com/getappmap/vscode-appland/commit/00a22703262bbf02336aef8042461d9fa303ce28))
+
+## [0.21.5](https://github.com/getappmap/vscode-appland/compare/v0.21.4...v0.21.5) (2021-10-21)
+
+
+### Bug Fixes
+
+* Add the project path to the installer command ([#356](https://github.com/getappmap/vscode-appland/issues/356)) ([69de4b9](https://github.com/getappmap/vscode-appland/commit/69de4b9ba96e7c562897dd4a97d4afa8c9dfba34))
+
+## [0.21.4](https://github.com/getappmap/vscode-appland/compare/v0.21.3...v0.21.4) (2021-10-08)
+
+
+### Bug Fixes
+
+* Ignore file access errors where possible ([8b7ac90](https://github.com/getappmap/vscode-appland/commit/8b7ac9020a01a89bb1c12ff8f1017bd1aaed6a67))
+
+## [0.21.3](https://github.com/getappmap/vscode-appland/compare/v0.21.2...v0.21.3) (2021-10-05)
+
+
+### Bug Fixes
+
+* Update social media section in README ([#355](https://github.com/getappmap/vscode-appland/issues/355)) ([74049c0](https://github.com/getappmap/vscode-appland/commit/74049c00752f9dcc65bc0dd101964dada41132bd))
+
+## [0.21.2](https://github.com/getappmap/vscode-appland/compare/v0.21.1...v0.21.2) (2021-10-04)
+
+
+### Bug Fixes
+
+* Update Marketplace description ([a22ca47](https://github.com/getappmap/vscode-appland/commit/a22ca47ff077a22f2a6303411f2a587d9b41f263))
+
+## [0.21.1](https://github.com/getappmap/vscode-appland/compare/v0.21.0...v0.21.1) (2021-09-24)
+
+
+### Bug Fixes
+
+* Capture debug information on number of workspace folders ([ede0c1c](https://github.com/getappmap/vscode-appland/commit/ede0c1caf48a2aca1830672a0ecaf966114043f1))
+
+# [0.21.0](https://github.com/getappmap/vscode-appland/compare/v0.20.0...v0.21.0) (2021-09-22)
 
 
 ### Features
 
-* Replace `Insatll AppMap agent` button ([7de440a](https://github.com/applandinc/vscode-appland/commit/7de440a19c4fad296aee3a6ed825107ac5f0226b))
+* Load AppMaps from a URI ([#232](https://github.com/getappmap/vscode-appland/issues/232)) ([2d38e4e](https://github.com/getappmap/vscode-appland/commit/2d38e4e30c3686836ae24e540e92cb3f7ad5cb8c))
 
-## [0.15.2](https://github.com/applandinc/vscode-appland/compare/v0.15.1...v0.15.2) (2021-08-03)
-
-
-### Bug Fixes
-
-* Alter files included in the extension bundle ([2b765d5](https://github.com/applandinc/vscode-appland/commit/2b765d53e5663770ac78b7225962f34f70804bd0))
-
-## [0.15.1](https://github.com/applandinc/vscode-appland/compare/v0.15.0...v0.15.1) (2021-08-01)
+# [0.20.0](https://github.com/getappmap/vscode-appland/compare/v0.19.0...v0.20.0) (2021-09-21)
 
 
 ### Bug Fixes
 
-* Abort project polling if one of the ticks fails unexpectedly. ([daeb191](https://github.com/applandinc/vscode-appland/commit/daeb19198929b75ae8fcc2df20e8c90a8ffcad4e))
-
-# [0.15.0](https://github.com/applandinc/vscode-appland/compare/v0.14.4...v0.15.0) (2021-07-30)
-
-
-### Bug Fixes
-
-* add possible folders with appmaps to file watcher ([a003af6](https://github.com/applandinc/vscode-appland/commit/a003af6e1e8dec196faf1f90ea56bbcbca694df5))
-* check recording status when trying to stop not running session ([7163177](https://github.com/applandinc/vscode-appland/commit/7163177041affa2bffb4f9bfb2763dbdd3900f87))
-* ensure config contents is available on step 2 for fresh installations ([0743a4a](https://github.com/applandinc/vscode-appland/commit/0743a4a9d2b5fc8ef67c1537ff2d13a2695a056e))
-* finish extension initialization when no workspace is open ([e4bd612](https://github.com/applandinc/vscode-appland/commit/e4bd612f1f445ca12a1d80a52c3b7757ee5c084f))
-* Only return supported languages when identifying project language ([875856c](https://github.com/applandinc/vscode-appland/commit/875856cee17c9649b465b6c54eb17733a1f85429))
-* prevent silent errors when CLI commands are failed ([fb37b8f](https://github.com/applandinc/vscode-appland/commit/fb37b8f5aabe2a938b9c087ba091a33b01aebd25))
-* read project.testFrameworks after the `status` information is available ([213cffe](https://github.com/applandinc/vscode-appland/commit/213cffe6831371ddeed6655661494dca1d99fb58))
-* real links to docs ([17c2fd3](https://github.com/applandinc/vscode-appland/commit/17c2fd36628bfdf7c8849019ae078a3b04f3e15b))
-* set steps 3 and 4 incomplete when steps 1 or 2 are completed ([efec142](https://github.com/applandinc/vscode-appland/commit/efec142e531358dea1e3982ebf5f40622732211c))
-* show update notification only when extension was updated ([b8217c4](https://github.com/applandinc/vscode-appland/commit/b8217c4c45b808dc070e961be80c839db008b8ed))
+* Disable uploading AppMaps from within the app ([3fb2d4e](https://github.com/getappmap/vscode-appland/commit/3fb2d4ef0389c420814ed5fcf4fa5e1fcae33268))
+* Upgrade @appland/components to v1.12.2 ([e8d6bba](https://github.com/getappmap/vscode-appland/commit/e8d6bbaa470d3d0f1d27222abf03709cc18fa564))
 
 
 ### Features
 
-* add 'Using AppMaps' and 'Mastering AppMaps' sidebar lists ([#253](https://github.com/applandinc/vscode-appland/issues/253)) ([30097fa](https://github.com/applandinc/vscode-appland/commit/30097faf2ba2d106b0278a68c64b8ef5a55cec7f))
-* Add Quickstart documentation pages ([#297](https://github.com/applandinc/vscode-appland/issues/297)) ([444dadb](https://github.com/applandinc/vscode-appland/commit/444dadbb8d4d7d65fa324cfb8389da88aa1cf57b))
-* Reset saved usage state ([9885b57](https://github.com/applandinc/vscode-appland/commit/9885b5739ae863d1d66fe7f5223063ebb8529634))
-* show 'Open Quickstart' button when no appmaps found ([3620dcb](https://github.com/applandinc/vscode-appland/commit/3620dcb17e820662062ea0574ec33e3c7cbc28d1))
+* Welcome and install views have merged ([1644d43](https://github.com/getappmap/vscode-appland/commit/1644d43dabe9cfdffce351e70b7779e224e69b5e))
 
-## [0.14.4](https://github.com/applandinc/vscode-appland/compare/v0.14.3...v0.14.4) (2021-06-23)
-
-
-### Bug Fixes
-
-* Upgrade dependencies ([ff05077](https://github.com/applandinc/vscode-appland/commit/ff050778940b5c9bc0b8b959df1230de992e3bf8))
-* Upgrade dependencies ([83b21a1](https://github.com/applandinc/vscode-appland/commit/83b21a134f0f2cf3a12b1116b8e88701460935fc))
-
-## [0.14.3](https://github.com/applandinc/vscode-appland/compare/v0.14.2...v0.14.3) (2021-06-16)
-
-
-### Bug Fixes
-
-* Bundle diagram styling ([e525c2e](https://github.com/applandinc/vscode-appland/commit/e525c2e967c37be6359c2cecdadd192187be7494))
-
-## [0.14.2](https://github.com/applandinc/vscode-appland/compare/v0.14.1...v0.14.2) (2021-06-15)
-
-
-### Bug Fixes
-
-* Upgrade @appland/components to v1.1.8 ([ec39e09](https://github.com/applandinc/vscode-appland/commit/ec39e099eed1392d75f6e5fef9c95ca9c6aa5615))
-
-## [0.14.1](https://github.com/applandinc/vscode-appland/compare/v0.14.0...v0.14.1) (2021-06-09)
-
-
-### Bug Fixes
-
-* Upgrade @appland/components to v1.1.6, @appland/models to v1.0.6 ([aab9672](https://github.com/applandinc/vscode-appland/commit/aab96729418cc5bfc6757d66cd7c1ad75d717a9d))
-
-# [0.14.0](https://github.com/applandinc/vscode-appland/compare/v0.13.0...v0.14.0) (2021-06-07)
-
-
-### Bug Fixes
-
-* Don't rely on isNewAppInstall for new installations ([#202](https://github.com/applandinc/vscode-appland/issues/202)) ([c29aaca](https://github.com/applandinc/vscode-appland/commit/c29aaca4db67cf00d07f38de67d5be011997713f))
-* Send event counts as metrics instead of event properties ([#200](https://github.com/applandinc/vscode-appland/issues/200)) ([d521b3a](https://github.com/applandinc/vscode-appland/commit/d521b3a66f3c1e83fa0ee8c6e193039cb06ff533))
+# [0.19.0](https://github.com/getappmap/vscode-appland/compare/v0.18.1...v0.19.0) (2021-09-17)
 
 
 ### Features
 
-* Add remote recording commands and interface ([#183](https://github.com/applandinc/vscode-appland/issues/183)) ([c5615a7](https://github.com/applandinc/vscode-appland/commit/c5615a7d071ce6548fa3a4b892417824961162bc))
+* Show progress notification when remote recording is in progress ([#350](https://github.com/getappmap/vscode-appland/issues/350)) ([9854030](https://github.com/getappmap/vscode-appland/commit/98540303ed0642f8b87323623af2393b80833e8d))
 
-# [0.13.0](https://github.com/applandinc/vscode-appland/compare/v0.12.1...v0.13.0) (2021-05-20)
+## [0.18.1](https://github.com/getappmap/vscode-appland/compare/v0.18.0...v0.18.1) (2021-09-15)
 
 
 ### Bug Fixes
 
-* Initialize after startup has completed ([5abe7d4](https://github.com/applandinc/vscode-appland/commit/5abe7d4611efd2e8f45e12ac09f25aa21b900370))
+* Update README ([f3e1ee0](https://github.com/getappmap/vscode-appland/commit/f3e1ee07a02cb6f9f8ded7ed2d28b8a7576cb32a))
+
+# [0.18.0](https://github.com/getappmap/vscode-appland/compare/v0.17.2...v0.18.0) (2021-09-07)
+
+
+### Bug Fixes
+
+* Better support for `.gitignore` while identifying project language ([#334](https://github.com/getappmap/vscode-appland/issues/334)) ([92d175d](https://github.com/getappmap/vscode-appland/commit/92d175d32b814edaaff7908c3a4a6a3bb57d1053))
 
 
 ### Features
 
-* Report AppMap agent references and project language/framework on initialize ([a11feca](https://github.com/applandinc/vscode-appland/commit/a11feca72db940ca750a3cee5a9ca9078109b463))
-* Send telemetry event after extension installation ([8024b63](https://github.com/applandinc/vscode-appland/commit/8024b633749463543ed0bb23fecd4308b77c99a8))
-* Send telemetry event upon opening a URL from the AppMap view ([505c87a](https://github.com/applandinc/vscode-appland/commit/505c87a7ae86ee0d2cd5905f267236c6d56cfdfd))
+* Add additional telemetry events ([#328](https://github.com/getappmap/vscode-appland/issues/328)) ([21a8839](https://github.com/getappmap/vscode-appland/commit/21a883952de42a86f9ac943c53e8c510d7584ab8))
+* Add CLI installer flow ([#325](https://github.com/getappmap/vscode-appland/issues/325)) ([882767f](https://github.com/getappmap/vscode-appland/commit/882767f696299a936d3e332813bfa30961282844))
+* Add context menu to AppMap panel ([#344](https://github.com/getappmap/vscode-appland/issues/344)) ([14492c5](https://github.com/getappmap/vscode-appland/commit/14492c5080ade2a67042e814ceafebc847bc2727))
 
-## [0.12.1](https://github.com/applandinc/vscode-appland/compare/v0.12.0...v0.12.1) (2021-04-30)
+## [0.17.2](https://github.com/getappmap/vscode-appland/compare/v0.17.1...v0.17.2) (2021-08-11)
 
 
 ### Bug Fixes
 
-* The AppMap panel will no longer display AppMaps within node_modules ([e4a5a06](https://github.com/applandinc/vscode-appland/commit/e4a5a0659f6cdc3a01ba7f60be75b559e0749ef4))
+* Do not show instructions popup automatically ([f62a93a](https://github.com/getappmap/vscode-appland/commit/f62a93a5a04cef7bf6ff4ef8e35bba2286b8f7c7))
 
-# [0.12.0](https://github.com/applandinc/vscode-appland/compare/v0.11.1...v0.12.0) (2021-04-28)
+## [0.17.1](https://github.com/getappmap/vscode-appland/compare/v0.17.0...v0.17.1) (2021-08-10)
+
+
+### Bug Fixes
+
+* Don't coerce arbitrary types into strings ([53800dc](https://github.com/getappmap/vscode-appland/commit/53800dc30dd6e62700c735d5967b201f7002aa79))
+
+# [0.17.0](https://github.com/getappmap/vscode-appland/compare/v0.16.0...v0.17.0) (2021-08-06)
+
+
+### Bug Fixes
+
+* Don't open a webview upon initialization ([a44ce5b](https://github.com/getappmap/vscode-appland/commit/a44ce5b81a48a5ff0a0ee547d60b1ed6169ad842))
 
 
 ### Features
 
-* Add AppMap to the sidebar ([a650bb7](https://github.com/applandinc/vscode-appland/commit/a650bb7071df0c8b8d5d867d922a514cedfc3322))
-* Display patch notes in the AppMap viewer ([323ade6](https://github.com/applandinc/vscode-appland/commit/323ade664781a15e75b77c75465e3645c6153c85))
-* filter and search AppMaps ([91a8f5e](https://github.com/applandinc/vscode-appland/commit/91a8f5e593018c0c8944f8dd49758d0d42e30357))
-* update @appland/appmap to v2.3.4 ([c8f9ace](https://github.com/applandinc/vscode-appland/commit/c8f9ace4288046aafdf80065a04182bbf114fabe))
+* Add the ability to upload AppMaps to AppLand cloud ([#182](https://github.com/getappmap/vscode-appland/issues/182)) ([5b5b35f](https://github.com/getappmap/vscode-appland/commit/5b5b35fd8d1809b6df1f80023142198a655741bc))
 
-## [0.11.1](https://github.com/applandinc/vscode-appland/compare/v0.11.0...v0.11.1) (2021-04-22)
-
-
-### Bug Fixes
-
-* Remove command state subscriptions when initializing new views ([cb1ef33](https://github.com/applandinc/vscode-appland/commit/cb1ef334b9126d2f73b9f0b9a0162395ee194827))
-
-# [0.11.0](https://github.com/applandinc/vscode-appland/compare/v0.10.1...v0.11.0) (2021-04-22)
+# [0.16.0](https://github.com/getappmap/vscode-appland/compare/v0.15.2...v0.16.0) (2021-08-05)
 
 
 ### Features
 
-* Add commands to read and write AppMap state ([21fd561](https://github.com/applandinc/vscode-appland/commit/21fd561ba50fc262c9fd1cc5658ef61a7010fbb5))
-* Upgrade @appland/appmap to v2.2.0 ([b7a7e09](https://github.com/applandinc/vscode-appland/commit/b7a7e09cc378e52ccc7d58b07ff91fb599eeca81))
+* Replace `Insatll AppMap agent` button ([7de440a](https://github.com/getappmap/vscode-appland/commit/7de440a19c4fad296aee3a6ed825107ac5f0226b))
 
-## [0.10.1](https://github.com/applandinc/vscode-appland/compare/v0.10.0...v0.10.1) (2021-04-07)
-
-
-### Bug Fixes
-
-* Update instrumentation key ([147a94a](https://github.com/applandinc/vscode-appland/commit/147a94ae9c8d1b56bb76878f256f71bae628d4ee))
-
-# [0.10.0](https://github.com/applandinc/vscode-appland/compare/v0.9.1...v0.10.0) (2021-04-06)
+## [0.15.2](https://github.com/getappmap/vscode-appland/compare/v0.15.1...v0.15.2) (2021-08-03)
 
 
 ### Bug Fixes
 
-* AppMap instructions are now shown upon first opening the extension ([#164](https://github.com/applandinc/vscode-appland/issues/164)) ([4de99a6](https://github.com/applandinc/vscode-appland/commit/4de99a6793f2b2ae525866d0c63328de8898e85b))
-* Upgrade @appland/appmap to v1.12 ([54cd392](https://github.com/applandinc/vscode-appland/commit/54cd392f37bbc67a85551e55a4d534c43a78bed1))
+* Alter files included in the extension bundle ([2b765d5](https://github.com/getappmap/vscode-appland/commit/2b765d53e5663770ac78b7225962f34f70804bd0))
+
+## [0.15.1](https://github.com/getappmap/vscode-appland/compare/v0.15.0...v0.15.1) (2021-08-01)
+
+
+### Bug Fixes
+
+* Abort project polling if one of the ticks fails unexpectedly. ([daeb191](https://github.com/getappmap/vscode-appland/commit/daeb19198929b75ae8fcc2df20e8c90a8ffcad4e))
+
+# [0.15.0](https://github.com/getappmap/vscode-appland/compare/v0.14.4...v0.15.0) (2021-07-30)
+
+
+### Bug Fixes
+
+* add possible folders with appmaps to file watcher ([a003af6](https://github.com/getappmap/vscode-appland/commit/a003af6e1e8dec196faf1f90ea56bbcbca694df5))
+* check recording status when trying to stop not running session ([7163177](https://github.com/getappmap/vscode-appland/commit/7163177041affa2bffb4f9bfb2763dbdd3900f87))
+* ensure config contents is available on step 2 for fresh installations ([0743a4a](https://github.com/getappmap/vscode-appland/commit/0743a4a9d2b5fc8ef67c1537ff2d13a2695a056e))
+* finish extension initialization when no workspace is open ([e4bd612](https://github.com/getappmap/vscode-appland/commit/e4bd612f1f445ca12a1d80a52c3b7757ee5c084f))
+* Only return supported languages when identifying project language ([875856c](https://github.com/getappmap/vscode-appland/commit/875856cee17c9649b465b6c54eb17733a1f85429))
+* prevent silent errors when CLI commands are failed ([fb37b8f](https://github.com/getappmap/vscode-appland/commit/fb37b8f5aabe2a938b9c087ba091a33b01aebd25))
+* read project.testFrameworks after the `status` information is available ([213cffe](https://github.com/getappmap/vscode-appland/commit/213cffe6831371ddeed6655661494dca1d99fb58))
+* real links to docs ([17c2fd3](https://github.com/getappmap/vscode-appland/commit/17c2fd36628bfdf7c8849019ae078a3b04f3e15b))
+* set steps 3 and 4 incomplete when steps 1 or 2 are completed ([efec142](https://github.com/getappmap/vscode-appland/commit/efec142e531358dea1e3982ebf5f40622732211c))
+* show update notification only when extension was updated ([b8217c4](https://github.com/getappmap/vscode-appland/commit/b8217c4c45b808dc070e961be80c839db008b8ed))
 
 
 ### Features
 
-* Report anonymous usage metadata and webview exceptions ([#167](https://github.com/applandinc/vscode-appland/issues/167)) ([b519176](https://github.com/applandinc/vscode-appland/commit/b519176ecd4c0f34bc7a9806b17d5149d746c191))
+* add 'Using AppMaps' and 'Mastering AppMaps' sidebar lists ([#253](https://github.com/getappmap/vscode-appland/issues/253)) ([30097fa](https://github.com/getappmap/vscode-appland/commit/30097faf2ba2d106b0278a68c64b8ef5a55cec7f))
+* Add Quickstart documentation pages ([#297](https://github.com/getappmap/vscode-appland/issues/297)) ([444dadb](https://github.com/getappmap/vscode-appland/commit/444dadbb8d4d7d65fa324cfb8389da88aa1cf57b))
+* Reset saved usage state ([9885b57](https://github.com/getappmap/vscode-appland/commit/9885b5739ae863d1d66fe7f5223063ebb8529634))
+* show 'Open Quickstart' button when no appmaps found ([3620dcb](https://github.com/getappmap/vscode-appland/commit/3620dcb17e820662062ea0574ec33e3c7cbc28d1))
 
-## [0.9.1](https://github.com/applandinc/vscode-appland/compare/v0.9.0...v0.9.1) (2021-03-24)
+## [0.14.4](https://github.com/getappmap/vscode-appland/compare/v0.14.3...v0.14.4) (2021-06-23)
 
 
 ### Bug Fixes
 
-* revert bundled logo ([d9a9e69](https://github.com/applandinc/vscode-appland/commit/d9a9e69f33515377fba947a7acdcc9e187d001e0))
+* Upgrade dependencies ([ff05077](https://github.com/getappmap/vscode-appland/commit/ff050778940b5c9bc0b8b959df1230de992e3bf8))
+* Upgrade dependencies ([83b21a1](https://github.com/getappmap/vscode-appland/commit/83b21a134f0f2cf3a12b1116b8e88701460935fc))
 
-# [0.9.0](https://github.com/applandinc/vscode-appland/compare/v0.8.6...v0.9.0) (2021-03-24)
+## [0.14.3](https://github.com/getappmap/vscode-appland/compare/v0.14.2...v0.14.3) (2021-06-16)
+
+
+### Bug Fixes
+
+* Bundle diagram styling ([e525c2e](https://github.com/getappmap/vscode-appland/commit/e525c2e967c37be6359c2cecdadd192187be7494))
+
+## [0.14.2](https://github.com/getappmap/vscode-appland/compare/v0.14.1...v0.14.2) (2021-06-15)
+
+
+### Bug Fixes
+
+* Upgrade @appland/components to v1.1.8 ([ec39e09](https://github.com/getappmap/vscode-appland/commit/ec39e099eed1392d75f6e5fef9c95ca9c6aa5615))
+
+## [0.14.1](https://github.com/getappmap/vscode-appland/compare/v0.14.0...v0.14.1) (2021-06-09)
+
+
+### Bug Fixes
+
+* Upgrade @appland/components to v1.1.6, @appland/models to v1.0.6 ([aab9672](https://github.com/getappmap/vscode-appland/commit/aab96729418cc5bfc6757d66cd7c1ad75d717a9d))
+
+# [0.14.0](https://github.com/getappmap/vscode-appland/compare/v0.13.0...v0.14.0) (2021-06-07)
+
+
+### Bug Fixes
+
+* Don't rely on isNewAppInstall for new installations ([#202](https://github.com/getappmap/vscode-appland/issues/202)) ([c29aaca](https://github.com/getappmap/vscode-appland/commit/c29aaca4db67cf00d07f38de67d5be011997713f))
+* Send event counts as metrics instead of event properties ([#200](https://github.com/getappmap/vscode-appland/issues/200)) ([d521b3a](https://github.com/getappmap/vscode-appland/commit/d521b3a66f3c1e83fa0ee8c6e193039cb06ff533))
 
 
 ### Features
 
-* update @appland/appmap to v1.7.0 ([16635b4](https://github.com/applandinc/vscode-appland/commit/16635b442bb2810e3d072b5a4a09df48725ed2a9))
+* Add remote recording commands and interface ([#183](https://github.com/getappmap/vscode-appland/issues/183)) ([c5615a7](https://github.com/getappmap/vscode-appland/commit/c5615a7d071ce6548fa3a4b892417824961162bc))
 
-## [0.8.6](https://github.com/applandinc/vscode-appland/compare/v0.8.5...v0.8.6) (2021-03-23)
-
-
-### Bug Fixes
-
-* doc and video update for recent agent changes ([eaef258](https://github.com/applandinc/vscode-appland/commit/eaef2581ecc1c34c1a9e38409818824acd046efa))
-
-## [0.8.5](https://github.com/applandinc/vscode-appland/compare/v0.8.4...v0.8.5) (2021-03-18)
+# [0.13.0](https://github.com/getappmap/vscode-appland/compare/v0.12.1...v0.13.0) (2021-05-20)
 
 
 ### Bug Fixes
 
-* adding java video and tutorial to docs ([b6684ed](https://github.com/applandinc/vscode-appland/commit/b6684edaf5de541be5fba2ceda5bf8ba523c4b67))
-
-## [0.8.4](https://github.com/applandinc/vscode-appland/compare/v0.8.3...v0.8.4) (2021-03-11)
-
-
-### Bug Fixes
-
-* adding support@ email to documentation ([b888dcd](https://github.com/applandinc/vscode-appland/commit/b888dcdd6c8a688b588154a4eb0fa9d1c7b60a8b))
-
-## [0.8.3](https://github.com/applandinc/vscode-appland/compare/v0.8.2...v0.8.3) (2021-03-11)
-
-
-### Bug Fixes
-
-* sharing instructions, setup videos ([8273f34](https://github.com/applandinc/vscode-appland/commit/8273f343388f50f77b5c53c926fff68b0de0e3ef))
-
-## [0.8.2](https://github.com/applandinc/vscode-appland/compare/v0.8.1...v0.8.2) (2021-03-06)
-
-
-### Bug Fixes
-
-* updated description and keywords ([3e0a1f3](https://github.com/applandinc/vscode-appland/commit/3e0a1f305d0ba6390be0740e5d672d98c7dea6e2))
-
-## [0.8.1](https://github.com/applandinc/vscode-appland/compare/v0.8.0...v0.8.1) (2021-03-05)
-
-
-### Bug Fixes
-
-* update docs for positioning, arrow keys in trace ([#146](https://github.com/applandinc/vscode-appland/issues/146)) ([cb7e690](https://github.com/applandinc/vscode-appland/commit/cb7e690a030d7f0340c07258b4cc4c9ccba01374))
-
-# [0.8.0](https://github.com/applandinc/vscode-appland/compare/v0.7.0...v0.8.0) (2021-03-05)
+* Initialize after startup has completed ([5abe7d4](https://github.com/getappmap/vscode-appland/commit/5abe7d4611efd2e8f45e12ac09f25aa21b900370))
 
 
 ### Features
 
-* update @appland/appmap to v1.4.0 ([c7d9a7f](https://github.com/applandinc/vscode-appland/commit/c7d9a7fc294729f4b852e1020ecbe633f50c874f))
+* Report AppMap agent references and project language/framework on initialize ([a11feca](https://github.com/getappmap/vscode-appland/commit/a11feca72db940ca750a3cee5a9ca9078109b463))
+* Send telemetry event after extension installation ([8024b63](https://github.com/getappmap/vscode-appland/commit/8024b633749463543ed0bb23fecd4308b77c99a8))
+* Send telemetry event upon opening a URL from the AppMap view ([505c87a](https://github.com/getappmap/vscode-appland/commit/505c87a7ae86ee0d2cd5905f267236c6d56cfdfd))
 
-# [0.7.0](https://github.com/applandinc/vscode-appland/compare/v0.6.1...v0.7.0) (2021-02-25)
-
-
-### Features
-
-* update @appland/appmap to v1.2.0 ([#143](https://github.com/applandinc/vscode-appland/issues/143)) ([a1600cf](https://github.com/applandinc/vscode-appland/commit/a1600cf95c498b4e111028dbac351460330e4ff6))
-
-## [0.6.1](https://github.com/applandinc/vscode-appland/compare/v0.6.0...v0.6.1) (2021-02-25)
+## [0.12.1](https://github.com/getappmap/vscode-appland/compare/v0.12.0...v0.12.1) (2021-04-30)
 
 
 ### Bug Fixes
 
-* documentation improvements ([ea791fa](https://github.com/applandinc/vscode-appland/commit/ea791fa849e8e62fa564b3b51b031b1dca4ae34f))
+* The AppMap panel will no longer display AppMaps within node_modules ([e4a5a06](https://github.com/getappmap/vscode-appland/commit/e4a5a0659f6cdc3a01ba7f60be75b559e0749ef4))
 
-# [0.6.0](https://github.com/applandinc/vscode-appland/compare/v0.5.1...v0.6.0) (2021-02-23)
+# [0.12.0](https://github.com/getappmap/vscode-appland/compare/v0.11.1...v0.12.0) (2021-04-28)
 
 
 ### Features
 
-* update @appland/appmap to v1.1.2 ([3b7ca61](https://github.com/applandinc/vscode-appland/commit/3b7ca615c64f17b5008bbfaf699561ae8a501eb6))
+* Add AppMap to the sidebar ([a650bb7](https://github.com/getappmap/vscode-appland/commit/a650bb7071df0c8b8d5d867d922a514cedfc3322))
+* Display patch notes in the AppMap viewer ([323ade6](https://github.com/getappmap/vscode-appland/commit/323ade664781a15e75b77c75465e3645c6153c85))
+* filter and search AppMaps ([91a8f5e](https://github.com/getappmap/vscode-appland/commit/91a8f5e593018c0c8944f8dd49758d0d42e30357))
+* update @appland/appmap to v2.3.4 ([c8f9ace](https://github.com/getappmap/vscode-appland/commit/c8f9ace4288046aafdf80065a04182bbf114fabe))
 
-## [0.5.1](https://github.com/applandinc/vscode-appland/compare/v0.5.0...v0.5.1) (2021-02-19)
+## [0.11.1](https://github.com/getappmap/vscode-appland/compare/v0.11.0...v0.11.1) (2021-04-22)
 
 
 ### Bug Fixes
 
-* add additional videos to the README ([#133](https://github.com/applandinc/vscode-appland/issues/133)) ([a2445dd](https://github.com/applandinc/vscode-appland/commit/a2445dd22a92ab0b295931c69016ce728fb4a08e))
+* Remove command state subscriptions when initializing new views ([cb1ef33](https://github.com/getappmap/vscode-appland/commit/cb1ef334b9126d2f73b9f0b9a0162395ee194827))
 
-# [0.5.0](https://github.com/applandinc/vscode-appland/compare/v0.4.1...v0.5.0) (2021-02-19)
+# [0.11.0](https://github.com/getappmap/vscode-appland/compare/v0.10.1...v0.11.0) (2021-04-22)
 
 
 ### Features
 
-* update [@appland](https://github.com/appland).appmap to v1.1.1 ([c7add9c](https://github.com/applandinc/vscode-appland/commit/c7add9cf4c970689685695d022519fe2c08582df))
+* Add commands to read and write AppMap state ([21fd561](https://github.com/getappmap/vscode-appland/commit/21fd561ba50fc262c9fd1cc5658ef61a7010fbb5))
+* Upgrade @appland/appmap to v2.2.0 ([b7a7e09](https://github.com/getappmap/vscode-appland/commit/b7a7e09cc378e52ccc7d58b07ff91fb599eeca81))
 
-## [0.4.1](https://github.com/applandinc/vscode-appland/compare/v0.4.0...v0.4.1) (2021-02-18)
+## [0.10.1](https://github.com/getappmap/vscode-appland/compare/v0.10.0...v0.10.1) (2021-04-07)
 
 
 ### Bug Fixes
 
-* reverting package-lock.js to master version ([dc2ea81](https://github.com/applandinc/vscode-appland/commit/dc2ea819c4cb8ec756b5c5f673ef6cade4812275))
+* Update instrumentation key ([147a94a](https://github.com/getappmap/vscode-appland/commit/147a94ae9c8d1b56bb76878f256f71bae628d4ee))
 
-# [0.4.0](https://github.com/applandinc/vscode-appland/compare/v0.3.2...v0.4.0) (2021-02-12)
+# [0.10.0](https://github.com/getappmap/vscode-appland/compare/v0.9.1...v0.10.0) (2021-04-06)
+
+
+### Bug Fixes
+
+* AppMap instructions are now shown upon first opening the extension ([#164](https://github.com/getappmap/vscode-appland/issues/164)) ([4de99a6](https://github.com/getappmap/vscode-appland/commit/4de99a6793f2b2ae525866d0c63328de8898e85b))
+* Upgrade @appland/appmap to v1.12 ([54cd392](https://github.com/getappmap/vscode-appland/commit/54cd392f37bbc67a85551e55a4d534c43a78bed1))
 
 
 ### Features
 
-* update @appland/appmap to v1.0.1 ([f0ac6f3](https://github.com/applandinc/vscode-appland/commit/f0ac6f3b4646fb29c0cddcde59713881d5365f5a))
+* Report anonymous usage metadata and webview exceptions ([#167](https://github.com/getappmap/vscode-appland/issues/167)) ([b519176](https://github.com/getappmap/vscode-appland/commit/b519176ecd4c0f34bc7a9806b17d5149d746c191))
+
+## [0.9.1](https://github.com/getappmap/vscode-appland/compare/v0.9.0...v0.9.1) (2021-03-24)
+
+
+### Bug Fixes
+
+* revert bundled logo ([d9a9e69](https://github.com/getappmap/vscode-appland/commit/d9a9e69f33515377fba947a7acdcc9e187d001e0))
+
+# [0.9.0](https://github.com/getappmap/vscode-appland/compare/v0.8.6...v0.9.0) (2021-03-24)
+
+
+### Features
+
+* update @appland/appmap to v1.7.0 ([16635b4](https://github.com/getappmap/vscode-appland/commit/16635b442bb2810e3d072b5a4a09df48725ed2a9))
+
+## [0.8.6](https://github.com/getappmap/vscode-appland/compare/v0.8.5...v0.8.6) (2021-03-23)
+
+
+### Bug Fixes
+
+* doc and video update for recent agent changes ([eaef258](https://github.com/getappmap/vscode-appland/commit/eaef2581ecc1c34c1a9e38409818824acd046efa))
+
+## [0.8.5](https://github.com/getappmap/vscode-appland/compare/v0.8.4...v0.8.5) (2021-03-18)
+
+
+### Bug Fixes
+
+* adding java video and tutorial to docs ([b6684ed](https://github.com/getappmap/vscode-appland/commit/b6684edaf5de541be5fba2ceda5bf8ba523c4b67))
+
+## [0.8.4](https://github.com/getappmap/vscode-appland/compare/v0.8.3...v0.8.4) (2021-03-11)
+
+
+### Bug Fixes
+
+* adding support@ email to documentation ([b888dcd](https://github.com/getappmap/vscode-appland/commit/b888dcdd6c8a688b588154a4eb0fa9d1c7b60a8b))
+
+## [0.8.3](https://github.com/getappmap/vscode-appland/compare/v0.8.2...v0.8.3) (2021-03-11)
+
+
+### Bug Fixes
+
+* sharing instructions, setup videos ([8273f34](https://github.com/getappmap/vscode-appland/commit/8273f343388f50f77b5c53c926fff68b0de0e3ef))
+
+## [0.8.2](https://github.com/getappmap/vscode-appland/compare/v0.8.1...v0.8.2) (2021-03-06)
+
+
+### Bug Fixes
+
+* updated description and keywords ([3e0a1f3](https://github.com/getappmap/vscode-appland/commit/3e0a1f305d0ba6390be0740e5d672d98c7dea6e2))
+
+## [0.8.1](https://github.com/getappmap/vscode-appland/compare/v0.8.0...v0.8.1) (2021-03-05)
+
+
+### Bug Fixes
+
+* update docs for positioning, arrow keys in trace ([#146](https://github.com/getappmap/vscode-appland/issues/146)) ([cb7e690](https://github.com/getappmap/vscode-appland/commit/cb7e690a030d7f0340c07258b4cc4c9ccba01374))
+
+# [0.8.0](https://github.com/getappmap/vscode-appland/compare/v0.7.0...v0.8.0) (2021-03-05)
+
+
+### Features
+
+* update @appland/appmap to v1.4.0 ([c7d9a7f](https://github.com/getappmap/vscode-appland/commit/c7d9a7fc294729f4b852e1020ecbe633f50c874f))
+
+# [0.7.0](https://github.com/getappmap/vscode-appland/compare/v0.6.1...v0.7.0) (2021-02-25)
+
+
+### Features
+
+* update @appland/appmap to v1.2.0 ([#143](https://github.com/getappmap/vscode-appland/issues/143)) ([a1600cf](https://github.com/getappmap/vscode-appland/commit/a1600cf95c498b4e111028dbac351460330e4ff6))
+
+## [0.6.1](https://github.com/getappmap/vscode-appland/compare/v0.6.0...v0.6.1) (2021-02-25)
+
+
+### Bug Fixes
+
+* documentation improvements ([ea791fa](https://github.com/getappmap/vscode-appland/commit/ea791fa849e8e62fa564b3b51b031b1dca4ae34f))
+
+# [0.6.0](https://github.com/getappmap/vscode-appland/compare/v0.5.1...v0.6.0) (2021-02-23)
+
+
+### Features
+
+* update @appland/appmap to v1.1.2 ([3b7ca61](https://github.com/getappmap/vscode-appland/commit/3b7ca615c64f17b5008bbfaf699561ae8a501eb6))
+
+## [0.5.1](https://github.com/getappmap/vscode-appland/compare/v0.5.0...v0.5.1) (2021-02-19)
+
+
+### Bug Fixes
+
+* add additional videos to the README ([#133](https://github.com/getappmap/vscode-appland/issues/133)) ([a2445dd](https://github.com/getappmap/vscode-appland/commit/a2445dd22a92ab0b295931c69016ce728fb4a08e))
+
+# [0.5.0](https://github.com/getappmap/vscode-appland/compare/v0.4.1...v0.5.0) (2021-02-19)
+
+
+### Features
+
+* update [@appland](https://github.com/appland).appmap to v1.1.1 ([c7add9c](https://github.com/getappmap/vscode-appland/commit/c7add9cf4c970689685695d022519fe2c08582df))
+
+## [0.4.1](https://github.com/getappmap/vscode-appland/compare/v0.4.0...v0.4.1) (2021-02-18)
+
+
+### Bug Fixes
+
+* reverting package-lock.js to master version ([dc2ea81](https://github.com/getappmap/vscode-appland/commit/dc2ea819c4cb8ec756b5c5f673ef6cade4812275))
+
+# [0.4.0](https://github.com/getappmap/vscode-appland/compare/v0.3.2...v0.4.0) (2021-02-12)
+
+
+### Features
+
+* update @appland/appmap to v1.0.1 ([f0ac6f3](https://github.com/getappmap/vscode-appland/commit/f0ac6f3b4646fb29c0cddcde59713881d5365f5a))
 
 ## 0.3.2
 
