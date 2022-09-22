@@ -307,40 +307,44 @@ export type UnionToIntersection<U> = (U extends unknown
   : never;
 
 export function downloadFile(url: string, destination: fs.WriteStream): Promise<boolean> {
-  return new Promise((resolve, reject) => {
-    https.get(url, async (response) => {
-      const statusCode = response.statusCode || NaN;
+  return new Promise((resolve) => {
+    https
+      .get(url, async (response) => {
+        const statusCode = response.statusCode || NaN;
 
-      if (REDIRECT_STATUS_CODES.includes(statusCode)) {
-        const redirectUrl = response.headers?.location;
+        if (REDIRECT_STATUS_CODES.includes(statusCode)) {
+          const redirectUrl = response.headers?.location;
 
-        if (redirectUrl) {
-          resolve(await downloadFile(redirectUrl, destination));
+          if (redirectUrl) {
+            resolve(await downloadFile(redirectUrl, destination));
+          }
+          resolve(false);
+        } else {
+          response.pipe(destination);
+
+          destination.on('finish', () => {
+            resolve(true);
+          });
         }
-        resolve(false);
-      } else {
-        response.pipe(destination);
-
-        destination.on('finish', () => {
-          resolve(true);
-        });
-      }
-    }).on('error', (err) => resolve(false));
+      })
+      .on('error', () => resolve(false));
   });
 }
 
 export function getLatestVersionInfo(appmapPackage: string): Promise<any> {
   return new Promise((resolve, reject) => {
-    https.get(`https://registry.npmjs.org/@appland%2F${appmapPackage}/latest`, (response) => {
-      let body = '';
+    https
+      .get(`https://registry.npmjs.org/@appland%2F${appmapPackage}/latest`, (response) => {
+        let body = '';
 
-      response.on('data', (chunk) => {
-        body += chunk;
-      });
+        response.on('data', (chunk) => {
+          body += chunk;
+        });
 
-      response.on('end', () => {
-        resolve(JSON.parse(body));
-      });
-    }).on('error', (err) => reject(err));
+        response.on('end', () => {
+          resolve(JSON.parse(body));
+        });
+      })
+      .on('error', (err) => reject(err));
   });
 }

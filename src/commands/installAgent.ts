@@ -19,7 +19,10 @@ function electronCommand(globalStorageDir: string, installLocation: string): str
   return `ELECTRON_RUN_AS_NODE=true ${nodePath} ${cliPath} install ${flags.join(' ')}`;
 }
 
-export default async function installAgent(context: vscode.ExtensionContext, hasCLIBin: boolean): Promise<void> {
+export default async function installAgent(
+  context: vscode.ExtensionContext,
+  hasCLIBin: boolean
+): Promise<void> {
   vscode.commands.registerCommand(InstallAgent, async (project) => {
     try {
       const installLocation = formatProjectPath(project.path);

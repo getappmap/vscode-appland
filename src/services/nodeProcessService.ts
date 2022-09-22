@@ -105,15 +105,11 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
   }
 
   protected async installCLIBin(): Promise<boolean> {
-    try {
-      const cliBinPath = path.join(this.globalStorageDir, 'appmap-win-x64.exe');
-      const cliBin = createWriteStream(cliBinPath, { autoClose: true });
-      const latestVersion = (await getLatestVersionInfo('appmap'))?.version;
-      const url = `https://github.com/getappmap/appmap-js/releases/download/%40appland%2Fappmap-v${latestVersion}/appmap-win-x64.exe`;
-      return await downloadFile(url, cliBin);
-    } catch (err) {
-      throw err;
-    }
+    const cliBinPath = path.join(this.globalStorageDir, 'appmap-win-x64.exe');
+    const cliBin = createWriteStream(cliBinPath, { autoClose: true });
+    const latestVersion = (await getLatestVersionInfo('appmap'))?.version;
+    const url = `https://github.com/getappmap/appmap-js/releases/download/%40appland%2Fappmap-v${latestVersion}/appmap-win-x64.exe`;
+    return await downloadFile(url, cliBin);
   }
 
   async install(): Promise<void> {
