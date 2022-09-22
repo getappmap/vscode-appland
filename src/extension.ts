@@ -34,7 +34,13 @@ import { ResolvedFinding } from './services/resolvedFinding';
 import { RuntimeAnalysisCtaService } from './services/runtimeAnalysisCtaService';
 import { SourceFileWatcher } from './services/sourceFileWatcher';
 import { initializeWorkspaceServices } from './services/workspaceServices';
-import { DEBUG_EXCEPTION, PROJECT_OPEN, Telemetry, TELEMETRY_ENABLED } from './telemetry';
+import {
+  DEBUG_EXCEPTION,
+  PROJECT_OPEN,
+  Telemetry,
+  TELEMETRY_ENABLED,
+  sendAppMapCreateEvent,
+} from './telemetry';
 import appmapLinkProvider from './terminalLink/appmapLinkProvider';
 import registerTrees from './tree';
 import { ClassMapTreeDataProvider } from './tree/classMapTreeDataProvider';
@@ -70,6 +76,9 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     const appmapWatcher = new AppMapWatcher();
     context.subscriptions.push(
       appmapWatcher.onCreate(({ uri }) => appmapCollectionFile.onCreate(uri)),
+      appmapWatcher.onCreate(({ uri, workspaceFolder }) =>
+        sendAppMapCreateEvent(uri, workspaceFolder)
+      ),
       appmapWatcher.onDelete(({ uri }) => appmapCollectionFile.onDelete(uri)),
       appmapWatcher.onChange(({ uri }) => appmapCollectionFile.onChange(uri))
     );

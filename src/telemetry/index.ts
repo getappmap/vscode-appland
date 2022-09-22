@@ -5,6 +5,7 @@ import { UnionToIntersection } from '../util';
 import TelemetryResolver from './telemetryResolver';
 import TelemetryDataProvider from './telemetryDataProvider';
 import Event from './event';
+export * from './sendAppMapCreateEvent';
 
 const EXTENSION_ID = `${publisher}.${name}`;
 const EXTENSION_VERSION = `${version}`;
