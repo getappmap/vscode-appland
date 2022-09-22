@@ -239,7 +239,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     const runtimeAnalysisCta = new RuntimeAnalysisCtaService(projectStates, extensionState);
     await workspaceServices.enroll(runtimeAnalysisCta);
 
-    installAgent(context);
+    installAgent(context, processService.hasCLIBin);
     deleteAllAppMaps(context, classMapIndex, findingsIndex);
 
     const trees = registerTrees(

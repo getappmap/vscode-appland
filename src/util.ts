@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
+import https from 'https';
 import {
   ChildProcess,
   exec as processExec,
@@ -9,6 +10,8 @@ import {
 } from 'child_process';
 import * as vscode from 'vscode';
 import { ProjectStateServiceInstance } from './services/projectStateService';
+
+const REDIRECT_STATUS_CODES = [301, 302, 307, 308];
 
 export function getNonce(): string {
   let text = '';
@@ -302,3 +305,42 @@ export type UnionToIntersection<U> = (U extends unknown
 : never) extends (k: infer I) => void
   ? I
   : never;
+
+export function downloadFile(url: string, destination: fs.WriteStream): Promise<boolean> {
+  return new Promise((resolve, reject) => {
+    https.get(url, async (response) => {
+      const statusCode = response.statusCode || NaN;
+
+      if (REDIRECT_STATUS_CODES.includes(statusCode)) {
+        const redirectUrl = response.headers?.location;
+
+        if (redirectUrl) {
+          resolve(await downloadFile(redirectUrl, destination));
+        }
+        resolve(false);
+      } else {
+        response.pipe(destination);
+
+        destination.on('finish', () => {
+          resolve(true);
+        });
+      }
+    }).on('error', (err) => resolve(false));
+  });
+}
+
+export function getLatestVersionInfo(appmapPackage: string): Promise<any> {
+  return new Promise((resolve, reject) => {
+    https.get(`https://registry.npmjs.org/@appland%2F${appmapPackage}/latest`, (response) => {
+      let body = '';
+
+      response.on('data', (chunk) => {
+        body += chunk;
+      });
+
+      response.on('end', () => {
+        resolve(JSON.parse(body));
+      });
+    }).on('error', (err) => reject(err));
+  });
+}

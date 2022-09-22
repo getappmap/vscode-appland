@@ -19,7 +19,7 @@ function electronCommand(globalStorageDir: string, installLocation: string): str
   return `ELECTRON_RUN_AS_NODE=true ${nodePath} ${cliPath} install ${flags.join(' ')}`;
 }
 
-export default async function installAgent(context: vscode.ExtensionContext): Promise<void> {
+export default async function installAgent(context: vscode.ExtensionContext, hasCLIBin: boolean): Promise<void> {
   vscode.commands.registerCommand(InstallAgent, async (project) => {
     try {
       const installLocation = formatProjectPath(project.path);
@@ -32,6 +32,8 @@ export default async function installAgent(context: vscode.ExtensionContext): Pr
       if (isElectronApp && canSendElectronComamnd) {
         env['ELECTRON_RUN_AS_NODE'] = 'true';
         command = electronCommand(context.globalStorageUri.fsPath, installLocation);
+      } else if (os.platform() === 'win32' && hasCLIBin) {
+        command = `${context.globalStorageUri.fsPath}\\appmap-win-x64.exe install -d ${installLocation}`;
       }
 
       const terminal = vscode.window.createTerminal({
