@@ -4,7 +4,7 @@
 
 The client is required for recording AppMaps when running tests in VS Code.
 
-Follow the `Installation` and `Configuration` sections in [github.com/applandinc/appmap-ruby](https://github.com/applandinc/appmap-ruby#installation).
+Follow the `Installation` and `Configuration` sections in [github.com/getappmap/appmap-ruby](https://github.com/getappmap/appmap-ruby#installation).
 
 ## Recording an AppMap
 
@@ -26,15 +26,15 @@ The following sections provide detailed instructions for recording AppMaps from 
 
 ![Run RSpec test](https://vscode-appmap.s3.us-east-2.amazonaws.com/media/004.png "Run RSpec test")
 
-Alternatively, you can generate AppMaps from tests manually from the command line. See instructions in [https://github.com/applandinc/appmap-ruby](https://github.com/applandinc/appmap-ruby#rspec)
+Alternatively, you can generate AppMaps from tests manually from the command line. See instructions in [https://github.com/getappmap/appmap-ruby](https://github.com/getappmap/appmap-ruby#rspec)
 
 ### Minitest
 
-See instructions in [https://github.com/applandinc/appmap-ruby/blob/master/README.md](https://github.com/applandinc/appmap-ruby/blob/master/README.md#minitest)
+See instructions in [https://github.com/getappmap/appmap-ruby/blob/master/README.md](https://github.com/getappmap/appmap-ruby/blob/master/README.md#minitest)
 
 ### Cucumber
 
-See instructions in [https://github.com/applandinc/appmap-ruby/blob/master/README.md](https://github.com/applandinc/appmap-ruby/blob/master/README.md#cucumber)
+See instructions in [https://github.com/getappmap/appmap-ruby/blob/master/README.md](https://github.com/getappmap/appmap-ruby/blob/master/README.md#cucumber)
 
 
 ## Location of AppMaps in the file tree navigator

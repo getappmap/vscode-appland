@@ -96,7 +96,7 @@ packages:
 - path: chipy_org
 ```
 
-The format of `appmap.yml` is documented in the [appmap-python documentation](https://github.com/applandinc/appmap-python/blob/master/README.md). `appmap.yml` can be fine tuned to include/exclude individual modules, classes and methods.
+The format of `appmap.yml` is documented in the [appmap-python documentation](https://github.com/getappmap/appmap-python/blob/master/README.md). `appmap.yml` can be fine tuned to include/exclude individual modules, classes and methods.
 
 ## Install the appmap package in the Docker image
 
@@ -177,7 +177,7 @@ Navigate to the `tmp/appmap/pytest` folder in the file explorer and press  `CTRL
 4. To see how AppMaps can be used for fast mastering of new-to-you code
 <a href="https://www.loom.com/share/327f17cf25de499e9254bde366137306"> watch this demonstration video<img src="https://cdn.loom.com/sessions/thumbnails/327f17cf25de499e9254bde366137306-with-play.gif"></a> 
 
-5. Additional information about AppMaps and their benefits can be found in the AppMap for Visual Studio Code [online documentation](https://github.com/applandinc/vscode-appland/blob/master/README.md)
+5. Additional information about AppMaps and their benefits can be found in the AppMap for Visual Studio Code [online documentation](https://github.com/getappmap/vscode-appland/blob/master/README.md)
 
 6. Explore not only the previously recorded AppMaps but see how code modifications change the way the application runs. Modify the code, re-run the tests with the AppMap recording enabled and observe the changes in the dependencies and flows
 

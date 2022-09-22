@@ -311,7 +311,7 @@ __metadata:
     async: ^3.2.3
     boxen: ^5.0.1
     chalk: ^4.1.2
-    chokidar: "applandinc/chokidar#fix/new-file-new-directory-race-on-linux"
+    chokidar: "getappmap/chokidar#fix/new-file-new-directory-race-on-linux"
     cli-progress: ^3.11.0
     conf: ^10.0.2
     form-data: ^4.0.0
@@ -4338,9 +4338,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chokidar@applandinc/chokidar#fix/new-file-new-directory-race-on-linux":
+"chokidar@getappmap/chokidar#fix/new-file-new-directory-race-on-linux":
   version: 3.5.3
-  resolution: "chokidar@https://github.com/applandinc/chokidar.git#commit=95bc9cdc42e18417359986fd7e34316713ef066b"
+  resolution: "chokidar@https://github.com/getappmap/chokidar.git#commit=95bc9cdc42e18417359986fd7e34316713ef066b"
   dependencies:
     anymatch: ~3.1.2
     braces: ~3.0.2

@@ -9199,7 +9199,7 @@ export default {
     name:
       'Cancel items when all items are not cancelable does not display the link to cancel items',
     client: {
-      url: 'https://github.com/applandinc/appmap-ruby',
+      url: 'https://github.com/getappmap/appmap-ruby',
       name: 'appmap',
       version: '0.37.2',
     },

@@ -9,7 +9,7 @@
     },
     "client": {
       "name": "appmap",
-      "url": "https://github.com/applandinc/appmap-ruby",
+      "url": "https://github.com/getappmap/appmap-ruby",
       "version": "0.83.2"
     },
     "frameworks": [

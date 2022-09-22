@@ -4,8 +4,8 @@
 
 The client is required for recording AppMaps when running tests in VS Code.
 
-1. Download the most recent `appmap.jar` from [https://github.com/applandinc/appmap-java/releases](https://github.com/applandinc/appmap-java/releases). 
-2. Then follow the `Configuration chapter` in [github.com/applandinc/appmap-java](https://github.com/applandinc/appmap-java#configuration).
+1. Download the most recent `appmap.jar` from [https://github.com/getappmap/appmap-java/releases](https://github.com/getappmap/appmap-java/releases). 
+2. Then follow the `Configuration chapter` in [github.com/getappmap/appmap-java](https://github.com/getappmap/appmap-java#configuration).
 
 ## Recording an AppMap
 
@@ -20,7 +20,7 @@ AppMap diagrams feature links to original source code. In order for the links to
 
 ### Maven, Maven Surefire, and Gradle
 
-The `appmap-java` project on GitHub has [instructions for running the `appmap.jar` Java agent within the Maven, Surefire, or Gradle](https://github.com/applandinc/appmap-java/blob/master/README.md#other-examples).
+The `appmap-java` project on GitHub has [instructions for running the `appmap.jar` Java agent within the Maven, Surefire, or Gradle](https://github.com/getappmap/appmap-java/blob/master/README.md#other-examples).
 
 
 ### JUnit

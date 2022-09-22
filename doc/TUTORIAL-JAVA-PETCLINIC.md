@@ -81,7 +81,7 @@ The file lists all packages and classes that will be recorded in AppMaps, in thi
 
 ![The appmap.yml file in Visual Studio Code](https://vscode-appmap.s3.us-east-2.amazonaws.com/media/petclinic-appmapyml.png)
 
-The format of `appmap.yml` is documented in the [appmap-java documentation](https://github.com/applandinc/appmap-java/blob/master/README.md). `appmap.yml` can be fine tuned to include/exclude individual packages, classes and methods.
+The format of `appmap.yml` is documented in the [appmap-java documentation](https://github.com/getappmap/appmap-java/blob/master/README.md). `appmap.yml` can be fine tuned to include/exclude individual packages, classes and methods.
 
 ## Add the AppMap plugin to pom.xml
 
@@ -111,7 +111,7 @@ Now add the AppMap plugin to the `pom.xml` file:
 ![AppMap plugin configuration in pom.xml](https://vscode-appmap.s3.us-east-2.amazonaws.com/media/petclinic-pom.png)
 
 The `appmap-maven-plugin` will activate the AppMap agent when the tests are run in the `process-test-classes` phase.
-Please see the [appmap-maven-plugin documentation](https://github.com/applandinc/appmap-maven-plugin/blob/master/README.md) for additional details.
+Please see the [appmap-maven-plugin documentation](https://github.com/getappmap/appmap-maven-plugin/blob/master/README.md) for additional details.
 
 # Record and interact with AppMaps
 
@@ -167,7 +167,7 @@ Please note that the tests of this application do not provide great coverage of 
 4. To see how AppMaps can be used for fast mastering of new-to-you code
 <a href="https://www.loom.com/share/327f17cf25de499e9254bde366137306"> watch this demonstration video<img src="https://cdn.loom.com/sessions/thumbnails/327f17cf25de499e9254bde366137306-with-play.gif"></a> 
 
-5. Additional information about AppMaps and their benefits can be found in the AppMap for Visual Studio Code [online documentation](https://github.com/applandinc/vscode-appland/blob/master/README.md)
+5. Additional information about AppMaps and their benefits can be found in the AppMap for Visual Studio Code [online documentation](https://github.com/getappmap/vscode-appland/blob/master/README.md)
 
 6. Explore not only the previously recorded AppMaps but see how code modifications change the way the application runs. Modify the code, re-run the tests with the AppMap recording enabled and observe the changes in the dependencies and flows
 
