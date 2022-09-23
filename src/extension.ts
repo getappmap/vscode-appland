@@ -53,6 +53,7 @@ import UriHandler from './uri/uriHandler';
 import OpenAppMapUriHandler from './uri/openAppMapUriHandler';
 import EarlyAccessUriHandler, { tryDisplayEarlyAccessWelcome } from './uri/earlyAccessUriHandler';
 import generateOpenApi from './commands/generateOpenApi';
+import AppMapServerConfiguration from './services/appmapServerConfiguration';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   Telemetry.register(context);
@@ -68,6 +69,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     if (extensionState.isNewInstall) {
       Telemetry.reportAction('plugin:install');
     }
+
+    AppMapServerConfiguration.enroll(context);
 
     const appmapCollectionFile = new AppMapCollectionFile();
     let findingsIndex: FindingsIndex | undefined,
