@@ -17,6 +17,16 @@ export default class UriHandler implements vscode.UriHandler, vscode.Disposable 
     }
   }
 
+  unregisterHandler(handler: RequestHandler): void {
+    const pathHandlers = this.handlers[handler.path];
+    if (!pathHandlers) return;
+
+    const handlerIndex = pathHandlers.indexOf(handler);
+    if (!handlerIndex) return;
+
+    this.handlers[handler.path] = pathHandlers.splice(handlerIndex, 1);
+  }
+
   registerHandlers(...handlers: RequestHandler[]): void {
     handlers.forEach((handler) => this.registerHandler(handler));
   }

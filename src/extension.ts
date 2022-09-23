@@ -54,6 +54,7 @@ import OpenAppMapUriHandler from './uri/openAppMapUriHandler';
 import EarlyAccessUriHandler, { tryDisplayEarlyAccessWelcome } from './uri/earlyAccessUriHandler';
 import generateOpenApi from './commands/generateOpenApi';
 import AppMapServerConfiguration from './services/appmapServerConfiguration';
+import AppMapServerAuthenticationProvider from './authentication/appmapServerAuthenticationProvider';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   Telemetry.register(context);
@@ -207,6 +208,17 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     const earlyAccessUriHandler = new EarlyAccessUriHandler(context);
     uriHandler.registerHandlers(openAppMapUriHandler, earlyAccessUriHandler);
     context.subscriptions.push(vscode.window.registerUriHandler(uriHandler));
+
+    const appmapServerAuthenticationProvider = AppMapServerAuthenticationProvider.enroll(
+      context,
+      uriHandler
+    );
+    vscode.commands.registerCommand('appmap.login', async () => {
+      appmapServerAuthenticationProvider.createSession();
+    });
+    vscode.commands.registerCommand('appmap.logout', async () => {
+      appmapServerAuthenticationProvider.removeSession();
+    });
 
     tryDisplayEarlyAccessWelcome(context);
 
