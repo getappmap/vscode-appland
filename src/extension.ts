@@ -213,6 +213,9 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       context,
       uriHandler
     );
+    appmapServerAuthenticationProvider.onDidChangeSessions(() =>
+      AppMapServerConfiguration.updateAppMapClientConfiguration()
+    );
     vscode.commands.registerCommand('appmap.login', async () => {
       appmapServerAuthenticationProvider.createSession();
     });

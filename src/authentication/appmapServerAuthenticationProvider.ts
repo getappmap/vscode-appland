@@ -3,6 +3,8 @@ import { default as ExtensionSettings } from '../configuration/extensionSettings
 import UriHandler from '../uri/uriHandler';
 import AppMapServerAuthenticationHandler from '../uri/appmapServerAuthenticationHandler';
 
+export const AUTHN_PROVIDER_NAME = 'appmap.server';
+
 const APPMAP_SERVER_SESSION_KEY = 'appmap.server.session';
 
 export default class AppMapServerAuthenticationProvider implements vscode.AuthenticationProvider {
@@ -17,7 +19,7 @@ export default class AppMapServerAuthenticationProvider implements vscode.Authen
   ): AppMapServerAuthenticationProvider {
     const provider = new AppMapServerAuthenticationProvider(context, uriHandler);
     const registration = vscode.authentication.registerAuthenticationProvider(
-      'appmap.server',
+      AUTHN_PROVIDER_NAME,
       'AppMap Server',
       provider,
       { supportsMultipleAccounts: false }

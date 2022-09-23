@@ -1,9 +1,9 @@
 import * as vscode from 'vscode';
 import extensionSettings from '../configuration/extensionSettings';
 import AppMapDocument from '../editor/AppMapDocument';
-import { AppMap } from '@appland/client';
-import { UploadCreateAppMapResponse } from '@appland/client/dist/src/appMap';
-import assert from 'assert';
+import { AppMap, loadConfiguration } from '@appland/client';
+import { UploadAppMapResponse } from '@appland/client/dist/src/appMap';
+import { AUTHN_PROVIDER_NAME } from '../authentication/appmapServerAuthenticationProvider';
 
 export class AppmapUploader {
   private static DIALOG_KEY = 'applandinc.appmap.uploadDialog';
@@ -16,67 +16,58 @@ export class AppmapUploader {
     if (!acceptedPreviously) {
       const result = await vscode.window.showInformationMessage(
         [
-          'Performing this action will upload this AppMap to the AppLand cloud where it can be easily shared.',
-          'By continuing, you agree that you have permission to distribute the data contained in this AppMap.',
-          'If you choose to continue, this dialog will not appear again.',
+          `To share your AppMap, it will be uploaded to AppMap Server.`,
+          `It will be identified by a secure, unguessable link.`,
+          `By default, anyone with the link will be able to see the AppMap`,
+          `You can manage the sharing settings on the AppMap Server page for your AppMap.`,
+          '',
+          `If you haven't logged in to AppMap Server from VSCode before, you'll be`,
+          `doing that next.`,
         ].join(' '),
-        'Continue',
-        'Cancel'
+        'OK'
       );
 
-      if (!result || result === 'Cancel') {
+      if (!result) {
         return false;
       }
 
       context.globalState.update(this.DIALOG_KEY, true);
     }
 
-    let upload: UploadCreateAppMapResponse;
-    try {
-      upload = await AppMap.createUpload(Buffer.from(appMapFile.raw), {});
-    } catch (e) {
-      const err = e as Error;
-      vscode.window.showErrorMessage(`Upload failed: ${err.name}: ${err.message}`);
+    const session = await vscode.authentication.getSession(AUTHN_PROVIDER_NAME, ['default'], {
+      createIfNone: true,
+    });
+    if (!session) {
       return false;
     }
 
-    if (upload.completed) {
-      const appMapURL = vscode.Uri.joinPath(
-        extensionSettings.appMapServerURL(),
-        'appmaps',
-        upload.completed.uuid
+    let upload: UploadAppMapResponse;
+    try {
+      upload = await AppMap.create(Buffer.from(appMapFile.raw), {});
+    } catch (e) {
+      const err = e as Error;
+      vscode.window.showErrorMessage(
+        `Upload failed (${loadConfiguration()}) ${err.name}: ${err.message}`
       );
-      // TODO: Open the AppMap with the current configured state
-      // .with({
-      //   query: `state=${appMapState}`,
-      // });
-
-      vscode.env.clipboard.writeText(appMapURL.toString());
-      vscode.window.showInformationMessage(`AppMap URL is on the clipboard`);
-      return true;
-    } else {
-      assert(upload.pending, `Upload should be pending if it's not completed`);
-      const confirmUri = this.getConfirmUri(
-        upload.pending.upload_id.toString(),
-        upload.pending.token
-      );
-      vscode.env.openExternal(confirmUri);
+      return false;
     }
 
+    const appMapURL = vscode.Uri.joinPath(
+      extensionSettings.appMapServerURL(),
+      'scenarios',
+      upload.uuid
+    );
+    // TODO: Open the AppMap with the current configured state
+    // .with({
+    //   query: `state=${appMapState}`,
+    // });
+
+    vscode.env.clipboard.writeText(appMapURL.toString());
+    vscode.window.showInformationMessage(`AppMap URL is on the clipboard`);
     return true;
   }
 
   public static resetState(context: vscode.ExtensionContext): void {
     context.globalState.update(this.DIALOG_KEY, undefined);
-  }
-
-  private static getConfirmUri(id: string, token: string): vscode.Uri {
-    return vscode.Uri.joinPath(
-      extensionSettings.appMapServerURL(),
-      '/scenario_uploads',
-      id.toString()
-    ).with({
-      query: `token=${token}`,
-    });
   }
 }

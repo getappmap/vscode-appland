@@ -19,7 +19,7 @@ export default class AppMapServerAuthenticationHandler implements RequestHandler
     this.resolve({
       id: email,
       account: { id: 'default', label: 'default' },
-      scopes: [],
+      scopes: ['default'],
       accessToken: apiKeyParam,
     });
   }
