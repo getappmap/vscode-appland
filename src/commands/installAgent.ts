@@ -23,9 +23,9 @@ export default async function installAgent(
   context: vscode.ExtensionContext,
   hasCLIBin: boolean
 ): Promise<void> {
-  vscode.commands.registerCommand(InstallAgent, async (project) => {
+  vscode.commands.registerCommand(InstallAgent, async (path: string) => {
     try {
-      const installLocation = formatProjectPath(project.path);
+      const installLocation = formatProjectPath(path);
       const env = {};
       let command = `npx @appland/appmap install -d ${installLocation}`;
 
@@ -41,16 +41,16 @@ export default async function installAgent(
 
       const terminal = vscode.window.createTerminal({
         name: 'install-appmap',
-        cwd: project.path,
+        cwd: path,
         env,
       });
       terminal.show();
       terminal.sendText(command);
 
-      Telemetry.sendEvent(CLICK_INSTALL_BUTTON, { rootDirectory: project.path });
+      Telemetry.sendEvent(CLICK_INSTALL_BUTTON, { rootDirectory: path });
     } catch (err) {
       const exception = err as Error;
-      Telemetry.sendEvent(INSTALL_BUTTON_ERROR, { rootDirectory: project.path, exception });
+      Telemetry.sendEvent(INSTALL_BUTTON_ERROR, { rootDirectory: path, exception });
     }
   });
 }

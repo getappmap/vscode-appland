@@ -75,8 +75,8 @@ export default function mountInstallGuide() {
       vscode.postMessage({ command: 'open-file', file });
     });
 
-    app.$on('install-agent', (project) => {
-      messages.rpc('install-agent', project);
+    app.$on('perform-install', (path) => {
+      vscode.postMessage({ command: 'perform-install', path });
     });
 
     app.$on('open-instruction', (pageId) => {

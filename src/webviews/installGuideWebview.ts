@@ -164,8 +164,11 @@ export default class InstallGuideWebView {
               );
               break;
 
-            case 'install-agent':
-              vscode.commands.executeCommand(InstallAgent, message.data);
+            case 'perform-install':
+              {
+                const { path } = message as { path: string };
+                vscode.commands.executeCommand(InstallAgent, path);
+              }
               break;
 
             default:
