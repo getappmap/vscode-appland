@@ -1,7 +1,9 @@
 import * as vscode from 'vscode';
-import bent from 'bent';
 import extensionSettings from '../configuration/extensionSettings';
 import AppMapDocument from '../editor/AppMapDocument';
+import { AppMap } from '@appland/client';
+import { UploadCreateAppMapResponse } from '@appland/client/dist/src/appMap';
+import assert from 'assert';
 
 export class AppmapUploader {
   private static DIALOG_KEY = 'applandinc.appmap.uploadDialog';
@@ -29,40 +31,48 @@ export class AppmapUploader {
       context.globalState.update(this.DIALOG_KEY, true);
     }
 
-    const post = bent(extensionSettings.uploadURL().toString(), 'POST', 'json', 201, {
-      'X-Requested-With': 'VSCodeUploader',
-    });
-
+    let upload: UploadCreateAppMapResponse;
     try {
-      const response = (await post('api/appmaps/create_upload', {
-        data: appMapFile.raw,
-      })) as {
-        id: number;
-        token: string;
-      };
-
-      const confirmUri = this.getConfirmUri(response.id, response.token);
-
-      vscode.env.openExternal(confirmUri);
-
-      vscode.window.showInformationMessage(`Uploaded ${appMapFile.fileName}`);
-
-      return true;
+      upload = await AppMap.createUpload(Buffer.from(appMapFile.raw), {});
     } catch (e) {
       const err = e as Error;
       vscode.window.showErrorMessage(`Upload failed: ${err.name}: ${err.message}`);
+      return false;
     }
 
-    return false;
+    if (upload.completed) {
+      const appMapURL = vscode.Uri.joinPath(
+        extensionSettings.appMapServerURL(),
+        'appmaps',
+        upload.completed.uuid
+      );
+      // TODO: Open the AppMap with the current configured state
+      // .with({
+      //   query: `state=${appMapState}`,
+      // });
+
+      vscode.env.clipboard.writeText(appMapURL.toString());
+      vscode.window.showInformationMessage(`AppMap URL is on the clipboard`);
+      return true;
+    } else {
+      assert(upload.pending, `Upload should be pending if it's not completed`);
+      const confirmUri = this.getConfirmUri(
+        upload.pending.upload_id.toString(),
+        upload.pending.token
+      );
+      vscode.env.openExternal(confirmUri);
+    }
+
+    return true;
   }
 
   public static resetState(context: vscode.ExtensionContext): void {
     context.globalState.update(this.DIALOG_KEY, undefined);
   }
 
-  private static getConfirmUri(id: number, token: string): vscode.Uri {
+  private static getConfirmUri(id: string, token: string): vscode.Uri {
     return vscode.Uri.joinPath(
-      extensionSettings.uploadURL(),
+      extensionSettings.appMapServerURL(),
       '/scenario_uploads',
       id.toString()
     ).with({
