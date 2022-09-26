@@ -70,6 +70,17 @@ export const APPMAP_UPLOAD = new Event({
   metrics: [Metrics.APPMAP_JSON],
 });
 
+export const APPMAP_CREATE = new Event({
+  name: 'appmap:create',
+  properties: [
+    Properties.FILE_PATH,
+    Properties.FILE_SHA_256,
+    Properties.FILE_SIZE,
+    Properties.FILE_METADATA,
+    Properties.PROJECT_LANGUAGE,
+  ],
+});
+
 export const RECORDING_START = new Event({
   name: 'remote_recording:start',
   properties: [Properties.RECORDING_ENDPOINT_URL, Properties.RECORDING_STATUS_CODE],
