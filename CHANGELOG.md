@@ -1,3 +1,10 @@
+# [0.44.0](https://github.com/getappmap/vscode-appland/compare/v0.43.0...v0.44.0) (2022-09-26)
+
+
+### Features
+
+* Send a telemetry event for AppMap creation ([50c3263](https://github.com/getappmap/vscode-appland/commit/50c32637ea403bad26cf3ee3871b194ae764cb1f)), closes [#458](https://github.com/getappmap/vscode-appland/issues/458)
+
 # [0.43.0](https://github.com/getappmap/vscode-appland/compare/v0.42.0...v0.43.0) (2022-09-21)
 
 
