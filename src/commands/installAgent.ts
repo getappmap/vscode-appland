@@ -23,7 +23,7 @@ export default async function installAgent(
   context: vscode.ExtensionContext,
   hasCLIBin: boolean
 ): Promise<void> {
-  vscode.commands.registerCommand(InstallAgent, async (path: string) => {
+  vscode.commands.registerCommand(InstallAgent, async (path: string, language: string) => {
     try {
       const installLocation = formatProjectPath(path);
       const env = {};
@@ -32,11 +32,13 @@ export default async function installAgent(
       const isElectronApp = !vscode.env.remoteName;
       const canSendElectronComamnd = ELECTRON_COMMAND_PLATFORMS.includes(os.platform());
 
-      if (isElectronApp && canSendElectronComamnd) {
-        env['ELECTRON_RUN_AS_NODE'] = 'true';
-        command = electronCommand(context.globalStorageUri.fsPath, installLocation);
-      } else if (os.platform() === 'win32' && hasCLIBin) {
-        command = `${context.globalStorageUri.fsPath}\\appmap-win-x64.exe install -d ${installLocation}`;
+      if (language !== 'JavaScript') {
+        if (isElectronApp && canSendElectronComamnd) {
+          env['ELECTRON_RUN_AS_NODE'] = 'true';
+          command = electronCommand(context.globalStorageUri.fsPath, installLocation);
+        } else if (os.platform() === 'win32' && hasCLIBin) {
+          command = `${context.globalStorageUri.fsPath}\\appmap-win-x64.exe install -d ${installLocation}`;
+        }
       }
 
       const terminal = vscode.window.createTerminal({
