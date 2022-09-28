@@ -29,7 +29,7 @@ describe('Sample Code Objects', () => {
     const sampleCodeObjects = (await serviceInstance.metadata()).sampleCodeObjects;
 
     assert.notStrictEqual(sampleCodeObjects, undefined, 'not undefined');
-    assert.strictEqual(sampleCodeObjects?.httpRequests.length, 2, 'two HTTP requests');
+    assert.strictEqual(sampleCodeObjects?.httpRequests.length, 5, 'five HTTP requests');
     assert.strictEqual(sampleCodeObjects?.queries.length, 5, '5 SQL queries');
   });
 });
