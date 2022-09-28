@@ -1,3 +1,10 @@
+## [0.44.1](https://github.com/getappmap/vscode-appland/compare/v0.44.0...v0.44.1) (2022-09-28)
+
+
+### Bug Fixes
+
+* Update scanner, appmap CLI dependencies ([09c2d4c](https://github.com/getappmap/vscode-appland/commit/09c2d4ca40acbe07b1be3e30e4e8f87d09eaf692))
+
 # [0.44.0](https://github.com/getappmap/vscode-appland/compare/v0.43.0...v0.44.0) (2022-09-26)
 
 
