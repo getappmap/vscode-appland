@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { initializeWorkspace, waitFor, ExampleAppMap, waitForExtension } from '../util';
-import assert, { AssertionError } from 'assert';
+import assert from 'assert';
 import AppMapService from '../../../src/appMapService';
 
 describe('AppMapEditorProvider', () => {

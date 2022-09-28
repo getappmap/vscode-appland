@@ -191,6 +191,7 @@ describe('Instructions tree view', function() {
     const pidfile = path.join(project.appMapDirectoryPath, 'index.pid');
     await driver.waitForFile(pidfile);
 
+    await driver.instructionsWebview.selectProjectPickerRow('project-system');
     await driver.instructionsWebview.clickButton('Next');
     await driver.instructionsWebview.getPageByTitle('Record AppMaps').waitFor();
 

@@ -49,6 +49,15 @@ export default class InstructionsWebview {
     // This is hacky, but it works for now.
     // Hit escape to clear any notifications that may hide a button.
     await this.page.keyboard.press('Escape');
-    await this.frame.locator(`.qs:visible button:text("${label}"):visible`).click();
+    await this.frame.locator(`.qs:visible button:has-text("${label}"):visible`).click();
+  }
+
+  public async selectProjectPickerRow(projectName: string): Promise<void> {
+    await this.page.keyboard.press('Escape');
+    const row = this.frame.locator(`.qs:visible div.project-picker-row:has-text("${projectName}")`);
+    await row.evaluate((el) => {
+      const element = el as HTMLElement;
+      element.click();
+    });
   }
 }
