@@ -58,6 +58,23 @@ export class AppmapUploader {
       upload.uuid
     );
     // TODO: Open the AppMap with the current configured state
+
+    // Post requestAppmapState, wait for the state to change, then incorporate the state
+    // into the URL.
+
+    // provider.currentWebView.webview.postMessage({
+    //   type: 'requestAppmapState',
+    // });
+
+    // It already unpacks state URLs like:
+    // http://localhost:3000/scenarios/8fea129d-eb00-4e05-90c2-efa358376aa3?state=%257B%2522currentView%2522%3A%2522viewFlow%2522%2C%2522selectedObject%2522%3A%2522event%3A173%2522%2C%2522filters%2522%3A%257B%2522limitRootEvents%2522%3Atrue%2C%2522hideMediaRequests%2522%3Atrue%2C%2522hideUnlabeled%2522%3Afalse%2C%2522hideElapsedTimeUnder%2522%3Afalse%2C%2522hideName%2522%3Afalse%257D%257D
+    // Equivalently:
+    // http://localhost:3000/scenarios/8fea129d-eb00-4e05-90c2-efa358376aa3?state=eyJjdXJyZW50VmlldyI6InZpZXdGbG93Iiwic2VsZWN0ZWRPYmplY3QiOiJldmVudDoxNzMiLCJmaWx0ZXJzIjp7ImxpbWl0Um9vdEV2ZW50cyI6dHJ1ZSwiaGlkZU1lZGlhUmVxdWVzdHMiOnRydWUsImhpZGVVbmxhYmVsZWQiOmZhbHNlLCJoaWRlRWxhcHNlZFRpbWVVbmRlciI6ZmFsc2UsImhpZGVOYW1lIjpmYWxzZX19
+    // Ensure that state strings are as compact as possible, e.g. don't specify defaults explicitly.
+    // 'state' param appears to be handled completely in the View, so updated it to handle
+    // URL-safe Base64 - and don't emit unnecessarily long state strings.
+
+    // Example:
     // .with({
     //   query: `state=${appMapState}`,
     // });
