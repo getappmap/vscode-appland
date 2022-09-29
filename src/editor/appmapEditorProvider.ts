@@ -32,6 +32,7 @@ export default class AppMapEditorProvider
           provider.currentWebView.webview.postMessage({
             type: 'requestAppmapState',
           });
+          // TODO: Wait for the state to be provided and then put it on the clipboard.
         }
       })
     );
@@ -162,6 +163,8 @@ export default class AppMapEditorProvider
           updateWebview();
           break;
         case 'appmapStateResult':
+          // Putting this directly on the clipboard is not what we always want;
+          // although it is what appmap.getAppmapState wants.
           vscode.env.clipboard.writeText(message.state);
           vscode.window.setStatusBarMessage('AppMap state was copied to clipboard', 5000);
           break;
@@ -192,7 +195,10 @@ export default class AppMapEditorProvider
           break;
         case 'uploadAppmap':
           {
-            const uploadResult = await AppmapUploader.upload(document, this.context);
+            const uploadResult = await AppmapUploader.upload(
+              Buffer.from(document.raw),
+              this.context
+            );
             if (uploadResult) {
               Telemetry.sendEvent(APPMAP_UPLOAD, {
                 rootDirectory: document.workspaceFolder?.uri.fsPath,

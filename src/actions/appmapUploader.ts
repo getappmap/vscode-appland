@@ -1,72 +1,78 @@
 import * as vscode from 'vscode';
-import bent from 'bent';
 import extensionSettings from '../configuration/extensionSettings';
-import AppMapDocument from '../editor/AppMapDocument';
+import { AppMap } from '@appland/client';
+import { UploadAppMapResponse } from '@appland/client/dist/src/appMap';
+import { AUTHN_PROVIDER_NAME } from '../authentication/appmapServerAuthenticationProvider';
 
 export class AppmapUploader {
-  private static DIALOG_KEY = 'applandinc.appmap.uploadDialog';
+  public static DIALOG_KEY = 'applandinc.appmap.uploadDialog';
 
-  public static async upload(
-    appMapFile: AppMapDocument,
-    context: vscode.ExtensionContext
-  ): Promise<boolean> {
-    const acceptedPreviously = context.globalState.get<boolean>(this.DIALOG_KEY);
+  private static async userAcceptedTerms(context: vscode.ExtensionContext): Promise<boolean> {
+    const acceptedPreviously = context.globalState.get<boolean>(AppmapUploader.DIALOG_KEY);
     if (!acceptedPreviously) {
       const result = await vscode.window.showInformationMessage(
         [
-          'Performing this action will upload this AppMap to the AppLand cloud where it can be easily shared.',
-          'By continuing, you agree that you have permission to distribute the data contained in this AppMap.',
-          'If you choose to continue, this dialog will not appear again.',
+          'Your AppMap will be uploaded to AppMap Server for sharing. ',
+          'Your map will have an unguessable link.',
+          'By default, anyone with the link will be able to view the AppMap in their browser.',
+          'You can manage the sharing settings on the AppMap Server page for each AppMap.',
+          "If you are not logged in to AppMap Server from VS Code before, you'll be prompted",
+          'to log in or sign up first.',
         ].join(' '),
-        'Continue',
-        'Cancel'
+        'OK'
       );
 
-      if (!result || result === 'Cancel') {
+      if (!result) {
         return false;
       }
 
-      context.globalState.update(this.DIALOG_KEY, true);
+      context.globalState.update(AppmapUploader.DIALOG_KEY, true);
+    }
+    return true;
+  }
+
+  public static async upload(
+    appmapData: Buffer,
+    context: vscode.ExtensionContext,
+    viewState?: string
+  ): Promise<boolean> {
+    if (!(await this.userAcceptedTerms(context))) {
+      return false;
     }
 
-    const post = bent(extensionSettings.appMapServerURL().toString(), 'POST', 'json', 201, {
-      'X-Requested-With': 'VSCodeUploader',
+    const session = await vscode.authentication.getSession(AUTHN_PROVIDER_NAME, ['default'], {
+      createIfNone: true,
     });
+    if (!session) {
+      return false;
+    }
 
+    let upload: UploadAppMapResponse;
     try {
-      const response = (await post('api/appmaps/create_upload', {
-        data: appMapFile.raw,
-      })) as {
-        id: number;
-        token: string;
-      };
-
-      const confirmUri = this.getConfirmUri(response.id, response.token);
-
-      vscode.env.openExternal(confirmUri);
-
-      vscode.window.showInformationMessage(`Uploaded ${appMapFile.fileName}`);
-
-      return true;
+      upload = await AppMap.create(appmapData, { public: true });
     } catch (e) {
       const err = e as Error;
-      vscode.window.showErrorMessage(`Upload failed: ${err.name}: ${err.message}`);
+      vscode.window.showErrorMessage(`Upload failed: ${String(err)}`);
+      return false;
     }
 
-    return false;
+    let appMapURL = vscode.Uri.joinPath(
+      extensionSettings.appMapServerURL(),
+      'scenarios',
+      upload.uuid
+    ).toString();
+
+    if (viewState) {
+      appMapURL += `?state=${viewState}`;
+    }
+
+    await vscode.env.clipboard.writeText(appMapURL);
+    vscode.window.showInformationMessage(`A link to the AppMap has been copied to the clipboard.`);
+
+    return true;
   }
 
   public static resetState(context: vscode.ExtensionContext): void {
     context.globalState.update(this.DIALOG_KEY, undefined);
-  }
-
-  private static getConfirmUri(id: number, token: string): vscode.Uri {
-    return vscode.Uri.joinPath(
-      extensionSettings.appMapServerURL(),
-      '/scenario_uploads',
-      id.toString()
-    ).with({
-      query: `token=${token}`,
-    });
   }
 }
