@@ -105,6 +105,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@appland/client@npm:^1.4.0":
+  version: 1.4.0
+  resolution: "@appland/client@npm:1.4.0"
+  dependencies:
+    "@appland/models": 1.20.0
+    "@types/form-data": ^2.5.0
+    form-data: ^4.0.0
+    js-yaml: ^4.1.0
+  checksum: 24f7544e6dde6adbd27066637fcbf28a01d195e632ad4012e30cf1b767df7823e538868deea314a9c7b477eb7311b7a872f62804ee09413379fedac566a3352a
+  languageName: node
+  linkType: hard
+
 "@appland/components@npm:2.11.3":
   version: 2.11.3
   resolution: "@appland/components@npm:2.11.3"
@@ -170,6 +182,16 @@ __metadata:
     "@appland/sql-parser": ^1.5.0
     crypto-js: ^4.0.0
   checksum: c3f933b793d38f82f42e6f31bd353410e530bf4dc3e5fe0b1350366c041dba2e8a4c93c20a819526e1c484269d111199a4f207137e81736ad33968238c3b5132
+  languageName: node
+  linkType: hard
+
+"@appland/models@npm:1.20.0":
+  version: 1.20.0
+  resolution: "@appland/models@npm:1.20.0"
+  dependencies:
+    "@appland/sql-parser": ^1.5.0
+    crypto-js: ^4.0.0
+  checksum: 37d7fbef688cfc3ec98eabcc38f10ba553083779c1457a2c125ef115c2262f51e533a2a56d9afc86e91be644537acc9930ecae1e895031a30ed08f22716a35f5
   languageName: node
   linkType: hard
 
@@ -2393,6 +2415,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/form-data@npm:^2.5.0":
+  version: 2.5.0
+  resolution: "@types/form-data@npm:2.5.0"
+  dependencies:
+    form-data: "*"
+  checksum: c3f6c8932726970d49d67a23410d5eef0e1ad0be418163ccc3d73a4cbaa0dcd71e0e29acbe2779aab85ed8f47cb0e8f6b67028480da3b0f7d074c5a3416b2400
+  languageName: node
+  linkType: hard
+
 "@types/fs-extra@npm:^9.0.13":
   version: 9.0.13
   resolution: "@types/fs-extra@npm:9.0.13"
@@ -3337,6 +3368,7 @@ __metadata:
   resolution: "appmap@workspace:."
   dependencies:
     "@appland/appmap": ^3.38.0
+    "@appland/client": ^1.4.0
     "@appland/components": ^2.11.1
     "@appland/diagrams": ^1.5.2
     "@appland/models": ^1.19.0
@@ -6419,6 +6451,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"form-data@npm:*, form-data@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "form-data@npm:4.0.0"
+  dependencies:
+    asynckit: ^0.4.0
+    combined-stream: ^1.0.8
+    mime-types: ^2.1.12
+  checksum: 01135bf8675f9d5c61ff18e2e2932f719ca4de964e3be90ef4c36aacfc7b9cb2fceb5eca0b7e0190e3383fe51c5b37f4cb80b62ca06a99aaabfcfd6ac7c9328c
+  languageName: node
+  linkType: hard
+
 "form-data@npm:^3.0.0":
   version: 3.0.1
   resolution: "form-data@npm:3.0.1"
@@ -6427,17 +6470,6 @@ __metadata:
     combined-stream: ^1.0.8
     mime-types: ^2.1.12
   checksum: b019e8d35c8afc14a2bd8a7a92fa4f525a4726b6d5a9740e8d2623c30e308fbb58dc8469f90415a856698933c8479b01646a9dff33c87cc4e76d72aedbbf860d
-  languageName: node
-  linkType: hard
-
-"form-data@npm:^4.0.0":
-  version: 4.0.0
-  resolution: "form-data@npm:4.0.0"
-  dependencies:
-    asynckit: ^0.4.0
-    combined-stream: ^1.0.8
-    mime-types: ^2.1.12
-  checksum: 01135bf8675f9d5c61ff18e2e2932f719ca4de964e3be90ef4c36aacfc7b9cb2fceb5eca0b7e0190e3383fe51c5b37f4cb80b62ca06a99aaabfcfd6ac7c9328c
   languageName: node
   linkType: hard
 
