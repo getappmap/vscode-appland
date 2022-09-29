@@ -153,6 +153,14 @@
       {
         "command": "appmap.generateOpenApi",
         "title": "AppMap: Generate OpenAPI definitions"
+      },
+      {
+        "command": "appmap.login",
+        "title": "AppMap: Login"
+      },
+      {
+        "command": "appmap.logout",
+        "title": "AppMap: Logout"
       }
     ],
     "configuration": {
