@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 
 export default {
-  uploadURL: (): vscode.Uri => {
+  appMapServerURL: (): vscode.Uri => {
     const configUrl: string = vscode.workspace
       .getConfiguration('appMap')
       .get('applandUrl') as string;
