@@ -232,14 +232,16 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     InstallGuideWebView.tryOpen(extensionState);
 
     const processService = new NodeProcessService(context, projectStates);
-    processService.onReady(activateUptodateService);
-    await processService.install();
-    await workspaceServices.enroll(processService);
+    (async function() {
+      processService.onReady(activateUptodateService);
+      await processService.install();
+      await workspaceServices.enroll(processService);
+      installAgent(context, processService.hasCLIBin);
+    })();
 
     const runtimeAnalysisCta = new RuntimeAnalysisCtaService(projectStates, extensionState);
     await workspaceServices.enroll(runtimeAnalysisCta);
 
-    installAgent(context, processService.hasCLIBin);
     deleteAllAppMaps(context, classMapIndex, findingsIndex);
 
     const trees = registerTrees(
