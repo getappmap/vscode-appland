@@ -57,7 +57,7 @@ export class AppmapUploader {
     }
 
     let appMapURL = vscode.Uri.joinPath(
-      extensionSettings.appMapServerURL(),
+      extensionSettings.appMapServerURL,
       'scenarios',
       upload.uuid
     ).toString();

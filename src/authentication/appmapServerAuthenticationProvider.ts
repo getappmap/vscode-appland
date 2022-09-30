@@ -33,7 +33,7 @@ export default class AppMapServerAuthenticationProvider implements vscode.Authen
   }
 
   static authURL(authnPath: string, queryParams?: Record<string, string>): vscode.Uri {
-    const url = new URL(authnPath, ExtensionSettings.appMapServerURL().toString());
+    const url = new URL(authnPath, ExtensionSettings.appMapServerURL.toString());
     if (queryParams) {
       Object.entries(queryParams).forEach(([k, v]) => url.searchParams.set(k, v));
     }

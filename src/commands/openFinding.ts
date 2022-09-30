@@ -4,11 +4,10 @@ import { ProjectStateServiceInstance } from '../services/projectStateService';
 import { getWorkspaceFolderFromPath } from '../util';
 
 export default function registerCommand(
-  context: vscode.ExtensionContext,
-  projectStates: ProjectStateServiceInstance[],
+  projectStates: ReadonlyArray<ProjectStateServiceInstance>,
   extensionState: ExtensionState
-): void {
-  const command = vscode.commands.registerCommand('appmap.openFinding', async (uri: vscode.Uri) => {
+): vscode.Disposable {
+  return vscode.commands.registerCommand('appmap.openFinding', async (uri: vscode.Uri) => {
     const workspaceFolder = await getWorkspaceFolderFromPath(projectStates, String(uri));
 
     if (workspaceFolder) {
@@ -17,6 +16,4 @@ export default function registerCommand(
 
     vscode.commands.executeCommand('vscode.open', uri);
   });
-
-  context.subscriptions.push(command);
 }

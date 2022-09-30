@@ -34,7 +34,7 @@ export default function appmapHoverProvider(
         );
         md.appendMarkdown(`[${codeObject.fqid}](${commandUri})\n\n`);
 
-        if (extensionSettings.inspectEnabled()) {
+        if (extensionSettings.inspectEnabled) {
           md.appendMarkdown(`**Inspect code object**\n\n`);
           let ancestor: CodeObjectEntry | undefined = codeObject;
           while (ancestor && ancestor.isInspectable) {

@@ -39,7 +39,7 @@ export class RuntimeAnalysisCtaServiceInstance implements WorkspaceServiceInstan
     protected projectState: ProjectStateServiceInstance,
     protected extensionState: ExtensionState
   ) {
-    if (ExtensionSettings.findingsEnabled()) {
+    if (ExtensionSettings.findingsEnabled) {
       return;
     }
 

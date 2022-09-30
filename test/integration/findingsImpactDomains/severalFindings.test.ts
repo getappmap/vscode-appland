@@ -2,9 +2,11 @@
 import assert from 'assert';
 import AppMapService from '../../../src/appMapService';
 import { ProjectStateServiceInstance } from '../../../src/services/projectStateService';
-import { waitForExtension } from '../util';
+import { waitForExtension, withAuthenticatedUser } from '../util';
 
 describe('Findings impact domains (several findings)', () => {
+  withAuthenticatedUser();
+
   let extension: AppMapService;
   let serviceInstances: ProjectStateServiceInstance[];
 

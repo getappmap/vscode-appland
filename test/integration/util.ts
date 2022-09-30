@@ -4,10 +4,12 @@ import { promises as fs } from 'fs';
 import * as fse from 'fs-extra';
 import glob from 'glob';
 import { join } from 'path';
+import sinon from 'sinon';
 import * as tmp from 'tmp';
 import { promisify } from 'util';
 import * as vscode from 'vscode';
 import AppMapService from '../../src/appMapService';
+import { AUTHN_PROVIDER_NAME } from '../../src/authentication';
 import { CodeObjectEntry } from '../../src/lib/CodeObjectEntry';
 import { touch } from '../../src/lib/touch';
 import { repeatUntil, wait, waitFor } from '../waitFor';
@@ -249,4 +251,22 @@ export async function mtimeFiles(): Promise<vscode.Uri[]> {
 
 export async function appmapFiles(): Promise<vscode.Uri[]> {
   return vscode.workspace.findFiles(`**/*.appmap.json`);
+}
+
+// Tests which have anything to do with findings require analysis to
+// be enabled, and thus the user must be authenticated.
+export function withAuthenticatedUser(): void {
+  beforeEach(() => {
+    sinon
+      .stub(vscode.authentication, 'getSession')
+      .withArgs(AUTHN_PROVIDER_NAME, ['default'], sinon.match.any)
+      .resolves({
+        id: 'id',
+        accessToken: 'accessToken',
+        scopes: ['default'],
+        account: { id: 'id', label: 'label' },
+      });
+  });
+
+  afterEach(sinon.restore);
 }

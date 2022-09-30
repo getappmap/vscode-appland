@@ -6,7 +6,7 @@ import { readFile } from 'fs';
 import EventEmitter from 'events';
 import { fileExists } from '../util';
 
-export default class FindingsIndex extends EventEmitter {
+export default class FindingsIndex extends EventEmitter implements vscode.Disposable {
   private _onChanged = new vscode.EventEmitter<vscode.WorkspaceFolder>();
   public readonly onChanged = this._onChanged.event;
 
@@ -126,5 +126,9 @@ export default class FindingsIndex extends EventEmitter {
         this.findingsByWorkspace.delete(workspaceFolder);
       }
     }
+  }
+
+  dispose(): void {
+    this._onChanged.dispose();
   }
 }

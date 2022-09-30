@@ -27,7 +27,7 @@ export default class AppMapServerConfiguration implements vscode.Disposable {
   }
 
   static async updateAppMapClientConfiguration(): Promise<void> {
-    const serverURL = ExtensionSettings.appMapServerURL();
+    const serverURL = ExtensionSettings.appMapServerURL;
     const configuration: Configuration = { baseURL: serverURL.toString() };
     const session = await vscode.authentication.getSession(AUTHN_PROVIDER_NAME, ['default']);
     if (session) {

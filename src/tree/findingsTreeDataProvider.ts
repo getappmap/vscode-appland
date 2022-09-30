@@ -2,15 +2,38 @@ import * as vscode from 'vscode';
 import FindingsIndex from '../services/findingsIndex';
 import { ResolvedFinding } from '../services/resolvedFinding';
 import generateTitle from '../lib/generateDisplayTitle';
+import AnalysisManager from '../services/analysisManager';
 
-export class FindingsTreeDataProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
+export class FindingsTreeDataProvider
+  implements vscode.TreeDataProvider<vscode.TreeItem>, vscode.Disposable {
   private _onDidChangeTreeData = new vscode.EventEmitter<undefined>();
   public readonly onDidChangeTreeData = this._onDidChangeTreeData.event;
-  findingsIndex: FindingsIndex;
+  private findingsIndex?: FindingsIndex;
+  private onChangeDisposable?: vscode.Disposable;
 
-  constructor(findingsIndex: FindingsIndex) {
+  constructor(context: vscode.ExtensionContext) {
+    AnalysisManager.onAnalysisToggled(
+      () => this.setFindingsIndex(AnalysisManager.findingsIndex),
+      undefined,
+      context.subscriptions
+    );
+  }
+
+  public setFindingsIndex(findingsIndex?: FindingsIndex): void {
+    if (this.findingsIndex !== findingsIndex) {
+      this.onChangeDisposable?.dispose();
+      this.onChangeDisposable = undefined;
+    }
+
     this.findingsIndex = findingsIndex;
-    this.findingsIndex.onChanged(() => this._onDidChangeTreeData.fire(undefined));
+
+    if (this.findingsIndex) {
+      this.onChangeDisposable = this.findingsIndex.onChanged(() =>
+        this._onDidChangeTreeData.fire(undefined)
+      );
+    }
+
+    this._onDidChangeTreeData.fire(undefined);
   }
 
   public getTreeItem(element: vscode.TreeItem): vscode.TreeItem {
@@ -22,6 +45,10 @@ export class FindingsTreeDataProvider implements vscode.TreeDataProvider<vscode.
   }
 
   public getChildren(): vscode.TreeItem[] {
+    if (!this.findingsIndex) {
+      return [];
+    }
+
     const uniqueFindings: { [key: string]: ResolvedFinding } = this.findingsIndex
       .findings()
       .reduce((acc, finding) => {
@@ -45,5 +72,10 @@ export class FindingsTreeDataProvider implements vscode.TreeDataProvider<vscode.
         }
       )
       .sort((a, b) => (a.label || '').toString().localeCompare((b.label || '').toString()));
+  }
+
+  dispose(): void {
+    this._onDidChangeTreeData.dispose();
+    this.onChangeDisposable?.dispose();
   }
 }

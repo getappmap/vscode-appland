@@ -4,14 +4,22 @@ import NodeProcessServiceInstance from '../../../src/services/nodeProcessService
 import { ProcessWatcher } from '../../../src/services/processWatcher';
 import { WorkspaceServiceInstance } from '../../../src/services/workspaceService';
 import { retry } from '../../../src/util';
-import { initializeWorkspace, ProjectA, restoreFile, waitForExtension } from '../util';
+import {
+  initializeWorkspace,
+  ProjectA,
+  restoreFile,
+  waitForExtension,
+  withAuthenticatedUser,
+} from '../util';
 import { promises as fs } from 'fs';
 import * as path from 'path';
+import * as vscode from 'vscode';
 
 async function waitForProcessState(
   processWatchers: ReadonlyArray<ProcessWatcher>,
   isRunning: boolean,
-  pidExclusions: (number | undefined)[] // If a process is identified by a PID in `pidExclusions`, it will not pass the conditional,
+  pidExclusions: (number | undefined)[], // If a process is identified by a PID in `pidExclusions`, it will not pass the conditional,
+  action: string
 ): Promise<void> {
   await retry(
     () => {
@@ -20,10 +28,10 @@ async function waitForProcessState(
           (p) => p.running == isRunning && !pidExclusions.includes(p.process?.pid)
         )
       ) {
-        throw new Error('Waiting for processes to start');
+        throw new Error(`Waiting for processes to ${action}`);
       }
     },
-    5,
+    10,
     1000
   );
 }
@@ -31,14 +39,16 @@ async function waitForProcessState(
 const waitForUp = (
   processWatchers: ReadonlyArray<ProcessWatcher>,
   pidExclusions: (number | undefined)[] = []
-): Promise<void> => waitForProcessState(processWatchers, true, pidExclusions);
+): Promise<void> => waitForProcessState(processWatchers, true, pidExclusions, 'start');
 
 const waitForDown = (
   processWatchers: ReadonlyArray<ProcessWatcher>,
   pidExclusions: (number | undefined)[] = []
-): Promise<void> => waitForProcessState(processWatchers, false, pidExclusions);
+): Promise<void> => waitForProcessState(processWatchers, false, pidExclusions, 'shut down');
 
 describe('Background processes', () => {
+  withAuthenticatedUser();
+
   let processService: NodeProcessService;
   let processServiceInstance: NodeProcessServiceInstance;
   let processWatchers: ReadonlyArray<ProcessWatcher>;
@@ -117,5 +127,20 @@ describe('Background processes', () => {
 
     await restoreFile('appmap.yml', ProjectA);
     await waitForUp(processWatchers, originalPids);
+  });
+
+  it('analysis process state reflects whether or not analysis is enabled', async () => {
+    await waitForUp(processWatchers);
+
+    const analysisService = processWatchers.find((p) => p.id === 'analysis');
+    const analysisPid = analysisService?.process?.pid;
+    assert(analysisService);
+    assert(analysisPid);
+
+    vscode.workspace.getConfiguration('appMap').update('findingsEnabled', false);
+    await waitForDown([analysisService]);
+
+    vscode.workspace.getConfiguration('appMap').update('findingsEnabled', true);
+    await waitForUp([analysisService], [analysisPid]);
   });
 });

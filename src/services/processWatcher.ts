@@ -12,7 +12,11 @@ export type RetryOptions = {
   retryBackoff?: (retryNumber: number) => number;
 };
 
-export type ProcessWatcherOptions = RetryOptions & SpawnOptions;
+export type ProcessWatcherOptions = {
+  id: string;
+  startCondition?: () => boolean | Promise<boolean>;
+} & RetryOptions &
+  SpawnOptions;
 
 const DEFAULT_RETRY_OPTIONS: Required<RetryOptions> = {
   retryTimes: 3,
@@ -43,6 +47,10 @@ export class ProcessWatcher implements vscode.Disposable {
   // will not be retried.
   public get onAbort(): vscode.Event<Error> {
     return this._onAbort.event;
+  }
+
+  public get id(): string {
+    return this.options.id;
   }
 
   constructor(options: ProcessWatcherOptions) {
@@ -82,9 +90,14 @@ export class ProcessWatcher implements vscode.Disposable {
     if (this.shouldRun) this.start();
   }
 
-  start(): void {
+  async start(): Promise<void> {
     if (this.process) {
       throw new Error(`process (${this.process.pid}) already running`);
+    }
+
+    if (this.options.startCondition) {
+      const canStart = await this.options.startCondition();
+      if (!canStart) return;
     }
 
     this.shouldRun = true;

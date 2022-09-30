@@ -1,9 +1,17 @@
 // @project project-a
 import assert from 'assert';
 import { ProjectStateServiceInstance } from '../../../src/services/projectStateService';
-import { initializeWorkspace, waitFor, waitForAppMapServices, waitForExtension } from '../util';
+import {
+  initializeWorkspace,
+  waitFor,
+  waitForAppMapServices,
+  waitForExtension,
+  withAuthenticatedUser,
+} from '../util';
 
 describe('Sample Code Objects', () => {
+  withAuthenticatedUser();
+
   beforeEach(initializeWorkspace);
   beforeEach(
     waitForAppMapServices.bind(

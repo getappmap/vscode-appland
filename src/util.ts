@@ -262,7 +262,7 @@ export function hasPreviouslyInstalledExtension(extensionPath: string): boolean 
 }
 
 export async function getWorkspaceFolderFromPath(
-  projectStates: ProjectStateServiceInstance[],
+  projectStates: ReadonlyArray<ProjectStateServiceInstance>,
   path: string
 ): Promise<vscode.WorkspaceFolder | undefined> {
   // generate an array of promises that resolve to a project path

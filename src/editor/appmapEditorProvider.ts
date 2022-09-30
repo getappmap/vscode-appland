@@ -110,7 +110,7 @@ export default class AppMapEditorProvider
     });
 
     const initialState = (() => {
-      const state = document.uri.fragment || extensionSettings.viewConfiguration();
+      const state = document.uri.fragment || extensionSettings.viewConfiguration;
       if (state !== undefined && state !== '') {
         try {
           JSON.parse(state);

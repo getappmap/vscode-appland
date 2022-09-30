@@ -2,8 +2,8 @@ import { unlink, rmdir } from 'fs';
 import { glob } from 'glob';
 import { promisify } from 'util';
 import * as vscode from 'vscode';
+import AnalysisManager from '../services/analysisManager';
 import ClassMapIndex from '../services/classMapIndex';
-import FindingsIndex from '../services/findingsIndex';
 import { fileExists, retry } from '../util';
 
 async function deleteAppMap(uri: vscode.Uri): Promise<void> {
@@ -42,15 +42,17 @@ async function deleteAppMaps(folder: vscode.WorkspaceFolder) {
   ).map(deleteAppMap.bind(null));
 }
 
-export default async function deleteAllAppMaps(
+export default function deleteAllAppMaps(
   context: vscode.ExtensionContext,
-  classMapIndex?: ClassMapIndex,
-  findingsIndex?: FindingsIndex
-): Promise<void> {
-  const command = vscode.commands.registerCommand('appmap.deleteAllAppMaps', async () => {
-    await Promise.all((vscode.workspace.workspaceFolders || []).map(deleteAppMaps));
-    if (classMapIndex) classMapIndex.clear();
-    if (findingsIndex) findingsIndex.clear();
-  });
-  context.subscriptions.push(command);
+  classMapIndex?: ClassMapIndex
+): void {
+  context.subscriptions.push(
+    vscode.commands.registerCommand('appmap.deleteAllAppMaps', async () => {
+      await Promise.all((vscode.workspace.workspaceFolders || []).map(deleteAppMaps));
+
+      const { findingsIndex } = AnalysisManager;
+      findingsIndex?.clear();
+      classMapIndex?.clear();
+    })
+  );
 }

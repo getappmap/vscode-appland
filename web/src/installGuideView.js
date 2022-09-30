@@ -7,8 +7,8 @@ export default function mountInstallGuide() {
   const vscode = window.acquireVsCodeApi();
   const messages = new MessagePublisher(vscode);
 
-  messages.on('init', ({ projects: startProjects, page: startPage, findingsEnabled }) => {
-    let currentPage = startPage;
+  messages.on('init', (initialData) => {
+    let currentPage = initialData.page;
     let currentProject;
 
     const app = new Vue({
@@ -19,14 +19,19 @@ export default function mountInstallGuide() {
           props: {
             projects: this.projects,
             editor: 'vscode',
+            analysisEnabled: this.analysisEnabled,
+            findingsEnabled: this.findingsEnabled,
+            userAuthenticated: this.userAuthenticated,
             // featureFlags: new Set(['ar-python']),
-            findingsEnabled,
           },
         });
       },
       data() {
         return {
-          projects: startProjects,
+          projects: initialData.projects,
+          analysisEnabled: initialData.analysisEnabled,
+          findingsEnabled: initialData.findingsEnabled,
+          userAuthenticated: initialData.userAuthenticated,
         };
       },
       beforeCreate() {
@@ -50,7 +55,7 @@ export default function mountInstallGuide() {
             vscode.postMessage({ command: 'click-link', uri: e.target.href });
           });
         });
-        this.$refs.ui.jumpTo(startPage);
+        this.$refs.ui.jumpTo(initialData.page);
       },
     });
 
@@ -83,8 +88,20 @@ export default function mountInstallGuide() {
       app.$refs.ui.jumpTo(pageId);
     });
 
+    app.$on('perform-install', (path, language) => {
+      vscode.postMessage({ command: 'perform-install', path, language });
+    });
+
+    app.$on('open-instruction', (pageId) => {
+      app.$refs.ui.jumpTo(pageId);
+    });
+
     app.$on('generate-openapi', (projectPath) => {
       messages.rpc('generate-openapi', { projectPath });
+    });
+
+    app.$on('perform-auth', () => {
+      vscode.postMessage({ command: 'perform-auth' });
     });
 
     messages.on('page', ({ page }) => {
@@ -93,6 +110,13 @@ export default function mountInstallGuide() {
 
     messages.on('projects', ({ projects }) => {
       app.projects = projects;
+      app.$forceUpdate();
+    });
+
+    messages.on('analysis-toggle', (message) => {
+      app.findingsEnabled = message.findingsEnabled;
+      app.analysisEnabled = message.enabled;
+      app.userAuthenticated = message.userAuthenticated;
       app.$forceUpdate();
     });
   });
