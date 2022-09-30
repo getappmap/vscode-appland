@@ -126,12 +126,16 @@ export async function restoreFile(filePath: string, workspaceDir = ProjectA): Pr
 
 /**
  * Touches a file, then waits for appmap services to react.
+ *
  * @param touchFile file to touch
  * @returns current state of services
  */
 export async function waitForAppMapServices(touchFile: string): Promise<AppMapService> {
   const appMapService = await waitForExtension();
-  const wsPath = vscode.workspace.workspaceFolders![0].uri.fsPath;
+  assert(vscode.workspace.workspaceFolders, 'vscode.workspace.workspaceFolders');
+  assert(vscode.workspace.workspaceFolders[0], 'vscode.workspace.workspaceFolders[0]');
+  const workspaceFolder = vscode.workspace.workspaceFolders[0];
+  const wsPath = workspaceFolder.uri.fsPath;
   const pidPath = join(wsPath, 'tmp', 'appmap', 'index.pid');
   // Make sure the indexer is all the way up before we ask it to do anything.
   try {
@@ -141,7 +145,7 @@ export async function waitForAppMapServices(touchFile: string): Promise<AppMapSe
       return fse.existsSync(pidPath);
     });
   } catch (e) {
-    const wsFiles = glob.sync(`${vscode.workspace.workspaceFolders![0].uri.fsPath}/**`);
+    const wsFiles = glob.sync(`${workspaceFolder.uri.fsPath}/**`);
     console.log(`wsFiles: ${JSON.stringify(wsFiles, null, 2)}`);
     console.log(e);
     throw e;
