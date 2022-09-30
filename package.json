@@ -83,6 +83,10 @@
         "title": "AppMap: Open Install Guide"
       },
       {
+        "command": "appmap.enableAnalysis",
+        "title": "AppMap: Enable Analysis"
+      },
+      {
         "command": "appmap.view.focusAppMap",
         "title": "AppMap: Open AppMaps View"
       },
@@ -217,7 +221,28 @@
       },
       {
         "view": "appmap.views.findings",
-        "contents": "AppMap runtime analysis works right in your code editor, to help you find and fix problems in your code.\n[Learn More](command:appmap.openInstallGuide?%5B%22investigate-findings%22%5D)"
+        "contents": "Loading...",
+        "when": "!appmap.initialized"
+      },
+      {
+        "view": "appmap.views.findings",
+        "contents": "AppMap runtime analysis works right in your code editor, to help you find and fix problems in your code.\n[Sign Up](command:appmap.enableAnalysis)\n[Learn More](command:appmap.openInstallGuide?%5B%22investigate-findings%22%5D)",
+        "when": "appmap.initialized && !appmap.userAuthenticated"
+      },
+      {
+        "view": "appmap.views.findings",
+        "contents": "AppMap runtime analysis works right in your code editor, to help you find and fix problems in your code.\n[Enable Runtime Analysis](command:appmap.enableAnalysis)\n[Learn More](command:appmap.openInstallGuide?%5B%22investigate-findings%22%5D)",
+        "when": "appmap.initialized && appmap.userAuthenticated && !appmap.findingsEnabled"
+      },
+      {
+        "view": "appmap.views.findings",
+        "contents": "Runtime analysis is ready and waiting for AppMaps.\n[Learn More](command:appmap.openInstallGuide?%5B%22investigate-findings%22%5D)",
+        "when": "appmap.initialized && appmap.analysisEnabled && !appmap.numFindings && !appmap.analysisPerformed"
+      },
+      {
+        "view": "appmap.views.findings",
+        "contents": "You're good to go! AppMap has scanned your application and found no flaws. We'll continue scanning for flaws automatically.",
+        "when": "appmap.initialized && appmap.analysisEnabled && appmap.numFindings == 0 && appmap.analysisPerformed"
       }
     ],
     "views": {
@@ -395,7 +420,7 @@
   "dependencies": {
     "@appland/appmap": "^3.43.2",
     "@appland/client": "^1.5.0",
-    "@appland/components": "^2.15.0",
+    "@appland/components": "^2.16.0",
     "@appland/diagrams": "^1.5.3",
     "@appland/models": "^1.20.0",
     "@appland/scanner": "^1.71.2",

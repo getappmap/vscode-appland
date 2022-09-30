@@ -14,16 +14,19 @@ import {
   repeatUntil,
   waitForAppMapServices,
   restoreFile,
+  withAuthenticatedUser,
 } from '../util';
 
 describe('Scanner', () => {
-  beforeEach(initializeWorkspace);
-  beforeEach(
-    waitForAppMapServices.bind(
-      null,
+  withAuthenticatedUser();
+
+  beforeEach(async () => {
+    await initializeWorkspace();
+    await waitForAppMapServices(
       'tmp/appmap/minitest/Microposts_controller_can_get_microposts_as_JSON.appmap.json'
-    )
-  );
+    );
+  });
+
   afterEach(initializeWorkspace);
 
   it('is performed as AppMaps are modified', async () => {

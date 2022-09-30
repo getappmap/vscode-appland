@@ -1,9 +1,9 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import svgPending from '../../web/static/media/tree/pending.svg';
-import extensionSettings from '../configuration/extensionSettings';
 import { ProjectStateServiceInstance } from '../services/projectStateService';
 import InstallGuideWebView from '../webviews/installGuideWebview';
+import AnalysisManager from '../services/analysisManager';
 
 export const DocsPages = [
   {
@@ -58,6 +58,7 @@ export class InstructionsTreeDataProvider implements vscode.TreeDataProvider<Doc
       context.subscriptions.push(emitter);
       this.onDidChangeTreeData = emitter.event;
       this.projectState.onStateChange(() => emitter.fire(), null, context.subscriptions);
+      AnalysisManager.onAnalysisToggled(() => emitter.fire(), null, context.subscriptions);
     }
   }
 
@@ -74,7 +75,7 @@ export class InstructionsTreeDataProvider implements vscode.TreeDataProvider<Doc
   }
 
   getIcon(id: DocPageId): string | vscode.ThemeIcon {
-    if (id === 'investigate-findings' && !extensionSettings.findingsEnabled()) return icons.lock;
+    if (id === 'investigate-findings' && !AnalysisManager.isAnalysisEnabled) return icons.lock;
 
     switch (this.completion.get(id)) {
       case true:

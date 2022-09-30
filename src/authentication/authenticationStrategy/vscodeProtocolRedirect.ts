@@ -28,7 +28,7 @@ export default class VscodeProtocolRedirect implements AuthenticationStrategy {
   }
 
   getAuthUrl(queryParams?: Record<string, string>): vscode.Uri {
-    const url = new URL('authn_provider/vscode', extensionSettings.appMapServerURL().toString());
+    const url = new URL('authn_provider/vscode', extensionSettings.appMapServerURL.toString());
     if (queryParams) {
       Object.entries(queryParams).forEach(([k, v]) => url.searchParams.set(k, v));
     }

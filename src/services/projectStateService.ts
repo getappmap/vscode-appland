@@ -14,6 +14,7 @@ import { CodeObjectEntry } from '../lib/CodeObjectEntry';
 
 import glob from 'glob';
 import { promisify } from 'util';
+import AnalysisManager from './analysisManager';
 
 type SimpleCodeObject = {
   name: string;
@@ -40,6 +41,7 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
   protected analysisPerformed = false;
   protected numFindings = 0;
   protected findingsDomainCounts?: FindingsDomainCounts;
+  protected findingsIndexListener?: vscode.Disposable;
 
   public onStateChange = this._onStateChange.event;
 
@@ -52,8 +54,7 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
     protected readonly appMapCollection: AppMapCollection,
     protected readonly classMapIndex: ClassMapIndex,
     appMapWatcher: FileChangeEmitter,
-    configWatcher: FileChangeEmitter,
-    findingsIndex?: FindingsIndex
+    configWatcher: FileChangeEmitter
   ) {
     this.disposables.push(
       this._onStateChange,
@@ -88,19 +89,21 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
         ) {
           this.updateMetadata();
         }
-      })
+      }),
+      AnalysisManager.onAnalysisToggled(() => this.setFindingsIndex(AnalysisManager.findingsIndex))
     );
 
-    if (findingsIndex) {
-      findingsIndex.onChanged((workspaceFolder) => {
-        if (workspaceFolder === folder) {
-          const findings = findingsIndex.findingsForWorkspace(folder);
-          this.onFindingsChanged(findings);
-        }
-      });
-    }
-
     this.syncConfigurationState();
+  }
+
+  public setFindingsIndex(findingsIndex?: FindingsIndex): void {
+    this.findingsIndexListener?.dispose();
+    this.findingsIndexListener = findingsIndex?.onChanged((workspaceFolder) => {
+      if (workspaceFolder === this.folder) {
+        const findings = findingsIndex.findingsForWorkspace(this.folder);
+        this.onFindingsChanged(findings);
+      }
+    });
   }
 
   private get isAgentConfigured(): boolean {
@@ -161,6 +164,7 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
   }
 
   onFindingsChanged(findings: ResolvedFinding[]): void {
+    vscode.commands.executeCommand('setContext', 'appmap.analysisPerformed', true);
     this.analysisPerformed = true;
     this.numFindings = findings.length;
     this.findingsDomainCounts = this.countDomainsFromFindings(findings);
@@ -326,8 +330,7 @@ export default class ProjectStateService implements WorkspaceService<ProjectStat
       this.appMapCollection,
       this.classMapIndex,
       this.appMapWatcher,
-      this.configWatcher,
-      this.findingsIndex
+      this.configWatcher
     );
   }
 }

@@ -2,18 +2,18 @@ import assert from 'assert';
 import { exists } from 'fs';
 import { join } from 'path';
 import { promisify } from 'util';
-import { touch } from '../../../src/lib/touch';
 import {
-  ExampleAppMap,
   ExampleAppMapIndexDir,
   initializeWorkspace,
   printCodeObject,
-  repeatUntil,
   waitFor,
   waitForAppMapServices,
+  withAuthenticatedUser,
 } from '../util';
 
 describe('CodeObjects', () => {
+  withAuthenticatedUser();
+
   beforeEach(initializeWorkspace);
   beforeEach(
     waitForAppMapServices.bind(

@@ -6,11 +6,11 @@ import { createWriteStream, promises as fs } from 'fs';
 import { WorkspaceService } from './workspaceService';
 import NodeProcessServiceInstance from './nodeProcessServiceInstance';
 import { ProcessWatcher } from './processWatcher';
-import ExtensionSettings from '../configuration/extensionSettings';
 import ErrorCode from '../telemetry/definitions/errorCodes';
 import { getBinPath, ProgramName, spawn } from './nodeDependencyProcess';
 import { ProjectStateServiceInstance } from './projectStateService';
 import { downloadFile, getLatestVersionInfo } from '../util';
+import AnalysisManager from './analysisManager';
 
 const YARN_JS = 'yarn.js';
 
@@ -56,6 +56,7 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
         : undefined;
       services.push(
         new ProcessWatcher({
+          id: 'index',
           binPath: await getBinPath({
             dependency: ProgramName.Appmap,
             globalStoragePath: this.globalStorageDir,
@@ -64,6 +65,17 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
           args: ['index', '--watch'],
           cwd: folder.uri.fsPath,
           env,
+        }),
+        new ProcessWatcher({
+          id: 'analysis',
+          startCondition: () => AnalysisManager.isAnalysisEnabled,
+          binPath: await getBinPath({
+            dependency: ProgramName.Scanner,
+            globalStoragePath: this.globalStorageDir,
+          }),
+          log: NodeProcessService.outputChannel,
+          args: ['scan', '--watch'],
+          cwd: folder.uri.fsPath,
         })
       );
     } catch (e) {
@@ -71,27 +83,6 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
         exception: e as Error,
         errorCode: ErrorCode.DependencyPathNotResolved,
       });
-    }
-
-    if (ExtensionSettings.findingsEnabled()) {
-      try {
-        services.push(
-          new ProcessWatcher({
-            binPath: await getBinPath({
-              dependency: ProgramName.Scanner,
-              globalStoragePath: this.globalStorageDir,
-            }),
-            log: NodeProcessService.outputChannel,
-            args: ['scan', '--watch'],
-            cwd: folder.uri.fsPath,
-          })
-        );
-      } catch (e) {
-        Telemetry.sendEvent(DEBUG_EXCEPTION, {
-          exception: e as Error,
-          errorCode: ErrorCode.DependencyPathNotResolved,
-        });
-      }
     }
 
     const instance = new NodeProcessServiceInstance(folder, services, projectState);

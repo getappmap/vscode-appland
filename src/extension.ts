@@ -7,12 +7,10 @@ import deleteAllAppMaps from './commands/deleteAllAppMaps';
 import getEarlyAccess from './commands/getEarlyAccess';
 import registerInspectCodeObject from './commands/inspectCodeObject';
 import openCodeObjectInAppMap from './commands/openCodeObjectInAppMap';
-import openFinding from './commands/openFinding';
 import outOfDateTests from './commands/outOfDateTests';
 import extensionSettings from './configuration/extensionSettings';
 import ExtensionState from './configuration/extensionState';
 import registerDecorationProvider from './decorations/decorationProvider';
-import FindingsDiagnosticsProvider from './diagnostics/findingsDiagnosticsProvider';
 import AppMapEditorProvider from './editor/appmapEditorProvider';
 import appmapHoverProvider from './hover/appmapHoverProvider';
 import ProcessServiceImpl from './processServiceImpl';
@@ -25,12 +23,9 @@ import AppmapUptodateServiceInstance, {
 import { AppMapWatcher } from './services/appmapWatcher';
 import ClassMapIndex from './services/classMapIndex';
 import { ClassMapWatcher } from './services/classMapWatcher';
-import FindingsIndex from './services/findingsIndex';
-import { FindingWatcher } from './services/findingWatcher';
 import LineInfoIndex from './services/lineInfoIndex';
 import { NodeProcessService } from './services/nodeProcessService';
 import ProjectStateService, { ProjectStateServiceInstance } from './services/projectStateService';
-import { ResolvedFinding } from './services/resolvedFinding';
 import { RuntimeAnalysisCtaService } from './services/runtimeAnalysisCtaService';
 import { SourceFileWatcher } from './services/sourceFileWatcher';
 import { initializeWorkspaceServices } from './services/workspaceServices';
@@ -56,11 +51,17 @@ import generateOpenApi from './commands/generateOpenApi';
 import AppMapServerConfiguration from './services/appmapServerConfiguration';
 import AppMapServerAuthenticationProvider from './authentication/appmapServerAuthenticationProvider';
 import installAgent from './commands/installAgent';
+import { Signup } from './actions/signup';
+import AnalysisManager from './services/analysisManager';
+import { FindingsService } from './findingsService';
+import Environment from './configuration/environment';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   Telemetry.register(context);
 
-  const workspaceServices = initializeWorkspaceServices(context);
+  const workspaceServices = initializeWorkspaceServices();
+  context.subscriptions.push(workspaceServices);
+
   const autoIndexServiceImpl = new ProcessServiceImpl();
   const autoScanServiceImpl = new ProcessServiceImpl();
 
@@ -75,8 +76,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     AppMapServerConfiguration.enroll(context);
 
     const appmapCollectionFile = new AppMapCollectionFile();
-    let findingsIndex: FindingsIndex | undefined,
-      projectStates: ProjectStateServiceInstance[] = [];
 
     const appmapWatcher = new AppMapWatcher();
     context.subscriptions.push(
@@ -94,10 +93,10 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     const configWatcher = new AppMapConfigWatcher();
     await workspaceServices.enroll(configWatcher);
 
-    const findingsEnabled = extensionSettings.findingsEnabled();
-
     const classMapIndex = new ClassMapIndex();
     const lineInfoIndex = new LineInfoIndex(classMapIndex);
+
+    deleteAllAppMaps(context, classMapIndex);
 
     const classMapProvider = new ClassMapTreeDataProvider(classMapIndex);
     const codeObjectsTree = vscode.window.createTreeView('appmap.views.codeObjects', {
@@ -151,59 +150,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       await workspaceServices.enroll(appmapUptodateService);
     };
 
-    if (findingsEnabled) {
-      findingsIndex = new FindingsIndex();
-
-      const findingsDiagnosticsProvider = new FindingsDiagnosticsProvider(context);
-      findingsIndex.on('added', (uri: vscode.Uri, findings: ResolvedFinding[]) => {
-        findingsDiagnosticsProvider.updateFindings(uri, findings);
-        vscode.commands.executeCommand('setContext', 'appmap.numFindings', findings.length);
-      });
-      findingsIndex.on('removed', (uri: vscode.Uri) =>
-        findingsDiagnosticsProvider.updateFindings(uri, [])
-      );
-
-      const findingsTreeProvider = new FindingsTreeDataProvider(findingsIndex);
-      vscode.window.createTreeView('appmap.views.findings', {
-        treeDataProvider: findingsTreeProvider,
-      });
-
-      const findingWatcher = new FindingWatcher();
-      context.subscriptions.push(
-        findingWatcher.onCreate(({ uri, workspaceFolder }) => {
-          findingsIndex?.addFindingsFile(uri, workspaceFolder);
-        }),
-        findingWatcher.onChange(({ uri, workspaceFolder }) => {
-          findingsIndex?.addFindingsFile(uri, workspaceFolder);
-        }),
-        findingWatcher.onDelete(({ uri, workspaceFolder }) => {
-          findingsIndex?.removeFindingsFile(uri, workspaceFolder);
-        })
-      );
-
-      await workspaceServices.enroll(findingWatcher);
-    }
-
-    const inspectEnabled = extensionSettings.inspectEnabled();
-    if (inspectEnabled) {
-      registerInspectCodeObject(context);
-    }
-
-    const projectState = new ProjectStateService(
-      extensionState,
-      appmapWatcher,
-      configWatcher,
-      appmapCollectionFile,
-      classMapIndex,
-      findingsIndex
-    );
-
-    projectStates = (await workspaceServices.enroll(projectState)) as ProjectStateServiceInstance[];
-
-    const badge = new InstallationStatusBadge('appmap.views.instructions');
-    badge.initialize(projectStates);
-    context.subscriptions.push(badge);
-
     const uriHandler = new UriHandler();
     const openAppMapUriHandler = new OpenAppMapUriHandler(context);
     const earlyAccessUriHandler = new EarlyAccessUriHandler(context);
@@ -226,6 +172,37 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       appmapServerAuthenticationProvider.removeSession();
     });
 
+    const findingsTreeProvider = new FindingsTreeDataProvider(context);
+    vscode.window.createTreeView('appmap.views.findings', {
+      treeDataProvider: findingsTreeProvider,
+    });
+    context.subscriptions.push(findingsTreeProvider);
+
+    const inspectEnabled = extensionSettings.inspectEnabled;
+    if (inspectEnabled) {
+      registerInspectCodeObject(context);
+    }
+
+    const projectState = new ProjectStateService(
+      extensionState,
+      appmapWatcher,
+      configWatcher,
+      appmapCollectionFile,
+      classMapIndex
+    );
+
+    const projectStates = (await workspaceServices.enroll(
+      projectState
+    )) as ProjectStateServiceInstance[];
+
+    AnalysisManager.register(context, projectStates, extensionState, workspaceServices);
+
+    const badge = new InstallationStatusBadge('appmap.views.instructions');
+    badge.initialize(projectStates);
+    context.subscriptions.push(badge);
+
+    vscode.commands.registerCommand('appmap.enableAnalysis', () => Signup.forAnalysis());
+
     tryDisplayEarlyAccessWelcome(context);
 
     InstallGuideWebView.register(context, projectStates, extensionState);
@@ -242,18 +219,12 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     const runtimeAnalysisCta = new RuntimeAnalysisCtaService(projectStates, extensionState);
     await workspaceServices.enroll(runtimeAnalysisCta);
 
-    deleteAllAppMaps(context, classMapIndex, findingsIndex);
-
     const trees = registerTrees(
       context,
       appmapCollectionFile,
       projectStates,
       appmapUptodateService
     );
-
-    if (findingsEnabled) {
-      openFinding(context, projectStates, extensionState);
-    }
 
     (vscode.workspace.workspaceFolders || []).forEach((workspaceFolder) => {
       Telemetry.sendEvent(PROJECT_OPEN, { rootDirectory: workspaceFolder.uri.fsPath });
@@ -297,7 +268,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     });
 
     // Use this notification to track when the extension is activated.
-    if (process.env.APPMAP_TEST) {
+    if (Environment.isSmokeTest) {
       // It may just be a nightly thing, but showErrorMessage has stopped working when called
       // immediately after the extension is activated. This is a workaround.
       const intervalHandle = setInterval(async () => {
@@ -315,7 +286,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       configWatcher,
       workspaceServices,
       uptodate: appmapUptodateService,
-      findings: findingsIndex,
       classMap: classMapIndex,
       processService,
       extensionState,
@@ -323,6 +293,9 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       projectState,
       trees,
       appmapServerAuthenticationProvider,
+      get findings(): FindingsService | undefined {
+        return AnalysisManager.findingsIndex;
+      },
     };
   } catch (exception) {
     Telemetry.sendEvent(DEBUG_EXCEPTION, { exception: exception as Error });

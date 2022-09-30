@@ -1,8 +1,16 @@
 import assert from 'assert';
 import * as vscode from 'vscode';
-import { hasDiagnostics, initializeWorkspace, waitFor, waitForExtension } from '../util';
+import {
+  hasDiagnostics,
+  initializeWorkspace,
+  waitFor,
+  waitForExtension,
+  withAuthenticatedUser,
+} from '../util';
 
 describe('Findings', () => {
+  withAuthenticatedUser();
+
   beforeEach(initializeWorkspace);
   beforeEach(waitForExtension);
   afterEach(initializeWorkspace);

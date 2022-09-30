@@ -3,9 +3,17 @@ import { unlink } from 'fs';
 import { promisify } from 'util';
 import * as vscode from 'vscode';
 import { touch } from '../../../src/lib/touch';
-import { initializeWorkspace, repeatUntil, waitFor, waitForAppMapServices } from '../util';
+import {
+  initializeWorkspace,
+  repeatUntil,
+  waitFor,
+  waitForAppMapServices,
+  withAuthenticatedUser,
+} from '../util';
 
 describe('AppMapIndex', () => {
+  withAuthenticatedUser();
+
   beforeEach(initializeWorkspace);
   beforeEach(
     waitForAppMapServices.bind(

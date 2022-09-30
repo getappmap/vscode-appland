@@ -2,7 +2,6 @@ import * as path from 'path';
 import * as vscode from 'vscode';
 import { GenerateOpenApi } from '../commands/generateOpenApi';
 import { InstallAgent } from '../commands/installAgent';
-import extensionSettings from '../configuration/extensionSettings';
 import { ProjectStateServiceInstance } from '../services/projectStateService';
 import { COPY_COMMAND, OPEN_VIEW, Telemetry } from '../telemetry';
 import { getNonce, getWorkspaceFolderFromPath } from '../util';
@@ -10,6 +9,9 @@ import ProjectMetadata from '../workspace/projectMetadata';
 import * as semver from 'semver';
 import ExtensionState from '../configuration/extensionState';
 import { DocPageId, DocsPages } from '../tree/instructionsTreeDataProvider';
+import { Signup } from '../actions/signup';
+import AnalysisManager from '../services/analysisManager';
+import ExtensionSettings from '../configuration/extensionSettings';
 
 type PageMessage = {
   page: string;
@@ -92,6 +94,15 @@ export default class InstallGuideWebView {
           })
         );
 
+        disposables.push(
+          AnalysisManager.onAnalysisToggled((e) => {
+            panel.webview.postMessage({
+              type: 'analysis-toggle',
+              ...e,
+            });
+          })
+        );
+
         // If the user closes the panel, make sure it's no longer cached
         panel.onDidDispose(() => {
           this.existingPanel = undefined;
@@ -105,7 +116,9 @@ export default class InstallGuideWebView {
                 type: 'init',
                 projects: await collectProjects(),
                 page,
-                findingsEnabled: extensionSettings.findingsEnabled(),
+                analysisEnabled: AnalysisManager.isAnalysisEnabled,
+                userAuthenticated: await AnalysisManager.isUserAuthenticated(),
+                findingsEnabled: ExtensionSettings.findingsEnabled,
               });
 
               break;
@@ -168,6 +181,10 @@ export default class InstallGuideWebView {
                 const { path, language } = message as { path: string; language: string };
                 vscode.commands.executeCommand(InstallAgent, path, language);
               }
+              break;
+
+            case 'perform-auth':
+              Signup.forAnalysis();
               break;
 
             default:
