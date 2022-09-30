@@ -322,6 +322,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       runtimeAnalysisCta,
       projectState,
       trees,
+      appmapServerAuthenticationProvider,
     };
   } catch (exception) {
     Telemetry.sendEvent(DEBUG_EXCEPTION, { exception: exception as Error });

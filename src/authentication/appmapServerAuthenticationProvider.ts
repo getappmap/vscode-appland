@@ -64,7 +64,7 @@ export default class AppMapServerAuthenticationProvider implements vscode.Authen
     return;
   }
 
-  private async performSignIn(): Promise<vscode.AuthenticationSession | undefined> {
+  async performSignIn(): Promise<vscode.AuthenticationSession | undefined> {
     let appMapServerAuthenticationHandler: AppMapServerAuthenticationHandler | undefined;
 
     const unregisterHandler = () => {
