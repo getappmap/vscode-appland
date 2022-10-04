@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 
 import { AppMapsService } from './appMapsService';
+import AppMapServerAuthenticationProvider from './authentication/appmapServerAuthenticationProvider';
 import { ClassMapService } from './classMapService';
 import ExtensionState from './configuration/extensionState';
 import AppMapEditorProvider from './editor/appmapEditorProvider';
@@ -44,4 +45,5 @@ export default interface AppMapService {
   runtimeAnalysisCta: RuntimeAnalysisCtaService;
   projectState: ProjectStateService;
   trees: AppMapTreeDataProviders;
+  appmapServerAuthenticationProvider: AppMapServerAuthenticationProvider;
 }

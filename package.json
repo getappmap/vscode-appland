@@ -153,6 +153,14 @@
       {
         "command": "appmap.generateOpenApi",
         "title": "AppMap: Generate OpenAPI definitions"
+      },
+      {
+        "command": "appmap.login",
+        "title": "AppMap: Login"
+      },
+      {
+        "command": "appmap.logout",
+        "title": "AppMap: Logout"
       }
     ],
     "configuration": {
@@ -312,10 +320,10 @@
     "vscode:prepublish": "yarn run compile",
     "lint": "eslint . --ext .ts",
     "pretest": "yarn run lint && tsc",
-    "test:extension": "ts-node ./test/integrationTest.ts",
+    "test:integration": "ts-node ./test/integrationTest.ts",
     "test:web-client": "mocha web/test/*.test.mjs",
     "test:system": "node out/test/systemTest.js",
-    "test": "yarn test:web-client && yarn test:system && yarn test:extension",
+    "test": "yarn test:web-client && yarn test:system && yarn test:integration",
     "compile": "webpack --mode=production",
     "watch": "webpack --watch --mode=development",
     "package": "vsce package",
@@ -386,6 +394,7 @@
   },
   "dependencies": {
     "@appland/appmap": "^3.38.0",
+    "@appland/client": "^1.4.0",
     "@appland/components": "^2.11.1",
     "@appland/diagrams": "^1.5.2",
     "@appland/models": "^1.19.0",

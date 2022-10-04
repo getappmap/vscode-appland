@@ -29,7 +29,7 @@ export class AppmapUploader {
       context.globalState.update(this.DIALOG_KEY, true);
     }
 
-    const post = bent(extensionSettings.uploadURL().toString(), 'POST', 'json', 201, {
+    const post = bent(extensionSettings.appMapServerURL().toString(), 'POST', 'json', 201, {
       'X-Requested-With': 'VSCodeUploader',
     });
 
@@ -62,7 +62,7 @@ export class AppmapUploader {
 
   private static getConfirmUri(id: number, token: string): vscode.Uri {
     return vscode.Uri.joinPath(
-      extensionSettings.uploadURL(),
+      extensionSettings.appMapServerURL(),
       '/scenario_uploads',
       id.toString()
     ).with({

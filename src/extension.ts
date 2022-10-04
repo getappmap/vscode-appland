@@ -53,6 +53,8 @@ import UriHandler from './uri/uriHandler';
 import OpenAppMapUriHandler from './uri/openAppMapUriHandler';
 import EarlyAccessUriHandler, { tryDisplayEarlyAccessWelcome } from './uri/earlyAccessUriHandler';
 import generateOpenApi from './commands/generateOpenApi';
+import AppMapServerConfiguration from './services/appmapServerConfiguration';
+import AppMapServerAuthenticationProvider from './authentication/appmapServerAuthenticationProvider';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   Telemetry.register(context);
@@ -68,6 +70,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     if (extensionState.isNewInstall) {
       Telemetry.reportAction('plugin:install');
     }
+
+    AppMapServerConfiguration.enroll(context);
 
     const appmapCollectionFile = new AppMapCollectionFile();
     let findingsIndex: FindingsIndex | undefined,
@@ -205,6 +209,22 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     uriHandler.registerHandlers(openAppMapUriHandler, earlyAccessUriHandler);
     context.subscriptions.push(vscode.window.registerUriHandler(uriHandler));
 
+    const appmapServerAuthenticationProvider = AppMapServerAuthenticationProvider.enroll(
+      context,
+      uriHandler
+    );
+    appmapServerAuthenticationProvider.onDidChangeSessions((e) => {
+      if (e.added) vscode.window.showInformationMessage('Logged in to AppMap Server');
+      if (e.removed) vscode.window.showInformationMessage('Logged out of AppMap Server');
+      AppMapServerConfiguration.updateAppMapClientConfiguration();
+    });
+    vscode.commands.registerCommand('appmap.login', async () => {
+      appmapServerAuthenticationProvider.createSession();
+    });
+    vscode.commands.registerCommand('appmap.logout', async () => {
+      appmapServerAuthenticationProvider.removeSession();
+    });
+
     tryDisplayEarlyAccessWelcome(context);
 
     InstallGuideWebView.register(context, projectStates, extensionState);
@@ -302,6 +322,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       runtimeAnalysisCta,
       projectState,
       trees,
+      appmapServerAuthenticationProvider,
     };
   } catch (exception) {
     Telemetry.sendEvent(DEBUG_EXCEPTION, { exception: exception as Error });

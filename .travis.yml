@@ -14,6 +14,7 @@ install:
        libatk1.0-0 \
        libatk-bridge2.0-0 \
        libgtk-3-0 \
+       libsecret-1-0 \
        libasound2
 
   - nvm install v16.15.0

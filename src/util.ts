@@ -23,6 +23,8 @@ export function getNonce(): string {
 // getStringRecords({ a: 'hello', b: [object Object] }, 'myApp') ->
 // { 'myApp.a': 'hello' }
 export function getRecords<T>(obj: Record<string, unknown>, keyPrefix?: string): Record<string, T> {
+  if (!obj) return {};
+
   const base = keyPrefix ? `${keyPrefix}.` : '';
 
   return Object.entries(obj).reduce((memo, [k, v]) => {
