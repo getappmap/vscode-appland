@@ -1,9 +1,11 @@
 import * as vscode from 'vscode';
 import os from 'os';
 import { CLICK_INSTALL_BUTTON, INSTALL_BUTTON_ERROR, Telemetry } from '../telemetry';
+import { NodeProcessService } from '../services/nodeProcessService';
 
 export const InstallAgent = 'appmap.installAgent';
 const ELECTRON_COMMAND_PLATFORMS = ['linux', 'darwin'];
+let pendingTask: Thenable<unknown> | undefined;
 
 function formatProjectPath(path: string): string {
   if (path.includes(' ')) {
@@ -25,6 +27,37 @@ export default async function installAgent(
 ): Promise<void> {
   vscode.commands.registerCommand(InstallAgent, async (path: string, language: string) => {
     try {
+      const { processService } = context.extension.exports as {
+        processService?: NodeProcessService;
+      };
+      if (!processService) {
+        vscode.window.showErrorMessage('The AppMap extension is pending initialization');
+        return;
+      }
+
+      if (!processService.ready) {
+        // Check to see if we're already waiting
+        if (pendingTask) return;
+
+        pendingTask = vscode.window.withProgress(
+          {
+            cancellable: false,
+            location: vscode.ProgressLocation.Notification,
+            title: `The AppMap CLI is updating...`,
+          },
+          async () => {
+            return new Promise<void>((resolve) => {
+              const disposable = processService.onReady(() => {
+                resolve();
+                disposable.dispose();
+              });
+            });
+          }
+        );
+        await pendingTask;
+        pendingTask = undefined;
+      }
+
       const installLocation = formatProjectPath(path);
       const env = {};
       let command = `npx @appland/appmap install -d ${installLocation}`;
