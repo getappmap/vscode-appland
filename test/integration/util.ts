@@ -133,6 +133,7 @@ export async function restoreFile(filePath: string, workspaceDir = ProjectA): Pr
 export async function waitForAppMapServices(touchFile: string): Promise<AppMapService> {
   console.log('[waitForAppMapServices] touchFile: ', touchFile);
   const appMapService = await waitForExtension();
+  await waitFor('waiting for dependency installation', () => appMapService.processService.ready);
   assert(vscode.workspace.workspaceFolders, 'vscode.workspace.workspaceFolders');
   assert(vscode.workspace.workspaceFolders[0], 'vscode.workspace.workspaceFolders[0]');
   const workspaceFolder = vscode.workspace.workspaceFolders[0];
