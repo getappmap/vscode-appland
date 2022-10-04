@@ -47,13 +47,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/appmap@npm:^3.41.0":
-  version: 3.41.0
-  resolution: "@appland/appmap@npm:3.41.0"
+"@appland/appmap@npm:^3.43.1":
+  version: 3.43.1
+  resolution: "@appland/appmap@npm:3.43.1"
   dependencies:
-    "@appland/components": 2.11.3
+    "@appland/components": 2.13.0
     "@appland/diagrams": 1.5.3
-    "@appland/models": ^1.16.2
+    "@appland/models": 1.20.0
     "@appland/openapi": 1.0.2
     "@sidvind/better-ajv-errors": ^0.9.1
     "@types/moo": ^0.5.5
@@ -91,7 +91,7 @@ __metadata:
     yargs: ^17.1.1
   bin:
     appmap: built/cli.js
-  checksum: d7842cc43e675a92a4ff14d033bdd3aeb3b764fc297d69b95c8c30726f98ba73355ea990b4109dfedb2cf53fdb735372745ab10b7b6dfa58d18a714bd05ed35b
+  checksum: f896ef6cda1733bd976db5b235a4e51edb60164882956c29660db84deef4a3aebd64d2b73591e7054dd544c3b194cbb60727136bda1de0f7aed1ca0b48a61420
   languageName: node
   linkType: hard
 
@@ -107,9 +107,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/components@npm:2.11.3":
-  version: 2.11.3
-  resolution: "@appland/components@npm:2.11.3"
+"@appland/components@npm:2.13.0":
+  version: 2.13.0
+  resolution: "@appland/components@npm:2.13.0"
   dependencies:
     "@appland/diagrams": ^1.5.1
     "@appland/models": ^1.9.0
@@ -117,7 +117,7 @@ __metadata:
     sql-formatter: ^4.0.2
     vue: ^2.6.11
     vuex: ^3.6.0
-  checksum: 8cfbb8ba8181873b33a87e5faaf7a6d7d30794a0334176d329bd69b4d191f47f9efa7402fecc11e4b61765860c9f38b13b51d593f0d37ed12c3b2854f3c76b42
+  checksum: 76bf83df18fefdec2aad1f84cfba09a632ab60d7a2e4293d4fabe62101263981bdb492865d442b2eafdd8ea856e2e217d4124517e2f88782cdd95b4ba84f5d44
   languageName: node
   linkType: hard
 
@@ -185,16 +185,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/models@npm:^1.16.2, @appland/models@npm:^1.9.0":
-  version: 1.17.0
-  resolution: "@appland/models@npm:1.17.0"
-  dependencies:
-    "@appland/sql-parser": ^1.5.0
-    crypto-js: ^4.0.0
-  checksum: 71687661e8378c526e6bea2a6a1ad90f160565093a66162e9b62338880657c0e4dedf1b7f01146c74aca74d7331c846b3c680455770a96ad45075ce7d5ccc4f5
-  languageName: node
-  linkType: hard
-
 "@appland/models@npm:^1.18.1":
   version: 1.19.0
   resolution: "@appland/models@npm:1.19.0"
@@ -202,6 +192,16 @@ __metadata:
     "@appland/sql-parser": ^1.5.0
     crypto-js: ^4.0.0
   checksum: 975ca89a7ae217a07d48839569bd4ba29732e64e9d8957bfd27d27d5e64307f0a770399af69dcf3c5cdcb7a94e03dc498c4565c4370c794038558ce0ab3827c0
+  languageName: node
+  linkType: hard
+
+"@appland/models@npm:^1.9.0":
+  version: 1.17.0
+  resolution: "@appland/models@npm:1.17.0"
+  dependencies:
+    "@appland/sql-parser": ^1.5.0
+    crypto-js: ^4.0.0
+  checksum: 71687661e8378c526e6bea2a6a1ad90f160565093a66162e9b62338880657c0e4dedf1b7f01146c74aca74d7331c846b3c680455770a96ad45075ce7d5ccc4f5
   languageName: node
   linkType: hard
 
@@ -215,9 +215,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/scanner@npm:^1.71.0":
-  version: 1.71.0
-  resolution: "@appland/scanner@npm:1.71.0"
+"@appland/scanner@npm:^1.71.2":
+  version: 1.71.2
+  resolution: "@appland/scanner@npm:1.71.2"
   dependencies:
     "@appland/client": ^1.3.0
     "@appland/models": ^1.18.1
@@ -248,7 +248,7 @@ __metadata:
     yargs: ^17.1.1
   bin:
     scanner: built/cli.js
-  checksum: 935769e7302f14537f5b60e0ba69b2c02a4151a4e7af3120fe4f9952a1a2140ab2efe1b22d89d08c9d35ce9cfb5eddd8971353c0215f9260d9a3e17670e6c02a
+  checksum: c25a76840f6dc9e4045e0f2b6795cbbe22ad9da416e8c155fdd2f8c09f581602bc29d000046e94be797864e7099071f396cd2aab20f97775d05eea78844fb871
   languageName: node
   linkType: hard
 
@@ -3357,12 +3357,12 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "appmap@workspace:."
   dependencies:
-    "@appland/appmap": ^3.41.0
+    "@appland/appmap": ^3.43.1
     "@appland/client": ^1.4.0
     "@appland/components": ^2.13.0
     "@appland/diagrams": ^1.5.3
     "@appland/models": ^1.20.0
-    "@appland/scanner": ^1.71.0
+    "@appland/scanner": ^1.71.2
     "@babel/core": ^7.14.3
     "@babel/preset-env": ^7.14.2
     "@babel/preset-typescript": ^7.13.0

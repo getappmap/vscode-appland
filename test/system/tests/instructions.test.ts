@@ -172,20 +172,7 @@ describe('Instructions tree view', function() {
     );
 
     await driver.appMap.openInstruction(InstructionStep.InstallAppMapAgent);
-    await driver.instructionsWebview.getPageByTitle('Install AppMap agent').waitFor();
-
-    // TODO: This has stopped working. Clipboard text is returned as '>', despite the button
-    // actually working.
-    //
-    // await driver.instructionsWebview.copyClipboardText();
-    // {
-    //   const expected = `npx @appland/appmap install ${workspacePath}`;
-    //   const actual = clipboard.readSync();
-    //   assert(
-    //     expected === actual,
-    //     `Clipboard text should be correct\nexpected: ${expected}\nactual: ${actual}`
-    //   );
-    // }
+    await driver.instructionsWebview.getPageByTitle('Add AppMap to your project').waitFor();
 
     await project.simulateAppMapInstall();
     const pidfile = path.join(project.appMapDirectoryPath, 'index.pid');
@@ -194,19 +181,6 @@ describe('Instructions tree view', function() {
     await driver.instructionsWebview.selectProjectPickerRow('project-system');
     await driver.instructionsWebview.clickButton('Next');
     await driver.instructionsWebview.getPageByTitle('Record AppMaps').waitFor();
-
-    // TODO: This has stopped working. Clipboard text is returned as '>', despite the button
-    // actually working.
-    //
-    // await driver.instructionsWebview.copyClipboardText();
-    // {
-    //   const expected = 'npx @appland/appmap record test';
-    //   const actual = clipboard.readSync();
-    //   assert(
-    //     expected === actual,
-    //     `Clipboard text should be correct\nexpected: ${expected}\nactual: ${actual}`
-    //   );
-    // }
 
     await project.restoreFiles('**/*.appmap.json');
     await driver.instructionsWebview.clickButton('Next');
