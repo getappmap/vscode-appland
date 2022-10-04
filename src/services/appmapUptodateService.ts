@@ -106,7 +106,10 @@ export default class AppmapUptodateServiceInstance extends EventEmitter
     const outofDateAppMapFiles = new Set(
       processLog
         .filter((line) => line.stream === OutputStream.Stdout)
-        .map((line) => line.data.trim())
+        .map((line) => line.data)
+        .join('\n')
+        .split('\n')
+        .map((line) => line.trim())
         .filter((line) => line.length > 0)
         // Begin: Handle some anomalous behavior where the file path contains logging output:
         .filter((line) => !line.startsWith('yarn run v'))
