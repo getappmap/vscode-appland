@@ -104,7 +104,6 @@ export default class InstallGuideWebView {
               panel.webview.postMessage({
                 type: 'init',
                 projects: await collectProjects(),
-                disabled: [],
                 page,
                 findingsEnabled: extensionSettings.findingsEnabled(),
               });
