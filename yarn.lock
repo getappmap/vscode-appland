@@ -47,11 +47,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/appmap@npm:^3.43.1":
-  version: 3.43.1
-  resolution: "@appland/appmap@npm:3.43.1"
+"@appland/appmap@npm:^3.43.2":
+  version: 3.43.2
+  resolution: "@appland/appmap@npm:3.43.2"
   dependencies:
-    "@appland/components": 2.13.0
+    "@appland/components": 2.13.1
     "@appland/diagrams": 1.5.3
     "@appland/models": 1.20.0
     "@appland/openapi": 1.0.2
@@ -91,7 +91,7 @@ __metadata:
     yargs: ^17.1.1
   bin:
     appmap: built/cli.js
-  checksum: f896ef6cda1733bd976db5b235a4e51edb60164882956c29660db84deef4a3aebd64d2b73591e7054dd544c3b194cbb60727136bda1de0f7aed1ca0b48a61420
+  checksum: 45b9a029df8a9b81889e60389ebce68b0b19ba8d4702b1ae0bfb4b315770e24b1cd151292ae33071cc69680ab44f24796c78d5e2de22ac41e3cd0fb53f4c82c2
   languageName: node
   linkType: hard
 
@@ -107,21 +107,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/components@npm:2.13.0":
-  version: 2.13.0
-  resolution: "@appland/components@npm:2.13.0"
-  dependencies:
-    "@appland/diagrams": ^1.5.1
-    "@appland/models": ^1.9.0
-    highlight.js: ^10.7.2
-    sql-formatter: ^4.0.2
-    vue: ^2.6.11
-    vuex: ^3.6.0
-  checksum: 76bf83df18fefdec2aad1f84cfba09a632ab60d7a2e4293d4fabe62101263981bdb492865d442b2eafdd8ea856e2e217d4124517e2f88782cdd95b4ba84f5d44
-  languageName: node
-  linkType: hard
-
-"@appland/components@npm:^2.13.0":
+"@appland/components@npm:2.13.1, @appland/components@npm:^2.13.1":
   version: 2.13.1
   resolution: "@appland/components@npm:2.13.1"
   dependencies:
@@ -3357,9 +3343,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "appmap@workspace:."
   dependencies:
-    "@appland/appmap": ^3.43.1
+    "@appland/appmap": ^3.43.2
     "@appland/client": ^1.4.0
-    "@appland/components": ^2.13.0
+    "@appland/components": ^2.13.1
     "@appland/diagrams": ^1.5.3
     "@appland/models": ^1.20.0
     "@appland/scanner": ^1.71.2

@@ -393,9 +393,9 @@
     "yaml": "^2.1.1"
   },
   "dependencies": {
-    "@appland/appmap": "^3.43.1",
+    "@appland/appmap": "^3.43.2",
     "@appland/client": "^1.4.0",
-    "@appland/components": "^2.13.0",
+    "@appland/components": "^2.13.1",
     "@appland/diagrams": "^1.5.3",
     "@appland/models": "^1.20.0",
     "@appland/scanner": "^1.71.2",
