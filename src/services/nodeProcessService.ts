@@ -1,7 +1,8 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
+import os from 'os';
 import { DEBUG_EXCEPTION, Telemetry } from '../telemetry';
-import { promises as fs } from 'fs';
+import { createWriteStream, promises as fs } from 'fs';
 import { WorkspaceService } from './workspaceService';
 import NodeProcessServiceInstance from './nodeProcessServiceInstance';
 import { ProcessWatcher } from './processWatcher';
@@ -9,6 +10,7 @@ import ExtensionSettings from '../configuration/extensionSettings';
 import ErrorCode from '../telemetry/definitions/errorCodes';
 import { getBinPath, ProgramName, spawn } from './nodeDependencyProcess';
 import { ProjectStateServiceInstance } from './projectStateService';
+import { downloadFile, getLatestVersionInfo } from '../util';
 
 const YARN_JS = 'yarn.js';
 
@@ -17,6 +19,11 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
   protected globalStorageDir: string;
   protected COPY_FILES: string[] = ['package.json', 'yarn.lock', YARN_JS];
   protected static outputChannel = vscode.window.createOutputChannel('AppMap: Services');
+
+  protected _hasCLIBin = false;
+  get hasCLIBin(): boolean {
+    return this._hasCLIBin;
+  }
 
   protected _ready = false;
   get ready(): boolean {
@@ -97,6 +104,14 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
     return path.join(this.globalStorageDir, YARN_JS);
   }
 
+  protected async installCLIBin(): Promise<boolean> {
+    const cliBinPath = path.join(this.globalStorageDir, 'appmap-win-x64.exe');
+    const cliBin = createWriteStream(cliBinPath, { autoClose: true });
+    const latestVersion = (await getLatestVersionInfo('appmap'))?.version;
+    const url = `https://github.com/getappmap/appmap-js/releases/download/%40appland%2Fappmap-v${latestVersion}/appmap-win-x64.exe`;
+    return await downloadFile(url, cliBin);
+  }
+
   async install(): Promise<void> {
     try {
       await fs.mkdir(this.globalStorageDir, { recursive: true });
@@ -125,7 +140,7 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
 
       return new Promise((resolve, reject) => {
         installProcess.once('error', (err) => reject(err));
-        installProcess.once('exit', (code, signal) => {
+        installProcess.once('exit', async (code, signal) => {
           if (code && code !== 0) {
             const message = [
               'Failed to install dependencies',
@@ -134,6 +149,10 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
               installProcess.log.toString(),
             ].join('\n');
             reject(new Error(message));
+          }
+
+          if (os.platform() === 'win32') {
+            this._hasCLIBin = await this.installCLIBin();
           }
 
           installProcess.log.append('Installation of AppMap services is complete.');

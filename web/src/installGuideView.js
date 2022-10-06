@@ -7,7 +7,7 @@ export default function mountInstallGuide() {
   const vscode = window.acquireVsCodeApi();
   const messages = new MessagePublisher(vscode);
 
-  messages.on('init', ({ projects: startProjects, page: startPage, disabled, findingsEnabled }) => {
+  messages.on('init', ({ projects: startProjects, page: startPage, findingsEnabled }) => {
     let currentPage = startPage;
     let currentProject;
 
@@ -18,8 +18,8 @@ export default function mountInstallGuide() {
           ref: 'ui',
           props: {
             projects: this.projects,
-            disabledPages: new Set(disabled),
             editor: 'vscode',
+            // featureFlags: new Set(['ar-python']),
             findingsEnabled,
           },
         });
@@ -73,6 +73,10 @@ export default function mountInstallGuide() {
 
     app.$on('openAppmap', (file) => {
       vscode.postMessage({ command: 'open-file', file });
+    });
+
+    app.$on('perform-install', (path, language) => {
+      vscode.postMessage({ command: 'perform-install', path, language });
     });
 
     app.$on('open-instruction', (pageId) => {

@@ -1,6 +1,7 @@
 import * as path from 'path';
 import * as vscode from 'vscode';
 import { GenerateOpenApi } from '../commands/generateOpenApi';
+import { InstallAgent } from '../commands/installAgent';
 import extensionSettings from '../configuration/extensionSettings';
 import { ProjectStateServiceInstance } from '../services/projectStateService';
 import { COPY_COMMAND, OPEN_VIEW, Telemetry } from '../telemetry';
@@ -103,7 +104,6 @@ export default class InstallGuideWebView {
               panel.webview.postMessage({
                 type: 'init',
                 projects: await collectProjects(),
-                disabled: [],
                 page,
                 findingsEnabled: extensionSettings.findingsEnabled(),
               });
@@ -161,6 +161,13 @@ export default class InstallGuideWebView {
                 vscode.ViewColumn.Beside,
                 message.projectPath
               );
+              break;
+
+            case 'perform-install':
+              {
+                const { path, language } = message as { path: string; language: string };
+                vscode.commands.executeCommand(InstallAgent, path, language);
+              }
               break;
 
             default:

@@ -393,12 +393,12 @@
     "yaml": "^2.1.1"
   },
   "dependencies": {
-    "@appland/appmap": "^3.38.0",
+    "@appland/appmap": "^3.43.2",
     "@appland/client": "^1.4.0",
-    "@appland/components": "^2.11.1",
-    "@appland/diagrams": "^1.5.2",
-    "@appland/models": "^1.19.0",
-    "@appland/scanner": "^1.70.2",
+    "@appland/components": "^2.13.1",
+    "@appland/diagrams": "^1.5.3",
+    "@appland/models": "^1.20.0",
+    "@appland/scanner": "^1.71.2",
     "bent": "^7.3.12",
     "bootstrap": "^4.5.3",
     "bootstrap-autocomplete": "^2.3.7",

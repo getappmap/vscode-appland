@@ -47,13 +47,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/appmap@npm:^3.38.0":
-  version: 3.38.0
-  resolution: "@appland/appmap@npm:3.38.0"
+"@appland/appmap@npm:^3.43.2":
+  version: 3.43.2
+  resolution: "@appland/appmap@npm:3.43.2"
   dependencies:
-    "@appland/components": 2.11.3
+    "@appland/components": 2.13.1
     "@appland/diagrams": 1.5.3
-    "@appland/models": ^1.16.2
+    "@appland/models": 1.20.0
     "@appland/openapi": 1.0.2
     "@sidvind/better-ajv-errors": ^0.9.1
     "@types/moo": ^0.5.5
@@ -71,7 +71,7 @@ __metadata:
     crypto-js: ^4.0.0
     detect-indent: ^6.1.0
     diff: ^5.0.0
-    fs-extra: ^9.1.0
+    fs-extra: ^10.1.0
     glob: ^7.2.3
     inquirer: ^8.1.2
     js-yaml: ^4.0.3
@@ -91,21 +91,11 @@ __metadata:
     yargs: ^17.1.1
   bin:
     appmap: built/cli.js
-  checksum: 60054ad9dee6404895b433dc1bba3b0d39d686e9128c3fd7a543aea9d0e077ba2350b12559f67861eb330459603414c5e318a0ee5a86d654156c25ee143832ff
+  checksum: 45b9a029df8a9b81889e60389ebce68b0b19ba8d4702b1ae0bfb4b315770e24b1cd151292ae33071cc69680ab44f24796c78d5e2de22ac41e3cd0fb53f4c82c2
   languageName: node
   linkType: hard
 
-"@appland/client@npm:^1.3.0":
-  version: 1.3.0
-  resolution: "@appland/client@npm:1.3.0"
-  dependencies:
-    "@appland/models": ^1.8.1
-    js-yaml: ^4.1.0
-  checksum: d5b9c55bf199333e5622af012586dc08b45571d538adea778ce70abf1b17fbf9c5049b212cac6c03cd5d1ca598799c41b8939cef64ea7a6044e9efaa6085727e
-  languageName: node
-  linkType: hard
-
-"@appland/client@npm:^1.4.0":
+"@appland/client@npm:^1.3.0, @appland/client@npm:^1.4.0":
   version: 1.4.0
   resolution: "@appland/client@npm:1.4.0"
   dependencies:
@@ -117,9 +107,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/components@npm:2.11.3":
-  version: 2.11.3
-  resolution: "@appland/components@npm:2.11.3"
+"@appland/components@npm:2.13.1, @appland/components@npm:^2.13.1":
+  version: 2.13.1
+  resolution: "@appland/components@npm:2.13.1"
   dependencies:
     "@appland/diagrams": ^1.5.1
     "@appland/models": ^1.9.0
@@ -127,25 +117,11 @@ __metadata:
     sql-formatter: ^4.0.2
     vue: ^2.6.11
     vuex: ^3.6.0
-  checksum: 8cfbb8ba8181873b33a87e5faaf7a6d7d30794a0334176d329bd69b4d191f47f9efa7402fecc11e4b61765860c9f38b13b51d593f0d37ed12c3b2854f3c76b42
+  checksum: 54823dab696d70f025a9449ccf73f26c9287dae8d282c20b1eeb306d922ee99af7613f18dca30511e00b031ec4f13714a2ad5736e3b7298f4c3eb6347a447776
   languageName: node
   linkType: hard
 
-"@appland/components@npm:^2.11.1":
-  version: 2.11.1
-  resolution: "@appland/components@npm:2.11.1"
-  dependencies:
-    "@appland/diagrams": ^1.5.1
-    "@appland/models": ^1.9.0
-    highlight.js: ^10.7.2
-    sql-formatter: ^4.0.2
-    vue: ^2.6.11
-    vuex: ^3.6.0
-  checksum: 1abc06e9f0d446519b57e6b881e92baa41bfc69b717af3438c7ba9a74d968ed75f6b4f866495aa2f967e7b57eb0b95f4100d78a770fa7f2ae6faa27fa465c7f0
-  languageName: node
-  linkType: hard
-
-"@appland/diagrams@npm:1.5.3":
+"@appland/diagrams@npm:1.5.3, @appland/diagrams@npm:^1.5.3":
   version: 1.5.3
   resolution: "@appland/diagrams@npm:1.5.3"
   dependencies:
@@ -160,7 +136,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/diagrams@npm:^1.5.1, @appland/diagrams@npm:^1.5.2":
+"@appland/diagrams@npm:^1.5.1":
   version: 1.5.2
   resolution: "@appland/diagrams@npm:1.5.2"
   dependencies:
@@ -185,7 +161,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/models@npm:1.20.0":
+"@appland/models@npm:1.20.0, @appland/models@npm:^1.20.0":
   version: 1.20.0
   resolution: "@appland/models@npm:1.20.0"
   dependencies:
@@ -195,23 +171,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/models@npm:^1.16.2, @appland/models@npm:^1.8.1, @appland/models@npm:^1.9.0":
-  version: 1.17.0
-  resolution: "@appland/models@npm:1.17.0"
-  dependencies:
-    "@appland/sql-parser": ^1.5.0
-    crypto-js: ^4.0.0
-  checksum: 71687661e8378c526e6bea2a6a1ad90f160565093a66162e9b62338880657c0e4dedf1b7f01146c74aca74d7331c846b3c680455770a96ad45075ce7d5ccc4f5
-  languageName: node
-  linkType: hard
-
-"@appland/models@npm:^1.18.1, @appland/models@npm:^1.19.0":
+"@appland/models@npm:^1.18.1":
   version: 1.19.0
   resolution: "@appland/models@npm:1.19.0"
   dependencies:
     "@appland/sql-parser": ^1.5.0
     crypto-js: ^4.0.0
   checksum: 975ca89a7ae217a07d48839569bd4ba29732e64e9d8957bfd27d27d5e64307f0a770399af69dcf3c5cdcb7a94e03dc498c4565c4370c794038558ce0ab3827c0
+  languageName: node
+  linkType: hard
+
+"@appland/models@npm:^1.9.0":
+  version: 1.17.0
+  resolution: "@appland/models@npm:1.17.0"
+  dependencies:
+    "@appland/sql-parser": ^1.5.0
+    crypto-js: ^4.0.0
+  checksum: 71687661e8378c526e6bea2a6a1ad90f160565093a66162e9b62338880657c0e4dedf1b7f01146c74aca74d7331c846b3c680455770a96ad45075ce7d5ccc4f5
   languageName: node
   linkType: hard
 
@@ -225,9 +201,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/scanner@npm:^1.70.2":
-  version: 1.70.2
-  resolution: "@appland/scanner@npm:1.70.2"
+"@appland/scanner@npm:^1.71.2":
+  version: 1.71.2
+  resolution: "@appland/scanner@npm:1.71.2"
   dependencies:
     "@appland/client": ^1.3.0
     "@appland/models": ^1.18.1
@@ -239,10 +215,10 @@ __metadata:
     async: ^3.2.3
     boxen: ^5.0.1
     chalk: ^4.1.2
-    chokidar: "getappmap/chokidar#fix/new-file-new-directory-race-on-linux"
+    chokidar: ^3.5.1
     cli-progress: ^3.11.0
     conf: ^10.0.2
-    form-data: ^4.0.0
+    crypto-js: ^4.0.0
     glob: 7.2.3
     inquirer: ^8.1.2
     js-yaml: ^4.1.0
@@ -258,7 +234,7 @@ __metadata:
     yargs: ^17.1.1
   bin:
     scanner: built/cli.js
-  checksum: 9270c798fbf71a24d6e85d48285b0e7b6d30eb9cb576c4d0969985d557fedb2bc1bd9fd965bf709f1d88ddf43eb732cff47f242f72a81c21ca24c3eb05f94757
+  checksum: c25a76840f6dc9e4045e0f2b6795cbbe22ad9da416e8c155fdd2f8c09f581602bc29d000046e94be797864e7099071f396cd2aab20f97775d05eea78844fb871
   languageName: node
   linkType: hard
 
@@ -3367,12 +3343,12 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "appmap@workspace:."
   dependencies:
-    "@appland/appmap": ^3.38.0
+    "@appland/appmap": ^3.43.2
     "@appland/client": ^1.4.0
-    "@appland/components": ^2.11.1
-    "@appland/diagrams": ^1.5.2
-    "@appland/models": ^1.19.0
-    "@appland/scanner": ^1.70.2
+    "@appland/components": ^2.13.1
+    "@appland/diagrams": ^1.5.3
+    "@appland/models": ^1.20.0
+    "@appland/scanner": ^1.71.2
     "@babel/core": ^7.14.3
     "@babel/preset-env": ^7.14.2
     "@babel/preset-typescript": ^7.13.0
@@ -4264,25 +4240,6 @@ __metadata:
     parse5-htmlparser2-tree-adapter: ^6.0.1
     tslib: ^2.2.0
   checksum: ace2f9c5809737534b1320d11d48762013694fa905b4deacac81a634edac178c1b0534f79d7b1896a88ce489db6cb539f222317996b21c8b6923ce413dcc1a2f
-  languageName: node
-  linkType: hard
-
-"chokidar@getappmap/chokidar#fix/new-file-new-directory-race-on-linux":
-  version: 3.5.3
-  resolution: "chokidar@https://github.com/getappmap/chokidar.git#commit=95bc9cdc42e18417359986fd7e34316713ef066b"
-  dependencies:
-    anymatch: ~3.1.2
-    braces: ~3.0.2
-    fsevents: ~2.3.2
-    glob-parent: ~5.1.2
-    is-binary-path: ~2.1.0
-    is-glob: ~4.0.1
-    normalize-path: ~3.0.0
-    readdirp: ~3.6.0
-  dependenciesMeta:
-    fsevents:
-      optional: true
-  checksum: 4c907670a95e106d423f62e4f58f6f6693c50905d1103044f628ee44d41c75e21c07845987206c7a0c713333125e98cb23100da1aeab50c97cca56413c0c83c0
   languageName: node
   linkType: hard
 

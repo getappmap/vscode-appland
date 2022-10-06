@@ -130,3 +130,13 @@ export const GENERATE_OPENAPI = new Event({
   name: 'open_api:generate',
   properties: [Properties.PROJECT_LANGUAGE],
 });
+
+export const CLICK_INSTALL_BUTTON = new Event({
+  name: 'install-button:click',
+  properties: [Properties.PROJECT_LANGUAGE],
+});
+
+export const INSTALL_BUTTON_ERROR = new Event({
+  name: 'install-button:error',
+  properties: [Properties.PROJECT_LANGUAGE, Properties.DEBUG_EXCEPTION],
+});
