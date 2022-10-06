@@ -1,3 +1,18 @@
+# [0.45.0](https://github.com/getappmap/vscode-appland/compare/v0.44.1...v0.45.0) (2022-10-06)
+
+
+### Bug Fixes
+
+* Fix crash on undefined object ([a0e7c41](https://github.com/getappmap/vscode-appland/commit/a0e7c4140b8ee0df702b6b31d461d5e7e561a998))
+* Fix multi-line processing of uptodate output ([ba42826](https://github.com/getappmap/vscode-appland/commit/ba42826633196b0d8619777fd0f9a0c8e8009675))
+
+
+### Features
+
+* Add command to install appmap agent ([#467](https://github.com/getappmap/vscode-appland/issues/467)) ([b5e0933](https://github.com/getappmap/vscode-appland/commit/b5e0933b0197c6a727e6a6602e10710a3e13ce64))
+* Authenticate with AppMap Server ([ac971f3](https://github.com/getappmap/vscode-appland/commit/ac971f36d37719b2024d1af84ad80bcff83fa3fa))
+* manage AppMap Server configuration ([f08b5e6](https://github.com/getappmap/vscode-appland/commit/f08b5e6ce6831e1a29b8d1360cc5fd570da3ca3e))
+
 ## [0.44.1](https://github.com/getappmap/vscode-appland/compare/v0.44.0...v0.44.1) (2022-09-28)
 
 
