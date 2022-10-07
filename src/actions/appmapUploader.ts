@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import extensionSettings from '../configuration/extensionSettings';
 import { AppMap } from '@appland/client';
 import { UploadAppMapResponse } from '@appland/client/dist/src/appMap';
-import { AUTHN_PROVIDER_NAME } from '../authentication/appmapServerAuthenticationProvider';
+import { AUTHN_PROVIDER_NAME } from '../authentication';
 
 export class AppmapUploader {
   public static DIALOG_KEY = 'applandinc.appmap.uploadDialog';
