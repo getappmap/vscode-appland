@@ -2,9 +2,9 @@ import assert from 'assert';
 import sinon from 'sinon';
 import * as vscode from 'vscode';
 import AppMapService from '../../../src/appMapService';
-import { AUTHN_PROVIDER_NAME } from '../../../src/authentication/appmapServerAuthenticationProvider';
 import { initializeWorkspace, waitForExtension } from '../util';
 import { waitFor } from '../../waitFor';
+import { AUTHN_PROVIDER_NAME } from '../../../src/authentication';
 
 describe('Authenticate', () => {
   let sandbox: sinon.SinonSandbox;

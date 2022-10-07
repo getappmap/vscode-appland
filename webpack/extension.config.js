@@ -22,10 +22,10 @@ module.exports = {
     // The following squashes the warnings.
     // cf. https://github.com/microsoft/vscode-extension-telemetry/issues/41#issuecomment-598852991
     'applicationinsights-native-metrics': 'commonjs applicationinsights-native-metrics',
-    '@opentelemetry/tracing': 'commonjs @opentelemetry/tracing'
+    '@opentelemetry/tracing': 'commonjs @opentelemetry/tracing',
   },
   resolve: {
-    extensions: ['.ts', '.js'],
+    extensions: ['.ts', '.js', '.html'],
     alias: {},
   },
   module: {
@@ -42,6 +42,10 @@ module.exports = {
             loader: 'file-loader',
           },
         ],
+      },
+      {
+        test: /\.html$/i,
+        loader: 'html-loader',
       },
     ],
   },

@@ -3,6 +3,7 @@ enum ErrorCode {
   DependencyInstallFailure,
   DependencyPathNotResolved,
   ProcessFailure,
+  AuthenticationFailure,
 }
 
 export default ErrorCode;

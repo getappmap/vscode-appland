@@ -365,7 +365,7 @@
     "file-loader": "^6.2.0",
     "fs-extra": "^10.1.0",
     "glob": "^7.2.3",
-    "html-loader": "^1.3.2",
+    "html-loader": "^4.2.0",
     "ignore": "^5.1.8",
     "mocha": "^8.1.3",
     "openapi-types": "^11.0.1",

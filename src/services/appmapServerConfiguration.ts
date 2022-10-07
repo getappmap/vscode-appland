@@ -1,7 +1,7 @@
 import { Configuration } from '@appland/client';
 import { setConfiguration } from '@appland/client/dist/src/loadConfiguration';
 import * as vscode from 'vscode';
-import { AUTHN_PROVIDER_NAME } from '../authentication/appmapServerAuthenticationProvider';
+import { AUTHN_PROVIDER_NAME } from '../authentication';
 import ExtensionSettings from '../configuration/extensionSettings';
 
 export default class AppMapServerConfiguration implements vscode.Disposable {
