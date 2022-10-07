@@ -35,10 +35,16 @@ export default class AppMapServerAuthenticationProvider implements vscode.Authen
   constructor(public context: vscode.ExtensionContext, public uriHandler: UriHandler) {}
 
   async getSessions(): Promise<vscode.AuthenticationSession[]> {
+    try {
     const session = await this.context.secrets.get(APPMAP_SERVER_SESSION_KEY);
     if (!session) return [];
 
     return [JSON.parse(session)];
+    } catch {
+      // Error: Cannot get password
+      // Possibly because nothing is stored at this key? Platform specific issue?
+      return [];
+    }
   }
 
   async createSession(): Promise<vscode.AuthenticationSession> {
