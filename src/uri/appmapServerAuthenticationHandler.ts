@@ -34,7 +34,7 @@ export default class AppMapServerAuthenticationHandler implements RequestHandler
 
     this._onCreateSession.fire({
       id: email,
-      account: { id: 'default', label: 'default' },
+      account: { id: email, label: email },
       scopes: ['default'],
       accessToken: apiKeyParam,
     });
