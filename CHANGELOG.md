@@ -1,3 +1,17 @@
+# [0.46.0](https://github.com/getappmap/vscode-appland/compare/v0.45.0...v0.46.0) (2022-10-12)
+
+
+### Bug Fixes
+
+* Describe sessions by email ([a8a9d53](https://github.com/getappmap/vscode-appland/commit/a8a9d53f27555a1e855d04c3941543d94167af6f))
+* Gracefully handle cases where AppMap sessions cannot be retrieved ([1c6cc06](https://github.com/getappmap/vscode-appland/commit/1c6cc0615121dc18208181da96d6600e72deb660))
+
+
+### Features
+
+* Add an alternate authentication mechanism ([1035dae](https://github.com/getappmap/vscode-appland/commit/1035daebc666e4798a5378d512e6f8da6a58d530))
+* Upload an AppMap to AppMap Server ([97c66d3](https://github.com/getappmap/vscode-appland/commit/97c66d34ed4c6a66256a6ab658bf9162a6303095))
+
 # [0.45.0](https://github.com/getappmap/vscode-appland/compare/v0.44.1...v0.45.0) (2022-10-06)
 
 
