@@ -44,7 +44,10 @@ describe('AppMapEditorProvider', () => {
         clipboardContents = await vscode.env.clipboard.readText();
         if (!clipboardContents) return false;
         try {
-          assert.deepStrictEqual(JSON.parse(clipboardContents), state);
+          assert.deepStrictEqual(
+            clipboardContents,
+            'eyJjdXJyZW50VmlldyI6InZpZXdGbG93Iiwic2VsZWN0ZWRPYmplY3QiOiJldmVudDo0MSIsImZpbHRlcnMiOnsibGltaXRSb290RXZlbnRzIjpmYWxzZX19'
+          );
           return true;
         } catch (e) {
           // This happens normally as the view opens with a default state, and is subsequently reconfigured.

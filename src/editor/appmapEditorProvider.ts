@@ -195,9 +195,11 @@ export default class AppMapEditorProvider
           break;
         case 'uploadAppmap':
           {
+            const { viewState } = message;
             const uploadResult = await AppmapUploader.upload(
               Buffer.from(document.raw),
-              this.context
+              this.context,
+              viewState
             );
             if (uploadResult) {
               Telemetry.sendEvent(APPMAP_UPLOAD, {
