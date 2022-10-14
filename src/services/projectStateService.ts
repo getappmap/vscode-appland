@@ -5,7 +5,7 @@ import ExtensionState, { Keys } from '../configuration/extensionState';
 import { FileChangeEmitter } from './fileChangeEmitter';
 import FindingsIndex from './findingsIndex';
 import { ResolvedFinding } from './resolvedFinding';
-import { analyze, scoreValue, OVERALL_SCORE_VALUES, NodeVersion } from '../analyzers';
+import { analyze, scoreValue, NodeVersion, SCORE_VALUES } from '../analyzers';
 import ProjectMetadata from '../workspace/projectMetadata';
 import AppMapCollection from './appmapCollection';
 import ChangeEventDebouncer from './changeEventDebouncer';
@@ -148,9 +148,9 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
   async supported(): Promise<boolean> {
     const metadata = await this.metadata();
     return (
-      (metadata.language?.score || 0) >= OVERALL_SCORE_VALUES.good &&
-      (metadata.webFramework?.score || 0) >= OVERALL_SCORE_VALUES.good &&
-      (metadata.testFramework?.score || 0) >= OVERALL_SCORE_VALUES.good
+      (metadata.language?.score || 0) >= SCORE_VALUES.good &&
+      ((metadata.webFramework?.score || 0) >= SCORE_VALUES.ok ||
+        (metadata.testFramework?.score || 0) >= SCORE_VALUES.ok)
     );
   }
 
@@ -274,7 +274,7 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
       numAppMaps: analysis.numAppMaps,
       language: {
         name: analysis.features.lang.title,
-        score: scoreValue(analysis.features.lang.score) + 1,
+        score: scoreValue(analysis.features.lang.score),
         text: analysis.features.lang.text,
       },
       appMaps: analysis.appMaps,
@@ -284,7 +284,7 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
     if (analysis.features.test) {
       this._metadata.testFramework = {
         name: analysis.features.test.title,
-        score: scoreValue(analysis.features.test.score) + 1,
+        score: scoreValue(analysis.features.test.score),
         text: analysis.features.test.text,
       };
     }
@@ -292,7 +292,7 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
     if (analysis.features.web) {
       this._metadata.webFramework = {
         name: analysis.features.web.title,
-        score: scoreValue(analysis.features.web.score) + 1,
+        score: scoreValue(analysis.features.web.score),
         text: analysis.features.web.text,
       };
     }
