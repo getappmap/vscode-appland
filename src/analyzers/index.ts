@@ -5,7 +5,7 @@ import LanguageResolver from '../services/languageResolver';
 import { systemNodeVersion, nvmNodeVersion } from '../services/command';
 
 export type Score = 'bad' | 'ok' | 'good';
-const SCORE_VALUES = { bad: 0, ok: 1, good: 2 };
+export const SCORE_VALUES = { bad: 0, ok: 1, good: 2 };
 export const OVERALL_SCORE_VALUES = { bad: 1, ok: 2, good: 3 };
 
 export function scoreValue(...scores: Score[]): number {
@@ -19,7 +19,7 @@ export function overallScore(result: Features): number {
 
   // score edge cases
   if (languageScore === 'bad') return OVERALL_SCORE_VALUES['bad'];
-  if (languageScore === 'ok' && webFrameworkScore === 'ok' && testFrameworkScore === 'ok') {
+  if (languageScore === 'ok' && (webFrameworkScore === 'ok' || testFrameworkScore === 'ok')) {
     return OVERALL_SCORE_VALUES['ok'];
   }
 
