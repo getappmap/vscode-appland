@@ -1,3 +1,17 @@
+# [0.47.0](https://github.com/getappmap/vscode-appland/compare/v0.46.0...v0.47.0) (2022-10-14)
+
+
+### Bug Fixes
+
+* Projects compatibility is now scored in an expected manner ([677f0e4](https://github.com/getappmap/vscode-appland/commit/677f0e4778427c3f78a57611a6d02e1148e01ae1))
+* Rename "Install AppMap agent" to "Add AppMap to your project" in the instructions list ([f5769fa](https://github.com/getappmap/vscode-appland/commit/f5769fafc559dd25a981d44110dade736960fbbd))
+
+
+### Features
+
+* Enable runtime analysis after logging in to AppMap ([d6a40a9](https://github.com/getappmap/vscode-appland/commit/d6a40a966050b898e80f18b41de0a0a901c90289))
+* The runtime analysis popup has been removed ([e328520](https://github.com/getappmap/vscode-appland/commit/e328520da73d98b6e1d6aea765c8b13d787b9601))
+
 # [0.46.0](https://github.com/getappmap/vscode-appland/compare/v0.45.0...v0.46.0) (2022-10-12)
 
 
