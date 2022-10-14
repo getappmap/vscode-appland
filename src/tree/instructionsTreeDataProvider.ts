@@ -8,7 +8,7 @@ import AnalysisManager from '../services/analysisManager';
 export const DocsPages = [
   {
     id: 'project-picker',
-    title: 'Install AppMap agent',
+    title: 'Add AppMap to your project',
     completion: 'agentInstalled',
   },
   {

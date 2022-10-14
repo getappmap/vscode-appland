@@ -90,7 +90,7 @@ describe('Instructions tree view', function() {
     await driver.appMap.openActionPanel();
 
     const pages = [
-      { step: InstructionStep.InstallAppMapAgent, title: 'Install AppMap agent' },
+      { step: InstructionStep.InstallAppMapAgent, title: 'Add AppMap to your project' },
       {
         step: InstructionStep.RecordAppMaps,
         title: 'Record AppMaps',
