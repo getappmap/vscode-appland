@@ -4,7 +4,6 @@ import assert from 'assert';
 import RemoteRecording from './actions/remoteRecording';
 import AppMapService from './appMapService';
 import deleteAllAppMaps from './commands/deleteAllAppMaps';
-import getEarlyAccess from './commands/getEarlyAccess';
 import registerInspectCodeObject from './commands/inspectCodeObject';
 import openCodeObjectInAppMap from './commands/openCodeObjectInAppMap';
 import outOfDateTests from './commands/outOfDateTests';
@@ -26,7 +25,6 @@ import { ClassMapWatcher } from './services/classMapWatcher';
 import LineInfoIndex from './services/lineInfoIndex';
 import { NodeProcessService } from './services/nodeProcessService';
 import ProjectStateService, { ProjectStateServiceInstance } from './services/projectStateService';
-import { RuntimeAnalysisCtaService } from './services/runtimeAnalysisCtaService';
 import { SourceFileWatcher } from './services/sourceFileWatcher';
 import { initializeWorkspaceServices } from './services/workspaceServices';
 import {
@@ -216,9 +214,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       installAgent(context, processService.hasCLIBin);
     })();
 
-    const runtimeAnalysisCta = new RuntimeAnalysisCtaService(projectStates, extensionState);
-    await workspaceServices.enroll(runtimeAnalysisCta);
-
     const trees = registerTrees(
       context,
       appmapCollectionFile,
@@ -234,7 +229,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     const editorProvider = AppMapEditorProvider.register(context, extensionState);
     RemoteRecording.register(context);
     ContextMenu.register(context);
-    getEarlyAccess(context, extensionState);
     generateOpenApi(context, extensionState);
 
     context.subscriptions.push(
@@ -289,7 +283,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       classMap: classMapIndex,
       processService,
       extensionState,
-      runtimeAnalysisCta,
       projectState,
       trees,
       appmapServerAuthenticationProvider,

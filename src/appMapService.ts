@@ -11,7 +11,6 @@ import { AppmapUptodateService } from './services/appmapUptodateService';
 import Command from './services/command';
 import { NodeProcessService } from './services/nodeProcessService';
 import ProjectStateService from './services/projectStateService';
-import { RuntimeAnalysisCtaService } from './services/runtimeAnalysisCtaService';
 import { SourceFileWatcher } from './services/sourceFileWatcher';
 import { WorkspaceServices } from './services/workspaceServices';
 
@@ -42,7 +41,6 @@ export default interface AppMapService {
   classMap?: ClassMapService;
   processService: NodeProcessService;
   extensionState: ExtensionState;
-  runtimeAnalysisCta: RuntimeAnalysisCtaService;
   projectState: ProjectStateService;
   trees: AppMapTreeDataProviders;
   appmapServerAuthenticationProvider: AppMapServerAuthenticationProvider;

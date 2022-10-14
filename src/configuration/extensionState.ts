@@ -101,14 +101,6 @@ export default class ExtensionState {
     this.context.globalState.update(Keys.Global.INSTALL_GUIDE_VIEWED, value);
   }
 
-  get hasDismissedAnalysisCTA(): boolean {
-    return Boolean(this.context.globalState.get(Keys.Global.ANALYSIS_CTA_DISMISSED, false));
-  }
-
-  set hasDismissedAnalysisCTA(value: boolean) {
-    this.context.globalState.update(Keys.Global.ANALYSIS_CTA_DISMISSED, value);
-  }
-
   get installTime(): Date {
     return this._installTime;
   }
