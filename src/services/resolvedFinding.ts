@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
-import { Finding } from '@appland/scanner/built/cli';
+import { Finding } from '@appland/scanner';
 import { resolveFilePath } from '../util';
+import present from '../lib/present';
 
 class StackFrameIndex {
   locationByFrame = new Map<string, vscode.Location>();
@@ -53,7 +54,7 @@ export class ResolvedFinding {
   ): vscode.Location | undefined {
     const locations = (finding.stack || [])
       .map((frame: string) => stackFrameIndex.get(sourceUri, frame))
-      .filter(Boolean);
+      .filter(present);
 
     const folderLocation = () => {
       return locations.find((location: vscode.Location) => {
