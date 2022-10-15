@@ -202,7 +202,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/scanner@npm:^1.71.2":
+"@appland/scanner@npm:^1.71.5":
   version: 1.71.6
   resolution: "@appland/scanner@npm:1.71.6"
   dependencies:
@@ -3617,7 +3617,7 @@ __metadata:
     "@appland/components": ^2.17.0
     "@appland/diagrams": ^1.5.3
     "@appland/models": ^1.20.0
-    "@appland/scanner": ^1.71.2
+    "@appland/scanner": ^1.71.5
     "@babel/core": ^7.19.3
     "@babel/preset-env": ^7.14.2
     "@babel/preset-typescript": ^7.18.6

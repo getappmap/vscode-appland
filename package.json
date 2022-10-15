@@ -423,7 +423,7 @@
     "@appland/components": "^2.17.0",
     "@appland/diagrams": "^1.5.3",
     "@appland/models": "^1.20.0",
-    "@appland/scanner": "^1.71.2",
+    "@appland/scanner": "^1.71.5",
     "bent": "^7.3.12",
     "bootstrap": "^4.5.3",
     "bootstrap-autocomplete": "^2.3.7",
