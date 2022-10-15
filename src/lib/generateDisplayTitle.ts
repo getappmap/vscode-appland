@@ -1,21 +1,17 @@
 import { ResolvedFinding } from '../services/resolvedFinding';
-import * as vscode from 'vscode';
 
 // Gets's name displayed in Findings bar
 export default (finding: ResolvedFinding): string => {
-  const absPath = finding.problemLocation?.uri.path;
-  const relPath = absPath ? vscode.workspace.asRelativePath(absPath) : undefined;
+  const {
+    finding: { ruleTitle },
+    groupDetails,
+    locationLabel,
+  } = finding;
 
-  const rule = finding.finding.ruleTitle;
-  const context = finding.finding.groupMessage || finding.finding.message;
-  const lineno = finding.problemLocation?.range.start.line;
-
-  // If rule and context are the same, only display one
-  const ruleAndContext =
-    rule !== context && !context.startsWith(rule) ? `${rule}: ${context}` : context;
+  const ruleAndContext = groupDetails ? `${ruleTitle}: ${groupDetails}` : ruleTitle;
 
   // Only display problemLocation if it exists
-  const fullPathString = finding.problemLocation ? `, ${relPath}:${lineno}` : '';
+  const fullPathString = locationLabel ? `, ${locationLabel}` : '';
 
   return `${ruleAndContext}${fullPathString}`;
 };

@@ -1,12 +1,25 @@
 import * as vscode from 'vscode';
 import FindingsIndex from '../services/findingsIndex';
 import { ResolvedFinding } from '../services/resolvedFinding';
-import generateTitle from '../lib/generateDisplayTitle';
 import AnalysisManager from '../services/analysisManager';
 import memoize from '../lib/memoize';
 import uniq from '../lib/uniq';
+import firstLine from '../lib/firstLine';
 
-const title = memoize(generateTitle);
+function tooltip({
+  finding: { ruleTitle },
+  locationLabel,
+  groupDetails,
+}: ResolvedFinding): vscode.MarkdownString {
+  const result = new vscode.MarkdownString(`**${ruleTitle}**`);
+  if (locationLabel) result.appendText('\n').appendMarkdown(`*${locationLabel}*`);
+  if (groupDetails) result.appendCodeblock(`${groupDetails}`);
+  return result;
+}
+
+const sortKey = memoize(({ finding: { ruleTitle }, locationLabel }: ResolvedFinding) =>
+  [ruleTitle, locationLabel].join(', ')
+);
 
 export class FindingsTreeDataProvider
   implements vscode.TreeDataProvider<ResolvedFinding>, vscode.Disposable {
@@ -41,13 +54,21 @@ export class FindingsTreeDataProvider
   }
 
   public getTreeItem(finding: ResolvedFinding): vscode.TreeItem {
-    const item = new vscode.TreeItem(title(finding));
-    item.id = finding.finding.hash;
-    if (finding.problemLocation) {
+    const {
+      finding: { ruleTitle, hash },
+      locationLabel,
+      problemLocation,
+      groupDetails,
+    } = finding;
+    const item = new vscode.TreeItem(ruleTitle);
+    item.description = locationLabel || firstLine(groupDetails);
+    item.tooltip = tooltip(finding);
+    item.id = hash;
+    if (problemLocation) {
       item.command = {
         title: 'Open',
         command: 'appmap.openFinding',
-        arguments: [finding.problemLocation.uri],
+        arguments: [problemLocation.uri],
       };
     }
     return item;
@@ -57,7 +78,7 @@ export class FindingsTreeDataProvider
     if (!this.findingsIndex) return [];
 
     const unique = uniq(this.findingsIndex.findings(), ({ finding: { hash } }) => hash);
-    return unique.sort((a, b) => title(a).localeCompare(title(b)));
+    return unique.sort((a, b) => sortKey(a).localeCompare(sortKey(b)));
   }
 
   dispose(): void {
