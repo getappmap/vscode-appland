@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import { Finding } from '@appland/scanner';
 import { resolveFilePath } from '../util';
 import present from '../lib/present';
+import ValueCache from '../lib/ValueCache';
 
 class StackFrameIndex {
   locationByFrame = new Map<string, vscode.Location>();
@@ -18,6 +19,9 @@ class StackFrameIndex {
     return `${sourceUri.toString()}#${frame}`;
   }
 }
+
+const locationLabels = new ValueCache<ResolvedFinding, string | undefined>();
+const groupDetailsCache = new ValueCache<ResolvedFinding, string | undefined>();
 
 export class ResolvedFinding {
   public appMapUri?: vscode.Uri;
@@ -43,6 +47,31 @@ export class ResolvedFinding {
       this.finding
     );
     this.appMapUri = await ResolvedFinding.resolveAppMapUri(this.finding);
+  }
+
+  get locationLabel(): string | undefined {
+    return locationLabels.getOrStore(this, () => {
+      if (this.problemLocation) {
+        let result = vscode.workspace.asRelativePath(this.problemLocation.uri.path);
+        const line = this.problemLocation.range.start.line;
+        if (line !== 0) result += `:${line}`;
+        return result;
+      }
+    });
+  }
+
+  /**
+   * Returns the finding details, suitable as a description of the finding group.
+   * Trims the rule title from the beginning of the message, if present.
+   */
+  get groupDetails(): string | undefined {
+    return groupDetailsCache.getOrStore(this, () => {
+      const { ruleTitle } = this.finding;
+      let message = this.finding.groupMessage || this.finding.message;
+      if (message.startsWith(ruleTitle))
+        message = message.substring(ruleTitle.length).replace(/^[:\s]+/, '');
+      if (message.length > 0) return message;
+    });
   }
 
   // Gets the preferred source Location of this finding. Source files which resolve relative to a workspace
