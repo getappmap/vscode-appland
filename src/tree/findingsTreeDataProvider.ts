@@ -3,9 +3,13 @@ import FindingsIndex from '../services/findingsIndex';
 import { ResolvedFinding } from '../services/resolvedFinding';
 import generateTitle from '../lib/generateDisplayTitle';
 import AnalysisManager from '../services/analysisManager';
+import memoize from '../lib/memoize';
+import uniq from '../lib/uniq';
+
+const title = memoize(generateTitle);
 
 export class FindingsTreeDataProvider
-  implements vscode.TreeDataProvider<vscode.TreeItem>, vscode.Disposable {
+  implements vscode.TreeDataProvider<ResolvedFinding>, vscode.Disposable {
   private _onDidChangeTreeData = new vscode.EventEmitter<undefined>();
   public readonly onDidChangeTreeData = this._onDidChangeTreeData.event;
   private findingsIndex?: FindingsIndex;
@@ -36,42 +40,24 @@ export class FindingsTreeDataProvider
     this._onDidChangeTreeData.fire(undefined);
   }
 
-  public getTreeItem(element: vscode.TreeItem): vscode.TreeItem {
-    return element;
-  }
-
-  public getParent(): Thenable<vscode.TreeItem | null> {
-    return Promise.resolve(null);
-  }
-
-  public getChildren(): vscode.TreeItem[] {
-    if (!this.findingsIndex) {
-      return [];
+  public getTreeItem(finding: ResolvedFinding): vscode.TreeItem {
+    const item = new vscode.TreeItem(title(finding));
+    item.id = finding.finding.hash;
+    if (finding.problemLocation) {
+      item.command = {
+        title: 'Open',
+        command: 'appmap.openFinding',
+        arguments: [finding.problemLocation.uri],
+      };
     }
+    return item;
+  }
 
-    const uniqueFindings: { [key: string]: ResolvedFinding } = this.findingsIndex
-      .findings()
-      .reduce((acc, finding) => {
-        acc[finding.finding.hash] = finding;
-        return acc;
-      }, {});
+  public getChildren(): ResolvedFinding[] {
+    if (!this.findingsIndex) return [];
 
-    return Object.values(uniqueFindings)
-      .map(
-        (finding: ResolvedFinding): vscode.TreeItem => {
-          const item = new vscode.TreeItem(generateTitle(finding));
-          item.id = finding.finding.hash;
-          if (finding.problemLocation) {
-            item.command = {
-              title: 'Open',
-              command: 'appmap.openFinding',
-              arguments: [finding.problemLocation.uri],
-            };
-          }
-          return item;
-        }
-      )
-      .sort((a, b) => (a.label || '').toString().localeCompare((b.label || '').toString()));
+    const unique = uniq(this.findingsIndex.findings(), ({ finding: { hash } }) => hash);
+    return unique.sort((a, b) => title(a).localeCompare(title(b)));
   }
 
   dispose(): void {
