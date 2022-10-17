@@ -65,17 +65,21 @@ export default class ExtensionState {
   ): void {
     const { fsPath } = workspaceFolder.uri;
     const workspaces = new Set<string>(this.context.globalState.get(key, []));
+    let changed = true;
 
     if (value) {
       if (!workspaces.has(fsPath)) {
         workspaces.add(fsPath);
-        this._onWorkspaceFlag.fire({ workspaceFolder, key, value });
+      } else {
+        changed = false;
       }
     } else {
       workspaces.delete(fsPath);
     }
 
     this.context.globalState.update(key, [...workspaces]);
+
+    if (changed) this._onWorkspaceFlag.fire({ workspaceFolder, key, value });
   }
 
   /** Returns whether or not the workspace folder at the given path exists in the set.

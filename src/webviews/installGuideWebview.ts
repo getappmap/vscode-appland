@@ -23,10 +23,10 @@ type ClipboardMessage = {
   text: string;
 } & PageMessage;
 
-async function defaultPageId(projectStates: ProjectStateServiceInstance[]): Promise<DocPageId> {
+function defaultPageId(projectStates: ProjectStateServiceInstance[]): DocPageId {
   const fallback = DocsPages[0].id;
   if (projectStates.length !== 1) return fallback;
-  const metadata = await projectStates[0].metadata();
+  const { metadata } = projectStates[0];
   return DocsPages.find(({ completion }) => !metadata[completion])?.id || fallback;
 }
 
@@ -56,7 +56,7 @@ export default class InstallGuideWebView {
   ): void {
     context.subscriptions.push(
       vscode.commands.registerCommand(this.command, async (page?: DocPageId) => {
-        if (!page) page = await defaultPageId(projectStates);
+        if (!page) page = defaultPageId(projectStates);
 
         // Attempt to re-use an existing webview for this project if one exists
         if (this.existingPanel) {
@@ -82,14 +82,12 @@ export default class InstallGuideWebView {
 
         panel.webview.html = getWebviewContent(panel.webview, context);
 
-        const collectProjects = async (): Promise<Readonly<ProjectMetadata>[]> =>
-          await Promise.all(projectStates.map(async (project) => project.metadata()));
-
+        const collectProjects = () => projectStates.map((project) => project.metadata);
         const disposables = projectStates.map((projectState) =>
-          projectState.onStateChange(async () => {
+          projectState.onStateChange(() => {
             panel.webview.postMessage({
               type: 'projects',
-              projects: await collectProjects(),
+              projects: collectProjects(),
             });
           })
         );
@@ -114,7 +112,7 @@ export default class InstallGuideWebView {
             case 'ready':
               panel.webview.postMessage({
                 type: 'init',
-                projects: await collectProjects(),
+                projects: collectProjects(),
                 page,
                 analysisEnabled: AnalysisManager.isAnalysisEnabled,
                 userAuthenticated: await AnalysisManager.isUserAuthenticated(),
