@@ -18,11 +18,9 @@ describe('Findings impact domains (one finding)', () => {
     ) as ProjectStateServiceInstance[];
   });
 
-  it('has the expected domain counts', async () => {
-    const domainCounts = await Promise.all(
-      serviceInstances.map(async (serviceInstance) => {
-        return (await serviceInstance.metadata()).findingsDomainCounts;
-      })
+  it('has the expected domain counts', () => {
+    const domainCounts = serviceInstances.map(
+      (serviceInstance) => serviceInstance.metadata.findingsDomainCounts
     );
 
     assert.strictEqual(domainCounts.length, 1, 'there is one workspace in the project');

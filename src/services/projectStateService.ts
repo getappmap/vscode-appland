@@ -5,7 +5,7 @@ import ExtensionState, { Keys } from '../configuration/extensionState';
 import { FileChangeEmitter } from './fileChangeEmitter';
 import FindingsIndex from './findingsIndex';
 import { ResolvedFinding } from './resolvedFinding';
-import { analyze, scoreValue, NodeVersion, SCORE_VALUES } from '../analyzers';
+import { analyze, scoreValue, NodeVersion, SCORE_VALUES, AppMapSummary } from '../analyzers';
 import ProjectMetadata from '../workspace/projectMetadata';
 import AppMapCollection from './appmapCollection';
 import ChangeEventDebouncer from './changeEventDebouncer';
@@ -15,6 +15,7 @@ import { CodeObjectEntry } from '../lib/CodeObjectEntry';
 import glob from 'glob';
 import { promisify } from 'util';
 import AnalysisManager from './analysisManager';
+import AppMapLoader from './appmapLoader';
 
 type SimpleCodeObject = {
   name: string;
@@ -36,11 +37,11 @@ export type FindingsDomainCounts = {
 export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
   protected disposables: vscode.Disposable[] = [];
   protected _onStateChange = new ChangeEventDebouncer<ProjectMetadata>(1000);
-  protected _metadata?: ProjectMetadata;
+  protected _metadata: ProjectMetadata = {
+    name: this.folder.name,
+    path: this.folder.uri.fsPath,
+  };
   protected initialized = false;
-  protected analysisPerformed = false;
-  protected numFindings = 0;
-  protected findingsDomainCounts?: FindingsDomainCounts;
   protected findingsIndexListener?: vscode.Disposable;
 
   public onStateChange = this._onStateChange.event;
@@ -78,6 +79,10 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
           await this.syncConfigurationState();
         }
       }),
+      this.classMapIndex.onChanged(async () => {
+        this._metadata.sampleCodeObjects = await this.classMapSelection();
+        this._onStateChange.fire(this._metadata);
+      }),
       extensionState.onWorkspaceFlag((e) => {
         if (
           e.workspaceFolder === folder &&
@@ -94,6 +99,11 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
     );
 
     this.syncConfigurationState();
+    this.updateMetadata();
+  }
+
+  public async initialize(): Promise<void> {
+    await Promise.all([this.analyzeProject(), this.onAppMapCreated()]);
   }
 
   public setFindingsIndex(findingsIndex?: FindingsIndex): void {
@@ -126,31 +136,25 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
     return this.extensionState.getWorkspaceGeneratedOpenApi(this.folder);
   }
 
-  async metadata(): Promise<Readonly<ProjectMetadata>> {
-    if (!this._metadata) {
-      await this.updateMetadata();
-    }
-
+  get metadata(): Readonly<ProjectMetadata> {
     return this._metadata as Readonly<ProjectMetadata>;
   }
 
   // Returns true if the project is installable and the agent has yet to be configured or
   // AppMaps have yet to be recorded
-  async installable(): Promise<boolean> {
-    const metadata = await this.metadata();
+  get installable(): boolean {
     return (
-      metadata.score !== undefined &&
-      metadata.score >= 2 &&
-      !(this.isAgentConfigured && this.hasRecordedAppMaps && metadata.analysisPerformed)
+      this.metadata.score !== undefined &&
+      this.metadata.score >= 2 &&
+      !(this.isAgentConfigured && this.hasRecordedAppMaps && this.metadata.analysisPerformed)
     );
   }
 
-  async supported(): Promise<boolean> {
-    const metadata = await this.metadata();
+  get supported(): boolean {
     return (
-      (metadata.language?.score || 0) >= SCORE_VALUES.good &&
-      ((metadata.webFramework?.score || 0) >= SCORE_VALUES.ok ||
-        (metadata.testFramework?.score || 0) >= SCORE_VALUES.ok)
+      (this.metadata.language?.score || 0) >= SCORE_VALUES.good &&
+      ((this.metadata.webFramework?.score || 0) >= SCORE_VALUES.ok ||
+        (this.metadata.testFramework?.score || 0) >= SCORE_VALUES.ok)
     );
   }
 
@@ -165,10 +169,12 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
 
   onFindingsChanged(findings: ResolvedFinding[]): void {
     vscode.commands.executeCommand('setContext', 'appmap.analysisPerformed', true);
-    this.analysisPerformed = true;
-    this.numFindings = findings.length;
-    this.findingsDomainCounts = this.countDomainsFromFindings(findings);
-    this.updateMetadata();
+
+    this._metadata.analysisPerformed = true;
+    this._metadata.numFindings = findings.length;
+    this._metadata.findingsDomainCounts = this.countDomainsFromFindings(findings);
+
+    this._onStateChange.fire(this._metadata);
   }
 
   countDomainsFromFindings(findings: ResolvedFinding[]): FindingsDomainCounts {
@@ -180,8 +186,8 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
     } as FindingsDomainCounts;
 
     findings.forEach((resolvedFinding) => {
-      const domain = resolvedFinding.finding.impactDomain.toLowerCase();
-      findingsDomainCounts[domain]++;
+      const domain = resolvedFinding.finding.impactDomain?.toLowerCase();
+      if (domain) findingsDomainCounts[domain]++;
     });
 
     return findingsDomainCounts;
@@ -192,7 +198,12 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
       this.extensionState.setWorkspaceRecordedAppMap(this.folder, true);
     }
 
-    this.updateMetadata();
+    const appMaps = this.appMapCollection.allAppMapsForWorkspaceFolder(this.folder);
+    this._metadata.appMaps = this.getBestAppMaps(appMaps);
+    this._metadata.numHttpRequests = this.countRoutes(appMaps);
+    this._metadata.numAppMaps = appMaps.length;
+
+    this._onStateChange.fire(this._metadata);
   }
 
   onConfigurationCreated(): void {
@@ -254,32 +265,16 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
     });
   }
 
-  private async updateMetadata(): Promise<void> {
-    const analysis = await analyze(this.folder, this.appMapCollection);
-    const sampleCodeObjects = await this.classMapSelection();
-    this._metadata = {
-      name: this.folder.name,
-      path: this.folder.uri.fsPath,
-      score: analysis.score,
-      hasNode: this.hasNode(analysis.nodeVersion),
-      agentInstalled: this.isAgentConfigured || false,
-      appMapsRecorded: this.hasRecordedAppMaps || false,
-      analysisPerformed: this.analysisPerformed,
-      investigatedFindings: this.hasInvestigatedFindings || false,
-      appMapOpened: this.hasOpenedAppMap || false,
-      generatedOpenApi: this.hasGeneratedOpenApi || false,
-      numFindings: this.numFindings,
-      findingsDomainCounts: this.findingsDomainCounts,
-      numHttpRequests: analysis.numHttpRequests,
-      numAppMaps: analysis.numAppMaps,
-      language: {
-        name: analysis.features.lang.title,
-        score: scoreValue(analysis.features.lang.score),
-        text: analysis.features.lang.text,
-      },
-      appMaps: analysis.appMaps,
-      sampleCodeObjects,
+  private async analyzeProject(): Promise<void> {
+    const analysis = await analyze(this.folder);
+
+    this._metadata.hasNode = this.hasNode(analysis.nodeVersion);
+    this._metadata.language = {
+      name: analysis.features.lang.title,
+      score: scoreValue(analysis.features.lang.score),
+      text: analysis.features.lang.text,
     };
+    this._metadata.score = analysis.score;
 
     if (analysis.features.test) {
       this._metadata.testFramework = {
@@ -296,6 +291,37 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
         text: analysis.features.web.text,
       };
     }
+
+    this._onStateChange.fire(this._metadata);
+  }
+
+  private getBestAppMaps(appMaps: AppMapLoader[], maxCount = 10): AppMapSummary[] {
+    return appMaps
+      .map(({ descriptor }) => ({
+        path: descriptor.resourceUri.fsPath,
+        name: descriptor.metadata?.name as string,
+        requests: descriptor.numRequests as number,
+        sqlQueries: descriptor.numQueries as number,
+        functions: descriptor.numFunctions as number,
+      }))
+      .sort((a, b) => {
+        const scoreA = a.requests * 100 + a.sqlQueries * 100 + a.functions * 100;
+        const scoreB = b.requests * 100 + b.sqlQueries * 100 + b.functions * 100;
+        return scoreB - scoreA;
+      })
+      .slice(0, maxCount);
+  }
+
+  private countRoutes(appMaps: AppMapLoader[]): number {
+    return appMaps.reduce((sum, { descriptor }) => sum + (descriptor.numRequests || 0), 0);
+  }
+
+  private updateMetadata(): void {
+    this._metadata.agentInstalled = this.isAgentConfigured || false;
+    this._metadata.appMapsRecorded = this.hasRecordedAppMaps || false;
+    this._metadata.investigatedFindings = this.hasInvestigatedFindings || false;
+    this._metadata.appMapOpened = this.hasOpenedAppMap || false;
+    this._metadata.generatedOpenApi = this.hasGeneratedOpenApi || false;
 
     this._onStateChange.fire(this._metadata);
   }
@@ -323,8 +349,8 @@ export default class ProjectStateService implements WorkspaceService<ProjectStat
     protected readonly findingsIndex?: FindingsIndex
   ) {}
 
-  public create(folder: vscode.WorkspaceFolder): ProjectStateServiceInstance {
-    return new ProjectStateServiceInstance(
+  public async create(folder: vscode.WorkspaceFolder): Promise<ProjectStateServiceInstance> {
+    const project = new ProjectStateServiceInstance(
       folder,
       this.extensionState,
       this.appMapCollection,
@@ -332,5 +358,7 @@ export default class ProjectStateService implements WorkspaceService<ProjectStat
       this.appMapWatcher,
       this.configWatcher
     );
+    await project.initialize();
+    return project;
   }
 }

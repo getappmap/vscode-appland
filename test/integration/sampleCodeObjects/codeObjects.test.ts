@@ -34,7 +34,7 @@ describe('Sample Code Objects', () => {
     const serviceInstance = extension.workspaceServices.getServiceInstances(
       extension.projectState
     )[0] as ProjectStateServiceInstance;
-    const sampleCodeObjects = (await serviceInstance.metadata()).sampleCodeObjects;
+    const sampleCodeObjects = serviceInstance.metadata.sampleCodeObjects;
 
     assert.notStrictEqual(sampleCodeObjects, undefined, 'not undefined');
     assert.strictEqual(sampleCodeObjects?.httpRequests.length, 5, 'five HTTP requests');

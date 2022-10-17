@@ -261,19 +261,11 @@ export function hasPreviouslyInstalledExtension(extensionPath: string): boolean 
   return false;
 }
 
-export async function getWorkspaceFolderFromPath(
+export function getWorkspaceFolderFromPath(
   projectStates: ReadonlyArray<ProjectStateServiceInstance>,
   path: string
-): Promise<vscode.WorkspaceFolder | undefined> {
-  // generate an array of promises that resolve to a project path
-  const promises = projectStates.map(async (projectState) => {
-    const metadata = await projectState.metadata();
-    return metadata?.path;
-  });
-
-  // convert the array of promises to an array of project paths
-  const projectPaths = await Promise.all(promises);
-
+): vscode.WorkspaceFolder | undefined {
+  const projectPaths = projectStates.map((projectState) => projectState.metadata.path);
   const projectIndex = projectPaths.findIndex((projectPath) => {
     return path.includes(projectPath);
   });

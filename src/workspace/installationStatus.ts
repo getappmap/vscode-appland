@@ -7,14 +7,14 @@ export default class InstallationStatusBadge {
 
   constructor(private readonly viewId: string) {}
 
-  async initialize(projectStates: ProjectStateServiceInstance[]): Promise<void> {
+  initialize(projectStates: ProjectStateServiceInstance[]): void {
     if (projectStates.length === 0) {
       return this.markAsComplete();
     }
 
     const installableProjects: ProjectStateServiceInstance[] = [];
     for (const projectState of projectStates) {
-      if (await projectState.installable()) {
+      if (projectState.installable) {
         installableProjects.push(projectState);
       }
     }

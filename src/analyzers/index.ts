@@ -67,42 +67,13 @@ export type NodeVersion = {
   patch: number;
 };
 
-function getBestAppMaps(appMaps: AppMapLoader[], maxCount = 10): AppMapSummary[] {
-  return appMaps
-    .map(({ descriptor }) => ({
-      path: descriptor.resourceUri.fsPath,
-      name: descriptor.metadata?.name as string,
-      requests: descriptor.numRequests as number,
-      sqlQueries: descriptor.numQueries as number,
-      functions: descriptor.numFunctions as number,
-    }))
-    .sort((a, b) => {
-      const scoreA = a.requests * 100 + a.sqlQueries * 100 + a.functions * 100;
-      const scoreB = b.requests * 100 + b.sqlQueries * 100 + b.functions * 100;
-      return scoreB - scoreA;
-    })
-    .slice(0, maxCount);
-}
-
-function countRoutes(appMaps: AppMapLoader[]): number {
-  return appMaps.reduce((sum, { descriptor }) => sum + (descriptor.numRequests || 0), 0);
-}
-
 export async function analyze(
-  folder: WorkspaceFolder,
-  appMapCollection?: AppMapCollection
+  folder: WorkspaceFolder
 ): Promise<ProjectAnalysis & Partial<WithAppMaps>> {
   // TODO: Use the 'language' field in appmap.yml instead
   const language = await LanguageResolver.getLanguage(folder);
   const analyzer = (await import(`./${language}`)).default;
   const result = await analyzer(folder);
-
-  if (appMapCollection) {
-    const appMaps = appMapCollection.allAppMapsForWorkspaceFolder(folder);
-    result.appMaps = getBestAppMaps(appMaps);
-    result.numHttpRequests = countRoutes(appMaps);
-    result.numAppMaps = appMaps.length;
-  }
 
   result.nodeVersion = await getNodeVersion(folder);
   result.path = folder.uri.fsPath;

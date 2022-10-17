@@ -87,8 +87,8 @@ export class InstructionsTreeDataProvider implements vscode.TreeDataProvider<Doc
     }
   }
 
-  public async getChildren(): Promise<DocPage[]> {
-    const metadata = await this.projectState?.metadata();
+  public getChildren(): DocPage[] {
+    const metadata = this.projectState?.metadata;
 
     if (!metadata) this.completion.clear();
     else

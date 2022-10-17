@@ -36,8 +36,8 @@ export default class NodeProcessServiceInstance implements WorkspaceServiceInsta
       : this.stop(undefined, 'appmap.yml has been deleted or moved');
   }
 
-  async initialize(): Promise<void> {
-    const metadata = await this.projectState.metadata();
+  initialize(): void {
+    const metadata = this.projectState.metadata;
     this.onReceiveProjectMetadata(metadata);
     this.disposables.push(
       this.projectState.onStateChange((metadata) => this.onReceiveProjectMetadata(metadata)),
