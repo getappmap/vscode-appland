@@ -8,20 +8,63 @@ export const InstallAgent = 'appmap.installAgent';
 const ELECTRON_COMMAND_PLATFORMS = ['linux', 'darwin'];
 let pendingTask: Thenable<unknown> | undefined;
 
-const escape = (str) => str.replace(/([^A-Za-z0-9_\-.,:/@\n])/g, '\\$1');
+type InstallEnv = {
+  ELECTRON_RUN_AS_NODE?: string;
+};
 
-function formatProjectPath(path: string): string {
-  if (path.includes(' ')) {
-    return "'" + path + "'";
+type InstallInformation = {
+  command: string;
+  env: InstallEnv;
+};
+
+function escapePath(str: string): string {
+  // on windows, quote everything except the drive letter when the path has one or more spaces
+  // e.g. C:"\Users\user\projects\directory with spaces"
+  if (os.platform() === 'win32') {
+    return str
+      .split(':')
+      .map((partialPath) => (partialPath.includes(' ') ? `"${partialPath}"` : partialPath))
+      .join(':');
   }
-  return path;
+
+  return str.replace(/([^A-Za-z0-9_\-.,:/@\n])/g, '\\$1');
 }
 
 function electronCommand(globalStorageDir: string, installLocation: string): string {
-  const nodePath = escape(process.argv0);
-  const cliPath = `${escape(globalStorageDir)}/node_modules/@appland/appmap/built/cli.js`;
-  const flags = ['--ms-enable-electron-run-as-node', '-d', escape(installLocation)];
+  const nodePath = escapePath(process.argv0);
+  const cliPath = join(globalStorageDir, 'node_modules', '@appland', 'appmap', 'built', 'cli.js');
+  const flags = ['--ms-enable-electron-run-as-node', '-d', installLocation];
   return `ELECTRON_RUN_AS_NODE=true ${nodePath} ${cliPath} install ${flags.join(' ')}`;
+}
+
+export function generateInstallInfo(
+  path: string,
+  language: string,
+  hasCLIBin: boolean,
+  globalStorageDir: string
+): InstallInformation {
+  const escapedStorageDir = escapePath(globalStorageDir);
+  const installLocation = escapePath(path);
+  const env = {};
+  let command = `npx @appland/appmap install -d ${installLocation}`;
+
+  const isElectronApp = !vscode.env.remoteName;
+  const canSendElectronComamnd = ELECTRON_COMMAND_PLATFORMS.includes(os.platform());
+
+  if (language !== 'JavaScript') {
+    if (isElectronApp && canSendElectronComamnd) {
+      env['ELECTRON_RUN_AS_NODE'] = 'true';
+      command = electronCommand(escapedStorageDir, installLocation);
+    } else if (os.platform() === 'win32' && hasCLIBin) {
+      const binPath = join(escapedStorageDir, 'appmap-win-x64.exe');
+      command = `${binPath} install -d ${installLocation}`;
+    }
+  }
+
+  return {
+    command,
+    env,
+  };
 }
 
 export default async function installAgent(
@@ -61,22 +104,12 @@ export default async function installAgent(
         pendingTask = undefined;
       }
 
-      const installLocation = formatProjectPath(path);
-      const env = {};
-      let command = `npx @appland/appmap install -d ${installLocation}`;
-
-      const isElectronApp = !vscode.env.remoteName;
-      const canSendElectronComamnd = ELECTRON_COMMAND_PLATFORMS.includes(os.platform());
-
-      if (language !== 'JavaScript') {
-        if (isElectronApp && canSendElectronComamnd) {
-          env['ELECTRON_RUN_AS_NODE'] = 'true';
-          command = electronCommand(context.globalStorageUri.fsPath, installLocation);
-        } else if (os.platform() === 'win32' && hasCLIBin) {
-          const binPath = join(escape(context.globalStorageUri.fsPath), 'appmap-win-x64.exe');
-          command = `${binPath} install -d ${installLocation}`;
-        }
-      }
+      const { command, env } = generateInstallInfo(
+        path,
+        language,
+        hasCLIBin,
+        context.globalStorageUri.fsPath
+      );
 
       const terminal = vscode.window.createTerminal({
         name: 'install-appmap',
