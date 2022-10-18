@@ -26,7 +26,7 @@ describe('Findings impact domains (several findings)', () => {
     assert.strictEqual(domainCounts.length, 1, 'there is one workspace in the project');
 
     domainCounts.forEach((domainCount) => {
-      assert.strictEqual(domainCount?.performance, 2, 'there are two performance issues');
+      assert.strictEqual(domainCount?.performance, 1, 'there is one performance issue');
       assert.strictEqual(domainCount?.maintainability, 0, 'there are no maintainability issues');
       assert.strictEqual(domainCount?.security, 1, 'there is one security issue');
       assert.strictEqual(domainCount?.stability, 0, 'there are no stability issues');
