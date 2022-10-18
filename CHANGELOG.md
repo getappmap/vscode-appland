@@ -1,3 +1,19 @@
+# [0.48.0](https://github.com/getappmap/vscode-appland/compare/v0.47.0...v0.48.0) (2022-10-18)
+
+
+### Bug Fixes
+
+* Don't fully analyze the project on every change update ([bc25c2d](https://github.com/getappmap/vscode-appland/commit/bc25c2dff6c3c80c8f65078a2e30ab9608351fae))
+* Look for poetry.lock over pyproject.toml ([40842c4](https://github.com/getappmap/vscode-appland/commit/40842c4fcc9bd90f1d7e068eb2988d57e8e01edf))
+* properly escape paths during installation ([08e5c3b](https://github.com/getappmap/vscode-appland/commit/08e5c3bfa96959ada41586c21a0b8bd5943c27e3))
+* Remove duplicate findings from appearing in the workspace ([fa0add8](https://github.com/getappmap/vscode-appland/commit/fa0add8daaf50449092436857ba0d8f0f5ab67ad))
+
+
+### Features
+
+* Add manual installation instructions for pipenv ([39f959d](https://github.com/getappmap/vscode-appland/commit/39f959dc107a9e908df18e190c279c5d96212aa3))
+* Detect dependencies from Pipfiles ([f1f3730](https://github.com/getappmap/vscode-appland/commit/f1f3730651062ac7176dfb3051b7d7d57e39ddc7))
+
 # [0.47.0](https://github.com/getappmap/vscode-appland/compare/v0.46.0...v0.47.0) (2022-10-14)
 
 
