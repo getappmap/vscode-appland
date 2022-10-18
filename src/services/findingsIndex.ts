@@ -5,6 +5,7 @@ import { promisify } from 'util';
 import { readFile } from 'fs';
 import EventEmitter from 'events';
 import { fileExists } from '../util';
+import uniq from '../lib/uniq';
 
 export default class FindingsIndex extends EventEmitter implements vscode.Disposable {
   private _onChanged = new vscode.EventEmitter<vscode.WorkspaceFolder>();
@@ -12,10 +13,11 @@ export default class FindingsIndex extends EventEmitter implements vscode.Dispos
 
   private findingsBySourceUri = new Map<string, ResolvedFinding[]>();
 
-  findingsForWorkspace(workspaceFolder: vscode.WorkspaceFolder): ResolvedFinding[] {
-    return Object.entries(this.findingsBySourceUri)
+  uniqueFindingsForWorkspace(workspaceFolder: vscode.WorkspaceFolder): ResolvedFinding[] {
+    const all = Object.entries(this.findingsBySourceUri)
       .filter(([sourceUri]) => sourceUri.startsWith(workspaceFolder.uri.toString()))
       .flatMap(([, findings]) => findings);
+    return uniq(all, (rf) => rf.finding.hash);
   }
 
   findingsForUri(uri: vscode.Uri): ResolvedFinding[] {

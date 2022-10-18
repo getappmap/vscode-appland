@@ -110,7 +110,7 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
     this.findingsIndexListener?.dispose();
     this.findingsIndexListener = findingsIndex?.onChanged((workspaceFolder) => {
       if (workspaceFolder === this.folder) {
-        const findings = findingsIndex.findingsForWorkspace(this.folder);
+        const findings = findingsIndex.uniqueFindingsForWorkspace(this.folder);
         this.onFindingsChanged(findings);
       }
     });
