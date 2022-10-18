@@ -14,6 +14,7 @@ async function pipDependencies(folder: WorkspaceFolder): Promise<DependencyFinde
 }
 
 const pyprojectDependencies = fileWordScanner('pyproject.toml');
+const pipfileDependencies = fileWordScanner('Pipfile');
 
 async function grepFiles(pattern: string, folder: WorkspaceFolder) {
   async function grepFile(file: PromiseLike<Uint8Array>) {
@@ -40,7 +41,11 @@ export default async function analyze(folder: WorkspaceFolder): Promise<ProjectA
   };
 
   try {
-    const dependency = await Promise.any([pipDependencies(folder), pyprojectDependencies(folder)]);
+    const dependency = await Promise.any([
+      pipDependencies(folder),
+      pipfileDependencies(folder),
+      pyprojectDependencies(folder),
+    ]);
     features.lang.depFile = dependency.filename;
     if (dependency('django')) {
       features.web = {
