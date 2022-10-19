@@ -6,6 +6,19 @@ import { NodeProcessService } from '../services/nodeProcessService';
 
 export const InstallAgent = 'appmap.installAgent';
 const ELECTRON_COMMAND_PLATFORMS = ['linux', 'darwin'];
+
+// these are in order of precedence
+const CONFIG_LOCATIONS = [
+  'workspaceFolderLanguageValue',
+  'workspaceLanguageValue',
+  'globalLanguageValue',
+  'defaultLanguageValue',
+  'workspaceFolderValue',
+  'workspaceValue',
+  'globalValue',
+  'defaultValue',
+];
+
 let pendingTask: Thenable<unknown> | undefined;
 
 type InstallEnv = {
@@ -16,6 +29,42 @@ type InstallInformation = {
   command: string;
   env: InstallEnv;
 };
+
+function getConfigTargetFromConfigLocation(
+  configLocation: string
+): vscode.ConfigurationTarget | undefined {
+  if (
+    ['defaultValue', 'globalValue', 'globalLanguageValue', 'defaultLanguageValue'].includes(
+      configLocation
+    )
+  ) {
+    return vscode.ConfigurationTarget.Global;
+  } else if (['workspaceValue', 'workspaceLanguageValue'].includes(configLocation)) {
+    return vscode.ConfigurationTarget.Workspace;
+  } else if (['workspaceFolderValue', 'workspaceFolderLanguageValue'].includes(configLocation)) {
+    return vscode.ConfigurationTarget.WorkspaceFolder;
+  }
+}
+
+function getActiveConfigLocation(config: vscode.WorkspaceConfiguration, scope: string): string {
+  const configInfo = config.inspect(scope) || {};
+  const activeConfig = CONFIG_LOCATIONS.find((configLocation) => {
+    const terminalSettings = configInfo[configLocation]?.terminal;
+    return terminalSettings && Object.keys(terminalSettings).includes('activateEnvironment');
+  });
+
+  return activeConfig || '';
+}
+
+function createTerminal(command: string, path: string, env: InstallEnv): void {
+  const terminal = vscode.window.createTerminal({
+    name: 'install-appmap',
+    cwd: path,
+    env,
+  });
+  terminal.show();
+  terminal.sendText(command);
+}
 
 function escapePath(str: string): string {
   // on windows, quote everything except the drive letter when the path has one or more spaces
@@ -111,14 +160,25 @@ export default async function installAgent(
         context.globalStorageUri.fsPath
       );
 
-      const terminal = vscode.window.createTerminal({
-        name: 'install-appmap',
-        cwd: path,
-        env,
-      });
-      terminal.show();
-      terminal.sendText(command);
+      // check if we need to temporarily suppress terminal activation in python
+      if (language === 'Python') {
+        const config = vscode.workspace.getConfiguration();
+        const originalValue = config.get('python.terminal.activateEnvironment');
 
+        if (originalValue) {
+          const activePythonConfig = getActiveConfigLocation(config, 'python');
+          const configTarget = getConfigTargetFromConfigLocation(activePythonConfig);
+          await config.update('python.terminal.activateEnvironment', false, configTarget);
+          createTerminal(command, path, env);
+
+          // restore settings to original state
+          await config.update('python.terminal.activateEnvironment', originalValue, configTarget);
+          Telemetry.sendEvent(CLICK_INSTALL_BUTTON, { rootDirectory: path });
+          return;
+        }
+      }
+
+      createTerminal(command, path, env);
       Telemetry.sendEvent(CLICK_INSTALL_BUTTON, { rootDirectory: path });
     } catch (err) {
       const exception = err as Error;
