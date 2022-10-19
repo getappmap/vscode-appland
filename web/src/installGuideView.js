@@ -22,7 +22,7 @@ export default function mountInstallGuide() {
             analysisEnabled: this.analysisEnabled,
             findingsEnabled: this.findingsEnabled,
             userAuthenticated: this.userAuthenticated,
-            // featureFlags: new Set(['ar-python']),
+            featureFlags: new Set(['ar-python']),
           },
         });
       },
