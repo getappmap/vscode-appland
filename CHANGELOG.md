@@ -1,3 +1,10 @@
+## [0.48.1](https://github.com/getappmap/vscode-appland/compare/v0.48.0...v0.48.1) (2022-10-19)
+
+
+### Bug Fixes
+
+* Enable record by default instructions for Python ([d853818](https://github.com/getappmap/vscode-appland/commit/d85381876d8302cf8051b253dc33b178f5a9b739))
+
 # [0.48.0](https://github.com/getappmap/vscode-appland/compare/v0.47.0...v0.48.0) (2022-10-18)
 
 
