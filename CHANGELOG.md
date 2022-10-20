@@ -1,3 +1,10 @@
+## [0.48.2](https://github.com/getappmap/vscode-appland/compare/v0.48.1...v0.48.2) (2022-10-20)
+
+
+### Bug Fixes
+
+* install button works with pyenv ([725919f](https://github.com/getappmap/vscode-appland/commit/725919f469e3e25fdb8f0161d7054c2903d80b61))
+
 ## [0.48.1](https://github.com/getappmap/vscode-appland/compare/v0.48.0...v0.48.1) (2022-10-19)
 
 
