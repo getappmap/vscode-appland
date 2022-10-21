@@ -1,3 +1,10 @@
+## [0.48.3](https://github.com/getappmap/vscode-appland/compare/v0.48.2...v0.48.3) (2022-10-21)
+
+
+### Bug Fixes
+
+* Improve analysis findings tree view ([43fd620](https://github.com/getappmap/vscode-appland/commit/43fd62009330670ed73dce11f2618d1c64e56610))
+
 ## [0.48.2](https://github.com/getappmap/vscode-appland/compare/v0.48.1...v0.48.2) (2022-10-20)
 
 
