@@ -6,6 +6,7 @@ import AppMapService from './appMapService';
 import deleteAllAppMaps from './commands/deleteAllAppMaps';
 import registerInspectCodeObject from './commands/inspectCodeObject';
 import registerSequenceDiagram from './commands/sequenceDiagram';
+import registerCompareSequenceDiagrams from './commands/compareSequenceDiagram';
 import openCodeObjectInAppMap from './commands/openCodeObjectInAppMap';
 import outOfDateTests from './commands/outOfDateTests';
 import extensionSettings from './configuration/extensionSettings';
@@ -197,7 +198,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
     const sequenceDiagramEnabled = extensionSettings.sequenceDiagramEnabled;
     if (sequenceDiagramEnabled) {
-      registerSequenceDiagram(context);
+      registerSequenceDiagram(context, appmapCollectionFile);
+      registerCompareSequenceDiagrams(context, appmapCollectionFile);
     }
 
     AnalysisManager.register(context, projectStates, extensionState, workspaceServices);
