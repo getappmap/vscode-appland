@@ -14,6 +14,12 @@ export default class ExtensionSettings {
     );
   }
 
+  public static get sequenceDiagramEnabled(): boolean {
+    return [true, 'true'].includes(
+      vscode.workspace.getConfiguration('appMap').get('sequenceDiagramEnabled') || false
+    );
+  }
+
   public static get viewConfiguration(): string | undefined {
     return vscode.workspace.getConfiguration('appMap').get('viewConfiguration');
   }
@@ -24,7 +30,35 @@ export default class ExtensionSettings {
     );
   }
 
+  public static get plantUMLJarPath(): string | undefined {
+    return vscode.workspace.getConfiguration('appMap').get('plantUmlJarPath');
+  }
+
+  public static get appMapCommandLineToolsPath(): string | undefined {
+    return vscode.workspace.getConfiguration('appMap').get('commandLineToolsPath');
+  }
+
   public static async enableFindings(): Promise<void> {
     vscode.workspace.getConfiguration('appMap').update('findingsEnabled', true);
+  }
+
+  public static getSequenceDiagramSetting(
+    key: string,
+    language: string,
+    defaultValue: string
+  ): string | undefined {
+    return vscode.workspace
+      .getConfiguration('appMap')
+      .get(['sequenceDiagram', key, language].join('.'), defaultValue);
+  }
+
+  public static setSequenceDiagramSetting(key: string, language: string, value: string): void {
+    vscode.workspace
+      .getConfiguration('appMap')
+      .update(
+        ['sequenceDiagram', key, language].join('.'),
+        value,
+        vscode.ConfigurationTarget.WorkspaceFolder
+      );
   }
 }

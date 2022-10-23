@@ -153,10 +153,7 @@ export default class InstallGuideWebView {
 
             case 'view-problems':
               {
-                const workspaceFolder = await getWorkspaceFolderFromPath(
-                  projectStates,
-                  message.data
-                );
+                const workspaceFolder = getWorkspaceFolderFromPath(projectStates, message.data);
 
                 if (workspaceFolder) {
                   extensionState.setFindingsInvestigated(workspaceFolder, true);

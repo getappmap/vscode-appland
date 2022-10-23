@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { packageManagerCommand } from '../configuration/packageManager';
+import chooseWorkspace from '../lib/chooseWorkspace';
 import { shellescape } from '../util';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -14,15 +15,7 @@ function appMapTerminal(): vscode.Terminal {
 
 export default async function inspectCodeObject(context: vscode.ExtensionContext): Promise<void> {
   const command = vscode.commands.registerCommand('appmap.inspectCodeObject', async (fqid) => {
-    if (!vscode.workspace.workspaceFolders || vscode.workspace.workspaceFolders.length === 0) {
-      return;
-    }
-    let workspace: vscode.WorkspaceFolder | undefined;
-    if (vscode.workspace.workspaceFolders.length === 1) {
-      workspace = vscode.workspace.workspaceFolders[0];
-    } else {
-      workspace = await vscode.window.showWorkspaceFolderPick();
-    }
+    const workspace = await chooseWorkspace();
     if (!workspace) return;
 
     const searchArg = fqid;
