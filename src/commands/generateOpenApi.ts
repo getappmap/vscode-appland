@@ -1,6 +1,14 @@
+import assert from 'assert';
 import * as vscode from 'vscode';
 import ExtensionState from '../configuration/extensionState';
-import { getBinPath, OutputStream, ProgramName, spawn } from '../services/nodeDependencyProcess';
+import chooseWorkspace from '../lib/chooseWorkspace';
+import {
+  getBinPath,
+  OutputStream,
+  ProgramName,
+  spawn,
+  verifyCommandOutput,
+} from '../services/nodeDependencyProcess';
 import { GENERATE_OPENAPI, Telemetry } from '../telemetry';
 
 export const GenerateOpenApi = 'appmap.generateOpenApi';
@@ -15,37 +23,13 @@ export default async function generateOpenApi(
       viewColumn: vscode.ViewColumn = vscode.ViewColumn.Active,
       workspaceFolder?: vscode.WorkspaceFolder
     ) => {
-      if (!workspaceFolder) {
-        if (!vscode.workspace.workspaceFolders || vscode.workspace.workspaceFolders.length === 0) {
-          vscode.window.showErrorMessage('No workspace is available.');
-          return;
-        }
-
-        if (vscode.workspace.workspaceFolders.length === 1) {
-          workspaceFolder = vscode.workspace.workspaceFolders[0];
-        } else {
-          // Let the user pick a workspace folder
-          const workspaceName = await vscode.window.showQuickPick(
-            vscode.workspace.workspaceFolders.map((folder) => folder.name),
-            { placeHolder: 'Select a directory' }
-          );
-
-          if (!workspaceName) {
-            return;
-          }
-
-          workspaceFolder = vscode.workspace.workspaceFolders.find(
-            (folder) => folder.name === workspaceName
-          );
-        }
-      }
+      if (!workspaceFolder) workspaceFolder = await chooseWorkspace();
+      if (!workspaceFolder) return;
 
       vscode.window.withProgress(
         { location: vscode.ProgressLocation.Notification, title: 'Generating OpenAPI definitions' },
         async () => {
-          if (!workspaceFolder) {
-            return;
-          }
+          assert(workspaceFolder);
 
           const binPath = await getBinPath({
             dependency: ProgramName.Appmap,
@@ -54,26 +38,10 @@ export default async function generateOpenApi(
           const openApiCmd = spawn({
             binPath,
             args: ['openapi', '--appmap-dir', workspaceFolder.uri.fsPath],
-            cacheLog: true,
+            saveOutput: true,
           });
 
-          await new Promise<void>((resolve, reject) => {
-            openApiCmd.once('error', (err) => {
-              reject(new Error(String(err)));
-            });
-            openApiCmd.once('exit', (code, signal) => {
-              if (signal) {
-                return reject(
-                  new Error(`${openApiCmd.spawnargs.join(' ')} exited due to ${signal}`)
-                );
-              } else if (code !== undefined && code !== 0) {
-                return reject(
-                  new Error(`${openApiCmd.spawnargs.join(' ')} exited with code ${code}`)
-                );
-              }
-              resolve();
-            });
-          });
+          await verifyCommandOutput(openApiCmd);
 
           extensionState.setWorkspaceGeneratedOpenApi(workspaceFolder, true);
           Telemetry.sendEvent(GENERATE_OPENAPI, { rootDirectory: workspaceFolder.uri.fsPath });

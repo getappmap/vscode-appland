@@ -8,7 +8,7 @@ export default function registerCommand(
   extensionState: ExtensionState
 ): vscode.Disposable {
   return vscode.commands.registerCommand('appmap.openFinding', async (uri: vscode.Uri) => {
-    const workspaceFolder = await getWorkspaceFolderFromPath(projectStates, String(uri));
+    const workspaceFolder = getWorkspaceFolderFromPath(projectStates, String(uri));
 
     if (workspaceFolder) {
       extensionState.setFindingsInvestigated(workspaceFolder, true);

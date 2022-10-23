@@ -98,7 +98,7 @@ export default class AppMapServerAuthenticationProvider implements vscode.Authen
     ];
 
     for (const [index, authnStrategy] of authnStrategies.entries()) {
-      await authnStrategy.prepareSignIn();
+      authnStrategy.prepareSignIn();
       const redirectUri = await authnStrategy.redirectUrl([['nonce', nonce]]);
       const authnUrl = AppMapServerAuthenticationProvider.authURL(authnStrategy.authnPath, {
         redirect_url: redirectUri.toString(),

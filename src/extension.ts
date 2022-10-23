@@ -5,6 +5,7 @@ import RemoteRecording from './actions/remoteRecording';
 import AppMapService from './appMapService';
 import deleteAllAppMaps from './commands/deleteAllAppMaps';
 import registerInspectCodeObject from './commands/inspectCodeObject';
+import registerSequenceDiagram from './commands/sequenceDiagram';
 import openCodeObjectInAppMap from './commands/openCodeObjectInAppMap';
 import outOfDateTests from './commands/outOfDateTests';
 import extensionSettings from './configuration/extensionSettings';
@@ -177,11 +178,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     });
     context.subscriptions.push(findingsTreeProvider);
 
-    const inspectEnabled = extensionSettings.inspectEnabled;
-    if (inspectEnabled) {
-      registerInspectCodeObject(context);
-    }
-
     const projectState = new ProjectStateService(
       extensionState,
       appmapWatcher,
@@ -193,6 +189,16 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     const projectStates = (await workspaceServices.enroll(
       projectState
     )) as ProjectStateServiceInstance[];
+
+    const inspectEnabled = extensionSettings.inspectEnabled;
+    if (inspectEnabled) {
+      registerInspectCodeObject(context);
+    }
+
+    const sequenceDiagramEnabled = extensionSettings.sequenceDiagramEnabled;
+    if (sequenceDiagramEnabled) {
+      registerSequenceDiagram(context);
+    }
 
     AnalysisManager.register(context, projectStates, extensionState, workspaceServices);
 

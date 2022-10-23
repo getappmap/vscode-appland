@@ -29,6 +29,7 @@ class FolderProperties {
 }
 
 type SortFunction = (a: AppMapLoader, b: AppMapLoader) => number;
+type NameFunction = (name: string) => string;
 
 export class AppMapTreeDataProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
   private appmaps: AppMapCollection;
@@ -43,6 +44,13 @@ export class AppMapTreeDataProvider implements vscode.TreeDataProvider<vscode.Tr
     requests: AppMapTreeDataProvider.sortByTimestamp,
     remote: AppMapTreeDataProvider.sortByName,
     tests: AppMapTreeDataProvider.sortByName,
+  };
+
+  // Here you can specify the name normalize function used for different recording types.
+  static NormalizeName: Record<string, NameFunction> = {
+    requests: AppMapTreeDataProvider.goodUrlName,
+    remote: AppMapTreeDataProvider.identityName,
+    tests: AppMapTreeDataProvider.identityName,
   };
 
   constructor(appmaps: AppMapCollection, appmapsUptodate?: AppmapUptodateService) {
@@ -104,6 +112,15 @@ export class AppMapTreeDataProvider implements vscode.TreeDataProvider<vscode.Tr
     return aName.localeCompare(bName);
   }
 
+  protected static identityName(name: string): string {
+    return name;
+  }
+
+  // Double forward slashes are sometimes observed in URL paths and they make it into the AppMap name.
+  protected static goodUrlName(name: string): string {
+    return name.replace(/\/{2,}/g, '/');
+  }
+
   protected static folderName(properties: FolderProperties): string {
     let name: string;
     if (properties.recorderType && properties.recorderType.length > 1) {
@@ -136,11 +153,20 @@ export class AppMapTreeDataProvider implements vscode.TreeDataProvider<vscode.Tr
     const sortFunction =
       AppMapTreeDataProvider.SortMethod[folderProperties.recorderType || 'unknown recorder type'] ||
       AppMapTreeDataProvider.sortByName;
+    const nameFunction =
+      AppMapTreeDataProvider.NormalizeName[
+        folderProperties.recorderType || 'unknown recorder type'
+      ] || AppMapTreeDataProvider.identityName;
     const listItems = this.appmaps
       .appMaps()
       .filter((appMap) =>
         isDeepStrictEqual(AppMapTreeDataProvider.appMapFolderProperties(appMap), folderProperties)
       )
+      .map((appmap) => {
+        if (appmap.descriptor.metadata)
+          appmap.descriptor.metadata.name = nameFunction(appmap.descriptor.metadata.name as string);
+        return appmap;
+      })
       .sort(sortFunction)
       .map(this.buildTreeItem.bind(this));
 
