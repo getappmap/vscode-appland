@@ -1,5 +1,6 @@
 {
   "editor.rulers": [120],
   "editor.formatOnSave": true,
-  "editor.defaultFormatter": "esbenp.prettier-vscode"
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "appMap.inspectEnabled": true
 }

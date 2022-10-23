@@ -90,7 +90,7 @@ export default class AppmapUptodateServiceInstance extends EventEmitter
       binPath: this.binPath,
       args: this.commandArgs,
       cwd: this.folder.uri.fsPath,
-      cacheLog: true,
+      saveOutput: true,
     });
     this.updatedAt = Date.now();
     this.process.once('exit', (code) => {

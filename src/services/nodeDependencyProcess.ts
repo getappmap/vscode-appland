@@ -2,6 +2,7 @@ import * as childProcess from 'child_process';
 import * as vscode from 'vscode';
 import * as path from 'path';
 import { readFile } from 'fs/promises';
+import ExtensionSettings from '../configuration/extensionSettings';
 
 export enum ProgramName {
   Appmap = 'appmap',
@@ -26,7 +27,7 @@ export type SpawnOptions = {
   log?: vscode.OutputChannel;
 
   // Indicates whether or not log messages should be retained in a buffer
-  cacheLog?: boolean;
+  saveOutput?: boolean;
 } & Exclude<childProcess.SpawnOptionsWithoutStdio, 'argv0'>;
 
 export type ProgramOptions = {
@@ -47,7 +48,7 @@ export class ProcessLog extends Array<ProcessLogItem> {
   protected constructor(
     protected process: childProcess.ChildProcessWithoutNullStreams,
     protected outputChannel?: vscode.OutputChannel,
-    protected shouldCache?: boolean
+    protected saveOutput?: boolean
   ) {
     super();
   }
@@ -55,13 +56,13 @@ export class ProcessLog extends Array<ProcessLogItem> {
   static appendLogger(
     process: childProcess.ChildProcessWithoutNullStreams,
     outputChannel?: vscode.OutputChannel,
-    cache?: boolean
+    save?: boolean
   ): ChildProcess {
     if ((process as ChildProcess).log) {
       throw new Error(`process ${process.pid} already has a logger appended`);
     }
 
-    const log = new ProcessLog(process, outputChannel, cache);
+    const log = new ProcessLog(process, outputChannel, save);
 
     process.stdout.setEncoding('utf8');
     process.stderr.setEncoding('utf8');
@@ -86,8 +87,8 @@ export class ProcessLog extends Array<ProcessLogItem> {
     return modifiedProcess;
   }
 
-  append(data: string, stream = OutputStream.Stdout, cache = false): void {
-    if (this.shouldCache && cache) {
+  append(data: string, stream = OutputStream.Stdout, save = false): void {
+    if (this.saveOutput && save) {
       this.push({ stream, data });
     }
 
@@ -108,6 +109,9 @@ export class ProcessLog extends Array<ProcessLogItem> {
 }
 
 export async function getBinPath(options: ProgramOptions): Promise<string> {
+  const overridePath = ExtensionSettings.appMapCommandLineToolsPath;
+  if (overridePath) return overridePath;
+
   const base = path.join(options.globalStoragePath, 'node_modules', '@appland', options.dependency);
   const bin = JSON.parse(await readFile(path.join(base, 'package.json'), 'utf8')).bin;
   return path.join(base, bin);
@@ -131,7 +135,25 @@ export function spawn(options: SpawnOptions): ChildProcess {
   const args = [...additionalArgs, ...(options.args || [])];
   const env = { ...process.env, ...additionalEnv, ...(options.env || {}) };
   const newProcess = childProcess.spawn(nodePath, args, { ...options, env });
-  const loggedProcess = ProcessLog.appendLogger(newProcess, options.log, options.cacheLog);
+  const loggedProcess = ProcessLog.appendLogger(newProcess, options.log, options.saveOutput);
 
   return loggedProcess;
+}
+
+export async function verifyCommandOutput(
+  cmd: childProcess.ChildProcessWithoutNullStreams
+): Promise<void> {
+  return new Promise<void>((resolve, reject) => {
+    cmd.once('error', (err) => {
+      reject(new Error(String(err)));
+    });
+    cmd.once('exit', (code, signal) => {
+      if (signal) {
+        return reject(new Error(`${cmd.spawnargs.join(' ')} exited due to ${signal}`));
+      } else if (code !== undefined && code !== 0) {
+        return reject(new Error(`${cmd.spawnargs.join(' ')} exited with code ${code}`));
+      }
+      resolve();
+    });
+  });
 }

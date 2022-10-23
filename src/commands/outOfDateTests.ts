@@ -2,6 +2,7 @@ import { resolve } from 'path';
 import * as vscode from 'vscode';
 import { AppmapUptodateService, fileLocationsToFilePaths } from '../services/appmapUptodateService';
 import { touch } from '../lib/touch';
+import chooseWorkspace from '../lib/chooseWorkspace';
 
 const TEST_NAMES = 'File names';
 const TEST_NAMES_LINES = 'File names and line numbers';
@@ -9,17 +10,7 @@ const TEST_NAMES_LINES = 'File names and line numbers';
 async function obtainOutOfDateTestLocations(
   uptodateService: AppmapUptodateService
 ): Promise<{ workspace: vscode.WorkspaceFolder; testLocations: string[] } | undefined> {
-  async function selectWorkspace(): Promise<vscode.WorkspaceFolder | undefined> {
-    if (vscode.workspace.workspaceFolders?.length === 0) return;
-
-    if (vscode.workspace.workspaceFolders?.length === 1) {
-      return vscode.workspace.workspaceFolders[0];
-    } else {
-      return await vscode.window.showWorkspaceFolderPick();
-    }
-  }
-
-  const workspace = await selectWorkspace();
+  const workspace = await chooseWorkspace();
   if (!workspace) return;
 
   const testLocations = await uptodateService.outOfDateTestLocations(workspace);

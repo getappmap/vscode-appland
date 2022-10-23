@@ -14,6 +14,12 @@ export default class ExtensionSettings {
     );
   }
 
+  public static get sequenceDiagramEnabled(): boolean {
+    return [true, 'true'].includes(
+      vscode.workspace.getConfiguration('appMap').get('sequenceDiagramEnabled') || false
+    );
+  }
+
   public static get viewConfiguration(): string | undefined {
     return vscode.workspace.getConfiguration('appMap').get('viewConfiguration');
   }
@@ -22,6 +28,14 @@ export default class ExtensionSettings {
     return [true, 'true'].includes(
       vscode.workspace.getConfiguration('appMap').get('findingsEnabled') || false
     );
+  }
+
+  public static get plantUMLJarPath(): string | undefined {
+    return vscode.workspace.getConfiguration('appMap').get('plantUmlJarPath');
+  }
+
+  public static get appMapCommandLineToolsPath(): string | undefined {
+    return vscode.workspace.getConfiguration('appMap').get('commandLineToolsPath');
   }
 
   public static async enableFindings(): Promise<void> {

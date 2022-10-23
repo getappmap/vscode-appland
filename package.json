@@ -119,10 +119,6 @@
         "title": "AppMap: Reset Usage State"
       },
       {
-        "command": "appmap.inspectCodeObject",
-        "title": "AppMap: Inspect Code Object"
-      },
-      {
         "command": "appmap.deleteAllAppMaps",
         "title": "AppMap: Delete All AppMaps"
       },
@@ -151,12 +147,20 @@
         "title": "AppMap View: Rename AppMap"
       },
       {
+        "command": "appmap.context.sequenceDiagram",
+        "title": "AppMap View: Generate Sequence Diagram"
+      },
+      {
         "command": "appmap.context.inspectCodeObject",
         "title": "AppMap View: Inspect Code Object"
       },
       {
         "command": "appmap.generateOpenApi",
         "title": "AppMap: Generate OpenAPI definitions"
+      },
+      {
+        "command": "appmap.sequenceDiagram",
+        "title": "AppMap: Generate Sequence Diagrams"
       },
       {
         "command": "appmap.login",
@@ -191,6 +195,18 @@
         "appMap.inspectEnabled": {
           "type": "boolean",
           "description": "Enable detailed inspection of AppMap code objects (preview)"
+        },
+        "appMap.sequenceDiagramEnabled": {
+          "type": "boolean",
+          "description": "Enable generation of sequence diagrams (preview)"
+        },
+        "appMap.plantUmlJarPath": {
+          "type": "string",
+          "description": "Location of Plant UML JAR (required to generate sequence diagrams) (preview)"
+        },
+        "appMap.commandLineToolsPath": {
+          "type": "string",
+          "description": "Location of AppMap command line tools (used for extension development only)"
         }
       }
     },
@@ -295,8 +311,8 @@
           "when": "false"
         },
         {
-          "command": "appmap.inspectCodeObject",
-          "when": "config.appMap.inspectEnabled == true"
+          "command": "appmap.context.sequenceDiagram",
+          "when": "false"
         }
       ],
       "view/title": [
@@ -332,6 +348,10 @@
         },
         {
           "command": "appmap.context.rename",
+          "when": "view == appmap.views.local && viewItem == appmap.views.local.appMap"
+        },
+        {
+          "command": "appmap.context.sequenceDiagram",
           "when": "view == appmap.views.local && viewItem == appmap.views.local.appMap"
         },
         {
@@ -443,5 +463,16 @@
     "publisherId": "f7f1004e-6038-49cd-a096-4e618fe53f77",
     "isPreReleaseVersion": false
   },
-  "packageManager": "yarn@3.2.3"
+  "packageManager": "yarn@3.2.3",
+  "resolutions": {
+    "@appland/appmap": "portal:/Users/kgilpin/source/appland/appmap-js/packages/cli",
+    "@appland/client": "portal:/Users/kgilpin/source/appland/appmap-js/packages/client",
+    "@appland/components": "portal:/Users/kgilpin/source/appland/appmap-js/packages/components",
+    "@appland/diagrams": "portal:/Users/kgilpin/source/appland/appmap-js/packages/diagrams",
+    "@appland/models": "portal:/Users/kgilpin/source/appland/appmap-js/packages/models",
+    "@appland/openapi": "portal:/Users/kgilpin/source/appland/appmap-js/packages/openapi",
+    "@appland/scanner": "portal:/Users/kgilpin/source/appland/appmap-js/packages/scanner",
+    "@appland/appmap-validate": "portal:/Users/kgilpin/source/appland/appmap-js/packages/validate",
+    "@appland/sequence-diagram": "portal:/Users/kgilpin/source/appland/appmap-js/packages/sequence-diagram"
+  }
 }
