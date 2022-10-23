@@ -65,6 +65,17 @@ export default class ContextMenu {
     );
     context.subscriptions.push(
       vscode.commands.registerCommand(
+        'appmap.context.compareSequenceDiagrams',
+        async (item: TreeItemContext) => {
+          vscode.commands.executeCommand(
+            'appmap.compareSequenceDiagrams',
+            item.descriptor.resourceUri
+          );
+        }
+      )
+    );
+    context.subscriptions.push(
+      vscode.commands.registerCommand(
         'appmap.context.inspectCodeObject',
         async (item: CodeObjectTreeItem) => {
           vscode.commands.executeCommand('appmap.inspectCodeObject', item.codeObjectFqid);

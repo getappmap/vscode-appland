@@ -147,6 +147,10 @@
         "title": "AppMap View: Rename AppMap"
       },
       {
+        "command": "appmap.context.compareSequenceDiagrams",
+        "title": "AppMap View: Compare Sequence Diagrams"
+      },
+      {
         "command": "appmap.context.sequenceDiagram",
         "title": "AppMap View: Generate Sequence Diagram"
       },
@@ -161,6 +165,10 @@
       {
         "command": "appmap.sequenceDiagram",
         "title": "AppMap: Generate Sequence Diagrams"
+      },
+      {
+        "command": "appmap.compareSequenceDiagrams",
+        "title": "AppMap: Compare Sequence Diagrams"
       },
       {
         "command": "appmap.login",
@@ -352,6 +360,10 @@
         },
         {
           "command": "appmap.context.sequenceDiagram",
+          "when": "view == appmap.views.local && viewItem == appmap.views.local.appMap"
+        },
+        {
+          "command": "appmap.context.compareSequenceDiagrams",
           "when": "view == appmap.views.local && viewItem == appmap.views.local.appMap"
         },
         {
