@@ -15,9 +15,11 @@ import AppMapCollection from '../services/appmapCollection';
 import { plantUMLJarPath, promptForAppMap, promptForSpecification } from '../lib/sequenceDiagram';
 import { tmpName } from 'tmp';
 import { promisify } from 'util';
+import { ProjectStateServiceInstance } from '../services/projectStateService';
 
 export default async function compareSequenceDiagrams(
   context: vscode.ExtensionContext,
+  projectStates: ReadonlyArray<ProjectStateServiceInstance>,
   appmaps: AppMapCollection
 ): Promise<void> {
   const command = vscode.commands.registerCommand(
@@ -33,7 +35,7 @@ export default async function compareSequenceDiagrams(
         for (let index = 0; index < uris.length; index++) {
           let appmapUri = uris[index];
           if (!appmapUri) {
-            const appmap = await promptForAppMap(appmaps.appMaps());
+            const appmap = await promptForAppMap(projectStates, appmaps.appMaps());
             if (!appmap) return;
 
             appmapUri = appmap.descriptor.resourceUri;
