@@ -4,6 +4,7 @@ enum ErrorCode {
   DependencyPathNotResolved,
   ProcessFailure,
   AuthenticationFailure,
+  InitializationFailure,
 }
 
 export default ErrorCode;
