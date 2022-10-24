@@ -147,6 +147,10 @@
         "title": "AppMap View: Rename AppMap"
       },
       {
+        "command": "appmap.context.saveToCollection",
+        "title": "AppMap View: Save To Collection"
+      },
+      {
         "command": "appmap.context.compareSequenceDiagrams",
         "title": "AppMap View: Compare Sequence Diagrams"
       },
@@ -157,6 +161,14 @@
       {
         "command": "appmap.context.inspectCodeObject",
         "title": "AppMap View: Inspect Code Object"
+      },
+      {
+        "command": "appmap.context.deleteAppMap",
+        "title": "AppMap View: Delete AppMap"
+      },
+      {
+        "command": "appmap.context.deleteAppMaps",
+        "title": "AppMap View: Delete AppMaps"
       },
       {
         "command": "appmap.generateOpenApi",
@@ -315,11 +327,27 @@
           "when": "false"
         },
         {
+          "command": "appmap.context.saveToCollection",
+          "when": "false"
+        },
+        {
           "command": "appmap.context.inspectCodeObject",
           "when": "false"
         },
         {
           "command": "appmap.context.sequenceDiagram",
+          "when": "false"
+        },
+        {
+          "command": "appmap.context.compareSequenceDiagrams",
+          "when": "false"
+        },
+        {
+          "command": "appmap.context.deleteAppMap",
+          "when": "false"
+        },
+        {
+          "command": "appmap.context.deleteAppMaps",
           "when": "false"
         }
       ],
@@ -359,12 +387,24 @@
           "when": "view == appmap.views.local && viewItem == appmap.views.local.appMap"
         },
         {
+          "command": "appmap.context.saveToCollection",
+          "when": "view == appmap.views.local && viewItem == appmap.views.local.appMap"
+        },
+        {
           "command": "appmap.context.sequenceDiagram",
           "when": "view == appmap.views.local && viewItem == appmap.views.local.appMap"
         },
         {
           "command": "appmap.context.compareSequenceDiagrams",
           "when": "view == appmap.views.local && viewItem == appmap.views.local.appMap"
+        },
+        {
+          "command": "appmap.context.deleteAppMap",
+          "when": "view == appmap.views.local && viewItem == appmap.views.local.appMap"
+        },
+        {
+          "command": "appmap.context.deleteAppMaps",
+          "when": "view == appmap.views.local && viewItem == appmap.views.local.appMapCollection"
         },
         {
           "command": "appmap.context.inspectCodeObject",
@@ -456,12 +496,13 @@
     "@appland/diagrams": "^1.5.3",
     "@appland/models": "^1.20.0",
     "@appland/scanner": "^1.71.5",
+    "@types/js-yaml": "^4.0.5",
     "bent": "^7.3.12",
     "bootstrap": "^4.5.3",
     "bootstrap-autocomplete": "^2.3.7",
     "diff": "^5.0.0",
     "jquery": "^3.5.1",
-    "js-yaml": "^4.0.0",
+    "js-yaml": "^4.1.0",
     "popper.js": "^1.16.1",
     "semver": "^7.3.5",
     "vscode-extension-telemetry": "^0.1.7",

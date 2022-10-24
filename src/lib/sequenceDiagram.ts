@@ -2,12 +2,14 @@ import { AppMap, CodeObject } from '@appland/models';
 import Priority from '@appland/sequence-diagram/dist/priority';
 import Specification from '@appland/sequence-diagram/dist/specification';
 import assert from 'assert';
+import { basename } from 'path';
 import * as vscode from 'vscode';
 
 import ExtensionSettings from '../configuration/extensionSettings';
 import AppMapLoader from '../services/appmapLoader';
 import { ProjectStateServiceInstance } from '../services/projectStateService';
 import { getWorkspaceFolderFromPath, timeAgo } from '../util';
+import { lookupAppMapDir } from './appmapDir';
 
 // TODO: Augment or replace these with filters that the user has applied in the AppMap diagram.
 const IGNORE_PACKAGES: Record<string, string[]> = {
@@ -41,25 +43,44 @@ type AppMapQuickPickItem = vscode.QuickPickItem & {
 
 export async function promptForAppMap(
   projectStates: ReadonlyArray<ProjectStateServiceInstance>,
-  appmaps: AppMapLoader[]
+  appmaps: AppMapLoader[],
+  exclude: AppMapLoader[] = []
 ): Promise<AppMapLoader | undefined> {
   const now = Date.now();
-  const items = appmaps
-    .filter((appmap) => appmap.descriptor.metadata?.name)
-    .map((appmap) => {
-      let path = appmap.descriptor.resourceUri.fsPath;
-      const projectFolder = getWorkspaceFolderFromPath(projectStates, path);
-      if (projectFolder) {
-        path = path.slice(projectFolder.uri.fsPath.length + 1);
-      }
+  const items = (
+    await Promise.all(
+      appmaps
+        .filter((appmap) => appmap.descriptor.metadata?.name)
+        .filter((appmap) => !exclude.includes(appmap))
+        .map(async (appmap) => {
+          assert(appmap.descriptor.metadata?.name);
+          let path = appmap.descriptor.resourceUri.fsPath;
+          const projectFolder = getWorkspaceFolderFromPath(projectStates, path);
+          const label = [appmap.descriptor.metadata?.name];
+          if (projectFolder) {
+            path = path.slice(projectFolder.uri.fsPath.length + 1);
 
-      return {
-        appmap,
-        label: appmap.descriptor.metadata?.name,
-        description: timeAgo(appmap.descriptor.timestamp, now),
-        detail: path,
-      } as AppMapQuickPickItem;
-    });
+            const detectedAppMapDir = await lookupAppMapDir(projectFolder.uri.fsPath);
+
+            if (detectedAppMapDir && path.startsWith(detectedAppMapDir)) {
+              const filename = basename(path);
+              const appmapFolder = path.slice(
+                detectedAppMapDir.length + 1,
+                path.length - filename.length - 1
+              );
+              label.unshift(`[${appmapFolder}]`);
+            }
+          }
+
+          return {
+            appmap,
+            label: label.join(' '),
+            description: timeAgo(appmap.descriptor.timestamp, now),
+            detail: path,
+          } as AppMapQuickPickItem;
+        })
+    )
+  ).sort((a, b) => a.label.localeCompare(b.label));
   const result = await vscode.window.showQuickPick<AppMapQuickPickItem>(items);
   if (!result) return;
 

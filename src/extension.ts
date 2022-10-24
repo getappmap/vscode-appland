@@ -236,7 +236,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     appmapLinkProvider();
     const editorProvider = AppMapEditorProvider.register(context, extensionState);
     RemoteRecording.register(context);
-    ContextMenu.register(context);
+    ContextMenu.register(context, projectStates, appmapCollectionFile);
     generateOpenApi(context, extensionState);
 
     context.subscriptions.push(

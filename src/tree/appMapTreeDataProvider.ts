@@ -1,7 +1,6 @@
-import assert from 'assert';
+import * as vscode from 'vscode';
 import { join } from 'path';
 import { isDeepStrictEqual } from 'util';
-import * as vscode from 'vscode';
 import AppMapCollection from '../services/appmapCollection';
 import AppMapLoader from '../services/appmapLoader';
 import { AppMapDescriptor } from '../services/appmapLoader';
@@ -12,19 +11,20 @@ const LABEL_NO_NAME = 'Untitled AppMap';
 const lightChangedIcon = join(__dirname, '../images/modified-file-icon-dark.svg');
 const darkChangedIcon = join(__dirname, '../images/modified-file-icon-light.svg');
 
-class AppMapTreeItem extends vscode.TreeItem {
-  descriptor?: AppMapDescriptor;
-}
+export type AppMapTreeItem = vscode.TreeItem & {
+  descriptor: AppMapDescriptor;
+};
 
-class RootTreeItem extends vscode.TreeItem {
-  folderProperties?: FolderProperties;
-}
+export type RootTreeItem = vscode.TreeItem & {
+  folderProperties: FolderProperties;
+};
 
 class FolderProperties {
   constructor(
     public recorderName: string,
     public recorderType?: string,
-    public language?: string
+    public language?: string,
+    public collection?: string
   ) {}
 }
 
@@ -74,8 +74,7 @@ export class AppMapTreeDataProvider implements vscode.TreeDataProvider<vscode.Tr
     if (!element) {
       return this.getRoots();
     } else {
-      const folderProperties = (element as any).properties;
-      assert(folderProperties);
+      const folderProperties = (element as RootTreeItem).folderProperties;
       return this.getAppMapsForRecordingMethod(folderProperties);
     }
   }
@@ -94,11 +93,15 @@ export class AppMapTreeDataProvider implements vscode.TreeDataProvider<vscode.Tr
     });
 
     return Promise.resolve(
-      [...folderNames].sort().map((name) => ({
-        label: name,
-        collapsibleState: vscode.TreeItemCollapsibleState.Expanded,
-        properties: folderProperties.get(name),
-      }))
+      [...folderNames].sort().map(
+        (name) =>
+          ({
+            label: name,
+            collapsibleState: vscode.TreeItemCollapsibleState.Expanded,
+            folderProperties: folderProperties.get(name),
+            contextValue: 'appmap.views.local.appMapCollection',
+          } as RootTreeItem)
+      )
     );
   }
 
@@ -121,7 +124,7 @@ export class AppMapTreeDataProvider implements vscode.TreeDataProvider<vscode.Tr
     return name.replace(/\/{2,}/g, '/');
   }
 
-  protected static folderName(properties: FolderProperties): string {
+  public static folderName(properties: FolderProperties): string {
     let name: string;
     if (properties.recorderType && properties.recorderType.length > 1) {
       name = `${properties.recorderType[0].toLocaleUpperCase()}${properties.recorderType.slice(
@@ -130,17 +133,22 @@ export class AppMapTreeDataProvider implements vscode.TreeDataProvider<vscode.Tr
     } else {
       name = properties.recorderName;
     }
-    return name;
+    const tokens = [name];
+    if (properties.collection) {
+      tokens.unshift(properties.collection);
+    }
+    return tokens.join(' - ');
   }
 
-  protected static appMapFolderProperties(appMap: AppMapLoader): FolderProperties {
+  public static appMapFolderProperties(appMap: AppMapLoader): FolderProperties {
     // Not my fault; it's declared as a Record.
     const metadata = appMap.descriptor.metadata as any;
 
     const name = metadata?.recorder?.name;
     const type = metadata?.recorder?.type;
     const language = metadata?.language?.name;
-    return new FolderProperties(name || 'unknown recorder', type, language);
+    const collection = metadata.collection;
+    return new FolderProperties(name || 'unknown recorder', type, language, collection);
   }
 
   protected getAppMapsForRecordingMethod(

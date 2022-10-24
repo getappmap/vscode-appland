@@ -16,6 +16,7 @@ import { plantUMLJarPath, promptForAppMap, promptForSpecification } from '../lib
 import { tmpName } from 'tmp';
 import { promisify } from 'util';
 import { ProjectStateServiceInstance } from '../services/projectStateService';
+import AppMapLoader from '../services/appmapLoader';
 
 export default async function compareSequenceDiagrams(
   context: vscode.ExtensionContext,
@@ -32,12 +33,14 @@ export default async function compareSequenceDiagrams(
         const uris = [baseAppMapUri, headAppMapUri];
         let specification: Specification | undefined;
         const diagrams: Diagram[] = [];
+        const excludeAppMaps: AppMapLoader[] = [];
         for (let index = 0; index < uris.length; index++) {
           let appmapUri = uris[index];
           if (!appmapUri) {
-            const appmap = await promptForAppMap(projectStates, appmaps.appMaps());
+            const appmap = await promptForAppMap(projectStates, appmaps.appMaps(), excludeAppMaps);
             if (!appmap) return;
 
+            excludeAppMaps.push(appmap);
             appmapUri = appmap.descriptor.resourceUri;
           }
           const data = await readFile(appmapUri.fsPath, 'utf-8');
