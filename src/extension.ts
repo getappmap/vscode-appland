@@ -53,6 +53,7 @@ import { Signup } from './actions/signup';
 import AnalysisManager from './services/analysisManager';
 import { FindingsService } from './findingsService';
 import Environment from './configuration/environment';
+import ErrorCode from './telemetry/definitions/errorCodes';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   Telemetry.register(context);
@@ -291,7 +292,10 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       },
     };
   } catch (exception) {
-    Telemetry.sendEvent(DEBUG_EXCEPTION, { exception: exception as Error });
+    Telemetry.sendEvent(DEBUG_EXCEPTION, {
+      exception: exception as Error,
+      errorCode: ErrorCode.InitializationFailure,
+    });
     throw exception;
   }
 }
