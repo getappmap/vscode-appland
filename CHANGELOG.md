@@ -1,3 +1,10 @@
+## [0.48.4](https://github.com/getappmap/vscode-appland/compare/v0.48.3...v0.48.4) (2022-10-24)
+
+
+### Bug Fixes
+
+* Finding counts in the instructions view is consistent ([c339cb9](https://github.com/getappmap/vscode-appland/commit/c339cb9986b251d345f4050bb499a11ed051075d)), closes [#485](https://github.com/getappmap/vscode-appland/issues/485)
+
 ## [0.48.3](https://github.com/getappmap/vscode-appland/compare/v0.48.2...v0.48.3) (2022-10-21)
 
 
