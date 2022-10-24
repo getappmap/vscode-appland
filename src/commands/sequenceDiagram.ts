@@ -9,9 +9,11 @@ import { writeFile } from 'fs/promises';
 import { readFile } from 'fs/promises';
 import AppMapCollection from '../services/appmapCollection';
 import { plantUMLJarPath, promptForAppMap, promptForSpecification } from '../lib/sequenceDiagram';
+import { ProjectStateServiceInstance } from '../services/projectStateService';
 
 export default async function sequenceDiagram(
   context: vscode.ExtensionContext,
+  projectStates: ReadonlyArray<ProjectStateServiceInstance>,
   appmaps: AppMapCollection
 ): Promise<void> {
   const command = vscode.commands.registerCommand(
@@ -21,7 +23,7 @@ export default async function sequenceDiagram(
       if (!umlJar) return;
 
       if (!appmapUri) {
-        const appmap = await promptForAppMap(appmaps.appMaps());
+        const appmap = await promptForAppMap(projectStates, appmaps.appMaps());
         if (!appmap) return;
 
         appmapUri = appmap.descriptor.resourceUri;

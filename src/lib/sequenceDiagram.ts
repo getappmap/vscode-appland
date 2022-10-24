@@ -6,6 +6,8 @@ import * as vscode from 'vscode';
 
 import ExtensionSettings from '../configuration/extensionSettings';
 import AppMapLoader from '../services/appmapLoader';
+import { ProjectStateServiceInstance } from '../services/projectStateService';
+import { getWorkspaceFolderFromPath, timeAgo } from '../util';
 
 // TODO: Augment or replace these with filters that the user has applied in the AppMap diagram.
 const IGNORE_PACKAGES: Record<string, string[]> = {
@@ -37,16 +39,27 @@ type AppMapQuickPickItem = vscode.QuickPickItem & {
   appmap: AppMapLoader;
 };
 
-export async function promptForAppMap(appmaps: AppMapLoader[]): Promise<AppMapLoader | undefined> {
+export async function promptForAppMap(
+  projectStates: ReadonlyArray<ProjectStateServiceInstance>,
+  appmaps: AppMapLoader[]
+): Promise<AppMapLoader | undefined> {
+  const now = Date.now();
   const items = appmaps
     .filter((appmap) => appmap.descriptor.metadata?.name)
-    .map(
-      (appmap) =>
-        ({
-          appmap,
-          label: appmap.descriptor.metadata?.name,
-        } as AppMapQuickPickItem)
-    );
+    .map((appmap) => {
+      let path = appmap.descriptor.resourceUri.fsPath;
+      const projectFolder = getWorkspaceFolderFromPath(projectStates, path);
+      if (projectFolder) {
+        path = path.slice(projectFolder.uri.fsPath.length + 1);
+      }
+
+      return {
+        appmap,
+        label: appmap.descriptor.metadata?.name,
+        description: timeAgo(appmap.descriptor.timestamp, now),
+        detail: path,
+      } as AppMapQuickPickItem;
+    });
   const result = await vscode.window.showQuickPick<AppMapQuickPickItem>(items);
   if (!result) return;
 

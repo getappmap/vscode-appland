@@ -340,3 +340,34 @@ export function getLatestVersionInfo(appmapPackage: string): Promise<any> {
       .on('error', (err) => reject(err));
   });
 }
+
+type Epoch = { name: string; seconds: number };
+
+const EPOCHS: Epoch[] = [
+  { name: 'year', seconds: 31536000 },
+  { name: 'month', seconds: 2592000 },
+  { name: 'day', seconds: 86400 },
+  { name: 'hour', seconds: 3600 },
+  { name: 'minute', seconds: 60 },
+  { name: 'second', seconds: 1 },
+];
+
+const getDuration = (timeAgoInSeconds: number): { interval: number; epoch: string } => {
+  for (let { name, seconds } of EPOCHS) {
+    const interval = Math.floor(timeAgoInSeconds / seconds);
+    if (interval >= 1) {
+      return {
+        interval: interval,
+        epoch: name,
+      };
+    }
+  }
+  return { epoch: 'second', interval: 0 };
+};
+
+export function timeAgo(compareFrom: number, compareTo: number): string {
+  const timeAgoInSeconds = Math.floor((compareTo - compareFrom) / 1000);
+  const { interval, epoch } = getDuration(timeAgoInSeconds);
+  const suffix = interval === 1 ? '' : 's';
+  return `${interval} ${epoch}${suffix} ago`;
+}
