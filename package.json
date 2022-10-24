@@ -160,11 +160,11 @@
       },
       {
         "command": "appmap.generateOpenApi",
-        "title": "AppMap: Generate OpenAPI definitions"
+        "title": "AppMap: Generate OpenAPI"
       },
       {
         "command": "appmap.sequenceDiagram",
-        "title": "AppMap: Generate Sequence Diagrams"
+        "title": "AppMap: Generate Sequence Diagram"
       },
       {
         "command": "appmap.compareSequenceDiagrams",
