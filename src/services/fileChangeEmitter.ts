@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 
 export interface FileChangeHandler {
   onChange(uri: vscode.Uri, workspaceFolder: vscode.WorkspaceFolder): void;
-  onCreate(uri: vscode.Uri, workspaceFolder: vscode.WorkspaceFolder): void;
+  onCreate(uri: vscode.Uri, workspaceFolder: vscode.WorkspaceFolder, initializing?: boolean): void;
   onDelete(uri: vscode.Uri, workspaceFolder: vscode.WorkspaceFolder): void;
 }
 
@@ -11,8 +11,12 @@ export interface FileChangeEvent {
   workspaceFolder: vscode.WorkspaceFolder;
 }
 
+export interface FileInitEvent {
+  initializing?: boolean;
+}
+
 export class FileChangeEmitter {
-  protected _onCreate = new vscode.EventEmitter<FileChangeEvent>();
+  protected _onCreate = new vscode.EventEmitter<FileChangeEvent & FileInitEvent>();
   protected _onChange = new vscode.EventEmitter<FileChangeEvent>();
   protected _onDelete = new vscode.EventEmitter<FileChangeEvent>();
   public onCreate = this._onCreate.event;

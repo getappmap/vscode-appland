@@ -25,7 +25,7 @@ class AppMapWatcherInstance implements WorkspaceServiceInstance {
         new vscode.RelativePattern(this.folder, '**/*.appmap.json'),
         '**/node_modules/**'
       )
-    ).map((uri) => this.handler.onCreate(uri, this.folder));
+    ).map((uri) => this.handler.onCreate(uri, this.folder, true));
     return this;
   }
 
@@ -49,8 +49,8 @@ export class AppMapWatcher extends FileChangeEmitter
       onChange: (uri, workspaceFolder) => {
         this._onChange.fire({ uri, workspaceFolder });
       },
-      onCreate: (uri, workspaceFolder) => {
-        this._onCreate.fire({ uri, workspaceFolder });
+      onCreate: (uri, workspaceFolder, initializing) => {
+        this._onCreate.fire({ uri, workspaceFolder, initializing });
       },
       onDelete: (uri, workspaceFolder) => {
         this._onDelete.fire({ uri, workspaceFolder });
