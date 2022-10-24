@@ -353,7 +353,7 @@ const EPOCHS: Epoch[] = [
 ];
 
 const getDuration = (timeAgoInSeconds: number): { interval: number; epoch: string } => {
-  for (let { name, seconds } of EPOCHS) {
+  for (const { name, seconds } of EPOCHS) {
     const interval = Math.floor(timeAgoInSeconds / seconds);
     if (interval >= 1) {
       return {
