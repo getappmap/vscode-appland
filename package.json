@@ -119,6 +119,10 @@
         "title": "AppMap: Reset Usage State"
       },
       {
+        "command": "appmap.inspectCodeObject",
+        "title": "AppMap: Inspect Code Object"
+      },
+      {
         "command": "appmap.deleteAllAppMaps",
         "title": "AppMap: Delete All AppMaps"
       },
@@ -321,6 +325,10 @@
         {
           "command": "appmap.context.sequenceDiagram",
           "when": "false"
+        },
+        {
+          "command": "appmap.context.compareSequenceDiagrams",
+          "when": "false"
         }
       ],
       "view/title": [
@@ -360,15 +368,15 @@
         },
         {
           "command": "appmap.context.sequenceDiagram",
-          "when": "view == appmap.views.local && viewItem == appmap.views.local.appMap"
+          "when": "config.appMap.sequenceDiagramEnabled == true && view == appmap.views.local && viewItem == appmap.views.local.appMap"
         },
         {
           "command": "appmap.context.compareSequenceDiagrams",
-          "when": "view == appmap.views.local && viewItem == appmap.views.local.appMap"
+          "when": "config.appMap.sequenceDiagramEnabled == true && view == appmap.views.local && viewItem == appmap.views.local.appMap"
         },
         {
           "command": "appmap.context.inspectCodeObject",
-          "when": "viewItem == appmap.views.codeObjects.package || viewItem == appmap.views.codeObjects.class || viewItem == appmap.views.codeObjects.function || viewItem == appmap.views.codeObjects.query || viewItem == appmap.views.codeObjects.route"
+          "when": "config.appMap.inspectEnabled == true && ( viewItem == appmap.views.codeObjects.package || viewItem == appmap.views.codeObjects.class || viewItem == appmap.views.codeObjects.function || viewItem == appmap.views.codeObjects.query || viewItem == appmap.views.codeObjects.route )"
         }
       ]
     }

@@ -9,7 +9,6 @@ import registerSequenceDiagram from './commands/sequenceDiagram';
 import registerCompareSequenceDiagrams from './commands/compareSequenceDiagram';
 import openCodeObjectInAppMap from './commands/openCodeObjectInAppMap';
 import outOfDateTests from './commands/outOfDateTests';
-import extensionSettings from './configuration/extensionSettings';
 import ExtensionState from './configuration/extensionState';
 import registerDecorationProvider from './decorations/decorationProvider';
 import AppMapEditorProvider from './editor/appmapEditorProvider';
@@ -191,16 +190,10 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       projectState
     )) as ProjectStateServiceInstance[];
 
-    const inspectEnabled = extensionSettings.inspectEnabled;
-    if (inspectEnabled) {
-      registerInspectCodeObject(context);
-    }
+    registerInspectCodeObject(context);
 
-    const sequenceDiagramEnabled = extensionSettings.sequenceDiagramEnabled;
-    if (sequenceDiagramEnabled) {
-      registerSequenceDiagram(context, projectStates, appmapCollectionFile);
-      registerCompareSequenceDiagrams(context, projectStates, appmapCollectionFile);
-    }
+    registerSequenceDiagram(context, projectStates, appmapCollectionFile);
+    registerCompareSequenceDiagrams(context, projectStates, appmapCollectionFile);
 
     AnalysisManager.register(context, projectStates, extensionState, workspaceServices);
 
