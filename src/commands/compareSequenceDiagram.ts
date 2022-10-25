@@ -68,7 +68,14 @@ export default async function compareSequenceDiagrams(
           await writeFile(diagramFile, uml);
 
           const cmd = childProcess.spawn('java', ['-jar', umlJar, '-tsvg', diagramFile]);
-          await verifyCommandOutput(cmd);
+          try {
+            await verifyCommandOutput(cmd);
+          } catch {
+            vscode.window.showInformationMessage(
+              'No sequence diagram diff is available for these AppMaps. Try changing the diagram configuration.'
+            );
+            return;
+          }
 
           const svgFile = [diagramFile, 'svg'].join('.');
           vscode.env.openExternal(vscode.Uri.file(svgFile));
