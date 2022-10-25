@@ -45,7 +45,14 @@ export default async function sequenceDiagram(
           await writeFile(diagramFile, uml);
 
           const cmd = childProcess.spawn('java', ['-jar', umlJar, '-tsvg', diagramFile]);
-          await verifyCommandOutput(cmd);
+          try {
+            await verifyCommandOutput(cmd);
+          } catch {
+            vscode.window.showInformationMessage(
+              'No sequence diagram is available for this AppMap. Try changing the diagram configuration.'
+            );
+            return;
+          }
 
           const tokens = diagramFile.split('.');
           vscode.env.openExternal(
