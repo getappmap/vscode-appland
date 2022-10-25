@@ -57,11 +57,18 @@ function getActiveConfigLocation(config: vscode.WorkspaceConfiguration, scope: s
 }
 
 function createTerminal(command: string, path: string, env: InstallEnv): void {
-  const terminal = vscode.window.createTerminal({
+  let terminalOptions = {
     name: 'install-appmap',
     cwd: path,
     env,
-  });
+  } as vscode.TerminalOptions;
+
+  terminalOptions =
+    os.platform() === 'win32'
+      ? { shellPath: 'powershell.exe', ...terminalOptions }
+      : terminalOptions;
+
+  const terminal = vscode.window.createTerminal(terminalOptions);
   terminal.show();
   terminal.sendText(command);
 }
