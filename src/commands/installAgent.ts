@@ -30,6 +30,17 @@ type InstallInformation = {
   env: InstallEnv;
 };
 
+type TerminalsByOS = {
+  windows: string | null;
+  osx: string | null;
+  linux: string | null;
+};
+
+export type TerminalConfig = {
+  defaultProfile: TerminalsByOS | undefined;
+  shell: TerminalsByOS | undefined;
+};
+
 function getConfigTargetFromConfigLocation(
   configLocation: string
 ): vscode.ConfigurationTarget | undefined {
@@ -114,11 +125,23 @@ export function generateInstallInfo(
   };
 }
 
+function getDefaultTerminals(): TerminalConfig {
+  const terminalConfig = vscode.workspace.getConfiguration('terminal.integrated');
+  const defaultProfile = terminalConfig?.defaultProfile;
+  const shell = terminalConfig?.shell;
+  return {
+    defaultProfile,
+    shell,
+  };
+}
+
 export default async function installAgent(
   context: vscode.ExtensionContext,
   hasCLIBin: boolean
 ): Promise<void> {
   vscode.commands.registerCommand(InstallAgent, async (path: string, language: string) => {
+    const defaultTerminals = getDefaultTerminals();
+
     try {
       const { processService } = context.extension.exports as {
         processService?: NodeProcessService;
@@ -171,16 +194,20 @@ export default async function installAgent(
 
           // restore settings to original state
           await config.update('python.terminal.activateEnvironment', originalValue, configTarget);
-          Telemetry.sendEvent(CLICK_INSTALL_BUTTON, { rootDirectory: path });
+          Telemetry.sendEvent(CLICK_INSTALL_BUTTON, { rootDirectory: path, defaultTerminals });
           return;
         }
       }
 
       createTerminal(command, path, env);
-      Telemetry.sendEvent(CLICK_INSTALL_BUTTON, { rootDirectory: path });
+      Telemetry.sendEvent(CLICK_INSTALL_BUTTON, { rootDirectory: path, defaultTerminals });
     } catch (err) {
       const exception = err as Error;
-      Telemetry.sendEvent(INSTALL_BUTTON_ERROR, { rootDirectory: path, exception });
+      Telemetry.sendEvent(INSTALL_BUTTON_ERROR, {
+        rootDirectory: path,
+        exception,
+        defaultTerminals,
+      });
     }
   });
 }

@@ -7,6 +7,7 @@ import LanguageResolver, { UNKNOWN_LANGUAGE } from '../../services/languageResol
 import { fileExists } from '../../util';
 import ErrorCode from './errorCodes';
 import ProjectMetadata from '../../workspace/projectMetadata';
+import { TerminalConfig } from '../../commands/installAgent';
 
 export const DEBUG_EXCEPTION = new TelemetryDataProvider({
   id: 'appmap.debug.exception',
@@ -165,5 +166,13 @@ export const HAS_INSTALLABLE_PROJECT = new TelemetryDataProvider({
   async value({ projects }: { projects: ProjectMetadata[] }) {
     const isInstallable = projects.some((project) => project?.score && project.score > 1);
     return String(isInstallable);
+  },
+});
+
+export const DEFAULT_TERMINALS = new TelemetryDataProvider({
+  id: 'vscode.workspace.default_terminals',
+  cache: true,
+  async value({ defaultTerminals }: { defaultTerminals: TerminalConfig }) {
+    return JSON.stringify(defaultTerminals);
   },
 });
