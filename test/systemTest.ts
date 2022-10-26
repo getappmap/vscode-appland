@@ -46,7 +46,7 @@ async function main(): Promise<void> {
       }
     }
 
-    const TIMEOUT = 30000;
+    const TIMEOUT = parseInt(process.env['DEFAULT_TIMEOUT'] || '30') * 1000;
     const beforeAll: Mocha.Func = async function() {
       this.codePath = await downloadCode();
     };
@@ -78,6 +78,7 @@ async function main(): Promise<void> {
       ui: 'bdd',
       color: true,
       timeout: TIMEOUT,
+      fullTrace: true,
       reporter: Mocha.reporters.Spec,
       rootHooks: {
         beforeAll,
