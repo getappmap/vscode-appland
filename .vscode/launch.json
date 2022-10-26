@@ -28,7 +28,8 @@
       "type": "extensionHost",
       "request": "launch",
       "env": {
-        "TEST_FILE": "appmaps/appmapsTree.test.js"
+        "TEST_FILE": "sequenceDiagram/sequenceDiagram.test.js",
+        "PROJECT_DIR": "${workspaceFolder}/test/fixtures/workspaces/project-a"
       },
       "args": [
         "--user-data-dir=${workspaceFolder}/.vscode-test/user-data",

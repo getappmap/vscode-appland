@@ -31,7 +31,11 @@ export default class ExtensionSettings {
   }
 
   public static get plantUMLJarPath(): string | undefined {
-    return vscode.workspace.getConfiguration('appMap').get('plantUmlJarPath');
+    let location = vscode.workspace.getConfiguration('appMap').get<string>('plantUmlJarPath');
+    if (location && process.env.TEST_FILE && process.env.PROJECT_DIR) {
+      location = location.replaceAll('$PROJECT_DIR', process.env.PROJECT_DIR);
+    }
+    return location;
   }
 
   public static get appMapCommandLineToolsPath(): string | undefined {

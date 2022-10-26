@@ -10,6 +10,7 @@ import { readFile } from 'fs/promises';
 import AppMapCollection from '../services/appmapCollection';
 import { plantUMLJarPath, promptForAppMap, promptForSpecification } from '../lib/sequenceDiagram';
 import { ProjectStateServiceInstance } from '../services/projectStateService';
+import assert from 'assert';
 
 export default async function sequenceDiagram(
   context: vscode.ExtensionContext,
@@ -18,16 +19,14 @@ export default async function sequenceDiagram(
 ): Promise<void> {
   const command = vscode.commands.registerCommand(
     'appmap.sequenceDiagram',
-    async (appmapUri: vscode.Uri) => {
+    async (appmapUri: vscode.Uri | undefined) => {
       const umlJar = plantUMLJarPath();
       if (!umlJar) return;
 
       if (!appmapUri) {
-        const appmap = await promptForAppMap(projectStates, appmaps.appMaps());
-        if (!appmap) return;
-
-        appmapUri = appmap.descriptor.resourceUri;
+        appmapUri = await promptForAppMap(projectStates, appmaps.appMaps());
       }
+      if (!appmapUri) return;
 
       const data = await readFile(appmapUri.fsPath, 'utf-8');
       const appmap: AppMap = buildAppMap()
@@ -39,9 +38,10 @@ export default async function sequenceDiagram(
       vscode.window.withProgress(
         { location: vscode.ProgressLocation.Notification, title: 'Generating sequence diagram' },
         async () => {
+          assert(appmapUri);
           const diagram = buildSequenceDiagram(appmapUri.fsPath, appmap, specification);
           const uml = formatPlantUML(diagram, appmapUri.fsPath);
-          const diagramFile = [appmapUri.fsPath, '.uml'].join('');
+          const diagramFile = [appmapUri.fsPath, 'uml'].join('.');
           await writeFile(diagramFile, uml);
 
           const cmd = childProcess.spawn('java', ['-jar', umlJar, '-tsvg', diagramFile]);

@@ -9,6 +9,10 @@ import AppMapLoader from '../services/appmapLoader';
 import { ProjectStateServiceInstance } from '../services/projectStateService';
 import { getWorkspaceFolderFromPath, timeAgo } from '../util';
 
+export const PACKAGES_TITLE = 'Enter packages to exclude from the diagram';
+
+export const EXPAND_PACKAGES_TITLE = 'Enter packages to expand into classes';
+
 // TODO: Augment or replace these with filters that the user has applied in the AppMap diagram.
 const IGNORE_PACKAGES: Record<string, string[]> = {
   ruby: [
@@ -35,14 +39,14 @@ export function plantUMLJarPath(): string | undefined {
   return result;
 }
 
-type AppMapQuickPickItem = vscode.QuickPickItem & {
-  appmap: AppMapLoader;
+export type AppMapQuickPickItem = vscode.QuickPickItem & {
+  resourceUri: vscode.Uri;
 };
 
 export async function promptForAppMap(
   projectStates: ReadonlyArray<ProjectStateServiceInstance>,
   appmaps: AppMapLoader[]
-): Promise<AppMapLoader | undefined> {
+): Promise<vscode.Uri | undefined> {
   const now = Date.now();
   const items = appmaps
     .filter((appmap) => appmap.descriptor.metadata?.name)
@@ -54,7 +58,7 @@ export async function promptForAppMap(
       }
 
       return {
-        appmap,
+        resourceUri: appmap.descriptor.resourceUri,
         label: appmap.descriptor.metadata?.name,
         description: timeAgo(appmap.descriptor.timestamp, now),
         detail: path,
@@ -63,7 +67,7 @@ export async function promptForAppMap(
   const result = await vscode.window.showQuickPick<AppMapQuickPickItem>(items);
   if (!result) return;
 
-  return result.appmap;
+  return result.resourceUri;
 }
 
 export async function promptForSpecification(appmap: AppMap): Promise<Specification> {
@@ -71,7 +75,7 @@ export async function promptForSpecification(appmap: AppMap): Promise<Specificat
   const suggestedIgnorePackages = IGNORE_PACKAGES[language] || [];
 
   const ignorePackagesText = await vscode.window.showInputBox({
-    title: 'Enter packages to exclude from the diagram',
+    title: PACKAGES_TITLE,
     value: ExtensionSettings.getSequenceDiagramSetting(
       language,
       'ignorePackages',
@@ -87,7 +91,7 @@ export async function promptForSpecification(appmap: AppMap): Promise<Specificat
   ).map((pkg) => ['package', pkg].join(':'));
 
   const expandPackagesText = await vscode.window.showInputBox({
-    title: 'Enter packages to expand into classes',
+    title: EXPAND_PACKAGES_TITLE,
     value: ExtensionSettings.getSequenceDiagramSetting(language, 'expandPackages', ''),
   });
 
