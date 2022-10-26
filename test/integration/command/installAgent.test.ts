@@ -57,7 +57,7 @@ describe('generateInstallInfo function', () => {
       it('generates the correct command for a non-JavaScript project', () => {
         let { command, env } = generateInstallInfo(cwd, 'Ruby', true, globalStorageDir);
         const expected =
-          'C:"\\globalStorageDir\\with spaces in path"\\appmap-win-x64.exe install ' +
+          'C:"\\globalStorageDir\\with spaces in path\\appmap-win-x64.exe" install ' +
           '-d C:"\\Users\\user\\projects\\directory with a space"';
         assert.deepStrictEqual(env, {});
         assert.strictEqual(command, expected);
@@ -95,15 +95,15 @@ describe('generateInstallInfo function', () => {
         assert.deepStrictEqual(env, {});
         assert.strictEqual(
           command,
-          'npx @appland/appmap install -d C:\\Users\\user\\projects\\directory-without-a-space'
+          'npx @appland/appmap install -d C:"\\Users\\user\\projects\\directory-without-a-space"'
         );
       });
 
       it('generates the correct command for a non-JavaScript project', () => {
         let { command, env } = generateInstallInfo(cwd, 'Ruby', true, globalStorageDir);
         const expected =
-          'C:\\globalStorageDir\\without-spaces-in-path\\appmap-win-x64.exe install ' +
-          '-d C:\\Users\\user\\projects\\directory-without-a-space';
+          'C:"\\globalStorageDir\\without-spaces-in-path\\appmap-win-x64.exe" install ' +
+          '-d C:"\\Users\\user\\projects\\directory-without-a-space"';
         assert.deepStrictEqual(env, {});
         assert.strictEqual(command, expected);
 
@@ -117,7 +117,7 @@ describe('generateInstallInfo function', () => {
       it('generates the correct command when there are no CLI binaries', () => {
         let { command, env } = generateInstallInfo(cwd, 'Ruby', false, globalStorageDir);
         const expected =
-          'npx @appland/appmap install -d C:\\Users\\user\\projects\\directory-without-a-space';
+          'npx @appland/appmap install -d C:"\\Users\\user\\projects\\directory-without-a-space"';
         assert.deepStrictEqual(env, {});
         assert.strictEqual(command, expected);
 
