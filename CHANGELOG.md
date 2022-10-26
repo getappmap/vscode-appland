@@ -1,3 +1,12 @@
+## [0.48.5](https://github.com/getappmap/vscode-appland/compare/v0.48.4...v0.48.5) (2022-10-26)
+
+
+### Bug Fixes
+
+* Don't attempt to emit appmap:create upon initialization ([d4e75fd](https://github.com/getappmap/vscode-appland/commit/d4e75fdcc743e53de0ee7a61e13a9fbd9979e5fb))
+* Initialization failures now have an error code ([b96881e](https://github.com/getappmap/vscode-appland/commit/b96881e4037ef51431e4a5f6cf2709854915b687))
+* Write appmap.file.size as a string ([2abd9b4](https://github.com/getappmap/vscode-appland/commit/2abd9b4e26c54c68809877615ab122f8b61321f1))
+
 ## [0.48.4](https://github.com/getappmap/vscode-appland/compare/v0.48.3...v0.48.4) (2022-10-24)
 
 
