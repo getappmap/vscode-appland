@@ -33,13 +33,12 @@ export default async function compareSequenceDiagrams(
         let specification: Specification | undefined;
         const diagrams: Diagram[] = [];
         for (let index = 0; index < uris.length; index++) {
-          let appmapUri = uris[index];
+          let appmapUri: vscode.Uri | undefined = uris[index];
           if (!appmapUri) {
-            const appmap = await promptForAppMap(projectStates, appmaps.appMaps());
-            if (!appmap) return;
-
-            appmapUri = appmap.descriptor.resourceUri;
+            appmapUri = await promptForAppMap(projectStates, appmaps.appMaps());
           }
+          if (!appmapUri) return;
+
           const data = await readFile(appmapUri.fsPath, 'utf-8');
           const appmap: AppMap = buildAppMap()
             .source(data)

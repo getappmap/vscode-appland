@@ -128,6 +128,7 @@ async function integrationTest() {
       // TEST_PATH env var sends the actual test names. index.js is a wrapper which loads Mocha, etc.
       extensionTestsPath: resolve(testDir, 'index.js'),
       extensionTestsEnv: {
+        PROJECT_DIR: workspaceDir, // A hint to resolve relative paths in settings
         TEST_FILE: testFile,
         APPMAP_WRITE_PIDFILE: 'true',
       },
