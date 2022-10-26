@@ -133,12 +133,16 @@ export const GENERATE_OPENAPI = new Event({
 
 export const CLICK_INSTALL_BUTTON = new Event({
   name: 'install-button:click',
-  properties: [Properties.PROJECT_LANGUAGE],
+  properties: [Properties.PROJECT_LANGUAGE, Properties.DEFAULT_TERMINALS],
 });
 
 export const INSTALL_BUTTON_ERROR = new Event({
   name: 'install-button:error',
-  properties: [Properties.PROJECT_LANGUAGE, Properties.DEBUG_EXCEPTION],
+  properties: [
+    Properties.PROJECT_LANGUAGE,
+    Properties.DEBUG_EXCEPTION,
+    Properties.DEFAULT_TERMINALS,
+  ],
 });
 
 export const AUTHENTICATION_SIGN_OUT = new Event({ name: 'authentication:sign_out' });
