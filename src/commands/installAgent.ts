@@ -67,13 +67,11 @@ function createTerminal(command: string, path: string, env: InstallEnv): void {
 }
 
 function escapePath(str: string): string {
-  // on windows, quote everything except the drive letter when the path has one or more spaces
-  // e.g. C:"\Users\user\projects\directory with spaces"
+  // on windows, quote everything except the drive letter (e.g. C:"\Users\user\projects\directory with spaces")
+  // this ensures that all terminals will correctly read the path and will not lose path separators
   if (os.platform() === 'win32') {
-    return str
-      .split(':')
-      .map((partialPath) => (partialPath.includes(' ') ? `"${partialPath}"` : partialPath))
-      .join(':');
+    const [driverLetter, restOfPath] = str.split(':');
+    return `${driverLetter}:"${restOfPath}"`;
   }
 
   return str.replace(/([^A-Za-z0-9_\-.,:/@\n])/g, '\\$1');
@@ -105,7 +103,7 @@ export function generateInstallInfo(
       env['ELECTRON_RUN_AS_NODE'] = 'true';
       command = electronCommand(escapedStorageDir, installLocation);
     } else if (os.platform() === 'win32' && hasCLIBin) {
-      const binPath = join(escapedStorageDir, 'appmap-win-x64.exe');
+      const binPath = escapePath(join(globalStorageDir, 'appmap-win-x64.exe'));
       command = `${binPath} install -d ${installLocation}`;
     }
   }
