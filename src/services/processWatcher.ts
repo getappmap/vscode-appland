@@ -116,6 +116,9 @@ export class ProcessWatcher implements vscode.Disposable {
         const msg = `${this.process?.spawnargs.join(' ')} exited with code ${code}`;
         this._onError.fire(new Error(msg));
       } else if (signal) {
+        // Make sure we're not killing our own process before firing off an error
+        if (!this.shouldRun) return;
+
         const msg = `${this.process?.spawnargs.join(' ')} exited with signal ${signal}`;
         this._onError.fire(new Error(msg));
       }
