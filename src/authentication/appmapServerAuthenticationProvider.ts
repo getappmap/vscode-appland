@@ -5,7 +5,13 @@ import AppMapServerAuthenticationHandler from '../uri/appmapServerAuthentication
 import { randomUUID } from 'crypto';
 import VscodeProtocolRedirect from './authenticationStrategy/vscodeProtocolRedirect';
 import LocalWebserver from './authenticationStrategy/localWebServer';
-import { DEBUG_EXCEPTION, Telemetry } from '../telemetry';
+import {
+  AUTHENTICATION_FAILED,
+  AUTHENTICATION_SIGN_OUT,
+  AUTHENTICATION_SUCCESS,
+  DEBUG_EXCEPTION,
+  Telemetry,
+} from '../telemetry';
 import ErrorCode from '../telemetry/definitions/errorCodes';
 import { AUTHN_PROVIDER_NAME } from './index';
 
@@ -58,12 +64,15 @@ export default class AppMapServerAuthenticationProvider implements vscode.Authen
   async createSession(): Promise<vscode.AuthenticationSession> {
     const session = await this.performSignIn();
     if (!session) {
+      Telemetry.sendEvent(AUTHENTICATION_FAILED);
       throw new Error('AppMap Server authentication was not completed');
     }
 
     this.context.secrets.store(APPMAP_SERVER_SESSION_KEY, JSON.stringify(session));
 
     this._onDidChangeSessions.fire({ added: [session] });
+
+    Telemetry.sendEvent(AUTHENTICATION_SUCCESS);
 
     return session;
   }
@@ -72,6 +81,8 @@ export default class AppMapServerAuthenticationProvider implements vscode.Authen
     const session = await this.context.secrets.get(APPMAP_SERVER_SESSION_KEY);
     if (session) {
       this.context.secrets.delete(APPMAP_SERVER_SESSION_KEY);
+
+      Telemetry.sendEvent(AUTHENTICATION_SIGN_OUT);
 
       this._onDidChangeSessions.fire({ removed: [JSON.parse(session)] });
     }
