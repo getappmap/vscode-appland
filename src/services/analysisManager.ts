@@ -10,6 +10,7 @@ import ExtensionState from '../configuration/extensionState';
 import { ResolvedFinding } from './resolvedFinding';
 import { WorkspaceServices } from './workspaceServices';
 import Environment from '../configuration/environment';
+import { ANALYSIS_DISABLE, ANALYSIS_ENABLE, Telemetry } from '../telemetry';
 
 export interface AnalysisToggleEvent {
   enabled: boolean;
@@ -81,9 +82,18 @@ export default class AnalysisManager {
       userAuthenticated
     );
 
+    const initializing = this._isAnalysisEnabled === undefined;
     if (this._isAnalysisEnabled !== enabled) {
       this._isAnalysisEnabled = enabled;
-      enabled ? this.onAnalysisEnabled() : this.onAnalysisDisabled();
+
+      if (enabled) {
+        this.onAnalysisEnabled();
+        if (!initializing) Telemetry.sendEvent(ANALYSIS_ENABLE);
+      } else {
+        this.onAnalysisDisabled();
+        if (!initializing) Telemetry.sendEvent(ANALYSIS_DISABLE);
+      }
+
       this._onAnalysisToggled.fire({ enabled, userAuthenticated, findingsEnabled });
     }
   }
