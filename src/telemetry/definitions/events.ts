@@ -144,3 +144,6 @@ export const INSTALL_BUTTON_ERROR = new Event({
 export const AUTHENTICATION_SIGN_OUT = new Event({ name: 'authentication:sign_out' });
 export const AUTHENTICATION_SUCCESS = new Event({ name: 'authentication:success' });
 export const AUTHENTICATION_FAILED = new Event({ name: 'authentication:failed' });
+export const ANALYSIS_ENABLE = new Event({ name: 'analysis:enable' });
+export const ANALYSIS_DISABLE = new Event({ name: 'analysis:disable' });
+export const ANALYSIS_CTA_INTERACTION = new Event({ name: 'analysis:cta_interaction' });
