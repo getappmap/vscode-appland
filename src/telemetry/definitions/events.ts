@@ -140,3 +140,7 @@ export const INSTALL_BUTTON_ERROR = new Event({
   name: 'install-button:error',
   properties: [Properties.PROJECT_LANGUAGE, Properties.DEBUG_EXCEPTION],
 });
+
+export const AUTHENTICATION_SIGN_OUT = new Event({ name: 'authentication:sign_out' });
+export const AUTHENTICATION_SUCCESS = new Event({ name: 'authentication:success' });
+export const AUTHENTICATION_FAILED = new Event({ name: 'authentication:failed' });
