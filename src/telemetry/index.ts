@@ -43,9 +43,9 @@ export class Telemetry {
 
   static async sendEvent<PropertyType, MetricType>(
     event: Event<PropertyType, MetricType>,
-    data: UnionToIntersection<DataType<PropertyType>> & UnionToIntersection<DataType<MetricType>>
+    data?: UnionToIntersection<DataType<PropertyType>> & UnionToIntersection<DataType<MetricType>>
   ): Promise<void> {
-    const telemetry = new TelemetryResolver(data as Record<string, unknown>);
+    const telemetry = new TelemetryResolver((data || {}) as Record<string, unknown>);
     let properties: Record<string, string> | undefined;
     let metrics: Record<string, number> | undefined;
 
