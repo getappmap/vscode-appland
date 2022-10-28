@@ -1,3 +1,12 @@
+## [0.48.6](https://github.com/getappmap/vscode-appland/compare/v0.48.5...v0.48.6) (2022-10-28)
+
+
+### Bug Fixes
+
+* Don't emit an error when a watched process is stopped by the ([f196293](https://github.com/getappmap/vscode-appland/commit/f19629305bd29e4a56e69741fbd4b3cc9af5c988))
+* Notify on analysis state changes ([f8af2ae](https://github.com/getappmap/vscode-appland/commit/f8af2ae460144d82c6180b5c5b8f8f5855b0c209))
+* Notify on authentication state changes ([041ffad](https://github.com/getappmap/vscode-appland/commit/041ffad651c7157ad0f266194c9b68ac5eb4571e))
+
 ## [0.48.5](https://github.com/getappmap/vscode-appland/compare/v0.48.4...v0.48.5) (2022-10-26)
 
 
