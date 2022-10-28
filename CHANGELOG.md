@@ -1,3 +1,11 @@
+## [0.48.7](https://github.com/getappmap/vscode-appland/compare/v0.48.6...v0.48.7) (2022-10-28)
+
+
+### Bug Fixes
+
+* Strip paths of any extra leading path separators ([9c815f9](https://github.com/getappmap/vscode-appland/commit/9c815f998497f4ae22aba80588e278757853447a))
+* Strip trailing Windows path separators from gitignore items ([9cb3b20](https://github.com/getappmap/vscode-appland/commit/9cb3b2057e5e906b161f1b731c1e4158795f6879))
+
 ## [0.48.6](https://github.com/getappmap/vscode-appland/compare/v0.48.5...v0.48.6) (2022-10-28)
 
 
