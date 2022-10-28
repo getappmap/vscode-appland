@@ -31,7 +31,7 @@ async function waitForProcessState(
         throw new Error(`Waiting for processes to ${action}`);
       }
     },
-    10,
+    15,
     1000
   );
 }
