@@ -9,9 +9,16 @@ type DirIgnore = {
   dir: string;
 };
 
-async function buildIgnore(ignoreFileName: string): Promise<Ignore> {
+export async function buildIgnore(ignoreFileName: string): Promise<Ignore> {
   const wsIgnore = ignore();
-  wsIgnore.add(await fs.readFile(ignoreFileName, 'utf-8'));
+  const buffer = await fs.readFile(ignoreFileName, 'utf-8');
+  const ignoreLines = buffer
+    .toString()
+    .split(/\r?\n/gm)
+    .map((line) => line.replace(/\\+$/, ''));
+
+  ignoreLines.forEach((line) => wsIgnore.add(line));
+
   return wsIgnore;
 }
 
