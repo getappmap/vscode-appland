@@ -1,3 +1,16 @@
+# [0.49.0](https://github.com/getappmap/vscode-appland/compare/v0.48.7...v0.49.0) (2022-11-01)
+
+
+### Bug Fixes
+
+* always quote paths in windows ([b7136e1](https://github.com/getappmap/vscode-appland/commit/b7136e1823bdaa06d561bffb6309b69ef1f50fd4))
+* tests reflect path quoting in windows ([9a2395d](https://github.com/getappmap/vscode-appland/commit/9a2395d9fdc88f02dca7b07f20f26bbb291487c9))
+
+
+### Features
+
+* send info on default terminals in telemetry ([f57b8ab](https://github.com/getappmap/vscode-appland/commit/f57b8ab5ee3e3630a6db242f56a003ce8b5c7db8))
+
 ## [0.48.7](https://github.com/getappmap/vscode-appland/compare/v0.48.6...v0.48.7) (2022-10-28)
 
 
