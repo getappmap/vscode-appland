@@ -203,7 +203,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@appland/sequence-diagram@portal:/Users/kgilpin/source/appland/appmap-js/packages/sequence-diagram::locator=appmap%40workspace%3A."
   dependencies:
-    "@appland/models": "workspace:^1.18.1"
+    "@appland/models": "workspace:*"
   bin:
     sequence-diagram: built/cli.js
   languageName: node
