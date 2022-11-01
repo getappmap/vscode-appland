@@ -97,80 +97,24 @@ export async function promptForSpecification(appmap: AppMap): Promise<Specificat
 
   const ignorePackagesText = await vscode.window.showInputBox({
     title: PACKAGES_TITLE,
-    value: ExtensionSettings.getSequenceDiagramSetting(
-      language,
-      'ignorePackages',
-      suggestedIgnorePackages.join(' ')
-    ),
+    value: suggestedIgnorePackages.join(' '),
   });
 
-  ExtensionSettings.setSequenceDiagramSetting('ignorePackages', language, ignorePackagesText || '');
-
-  const ignorePackages = (ignorePackagesText
-    ? ignorePackagesText.split(/\s+/)
-    : suggestedIgnorePackages
-  ).map((pkg) => ['package', pkg].join(':'));
+  const ignorePackages = (ignorePackagesText || '')
+    .split(/\s+/)
+    .map((pkg) => ['package', pkg].join(':'));
 
   const expandPackagesText = await vscode.window.showInputBox({
     title: EXPAND_PACKAGES_TITLE,
-    value: ExtensionSettings.getSequenceDiagramSetting(language, 'expandPackages', ''),
+    value: '',
   });
 
-  ExtensionSettings.setSequenceDiagramSetting('expandPackages', language, expandPackagesText || '');
+  const expandPackages = (expandPackagesText || '')
+    .split(/\s+/)
+    .map((pkg) => ['package', pkg].join(':'));
 
-  const expandPackages = (expandPackagesText ? expandPackagesText.split(/\s+/) : []).map((pkg) =>
-    ['package', pkg].join(':')
-  );
-
-  // Include HTTP, all packages, and the database
-  const includedCodeObjectIds = new Set<string>();
-  includedCodeObjectIds.add('http:HTTP server requests');
-  includedCodeObjectIds.add('database:Database');
-
-  const packageNames: string[] = [];
-  const requiredCodeObjectIds = new Set<string>();
-  const classesForPackage = new Map<string, string[]>();
-  appmap.classMap.visit((co: CodeObject) => {
-    if (co.type === 'package' && !ignorePackages.includes(co.fqid)) {
-      packageNames.push(co.fqid);
-    }
-    if (co.type === 'class') {
-      let pkg = co.packageObject;
-      while (pkg) {
-        let classes: string[] | undefined = classesForPackage.get(pkg.fqid);
-        if (!classes) {
-          classes = [];
-          classesForPackage.set(pkg.fqid, classes);
-        }
-        classes.push(co.fqid);
-        pkg = pkg.parent;
-      }
-    }
+  return Specification.build(appmap, {
+    exclude: ignorePackages,
+    expand: expandPackages,
   });
-
-  packageNames
-    .filter((pkg) => expandPackages.includes(pkg))
-    .forEach((pkg) => {
-      const classes = classesForPackage.get(pkg);
-      assert(classes);
-      classes.forEach((cls) => requiredCodeObjectIds.add(cls));
-    });
-  packageNames
-    .filter((pkg) => !expandPackages.includes(pkg))
-    .forEach((pkg) => requiredCodeObjectIds.add(pkg));
-
-  const priority = new Priority();
-  priority.enrollPattern('http:%r{.*}');
-  priority.expandPattern('http:%r{.*}', ['http:HTTP server requests']);
-
-  priority.enrollPattern('package:%r{.*}');
-  priority.expandPattern('package:%r{.*}', packageNames);
-
-  priority.enrollPattern('database:%r{.*}');
-  priority.expandPattern('database:%r{.*}', ['database:Database']);
-
-  for (const coid of requiredCodeObjectIds) {
-    includedCodeObjectIds.add(coid);
-  }
-  return new Specification(priority, includedCodeObjectIds, requiredCodeObjectIds);
 }
