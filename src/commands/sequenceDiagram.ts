@@ -1,8 +1,7 @@
 import * as vscode from 'vscode';
 import * as childProcess from 'child_process';
 import { AppMap, buildAppMap } from '@appland/models';
-import buildSequenceDiagram from '@appland/sequence-diagram/dist/buildDiagram';
-import { format as formatPlantUML } from '@appland/sequence-diagram/dist/formatter/plantUML';
+import { buildDiagram, format, FormatType } from '@appland/sequence-diagram';
 
 import { verifyCommandOutput } from '../services/nodeDependencyProcess';
 import { writeFile } from 'fs/promises';
@@ -39,10 +38,10 @@ export default async function sequenceDiagram(
         { location: vscode.ProgressLocation.Notification, title: 'Generating sequence diagram' },
         async () => {
           assert(appmapUri);
-          const diagram = buildSequenceDiagram(appmapUri.fsPath, appmap, specification);
-          const uml = formatPlantUML(diagram, appmapUri.fsPath);
+          const diagram = buildDiagram(appmapUri.fsPath, appmap, specification);
+          const uml = format(FormatType.PlantUML, diagram, appmapUri.fsPath);
           const diagramFile = [appmapUri.fsPath, 'uml'].join('.');
-          await writeFile(diagramFile, uml);
+          await writeFile(diagramFile, uml.diagram);
 
           const cmd = childProcess.spawn('java', ['-jar', umlJar, '-tsvg', diagramFile]);
           try {

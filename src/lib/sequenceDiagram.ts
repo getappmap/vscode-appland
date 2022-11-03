@@ -1,6 +1,5 @@
-import { AppMap, CodeObject } from '@appland/models';
-import Priority from '@appland/sequence-diagram/dist/priority';
-import Specification from '@appland/sequence-diagram/dist/specification';
+import { AppMap } from '@appland/models';
+import { Specification } from '@appland/sequence-diagram';
 import assert from 'assert';
 import { basename } from 'path';
 import * as vscode from 'vscode';
