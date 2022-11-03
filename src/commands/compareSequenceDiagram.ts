@@ -3,12 +3,6 @@ import * as childProcess from 'child_process';
 import { readFile, writeFile } from 'fs/promises';
 
 import { AppMap, buildAppMap } from '@appland/models';
-import buildDiagram from '@appland/sequence-diagram/dist/buildDiagram';
-import diff from '@appland/sequence-diagram/dist/diff';
-import buildDiffDiagram from '@appland/sequence-diagram/dist/buildDiffDiagram';
-import Specification from '@appland/sequence-diagram/dist/specification';
-import { Diagram } from '@appland/sequence-diagram/dist/types';
-import { format as formatPlantUML } from '@appland/sequence-diagram/dist/formatter/plantUML';
 
 import { verifyCommandOutput } from '../services/nodeDependencyProcess';
 import AppMapCollection from '../services/appmapCollection';
@@ -16,7 +10,15 @@ import { plantUMLJarPath, promptForAppMap, promptForSpecification } from '../lib
 import { tmpName } from 'tmp';
 import { promisify } from 'util';
 import { ProjectStateServiceInstance } from '../services/projectStateService';
-import AppMapLoader from '../services/appmapLoader';
+import {
+  buildDiagram,
+  buildDiffDiagram,
+  Diagram,
+  diff,
+  format,
+  FormatType,
+  Specification,
+} from '@appland/sequence-diagram';
 
 export default async function compareSequenceDiagrams(
   context: vscode.ExtensionContext,
@@ -67,9 +69,9 @@ export default async function compareSequenceDiagrams(
           const diffRaw = diff(base, head, { verbose: false });
           const diffDiagram = buildDiffDiagram(diffRaw);
 
-          const uml = formatPlantUML(diffDiagram, 'base -> head');
+          const uml = format(FormatType.PlantUML, diffDiagram, 'base -> head');
           const diagramFile = await promisify(tmpName)();
-          await writeFile(diagramFile, uml);
+          await writeFile(diagramFile, uml.diagram);
 
           const cmd = childProcess.spawn('java', ['-jar', umlJar, '-tsvg', diagramFile]);
           try {
