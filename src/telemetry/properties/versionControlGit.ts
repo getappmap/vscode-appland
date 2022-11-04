@@ -11,7 +11,15 @@ type DirIgnore = {
 
 export async function buildIgnore(ignoreFileName: string): Promise<Ignore> {
   const wsIgnore = ignore();
-  const buffer = await fs.readFile(ignoreFileName, 'utf-8');
+
+  let buffer: string | Buffer;
+  try {
+    buffer = await fs.readFile(ignoreFileName, 'utf-8');
+  } catch (e) {
+    console.warn(`Failed to read ${ignoreFileName}. It's content will be ignored.`);
+    return wsIgnore;
+  }
+
   const ignoreLines = buffer
     .toString()
     .split(/\r?\n/gm)
