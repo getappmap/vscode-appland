@@ -41,7 +41,8 @@ export default async function analyze(folder: WorkspaceFolder): Promise<ProjectA
     }
 
     if (pkg.devDependencies?.mocha) {
-      if (semverIntersects('>=8', pkg.devDependencies.mocha)) {
+      const { mocha: mochaVersion } = pkg.devDependencies;
+      if (mochaVersion === 'latest' || semverIntersects('>=8', mochaVersion)) {
         features.test = {
           title: 'mocha',
           score: 'ok',
