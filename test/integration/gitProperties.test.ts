@@ -6,6 +6,11 @@ import * as path from 'path';
 
 describe('GitProperties', () => {
   describe('buildIgnore', () => {
+    it('gracefully fails when encountering a gitignore file that cannot be read', async () => {
+      const ignore = await buildIgnore('.not-a-real-gitignore');
+      assert(ignore);
+    });
+
     it('accepts trailing Windows path separators', async () => {
       await withTmpDir(async (tmpDir) => {
         const gitIgnorePath = path.join(tmpDir, '.gitignore');
