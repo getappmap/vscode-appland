@@ -104,7 +104,7 @@ export function generateInstallInfo(
   const escapedStorageDir = escapePath(globalStorageDir);
   const installLocation = escapePath(path);
   const env = {};
-  let command = `npx @appland/appmap install -d ${installLocation}`;
+  let command = `npx @appland/appmap@latest install -d ${installLocation}`;
 
   const isElectronApp = !vscode.env.remoteName;
   const canSendElectronComamnd = ELECTRON_COMMAND_PLATFORMS.includes(os.platform());
