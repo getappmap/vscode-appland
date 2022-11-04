@@ -38,6 +38,8 @@ export default class GitProperties implements VersionControlProperties {
       if (!filePath.startsWith(ignore.dir)) return false;
 
       const relativePath = filePath.slice(ignore.dir.length + 1).replace(/^[/\\]+/, '');
+      if (!relativePath) return false;
+
       return ignore.ignore.ignores(relativePath);
     });
   }

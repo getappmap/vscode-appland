@@ -35,6 +35,7 @@ describe('GitProperties', () => {
       assert(!gitProperties.isIgnored(`${absoluteProjectPath}/filename`));
       assert(!gitProperties.isIgnored(`${absoluteProjectPath}//filename`));
       assert(!gitProperties.isIgnored(`/filename`));
+      assert(!gitProperties.isIgnored(absoluteProjectPath));
     });
 
     it('returns ignored paths', () => {
