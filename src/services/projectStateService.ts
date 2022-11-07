@@ -16,6 +16,7 @@ import glob from 'glob';
 import { promisify } from 'util';
 import AnalysisManager from './analysisManager';
 import AppMapLoader from './appmapLoader';
+import { PROJECT_OPEN, Telemetry } from '../telemetry';
 
 type SimpleCodeObject = {
   name: string;
@@ -104,6 +105,10 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
 
   public async initialize(): Promise<void> {
     await Promise.all([this.analyzeProject(), this.onAppMapCreated()]);
+    Telemetry.sendEvent(PROJECT_OPEN, {
+      rootDirectory: this.folder.uri.fsPath,
+      project: this.metadata,
+    });
   }
 
   public setFindingsIndex(findingsIndex?: FindingsIndex): void {
