@@ -222,10 +222,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       appmapUptodateService
     );
 
-    (vscode.workspace.workspaceFolders || []).forEach((workspaceFolder) => {
-      Telemetry.sendEvent(PROJECT_OPEN, { rootDirectory: workspaceFolder.uri.fsPath });
-    });
-
     appmapLinkProvider();
     const editorProvider = AppMapEditorProvider.register(context, extensionState);
     RemoteRecording.register(context);

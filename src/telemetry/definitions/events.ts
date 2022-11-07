@@ -18,6 +18,7 @@ export const PROJECT_OPEN = new Event({
     Properties.SCANNER_CONFIG_PRESENT,
     Properties.PROJECT_LANGUAGE,
     Properties.PROJECT_LANGUAGE_DISTRIBUTION,
+    Properties.IS_INSTALLABLE,
   ],
   metrics: [Metrics.NUM_WORKSPACE_FOLDERS],
 });
