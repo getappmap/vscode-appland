@@ -8,6 +8,7 @@ import { fileExists } from '../../util';
 import ErrorCode from './errorCodes';
 import ProjectMetadata from '../../workspace/projectMetadata';
 import { TerminalConfig } from '../../commands/installAgent';
+import * as vscode from 'vscode';
 
 export const DEBUG_EXCEPTION = new TelemetryDataProvider({
   id: 'appmap.debug.exception',
@@ -174,5 +175,22 @@ export const DEFAULT_TERMINALS = new TelemetryDataProvider({
   cache: true,
   async value({ defaultTerminals }: { defaultTerminals: TerminalConfig }) {
     return JSON.stringify(defaultTerminals);
+  },
+});
+
+export const HAS_DEVCONTAINER = new TelemetryDataProvider({
+  id: 'appmap.project.has_devcontainer',
+  async value({ rootDirectory }: { rootDirectory: string }) {
+    const devContainerPattern = new vscode.RelativePattern(
+      rootDirectory,
+      '{devcontainer,.devcontainer}.json'
+    );
+    const devContainerJson = await vscode.workspace.findFiles(
+      devContainerPattern,
+      '**/node_modules/**',
+      1
+    );
+    const hasDevContainer = devContainerJson.length !== 0;
+    return String(hasDevContainer);
   },
 });
