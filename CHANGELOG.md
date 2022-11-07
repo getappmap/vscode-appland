@@ -1,3 +1,12 @@
+## [0.49.1](https://github.com/getappmap/vscode-appland/compare/v0.49.0...v0.49.1) (2022-11-07)
+
+
+### Bug Fixes
+
+* Add [@latest](https://github.com/latest) tag in install prompt. ([72bfd14](https://github.com/getappmap/vscode-appland/commit/72bfd1465b6ccb99b51f20c73064c0b9fe3b96e4))
+* Gracefully handle unreadable gitignore files ([31fb745](https://github.com/getappmap/vscode-appland/commit/31fb745dd9a52bfe9cf1aab15a62b027981f11d2))
+* Prevent semver comparison with 'latest' ([0967b0c](https://github.com/getappmap/vscode-appland/commit/0967b0c58880db9a67213af93988eeba03ab3770))
+
 # [0.49.0](https://github.com/getappmap/vscode-appland/compare/v0.48.7...v0.49.0) (2022-11-01)
 
 
