@@ -1,3 +1,12 @@
+## [0.49.3](https://github.com/getappmap/vscode-appland/compare/v0.49.2...v0.49.3) (2022-11-08)
+
+
+### Bug Fixes
+
+* Add debugging information for JS supported dependencies ([33296d6](https://github.com/getappmap/vscode-appland/commit/33296d6c61276f599d22edd9759a595043915a54))
+* Emit whether or not a project is installable ([dff02fc](https://github.com/getappmap/vscode-appland/commit/dff02fc61ac18cf7ba40288f1e1d3c5156eb38b8))
+* Emit whether or not the project contains a devcontainer config ([18d7ddc](https://github.com/getappmap/vscode-appland/commit/18d7ddc10fabcb0fa8fdc41b854d5d3519d61f7d))
+
 ## [0.49.2](https://github.com/getappmap/vscode-appland/compare/v0.49.1...v0.49.2) (2022-11-08)
 
 
