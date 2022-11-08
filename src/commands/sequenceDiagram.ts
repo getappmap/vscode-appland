@@ -19,7 +19,7 @@ export default async function sequenceDiagram(
   const command = vscode.commands.registerCommand(
     'appmap.sequenceDiagram',
     async (appmapUri: vscode.Uri | undefined) => {
-      const umlJar = plantUMLJarPath();
+      const umlJar = await plantUMLJarPath();
       if (!umlJar) return;
 
       if (!appmapUri) {
