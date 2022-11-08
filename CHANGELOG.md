@@ -1,3 +1,10 @@
+## [0.49.2](https://github.com/getappmap/vscode-appland/compare/v0.49.1...v0.49.2) (2022-11-08)
+
+
+### Bug Fixes
+
+* Don't fail when checking if the project root is ignored ([bd9238c](https://github.com/getappmap/vscode-appland/commit/bd9238c3879cb5facb786aeec735df86a776ca13))
+
 ## [0.49.1](https://github.com/getappmap/vscode-appland/compare/v0.49.0...v0.49.1) (2022-11-07)
 
 
