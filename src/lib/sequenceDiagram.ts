@@ -1,13 +1,13 @@
 import { AppMap } from '@appland/models';
 import { Specification } from '@appland/sequence-diagram';
 import assert from 'assert';
-import { basename } from 'path';
+import { basename, join } from 'path';
 import * as vscode from 'vscode';
 
 import ExtensionSettings from '../configuration/extensionSettings';
 import AppMapLoader from '../services/appmapLoader';
 import { ProjectStateServiceInstance } from '../services/projectStateService';
-import { getWorkspaceFolderFromPath, timeAgo } from '../util';
+import { fileExists, getWorkspaceFolderFromPath, timeAgo } from '../util';
 import { lookupAppMapDir } from './appmapDir';
 
 export const PACKAGES_TITLE = 'Enter packages to exclude from the diagram';
@@ -29,15 +29,18 @@ const IGNORE_PACKAGES: Record<string, string[]> = {
   ],
 };
 
-export function plantUMLJarPath(): string | undefined {
-  const result = ExtensionSettings.plantUMLJarPath;
-  if (!result) {
+export async function plantUMLJarPath(): Promise<string | undefined> {
+  let jarPath = ExtensionSettings.plantUMLJarPath();
+  if (!jarPath) {
+    jarPath = join(__dirname, 'ext', 'plantuml-1.2022.8.jar');
+  }
+  if (!(await fileExists(jarPath))) {
     vscode.window.showErrorMessage(
-      `Setting "AppMap : Plant UML Jar Path" is required to generate sequence diagrams`
+      `PlantUML JAR file ${jarPath}, as specified by "AppMap : Plant UML Jar Path", does not exist`
     );
     return;
   }
-  return result;
+  return jarPath;
 }
 
 export type AppMapQuickPickItem = vscode.QuickPickItem & {

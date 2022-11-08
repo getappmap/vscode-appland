@@ -28,7 +28,7 @@ export default async function compareSequenceDiagrams(
   const command = vscode.commands.registerCommand(
     'appmap.compareSequenceDiagrams',
     async (baseAppMapUri: vscode.Uri, headAppMapUri: vscode.Uri) => {
-      const umlJar = plantUMLJarPath();
+      const umlJar = await plantUMLJarPath();
       if (!umlJar) return;
 
       const diffDiagrams = async (): Promise<{ base: Diagram; head: Diagram } | undefined> => {
