@@ -23,9 +23,9 @@ export default class AppMapServerAuthenticationHandler implements RequestHandler
       return;
     }
 
-    const apiKeyParam = queryParams.get('api_key');
+    const apiKeyParam = queryParams.get('code');
     if (!apiKeyParam) {
-      this._onError.fire(new Error('missing parameter "api_key"'));
+      this._onError.fire(new Error('missing parameter "code"'));
       return;
     }
 
