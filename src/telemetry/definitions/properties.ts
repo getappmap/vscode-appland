@@ -194,3 +194,33 @@ export const HAS_DEVCONTAINER = new TelemetryDataProvider({
     return String(hasDevContainer);
   },
 });
+
+export const DEPENDENCIES = new TelemetryDataProvider({
+  id: 'appmap.project',
+  cache: true,
+  async value({ project }: { project: ProjectMetadata }) {
+    try {
+      const packageJsonPath = path.join(project.path, 'package.json');
+      const packageJsonFile = await fs.readFile(packageJsonPath, 'utf-8');
+      const packageJson = JSON.parse(packageJsonFile);
+      const result = {
+        dependencies: Object.keys(packageJson.dependencies || {})
+          .sort()
+          .join(','),
+        dev_dependencies: Object.keys(packageJson.devDependencies || {})
+          .sort()
+          .join(','),
+      };
+
+      // Don't emit an entry if the value is empty
+      Object.entries(result).forEach(([k, v]) => {
+        if (!v) delete result[k];
+      });
+
+      return result;
+    } catch {
+      // do nothing
+      // the file may not event exist
+    }
+  },
+});

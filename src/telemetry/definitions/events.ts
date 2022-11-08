@@ -20,6 +20,7 @@ export const PROJECT_OPEN = new Event({
     Properties.PROJECT_LANGUAGE_DISTRIBUTION,
     Properties.IS_INSTALLABLE,
     Properties.HAS_DEVCONTAINER,
+    Properties.DEPENDENCIES,
   ],
   metrics: [Metrics.NUM_WORKSPACE_FOLDERS],
 });
