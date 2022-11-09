@@ -77,7 +77,7 @@ describe('Instructions tree view', function() {
       InstructionStepStatus.Complete
     );
 
-    await driver.runCommand('AppMap: Generate OpenAPI definitions');
+    await driver.runCommand('AppMap: Generate OpenAPI');
     await driver.appMap.assertInstructionStepStatus(
       InstructionStep.GenerateOpenApi,
       InstructionStepStatus.Complete
@@ -147,7 +147,7 @@ describe('Instructions tree view', function() {
     await project.restoreFiles('**/appmap-findings.json');
     await driver.appMap.openInstruction(InstructionStep.InvestigateFindings);
     await driver.instructionsWebview.clickButton('Open the PROBLEMS tab');
-    await driver.runCommand('AppMap: Generate OpenAPI definitions');
+    await driver.runCommand('AppMap: Generate OpenAPI');
     await driver.appMap.pendingBadge.waitFor({ state: 'hidden' });
   });
 

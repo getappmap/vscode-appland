@@ -23,7 +23,7 @@ export const DocsPages = [
   },
   {
     id: 'openapi',
-    title: 'Generate OpenAPI definitions',
+    title: 'Generate OpenAPI',
     completion: 'generatedOpenApi',
   },
   {
