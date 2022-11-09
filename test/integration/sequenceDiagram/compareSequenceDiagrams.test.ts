@@ -57,8 +57,6 @@ describe('Compare sequence diagram', () => {
       label: 'Microposts_interface_micropost_interface',
     } as AppMapQuickPickItem);
 
-    await vscode.commands.executeCommand('appmap.compareSequenceDiagrams');
-
     const openExternal = sinon.stub(vscode.env, 'openExternal');
 
     let tempFileUri: vscode.Uri | undefined;
@@ -69,6 +67,7 @@ describe('Compare sequence diagram', () => {
       }
     );
 
+    await vscode.commands.executeCommand('appmap.compareSequenceDiagrams');
     await waitFor(
       'UML file was not opened',
       async () => !!tempFileUri?.fsPath && (await fileExists(tempFileUri.fsPath))
