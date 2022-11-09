@@ -45,6 +45,8 @@ describe('Sequence diagram', () => {
       .resolves('')
       .calledWith(sinon.match({ title: EXPAND_PACKAGES_TITLE }));
 
+    sinon.stub(vscode.env, 'openExternal');
+
     await vscode.commands.executeCommand('appmap.sequenceDiagram');
 
     const umlFile = [appmapUri.fsPath, 'uml'].join('.');
