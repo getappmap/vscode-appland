@@ -1,3 +1,23 @@
+# [0.50.0](https://github.com/getappmap/vscode-appland/compare/v0.49.3...v0.50.0) (2022-11-11)
+
+
+### Bug Fixes
+
+* Can't save to undeclared settings ([0eaf552](https://github.com/getappmap/vscode-appland/commit/0eaf5521a6d0512b98ee1366390b16bc8684141c))
+* Fix sequence diagram imports ([01682c8](https://github.com/getappmap/vscode-appland/commit/01682c8d73dff3a0ff76b37c3c2819f6fba8b056))
+
+
+### Features
+
+* Add plantUmlJarPath ([80c33dc](https://github.com/getappmap/vscode-appland/commit/80c33dc5df8c87c2886c7475953bc640bad2e6ff))
+* Bundle PlantUML JAR file, with license ([ca77f0e](https://github.com/getappmap/vscode-appland/commit/ca77f0ebca1657c4e2030224373f1e5cf01716c0))
+* Compare two sequence diagrams ([488d560](https://github.com/getappmap/vscode-appland/commit/488d56030e7a111120599d62c7944df3e29f2317))
+* Create sequence diagram ([d5e0953](https://github.com/getappmap/vscode-appland/commit/d5e0953860389baec78c5ac0d5b0f082b133e194))
+* Display appmap description and detail ([e8976cd](https://github.com/getappmap/vscode-appland/commit/e8976cd78602c091f4bcbd044ae8111bc864dc61))
+* Inform user when diagram generation fails ([9e4d30f](https://github.com/getappmap/vscode-appland/commit/9e4d30f0b929c6252df3f48e5b867905b52aecbd))
+* Manage collections of AppMaps ([09a04ff](https://github.com/getappmap/vscode-appland/commit/09a04ff4f780b8e5205e3d8be3663227dbe987ce))
+* Properly enable/disable commands ([48b12bb](https://github.com/getappmap/vscode-appland/commit/48b12bb3b696b1b3f520610f99031b2fbefe2227))
+
 ## [0.49.3](https://github.com/getappmap/vscode-appland/compare/v0.49.2...v0.49.3) (2022-11-08)
 
 
