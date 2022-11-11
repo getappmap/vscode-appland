@@ -154,3 +154,8 @@ export const AUTHENTICATION_FAILED = new Event({ name: 'authentication:failed' }
 export const ANALYSIS_ENABLE = new Event({ name: 'analysis:enable' });
 export const ANALYSIS_DISABLE = new Event({ name: 'analysis:disable' });
 export const ANALYSIS_CTA_INTERACTION = new Event({ name: 'analysis:cta_interaction' });
+
+export const INSTALL_PROMPT = new Event({
+  name: 'install_prompt',
+  properties: [Properties.RESULT],
+});

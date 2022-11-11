@@ -55,6 +55,7 @@ import AnalysisManager from './services/analysisManager';
 import { FindingsService } from './findingsService';
 import Environment from './configuration/environment';
 import ErrorCode from './telemetry/definitions/errorCodes';
+import promptInstall from './actions/promptInstall';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   Telemetry.register(context);
@@ -252,6 +253,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     );
 
     registerUtilityCommands(context, extensionState);
+
+    promptInstall(workspaceServices, extensionState);
 
     vscode.env.onDidChangeTelemetryEnabled((enabled: boolean) => {
       Telemetry.sendEvent(TELEMETRY_ENABLED, {

@@ -14,6 +14,7 @@ export const Keys = {
     OPENED_APPMAP: 'appmap.applandinc.workspaces_opened_appmap',
     FINDINGS_INVESTIGATED: 'appmap.applandinc.findingsInvestigated',
     GENERATED_OPENAPI: 'appmap.applandinc.generatedOpenApi',
+    HIDE_INSTALL_PROMPT: 'appmap.applandinc.hideInstallPrompt',
   },
 };
 
@@ -159,6 +160,14 @@ export default class ExtensionState {
 
   setWorkspaceGeneratedOpenApi(workspaceFolder: vscode.WorkspaceFolder, value: boolean): void {
     this.setWorkspaceFlag(Keys.Workspace.GENERATED_OPENAPI, value, workspaceFolder);
+  }
+
+  setHideInstallPrompt(workspaceFolder: vscode.WorkspaceFolder, value: boolean): void {
+    this.setWorkspaceFlag(Keys.Workspace.HIDE_INSTALL_PROMPT, value, workspaceFolder);
+  }
+
+  getHideInstallPrompt(workspaceFolder: vscode.WorkspaceFolder): boolean {
+    return this.getWorkspaceFlag(Keys.Workspace.HIDE_INSTALL_PROMPT, workspaceFolder.uri.fsPath);
   }
 
   resetState(): void {

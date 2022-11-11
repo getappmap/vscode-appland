@@ -38,6 +38,13 @@ export const TEXT = new TelemetryDataProvider({
   },
 });
 
+export const RESULT = new TelemetryDataProvider({
+  id: 'appmap.result',
+  async value({ result }: { result: string }): Promise<string> {
+    return result;
+  },
+});
+
 export const CTA_ID = new TelemetryDataProvider({
   id: 'appmap.cta.id',
   async value({ id }: { id: string }): Promise<string> {
