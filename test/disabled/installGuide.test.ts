@@ -41,7 +41,7 @@ describe('Install guide', () => {
       mockSingleProjectWorkspace(sinon);
 
       assert(properties.hasViewedInstallGuide === false);
-      await InstallGuideWebView.tryOpen(properties);
+      InstallGuideWebView.tryOpen(properties);
       assert(executeCommand.calledWith('appmap.openWorkspaceOverview'));
       assert(properties.hasViewedInstallGuide);
     });
@@ -53,7 +53,7 @@ describe('Install guide', () => {
       mockSingleProjectWorkspace(sinon);
 
       assert(properties.hasViewedInstallGuide === false);
-      await InstallGuideWebView.tryOpen(properties);
+      InstallGuideWebView.tryOpen(properties);
       assert(executeCommand.calledWith('appmap.openWorkspaceOverview') === false);
       assert(properties.hasViewedInstallGuide === false);
     });
@@ -65,7 +65,7 @@ describe('Install guide', () => {
       mockSingleProjectWorkspace(sinon);
 
       assert(properties.hasViewedInstallGuide === false);
-      await InstallGuideWebView.tryOpen(properties);
+      InstallGuideWebView.tryOpen(properties);
 
       assert(executeCommand.calledWith('appmap.openWorkspaceOverview') === shouldOpen);
       assert(properties.hasViewedInstallGuide === shouldOpen);

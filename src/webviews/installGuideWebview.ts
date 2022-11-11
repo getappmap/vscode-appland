@@ -35,7 +35,7 @@ export default class InstallGuideWebView {
   public static readonly command = 'appmap.openInstallGuide';
   private static existingPanel?: vscode.WebviewPanel;
 
-  public static tryOpen(extensionState: ExtensionState): Thenable<void | undefined> | undefined {
+  public static tryOpen(extensionState: ExtensionState): boolean {
     const firstVersionInstalled = semver.coerce(extensionState.firstVersionInstalled);
     if (firstVersionInstalled && semver.gte(firstVersionInstalled, '0.15.0')) {
       // Logic within this block will only be executed if the extension was installed after we began tracking the
@@ -44,9 +44,11 @@ export default class InstallGuideWebView {
 
       if (!extensionState.hasViewedInstallGuide) {
         extensionState.hasViewedInstallGuide = true;
-        return vscode.commands.executeCommand(InstallGuideWebView.command, 'project-picker');
+        vscode.commands.executeCommand(InstallGuideWebView.command, 'project-picker');
+        return true;
       }
     }
+    return false;
   }
 
   public static register(
