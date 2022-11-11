@@ -90,7 +90,8 @@ export class WorkspaceServices implements vscode.Disposable {
   getService<
     ServiceInstanceType extends WorkspaceServiceInstance,
     ServiceType extends WorkspaceService<ServiceInstanceType>
-  >(c: { new (): ServiceType }): ServiceType | undefined {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  >(c: { new (...args: any[]): ServiceType }): ServiceType | undefined {
     return this.workspaceServices.find((service) => service.constructor === c) as ServiceType;
   }
 
@@ -108,14 +109,16 @@ export class WorkspaceServices implements vscode.Disposable {
   /**
    * Gets all instances of a given service, with an optional folder name.
    */
-  getServiceInstances(
-    service: WorkspaceService<WorkspaceServiceInstance>,
+  getServiceInstances<ServiceInstanceType extends WorkspaceServiceInstance>(
+    service: WorkspaceService<ServiceInstanceType>,
     folder?: vscode.WorkspaceFolder
-  ): WorkspaceServiceInstance[] {
+  ): ServiceInstanceType[] {
     const serviceInstances = folder
       ? this.workspaceServiceInstances.get(folder) || []
       : Array(...this.workspaceServiceInstances.values()).flat();
-    return serviceInstances.filter((instance) => this.instanceServices.get(instance) === service);
+    return serviceInstances.filter(
+      (instance) => this.instanceServices.get(instance) === service
+    ) as ServiceInstanceType[];
   }
 
   private enrollServiceInstance(
