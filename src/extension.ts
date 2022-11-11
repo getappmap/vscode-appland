@@ -207,7 +207,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     tryDisplayEarlyAccessWelcome(context);
 
     InstallGuideWebView.register(context, projectStates, extensionState);
-    InstallGuideWebView.tryOpen(extensionState);
+    const openedInstallGuide = InstallGuideWebView.tryOpen(extensionState);
 
     const processService = new NodeProcessService(context, projectStates);
     (async function() {
@@ -254,7 +254,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
     registerUtilityCommands(context, extensionState);
 
-    promptInstall(workspaceServices, extensionState);
+    if (!openedInstallGuide) promptInstall(workspaceServices, extensionState);
 
     vscode.env.onDidChangeTelemetryEnabled((enabled: boolean) => {
       Telemetry.sendEvent(TELEMETRY_ENABLED, {
