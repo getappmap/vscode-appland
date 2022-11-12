@@ -1,3 +1,10 @@
+# [0.51.0](https://github.com/getappmap/vscode-appland/compare/v0.50.0...v0.51.0) (2022-11-12)
+
+
+### Features
+
+* Bump embedded CLI version pin to 3.49.2 ([c5bcadd](https://github.com/getappmap/vscode-appland/commit/c5bcadd58c146a935fe8ff0249dee7e8305a2011))
+
 # [0.50.0](https://github.com/getappmap/vscode-appland/compare/v0.49.3...v0.50.0) (2022-11-11)
 
 
