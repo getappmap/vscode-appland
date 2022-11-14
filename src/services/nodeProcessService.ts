@@ -12,13 +12,16 @@ import { ProjectStateServiceInstance } from './projectStateService';
 import { downloadFile, getLatestVersionInfo } from '../util';
 import AnalysisManager from './analysisManager';
 import { lookupAppMapDir } from '../lib/appmapDir';
+import lockfile from 'proper-lockfile';
 
 const YARN_JS = 'yarn.js';
+const PACKAGE_JSON = 'package.json';
+const INSTALL_SUCCESS_MESSAGE = 'Installation of AppMap services is complete.';
 
 export class NodeProcessService implements WorkspaceService<NodeProcessServiceInstance> {
   protected externDir: string;
   protected globalStorageDir: string;
-  protected COPY_FILES: string[] = ['package.json', 'yarn.lock', YARN_JS];
+  protected COPY_FILES: string[] = [PACKAGE_JSON, YARN_JS];
   protected static outputChannel = vscode.window.createOutputChannel('AppMap: Services');
   protected static readonly DEFAULT_APPMAP_DIR = '.';
 
@@ -111,6 +114,10 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
     return path.join(this.globalStorageDir, YARN_JS);
   }
 
+  protected get packageJsonPath(): string {
+    return path.join(this.globalStorageDir, PACKAGE_JSON);
+  }
+
   protected async installCLIBin(): Promise<boolean> {
     const cliBinPath = path.join(this.globalStorageDir, 'appmap-win-x64.exe');
     const cliBin = createWriteStream(cliBinPath, { autoClose: true });
@@ -120,9 +127,66 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
   }
 
   async install(): Promise<void> {
+    const { outputChannel: log } = NodeProcessService;
+
     try {
       await fs.mkdir(this.globalStorageDir, { recursive: true });
+    } catch (e) {
+      // Ignore this error, it's probably because the directory already exists.
+      log.appendLine('Failed to create the global storage directory.');
+      log.appendLine(String(e));
+    }
 
+    let lockfileRelease: () => Promise<void> | undefined;
+    try {
+      // If multiple VS Code windows are open, we may have multiple processes racing to install.
+      // Only let one process continue.
+      lockfileRelease = await lockfile.lock(this.globalStorageDir);
+    } catch (e) {
+      // We didn't aquire the lock, so we'll assume that another process is already installing.
+      // We'll just wait for it to finish.
+      log.appendLine('Another process is currently installing dependencies. Waiting...');
+
+      let installSuccess = true;
+      for (;;) {
+        // Add a little randomness to avoid multiple processes checking all at once.
+        const nextCheckMs = 500 + Math.random() * 500;
+        await new Promise((resolve) => setTimeout(resolve, nextCheckMs));
+
+        try {
+          const isLocked = await lockfile.check(this.globalStorageDir);
+          if (!isLocked) break;
+        } catch (e) {
+          // This is likely not resolvable as ENOENT is gracefully handled by the library.
+          // The best we can do is log the error and continue on as best we can. It's possible there's
+          // a viable installation already installed.
+          Telemetry.sendEvent(DEBUG_EXCEPTION, {
+            exception: e as Error,
+            errorCode: ErrorCode.DependencyLockFailure,
+          });
+
+          log.appendLine('An error occurred while checking the installation status:');
+          log.appendLine(String(e));
+
+          // Note that we're not returning here. We'll still be reporting a ready state, whether or not it's true.
+          // If no viable installation is present we can expect another error down the line.
+          installSuccess = false;
+        }
+      }
+
+      // By this point, the other process should have finished installing.
+      // TODO: we have no way of telling if the installation was actually successful, we're just
+      //       assuming that it was.
+      this._ready = true;
+      this._onReady.fire();
+
+      if (installSuccess) log.appendLine(INSTALL_SUCCESS_MESSAGE);
+
+      return;
+    }
+
+    // We have the lock, so we'll install.
+    try {
       await Promise.all(
         this.COPY_FILES.map((fileName) =>
           fs.copyFile(
@@ -137,9 +201,9 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
         ['nodeLinker: node-modules', 'npmRegistryServer: "https://registry.npmjs.org"'].join('\n')
       );
 
-      // By writing an empty yarn.lock, we avoid needing to run `yarn install` to create it.
-      // `yarn up` will happilly update an empty lock file.
-      await fs.writeFile(path.join(this.globalStorageDir, 'yarn.lock'), '');
+      // Write an empty yarn.lock if it doesn't already exist. This allows us to avoid needing
+      // to run `yarn install` to create it. `yarn up` will happilly update an empty lock file.
+      await fs.appendFile(path.join(this.globalStorageDir, 'yarn.lock'), '');
 
       const installProcess = await spawn({
         args: [this.yarnPath, 'up'],
@@ -166,10 +230,11 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
             this._hasCLIBin = await this.installCLIBin();
           }
 
-          installProcess.log.append('Installation of AppMap services is complete.');
+          installProcess.log.append(INSTALL_SUCCESS_MESSAGE);
 
           this._ready = true;
           this._onReady.fire();
+
           resolve();
         });
       });
@@ -180,6 +245,15 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
         exception: err,
         errorCode: ErrorCode.DependencyInstallFailure,
       });
+    } finally {
+      try {
+        if (lockfileRelease) await lockfileRelease();
+      } catch (e) {
+        Telemetry.sendEvent(DEBUG_EXCEPTION, {
+          exception: e as Error,
+          errorCode: ErrorCode.DependencyLockFailure,
+        });
+      }
     }
   }
 }
