@@ -8,6 +8,7 @@ appland.appmap-*.*.*
 .obsolete
 
 extern/.yarn
+extern/yarn.lock
 
 # Yarn files
 .yarn/*

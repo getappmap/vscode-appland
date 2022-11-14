@@ -137,8 +137,12 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
         ['nodeLinker: node-modules', 'npmRegistryServer: "https://registry.npmjs.org"'].join('\n')
       );
 
+      // By writing an empty yarn.lock, we avoid needing to run `yarn install` to create it.
+      // `yarn up` will happilly update an empty lock file.
+      await fs.writeFile(path.join(this.globalStorageDir, 'yarn.lock'), '');
+
       const installProcess = await spawn({
-        args: [this.yarnPath, 'install'],
+        args: [this.yarnPath, 'up'],
         cwd: this.globalStorageDir,
         log: NodeProcessService.outputChannel,
       });

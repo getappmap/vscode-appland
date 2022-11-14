@@ -1,9 +1,6 @@
 {
   "devDependencies": {
-    "@appland/appmap": "^3.49.2",
-    "@appland/scanner": "^1.71.0"
-  },
-  "resolutions": {
-    "@appland/models": "^1.20.0"
+    "@appland/appmap": "^3",
+    "@appland/scanner": "^1"
   }
 }
