@@ -2777,6 +2777,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/proper-lockfile@npm:^4.1.2":
+  version: 4.1.2
+  resolution: "@types/proper-lockfile@npm:4.1.2"
+  dependencies:
+    "@types/retry": "*"
+  checksum: 9d8a100f96e6df3ce1213eea2696b86de4b75dce3ab5bbc1767226732976bf38d2d2ce1060d6942e76561e8617576547e83bb172e95375192a0b8df1fbca2331
+  languageName: node
+  linkType: hard
+
+"@types/retry@npm:*":
+  version: 0.12.2
+  resolution: "@types/retry@npm:0.12.2"
+  checksum: e5675035717b39ce4f42f339657cae9637cf0c0051cf54314a6a2c44d38d91f6544be9ddc0280587789b6afd056be5d99dbe3e9f4df68c286c36321579b1bf4a
+  languageName: node
+  linkType: hard
+
 "@types/retry@npm:^0.12.0":
   version: 0.12.1
   resolution: "@types/retry@npm:0.12.1"
@@ -3641,6 +3657,7 @@ __metadata:
     "@types/js-yaml": ^4.0.5
     "@types/mocha": ^8.2.0
     "@types/node": ^14.16.0
+    "@types/proper-lockfile": ^4.1.2
     "@types/semver": ^7.3.9
     "@types/sinon": ^10.0.2
     "@types/tmp": ^0.2.3
@@ -3676,6 +3693,7 @@ __metadata:
     prettier: ^1.19.1
     prettier-eslint: ^12.0.0
     project-root-directory: ^1.0.3
+    proper-lockfile: ^4.1.2
     sass: ^1.32.2
     sass-loader: ^10.1.0
     semantic-release: ^17.3.8
@@ -10874,6 +10892,17 @@ __metadata:
   dependencies:
     read: 1
   checksum: 443a3b39ac916099988ee0161ab4e22edd1fa27e3d39a38d60e48c11ca6df3f5a90bfe44d95af06ed8659c4050b789ffe64c3f9f8e49a4bea1ea19105c98445a
+  languageName: node
+  linkType: hard
+
+"proper-lockfile@npm:^4.1.2":
+  version: 4.1.2
+  resolution: "proper-lockfile@npm:4.1.2"
+  dependencies:
+    graceful-fs: ^4.2.4
+    retry: ^0.12.0
+    signal-exit: ^3.0.2
+  checksum: 00078ee6a61c216a56a6140c7d2a98c6c733b3678503002dc073ab8beca5d50ca271de4c85fca13b9b8ee2ff546c36674d1850509b84a04a5d0363bcb8638939
   languageName: node
   linkType: hard
 
