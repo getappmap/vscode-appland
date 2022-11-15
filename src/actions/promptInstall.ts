@@ -1,4 +1,4 @@
-import ProjectStateService from '../services/projectStateService';
+import ProjectStateService, { ProjectStateServiceInstance } from '../services/projectStateService';
 import { WorkspaceServices } from '../services/workspaceServices';
 import * as vscode from 'vscode';
 import { INSTALL_PROMPT, Telemetry } from '../telemetry';
@@ -22,6 +22,12 @@ const promptResponses: ReadonlyArray<vscode.MessageItem> = [
   { title: ButtonText.DontShowAgain },
 ];
 
+const meetsPromptCriteria = (project: ProjectStateServiceInstance): boolean =>
+  project.installable &&
+  !project.metadata.agentInstalled &&
+  project.metadata.language?.name === 'Ruby' &&
+  project.metadata.webFramework?.name === 'Rails';
+
 export default async function promptInstall(
   services: WorkspaceServices,
   extensionState: ExtensionState
@@ -35,9 +41,7 @@ export default async function promptInstall(
     undefined;
   if (silencePrompt) return;
 
-  const numInstallable = projectInstances.filter(
-    (project) => project.installable && !project.metadata.agentInstalled
-  ).length;
+  const numInstallable = projectInstances.filter(meetsPromptCriteria).length;
   if (!numInstallable) return;
 
   const numProjects = projectInstances.length;

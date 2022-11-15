@@ -9,14 +9,18 @@ import { ProjectStateServiceInstance } from '../../../src/services/projectStateS
 import { ProjectA } from '../util';
 
 const unsafeCast = <T>(val: unknown): T => val as T;
-const stubWorkspaceServices = (installable = true) =>
+const stubWorkspaceServices = (installable = true, language = 'Ruby', webFramework = 'Rails') =>
   unsafeCast<WorkspaceServices>({
     getService: () => sinon.stub(),
     getServiceInstances: () =>
       unsafeCast<Array<ProjectStateServiceInstance>>([
         {
           folder: { name: path.basename(ProjectA), uri: vscode.Uri.parse(ProjectA), index: -1 },
-          metadata: { agentInstalled: false },
+          metadata: {
+            agentInstalled: false,
+            language: { name: language },
+            webFramework: { name: webFramework },
+          },
           installable,
         },
       ]),
@@ -91,6 +95,17 @@ describe('promptInstall', () => {
 
   context('when in an uninstallable project', () => {
     const workspaceServices = stubWorkspaceServices(false);
+    const extensionState = unsafeCast<ExtensionState>({ getHideInstallPrompt: () => false });
+
+    it('does not prompt', async () => {
+      const showInformationMessage = sinon.stub(vscode.window, 'showInformationMessage');
+      await promptInstall(workspaceServices, extensionState);
+      assert(!showInformationMessage.called);
+    });
+  });
+
+  context('when in an installable java project', () => {
+    const workspaceServices = stubWorkspaceServices(true, 'Java', 'Spring');
     const extensionState = unsafeCast<ExtensionState>({ getHideInstallPrompt: () => false });
 
     it('does not prompt', async () => {
