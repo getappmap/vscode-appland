@@ -9,7 +9,8 @@ import {
   spawn,
   verifyCommandOutput,
 } from '../services/nodeDependencyProcess';
-import { GENERATE_OPENAPI, Telemetry } from '../telemetry';
+import { DEBUG_EXCEPTION, GENERATE_OPENAPI, Telemetry } from '../telemetry';
+import ErrorCode from '../telemetry/definitions/errorCodes';
 
 export const GenerateOpenApi = 'appmap.generateOpenApi';
 
@@ -41,7 +42,19 @@ export default async function generateOpenApi(
             saveOutput: true,
           });
 
-          await verifyCommandOutput(openApiCmd);
+          try {
+            await verifyCommandOutput(openApiCmd);
+          } catch (e) {
+            Telemetry.sendEvent(DEBUG_EXCEPTION, {
+              exception: e as Error,
+              errorCode: ErrorCode.GenerateOpenApiFailure,
+              log: openApiCmd.log.toString(),
+            });
+            vscode.window.showWarningMessage(
+              'Failed to generate OpenAPI definitions. Please try again later.'
+            );
+            return;
+          }
 
           extensionState.setWorkspaceGeneratedOpenApi(workspaceFolder, true);
           Telemetry.sendEvent(GENERATE_OPENAPI, { rootDirectory: workspaceFolder.uri.fsPath });

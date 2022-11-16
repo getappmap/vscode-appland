@@ -8,7 +8,7 @@ import * as Metrics from './metrics';
  */
 export const DEBUG_EXCEPTION = new Event({
   name: 'debug/exception',
-  properties: [Properties.DEBUG_EXCEPTION, Properties.DEBUG_ERROR_CODE],
+  properties: [Properties.DEBUG_EXCEPTION, Properties.DEBUG_ERROR_CODE, Properties.DEBUG_LOG],
 });
 
 export const PROJECT_OPEN = new Event({
