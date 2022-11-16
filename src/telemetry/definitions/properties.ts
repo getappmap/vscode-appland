@@ -24,6 +24,13 @@ export const DEBUG_ERROR_CODE = new TelemetryDataProvider({
   },
 });
 
+export const DEBUG_LOG = new TelemetryDataProvider({
+  id: 'appmap.debug.log',
+  async value({ log }: { log?: string }) {
+    return log;
+  },
+});
+
 export const VIEW_ID = new TelemetryDataProvider({
   id: 'appmap.view.id',
   async value({ viewId }: { viewId: string }): Promise<string> {
