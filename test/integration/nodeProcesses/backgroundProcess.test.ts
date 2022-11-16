@@ -8,12 +8,16 @@ import {
   initializeWorkspace,
   ProjectA,
   restoreFile,
+  unsafeCast,
   waitForExtension,
   withAuthenticatedUser,
+  withTmpDir,
 } from '../util';
 import { promises as fs } from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
+import { ProjectStateServiceInstance } from '../../../src/services/projectStateService';
+import Sinon from 'sinon';
 
 async function waitForProcessState(
   processWatchers: ReadonlyArray<ProcessWatcher>,
@@ -142,5 +146,47 @@ describe('Background processes', () => {
 
     vscode.workspace.getConfiguration('appMap').update('findingsEnabled', true);
     await waitForUp([analysisService], [analysisPid]);
+  });
+
+  it('specifies --appmap-dir', async () => {
+    await waitForUp(processWatchers);
+    processWatchers
+      .map((p) => p['options'].args?.join(' ') || ' ')
+      .forEach((cmd) => {
+        assert(cmd.includes('--appmap-dir .'));
+      });
+  });
+
+  context('with appmap_dir specified in appmap.yml', () => {
+    it('specifies --appmap-dir', async () => {
+      await withTmpDir(async (tmpDir) => {
+        const uri = vscode.Uri.parse(tmpDir);
+        const folder = {
+          uri,
+          name: path.basename(tmpDir),
+          index: -1,
+        } as vscode.WorkspaceFolder;
+        const service = new NodeProcessService(
+          {
+            globalStorageUri: uri,
+            extensionPath: path.join(__dirname, '..', '..', '..', '..'),
+          } as vscode.ExtensionContext,
+          [
+            unsafeCast<ProjectStateServiceInstance>({
+              folder,
+              metadata: {},
+              onStateChange: Sinon.stub(),
+            }),
+          ]
+        );
+        await fs.writeFile(path.join(tmpDir, 'appmap.yml'), 'appmap_dir: example', 'utf8');
+        const instance = await service.create(folder);
+        instance['processes']
+          .map((p) => p['options'].args?.join(' ') || ' ')
+          .forEach((cmd) => {
+            assert(cmd.includes('--appmap-dir example'));
+          });
+      });
+    });
   });
 });

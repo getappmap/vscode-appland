@@ -11,6 +11,7 @@ import { getBinPath, ProgramName, spawn } from './nodeDependencyProcess';
 import { ProjectStateServiceInstance } from './projectStateService';
 import { downloadFile, getLatestVersionInfo } from '../util';
 import AnalysisManager from './analysisManager';
+import { lookupAppMapDir } from '../lib/appmapDir';
 
 const YARN_JS = 'yarn.js';
 
@@ -50,6 +51,8 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
       throw new Error(`failed to resolve a project state for ${folder.name}`);
     }
 
+    const appMapDir = (await lookupAppMapDir(folder.uri.fsPath)) || '.';
+
     try {
       const env = process.env.APPMAP_TEST
         ? { ...process.env, APPMAP_WRITE_PIDFILE: 'true' }
@@ -62,7 +65,7 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
             globalStoragePath: this.globalStorageDir,
           }),
           log: NodeProcessService.outputChannel,
-          args: ['index', '--watch'],
+          args: ['index', '--watch', '--appmap-dir', appMapDir],
           cwd: folder.uri.fsPath,
           env,
         }),
@@ -74,7 +77,7 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
             globalStoragePath: this.globalStorageDir,
           }),
           log: NodeProcessService.outputChannel,
-          args: ['scan', '--watch'],
+          args: ['scan', '--watch', '--appmap-dir', appMapDir],
           cwd: folder.uri.fsPath,
         })
       );
