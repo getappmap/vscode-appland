@@ -141,7 +141,7 @@ export async function waitForAppMapServices(touchFile: string): Promise<AppMapSe
   const workspaceFolder = vscode.workspace.workspaceFolders[0];
   const wsPath = workspaceFolder.uri.fsPath;
   console.log('[waitForAppMapServices] wsPath: ', wsPath);
-  const pidPath = join(wsPath, 'tmp', 'appmap', 'index.pid');
+  const pidPath = join(wsPath, 'index.pid');
   console.log('[waitForAppMapServices] pidPath: ', pidPath);
   // Make sure the indexer is all the way up before we ask it to do anything.
   try {
