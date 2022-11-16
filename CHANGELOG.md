@@ -1,3 +1,10 @@
+# [0.52.0](https://github.com/getappmap/vscode-appland/compare/v0.51.0...v0.52.0) (2022-11-16)
+
+
+### Features
+
+* Prompt users to install AppMap to installable projects ([fe74ee4](https://github.com/getappmap/vscode-appland/commit/fe74ee46a66954206e1b3dfdab1fe1c04ad73f5b))
+
 # [0.51.0](https://github.com/getappmap/vscode-appland/compare/v0.50.0...v0.51.0) (2022-11-12)
 
 
