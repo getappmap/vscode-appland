@@ -270,3 +270,7 @@ export function withAuthenticatedUser(): void {
 
   afterEach(sinon.restore);
 }
+
+export function unsafeCast<T>(val: unknown): T {
+  return val as T;
+}
