@@ -6,9 +6,8 @@ import { WorkspaceServices } from '../../../src/services/workspaceServices';
 import promptInstall, { ButtonText } from '../../../src/actions/promptInstall';
 import ExtensionState from '../../../src/configuration/extensionState';
 import { ProjectStateServiceInstance } from '../../../src/services/projectStateService';
-import { ProjectA } from '../util';
+import { ProjectA, unsafeCast } from '../util';
 
-const unsafeCast = <T>(val: unknown): T => val as T;
 const stubWorkspaceServices = (installable = true, language = 'Ruby', webFramework = 'Rails') =>
   unsafeCast<WorkspaceServices>({
     getService: () => sinon.stub(),
