@@ -42,6 +42,30 @@ export async function withTmpDir(fn: (tmpDir: string) => void | Promise<void>): 
   if (createdByUs) await fs.rmdir(tmpDir);
 }
 
+export type TempDirectory = {
+  path: string;
+  cleanup: () => Promise<void>;
+};
+
+export async function mkTmpDir(): Promise<TempDirectory> {
+  const tmpDir = await promisify(tmp.dir)();
+  let createdByUs = false;
+
+  try {
+    await fs.access(tmpDir);
+  } catch (e) {
+    await fs.mkdir(tmpDir);
+    createdByUs = true;
+  }
+
+  return {
+    path: tmpDir,
+    async cleanup() {
+      if (createdByUs) await fs.rmdir(tmpDir);
+    },
+  };
+}
+
 export const ExampleAppMap = join(
   ProjectA,
   'tmp/appmap/minitest/Microposts_controller_can_get_microposts_as_JSON.appmap.json'
