@@ -20,6 +20,7 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
   protected globalStorageDir: string;
   protected COPY_FILES: string[] = ['package.json', 'yarn.lock', YARN_JS];
   protected static outputChannel = vscode.window.createOutputChannel('AppMap: Services');
+  protected static readonly DEFAULT_APPMAP_DIR = '.';
 
   protected _hasCLIBin = false;
   get hasCLIBin(): boolean {
@@ -51,7 +52,19 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
       throw new Error(`failed to resolve a project state for ${folder.name}`);
     }
 
-    const appMapDir = (await lookupAppMapDir(folder.uri.fsPath)) || '.';
+    let appMapDir = await lookupAppMapDir(folder.uri.fsPath);
+    if (appMapDir) {
+      try {
+        await fs.mkdir(path.join(folder.uri.fsPath, appMapDir), { recursive: true });
+      } catch (e) {
+        appMapDir = NodeProcessService.DEFAULT_APPMAP_DIR;
+        Telemetry.sendEvent(DEBUG_EXCEPTION, {
+          exception: new Error('Failed to create appmap_dir: ' + String(e)),
+        });
+      }
+    } else {
+      appMapDir = NodeProcessService.DEFAULT_APPMAP_DIR;
+    }
 
     try {
       const env = process.env.APPMAP_TEST
