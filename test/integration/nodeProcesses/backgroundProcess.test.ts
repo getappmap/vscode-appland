@@ -3,9 +3,10 @@ import { NodeProcessService } from '../../../src/services/nodeProcessService';
 import NodeProcessServiceInstance from '../../../src/services/nodeProcessServiceInstance';
 import { ProcessWatcher } from '../../../src/services/processWatcher';
 import { WorkspaceServiceInstance } from '../../../src/services/workspaceService';
-import { retry } from '../../../src/util';
+import { fileExists, retry } from '../../../src/util';
 import {
   initializeWorkspace,
+  mkTmpDir,
   ProjectA,
   restoreFile,
   unsafeCast,
@@ -158,35 +159,55 @@ describe('Background processes', () => {
   });
 
   context('with appmap_dir specified in appmap.yml', () => {
+    let tmpDir: string;
+    let cleanup: () => void;
+    let directoryUri: vscode.Uri;
+    let service: NodeProcessService;
+    let workspaceFolder: vscode.WorkspaceFolder;
+    const appmapDir = 'tmp/appmap';
+
+    beforeEach(async () => {
+      const result = await mkTmpDir();
+      tmpDir = result.path;
+      cleanup = result.cleanup;
+      directoryUri = vscode.Uri.parse(tmpDir);
+      workspaceFolder = {
+        uri: directoryUri,
+        name: path.basename(tmpDir),
+        index: -1,
+      } as vscode.WorkspaceFolder;
+      service = new NodeProcessService(
+        {
+          globalStorageUri: directoryUri,
+          extensionPath: path.join(__dirname, '..', '..', '..', '..'),
+        } as vscode.ExtensionContext,
+        [
+          unsafeCast<ProjectStateServiceInstance>({
+            folder: workspaceFolder,
+            metadata: {},
+            onStateChange: Sinon.stub(),
+          }),
+        ]
+      );
+      await fs.writeFile(path.join(tmpDir, 'appmap.yml'), `appmap_dir: ${appmapDir}`, 'utf8');
+    });
+
+    afterEach(async () => cleanup());
+
     it('specifies --appmap-dir', async () => {
-      await withTmpDir(async (tmpDir) => {
-        const uri = vscode.Uri.parse(tmpDir);
-        const folder = {
-          uri,
-          name: path.basename(tmpDir),
-          index: -1,
-        } as vscode.WorkspaceFolder;
-        const service = new NodeProcessService(
-          {
-            globalStorageUri: uri,
-            extensionPath: path.join(__dirname, '..', '..', '..', '..'),
-          } as vscode.ExtensionContext,
-          [
-            unsafeCast<ProjectStateServiceInstance>({
-              folder,
-              metadata: {},
-              onStateChange: Sinon.stub(),
-            }),
-          ]
-        );
-        await fs.writeFile(path.join(tmpDir, 'appmap.yml'), 'appmap_dir: example', 'utf8');
-        const instance = await service.create(folder);
-        instance['processes']
-          .map((p) => p['options'].args?.join(' ') || ' ')
-          .forEach((cmd) => {
-            assert(cmd.includes('--appmap-dir example'));
-          });
-      });
+      const instance = await service.create(workspaceFolder);
+      instance['processes']
+        .map((p) => p['options'].args?.join(' ') || ' ')
+        .forEach((cmd) => {
+          assert(cmd.includes(`--appmap-dir ${appmapDir}`));
+        });
+    });
+
+    it("creates the AppMap directory if it doesn't already exist", async () => {
+      const expectedPath = path.join(tmpDir, appmapDir);
+      assert(!(await fileExists(expectedPath)), 'the appmap_dir provided is expected not to exist');
+      await service.create(workspaceFolder);
+      assert(await fileExists(expectedPath), 'the appmap_dir provided was not created');
     });
   });
 });
