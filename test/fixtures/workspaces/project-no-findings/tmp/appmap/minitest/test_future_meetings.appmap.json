@@ -1,0 +1,373 @@
+{
+  "events": [
+    {
+      "http_server_request": {
+        "request_method": "GET",
+        "protocol": "HTTP/1.1",
+        "path_info": "/meetings/",
+        "normalized_path_info": "/meetings/",
+        "headers": {
+          "Cookie": ""
+        }
+      },
+      "id": 1,
+      "event": "call",
+      "thread_id": 1
+    },
+    {
+      "sql_query": {
+        "sql": "SELECT COUNT(*) AS \"__count\" FROM \"meetings_meeting\" WHERE \"meetings_meeting\".\"when\" > '2022-10-15 08:46:11.632071'",
+        "database_type": "sqlite",
+        "server_version": "3.37.0"
+      },
+      "id": 2,
+      "event": "call",
+      "thread_id": 1
+    },
+    {
+      "parent_id": 2,
+      "elapsed": 0.0001041799999996762,
+      "id": 3,
+      "event": "return",
+      "thread_id": 1
+    },
+    {
+      "receiver": {
+        "class": "django.template.base.Template",
+        "object_id": 4637361200,
+        "value": "<django.template.base.Template object at 0x114688430>"
+      },
+      "path": "chipy_org/apps/meetings/templates/meetings/future_meetings.html",
+      "id": 4,
+      "event": "call",
+      "thread_id": 1,
+      "defined_class": "<templates>.Chipy_OrgAppsMeetingsTemplatesMeetingsFuture_MeetingsHtml",
+      "method_id": "render",
+      "static": false
+    },
+    {
+      "receiver": {
+        "class": "django.template.base.Template",
+        "object_id": 4637483408,
+        "value": "<django.template.base.Template object at 0x1146a6190>"
+      },
+      "path": "chipy_org/templates/shiny/navbar.html",
+      "id": 5,
+      "event": "call",
+      "thread_id": 1,
+      "defined_class": "<templates>.Chipy_OrgTemplatesShinyNavbarHtml",
+      "method_id": "render",
+      "static": false
+    },
+    {
+      "receiver": {
+        "class": "django.template.base.Template",
+        "object_id": 4637486384,
+        "value": "<django.template.base.Template object at 0x1146a6d30>"
+      },
+      "path": "chipy_org/templates/shiny/_login_options.html",
+      "id": 6,
+      "event": "call",
+      "thread_id": 1,
+      "defined_class": "<templates>.Chipy_OrgTemplatesShiny_Login_OptionsHtml",
+      "method_id": "render",
+      "static": false
+    },
+    {
+      "parent_id": 6,
+      "elapsed": 0.0003132250000001946,
+      "id": 7,
+      "event": "return",
+      "thread_id": 1
+    },
+    {
+      "parent_id": 5,
+      "elapsed": 0.001205209000000096,
+      "id": 8,
+      "event": "return",
+      "thread_id": 1
+    },
+    {
+      "sql_query": {
+        "sql": "SELECT \"meetings_meeting\".\"id\", \"meetings_meeting\".\"created\", \"meetings_meeting\".\"modified\", \"meetings_meeting\".\"when\", \"meetings_meeting\".\"reg_close_date\", \"meetings_meeting\".\"where_id\", \"meetings_meeting\".\"key\", \"meetings_meeting\".\"live_stream\", \"meetings_meeting\".\"meetup_id\", \"meetings_meeting\".\"meeting_type_id\", \"meetings_meeting\".\"custom_title\", \"meetings_meeting\".\"description\", \"meetings_meeting\".\"in_person_capacity\", \"meetings_meeting\".\"virtual_capacity\" FROM \"meetings_meeting\" WHERE \"meetings_meeting\".\"when\" > '2022-10-15 08:46:11.632071' ORDER BY \"meetings_meeting\".\"when\" ASC LIMIT 1",
+        "database_type": "sqlite",
+        "server_version": "3.37.0"
+      },
+      "id": 9,
+      "event": "call",
+      "thread_id": 1
+    },
+    {
+      "parent_id": 9,
+      "elapsed": 0.0002147240000001105,
+      "id": 10,
+      "event": "return",
+      "thread_id": 1
+    },
+    {
+      "sql_query": {
+        "sql": "SELECT \"meetings_venue\".\"id\", \"meetings_venue\".\"created\", \"meetings_venue\".\"modified\", \"meetings_venue\".\"name\", \"meetings_venue\".\"email\", \"meetings_venue\".\"phone\", \"meetings_venue\".\"address\", \"meetings_venue\".\"directions\", \"meetings_venue\".\"embed_map\", \"meetings_venue\".\"link\" FROM \"meetings_venue\" WHERE \"meetings_venue\".\"id\" = 1 LIMIT 21",
+        "database_type": "sqlite",
+        "server_version": "3.37.0"
+      },
+      "id": 11,
+      "event": "call",
+      "thread_id": 1
+    },
+    {
+      "parent_id": 11,
+      "elapsed": 0.00011169799999999341,
+      "id": 12,
+      "event": "return",
+      "thread_id": 1
+    },
+    {
+      "sql_query": {
+        "sql": "SELECT \"meetings_topic\".\"id\", \"meetings_topic\".\"created\", \"meetings_topic\".\"modified\", \"meetings_topic\".\"title\", \"meetings_topic\".\"meeting_id\", \"meetings_topic\".\"experience_level\", \"meetings_topic\".\"license\", \"meetings_topic\".\"length\", \"meetings_topic\".\"embed_video\", \"meetings_topic\".\"description\", \"meetings_topic\".\"notes\", \"meetings_topic\".\"slides_link\", \"meetings_topic\".\"start_time\", \"meetings_topic\".\"approved\" FROM \"meetings_topic\" WHERE \"meetings_topic\".\"meeting_id\" = 1",
+        "database_type": "sqlite",
+        "server_version": "3.37.0"
+      },
+      "id": 13,
+      "event": "call",
+      "thread_id": 1
+    },
+    {
+      "parent_id": 13,
+      "elapsed": 0.00008641000000020327,
+      "id": 14,
+      "event": "return",
+      "thread_id": 1
+    },
+    {
+      "sql_query": {
+        "sql": "SELECT \"sponsors_meetingsponsor\".\"id\", \"sponsors_meetingsponsor\".\"sponsor_id\", \"sponsors_meetingsponsor\".\"meeting_id\", \"sponsors_meetingsponsor\".\"about\", \"sponsors_meetingsponsor\".\"about_short\" FROM \"sponsors_meetingsponsor\" INNER JOIN \"sponsors_sponsor\" ON (\"sponsors_meetingsponsor\".\"sponsor_id\" = \"sponsors_sponsor\".\"id\") WHERE \"sponsors_meetingsponsor\".\"meeting_id\" = 1 ORDER BY \"sponsors_sponsor\".\"name\" ASC",
+        "database_type": "sqlite",
+        "server_version": "3.37.0"
+      },
+      "id": 15,
+      "event": "call",
+      "thread_id": 1
+    },
+    {
+      "parent_id": 15,
+      "elapsed": 0.00009207100000008239,
+      "id": 16,
+      "event": "return",
+      "thread_id": 1
+    },
+    {
+      "parent_id": 4,
+      "elapsed": 0.008491145999999894,
+      "id": 17,
+      "event": "return",
+      "thread_id": 1
+    },
+    {
+      "http_server_response": {
+        "mime_type": "text/html; charset=utf-8",
+        "headers": {
+          "Content-Type": "text/html; charset=utf-8",
+          "X-Content-Type-Options": "nosniff",
+          "Referrer-Policy": "same-origin",
+          "X-Frame-Options": "DENY",
+          "Content-Length": "12948",
+          "Vary": "Cookie"
+        },
+        "status": 200
+      },
+      "parent_id": 1,
+      "elapsed": 0.012402880000000227,
+      "id": 18,
+      "event": "return",
+      "thread_id": 1
+    }
+  ],
+  "version": "1.9",
+  "metadata": {
+    "language": {
+      "name": "python",
+      "engine": "CPython",
+      "version": "3.8.12"
+    },
+    "client": {
+      "name": "appmap",
+      "url": "https://github.com/applandinc/appmap-python"
+    },
+    "git": {
+      "repository": "git@github.com:chicagopython/chipy.org.git",
+      "branch": "main",
+      "commit": "6050c63028acc4e78c02b71140364c905ff3993f",
+      "status": [
+        "M Pipfile",
+        "M Pipfile.lock",
+        "?? .envrc",
+        "?? .tool-versions",
+        "?? appmap.yml",
+        "?? chipy.org-appmaps.zip"
+      ],
+      "tag": "202102082215",
+      "annotated_tag": "202102082215",
+      "commits_since_tag": 111,
+      "commits_since_annotated_tag": 111
+    },
+    "recording": {
+      "source_location": "chipy_org/apps/meetings/tests/tests.py:77"
+    },
+    "name": "future meetings",
+    "feature": "Future meetings",
+    "app": "chipy.org",
+    "recorder": {
+      "name": "pytest",
+      "type": "tests"
+    },
+    "test_status": "succeeded",
+    "fingerprints": [
+      {
+        "appmap_digest": "9311ab993d26525f0d45da701a5eb0a99d61fc276f72b6e91318fa2e468859e5",
+        "canonicalization_algorithm": "classDependencies",
+        "digest": "ca75599baa396329c06afa7761b7767979b2d74e737ede7b1e319c09481b6d75",
+        "fingerprint_algorithm": "sha256"
+      },
+      {
+        "appmap_digest": "9311ab993d26525f0d45da701a5eb0a99d61fc276f72b6e91318fa2e468859e5",
+        "canonicalization_algorithm": "classes",
+        "digest": "f1c89ad3e19da79d81abe9b7c65a6108f0eb2fd46bcf08ebcc24047c6ff491a1",
+        "fingerprint_algorithm": "sha256"
+      },
+      {
+        "appmap_digest": "9311ab993d26525f0d45da701a5eb0a99d61fc276f72b6e91318fa2e468859e5",
+        "canonicalization_algorithm": "httpClientRequests",
+        "digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "fingerprint_algorithm": "sha256"
+      },
+      {
+        "appmap_digest": "9311ab993d26525f0d45da701a5eb0a99d61fc276f72b6e91318fa2e468859e5",
+        "canonicalization_algorithm": "httpServerRequests",
+        "digest": "a096c0500cf72bdac6dd1e969e0f164ac84618871d05407820354aed4ba3ffc4",
+        "fingerprint_algorithm": "sha256"
+      },
+      {
+        "appmap_digest": "9311ab993d26525f0d45da701a5eb0a99d61fc276f72b6e91318fa2e468859e5",
+        "canonicalization_algorithm": "info",
+        "digest": "11d5b4d1a23a4dd227dc57cbd66376f8f08e94336317a46a130d78eb2fe88783",
+        "fingerprint_algorithm": "sha256"
+      },
+      {
+        "appmap_digest": "9311ab993d26525f0d45da701a5eb0a99d61fc276f72b6e91318fa2e468859e5",
+        "canonicalization_algorithm": "labels",
+        "digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "fingerprint_algorithm": "sha256"
+      },
+      {
+        "appmap_digest": "9311ab993d26525f0d45da701a5eb0a99d61fc276f72b6e91318fa2e468859e5",
+        "canonicalization_algorithm": "packageDependencies",
+        "digest": "983b2b482f208646e70b0ae3297f6ba9e28eb992c2b7376688d6a5c39ba79267",
+        "fingerprint_algorithm": "sha256"
+      },
+      {
+        "appmap_digest": "9311ab993d26525f0d45da701a5eb0a99d61fc276f72b6e91318fa2e468859e5",
+        "canonicalization_algorithm": "packages",
+        "digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "fingerprint_algorithm": "sha256"
+      },
+      {
+        "appmap_digest": "9311ab993d26525f0d45da701a5eb0a99d61fc276f72b6e91318fa2e468859e5",
+        "canonicalization_algorithm": "sqlNormalized",
+        "digest": "0cabb0382cbc4beaf3bd6d0213fbf874d5feecf27c2efa305db817be4507b37d",
+        "fingerprint_algorithm": "sha256"
+      },
+      {
+        "appmap_digest": "9311ab993d26525f0d45da701a5eb0a99d61fc276f72b6e91318fa2e468859e5",
+        "canonicalization_algorithm": "sqlTables",
+        "digest": "075afb7ef730037335a8e2845a6901bfd2d1ac1b5f771c396c969d38f086d753",
+        "fingerprint_algorithm": "sha256"
+      },
+      {
+        "appmap_digest": "9311ab993d26525f0d45da701a5eb0a99d61fc276f72b6e91318fa2e468859e5",
+        "canonicalization_algorithm": "trace",
+        "digest": "3f0ca97c82fb148eebca50da7c24a9c0994659f6f59dc7f9025b606834310c02",
+        "fingerprint_algorithm": "sha256"
+      },
+      {
+        "appmap_digest": "9311ab993d26525f0d45da701a5eb0a99d61fc276f72b6e91318fa2e468859e5",
+        "canonicalization_algorithm": "update",
+        "digest": "71c5b802206ff8ab7c0e9cc5a69840347a66882bc7a3d45db4c05e5d0b4a5f98",
+        "fingerprint_algorithm": "sha256"
+      }
+    ]
+  },
+  "classMap": [
+    {
+      "type": "http",
+      "name": "HTTP server requests",
+      "children": [
+        {
+          "type": "route",
+          "name": "GET /meetings/"
+        }
+      ]
+    },
+    {
+      "type": "database",
+      "name": "Database",
+      "children": [
+        {
+          "type": "query",
+          "name": "SELECT COUNT(*) AS \"__count\" FROM \"meetings_meeting\" WHERE \"meetings_meeting\".\"when\" > '2022-10-15 08:46:11.632071'"
+        },
+        {
+          "type": "query",
+          "name": "SELECT \"meetings_meeting\".\"id\", \"meetings_meeting\".\"created\", \"meetings_meeting\".\"modified\", \"meetings_meeting\".\"when\", \"meetings_meeting\".\"reg_close_date\", \"meetings_meeting\".\"where_id\", \"meetings_meeting\".\"key\", \"meetings_meeting\".\"live_stream\", \"meetings_meeting\".\"meetup_id\", \"meetings_meeting\".\"meeting_type_id\", \"meetings_meeting\".\"custom_title\", \"meetings_meeting\".\"description\", \"meetings_meeting\".\"in_person_capacity\", \"meetings_meeting\".\"virtual_capacity\" FROM \"meetings_meeting\" WHERE \"meetings_meeting\".\"when\" > '2022-10-15 08:46:11.632071' ORDER BY \"meetings_meeting\".\"when\" ASC LIMIT 1"
+        },
+        {
+          "type": "query",
+          "name": "SELECT \"meetings_venue\".\"id\", \"meetings_venue\".\"created\", \"meetings_venue\".\"modified\", \"meetings_venue\".\"name\", \"meetings_venue\".\"email\", \"meetings_venue\".\"phone\", \"meetings_venue\".\"address\", \"meetings_venue\".\"directions\", \"meetings_venue\".\"embed_map\", \"meetings_venue\".\"link\" FROM \"meetings_venue\" WHERE \"meetings_venue\".\"id\" = 1 LIMIT 21"
+        },
+        {
+          "type": "query",
+          "name": "SELECT \"meetings_topic\".\"id\", \"meetings_topic\".\"created\", \"meetings_topic\".\"modified\", \"meetings_topic\".\"title\", \"meetings_topic\".\"meeting_id\", \"meetings_topic\".\"experience_level\", \"meetings_topic\".\"license\", \"meetings_topic\".\"length\", \"meetings_topic\".\"embed_video\", \"meetings_topic\".\"description\", \"meetings_topic\".\"notes\", \"meetings_topic\".\"slides_link\", \"meetings_topic\".\"start_time\", \"meetings_topic\".\"approved\" FROM \"meetings_topic\" WHERE \"meetings_topic\".\"meeting_id\" = 1"
+        },
+        {
+          "type": "query",
+          "name": "SELECT \"sponsors_meetingsponsor\".\"id\", \"sponsors_meetingsponsor\".\"sponsor_id\", \"sponsors_meetingsponsor\".\"meeting_id\", \"sponsors_meetingsponsor\".\"about\", \"sponsors_meetingsponsor\".\"about_short\" FROM \"sponsors_meetingsponsor\" INNER JOIN \"sponsors_sponsor\" ON (\"sponsors_meetingsponsor\".\"sponsor_id\" = \"sponsors_sponsor\".\"id\") WHERE \"sponsors_meetingsponsor\".\"meeting_id\" = 1 ORDER BY \"sponsors_sponsor\".\"name\" ASC"
+        }
+      ]
+    },
+    {
+      "type": "class",
+      "name": "<templates>/Chipy_OrgAppsMeetingsTemplatesMeetingsFuture_MeetingsHtml",
+      "children": [
+        {
+          "type": "function",
+          "name": "render",
+          "static": false,
+          "location": ""
+        }
+      ]
+    },
+    {
+      "type": "class",
+      "name": "<templates>/Chipy_OrgTemplatesShinyNavbarHtml",
+      "children": [
+        {
+          "type": "function",
+          "name": "render",
+          "static": false,
+          "location": ""
+        }
+      ]
+    },
+    {
+      "type": "class",
+      "name": "<templates>/Chipy_OrgTemplatesShiny_Login_OptionsHtml",
+      "children": [
+        {
+          "type": "function",
+          "name": "render",
+          "static": false,
+          "location": ""
+        }
+      ]
+    }
+  ]
+}
