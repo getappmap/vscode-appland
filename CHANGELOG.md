@@ -1,3 +1,11 @@
+## [0.52.1](https://github.com/getappmap/vscode-appland/compare/v0.52.0...v0.52.1) (2022-11-17)
+
+
+### Bug Fixes
+
+* AppMap CLI and scanner processes will now specify --appmap-dir ([f24fa59](https://github.com/getappmap/vscode-appland/commit/f24fa5928821cac186b009f4411a99745d999278))
+* Create `appmap_dir` if it doesn't already exist before launching ([354161d](https://github.com/getappmap/vscode-appland/commit/354161d77298889ccd954c30604ff2fe9512e7dd))
+
 # [0.52.0](https://github.com/getappmap/vscode-appland/compare/v0.51.0...v0.52.0) (2022-11-16)
 
 
