@@ -2,7 +2,7 @@
 import assert from 'assert';
 import AppMapService from '../../../src/appMapService';
 import { ProjectStateServiceInstance } from '../../../src/services/projectStateService';
-import { waitForExtension, withAuthenticatedUser } from '../util';
+import { waitForExtension, withAuthenticatedUser, waitFor } from '../util';
 
 describe('Findings impact domains (one finding)', () => {
   withAuthenticatedUser();
@@ -16,6 +16,9 @@ describe('Findings impact domains (one finding)', () => {
     serviceInstances = extension.workspaceServices.getServiceInstances(
       projectState
     ) as ProjectStateServiceInstance[];
+    await waitFor('Analysis was not performed', () =>
+      serviceInstances.every(({ metadata }) => metadata.analysisPerformed)
+    );
   });
 
   it('has the expected domain counts', () => {
