@@ -104,7 +104,7 @@ export class ProcessLog extends Array<ProcessLogItem> {
   }
 
   toString(): string {
-    return this.map((log) => `${log.stream}: ${log.data}`).join('\n');
+    return this.map((log) => `${OutputStream[log.stream]}: ${log.data}`).join('\n');
   }
 }
 
