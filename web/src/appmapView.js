@@ -10,8 +10,7 @@ export default function mountApp() {
 
   const app = new Vue({
     el: '#app',
-    // eslint-disable-next-line arrow-body-style
-    render: (h) => {
+    render(h) {
       return h(VVsCodeExtension, {
         ref: 'ui',
         props: {

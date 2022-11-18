@@ -213,7 +213,7 @@ function getWebviewContent(webview: vscode.Webview, context: vscode.ExtensionCon
     <script nonce="${nonce}" src="${scriptUri}"></script>
     <script type="text/javascript" nonce="${nonce}">
       AppLandWeb.mountInstallGuide();
-    </script>1
+    </script>
   </body>
   </html>`;
 }

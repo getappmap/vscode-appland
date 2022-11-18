@@ -80,20 +80,12 @@ export default function mountInstallGuide() {
       vscode.postMessage({ command: 'open-file', file });
     });
 
-    app.$on('perform-install', (path, language) => {
-      vscode.postMessage({ command: 'perform-install', path, language });
-    });
-
     app.$on('open-instruction', (pageId) => {
       app.$refs.ui.jumpTo(pageId);
     });
 
     app.$on('perform-install', (path, language) => {
       vscode.postMessage({ command: 'perform-install', path, language });
-    });
-
-    app.$on('open-instruction', (pageId) => {
-      app.$refs.ui.jumpTo(pageId);
     });
 
     app.$on('generate-openapi', (projectPath) => {
