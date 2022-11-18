@@ -56,6 +56,8 @@ import { FindingsService } from './findingsService';
 import Environment from './configuration/environment';
 import ErrorCode from './telemetry/definitions/errorCodes';
 import promptInstall from './actions/promptInstall';
+import FindingsOverviewWebview from './webviews/findingsWebview';
+import FindingInfoWebview from './webviews/findingInfoWebview';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   Telemetry.register(context);
@@ -208,6 +210,9 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
     InstallGuideWebView.register(context, projectStates, extensionState);
     const openedInstallGuide = InstallGuideWebView.tryOpen(extensionState);
+
+    FindingsOverviewWebview.register(context);
+    FindingInfoWebview.register(context);
 
     const processService = new NodeProcessService(context, projectStates);
     (async function() {
