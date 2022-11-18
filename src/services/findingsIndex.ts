@@ -102,6 +102,32 @@ export default class FindingsIndex extends EventEmitter implements vscode.Dispos
     this._onChanged.fire(workspaceFolder);
   }
 
+  findingsByImpactDomain(impactDomain: string): ResolvedFinding[] {
+    return this.findings().filter((finding) => finding.finding.impactDomain === impactDomain);
+  }
+
+  findingsByHashV2(hash: string): ResolvedFinding[] {
+    return this.findings().filter((finding) => finding.finding.hash_v2 === hash);
+  }
+
+  uniqueFindingsByRuleTitle(ruleTitle: string): ResolvedFinding[] {
+    const findingsByRuleTitle = this.findings().filter(
+      (finding) => finding.finding.ruleTitle === ruleTitle
+    );
+
+    const uniqueFindingsByHash = findingsByRuleTitle.reduce((accumulator, finding) => {
+      const hashV2 = finding.finding.hash_v2;
+
+      if (!(hashV2 in accumulator)) {
+        accumulator[hashV2] = finding;
+      }
+
+      return accumulator;
+    }, {});
+
+    return Object.values(uniqueFindingsByHash);
+  }
+
   dispose(): void {
     this._onChanged.dispose();
   }
