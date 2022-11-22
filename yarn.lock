@@ -2612,6 +2612,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/chai-fs@npm:^2.0.2":
+  version: 2.0.2
+  resolution: "@types/chai-fs@npm:2.0.2"
+  dependencies:
+    "@types/chai": "*"
+    "@types/node": "*"
+  checksum: 21a7363c00730eb62f2087237000886b45a048531b6eca0dee5382ad194a782a80b326f5f0ac2cbc05d7c955eafdcde967305df3bfc0c49f99033bbf7f619645
+  languageName: node
+  linkType: hard
+
+"@types/chai@npm:*":
+  version: 4.3.4
+  resolution: "@types/chai@npm:4.3.4"
+  checksum: 571184967beb03bf64c4392a13a7d44e72da9af5a1e83077ff81c39cf59c0fda2a5c78d2005084601cf8f3d11726608574d8b5b4a0e3e9736792807afd926cd0
+  languageName: node
+  linkType: hard
+
 "@types/cli-progress@npm:^3.9.2":
   version: 3.9.2
   resolution: "@types/cli-progress@npm:3.9.2"
@@ -3652,6 +3669,7 @@ __metadata:
     "@semantic-release/exec": ^5.0.0
     "@semantic-release/git": ^9.0.0
     "@types/bent": ^7.3.2
+    "@types/chai-fs": ^2.0.2
     "@types/fs-extra": ^9.0.13
     "@types/glob": ^7.1.3
     "@types/js-yaml": ^4.0.5
