@@ -48,10 +48,14 @@ export class ProcessLog extends Array<ProcessLogItem> {
   protected constructor(
     protected process: childProcess.ChildProcessWithoutNullStreams,
     protected outputChannel?: vscode.OutputChannel,
-    protected saveOutput?: boolean
+    saveOutput?: boolean
   ) {
     super();
+    if (saveOutput) this.maxLength = 1024 * 1024; // aka. infinity
   }
+
+  // number of messages to keep
+  private maxLength = 16;
 
   static appendLogger(
     process: childProcess.ChildProcessWithoutNullStreams,
@@ -88,9 +92,8 @@ export class ProcessLog extends Array<ProcessLogItem> {
   }
 
   append(data: string, stream = OutputStream.Stdout, save = false): void {
-    if (this.saveOutput && save) {
-      this.push({ stream, data });
-    }
+    if (save) this.push({ stream, data });
+    if (this.length > this.maxLength) this.shift();
 
     if (this.outputChannel) {
       const { outputChannel } = this;
