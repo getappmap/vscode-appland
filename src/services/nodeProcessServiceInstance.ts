@@ -23,6 +23,7 @@ export default class NodeProcessServiceInstance implements WorkspaceServiceInsta
           Telemetry.sendEvent(DEBUG_EXCEPTION, {
             exception: e,
             errorCode: ErrorCode.ProcessFailure,
+            log: p.process?.log.toString(),
           });
         })
       );
