@@ -59,7 +59,7 @@ describe('ProjectDirectory', () => {
     it('can restore files', async function() {
       const dir = await this.projectDirectory.reset('**/*.appmap.json');
       expect(this.jsonPath).not.to.be.a.path(); // sanity check
-      await dir.restoreFile('**/*.appmap.json');
+      await dir.restoreFiles('**/*.appmap.json');
       expect(this.jsonPath).to.be.a.path();
     });
   });
