@@ -46,7 +46,7 @@ async function main(): Promise<void> {
       }
     }
 
-    const TIMEOUT = Number(process.env.TEST_TIMEOUT || 30000);
+    const TIMEOUT = Number(process.env.TEST_TIMEOUT || 60000);
     const beforeAll: Mocha.Func = async function() {
       this.codePath = await downloadCode();
     };
