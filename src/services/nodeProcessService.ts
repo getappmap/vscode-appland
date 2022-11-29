@@ -213,7 +213,7 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
 
       installProcess.log.append('Installing dependencies...');
 
-      return new Promise((resolve, reject) => {
+      await new Promise<void>((resolve, reject) => {
         installProcess.once('error', (err) => reject(err));
         installProcess.once('exit', async (code, signal) => {
           if (code && code !== 0) {
