@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import TelemetryReporter from 'vscode-extension-telemetry';
 import { default as ExtensionSettings } from '../configuration/extensionSettings';
 import UriHandler from '../uri/uriHandler';
 import AppMapServerAuthenticationHandler from '../uri/appmapServerAuthenticationHandler';
@@ -40,9 +41,11 @@ export default class AppMapServerAuthenticationProvider implements vscode.Authen
 
   static authURL(authnPath: string, queryParams?: Record<string, string>): vscode.Uri {
     const url = new URL(authnPath, ExtensionSettings.appMapServerURL.toString());
-    if (queryParams) {
-      Object.entries(queryParams).forEach(([k, v]) => url.searchParams.set(k, v));
-    }
+    if (!queryParams) queryParams = {};
+    queryParams.azure_user_id = vscode.env.machineId;
+
+    Object.entries(queryParams).forEach(([k, v]) => url.searchParams.set(k, v));
+
     return vscode.Uri.parse(url.toString());
   }
 
