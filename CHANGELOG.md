@@ -1,3 +1,15 @@
+# [0.53.0](https://github.com/getappmap/vscode-appland/compare/v0.52.2...v0.53.0) (2022-11-29)
+
+
+### Bug Fixes
+
+* Wait for `yarn up` before releasing installation lock ([41d0cf3](https://github.com/getappmap/vscode-appland/commit/41d0cf39dd71ddd6907817c54c69e9bdad3827ce))
+
+
+### Features
+
+* Send process logs in telemetry on failure ([c0a8f5a](https://github.com/getappmap/vscode-appland/commit/c0a8f5a58bf883c5e140c9b64d48138af33a8d6f)), closes [#510](https://github.com/getappmap/vscode-appland/issues/510)
+
 ## [0.52.2](https://github.com/getappmap/vscode-appland/compare/v0.52.1...v0.52.2) (2022-11-29)
 
 
