@@ -1,3 +1,12 @@
+## [0.52.2](https://github.com/getappmap/vscode-appland/compare/v0.52.1...v0.52.2) (2022-11-29)
+
+
+### Bug Fixes
+
+* Acquire a lock before attempting to install node dependencies ([1f3c7b8](https://github.com/getappmap/vscode-appland/commit/1f3c7b892875ae846c1d48ae74472035663c8849))
+* Notify the user when OpenAPI generation fails ([b897f96](https://github.com/getappmap/vscode-appland/commit/b897f961e9877214f9ed598b0c10323897035d17))
+* Unpin end-user CLI and scanner versions ([14884cf](https://github.com/getappmap/vscode-appland/commit/14884cf4d4979749122af6b9cc9c6c077d08e934))
+
 ## [0.52.1](https://github.com/getappmap/vscode-appland/compare/v0.52.0...v0.52.1) (2022-11-17)
 
 
