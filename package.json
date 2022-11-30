@@ -220,10 +220,6 @@
           "type": "boolean",
           "description": "Enable detailed inspection of AppMap code objects (preview)"
         },
-        "appMap.sequenceDiagramEnabled": {
-          "type": "boolean",
-          "description": "Enable generation of sequence diagrams (preview)"
-        },
         "appMap.plantUmlJarPath": {
           "type": "string",
           "description": "Location of Plant UML JAR (required to generate sequence diagrams) (preview)"
@@ -396,11 +392,11 @@
         },
         {
           "command": "appmap.context.sequenceDiagram",
-          "when": "config.appMap.sequenceDiagramEnabled == true && view == appmap.views.local && viewItem == appmap.views.local.appMap"
+          "when": "view == appmap.views.local && viewItem == appmap.views.local.appMap"
         },
         {
           "command": "appmap.context.compareSequenceDiagrams",
-          "when": "config.appMap.sequenceDiagramEnabled == true && view == appmap.views.local && viewItem == appmap.views.local.appMap"
+          "when": "view == appmap.views.local && viewItem == appmap.views.local.appMap"
         },
         {
           "command": "appmap.context.deleteAppMap",

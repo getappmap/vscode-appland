@@ -14,12 +14,6 @@ export default class ExtensionSettings {
     );
   }
 
-  public static get sequenceDiagramEnabled(): boolean {
-    return [true, 'true'].includes(
-      vscode.workspace.getConfiguration('appMap').get('sequenceDiagramEnabled') || false
-    );
-  }
-
   public static get viewConfiguration(): string | undefined {
     return vscode.workspace.getConfiguration('appMap').get('viewConfiguration');
   }
