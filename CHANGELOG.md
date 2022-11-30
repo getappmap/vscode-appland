@@ -1,3 +1,10 @@
+# [0.54.0](https://github.com/getappmap/vscode-appland/compare/v0.53.0...v0.54.0) (2022-11-30)
+
+
+### Features
+
+* Remove sequence diagram feature flag ([90b072f](https://github.com/getappmap/vscode-appland/commit/90b072fac62c1c696501a452583285b3e1c8f1bd))
+
 # [0.53.0](https://github.com/getappmap/vscode-appland/compare/v0.52.2...v0.53.0) (2022-11-29)
 
 
