@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { Finding } from '@appland/scanner';
+import { Check, Finding, Rule } from '@appland/scanner';
 import { resolveFilePath } from '../util';
 import present from '../lib/present';
 import ValueCache from '../lib/ValueCache';
@@ -26,10 +26,11 @@ const groupDetailsCache = new ValueCache<ResolvedFinding, string | undefined>();
 export class ResolvedFinding {
   public appMapUri?: vscode.Uri;
   public problemLocation?: vscode.Location;
+  public rule?: Rule;
 
   stackFrameIndex = new StackFrameIndex();
 
-  constructor(public sourceUri: vscode.Uri, public finding: Finding) {}
+  constructor(public sourceUri: vscode.Uri, public finding: Finding, public checks: Check[]) {}
 
   async initialize(): Promise<void> {
     await Promise.all(
@@ -40,6 +41,8 @@ export class ResolvedFinding {
         if (location) this.stackFrameIndex.put(this.sourceUri, path, location);
       })
     );
+
+    this.rule = this.checks.find((check) => check.id === this.finding.checkId)?.rule;
 
     this.problemLocation = ResolvedFinding.preferredLocation(
       this.stackFrameIndex,
