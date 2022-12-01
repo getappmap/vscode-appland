@@ -1,11 +1,9 @@
-import path, { join } from 'path';
+import path from 'path';
 import * as vscode from 'vscode';
-import fs from 'fs';
 import AnalysisManager from '../services/analysisManager';
 import { ResolvedFinding } from '../services/resolvedFinding';
 import { getNonce } from '../util';
-import { parse } from 'yaml';
-import { Finding } from '@appland/scanner';
+import { Finding, Rule } from '@appland/scanner';
 
 type FindingData = {
   finding: Finding;
@@ -28,19 +26,14 @@ type LocationInfo = {
   }>;
 };
 
-type RuleFrontMatter = {
-  rule: string;
-  name: string;
+type RuleInfo = {
+  id: string;
+  description: string;
   title: string;
-  references?: Array<{ reference: string }>;
-  impactDomain: string;
+  references?: Record<string, URL>;
+  impactDomain?: string;
   labels?: Array<string>;
   scope?: string;
-};
-
-type RuleInfo = {
-  frontMatter?: RuleFrontMatter;
-  description: string;
 };
 
 type StackLocation = vscode.Location & {
@@ -52,16 +45,6 @@ type WebPanelHolder = {
 };
 
 const STACK_TRACE_CHARACTER_LIMIT = 50;
-
-// Attribution: https://github.com/shahata/dasherize
-// MIT License
-function dasherize(str: string): string {
-  return str
-    .replace(/[A-Z0-9](?:(?=[^A-Z0-9])|[A-Z0-9]*(?=[A-Z0-9][^A-Z0-9]|$))/g, function(s, i) {
-      return (i > 0 ? '-' : '') + s.toLowerCase();
-    })
-    .replace(/--+/g, '-');
-}
 
 function openInSource(location: LocationInfo): void {
   const { uri, range } = location;
@@ -86,32 +69,24 @@ function getStackLocations(finding: ResolvedFinding): StackLocation[] {
   });
 }
 
-function parseRule(id: string): RuleInfo | undefined {
-  const docPath = join(__dirname, `../node_modules/@appland/scanner/doc/rules/${dasherize(id)}.md`);
+function generateRuleInfo(rule: Rule | undefined): RuleInfo | undefined {
+  if (!rule) return;
 
-  if (!fs.existsSync(docPath)) return;
-
-  // replace any carriage return with a newline
-  const content = fs.readFileSync(docPath, 'utf-8').replace(/\r\n/g, '\n');
-  const propertiesContent = content.match(/---\n((?:.*\n)+)---\n((?:.*\n)+?)##?#?/);
-
-  if (!propertiesContent) {
-    // This is probably a new doc that doesn't have front matter yet.
-    // It's all description.
-    return { description: content };
-  }
-
-  const frontMatter = parse(propertiesContent[1]);
-  const description = propertiesContent[2].replace(/\n/g, ' ').trim();
+  const { id, description, impactDomain, title, references, labels, scope } = rule;
 
   return {
-    frontMatter,
+    id,
     description,
+    impactDomain,
+    title,
+    references,
+    labels,
+    scope,
   };
 }
 
 function filterFinding(resolvedFinding: ResolvedFinding): FindingData {
-  const ruleInfo = parseRule(resolvedFinding.finding.ruleId);
+  const ruleInfo = generateRuleInfo(resolvedFinding.rule);
   const stackLocations = getStackLocations(resolvedFinding);
   const appMapName = path.basename(resolvedFinding.finding.appMapFile).split('.')[0];
   const { finding, appMapUri, problemLocation } = resolvedFinding;
