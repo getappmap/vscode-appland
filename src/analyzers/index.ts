@@ -1,6 +1,4 @@
 import { WorkspaceFolder } from 'vscode';
-import AppMapCollection from '../services/appmapCollection';
-import AppMapLoader from '../services/appmapLoader';
 import LanguageResolver from '../services/languageResolver';
 import { systemNodeVersion, nvmNodeVersion } from '../services/command';
 

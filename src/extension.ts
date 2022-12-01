@@ -28,13 +28,7 @@ import { NodeProcessService } from './services/nodeProcessService';
 import ProjectStateService, { ProjectStateServiceInstance } from './services/projectStateService';
 import { SourceFileWatcher } from './services/sourceFileWatcher';
 import { initializeWorkspaceServices } from './services/workspaceServices';
-import {
-  DEBUG_EXCEPTION,
-  PROJECT_OPEN,
-  Telemetry,
-  TELEMETRY_ENABLED,
-  sendAppMapCreateEvent,
-} from './telemetry';
+import { DEBUG_EXCEPTION, Telemetry, TELEMETRY_ENABLED, sendAppMapCreateEvent } from './telemetry';
 import appmapLinkProvider from './terminalLink/appmapLinkProvider';
 import registerTrees from './tree';
 import { ClassMapTreeDataProvider } from './tree/classMapTreeDataProvider';
