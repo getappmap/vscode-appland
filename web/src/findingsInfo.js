@@ -47,6 +47,10 @@ export default function mountFindingInfoView() {
     app.$on('open-map', (mapFile, uri) => {
       messages.rpc('open-map', { mapFile, uri });
     });
+
+    app.$on('open-findings-overview', () => {
+      messages.rpc('open-findings-overview');
+    });
   });
 
   vscode.postMessage({ command: 'findingsInfoReady' });

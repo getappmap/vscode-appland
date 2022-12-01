@@ -187,6 +187,11 @@ export default class FindingInfoWebview {
                 vscode.commands.executeCommand('vscode.open', uri);
               }
               break;
+            case 'open-findings-overview':
+              {
+                vscode.commands.executeCommand('appmap.openFindingsOverview');
+              }
+              break;
           }
         });
       })
