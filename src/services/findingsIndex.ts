@@ -110,7 +110,7 @@ export default class FindingsIndex extends EventEmitter implements vscode.Dispos
     return this.findings().filter((finding) => finding.finding.impactDomain === impactDomain);
   }
 
-  findingsByHashV2(hash: string): ResolvedFinding[] {
+  findingsByHash(hash: string): ResolvedFinding[] {
     return this.findings().filter((finding) => finding.finding.hash_v2 === hash);
   }
 

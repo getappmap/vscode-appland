@@ -103,7 +103,7 @@ export default class FindingInfoWebview {
         if (!this.findingsIndex) {
           this.findingsIndex = AnalysisManager.findingsIndex;
         }
-        const findings = this.findingsIndex?.findingsByHashV2(hash).map(filterFinding);
+        const findings = this.findingsIndex?.findingsByHash(hash).map(filterFinding);
 
         // Attempt to re-use an existing webview for this project if one exists
         if (this.existingPanels && this.existingPanels[hash]) {
