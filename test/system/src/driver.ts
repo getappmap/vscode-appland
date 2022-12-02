@@ -1,6 +1,8 @@
 import { BrowserContext, ElectronApplication, Locator, Page } from '@playwright/test';
 import { glob } from 'glob';
 import AppMap from './appMap';
+import FindingDetailsWebview from './findingDetailsWebview';
+import FindingsOverviewWebview from './findingsOverviewWebview';
 import InstructionsWebview from './instructionsWebview';
 import Panel from './panel';
 import { getOsShortcut } from './util';
@@ -15,7 +17,14 @@ async function tryClick(elem: Locator, timeout = 5000) {
 
 export default class Driver {
   public readonly instructionsWebview = new InstructionsWebview(this.page);
-  public readonly appMap = new AppMap(this.page, this.instructionsWebview);
+  public readonly findingsOverviewWebview = new FindingsOverviewWebview(this.page);
+  public readonly findingDetailsWebview = new FindingDetailsWebview(this.page);
+  public readonly appMap = new AppMap(
+    this.page,
+    this.instructionsWebview,
+    this.findingsOverviewWebview,
+    this.findingDetailsWebview
+  );
   public readonly panel = new Panel(this.page);
 
   constructor(
