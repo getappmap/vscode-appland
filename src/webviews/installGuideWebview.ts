@@ -12,6 +12,7 @@ import { DocPageId, DocsPages } from '../tree/instructionsTreeDataProvider';
 import { Signup } from '../actions/signup';
 import AnalysisManager from '../services/analysisManager';
 import ExtensionSettings from '../configuration/extensionSettings';
+import { AUTHN_PROVIDER_NAME } from '../authentication';
 
 type PageMessage = {
   page: string;
@@ -99,6 +100,13 @@ export default class InstallGuideWebView {
             panel.webview.postMessage({
               type: 'analysis-toggle',
               ...e,
+            });
+          }),
+          vscode.authentication.onDidChangeSessions(async (e) => {
+            if (e.provider.id !== AUTHN_PROVIDER_NAME) return;
+            panel.webview.postMessage({
+              type: 'user-authenticated',
+              userAuthenticated: await AnalysisManager.isUserAuthenticated(),
             });
           })
         );
