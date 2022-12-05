@@ -1,3 +1,10 @@
+# [0.55.0](https://github.com/getappmap/vscode-appland/compare/v0.54.0...v0.55.0) (2022-12-05)
+
+
+### Features
+
+* Send machine id to AppMap Server auth ([b803c52](https://github.com/getappmap/vscode-appland/commit/b803c521a603fe6948fe16f0757bb49731fda858))
+
 # [0.54.0](https://github.com/getappmap/vscode-appland/compare/v0.53.0...v0.54.0) (2022-11-30)
 
 
