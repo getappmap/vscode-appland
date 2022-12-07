@@ -120,7 +120,14 @@ export class FindingsTreeDataProvider
 
     return uniqueFindingsByRuleTitle.map((finding) => {
       const hashV2 = finding.finding.hash_v2;
-      const label = finding.locationLabel;
+      const { event } = finding.finding;
+      const req = event['http_server_request'];
+      const label =
+        finding.locationLabel ||
+        event.path ||
+        finding.finding.stack[0] ||
+        (req && `${req?.request_method} ${req?.path_info}`);
+
       const treeItem = new vscode.TreeItem(String(label));
 
       treeItem.command = {
