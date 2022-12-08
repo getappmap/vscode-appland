@@ -24,6 +24,7 @@ export default class FindingDetailsWebview {
     };
 
     await waitFor('waiting for second iframe', checkForIFrames.bind(this));
+    // this assumes that the last iframe is the finding details page
     const outerFrame = this.page.frameLocator(this.frameSelector).last();
     await outerFrame.locator('iframe#active-frame').waitFor();
     this.frame = outerFrame.frameLocator('#active-frame');
