@@ -1,4 +1,6 @@
 import { Locator, Page } from '@playwright/test';
+import FindingDetailsWebview from './findingDetailsWebview';
+import FindingsOverviewWebview from './findingsOverviewWebview';
 import InstructionsWebview from './instructionsWebview';
 
 export enum InstructionStep {
@@ -18,7 +20,9 @@ export enum InstructionStepStatus {
 export default class AppMap {
   constructor(
     protected readonly page: Page,
-    protected readonly instructionsWebview: InstructionsWebview
+    protected readonly instructionsWebview: InstructionsWebview,
+    protected readonly findingsOverviewWebview: FindingsOverviewWebview,
+    protected readonly findingDetailsWebview: FindingDetailsWebview
   ) {}
 
   get actionPanelButton(): Locator {
@@ -49,6 +53,10 @@ export default class AppMap {
     return this.findingsTree.locator('.pane-body >> [role="treeitem"]').nth(nth || 0);
   }
 
+  public finding(nth?: number): Locator {
+    return this.findingsTree.locator('[role="treeitem"][aria-level="3"]').nth(nth || 0);
+  }
+
   public appMapTreeItem(): Locator {
     return this.appMapTree.locator('.pane-body >> [role="treeitem"]:not([aria-expanded])').first();
   }
@@ -57,6 +65,14 @@ export default class AppMap {
     if (await this.findingsTree.locator('.pane-body').isHidden()) {
       await this.findingsTree.click();
     }
+  }
+
+  public async openFindingsOverview(): Promise<void> {
+    this.findingsTreeItem(0).click();
+  }
+
+  public openNthFinding(nth: number): void {
+    this.finding(nth).click();
   }
 
   public async openActionPanel(): Promise<void> {

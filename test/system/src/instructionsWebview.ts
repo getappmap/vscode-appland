@@ -6,10 +6,13 @@ export default class InstructionsWebview {
   private frameSelector = 'iframe.webview.ready';
 
   private get frame(): FrameLocator {
-    return this.page
-      .frameLocator(this.frameSelector)
-      .first()
-      .frameLocator('#active-frame');
+    return (
+      this.page
+        .frameLocator(this.frameSelector)
+        // this assumes that the first iframe is the instructions page
+        .first()
+        .frameLocator('#active-frame')
+    );
   }
 
   public get currentPage(): Locator {

@@ -6,6 +6,7 @@ import { readFile } from 'fs';
 import EventEmitter from 'events';
 import { fileExists } from '../util';
 import uniq from '../lib/uniq';
+import { Check } from '@appland/scanner';
 
 export default class FindingsIndex extends EventEmitter implements vscode.Disposable {
   private _onChanged = new vscode.EventEmitter<vscode.WorkspaceFolder>();
@@ -50,6 +51,7 @@ export default class FindingsIndex extends EventEmitter implements vscode.Dispos
   ): Promise<void> {
     let findingsData: Buffer;
     let findings: Finding[];
+    let checks: Check[];
 
     try {
       findingsData = await promisify(readFile)(sourceUri.fsPath);
@@ -62,7 +64,9 @@ export default class FindingsIndex extends EventEmitter implements vscode.Dispos
     const findingsDataStr = findingsData.toString();
 
     try {
-      findings = JSON.parse(findingsDataStr).findings;
+      const appmapFindings = JSON.parse(findingsDataStr);
+      findings = appmapFindings.findings;
+      checks = appmapFindings.checks || [];
     } catch (e) {
       // Malformed JSON file. This is unexpected because findings files should be written atomically.
       // TODO: Retry in a little while?
@@ -78,7 +82,7 @@ export default class FindingsIndex extends EventEmitter implements vscode.Dispos
     const resolvedFindings = await Promise.all(
       findings.map(
         async (finding: Finding): Promise<ResolvedFinding> => {
-          const resolvedFinding = new ResolvedFinding(sourceUri, finding);
+          const resolvedFinding = new ResolvedFinding(sourceUri, finding, checks);
           await resolvedFinding.initialize();
           return resolvedFinding;
         }
@@ -100,6 +104,32 @@ export default class FindingsIndex extends EventEmitter implements vscode.Dispos
 
     this.emit('removed', sourceUri);
     this._onChanged.fire(workspaceFolder);
+  }
+
+  findingsByImpactDomain(impactDomain: string): ResolvedFinding[] {
+    return this.findings().filter(({ finding }) => finding.impactDomain === impactDomain);
+  }
+
+  findingsByHash(hash: string): ResolvedFinding[] {
+    return this.findings().filter(({ finding }) => finding.hash_v2 === hash);
+  }
+
+  uniqueFindingsByRuleTitle(ruleTitle: string): ResolvedFinding[] {
+    const findingsByRuleTitle = this.findings().filter(
+      ({ finding }) => finding.ruleTitle === ruleTitle
+    );
+
+    const uniqueFindingsByHash = findingsByRuleTitle.reduce((accumulator, finding) => {
+      const hashV2 = finding.finding.hash_v2;
+
+      if (!(hashV2 in accumulator)) {
+        accumulator[hashV2] = finding;
+      }
+
+      return accumulator;
+    }, {});
+
+    return Object.values(uniqueFindingsByHash);
   }
 
   dispose(): void {
