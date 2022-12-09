@@ -29,3 +29,4 @@ jobs:
       - run: yarn pretest
       - run: yarn compile
       - run: xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" -- yarn test
+        name: Run yarn test

@@ -1,4 +1,4 @@
-name: release
+name: Release
 
 on:
   push:
@@ -7,6 +7,7 @@ on:
 
 jobs:
   release:
+    name: Package and release to VS Code marketplace
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -20,6 +21,9 @@ jobs:
           cache: yarn
       - run: npm i -g yarn
       - run: yarn install --immutable
+      - run: yarn pretest
+      - run: xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" -- yarn test
+        name: Run yarn test
       - run: yarn semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE_BOT_GITHUB_TOKEN }}
