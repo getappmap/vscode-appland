@@ -53,7 +53,7 @@ describe('Instructions tree view', function() {
       InstructionStep.InstallAppMapAgent,
       InstructionStepStatus.Complete
     );
-    const pidfile = path.join(project.appMapDirectoryPath, 'index.pid');
+    const pidfile = path.join(project.workspacePath, '**', 'index.pid');
     await driver.waitForFile(pidfile);
 
     await project.restoreFiles('**/*.appmap.json');
@@ -139,7 +139,7 @@ describe('Instructions tree view', function() {
 
     await driver.appMap.pendingBadge.waitFor({ state: 'visible' });
     await project.simulateAppMapInstall();
-    const pidfile = path.join(project.appMapDirectoryPath, 'index.pid');
+    const pidfile = path.join(project.workspacePath, '**', 'index.pid');
     await driver.waitForFile(pidfile);
     await driver.appMap.openActionPanel();
     await project.restoreFiles('**/*.appmap.json');
@@ -175,7 +175,7 @@ describe('Instructions tree view', function() {
     await driver.instructionsWebview.getPageByTitle('Add AppMap to your project').waitFor();
 
     await project.simulateAppMapInstall();
-    const pidfile = path.join(project.appMapDirectoryPath, 'index.pid');
+    const pidfile = path.join(project.workspacePath, '**', 'index.pid');
     await driver.waitForFile(pidfile);
 
     await driver.instructionsWebview.selectProjectPickerRow('project-system');

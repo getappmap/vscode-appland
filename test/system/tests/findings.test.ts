@@ -4,7 +4,7 @@ describe('Findings and scanning', function() {
   beforeEach(async function() {
     const { driver, project } = this;
 
-    const pidfile = path.join(project.appMapDirectoryPath, 'index.pid');
+    const pidfile = path.join(project.workspacePath, '**', 'index.pid');
     await project.reset('**/*.appmap.json', 'appmap.yml', 'appmap-findings.json');
     await driver.closePanel();
     await driver.resetUsage();
