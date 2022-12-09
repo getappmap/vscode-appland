@@ -1,0 +1,31 @@
+name: Testing
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+
+jobs:
+  test:
+    name: 'Build and run tests'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+      - uses: actions/cache@v2
+        with:
+          path: .vscode-test
+          key: ${{ runner.os }}-vscode-test }}
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: yarn
+      - run: npm i -g yarn
+      - run: yarn install --immutable
+      - run: yarn pretest
+      - run: yarn compile
+      - run: xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" -- yarn test
