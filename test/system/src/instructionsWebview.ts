@@ -24,12 +24,6 @@ export default class InstructionsWebview {
   }
 
   public async ready(): Promise<void> {
-    const webviewId = await this.page
-      .locator('[title="Using AppMap"][data-resource-name]')
-      .getAttribute('data-resource-name');
-    if (webviewId) {
-      this.frameSelector = `#${webviewId} iframe`;
-    }
     await this.currentPage.waitFor();
   }
 
