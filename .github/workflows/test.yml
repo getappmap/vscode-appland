@@ -3,7 +3,7 @@ name: Testing
 on:
   pull_request:
   push:
-    - !master
+    branches-ignore: [master]
   workflow_call:
 
 jobs:
