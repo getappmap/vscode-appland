@@ -3,6 +3,7 @@ name: Testing
 on:
   pull_request:
   push:
+    - !master
   workflow_call:
 
 jobs:
