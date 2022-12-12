@@ -148,8 +148,10 @@ export const INSTALL_BUTTON_ERROR = new Event({
   ],
 });
 
+export const AUTHENTICATION_PROMPT = new Event({ name: 'authentication:view_prompt' });
 export const AUTHENTICATION_SIGN_OUT = new Event({ name: 'authentication:sign_out' });
 export const AUTHENTICATION_SUCCESS = new Event({ name: 'authentication:success' });
+export const AUTHENTICATION_SKIP = new Event({ name: 'authentication:skip' });
 export const AUTHENTICATION_FAILED = new Event({ name: 'authentication:failed' });
 export const ANALYSIS_ENABLE = new Event({ name: 'analysis:enable' });
 export const ANALYSIS_DISABLE = new Event({ name: 'analysis:disable' });

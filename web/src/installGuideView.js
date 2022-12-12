@@ -39,6 +39,15 @@ export default function mountInstallGuide() {
           promptSignIn: !initialData.userAuthenticated,
         };
       },
+      watch: {
+        promptSignIn: {
+          immediate: true,
+          handler(viewingPrompt) {
+            if (viewingPrompt) vscode.postMessage({ command: 'view-sign-in' });
+            this.notifyOpenPage();
+          },
+        },
+      },
       beforeCreate() {
         this.$on('open-page', async (pageId) => {
           // Wait until next frame if there's no current project. It may take some time for the
@@ -46,12 +55,7 @@ export default function mountInstallGuide() {
           if (!currentProject) await new Promise((resolve) => requestAnimationFrame(resolve));
 
           currentPage = pageId;
-          vscode.postMessage({
-            command: 'open-page',
-            page: currentPage,
-            project: currentProject,
-            projects: this.projects,
-          });
+          this.notifyOpenPage();
         });
       },
       mounted() {
@@ -61,6 +65,18 @@ export default function mountInstallGuide() {
           });
         });
         this.$refs.ui.jumpTo(initialData.page);
+      },
+      methods: {
+        notifyOpenPage() {
+          if (this.promptSignIn) return;
+
+          vscode.postMessage({
+            command: 'open-page',
+            page: currentPage,
+            project: currentProject,
+            projects: this.projects,
+          });
+        },
       },
     });
 
@@ -98,11 +114,12 @@ export default function mountInstallGuide() {
     });
 
     app.$on('perform-auth', () => {
-      vscode.postMessage({ command: 'perform-auth' });
+      vscode.postMessage({ command: 'perform-auth', promptSignIn: this.promptSignIn });
     });
 
     app.$on('skip-sign-in', () => {
       app.promptSignIn = false;
+      vscode.postMessage({ command: 'skip-sign-in' });
     });
 
     messages.on('page', ({ page }) => {
