@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { VInstallGuide } from '@appland/components';
+import { VInstallGuide, VSignIn } from '@appland/components';
 import '@appland/diagrams/dist/style.css';
 import MessagePublisher from './messagePublisher';
 
@@ -14,17 +14,21 @@ export default function mountInstallGuide() {
     const app = new Vue({
       el: '#app',
       render(h) {
-        return h(VInstallGuide, {
-          ref: 'ui',
-          props: {
-            projects: this.projects,
-            editor: 'vscode',
-            analysisEnabled: this.analysisEnabled,
-            findingsEnabled: this.findingsEnabled,
-            userAuthenticated: this.userAuthenticated,
-            featureFlags: new Set(['ar-python']),
-          },
-        });
+        return h('div', [
+          h(VSignIn, { style: { display: this.promptSignIn ? '' : 'none' } }),
+          h(VInstallGuide, {
+            ref: 'ui',
+            props: {
+              projects: this.projects,
+              editor: 'vscode',
+              analysisEnabled: this.analysisEnabled,
+              findingsEnabled: this.findingsEnabled,
+              userAuthenticated: this.userAuthenticated,
+              featureFlags: new Set(['ar-python']),
+            },
+            style: { display: this.promptSignIn ? 'none' : '' },
+          }),
+        ]);
       },
       data() {
         return {
@@ -32,7 +36,17 @@ export default function mountInstallGuide() {
           analysisEnabled: initialData.analysisEnabled,
           findingsEnabled: initialData.findingsEnabled,
           userAuthenticated: initialData.userAuthenticated,
+          promptSignIn: !initialData.userAuthenticated,
         };
+      },
+      watch: {
+        promptSignIn: {
+          immediate: true,
+          handler(viewingPrompt) {
+            if (viewingPrompt) vscode.postMessage({ command: 'view-sign-in' });
+            this.notifyOpenPage();
+          },
+        },
       },
       beforeCreate() {
         this.$on('open-page', async (pageId) => {
@@ -41,12 +55,7 @@ export default function mountInstallGuide() {
           if (!currentProject) await new Promise((resolve) => requestAnimationFrame(resolve));
 
           currentPage = pageId;
-          vscode.postMessage({
-            command: 'open-page',
-            page: currentPage,
-            project: currentProject,
-            projects: this.projects,
-          });
+          this.notifyOpenPage();
         });
       },
       mounted() {
@@ -56,6 +65,18 @@ export default function mountInstallGuide() {
           });
         });
         this.$refs.ui.jumpTo(initialData.page);
+      },
+      methods: {
+        notifyOpenPage() {
+          if (this.promptSignIn) return;
+
+          vscode.postMessage({
+            command: 'open-page',
+            page: currentPage,
+            project: currentProject,
+            projects: this.projects,
+          });
+        },
       },
     });
 
@@ -93,7 +114,12 @@ export default function mountInstallGuide() {
     });
 
     app.$on('perform-auth', () => {
-      vscode.postMessage({ command: 'perform-auth' });
+      vscode.postMessage({ command: 'perform-auth', promptSignIn: this.promptSignIn });
+    });
+
+    app.$on('skip-sign-in', () => {
+      app.promptSignIn = false;
+      vscode.postMessage({ command: 'skip-sign-in' });
     });
 
     messages.on('page', ({ page }) => {
@@ -110,6 +136,10 @@ export default function mountInstallGuide() {
       app.analysisEnabled = message.enabled;
       app.userAuthenticated = message.userAuthenticated;
       app.$forceUpdate();
+    });
+
+    messages.on('user-authenticated', (message) => {
+      app.promptSignIn = !message.userAuthenticated;
     });
   });
 

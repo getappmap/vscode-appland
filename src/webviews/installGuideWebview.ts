@@ -3,7 +3,13 @@ import * as vscode from 'vscode';
 import { GenerateOpenApi } from '../commands/generateOpenApi';
 import { InstallAgent } from '../commands/installAgent';
 import { ProjectStateServiceInstance } from '../services/projectStateService';
-import { COPY_COMMAND, OPEN_VIEW, Telemetry } from '../telemetry';
+import {
+  AUTHENTICATION_PROMPT,
+  AUTHENTICATION_SKIP,
+  COPY_COMMAND,
+  OPEN_VIEW,
+  Telemetry,
+} from '../telemetry';
 import { getNonce, getWorkspaceFolderFromPath } from '../util';
 import ProjectMetadata from '../workspace/projectMetadata';
 import * as semver from 'semver';
@@ -12,6 +18,7 @@ import { DocPageId, DocsPages } from '../tree/instructionsTreeDataProvider';
 import { Signup } from '../actions/signup';
 import AnalysisManager from '../services/analysisManager';
 import ExtensionSettings from '../configuration/extensionSettings';
+import { AUTHN_PROVIDER_NAME } from '../authentication';
 
 type PageMessage = {
   page: string;
@@ -100,6 +107,13 @@ export default class InstallGuideWebView {
               type: 'analysis-toggle',
               ...e,
             });
+          }),
+          vscode.authentication.onDidChangeSessions(async (e) => {
+            if (e.provider.id !== AUTHN_PROVIDER_NAME) return;
+            panel.webview.postMessage({
+              type: 'user-authenticated',
+              userAuthenticated: await AnalysisManager.isUserAuthenticated(),
+            });
           })
         );
 
@@ -120,7 +134,6 @@ export default class InstallGuideWebView {
                 userAuthenticated: await AnalysisManager.isUserAuthenticated(),
                 findingsEnabled: ExtensionSettings.findingsEnabled,
               });
-
               break;
 
             case 'open-file':
@@ -180,8 +193,18 @@ export default class InstallGuideWebView {
               }
               break;
 
-            case 'perform-auth':
-              Signup.forAnalysis();
+            case 'perform-auth': {
+              const { promptSignIn } = message as { promptSignIn?: boolean };
+              Signup.forAnalysis(!promptSignIn);
+              break;
+            }
+
+            case 'skip-sign-in':
+              Telemetry.sendEvent(AUTHENTICATION_SKIP);
+              break;
+
+            case 'view-sign-in':
+              Telemetry.sendEvent(AUTHENTICATION_PROMPT);
               break;
 
             default:
