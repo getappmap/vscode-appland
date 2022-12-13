@@ -1,3 +1,11 @@
+# [0.56.0](https://github.com/getappmap/vscode-appland/compare/v0.55.0...v0.56.0) (2022-12-13)
+
+
+### Features
+
+* Add dashboard and details pages for Runtime Analysis ([#519](https://github.com/getappmap/vscode-appland/issues/519)) ([88f3df8](https://github.com/getappmap/vscode-appland/commit/88f3df8a7c8c80249ec7ee92f790aa118e40fb77))
+* Prompt the user to sign in before viewing instructions if they're not authenticated ([3827287](https://github.com/getappmap/vscode-appland/commit/38272871e44fb43f9448143dbeb5b4a37206e10a))
+
 # [0.55.0](https://github.com/getappmap/vscode-appland/compare/v0.54.0...v0.55.0) (2022-12-05)
 
 
