@@ -3,6 +3,8 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import { readFile } from 'fs/promises';
 import ExtensionSettings from '../configuration/extensionSettings';
+import { Writable } from 'stream';
+import MemoryStream from '../lib/memoryStream';
 
 export enum ProgramName {
   Appmap = 'appmap',
@@ -44,7 +46,10 @@ export enum OutputStream {
 }
 
 export type ProcessLogItem = { stream: OutputStream; data: string };
-export class ProcessLog extends Array<ProcessLogItem> {
+export class ProcessLog extends Writable {
+  private readonly stdout = new MemoryStream();
+  private readonly stderr = new MemoryStream();
+
   protected constructor(
     protected process: childProcess.ChildProcessWithoutNullStreams,
     protected outputChannel?: vscode.OutputChannel,
@@ -121,10 +126,9 @@ export async function getBinPath(options: ProgramOptions): Promise<string> {
 }
 
 export function spawn(options: SpawnOptions): ChildProcess {
-  const nodePath: string = process.argv0;
   const additionalEnv: NodeJS.ProcessEnv = process.env;
   const additionalArgs: string[] = [];
-  const isElectronApp = !vscode.env.remoteName;
+  const isElectronApp = process.versions.electron !== undefined;
 
   if (isElectronApp) {
     additionalEnv['ELECTRON_RUN_AS_NODE'] = 'true';
@@ -137,7 +141,7 @@ export function spawn(options: SpawnOptions): ChildProcess {
 
   const args = [...additionalArgs, ...(options.args || [])];
   const env = { ...process.env, ...additionalEnv, ...(options.env || {}) };
-  const newProcess = childProcess.spawn(nodePath, args, { ...options, env });
+  const newProcess = childProcess.fork(options.binPath, args, { ...options, env });
   const loggedProcess = ProcessLog.appendLogger(newProcess, options.log, options.saveOutput);
 
   return loggedProcess;
