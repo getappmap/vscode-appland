@@ -4,6 +4,7 @@ import AnalysisManager from '../services/analysisManager';
 import { ResolvedFinding } from '../services/resolvedFinding';
 import { getNonce } from '../util';
 import { Finding, Rule } from '@appland/scanner';
+import { ANALYSIS_VIEW_FINDING, Telemetry } from '../telemetry';
 
 type FindingData = {
   finding: Finding;
@@ -113,6 +114,10 @@ export default class FindingInfoWebview {
             findings,
           });
           return;
+        }
+
+        if (findings && findings.length > 0) {
+          Telemetry.sendEvent(ANALYSIS_VIEW_FINDING, { finding: findings[0].finding });
         }
 
         const panelTitle = (findings && findings[0]?.finding.ruleTitle) || 'Finding Info';
