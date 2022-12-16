@@ -19,9 +19,9 @@ export default async function commandArgs(
 ): Promise<Command> {
   const home = process.env.HOME || '';
   let error: string | undefined;
-  const environment: Record<string, string> = {};
 
-  (await packageManagerCommand(folder.uri)).reverse().forEach((cmd) => args.unshift(cmd));
+  const [commandArgs, environment] = await packageManagerCommand(folder.uri);
+  commandArgs.reverse().forEach((cmd) => args.unshift(cmd));
 
   const nvmrcPath = await resolveFilePath(folder.uri.fsPath, '.nvmrc');
   if (nvmrcPath) {
