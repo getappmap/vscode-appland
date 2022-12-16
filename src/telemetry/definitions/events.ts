@@ -157,6 +157,17 @@ export const ANALYSIS_ENABLE = new Event({ name: 'analysis:enable' });
 export const ANALYSIS_DISABLE = new Event({ name: 'analysis:disable' });
 export const ANALYSIS_CTA_INTERACTION = new Event({ name: 'analysis:cta_interaction' });
 
+export const ANALYSIS_VIEW_OVERVIEW = new Event({
+  name: 'analysis:view_overview',
+  properties: [Properties.FINDINGS_SUMMARY],
+  metrics: [Metrics.NUM_FINDINGS],
+});
+
+export const ANALYSIS_VIEW_FINDING = new Event({
+  name: 'analysis:view_finding',
+  properties: [Properties.FINDING_SUMMARY],
+});
+
 export const INSTALL_PROMPT = new Event({
   name: 'install_prompt',
   properties: [Properties.RESULT],

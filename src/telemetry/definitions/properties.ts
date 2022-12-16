@@ -9,6 +9,7 @@ import ErrorCode from './errorCodes';
 import ProjectMetadata from '../../workspace/projectMetadata';
 import { TerminalConfig } from '../../commands/installAgent';
 import * as vscode from 'vscode';
+import { Finding } from '@appland/scanner';
 
 export const DEBUG_EXCEPTION = new TelemetryDataProvider({
   id: 'appmap.debug.exception',
@@ -236,5 +237,41 @@ export const DEPENDENCIES = new TelemetryDataProvider({
       // do nothing
       // the file may not event exist
     }
+  },
+});
+
+export const FINDING_SUMMARY = new TelemetryDataProvider({
+  id: 'appmap.finding',
+  async value({ finding }: { finding: Finding }) {
+    return {
+      rule: finding.ruleId,
+      impact_domain: finding.impactDomain?.toLowerCase(),
+      hash: finding.hash,
+      hash_v2: finding.hash_v2,
+    };
+  },
+});
+
+export const FINDINGS_SUMMARY = new TelemetryDataProvider({
+  id: 'appmap.analysis',
+  async value({ findings }: { findings: ReadonlyArray<Finding> }) {
+    const result = findings
+      .map((finding) => ({
+        rule: finding.ruleId,
+        impactDomain: finding.impactDomain?.toLowerCase(),
+      }))
+      .reduce(
+        (acc, finding) => {
+          acc.rules.add(finding.rule);
+          acc.impactDomains.add(finding.impactDomain);
+          return acc;
+        },
+        { rules: new Set(), impactDomains: new Set() }
+      );
+
+    return {
+      rules: Array.from(result.rules).join(','),
+      impact_domains: Array.from(result.impactDomains).join(','),
+    };
   },
 });
