@@ -1,3 +1,10 @@
+## [0.56.2](https://github.com/getappmap/vscode-appland/compare/v0.56.1...v0.56.2) (2022-12-16)
+
+
+### Bug Fixes
+
+* `getRecords` now returns nested objects and enforces value type ([34fcd28](https://github.com/getappmap/vscode-appland/commit/34fcd286bc5a02e3056bf66d581e14212474da01))
+
 ## [0.56.1](https://github.com/getappmap/vscode-appland/compare/v0.56.0...v0.56.1) (2022-12-16)
 
 
