@@ -1,3 +1,10 @@
+## [0.56.1](https://github.com/getappmap/vscode-appland/compare/v0.56.0...v0.56.1) (2022-12-16)
+
+
+### Bug Fixes
+
+* Notify on findings views ([90bfc64](https://github.com/getappmap/vscode-appland/commit/90bfc64035a54b0ff286b6b78a3439c4ab8f9f4b))
+
 # [0.56.0](https://github.com/getappmap/vscode-appland/compare/v0.55.0...v0.56.0) (2022-12-13)
 
 
