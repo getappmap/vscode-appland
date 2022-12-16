@@ -22,20 +22,33 @@ export function getNonce(): string {
   return text;
 }
 
+type Transformer = (value?: any) => unknown;
+const nopTransformer: Transformer = (value) => value;
+
 // Returns an object's string values with an optional key prefix
 // getStringRecords({ a: 'hello', b: [object Object] }, 'myApp') ->
 // { 'myApp.a': 'hello' }
-export function getRecords<T>(obj: Record<string, unknown>, keyPrefix?: string): Record<string, T> {
+export function getRecords<T>(
+  obj: Record<string, unknown>,
+  keyPrefix?: string,
+  transformer = nopTransformer
+): Record<string, T> {
   if (!obj) return {};
 
-  const base = keyPrefix ? `${keyPrefix}.` : '';
-
-  return Object.entries(obj).reduce((memo, [k, v]) => {
-    if (typeof v !== 'object') {
-      memo[`${base}${k}`] = v as T;
-    }
-    return memo;
-  }, {} as Record<string, T>);
+  return Object.entries(obj)
+    .filter(([, v]) => v !== null && v !== undefined)
+    .reduce((memo, [k, v]) => {
+      const key = [keyPrefix, k].filter(Boolean).join('.');
+      if (typeof v === 'object') {
+        memo = {
+          ...memo,
+          ...getRecords(v as Record<string, unknown>, key, transformer),
+        };
+      } else {
+        if (v) memo[key] = transformer(v) as T;
+      }
+      return memo;
+    }, {} as Record<string, T>);
 }
 
 export function notEmpty<TValue>(value: TValue | null | undefined): value is TValue {

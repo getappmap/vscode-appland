@@ -4,7 +4,7 @@ import * as path from 'path';
 import { createHash } from 'crypto';
 import TelemetryDataProvider from '../telemetryDataProvider';
 import LanguageResolver, { UNKNOWN_LANGUAGE } from '../../services/languageResolver';
-import { fileExists } from '../../util';
+import { fileExists, getRecords } from '../../util';
 import ErrorCode from './errorCodes';
 import ProjectMetadata from '../../workspace/projectMetadata';
 import { TerminalConfig } from '../../commands/installAgent';
@@ -98,7 +98,7 @@ export const FILE_SIZE = new TelemetryDataProvider({
 export const FILE_METADATA = new TelemetryDataProvider({
   id: 'appmap.file.metadata',
   async value({ metadata }: { metadata?: Record<string, unknown> }) {
-    return metadata;
+    return getRecords({ ...metadata, git: undefined, fingerprints: undefined }, undefined, String);
   },
 });
 
