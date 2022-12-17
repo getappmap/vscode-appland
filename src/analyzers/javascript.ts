@@ -5,7 +5,7 @@ import semverIntersects from 'semver/ranges/intersects';
 
 const fs = workspace.fs;
 
-export default async function analyze(folder: WorkspaceFolder): Promise<ProjectAnalysis | null> {
+export default async function analyze(folder: WorkspaceFolder): Promise<ProjectAnalysis> {
   const features: Features = {
     lang: {
       title: 'JavaScript',

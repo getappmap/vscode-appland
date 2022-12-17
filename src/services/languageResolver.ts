@@ -3,9 +3,10 @@ import { extname } from 'path';
 import backgroundJob from '../lib/backgroundJob';
 import GitProperties from '../telemetry/properties/versionControlGit';
 
-export const SUPPORTED_LANGUAGES = ['ruby', 'python', 'java', 'javascript'];
-
+export const SUPPORTED_LANGUAGES = ['ruby', 'python', 'java', 'javascript'] as const;
 export const UNKNOWN_LANGUAGE = 'unknown';
+
+export type LanguageId = typeof SUPPORTED_LANGUAGES[number] | typeof UNKNOWN_LANGUAGE;
 
 const LANGUAGES = [
   {
@@ -243,7 +244,9 @@ export default class LanguageResolver {
    * Retrieve the most frequently used language id for a given directory. The language returned must be supported (i.e.,
    * it must be registered in LANGUAGE_AGENTS). If the language is not supported, returns 'unknown'.
    */
-  private static async identifyLanguage(folder: vscode.WorkspaceFolder | string): Promise<string> {
+  private static async identifyLanguage(
+    folder: vscode.WorkspaceFolder | string
+  ): Promise<LanguageId> {
     let languageStats = LANGUAGE_CACHE[folderPath(folder)];
     if (!languageStats) {
       languageStats = await backgroundJob<LanguageStats>(
@@ -263,10 +266,7 @@ export default class LanguageResolver {
     }
 
     const best = Object.entries(languageStats).sort((a, b) => b[1] - a[1])?.[0]?.[0];
-    if (SUPPORTED_LANGUAGES.indexOf(best) !== -1) {
-      return best;
-    }
-    return UNKNOWN_LANGUAGE;
+    return toSupported(best);
   }
 
   /**
@@ -275,7 +275,14 @@ export default class LanguageResolver {
    *
    * @returns unknown if the most used language is not supported
    */
-  public static async getLanguage(folder: vscode.WorkspaceFolder | string): Promise<string> {
+  public static async getLanguage(folder: vscode.WorkspaceFolder | string): Promise<LanguageId> {
     return await this.identifyLanguage(folder);
   }
+}
+
+function toSupported(lang: string): LanguageId {
+  if ((SUPPORTED_LANGUAGES as readonly string[]).includes(lang)) {
+    return lang as LanguageId;
+  }
+  return UNKNOWN_LANGUAGE;
 }
