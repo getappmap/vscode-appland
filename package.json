@@ -445,7 +445,7 @@
     "@types/js-yaml": "^4.0.5",
     "@types/mocha": "^8.2.0",
     "@types/mockery": "^1.4.30",
-    "@types/node": "^14.16.0",
+    "@types/node": "^16",
     "@types/proper-lockfile": "^4.1.2",
     "@types/semver": "^7.3.9",
     "@types/sinon": "^10.0.2",
