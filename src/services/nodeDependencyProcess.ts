@@ -112,12 +112,29 @@ export class ProcessLog extends Array<ProcessLogItem> {
 }
 
 export async function getBinPath(options: ProgramOptions): Promise<string> {
-  const overridePath = ExtensionSettings.appMapCommandLineToolsPath;
-  if (overridePath) return overridePath;
-
-  const base = path.join(options.globalStoragePath, 'node_modules', '@appland', options.dependency);
-  const bin = JSON.parse(await readFile(path.join(base, 'package.json'), 'utf8')).bin;
-  return path.join(base, bin);
+  const localToolsPath = ExtensionSettings.appMapCommandLineToolsPath;
+  if (localToolsPath) {
+    let packageName: string;
+    switch (options.dependency) {
+      case ProgramName.Appmap:
+        packageName = 'cli';
+        break;
+      case ProgramName.Scanner:
+        packageName = 'scanner';
+        break;
+    }
+    const bin = 'built/cli.js';
+    return path.join(localToolsPath, 'packages', packageName, bin);
+  } else {
+    const base = path.join(
+      options.globalStoragePath,
+      'node_modules',
+      '@appland',
+      options.dependency
+    );
+    const bin = JSON.parse(await readFile(path.join(base, 'package.json'), 'utf8')).bin;
+    return path.join(base, bin);
+  }
 }
 
 export function spawn(options: SpawnOptions): ChildProcess {

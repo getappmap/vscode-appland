@@ -58,14 +58,14 @@ __metadata:
   linkType: hard
 
 "@appland/appmap@npm:^3.43.2":
-  version: 3.49.2
-  resolution: "@appland/appmap@npm:3.49.2"
+  version: 3.54.0
+  resolution: "@appland/appmap@npm:3.54.0"
   dependencies:
-    "@appland/components": 2.18.3
+    "@appland/components": 2.19.1
     "@appland/diagrams": 1.5.3
-    "@appland/models": 1.21.0
-    "@appland/openapi": 1.1.0
-    "@appland/sequence-diagram": 1.1.0
+    "@appland/models": 1.22.0
+    "@appland/openapi": 1.2.1
+    "@appland/sequence-diagram": 1.3.0
     "@datastructures-js/priority-queue": ^6.1.3
     "@sidvind/better-ajv-errors": ^0.9.1
     "@types/moo": ^0.5.5
@@ -85,6 +85,7 @@ __metadata:
     diff: ^5.0.0
     fs-extra: ^10.1.0
     glob: ^7.2.3
+    graceful-fs: ^4.2.10
     inquirer: ^8.1.2
     js-yaml: ^4.0.3
     jsdom: ^16.6.0
@@ -99,11 +100,12 @@ __metadata:
     semver: ^7.3.5
     strip-ansi: ^6.0.0
     supports-hyperlinks: ^2.2.0
+    validator: ^13.7.0
     w3c-xmlserializer: ^2.0.0
     yargs: ^17.1.1
   bin:
     appmap: built/cli.js
-  checksum: 53d318e3955249c418c14f8f3ef55e89c6ee4d26fbbdf7a0c900db997ecc32d5a082c7e9e144bcbb5389a4175ce59e267e873918b8e509448cb461f5cf6f4b0f
+  checksum: e3299b1a469f2e1c14c1dde973644506af3d2a5cc213de6a55f77f58fbb0d04e176e10fbb54e251c2f04f58f66df69c13ccacb72a01ec5ac16056f98f245dcc0
   languageName: node
   linkType: hard
 
@@ -119,22 +121,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/components@npm:2.18.3":
-  version: 2.18.3
-  resolution: "@appland/components@npm:2.18.3"
-  dependencies:
-    "@appland/diagrams": ^1.5.1
-    "@appland/models": ^1.9.0
-    buffer: ^6.0.3
-    highlight.js: ^10.7.2
-    sql-formatter: ^4.0.2
-    vue: ^2.6.11
-    vuex: ^3.6.0
-  checksum: 8ccd067f0b2d1a4c94d18682992ddf27071b8684a4e3bab27be9661288939fe948611bb260bd57f0a17f155d4f796d54f22a3ab18b91d0a7e6f8f9a68b836f86
-  languageName: node
-  linkType: hard
-
-"@appland/components@npm:^2.19.1":
+"@appland/components@npm:2.19.1, @appland/components@npm:^2.19.1":
   version: 2.19.1
   resolution: "@appland/components@npm:2.19.1"
   dependencies:
@@ -174,33 +161,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/models@npm:1.21.0, @appland/models@npm:^1.18.1, @appland/models@npm:^1.20.0, @appland/models@npm:^1.9.0":
-  version: 1.21.0
-  resolution: "@appland/models@npm:1.21.0"
-  dependencies:
-    "@appland/sql-parser": ^1.5.0
-    crypto-js: ^4.0.0
-  checksum: 9f7403abe9bcd647f25f416ed08788276b91616a39e132ac2bee1504a43ca8022827687174834eb138aa25914fc7bf79aac4722ac97a471e997e4891fe23c8a5
-  languageName: node
-  linkType: hard
-
-"@appland/models@npm:1.22.0":
+"@appland/models@npm:1.22.0, @appland/models@npm:^1.18.1, @appland/models@npm:^1.20.0, @appland/models@npm:^1.9.0":
   version: 1.22.0
   resolution: "@appland/models@npm:1.22.0"
   dependencies:
     "@appland/sql-parser": ^1.5.0
     crypto-js: ^4.0.0
   checksum: 9627cc5143a93114a94bac4f9d967e126fa7fc6c63bdabdb0665dc49c5993aa776b485f78ab725414b18987935806af107a84075f50890acff89e4152c6a8c34
-  languageName: node
-  linkType: hard
-
-"@appland/openapi@npm:1.1.0":
-  version: 1.1.0
-  resolution: "@appland/openapi@npm:1.1.0"
-  dependencies:
-    "@appland/models": 1.21.0
-    js-yaml: ^4.1.0
-  checksum: 44ddbad71df078e3048557d49c8816155c5285f5cb1b498fa52ea4443f28a9ace0067cae2c6d4d9a2171b3d2a2c0dea6b0f1af7f4b3f65ecf3e652c9107878dd
   languageName: node
   linkType: hard
 
@@ -211,6 +178,16 @@ __metadata:
     "@appland/models": 1.22.0
     js-yaml: ^4.1.0
   checksum: 113ad14837a22ada4cbf43a93430b0bfdfac6cb3194a9b6d60323f6d63d06cc99e8097a74e8c4938b107f6d62af97d835c2ed4a1d24ccb3df095eeedc202708c
+  languageName: node
+  linkType: hard
+
+"@appland/openapi@npm:1.2.1":
+  version: 1.2.1
+  resolution: "@appland/openapi@npm:1.2.1"
+  dependencies:
+    "@appland/models": 1.22.0
+    js-yaml: ^4.1.0
+  checksum: 0c1cc4a472e028d41042a44a3cd3f34e657e33379901792725572b97709da01ec95cf66c1dcebc3995f6954de5bdc36014dba8f4a957ad6941059a8e92ef6e12
   languageName: node
   linkType: hard
 
@@ -251,12 +228,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/sequence-diagram@npm:1.1.0, @appland/sequence-diagram@npm:^1.1.0":
-  version: 1.1.0
-  resolution: "@appland/sequence-diagram@npm:1.1.0"
+"@appland/sequence-diagram@npm:1.3.0, @appland/sequence-diagram@npm:^1.1.0":
+  version: 1.3.0
+  resolution: "@appland/sequence-diagram@npm:1.3.0"
   dependencies:
-    "@appland/models": 1.21.0
-  checksum: bdb141ea89cf807095c8e63a0756e52bad8fbe7e988539f39b9a1e1af34f5845612ce2efc5965a94d6735c55ae4fcace78403e712bd7ac15457128b62f860ab1
+    "@appland/models": 1.22.0
+    diff: ^5.1.0
+  peerDependencies:
+    "@appland/openapi": ^1.2.1
+    "@datastructures-js/priority-queue": "*"
+  checksum: d8ac21d393c4d583d76ad3df40c3ef4be055ee0a942e0ae734fdf10d5c3c026e3243819e85bcc54b1255c1a91ae37e5b63bd412c1d6d4498f259cff41e29650d
   languageName: node
   linkType: hard
 
@@ -1895,11 +1876,11 @@ __metadata:
   linkType: hard
 
 "@datastructures-js/priority-queue@npm:^6.1.3":
-  version: 6.1.3
-  resolution: "@datastructures-js/priority-queue@npm:6.1.3"
+  version: 6.1.4
+  resolution: "@datastructures-js/priority-queue@npm:6.1.4"
   dependencies:
     "@datastructures-js/heap": ^4.1.2
-  checksum: 518a3c588c5d34c00a053963803cf47b9af0531b6d965ba8bdaa9c25509420fc6b747ad3b63d30412c38c6446b4e07293b6274940fa9305db7a208389bbac51c
+  checksum: fc77f94f687b3903a34c88e36955d6b8a99082306cdd6f0887bfaa9e1d93c6801581dd5552d6f4057bbcae11f2b7358ad0a2c0669eaec7c51d291e3608f5fde6
   languageName: node
   linkType: hard
 
@@ -3735,7 +3716,7 @@ __metadata:
     chai-fs: ^2.0.0
     clipboardy: ^2.3.0
     css-loader: ^5.0.1
-    diff: ^5.0.0
+    diff: ^5.1.0
     eslint: ^7.17.0
     eslint-config-airbnb-base: ^14.2.1
     eslint-config-prettier: ^8.3.0
@@ -5784,6 +5765,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"diff@npm:^5.1.0":
+  version: 5.1.0
+  resolution: "diff@npm:5.1.0"
+  checksum: c7bf0df7c9bfbe1cf8a678fd1b2137c4fb11be117a67bc18a0e03ae75105e8533dbfb1cda6b46beb3586ef5aed22143ef9d70713977d5fb1f9114e21455fba90
+  languageName: node
+  linkType: hard
+
 "dir-glob@npm:^3.0.0, dir-glob@npm:^3.0.1":
   version: 3.0.1
   resolution: "dir-glob@npm:3.0.1"
@@ -7192,7 +7180,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"graceful-fs@npm:^4.2.9":
+"graceful-fs@npm:^4.2.10, graceful-fs@npm:^4.2.9":
   version: 4.2.10
   resolution: "graceful-fs@npm:4.2.10"
   checksum: 3f109d70ae123951905d85032ebeae3c2a5a7a997430df00ea30df0e3a6c60cf6689b109654d6fdacd28810a053348c4d14642da1d075049e6be1ba5216218da
