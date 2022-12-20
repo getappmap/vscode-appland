@@ -23,9 +23,6 @@ export type SpawnOptions = {
   // Command line args given to `node` or the `bin` script specified
   args?: string[];
 
-  // Additional environment variables given to `node` or the `bin` script specified
-  env?: Record<string, string>;
-
   // If specified, write log messages to the given output channel
   log?: vscode.OutputChannel;
 
