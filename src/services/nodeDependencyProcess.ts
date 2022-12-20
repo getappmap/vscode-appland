@@ -142,6 +142,7 @@ export function spawn(options: SpawnOptions): ChildProcess {
   const newProcess = childProcess.fork(options.binPath, options.args || [], {
     ...options,
     env,
+    execArgv: [],
     stdio: 'pipe',
   });
   const loggedProcess = ProcessLog.appendLogger(
