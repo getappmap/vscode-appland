@@ -8,6 +8,13 @@ import extensionSettings from '../configuration/extensionSettings';
 import { AppmapUploader } from '../actions/appmapUploader';
 import { bestFilePath } from '../lib/bestFilePath';
 import AppMapDocument from './AppMapDocument';
+import AnalysisManager from '../services/analysisManager';
+import { getStackLocations, StackLocation } from '../lib/getStackLocations';
+import { ResolvedFinding } from '../services/resolvedFinding';
+
+export type FindingInfo = ResolvedFinding & {
+  stackLocations?: StackLocation[];
+};
 
 /**
  * Provider for AppLand scenario files.
@@ -70,6 +77,7 @@ export default class AppMapEditorProvider
   private static readonly viewType = 'appmap.views.appMapFile';
   private static readonly INSTRUCTIONS_VIEWED = 'APPMAP_INSTRUCTIONS_VIEWED';
   private static readonly RELEASE_KEY = 'APPMAP_RELEASE_KEY';
+  private static readonly analysisManager = AnalysisManager;
   public static readonly APPMAP_OPENED = 'APPMAP_OPENED';
   public static readonly INITIAL_STATE = 'INITIAL_STATE';
   public currentWebView?: vscode.WebviewPanel;
@@ -81,7 +89,22 @@ export default class AppMapEditorProvider
 
   async openCustomDocument(uri: vscode.Uri): Promise<AppMapDocument> {
     const data = await vscode.workspace.fs.readFile(uri);
-    return new AppMapDocument(uri, data);
+    const findings = this.retrieveAndProcessFindings(uri);
+
+    return new AppMapDocument(uri, data, findings);
+  }
+
+  retrieveAndProcessFindings(uri: vscode.Uri): FindingInfo[] {
+    const allFindings = AppMapEditorProvider.analysisManager.findingsIndex?.findings() || [];
+    const associatedFindings = allFindings.filter(
+      (finding) => finding.appMapUri?.path === uri.path
+    );
+
+    return associatedFindings.map((finding) => {
+      const findingData = finding as FindingInfo;
+      findingData.stackLocations = getStackLocations(finding);
+      return findingData;
+    });
   }
 
   private documents = new Array<AppMapDocument>();
