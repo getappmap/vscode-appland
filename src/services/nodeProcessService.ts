@@ -209,6 +209,9 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
         args: [this.yarnPath, 'up'],
         cwd: this.globalStorageDir,
         log: NodeProcessService.outputChannel,
+        // Fix "The remote archive doesn't match the expected checksum" issue by
+        // forcing yarn to fetch from the remote registry if checksums don't match.
+        env: { YARN_CHECKSUM_BEHAVIOR: 'update' },
       });
 
       installProcess.log.append('Installing dependencies...');
