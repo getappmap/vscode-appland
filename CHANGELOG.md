@@ -1,3 +1,15 @@
+# [0.57.0](https://github.com/getappmap/vscode-appland/compare/v0.56.2...v0.57.0) (2022-12-20)
+
+
+### Bug Fixes
+
+* Drop the immediate sign-in prompt ([4901f57](https://github.com/getappmap/vscode-appland/commit/4901f576cddb9134b4aa6ffb860c624aed355b27))
+
+
+### Features
+
+* Emit telemtry for sequence diagrams ([c2d113f](https://github.com/getappmap/vscode-appland/commit/c2d113fcac0a808a211ae144c7379634d0830d97))
+
 ## [0.56.2](https://github.com/getappmap/vscode-appland/compare/v0.56.1...v0.56.2) (2022-12-16)
 
 
