@@ -1,3 +1,10 @@
+## [0.57.2](https://github.com/getappmap/vscode-appland/compare/v0.57.1...v0.57.2) (2022-12-20)
+
+
+### Bug Fixes
+
+* Drop the front-end sign-up prompt ([41f2d9b](https://github.com/getappmap/vscode-appland/commit/41f2d9b14d67b2f387f650ec971a358e2a2d6ee0))
+
 ## [0.57.1](https://github.com/getappmap/vscode-appland/compare/v0.57.0...v0.57.1) (2022-12-20)
 
 
