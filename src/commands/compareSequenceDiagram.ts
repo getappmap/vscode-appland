@@ -6,7 +6,14 @@ import { AppMap, buildAppMap } from '@appland/models';
 
 import { verifyCommandOutput } from '../services/nodeDependencyProcess';
 import AppMapCollection from '../services/appmapCollection';
-import { plantUMLJarPath, promptForAppMap, promptForSpecification } from '../lib/sequenceDiagram';
+import {
+  NUM_ACTIONS,
+  NUM_ACTORS,
+  NUM_CHANGES,
+  plantUMLJarPath,
+  promptForAppMap,
+  promptForSpecification,
+} from '../lib/sequenceDiagram';
 import { tmpName } from 'tmp';
 import { promisify } from 'util';
 import { ProjectStateServiceInstance } from '../services/projectStateService';
@@ -19,6 +26,13 @@ import {
   FormatType,
   Specification,
 } from '@appland/sequence-diagram';
+import Event from '../telemetry/event';
+import { Telemetry } from '../telemetry';
+
+const SEQUENCE_DIAGRAM_DIFF_EVENT = new Event({
+  name: 'sequence_diagram:generate_diff',
+  metrics: [NUM_ACTORS, NUM_ACTIONS, NUM_CHANGES],
+});
 
 export default async function compareSequenceDiagrams(
   context: vscode.ExtensionContext,
@@ -82,6 +96,8 @@ export default async function compareSequenceDiagrams(
             );
             return;
           }
+
+          Telemetry.sendEvent(SEQUENCE_DIAGRAM_DIFF_EVENT, { diagram: diffDiagram });
 
           const svgFile = [diagramFile, 'svg'].join('.');
           vscode.env.openExternal(vscode.Uri.file(svgFile));

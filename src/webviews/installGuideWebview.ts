@@ -3,13 +3,7 @@ import * as vscode from 'vscode';
 import { GenerateOpenApi } from '../commands/generateOpenApi';
 import { InstallAgent } from '../commands/installAgent';
 import { ProjectStateServiceInstance } from '../services/projectStateService';
-import {
-  AUTHENTICATION_PROMPT,
-  AUTHENTICATION_SKIP,
-  COPY_COMMAND,
-  OPEN_VIEW,
-  Telemetry,
-} from '../telemetry';
+import { COPY_COMMAND, OPEN_VIEW, Telemetry } from '../telemetry';
 import { getNonce, getWorkspaceFolderFromPath } from '../util';
 import ProjectMetadata from '../workspace/projectMetadata';
 import * as semver from 'semver';
@@ -194,18 +188,9 @@ export default class InstallGuideWebView {
               break;
 
             case 'perform-auth': {
-              const { promptSignIn } = message as { promptSignIn?: boolean };
-              Signup.forAnalysis(!promptSignIn);
+              Signup.forAnalysis();
               break;
             }
-
-            case 'skip-sign-in':
-              Telemetry.sendEvent(AUTHENTICATION_SKIP);
-              break;
-
-            case 'view-sign-in':
-              Telemetry.sendEvent(AUTHENTICATION_PROMPT);
-              break;
 
             default:
               break;
