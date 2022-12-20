@@ -1,3 +1,10 @@
+## [0.57.1](https://github.com/getappmap/vscode-appland/compare/v0.57.0...v0.57.1) (2022-12-20)
+
+
+### Bug Fixes
+
+* Set YARN_CHECKSUM_BEHAVIOR=update when 'yarn up' is called ([577526c](https://github.com/getappmap/vscode-appland/commit/577526c61852690ffb46e1bd34a4765a8994af94))
+
 # [0.57.0](https://github.com/getappmap/vscode-appland/compare/v0.56.2...v0.57.0) (2022-12-20)
 
 
