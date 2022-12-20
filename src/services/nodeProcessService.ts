@@ -206,7 +206,8 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
       await fs.appendFile(path.join(this.globalStorageDir, 'yarn.lock'), '');
 
       const installProcess = await spawn({
-        args: [this.yarnPath, 'up'],
+        binPath: this.yarnPath,
+        args: ['up'],
         cwd: this.globalStorageDir,
         log: NodeProcessService.outputChannel,
       });
