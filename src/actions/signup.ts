@@ -4,12 +4,12 @@ import extensionSettings from '../configuration/extensionSettings';
 import AnalysisManager from '../services/analysisManager';
 import { ANALYSIS_CTA_INTERACTION, Telemetry } from '../telemetry';
 export class Signup {
-  public static async forAnalysis(skipTelemetry?: boolean): Promise<boolean> {
+  public static async forAnalysis(): Promise<boolean> {
     if (AnalysisManager.isAnalysisEnabled) {
       return true;
     }
 
-    if (!skipTelemetry) Telemetry.sendEvent(ANALYSIS_CTA_INTERACTION);
+    Telemetry.sendEvent(ANALYSIS_CTA_INTERACTION);
 
     const session = await vscode.authentication.getSession(AUTHN_PROVIDER_NAME, ['default'], {
       createIfNone: true,
