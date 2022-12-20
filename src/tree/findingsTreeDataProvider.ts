@@ -76,6 +76,7 @@ export class FindingsTreeDataProvider
       command: 'appmap.openFindingsOverview',
       title: `Open in AppMap`,
     };
+    overviewTreeItem.iconPath = new vscode.ThemeIcon('preview');
 
     return topLevelTreeLabels.reduce(
       (treeItems, impactDomain) => {
