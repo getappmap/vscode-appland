@@ -4,7 +4,7 @@ import { fileWordScanner } from './deps';
 
 const scanGemfile = fileWordScanner('Gemfile');
 
-export default async function analyze(folder: WorkspaceFolder): Promise<ProjectAnalysis> {
+export default async function analyze(folder: WorkspaceFolder): Promise<ProjectAnalysis | null> {
   const features: Features = {
     lang: {
       title: 'Ruby',
