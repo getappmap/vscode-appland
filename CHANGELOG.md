@@ -1,3 +1,10 @@
+# [0.58.0](https://github.com/getappmap/vscode-appland/compare/v0.57.2...v0.58.0) (2022-12-21)
+
+
+### Features
+
+* Recognize support of Jest testing framework ([c7408f4](https://github.com/getappmap/vscode-appland/commit/c7408f4cd22f5f0bf9abe2a38809e999660e68e1)), closes [#554](https://github.com/getappmap/vscode-appland/issues/554)
+
 ## [0.57.2](https://github.com/getappmap/vscode-appland/compare/v0.57.1...v0.57.2) (2022-12-20)
 
 
