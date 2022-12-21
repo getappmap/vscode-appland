@@ -3,10 +3,9 @@ import { extname } from 'path';
 import backgroundJob from '../lib/backgroundJob';
 import GitProperties from '../telemetry/properties/versionControlGit';
 
-export const SUPPORTED_LANGUAGES = ['ruby', 'python', 'java', 'javascript'] as const;
-export const UNKNOWN_LANGUAGE = 'unknown';
+export const SUPPORTED_LANGUAGES = ['ruby', 'python', 'java', 'javascript'];
 
-export type LanguageId = typeof SUPPORTED_LANGUAGES[number] | typeof UNKNOWN_LANGUAGE;
+export const UNKNOWN_LANGUAGE = 'unknown';
 
 const LANGUAGES = [
   {
@@ -244,9 +243,7 @@ export default class LanguageResolver {
    * Retrieve the most frequently used language id for a given directory. The language returned must be supported (i.e.,
    * it must be registered in LANGUAGE_AGENTS). If the language is not supported, returns 'unknown'.
    */
-  private static async identifyLanguage(
-    folder: vscode.WorkspaceFolder | string
-  ): Promise<LanguageId> {
+  private static async identifyLanguage(folder: vscode.WorkspaceFolder | string): Promise<string> {
     let languageStats = LANGUAGE_CACHE[folderPath(folder)];
     if (!languageStats) {
       languageStats = await backgroundJob<LanguageStats>(
@@ -266,7 +263,10 @@ export default class LanguageResolver {
     }
 
     const best = Object.entries(languageStats).sort((a, b) => b[1] - a[1])?.[0]?.[0];
-    return toSupported(best);
+    if (SUPPORTED_LANGUAGES.indexOf(best) !== -1) {
+      return best;
+    }
+    return UNKNOWN_LANGUAGE;
   }
 
   /**
@@ -275,14 +275,7 @@ export default class LanguageResolver {
    *
    * @returns unknown if the most used language is not supported
    */
-  public static async getLanguage(folder: vscode.WorkspaceFolder | string): Promise<LanguageId> {
+  public static async getLanguage(folder: vscode.WorkspaceFolder | string): Promise<string> {
     return await this.identifyLanguage(folder);
   }
-}
-
-function toSupported(lang: string): LanguageId {
-  if ((SUPPORTED_LANGUAGES as readonly string[]).includes(lang)) {
-    return lang as LanguageId;
-  }
-  return UNKNOWN_LANGUAGE;
 }

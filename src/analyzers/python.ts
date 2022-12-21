@@ -31,7 +31,7 @@ async function grepFiles(pattern: string, folder: WorkspaceFolder) {
   );
 }
 
-export default async function analyze(folder: WorkspaceFolder): Promise<ProjectAnalysis> {
+export default async function analyze(folder: WorkspaceFolder): Promise<ProjectAnalysis | null> {
   const features: Features = {
     lang: {
       title: 'Python',
