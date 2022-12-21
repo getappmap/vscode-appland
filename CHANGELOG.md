@@ -1,3 +1,20 @@
+## [0.58.1](https://github.com/getappmap/vscode-appland/compare/v0.58.0...v0.58.1) (2022-12-21)
+
+
+### Bug Fixes
+
+* Revert "feat: Recognize support of Jest testing framework" ([0efe031](https://github.com/getappmap/vscode-appland/commit/0efe03172e3649f10a02e943b94cbdd22268a7cc))
+
+
+### Reverts
+
+* Revert "Bump loader-utils version pins" ([d8dd41d](https://github.com/getappmap/vscode-appland/commit/d8dd41d4bc6fee37308a51db30b6c975ed0df3bc))
+* Revert "Bump typescript and ts-loader versions" ([2f62c93](https://github.com/getappmap/vscode-appland/commit/2f62c93f39563411a0e09a156158b755f9e0effe))
+* Revert "Update @types/node to ^16" ([81e2068](https://github.com/getappmap/vscode-appland/commit/81e20687725ef8e8b44770703f8bdea4a6e8732b))
+* Revert "Update ts-node" ([4e7780b](https://github.com/getappmap/vscode-appland/commit/4e7780b6cea3e5f9acf1c871af38a724e100c7ec))
+* Revert "Load project analyzers statically" ([9df6cdf](https://github.com/getappmap/vscode-appland/commit/9df6cdf9a311fea60e4732df0bd34b00c6e2de38))
+* Revert "feat: Recognize support of Jest testing framework" ([1df57ea](https://github.com/getappmap/vscode-appland/commit/1df57eaee4455ee8e111fbd50680e747f83bd304))
+
 # [0.58.0](https://github.com/getappmap/vscode-appland/compare/v0.57.2...v0.58.0) (2022-12-21)
 
 
