@@ -1,3 +1,10 @@
+## [0.58.2](https://github.com/getappmap/vscode-appland/compare/v0.58.1...v0.58.2) (2022-12-22)
+
+
+### Bug Fixes
+
+* Use `child_process.fork` for launching sub-processes ([#569](https://github.com/getappmap/vscode-appland/issues/569)) ([8a7de10](https://github.com/getappmap/vscode-appland/commit/8a7de1045cd7947bf2b04ae864a4173739e6cbbd))
+
 ## [0.58.1](https://github.com/getappmap/vscode-appland/compare/v0.58.0...v0.58.1) (2022-12-21)
 
 
