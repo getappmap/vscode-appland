@@ -5,7 +5,7 @@ import {
   OutputStream,
   ProcessLogItem,
   spawn,
-  getBinPath,
+  getModulePath,
 } from './nodeDependencyProcess';
 import EventEmitter from 'events';
 import { readFile } from 'fs';
@@ -18,7 +18,7 @@ import { workspaceServices } from './workspaceServices';
 
 export default class AppmapUptodateServiceInstance extends EventEmitter
   implements WorkspaceServiceInstance {
-  binPath: string | undefined;
+  modulePath: string | undefined;
   interval?: NodeJS.Timeout;
   process?: ChildProcess;
   updatedAt?: number;
@@ -52,8 +52,8 @@ export default class AppmapUptodateServiceInstance extends EventEmitter
   }
 
   async update(): Promise<void> {
-    if (!this.binPath) {
-      this.binPath = await getBinPath({
+    if (!this.modulePath) {
+      this.modulePath = await getModulePath({
         dependency: ProgramName.Appmap,
         globalStoragePath: this.globalStoragePath,
       });
@@ -85,9 +85,9 @@ export default class AppmapUptodateServiceInstance extends EventEmitter
     // we began our update request.
     if (this.updatedAt && this.updatedAt > updateRequestedAt) return;
 
-    assert(this.binPath, `binPath is not initialized`);
+    assert(this.modulePath, `modulePath is not initialized`);
     this.process = spawn({
-      binPath: this.binPath,
+      modulePath: this.modulePath,
       args: this.commandArgs,
       cwd: this.folder.uri.fsPath,
       saveOutput: true,

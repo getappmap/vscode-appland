@@ -7,7 +7,7 @@ import { WorkspaceService } from './workspaceService';
 import NodeProcessServiceInstance from './nodeProcessServiceInstance';
 import { ProcessWatcher } from './processWatcher';
 import ErrorCode from '../telemetry/definitions/errorCodes';
-import { getBinPath, ProgramName, spawn } from './nodeDependencyProcess';
+import { getModulePath, ProgramName, spawn } from './nodeDependencyProcess';
 import { ProjectStateServiceInstance } from './projectStateService';
 import { downloadFile, getLatestVersionInfo } from '../util';
 import AnalysisManager from './analysisManager';
@@ -76,7 +76,7 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
       services.push(
         new ProcessWatcher({
           id: 'index',
-          binPath: await getBinPath({
+          modulePath: await getModulePath({
             dependency: ProgramName.Appmap,
             globalStoragePath: this.globalStorageDir,
           }),
@@ -88,7 +88,7 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
         new ProcessWatcher({
           id: 'analysis',
           startCondition: () => AnalysisManager.isAnalysisEnabled,
-          binPath: await getBinPath({
+          modulePath: await getModulePath({
             dependency: ProgramName.Scanner,
             globalStoragePath: this.globalStorageDir,
           }),
@@ -206,7 +206,8 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
       await fs.appendFile(path.join(this.globalStorageDir, 'yarn.lock'), '');
 
       const installProcess = await spawn({
-        args: [this.yarnPath, 'up'],
+        modulePath: this.yarnPath,
+        args: ['up'],
         cwd: this.globalStorageDir,
         log: NodeProcessService.outputChannel,
         // Fix "The remote archive doesn't match the expected checksum" issue by
