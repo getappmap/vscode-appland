@@ -3,7 +3,7 @@ import * as vscode from 'vscode';
 import ExtensionState from '../configuration/extensionState';
 import chooseWorkspace from '../lib/chooseWorkspace';
 import {
-  getBinPath,
+  getModulePath,
   OutputStream,
   ProgramName,
   spawn,
@@ -32,12 +32,12 @@ export default async function generateOpenApi(
         async () => {
           assert(workspaceFolder);
 
-          const binPath = await getBinPath({
+          const modulePath = await getModulePath({
             dependency: ProgramName.Appmap,
             globalStoragePath: context.globalStorageUri.fsPath,
           });
           const openApiCmd = spawn({
-            binPath,
+            modulePath,
             args: ['openapi', '--appmap-dir', workspaceFolder.uri.fsPath],
             saveOutput: true,
           });

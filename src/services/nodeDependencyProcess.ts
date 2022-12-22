@@ -16,9 +16,8 @@ export type WithLogCache = {
 export type ChildProcess = childProcess.ChildProcessWithoutNullStreams & WithLogCache;
 
 export type SpawnOptions = {
-  // Path to a bin script installed via yarn. If specified, it will be shifted into the command args
-  // to be run via `node`
-  binPath: string;
+  // Path to a node module script to be executed
+  modulePath: string;
 
   // Command line args given to `node` or the `bin` script specified
   args?: string[];
@@ -111,7 +110,7 @@ export class ProcessLog extends Array<ProcessLogItem> {
   }
 }
 
-export async function getBinPath(options: ProgramOptions): Promise<string> {
+export async function getModulePath(options: ProgramOptions): Promise<string> {
   const localToolsPath = ExtensionSettings.appMapCommandLineToolsPath;
   if (localToolsPath) {
     let packageName: string;
@@ -139,7 +138,7 @@ export async function getBinPath(options: ProgramOptions): Promise<string> {
 
 export function spawn(options: SpawnOptions): ChildProcess {
   const env = { ...process.env, ...(options.env || {}) };
-  const newProcess = childProcess.fork(options.binPath, options.args || [], {
+  const newProcess = childProcess.fork(options.modulePath, options.args || [], {
     ...options,
     env,
     execArgv: [],
