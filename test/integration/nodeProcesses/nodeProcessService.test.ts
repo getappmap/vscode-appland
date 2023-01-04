@@ -15,13 +15,15 @@ describe('NodeProcessService', () => {
           extensionPath: path.join(__dirname, '..', '..', '..', '..'),
         } as vscode.ExtensionContext;
 
-        console.log(extensionContext.extensionPath);
         const service = new NodeProcessService(extensionContext, []);
         await service.install();
         await fs.stat(path.join(tmpDir, 'node_modules'));
         await fs.stat(path.join(tmpDir, 'yarn.lock'));
         await fs.stat(path.join(tmpDir, 'yarn.js'));
         await fs.stat(path.join(tmpDir, 'package.json'));
+
+        // This file shouldn't exist. If it does, our process environment was not overridden.
+        await assert.rejects(fs.stat(path.join(tmpDir, 'bad.lock')));
         await assert.rejects(fs.stat(lockFile));
       });
     });
