@@ -5,6 +5,7 @@ import { ResolvedFinding } from '../services/resolvedFinding';
 import { getNonce } from '../util';
 import { Finding, Rule } from '@appland/scanner';
 import { ANALYSIS_VIEW_FINDING, Telemetry } from '../telemetry';
+import { getStackLocations, StackLocation } from '../lib/getStackLocations';
 
 type FindingData = {
   finding: Finding;
@@ -37,37 +38,15 @@ type RuleInfo = {
   scope?: string;
 };
 
-type StackLocation = vscode.Location & {
-  truncatedPath: string;
-};
-
 type WebPanelHolder = {
   [hash: string]: vscode.WebviewPanel;
 };
-
-const STACK_TRACE_CHARACTER_LIMIT = 50;
 
 function openInSource(location: LocationInfo): void {
   const { uri, range } = location;
   const [start, end] = range;
   const selection = new vscode.Range(start.line, start.character, end.line, end.character);
   vscode.window.showTextDocument(vscode.Uri.file(uri.path), { selection });
-}
-
-function getStackLocations(finding: ResolvedFinding): StackLocation[] {
-  const stackFrameIndex = finding.stackFrameIndex;
-  return Array.from(stackFrameIndex.locationByFrame.values()).map((location) => {
-    let truncatedPath = location.uri.path;
-    const splitPath = location.uri.path.split(path.sep);
-
-    while (truncatedPath.length > STACK_TRACE_CHARACTER_LIMIT) {
-      splitPath.shift();
-      truncatedPath = splitPath.join(path.sep);
-    }
-    truncatedPath = `...${path.sep}${truncatedPath}`;
-
-    return { ...location, truncatedPath };
-  });
 }
 
 function generateRuleInfo(rule: Rule | undefined): RuleInfo | undefined {

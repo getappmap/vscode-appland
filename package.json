@@ -499,11 +499,11 @@
   "dependencies": {
     "@appland/appmap": "^3.43.2",
     "@appland/client": "^1.5.0",
-    "@appland/components": "^2.19.1",
-    "@appland/diagrams": "^1.5.3",
-    "@appland/models": "^1.20.0",
+    "@appland/components": "^2.20.1",
+    "@appland/diagrams": "^1.6.1",
+    "@appland/models": "^1.23.0",
     "@appland/scanner": "^1.74.0",
-    "@appland/sequence-diagram": "^1.1.0",
+    "@appland/sequence-diagram": "^1.3.0",
     "bent": "^7.3.12",
     "bootstrap": "^4.5.3",
     "bootstrap-autocomplete": "^2.3.7",
@@ -514,8 +514,8 @@
     "proper-lockfile": "^4.1.2",
     "semver": "^7.3.5",
     "vscode-extension-telemetry": "^0.1.7",
-    "vue": "^2.6.14",
-    "vue-template-compiler": "^2.6.14",
+    "vue": "^2.7.14",
+    "vue-template-compiler": "^2.7.14",
     "vuex": "^3.6.0"
   },
   "__metadata": {

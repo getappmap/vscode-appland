@@ -121,7 +121,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/components@npm:2.19.1, @appland/components@npm:^2.19.1":
+"@appland/components@npm:2.19.1":
   version: 2.19.1
   resolution: "@appland/components@npm:2.19.1"
   dependencies:
@@ -136,7 +136,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/diagrams@npm:1.5.3, @appland/diagrams@npm:^1.5.1, @appland/diagrams@npm:^1.5.3":
+"@appland/components@npm:^2.20.1":
+  version: 2.20.1
+  resolution: "@appland/components@npm:2.20.1"
+  dependencies:
+    "@appland/diagrams": ^1.6.0
+    "@appland/models": ^1.23.0
+    buffer: ^6.0.3
+    highlight.js: ^10.7.2
+    sql-formatter: ^4.0.2
+    vue: ^2.7.14
+    vuex: ^3.6.0
+  checksum: 7e2aa4de065f060bc873290b5c18911fe22a77b85252d0364f5d7d378a316590cb001b5e44acb8f3c2eab54990298eb5c95d91120ff94d27c970107ee58590da
+  languageName: node
+  linkType: hard
+
+"@appland/diagrams@npm:1.5.3, @appland/diagrams@npm:^1.5.1":
   version: 1.5.3
   resolution: "@appland/diagrams@npm:1.5.3"
   dependencies:
@@ -151,6 +166,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@appland/diagrams@npm:^1.6.0, @appland/diagrams@npm:^1.6.1":
+  version: 1.6.1
+  resolution: "@appland/diagrams@npm:1.6.1"
+  dependencies:
+    "@appland/models": ^1.23.0
+    d3-interpolate: ^1.4.0
+    d3-selection: ^1.4.2
+    d3-shape: ^1.3.7
+    d3-zoom: ^1.8.3
+    dagre: ^0.8.5
+    deepmerge: ^4.2.2
+  checksum: 38a07edd9969ea1942c597a1ad76c9d0f502295a6fa317d8c26af3fdc11866e6577e403e8a33cd28fe1c6a540ad464c6db3f2836cd5f703bb2c64b135bf1e9eb
+  languageName: node
+  linkType: hard
+
 "@appland/models@npm:1.20.0":
   version: 1.20.0
   resolution: "@appland/models@npm:1.20.0"
@@ -161,13 +191,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/models@npm:1.22.0, @appland/models@npm:^1.18.1, @appland/models@npm:^1.20.0, @appland/models@npm:^1.9.0":
+"@appland/models@npm:1.22.0, @appland/models@npm:^1.18.1, @appland/models@npm:^1.9.0":
   version: 1.22.0
   resolution: "@appland/models@npm:1.22.0"
   dependencies:
     "@appland/sql-parser": ^1.5.0
     crypto-js: ^4.0.0
   checksum: 9627cc5143a93114a94bac4f9d967e126fa7fc6c63bdabdb0665dc49c5993aa776b485f78ab725414b18987935806af107a84075f50890acff89e4152c6a8c34
+  languageName: node
+  linkType: hard
+
+"@appland/models@npm:^1.23.0":
+  version: 1.23.0
+  resolution: "@appland/models@npm:1.23.0"
+  dependencies:
+    "@appland/sql-parser": ^1.5.0
+    crypto-js: ^4.0.0
+  checksum: f6750f00e9ae45c1180f370b9182147b0241a635fbe8d097f1e6c596fd1be74cc2eef647b0da39e391bb5f468313ba88c5c9128e6b99263595df67e775932e63
   languageName: node
   linkType: hard
 
@@ -188,6 +228,16 @@ __metadata:
     "@appland/models": 1.22.0
     js-yaml: ^4.1.0
   checksum: 0c1cc4a472e028d41042a44a3cd3f34e657e33379901792725572b97709da01ec95cf66c1dcebc3995f6954de5bdc36014dba8f4a957ad6941059a8e92ef6e12
+  languageName: node
+  linkType: hard
+
+"@appland/openapi@npm:1.3.0":
+  version: 1.3.0
+  resolution: "@appland/openapi@npm:1.3.0"
+  dependencies:
+    "@appland/models": 1.22.0
+    js-yaml: ^4.1.0
+  checksum: eeb4162655459f11184e416cb701381a34c6a3953d3ce0bf482081d5a1871aed047a7036fd472d20826c8deb599c4739f2a727f265302d9d6a276fea6ddcca1e
   languageName: node
   linkType: hard
 
@@ -228,7 +278,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/sequence-diagram@npm:1.3.0, @appland/sequence-diagram@npm:^1.1.0":
+"@appland/sequence-diagram@npm:1.3.0":
   version: 1.3.0
   resolution: "@appland/sequence-diagram@npm:1.3.0"
   dependencies:
@@ -238,6 +288,18 @@ __metadata:
     "@appland/openapi": ^1.2.1
     "@datastructures-js/priority-queue": "*"
   checksum: d8ac21d393c4d583d76ad3df40c3ef4be055ee0a942e0ae734fdf10d5c3c026e3243819e85bcc54b1255c1a91ae37e5b63bd412c1d6d4498f259cff41e29650d
+  languageName: node
+  linkType: hard
+
+"@appland/sequence-diagram@npm:^1.3.0":
+  version: 1.3.1
+  resolution: "@appland/sequence-diagram@npm:1.3.1"
+  dependencies:
+    "@appland/models": 1.22.0
+    "@appland/openapi": 1.3.0
+    "@datastructures-js/priority-queue": ^6.1.3
+    diff: ^5.1.0
+  checksum: b34bf2e9f26249e3fb8147c4071a5f14d4868c14393dc1ac3af55ac606171da2536578cd75ad5aad7b24e8dbe2fd02e7b4bc0d948f6b61dd0f41f8ccc9b03ab2
   languageName: node
   linkType: hard
 
@@ -891,6 +953,15 @@ __metadata:
   bin:
     parser: ./bin/babel-parser.js
   checksum: 5ef97da97915085ff3b9c562b04fb6316074ece52d20de95f44c47b46abf87fd754cbcae769a69570a84652b736afe5bb2cb7dc117aa7ad6d81ab40eed0c613b
+  languageName: node
+  linkType: hard
+
+"@babel/parser@npm:^7.18.4":
+  version: 7.20.7
+  resolution: "@babel/parser@npm:7.20.7"
+  bin:
+    parser: ./bin/babel-parser.js
+  checksum: 25b5266e3bd4be837092685f6b7ef886f1308ff72659a24342eb646ae5014f61ed1771ce8fc20636c890fcae19304fc72c069564ca6075207b7fbf3f75367275
   languageName: node
   linkType: hard
 
@@ -3087,6 +3158,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@vue/compiler-sfc@npm:2.7.14":
+  version: 2.7.14
+  resolution: "@vue/compiler-sfc@npm:2.7.14"
+  dependencies:
+    "@babel/parser": ^7.18.4
+    postcss: ^8.4.14
+    source-map: ^0.6.1
+  checksum: 25e00abaecb311f1effbf539bc3e4fdeedb39d35f9c2947b2640187a047e6a7400e693fd7da1d3a98977b9078c5bf629ca47f8b9a59dc14a080c0a1e1dd06a49
+  languageName: node
+  linkType: hard
+
 "@vue/compiler-sfc@npm:^3.2.37":
   version: 3.2.37
   resolution: "@vue/compiler-sfc@npm:3.2.37"
@@ -3679,11 +3761,11 @@ __metadata:
   dependencies:
     "@appland/appmap": ^3.43.2
     "@appland/client": ^1.5.0
-    "@appland/components": ^2.19.1
-    "@appland/diagrams": ^1.5.3
-    "@appland/models": ^1.20.0
+    "@appland/components": ^2.20.1
+    "@appland/diagrams": ^1.6.1
+    "@appland/models": ^1.23.0
     "@appland/scanner": ^1.74.0
-    "@appland/sequence-diagram": ^1.1.0
+    "@appland/sequence-diagram": ^1.3.0
     "@babel/core": ^7.19.3
     "@babel/preset-env": ^7.14.2
     "@babel/preset-typescript": ^7.18.6
@@ -3753,10 +3835,10 @@ __metadata:
     typescript: ^4.1.3
     vsce: ^2.11.0
     vscode-extension-telemetry: ^0.1.7
-    vue: ^2.6.14
+    vue: ^2.7.14
     vue-loader: ^15.9.6
     vue-style-loader: ^4.1.2
-    vue-template-compiler: ^2.6.14
+    vue-template-compiler: ^2.7.14
     vuex: ^3.6.0
     webpack: ^5.72.1
     webpack-cli: ^4.3.1
@@ -5295,6 +5377,13 @@ __metadata:
   dependencies:
     cssom: ~0.3.6
   checksum: 5f05e6fd2e3df0b44695c2f08b9ef38b011862b274e320665176467c0725e44a53e341bc4959a41176e83b66064ab786262e7380fd1cabeae6efee0d255bb4e3
+  languageName: node
+  linkType: hard
+
+"csstype@npm:^3.1.0":
+  version: 3.1.1
+  resolution: "csstype@npm:3.1.1"
+  checksum: 1f7b4f5fdd955b7444b18ebdddf3f5c699159f13e9cf8ac9027ae4a60ae226aef9bbb14a6e12ca7dba3358b007cee6354b116e720262867c398de6c955ea451d
   languageName: node
   linkType: hard
 
@@ -7330,7 +7419,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"he@npm:1.2.0, he@npm:^1.1.0":
+"he@npm:1.2.0, he@npm:^1.2.0":
   version: 1.2.0
   resolution: "he@npm:1.2.0"
   bin:
@@ -10741,6 +10830,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"postcss@npm:^8.4.14":
+  version: 8.4.20
+  resolution: "postcss@npm:8.4.20"
+  dependencies:
+    nanoid: ^3.3.4
+    picocolors: ^1.0.0
+    source-map-js: ^1.0.2
+  checksum: 1a5609ea1c1b204f9c2974a0019ae9eef2d99bf645c2c9aac675166c4cb1005be7b5e2ba196160bc771f5d9ac896ed883f236f888c891e835e59d28fff6651aa
+  languageName: node
+  linkType: hard
+
 "prebuild-install@npm:6.1.4":
   version: 6.1.4
   resolution: "prebuild-install@npm:6.1.4"
@@ -13384,13 +13484,13 @@ typescript@^4.1.3:
   languageName: node
   linkType: hard
 
-"vue-template-compiler@npm:^2.6.14":
-  version: 2.6.14
-  resolution: "vue-template-compiler@npm:2.6.14"
+"vue-template-compiler@npm:^2.7.14":
+  version: 2.7.14
+  resolution: "vue-template-compiler@npm:2.7.14"
   dependencies:
     de-indent: ^1.0.2
-    he: ^1.1.0
-  checksum: 0d03f804ac97e26629c78219929596cfd98f522e1f13b16dd42f13e3fff09b85fb8252ef3486e9d62ca7993f576386f587e760df0506230fa87141fdac8275ea
+    he: ^1.2.0
+  checksum: eba9d2eed6b7110c963bc356b47bdd11d4023d25148abb7e5f7826db2fefe7ad8a575787ee0d8fa47701d44a6f54bde475279b1319f44e1049271eb2419f93a7
   languageName: node
   linkType: hard
 
@@ -13401,10 +13501,20 @@ typescript@^4.1.3:
   languageName: node
   linkType: hard
 
-"vue@npm:^2.6.11, vue@npm:^2.6.14":
+"vue@npm:^2.6.11":
   version: 2.6.14
   resolution: "vue@npm:2.6.14"
   checksum: 23524a1bdca094d62cb3491a46317eed75184b5d61d28fa846ea5d2b241c1cc7084fc67ee259d47a50a6d0bbc33ecaceb7bb52bff81312fe7da07263f3419942
+  languageName: node
+  linkType: hard
+
+"vue@npm:^2.7.14":
+  version: 2.7.14
+  resolution: "vue@npm:2.7.14"
+  dependencies:
+    "@vue/compiler-sfc": 2.7.14
+    csstype: ^3.1.0
+  checksum: 8b06da67cc40870c66a30b7a6bc2874950cd4383792c371eb30497dd14fc7b41cf308b1c4517368d8f0e7ac16198c08de19236f6a79fe43f4bdbc4a1d9d4ad07
   languageName: node
   linkType: hard
 
