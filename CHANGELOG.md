@@ -1,3 +1,10 @@
+# [0.59.0](https://github.com/getappmap/vscode-appland/compare/v0.58.2...v0.59.0) (2023-01-06)
+
+
+### Features
+
+* Present findings information within AppMap view ([#551](https://github.com/getappmap/vscode-appland/issues/551)) ([b2ef538](https://github.com/getappmap/vscode-appland/commit/b2ef538251511292c9b90d26f1fb92071d82099f))
+
 ## [0.58.2](https://github.com/getappmap/vscode-appland/compare/v0.58.1...v0.58.2) (2022-12-22)
 
 
