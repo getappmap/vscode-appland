@@ -246,6 +246,8 @@ export default class AppMapEditorProvider
     webviewPanel.onDidDispose(() => {
       this.currentWebView = undefined;
       removeOne(this.documents, document);
+      if (document.workspaceFolder)
+        this.extensionState.setClosedAppMap(document.workspaceFolder, true);
     });
 
     function openFile(uri: vscode.Uri, lineNumber: number) {
