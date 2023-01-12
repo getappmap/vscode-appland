@@ -11,6 +11,7 @@ import { ResolvedFinding } from './resolvedFinding';
 import { WorkspaceServices } from './workspaceServices';
 import Environment from '../configuration/environment';
 import { ANALYSIS_DISABLE, ANALYSIS_ENABLE, Telemetry } from '../telemetry';
+import AppMapServerAuthenticationProvider from '../authentication/appmapServerAuthenticationProvider';
 
 export interface AnalysisToggleEvent {
   enabled: boolean;
@@ -101,10 +102,7 @@ export default class AnalysisManager {
   public static async isUserAuthenticated(): Promise<boolean> {
     if (Environment.isSmokeTest) return true;
 
-    const session = await vscode.authentication.getSession(AUTHN_PROVIDER_NAME, ['default'], {
-      createIfNone: false,
-    });
-    return session !== undefined;
+    return !!(await AppMapServerAuthenticationProvider.getApiKey(false));
   }
 
   private static onAnalysisEnabled(): void {

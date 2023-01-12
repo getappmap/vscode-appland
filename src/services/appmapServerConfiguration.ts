@@ -1,7 +1,7 @@
 import { Configuration } from '@appland/client';
 import { setConfiguration } from '@appland/client/dist/src/loadConfiguration';
 import * as vscode from 'vscode';
-import { AUTHN_PROVIDER_NAME } from '../authentication';
+import AppMapServerAuthenticationProvider from '../authentication/appmapServerAuthenticationProvider';
 import ExtensionSettings from '../configuration/extensionSettings';
 
 export default class AppMapServerConfiguration implements vscode.Disposable {
@@ -29,10 +29,8 @@ export default class AppMapServerConfiguration implements vscode.Disposable {
   static async updateAppMapClientConfiguration(): Promise<void> {
     const serverURL = ExtensionSettings.appMapServerURL;
     const configuration: Configuration = { baseURL: serverURL.toString() };
-    const session = await vscode.authentication.getSession(AUTHN_PROVIDER_NAME, ['default']);
-    if (session) {
-      configuration.apiKey = session.accessToken;
-    }
+    const apiKey = await AppMapServerAuthenticationProvider.getApiKey(false);
+    if (apiKey) configuration.apiKey = apiKey;
 
     setConfiguration(configuration);
   }

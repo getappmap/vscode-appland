@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import extensionSettings from '../configuration/extensionSettings';
 import { AppMap } from '@appland/client';
 import { UploadAppMapResponse } from '@appland/client/dist/src/appMap';
-import { AUTHN_PROVIDER_NAME } from '../authentication';
+import AppMapServerAuthenticationProvider from '../authentication/appmapServerAuthenticationProvider';
 
 export class AppmapUploader {
   public static DIALOG_KEY = 'applandinc.appmap.uploadDialog';
@@ -40,12 +40,8 @@ export class AppmapUploader {
       return undefined;
     }
 
-    const session = await vscode.authentication.getSession(AUTHN_PROVIDER_NAME, ['default'], {
-      createIfNone: true,
-    });
-    if (!session) {
-      return undefined;
-    }
+    const appmapApiKey = await AppMapServerAuthenticationProvider.getApiKey(true);
+    if (!appmapApiKey) return;
 
     let upload: UploadAppMapResponse;
     try {

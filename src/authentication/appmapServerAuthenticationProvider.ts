@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-import TelemetryReporter from 'vscode-extension-telemetry';
 import { default as ExtensionSettings } from '../configuration/extensionSettings';
 import UriHandler from '../uri/uriHandler';
 import AppMapServerAuthenticationHandler from '../uri/appmapServerAuthenticationHandler';
@@ -47,6 +46,16 @@ export default class AppMapServerAuthenticationProvider implements vscode.Authen
     Object.entries(queryParams).forEach(([k, v]) => url.searchParams.set(k, v));
 
     return vscode.Uri.parse(url.toString());
+  }
+
+  static async getApiKey(createIfNone: boolean): Promise<string | undefined> {
+    const session = await vscode.authentication.getSession(AUTHN_PROVIDER_NAME, ['default'], {
+      createIfNone,
+    });
+    if (!session) {
+      return;
+    }
+    return session.accessToken;
   }
 
   constructor(public context: vscode.ExtensionContext, public uriHandler: UriHandler) {}
