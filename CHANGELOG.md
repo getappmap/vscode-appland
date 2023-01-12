@@ -1,3 +1,10 @@
+# [0.60.0](https://github.com/getappmap/vscode-appland/compare/v0.59.1...v0.60.0) (2023-01-12)
+
+
+### Features
+
+* share button updates ([2245b81](https://github.com/getappmap/vscode-appland/commit/2245b81172675b0f7b90ec4df29a56672a684c4d))
+
 ## [0.59.1](https://github.com/getappmap/vscode-appland/compare/v0.59.0...v0.59.1) (2023-01-12)
 
 
