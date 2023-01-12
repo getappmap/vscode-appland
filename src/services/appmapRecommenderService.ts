@@ -4,6 +4,7 @@ import { resolve } from 'path';
 import { promisify } from 'util';
 import ExtensionState, { Keys } from '../configuration/extensionState';
 import { WorkspaceService, WorkspaceServiceInstance } from './workspaceService';
+import { ADD_RECOMMENDATION, Telemetry } from '../telemetry';
 
 type ExtensionsJson = {
   recommendations?: Array<string>;
@@ -18,6 +19,7 @@ export class AppMapRecommenderServiceInstance implements WorkspaceServiceInstanc
     extensionState.onWorkspaceFlag(async (event) => {
       if (event.workspaceFolder === folder && event.key === Keys.Workspace.CLOSED_APPMAP) {
         const response = await this.askUser();
+        Telemetry.sendEvent(ADD_RECOMMENDATION, { result: response === 'Yes' ? 'true' : 'false' });
         if (response === 'Yes') await this.recommendAppMap();
       }
     });
