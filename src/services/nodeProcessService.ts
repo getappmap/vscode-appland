@@ -10,19 +10,21 @@ import ErrorCode from '../telemetry/definitions/errorCodes';
 import { getModulePath, ProgramName, spawn } from './nodeDependencyProcess';
 import { ProjectStateServiceInstance } from './projectStateService';
 import { downloadFile, getLatestVersionInfo } from '../util';
-import AnalysisManager from './analysisManager';
 import { lookupAppMapDir } from '../lib/appmapDir';
 import lockfile from 'proper-lockfile';
+import IndexProcessWatcher from './indexProcessWatcher';
+import ScanProcessWatcher from './scanProcessWatcher';
 
 const YARN_JS = 'yarn.js';
 const PACKAGE_JSON = 'package.json';
 const INSTALL_SUCCESS_MESSAGE = 'Installation of AppMap services is complete.';
 
 export class NodeProcessService implements WorkspaceService<NodeProcessServiceInstance> {
+  public static outputChannel = vscode.window.createOutputChannel('AppMap: Services');
+
   protected externDir: string;
   protected globalStorageDir: string;
   protected COPY_FILES: string[] = [PACKAGE_JSON, YARN_JS];
-  protected static outputChannel = vscode.window.createOutputChannel('AppMap: Services');
   protected static readonly DEFAULT_APPMAP_DIR = '.';
 
   protected _hasCLIBin = false;
@@ -69,39 +71,32 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
       appMapDir = NodeProcessService.DEFAULT_APPMAP_DIR;
     }
 
-    try {
-      const env = process.env.APPMAP_TEST
-        ? { ...process.env, APPMAP_WRITE_PIDFILE: 'true' }
-        : undefined;
-      services.push(
-        new ProcessWatcher({
-          id: 'index',
-          modulePath: await getModulePath({
-            dependency: ProgramName.Appmap,
-            globalStoragePath: this.globalStorageDir,
-          }),
-          log: NodeProcessService.outputChannel,
-          args: ['index', '--watch', '--appmap-dir', appMapDir],
-          cwd: folder.uri.fsPath,
-          env,
-        }),
-        new ProcessWatcher({
-          id: 'analysis',
-          startCondition: () => AnalysisManager.isAnalysisEnabled,
-          modulePath: await getModulePath({
-            dependency: ProgramName.Scanner,
-            globalStoragePath: this.globalStorageDir,
-          }),
-          log: NodeProcessService.outputChannel,
-          args: ['scan', '--watch', '--appmap-dir', appMapDir],
-          cwd: folder.uri.fsPath,
-        })
-      );
-    } catch (e) {
-      Telemetry.sendEvent(DEBUG_EXCEPTION, {
-        exception: e as Error,
-        errorCode: ErrorCode.DependencyPathNotResolved,
-      });
+    const env = process.env.APPMAP_TEST
+      ? { ...process.env, APPMAP_WRITE_PIDFILE: 'true' }
+      : undefined;
+
+    const tryModulePath = async (program: ProgramName): Promise<string | undefined> => {
+      try {
+        return await getModulePath({
+          dependency: program,
+          globalStoragePath: this.globalStorageDir,
+        });
+      } catch (e) {
+        Telemetry.sendEvent(DEBUG_EXCEPTION, {
+          exception: e as Error,
+          errorCode: ErrorCode.DependencyPathNotResolved,
+        });
+      }
+    };
+
+    const appmapModulePath = await tryModulePath(ProgramName.Appmap);
+    if (appmapModulePath) {
+      services.push(new IndexProcessWatcher(appmapModulePath, appMapDir, folder.uri.fsPath, env));
+    }
+
+    const scannerModulePath = await tryModulePath(ProgramName.Scanner);
+    if (scannerModulePath) {
+      services.push(new ScanProcessWatcher(scannerModulePath, appMapDir, folder.uri.fsPath, env));
     }
 
     const instance = new NodeProcessServiceInstance(folder, services, projectState);

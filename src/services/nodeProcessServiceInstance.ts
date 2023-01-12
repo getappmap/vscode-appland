@@ -1,4 +1,6 @@
 import * as vscode from 'vscode';
+import { AUTHN_PROVIDER_NAME } from '../authentication';
+import AppMapServerAuthenticationProvider from '../authentication/appmapServerAuthenticationProvider';
 import { DEBUG_EXCEPTION, Telemetry } from '../telemetry';
 import ErrorCode from '../telemetry/definitions/errorCodes';
 import ProjectMetadata from '../workspace/projectMetadata';
@@ -44,6 +46,14 @@ export default class NodeProcessServiceInstance implements WorkspaceServiceInsta
       this.projectState.onStateChange((metadata) => this.onReceiveProjectMetadata(metadata)),
       AnalysisManager.onAnalysisToggled(({ enabled }) => {
         enabled ? this.start('analysis') : this.stop('analysis', 'analysis has been disabled');
+      }),
+      vscode.authentication.onDidChangeSessions(async (event) => {
+        if (event.provider.id === AUTHN_PROVIDER_NAME) {
+          const apiKey = await AppMapServerAuthenticationProvider.getApiKey(false);
+          apiKey
+            ? this.start('analysis')
+            : this.stop('analysis', 'user has logged out from AppMap');
+        }
       })
     );
   }
@@ -53,6 +63,7 @@ export default class NodeProcessServiceInstance implements WorkspaceServiceInsta
 
     this.processes
       .filter((process) => !process.running && (!id || id === process.id))
+      .filter(async (process) => !!(await process.canStart()))
       .forEach((process) => {
         process.start();
       });
@@ -61,6 +72,7 @@ export default class NodeProcessServiceInstance implements WorkspaceServiceInsta
   stop(id?: string, reason?: string): void {
     this.processes
       .filter((process) => !id || id === process.id)
+      .filter(async (process) => !(await process.canStart()))
       .forEach((process) => {
         process.stop(reason);
       });

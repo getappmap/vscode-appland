@@ -14,7 +14,6 @@ export type RetryOptions = {
 
 export type ProcessWatcherOptions = {
   id: string;
-  startCondition?: () => boolean | Promise<boolean>;
 } & RetryOptions &
   SpawnOptions;
 
@@ -90,18 +89,17 @@ export class ProcessWatcher implements vscode.Disposable {
     if (this.shouldRun) this.start();
   }
 
+  async canStart(): Promise<boolean> {
+    return true;
+  }
+
   async start(): Promise<void> {
     if (this.process) {
       throw new Error(`process (${this.process.pid}) already running`);
     }
 
-    if (this.options.startCondition) {
-      const canStart = await this.options.startCondition();
-      if (!canStart) return;
-    }
-
     this.shouldRun = true;
-    this.process = spawn(this.options);
+    this.process = await this.spawn();
     this.process.log.append(
       `spawned ${this.process.spawnargs.join(' ')} with options ${JSON.stringify(this.options)}`
     );
@@ -135,6 +133,16 @@ export class ProcessWatcher implements vscode.Disposable {
       this.process.kill();
       this.process = undefined;
     }
+  }
+
+  protected async loadEnvironment(): Promise<NodeJS.ProcessEnv> {
+    return {};
+  }
+
+  protected async spawn(): Promise<ChildProcess> {
+    const options = { ...this.options };
+    options.env = { ...options.env, ...(await this.loadEnvironment()) };
+    return spawn(this.options);
   }
 
   dispose(): void {
