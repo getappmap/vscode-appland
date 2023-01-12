@@ -1,3 +1,10 @@
+## [0.59.1](https://github.com/getappmap/vscode-appland/compare/v0.59.0...v0.59.1) (2023-01-12)
+
+
+### Bug Fixes
+
+* Override environment yarn configuration ([2871c49](https://github.com/getappmap/vscode-appland/commit/2871c49e2573c52d2f9de7890e47e8bbf8ce4934))
+
 # [0.59.0](https://github.com/getappmap/vscode-appland/compare/v0.58.2...v0.59.0) (2023-01-06)
 
 
