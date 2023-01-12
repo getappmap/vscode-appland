@@ -105,7 +105,7 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
     }
 
     const instance = new NodeProcessServiceInstance(folder, services, projectState);
-    await instance.initialize();
+    instance.initialize();
 
     return instance;
   }
@@ -205,7 +205,7 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
       // to run `yarn install` to create it. `yarn up` will happilly update an empty lock file.
       await fs.appendFile(path.join(this.globalStorageDir, 'yarn.lock'), '');
 
-      const installProcess = await spawn({
+      const installProcess = spawn({
         modulePath: this.yarnPath,
         args: ['up', '-R', '@appland/appmap', '@appland/scanner'],
         cwd: this.globalStorageDir,
