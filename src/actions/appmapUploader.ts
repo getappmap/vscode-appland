@@ -35,16 +35,16 @@ export class AppmapUploader {
     appmapData: Buffer,
     context: vscode.ExtensionContext,
     viewState?: string
-  ): Promise<boolean> {
+  ): Promise<string | undefined> {
     if (!(await this.userAcceptedTerms(context))) {
-      return false;
+      return undefined;
     }
 
     const session = await vscode.authentication.getSession(AUTHN_PROVIDER_NAME, ['default'], {
       createIfNone: true,
     });
     if (!session) {
-      return false;
+      return undefined;
     }
 
     let upload: UploadAppMapResponse;
@@ -53,7 +53,7 @@ export class AppmapUploader {
     } catch (e) {
       const err = e as Error;
       vscode.window.showErrorMessage(`Upload failed: ${String(err)}`);
-      return false;
+      return undefined;
     }
 
     let appMapURL = vscode.Uri.joinPath(
@@ -69,7 +69,7 @@ export class AppmapUploader {
     await vscode.env.clipboard.writeText(appMapURL);
     vscode.window.showInformationMessage(`A link to the AppMap has been copied to the clipboard.`);
 
-    return true;
+    return appMapURL;
   }
 
   public static resetState(context: vscode.ExtensionContext): void {

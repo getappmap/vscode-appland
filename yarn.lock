@@ -136,9 +136,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/components@npm:^2.20.1":
-  version: 2.20.1
-  resolution: "@appland/components@npm:2.20.1"
+"@appland/components@npm:^2.21.0":
+  version: 2.21.0
+  resolution: "@appland/components@npm:2.21.0"
   dependencies:
     "@appland/diagrams": ^1.6.0
     "@appland/models": ^1.23.0
@@ -147,7 +147,7 @@ __metadata:
     sql-formatter: ^4.0.2
     vue: ^2.7.14
     vuex: ^3.6.0
-  checksum: 7e2aa4de065f060bc873290b5c18911fe22a77b85252d0364f5d7d378a316590cb001b5e44acb8f3c2eab54990298eb5c95d91120ff94d27c970107ee58590da
+  checksum: 44e3c1ed48ee95b7a43792ba70d23a8e03afa2e9fb0307b655849d7a645fea7cf04e69b9b737ca2e59ce69370198d09a43197665d8c72d987442cf1e44d31173
   languageName: node
   linkType: hard
 
@@ -3761,7 +3761,7 @@ __metadata:
   dependencies:
     "@appland/appmap": ^3.43.2
     "@appland/client": ^1.5.0
-    "@appland/components": ^2.20.1
+    "@appland/components": ^2.21.0
     "@appland/diagrams": ^1.6.1
     "@appland/models": ^1.23.0
     "@appland/scanner": ^1.74.0
@@ -10831,13 +10831,13 @@ __metadata:
   linkType: hard
 
 "postcss@npm:^8.4.14":
-  version: 8.4.20
-  resolution: "postcss@npm:8.4.20"
+  version: 8.4.21
+  resolution: "postcss@npm:8.4.21"
   dependencies:
     nanoid: ^3.3.4
     picocolors: ^1.0.0
     source-map-js: ^1.0.2
-  checksum: 1a5609ea1c1b204f9c2974a0019ae9eef2d99bf645c2c9aac675166c4cb1005be7b5e2ba196160bc771f5d9ac896ed883f236f888c891e835e59d28fff6651aa
+  checksum: e39ac60ccd1542d4f9d93d894048aac0d686b3bb38e927d8386005718e6793dbbb46930f0a523fe382f1bbd843c6d980aaea791252bf5e176180e5a4336d9679
   languageName: node
   linkType: hard
 
