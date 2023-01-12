@@ -1,3 +1,10 @@
+# [0.61.0](https://github.com/getappmap/vscode-appland/compare/v0.60.0...v0.61.0) (2023-01-12)
+
+
+### Features
+
+* add appmap to recommended extensions ([7c4425d](https://github.com/getappmap/vscode-appland/commit/7c4425dad980b28d6137f01c6a276c57c5238fda))
+
 # [0.60.0](https://github.com/getappmap/vscode-appland/compare/v0.59.1...v0.60.0) (2023-01-12)
 
 
