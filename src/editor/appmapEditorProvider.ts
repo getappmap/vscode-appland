@@ -232,7 +232,14 @@ export default class AppMapEditorProvider
                 metrics: message.metrics,
               });
             }
+            webviewPanel.webview.postMessage({
+              type: 'setShareURL',
+              url: uploadResult,
+            });
           }
+          break;
+        case 'copyToClipboard':
+          vscode.env.clipboard.writeText(message.stringToCopy);
           break;
       }
     });

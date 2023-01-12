@@ -43,6 +43,9 @@ export default function mountApp() {
       displayUpdateNotification(version) {
         this.$refs.ui.showVersionNotification(`v${version}`, patchNotesHtml);
       },
+      setShareURL(url) {
+        this.$refs.ui.setShareURL(url);
+      },
     },
     mounted() {
       vscode.postMessage({ command: 'ready' });
@@ -72,6 +75,13 @@ export default function mountApp() {
       viewState: app.getState(),
     });
     vscode.postMessage({ command: 'performAction', action: 'upload_appmap' });
+  });
+
+  app.$on('copyToClipboard', (stringToCopy) => {
+    vscode.postMessage({
+      command: 'copyToClipboard',
+      stringToCopy,
+    });
   });
 
   app.$on('stateChanged', (stateKey) => {
@@ -158,6 +168,9 @@ export default function mountApp() {
           command: 'appmapOpenUrl',
           url: message.url,
         });
+        break;
+      case 'setShareURL':
+        app.setShareURL(message.url);
         break;
       default:
         break;
