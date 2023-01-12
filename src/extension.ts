@@ -52,6 +52,7 @@ import ErrorCode from './telemetry/definitions/errorCodes';
 import promptInstall from './actions/promptInstall';
 import FindingsOverviewWebview from './webviews/findingsWebview';
 import FindingInfoWebview from './webviews/findingInfoWebview';
+import { AppMapRecommenderService } from './services/appmapRecommenderService';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   Telemetry.register(context);
@@ -69,6 +70,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     if (extensionState.isNewInstall) {
       Telemetry.reportAction('plugin:install');
     }
+    const recommender = new AppMapRecommenderService(extensionState);
+    await workspaceServices.enroll(recommender);
 
     AppMapServerConfiguration.enroll(context);
 
@@ -289,6 +292,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       get findings(): FindingsService | undefined {
         return AnalysisManager.findingsIndex;
       },
+      recommender,
     };
   } catch (exception) {
     Telemetry.sendEvent(DEBUG_EXCEPTION, {

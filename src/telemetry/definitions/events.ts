@@ -170,3 +170,8 @@ export const INSTALL_PROMPT = new Event({
   name: 'install_prompt',
   properties: [Properties.RESULT],
 });
+
+export const ADD_RECOMMENDATION = new Event({
+  name: 'recommend_extension:prompt',
+  properties: [Properties.RESULT],
+});

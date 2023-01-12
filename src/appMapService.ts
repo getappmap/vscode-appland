@@ -7,6 +7,7 @@ import ExtensionState from './configuration/extensionState';
 import AppMapEditorProvider from './editor/appmapEditorProvider';
 import { FindingsService } from './findingsService';
 import { AppMapConfigWatcher } from './services/appMapConfigWatcher';
+import { AppMapRecommenderService } from './services/appmapRecommenderService';
 import { AppmapUptodateService } from './services/appmapUptodateService';
 import Command from './services/command';
 import { NodeProcessService } from './services/nodeProcessService';
@@ -44,4 +45,5 @@ export default interface AppMapService {
   projectState: ProjectStateService;
   trees: AppMapTreeDataProviders;
   appmapServerAuthenticationProvider: AppMapServerAuthenticationProvider;
+  recommender: AppMapRecommenderService;
 }
