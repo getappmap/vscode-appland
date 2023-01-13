@@ -1,3 +1,10 @@
+## [0.61.1](https://github.com/getappmap/vscode-appland/compare/v0.61.0...v0.61.1) (2023-01-13)
+
+
+### Bug Fixes
+
+* Update @appland/appmap and @appland/scanner properly ([6614046](https://github.com/getappmap/vscode-appland/commit/66140464673321cf581facbed515a700100a25ae))
+
 # [0.61.0](https://github.com/getappmap/vscode-appland/compare/v0.60.0...v0.61.0) (2023-01-12)
 
 
