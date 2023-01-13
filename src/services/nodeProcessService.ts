@@ -207,7 +207,7 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
 
       const installProcess = await spawn({
         modulePath: this.yarnPath,
-        args: ['up'],
+        args: ['up', '-R', '@appland/appmap', '@appland/scanner'],
         cwd: this.globalStorageDir,
         log: NodeProcessService.outputChannel,
         // Fix "The remote archive doesn't match the expected checksum" issue by
