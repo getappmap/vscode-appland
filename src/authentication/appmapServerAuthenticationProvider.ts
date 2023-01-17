@@ -52,10 +52,7 @@ export default class AppMapServerAuthenticationProvider implements vscode.Authen
     const session = await vscode.authentication.getSession(AUTHN_PROVIDER_NAME, ['default'], {
       createIfNone,
     });
-    if (!session) {
-      return;
-    }
-    return session.accessToken;
+    return session?.accessToken;
   }
 
   constructor(public context: vscode.ExtensionContext, public uriHandler: UriHandler) {}
@@ -124,7 +121,8 @@ export default class AppMapServerAuthenticationProvider implements vscode.Authen
         },
         async (_progress, token) => {
           return new Promise((resolve) => {
-            const dispose = (disposables) => disposables.forEach((d) => d.dispose());
+            const dispose = (disposables: vscode.Disposable[]) =>
+              disposables.forEach((d) => d.dispose());
             const disposables = [
               authnHandler.onCreateSession((session) => {
                 dispose(disposables);

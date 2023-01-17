@@ -1,18 +1,13 @@
 import * as vscode from 'vscode';
-import { AUTHN_PROVIDER_NAME } from '../authentication';
-import AppMapServerAuthenticationProvider from '../authentication/appmapServerAuthenticationProvider';
 import { DEBUG_EXCEPTION, Telemetry } from '../telemetry';
 import ErrorCode from '../telemetry/definitions/errorCodes';
-import ProjectMetadata from '../workspace/projectMetadata';
-import AnalysisManager from './analysisManager';
 import { ProcessWatcher } from './processWatcher';
 import { ProjectStateServiceInstance } from './projectStateService';
 import { WorkspaceServiceInstance } from './workspaceService';
 
 export default class NodeProcessServiceInstance implements WorkspaceServiceInstance {
   disposables: vscode.Disposable[] = [];
-  protected running = false;
-  protected agentInstalled = false;
+  jobInterval?: NodeJS.Timeout;
 
   constructor(
     public folder: vscode.WorkspaceFolder,
@@ -32,53 +27,43 @@ export default class NodeProcessServiceInstance implements WorkspaceServiceInsta
     });
   }
 
-  protected onReceiveProjectMetadata(metadata: Readonly<ProjectMetadata>): void {
-    this.agentInstalled = Boolean(metadata.agentInstalled);
-    this.agentInstalled
-      ? this.start()
-      : this.stop(undefined, 'appmap.yml has been deleted or moved');
-  }
-
   initialize(): void {
-    const metadata = this.projectState.metadata;
-    this.onReceiveProjectMetadata(metadata);
-    this.disposables.push(
-      this.projectState.onStateChange((metadata) => this.onReceiveProjectMetadata(metadata)),
-      AnalysisManager.onAnalysisToggled(({ enabled }) => {
-        enabled ? this.start('analysis') : this.stop('analysis', 'analysis has been disabled');
-      }),
-      vscode.authentication.onDidChangeSessions(async (event) => {
-        if (event.provider.id === AUTHN_PROVIDER_NAME) {
-          const apiKey = await AppMapServerAuthenticationProvider.getApiKey(false);
-          apiKey
-            ? this.start('analysis')
-            : this.stop('analysis', 'user has logged out from AppMap');
-        }
-      })
-    );
+    this.startJob();
   }
 
-  start(id?: string): void {
-    if (!this.agentInstalled) return;
-
-    this.processes
-      .filter((process) => !process.running && (!id || id === process.id))
-      .filter(async (process) => !!(await process.canStart()))
-      .forEach((process) => {
-        process.start();
-      });
+  // By using a single interval to start/stop processes we avoid trying to do job control concurrently, which
+  // leads to situations like attempts to start a process that is already running.
+  protected async manageProcesses(): Promise<void> {
+    const processControl = async (): Promise<void> => {
+      for (let index = 0; index < this.processes.length; index++) {
+        const process = this.processes[index];
+        const { enabled, reason } = await process.canStart();
+        if (enabled && !process.running) process.start();
+        else if (!enabled && process.running) process.stop(reason);
+      }
+    };
+    this.stopJob();
+    try {
+      await processControl();
+    } finally {
+      this.startJob();
+    }
   }
 
-  stop(id?: string, reason?: string): void {
-    this.processes
-      .filter((process) => !id || id === process.id)
-      .filter(async (process) => !(await process.canStart()))
-      .forEach((process) => {
-        process.stop(reason);
-      });
+  protected startJob(): void {
+    if (this.jobInterval) return;
+
+    this.jobInterval = setInterval(this.manageProcesses.bind(this), 1000);
+  }
+
+  protected stopJob(): void {
+    if (this.jobInterval) clearInterval(this.jobInterval);
+
+    this.jobInterval = undefined;
   }
 
   dispose(): void {
+    this.stopJob();
     this.processes.forEach((p) => p.dispose());
     this.disposables.forEach((d) => d.dispose());
   }

@@ -65,7 +65,9 @@ export default class AnalysisManager {
       }),
       vscode.authentication.onDidChangeSessions((e) => {
         if (e.provider.id !== AUTHN_PROVIDER_NAME) return;
-        this.updateAnalysisState();
+
+        // The API key won't be available immediately. Wait a tick.
+        setTimeout(this.updateAnalysisState.bind(this), 0);
       })
     );
   }

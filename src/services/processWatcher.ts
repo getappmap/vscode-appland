@@ -89,19 +89,26 @@ export class ProcessWatcher implements vscode.Disposable {
     if (this.shouldRun) this.start();
   }
 
-  async canStart(): Promise<boolean> {
-    return true;
+  async canStart(): Promise<{ enabled: boolean; reason?: string }> {
+    return { enabled: true };
   }
 
   async start(): Promise<void> {
+    const options = { ...this.options };
+    options.env = { ...options.env, ...(await this.loadEnvironment()) };
+
+    // If this.process is undefined, don't await until after this.process is set, or the process may be started twice.
     if (this.process) {
-      throw new Error(`process (${this.process.pid}) already running`);
+      this.process.log.append(
+        `${(options.args || [])[0]} process (${this.process.pid}) already running`
+      );
+      return;
     }
 
     this.shouldRun = true;
-    this.process = await this.spawn();
+    this.process = spawn(options);
     this.process.log.append(
-      `spawned ${this.process.spawnargs.join(' ')} with options ${JSON.stringify(this.options)}`
+      `spawned ${this.process.spawnargs.join(' ')} with options ${JSON.stringify(options)}`
     );
 
     this.process.once('error', (err) => {
@@ -129,7 +136,10 @@ export class ProcessWatcher implements vscode.Disposable {
     this.shouldRun = false;
     if (this.crashTimeout) clearTimeout(this.crashTimeout);
     if (this.process) {
-      this.process.log.append('process has been stopped' + (reason ? `: ${reason}` : ''));
+      this.process.log.append(
+        `${this.process?.spawnargs.join(' ')} process has been stopped` +
+          (reason ? `: ${reason}` : '')
+      );
       this.process.kill();
       this.process = undefined;
     }
@@ -137,12 +147,6 @@ export class ProcessWatcher implements vscode.Disposable {
 
   protected async loadEnvironment(): Promise<NodeJS.ProcessEnv> {
     return {};
-  }
-
-  protected async spawn(): Promise<ChildProcess> {
-    const options = { ...this.options };
-    options.env = { ...options.env, ...(await this.loadEnvironment()) };
-    return spawn(this.options);
   }
 
   dispose(): void {

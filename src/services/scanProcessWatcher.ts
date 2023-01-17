@@ -1,5 +1,5 @@
 import AppMapServerAuthenticationProvider from '../authentication/appmapServerAuthenticationProvider';
-import AnalysisManager from './analysisManager';
+import ExtensionSettings from '../configuration/extensionSettings';
 import { NodeProcessService } from './nodeProcessService';
 import { ProcessWatcher } from './processWatcher';
 
@@ -15,12 +15,18 @@ export default class ScanProcessWatcher extends ProcessWatcher {
     });
   }
 
-  async canStart(): Promise<boolean> {
-    return AnalysisManager.isAnalysisEnabled && !!(await this.accessToken());
+  async canStart(): Promise<{ enabled: boolean; reason?: string }> {
+    if (!ExtensionSettings.findingsEnabled)
+      return { enabled: false, reason: 'appMap.findingsEnabled is false' };
+
+    if (!(await this.accessToken()))
+      return { enabled: false, reason: 'User is not logged in to AppMap' };
+
+    return { enabled: true };
   }
 
   async accessToken(): Promise<string | undefined> {
-    return await AppMapServerAuthenticationProvider.getApiKey(false);
+    return AppMapServerAuthenticationProvider.getApiKey(false);
   }
 
   protected async loadEnvironment(): Promise<NodeJS.ProcessEnv> {
