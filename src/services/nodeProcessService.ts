@@ -71,7 +71,7 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
       appMapDir = NodeProcessService.DEFAULT_APPMAP_DIR;
     }
 
-    const env = process.env.APPMAP_TEST
+    const env = process.env.APPMAP_SYSTEM_TEST
       ? { ...process.env, APPMAP_WRITE_PIDFILE: 'true' }
       : undefined;
 

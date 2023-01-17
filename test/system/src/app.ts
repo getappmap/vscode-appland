@@ -64,7 +64,7 @@ export async function launchCode(
     ],
     env: {
       ...process.env,
-      APPMAP_TEST: '1',
+      APPMAP_SYSTEM_TEST: '1',
     },
   });
 

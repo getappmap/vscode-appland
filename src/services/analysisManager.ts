@@ -102,7 +102,7 @@ export default class AnalysisManager {
   }
 
   public static async isUserAuthenticated(): Promise<boolean> {
-    if (Environment.isSmokeTest) return true;
+    if (Environment.isSystemTest) return true;
 
     return !!(await AppMapServerAuthenticationProvider.getApiKey(false));
   }

@@ -1,5 +1,5 @@
 export default class Environment {
-  static get isSmokeTest(): boolean {
-    return process.env.APPMAP_TEST !== undefined;
+  static get isSystemTest(): boolean {
+    return process.env.APPMAP_SYSTEM_TEST !== undefined;
   }
 }
