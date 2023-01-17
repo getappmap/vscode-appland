@@ -72,3 +72,6 @@ dynamic security analysis (**DAST**).
 ## YouTube
 
 - [AppMap channel](https://www.youtube.com/channel/UCxVv4gVnr2Uf2PSzoELZUcg)
+
+By downloading and using AppMap you agree to the
+[Terms and Conditions](https://appmap.io/community/terms-and-conditions).
