@@ -64,6 +64,7 @@ export async function launchCode(
     ],
     env: {
       ...process.env,
+      APPMAP_TEST_API_KEY: 'Zm9vQGdtYWlsLmNvbTpmYzYwNTRiNi0xOTAzLTQ0MDEtOTJhNy0wMDAzNWFjOGI2MGMK',
       APPMAP_SYSTEM_TEST: '1',
     },
   });
