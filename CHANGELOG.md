@@ -1,3 +1,10 @@
+# [0.62.0](https://github.com/getappmap/vscode-appland/compare/v0.61.1...v0.62.0) (2023-01-17)
+
+
+### Features
+
+* add terms of service to readme ([3574931](https://github.com/getappmap/vscode-appland/commit/3574931a338a0de008a1b32b769bac1bdf348c5a))
+
 ## [0.61.1](https://github.com/getappmap/vscode-appland/compare/v0.61.0...v0.61.1) (2023-01-13)
 
 
