@@ -136,3 +136,6 @@ resolved relative to the `test/integration` directory. Here's an example:
 ```
 yarn run pretest && TEST_PATH='appmapTextEditor.test.js' yarn run test:extension
 ```
+
+By downloading and using AppMap you agree to the
+[Terms and Conditions](https://appmap.io/community/terms-and-conditions).
