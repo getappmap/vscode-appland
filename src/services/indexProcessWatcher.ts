@@ -1,9 +1,15 @@
 import { NodeProcessService } from './nodeProcessService';
-import { ProcessWatcher } from './processWatcher';
+import { ConfigFileProvider, ProcessWatcher } from './processWatcher';
 
 export default class IndexProcessWatcher extends ProcessWatcher {
-  constructor(modulePath: string, appmapDir: string, cwd: string, env?: NodeJS.ProcessEnv) {
-    super({
+  constructor(
+    configFileProvider: ConfigFileProvider,
+    modulePath: string,
+    appmapDir: string,
+    cwd: string,
+    env?: NodeJS.ProcessEnv
+  ) {
+    super(configFileProvider, {
       id: 'index',
       modulePath: modulePath,
       log: NodeProcessService.outputChannel,

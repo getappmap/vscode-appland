@@ -8,12 +8,14 @@ import NodeProcessServiceInstance from './nodeProcessServiceInstance';
 import { ProcessWatcher } from './processWatcher';
 import ErrorCode from '../telemetry/definitions/errorCodes';
 import { getModulePath, ProgramName, spawn } from './nodeDependencyProcess';
-import { ProjectStateServiceInstance } from './projectStateService';
 import { downloadFile, getLatestVersionInfo } from '../util';
 import { lookupAppMapDir } from '../lib/appmapDir';
 import lockfile from 'proper-lockfile';
 import IndexProcessWatcher from './indexProcessWatcher';
 import ScanProcessWatcher from './scanProcessWatcher';
+import ChangeEventDebouncer from './changeEventDebouncer';
+import { fileSync } from 'tmp';
+import Environment from '../configuration/environment';
 
 const YARN_JS = 'yarn.js';
 const PACKAGE_JSON = 'package.json';
@@ -42,20 +44,13 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
     return this._onReady.event;
   }
 
-  constructor(
-    context: vscode.ExtensionContext,
-    protected projectStates: Readonly<Array<ProjectStateServiceInstance>>
-  ) {
+  constructor(protected context: vscode.ExtensionContext) {
     this.globalStorageDir = context.globalStorageUri.fsPath;
     this.externDir = path.join(context.extensionPath, 'extern');
   }
 
   async create(folder: vscode.WorkspaceFolder): Promise<NodeProcessServiceInstance> {
     const services: ProcessWatcher[] = [];
-    const projectState = this.projectStates.find((projectState) => projectState.folder === folder);
-    if (!projectState) {
-      throw new Error(`failed to resolve a project state for ${folder.name}`);
-    }
 
     let appMapDir = await lookupAppMapDir(folder.uri.fsPath);
     if (appMapDir) {
@@ -71,9 +66,10 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
       appMapDir = NodeProcessService.DEFAULT_APPMAP_DIR;
     }
 
-    const env = process.env.APPMAP_SYSTEM_TEST
-      ? { ...process.env, APPMAP_WRITE_PIDFILE: 'true' }
-      : undefined;
+    const env =
+      Environment.isSystemTest || Environment.isIntegrationTest
+        ? { ...process.env, APPMAP_WRITE_PIDFILE: 'true' }
+        : undefined;
 
     const tryModulePath = async (program: ProgramName): Promise<string | undefined> => {
       try {
@@ -89,17 +85,59 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
       }
     };
 
+    const configPattern = new vscode.RelativePattern(folder, `**/appmap.yml`);
+    const configFiles = async (): Promise<vscode.Uri[]> => {
+      return await vscode.workspace.findFiles(configPattern);
+    };
+
     const appmapModulePath = await tryModulePath(ProgramName.Appmap);
     if (appmapModulePath) {
-      services.push(new IndexProcessWatcher(appmapModulePath, appMapDir, folder.uri.fsPath, env));
+      services.push(
+        new IndexProcessWatcher(configFiles, appmapModulePath, appMapDir, folder.uri.fsPath, env)
+      );
     }
 
     const scannerModulePath = await tryModulePath(ProgramName.Scanner);
     if (scannerModulePath) {
-      services.push(new ScanProcessWatcher(scannerModulePath, appMapDir, folder.uri.fsPath, env));
+      services.push(
+        new ScanProcessWatcher(configFiles, scannerModulePath, appMapDir, folder.uri.fsPath, env)
+      );
     }
 
-    const instance = new NodeProcessServiceInstance(folder, services, projectState);
+    const restartServices = () =>
+      services.forEach((service) => {
+        service.restart();
+      });
+
+    const configFileEvent = new ChangeEventDebouncer<vscode.Uri>(1000);
+    const watcher = vscode.workspace.createFileSystemWatcher(configPattern);
+
+    const files = new Set<string>();
+    const cloneFiles = () => [...files];
+    const addFile = (uri: vscode.Uri) => files.add(uri.fsPath);
+    const removeFile = (uri: vscode.Uri) => files.delete(uri.fsPath);
+
+    this.context.subscriptions.push(
+      watcher,
+      watcher.onDidChange((e) => {
+        const oldFiles = cloneFiles();
+        addFile(e);
+        if (oldFiles.join('\n') !== [...files].join('\n')) configFileEvent.fire(e);
+      }),
+      watcher.onDidCreate((e) => {
+        const oldFiles = cloneFiles();
+        addFile(e);
+        if (oldFiles.join('\n') !== [...files].join('\n')) configFileEvent.fire(e);
+      }),
+      watcher.onDidDelete((e) => {
+        const oldFiles = cloneFiles();
+        removeFile(e);
+        if (oldFiles.join('\n') !== [...files].join('\n')) configFileEvent.fire(e);
+      })
+    );
+    configFileEvent.event(restartServices);
+
+    const instance = new NodeProcessServiceInstance(folder, services);
     instance.initialize();
 
     return instance;

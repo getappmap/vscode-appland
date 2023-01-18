@@ -3,7 +3,7 @@ import { fileExists } from '../util';
 import { FileChangeEmitter, FileChangeEvent } from './fileChangeEmitter';
 import { WorkspaceService, WorkspaceServiceInstance } from './workspaceService';
 
-class ConfigWatcherInstance implements WorkspaceServiceInstance {
+export class AppMapConfigWatcherInstance implements WorkspaceServiceInstance {
   watcher: vscode.FileSystemWatcher;
   protected disposables: vscode.Disposable[] = [];
   protected configPattern = new vscode.RelativePattern(this.folder, `**/appmap.yml`);
@@ -26,14 +26,14 @@ class ConfigWatcherInstance implements WorkspaceServiceInstance {
     );
   }
 
-  async initialize() {
+  async initialize(): Promise<AppMapConfigWatcherInstance> {
     (await vscode.workspace.findFiles(this.configPattern)).forEach((uri) => {
       this.onCreate.fire({ uri, workspaceFolder: this.folder });
     });
     return this;
   }
 
-  async dispose() {
+  async dispose(): Promise<void> {
     (
       await vscode.workspace.findFiles(
         new vscode.RelativePattern(this.folder, '**/*.appmap.json'),
@@ -48,9 +48,9 @@ class ConfigWatcherInstance implements WorkspaceServiceInstance {
 }
 
 export class AppMapConfigWatcher extends FileChangeEmitter
-  implements WorkspaceService<ConfigWatcherInstance> {
-  async create(folder: vscode.WorkspaceFolder): Promise<ConfigWatcherInstance> {
-    const watcher = new ConfigWatcherInstance(
+  implements WorkspaceService<AppMapConfigWatcherInstance> {
+  async create(folder: vscode.WorkspaceFolder): Promise<AppMapConfigWatcherInstance> {
+    const watcher = new AppMapConfigWatcherInstance(
       folder,
       this._onChange,
       this._onCreate,

@@ -15,7 +15,7 @@ describe('NodeProcessService', () => {
           extensionPath: path.join(__dirname, '..', '..', '..', '..'),
         } as vscode.ExtensionContext;
 
-        const service = new NodeProcessService(extensionContext, []);
+        const service = new NodeProcessService(extensionContext);
         await service.install();
         await fs.stat(path.join(tmpDir, 'node_modules'));
         await fs.stat(path.join(tmpDir, 'yarn.lock'));
@@ -39,7 +39,7 @@ describe('NodeProcessService', () => {
             extensionPath: path.join(__dirname, '..', '..', '..', '..'),
           } as vscode.ExtensionContext;
 
-          const service = new NodeProcessService(extensionContext, []);
+          const service = new NodeProcessService(extensionContext);
           service.install();
           await new Promise((resolve) => service.onReady(resolve));
 

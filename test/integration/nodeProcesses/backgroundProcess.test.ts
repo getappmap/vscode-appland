@@ -9,16 +9,12 @@ import {
   mkTmpDir,
   ProjectA,
   restoreFile,
-  unsafeCast,
   waitForExtension,
   withAuthenticatedUser,
-  withTmpDir,
 } from '../util';
 import { promises as fs } from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
-import { ProjectStateServiceInstance } from '../../../src/services/projectStateService';
-import Sinon from 'sinon';
 
 async function waitForProcessState(
   processWatchers: ReadonlyArray<ProcessWatcher>,
@@ -176,19 +172,11 @@ describe('Background processes', () => {
         name: path.basename(tmpDir),
         index: -1,
       } as vscode.WorkspaceFolder;
-      service = new NodeProcessService(
-        {
-          globalStorageUri: directoryUri,
-          extensionPath: path.join(__dirname, '..', '..', '..', '..'),
-        } as vscode.ExtensionContext,
-        [
-          unsafeCast<ProjectStateServiceInstance>({
-            folder: workspaceFolder,
-            metadata: {},
-            onStateChange: Sinon.stub(),
-          }),
-        ]
-      );
+      service = new NodeProcessService(({
+        globalStorageUri: directoryUri,
+        extensionPath: path.join(__dirname, '..', '..', '..', '..'),
+        subscriptions: [],
+      } as any) as vscode.ExtensionContext);
       await fs.writeFile(path.join(tmpDir, 'appmap.yml'), `appmap_dir: ${appmapDir}`, 'utf8');
     });
 
@@ -205,9 +193,9 @@ describe('Background processes', () => {
 
     it("creates the AppMap directory if it doesn't already exist", async () => {
       const expectedPath = path.join(tmpDir, appmapDir);
-      assert(!(await fileExists(expectedPath)), 'the appmap_dir provided is expected not to exist');
+      assert(!(await fileExists(expectedPath)), 'the appmap_dir provided should not exist');
       await service.create(workspaceFolder);
-      assert(await fileExists(expectedPath), 'the appmap_dir provided was not created');
+      assert(await fileExists(expectedPath), 'the appmap_dir provided does not exist');
     });
   });
 });

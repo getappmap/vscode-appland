@@ -23,6 +23,8 @@ const DEFAULT_RETRY_OPTIONS: Required<RetryOptions> = {
   retryBackoff: (retryNumber: number) => Math.pow(2, retryNumber) * 1000,
 };
 
+export type ConfigFileProvider = () => Promise<vscode.Uri[]>;
+
 export class ProcessWatcher implements vscode.Disposable {
   public process?: ChildProcess;
   protected options: ProcessWatcherOptions & Required<RetryOptions>;
@@ -52,7 +54,7 @@ export class ProcessWatcher implements vscode.Disposable {
     return this.options.id;
   }
 
-  constructor(options: ProcessWatcherOptions) {
+  constructor(protected configFileProvider: ConfigFileProvider, options: ProcessWatcherOptions) {
     this.options = {
       ...DEFAULT_RETRY_OPTIONS,
       ...options,
@@ -90,7 +92,15 @@ export class ProcessWatcher implements vscode.Disposable {
   }
 
   async canStart(): Promise<{ enabled: boolean; reason?: string }> {
+    const configFiles = await this.configFileProvider();
+    if (configFiles.length === 0) return { enabled: false, reason: 'appmap.yml does not exist' };
+
     return { enabled: true };
+  }
+
+  async restart(): Promise<void> {
+    await this.stop();
+    await this.start();
   }
 
   async start(): Promise<void> {

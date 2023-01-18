@@ -211,7 +211,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     FindingsOverviewWebview.register(context);
     FindingInfoWebview.register(context);
 
-    const processService = new NodeProcessService(context, projectStates);
+    const processService = new NodeProcessService(context);
     (async function() {
       processService.onReady(activateUptodateService);
       await processService.install();

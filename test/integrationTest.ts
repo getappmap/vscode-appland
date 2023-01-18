@@ -131,6 +131,7 @@ async function integrationTest() {
         PROJECT_DIR: workspaceDir, // A hint to resolve relative paths in settings
         TEST_FILE: testFile,
         APPMAP_WRITE_PIDFILE: 'true',
+        APPMAP_INTEGRATION_TEST: 'true',
         YARN_LOCKFILE_NAME: 'bad.lock',
       },
       launchArgs: [

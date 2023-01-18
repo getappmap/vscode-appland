@@ -2,7 +2,6 @@ import * as vscode from 'vscode';
 import { DEBUG_EXCEPTION, Telemetry } from '../telemetry';
 import ErrorCode from '../telemetry/definitions/errorCodes';
 import { ProcessWatcher } from './processWatcher';
-import { ProjectStateServiceInstance } from './projectStateService';
 import { WorkspaceServiceInstance } from './workspaceService';
 
 export default class NodeProcessServiceInstance implements WorkspaceServiceInstance {
@@ -11,8 +10,7 @@ export default class NodeProcessServiceInstance implements WorkspaceServiceInsta
 
   constructor(
     public folder: vscode.WorkspaceFolder,
-    protected readonly processes: Readonly<ProcessWatcher[]>,
-    protected readonly projectState: ProjectStateServiceInstance
+    protected readonly processes: Readonly<ProcessWatcher[]>
   ) {
     this.processes.forEach((p) => {
       this.disposables.push(
@@ -31,20 +29,49 @@ export default class NodeProcessServiceInstance implements WorkspaceServiceInsta
     this.startJob();
   }
 
+  async restart(reason?: string): Promise<void> {
+    await this.stop(reason);
+    await this.start();
+  }
+
+  async stop(reason?: string): Promise<void> {
+    const processControl = async (): Promise<void> => {
+      for (let index = 0; index < this.processes.length; index++) {
+        const process = this.processes[index];
+        await process.stop(reason);
+      }
+    };
+    return this.manageProcesses(processControl);
+  }
+
+  async start(): Promise<void> {
+    const processControl = async (): Promise<void> => {
+      for (let index = 0; index < this.processes.length; index++) {
+        const process = this.processes[index];
+        await process.start();
+      }
+    };
+    return this.manageProcesses(processControl);
+  }
+
   // By using a single interval to start/stop processes we avoid trying to do job control concurrently, which
   // leads to situations like attempts to start a process that is already running.
-  protected async manageProcesses(): Promise<void> {
+  protected async startAndStopProcesses(): Promise<void> {
     const processControl = async (): Promise<void> => {
       for (let index = 0; index < this.processes.length; index++) {
         const process = this.processes[index];
         const { enabled, reason } = await process.canStart();
-        if (enabled && !process.running) process.start();
-        else if (!enabled && process.running) process.stop(reason);
+        if (enabled && !process.running) await process.start();
+        else if (!enabled && process.running) await process.stop(reason);
       }
     };
+    return this.manageProcesses(processControl);
+  }
+
+  protected async manageProcesses(handler: () => Promise<void>): Promise<void> {
     this.stopJob();
     try {
-      await processControl();
+      await handler();
     } finally {
       this.startJob();
     }
@@ -53,7 +80,7 @@ export default class NodeProcessServiceInstance implements WorkspaceServiceInsta
   protected startJob(): void {
     if (this.jobInterval) return;
 
-    this.jobInterval = setInterval(this.manageProcesses.bind(this), 1000);
+    this.jobInterval = setInterval(this.startAndStopProcesses.bind(this), 1000);
   }
 
   protected stopJob(): void {
