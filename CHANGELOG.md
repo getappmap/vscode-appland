@@ -1,3 +1,16 @@
+# [0.63.0](https://github.com/getappmap/vscode-appland/compare/v0.62.0...v0.63.0) (2023-01-18)
+
+
+### Bug Fixes
+
+* Remove unnecessary await ([3caf13c](https://github.com/getappmap/vscode-appland/commit/3caf13c8fa56b4f0ee4278ef0c43b0e7383acabc))
+* Unwind use of ProjectState ([ed71ec1](https://github.com/getappmap/vscode-appland/commit/ed71ec15fa2ea076e8789b783504bf56034b9883))
+
+
+### Features
+
+* Provide api key to scanner process ([fd69280](https://github.com/getappmap/vscode-appland/commit/fd69280182e26f1879476928079bc8c14a4de5c5))
+
 # [0.62.0](https://github.com/getappmap/vscode-appland/compare/v0.61.1...v0.62.0) (2023-01-17)
 
 
