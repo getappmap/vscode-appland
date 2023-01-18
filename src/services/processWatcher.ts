@@ -14,7 +14,6 @@ export type RetryOptions = {
 
 export type ProcessWatcherOptions = {
   id: string;
-  startCondition?: () => boolean | Promise<boolean>;
 } & RetryOptions &
   SpawnOptions;
 
@@ -23,6 +22,8 @@ const DEFAULT_RETRY_OPTIONS: Required<RetryOptions> = {
   retryThreshold: 3 * 60 * 1000,
   retryBackoff: (retryNumber: number) => Math.pow(2, retryNumber) * 1000,
 };
+
+export type ConfigFileProvider = () => Promise<vscode.Uri[]>;
 
 export class ProcessWatcher implements vscode.Disposable {
   public process?: ChildProcess;
@@ -53,7 +54,7 @@ export class ProcessWatcher implements vscode.Disposable {
     return this.options.id;
   }
 
-  constructor(options: ProcessWatcherOptions) {
+  constructor(protected configFileProvider: ConfigFileProvider, options: ProcessWatcherOptions) {
     this.options = {
       ...DEFAULT_RETRY_OPTIONS,
       ...options,
@@ -90,20 +91,34 @@ export class ProcessWatcher implements vscode.Disposable {
     if (this.shouldRun) this.start();
   }
 
-  async start(): Promise<void> {
-    if (this.process) {
-      throw new Error(`process (${this.process.pid}) already running`);
-    }
+  async canStart(): Promise<{ enabled: boolean; reason?: string }> {
+    const configFiles = await this.configFileProvider();
+    if (configFiles.length === 0) return { enabled: false, reason: 'appmap.yml does not exist' };
 
-    if (this.options.startCondition) {
-      const canStart = await this.options.startCondition();
-      if (!canStart) return;
+    return { enabled: true };
+  }
+
+  async restart(): Promise<void> {
+    await this.stop();
+    await this.start();
+  }
+
+  async start(): Promise<void> {
+    const options = { ...this.options };
+    options.env = { ...options.env, ...(await this.loadEnvironment()) };
+
+    // If this.process is undefined, don't await until after this.process is set, or the process may be started twice.
+    if (this.process) {
+      this.process.log.append(
+        `${(options.args || [])[0]} process (${this.process.pid}) already running`
+      );
+      return;
     }
 
     this.shouldRun = true;
-    this.process = spawn(this.options);
+    this.process = spawn(options);
     this.process.log.append(
-      `spawned ${this.process.spawnargs.join(' ')} with options ${JSON.stringify(this.options)}`
+      `spawned ${this.process.spawnargs.join(' ')} with options ${JSON.stringify(options)}`
     );
 
     this.process.once('error', (err) => {
@@ -131,10 +146,17 @@ export class ProcessWatcher implements vscode.Disposable {
     this.shouldRun = false;
     if (this.crashTimeout) clearTimeout(this.crashTimeout);
     if (this.process) {
-      this.process.log.append('process has been stopped' + (reason ? `: ${reason}` : ''));
+      this.process.log.append(
+        `${this.process?.spawnargs.join(' ')} process has been stopped` +
+          (reason ? `: ${reason}` : '')
+      );
       this.process.kill();
       this.process = undefined;
     }
+  }
+
+  protected async loadEnvironment(): Promise<NodeJS.ProcessEnv> {
+    return {};
   }
 
   dispose(): void {

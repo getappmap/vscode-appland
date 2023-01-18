@@ -1,21 +1,16 @@
 import * as vscode from 'vscode';
 import { DEBUG_EXCEPTION, Telemetry } from '../telemetry';
 import ErrorCode from '../telemetry/definitions/errorCodes';
-import ProjectMetadata from '../workspace/projectMetadata';
-import AnalysisManager from './analysisManager';
 import { ProcessWatcher } from './processWatcher';
-import { ProjectStateServiceInstance } from './projectStateService';
 import { WorkspaceServiceInstance } from './workspaceService';
 
 export default class NodeProcessServiceInstance implements WorkspaceServiceInstance {
   disposables: vscode.Disposable[] = [];
-  protected running = false;
-  protected agentInstalled = false;
+  jobInterval?: NodeJS.Timeout;
 
   constructor(
     public folder: vscode.WorkspaceFolder,
-    protected readonly processes: Readonly<ProcessWatcher[]>,
-    protected readonly projectState: ProjectStateServiceInstance
+    protected readonly processes: Readonly<ProcessWatcher[]>
   ) {
     this.processes.forEach((p) => {
       this.disposables.push(
@@ -30,43 +25,72 @@ export default class NodeProcessServiceInstance implements WorkspaceServiceInsta
     });
   }
 
-  protected onReceiveProjectMetadata(metadata: Readonly<ProjectMetadata>): void {
-    this.agentInstalled = Boolean(metadata.agentInstalled);
-    this.agentInstalled
-      ? this.start()
-      : this.stop(undefined, 'appmap.yml has been deleted or moved');
-  }
-
   initialize(): void {
-    const metadata = this.projectState.metadata;
-    this.onReceiveProjectMetadata(metadata);
-    this.disposables.push(
-      this.projectState.onStateChange((metadata) => this.onReceiveProjectMetadata(metadata)),
-      AnalysisManager.onAnalysisToggled(({ enabled }) => {
-        enabled ? this.start('analysis') : this.stop('analysis', 'analysis has been disabled');
-      })
-    );
+    this.startJob();
   }
 
-  start(id?: string): void {
-    if (!this.agentInstalled) return;
-
-    this.processes
-      .filter((process) => !process.running && (!id || id === process.id))
-      .forEach((process) => {
-        process.start();
-      });
+  async restart(reason?: string): Promise<void> {
+    await this.stop(reason);
+    await this.start();
   }
 
-  stop(id?: string, reason?: string): void {
-    this.processes
-      .filter((process) => !id || id === process.id)
-      .forEach((process) => {
-        process.stop(reason);
-      });
+  async stop(reason?: string): Promise<void> {
+    const processControl = async (): Promise<void> => {
+      for (let index = 0; index < this.processes.length; index++) {
+        const process = this.processes[index];
+        await process.stop(reason);
+      }
+    };
+    return this.manageProcesses(processControl);
+  }
+
+  async start(): Promise<void> {
+    const processControl = async (): Promise<void> => {
+      for (let index = 0; index < this.processes.length; index++) {
+        const process = this.processes[index];
+        await process.start();
+      }
+    };
+    return this.manageProcesses(processControl);
+  }
+
+  // By using a single interval to start/stop processes we avoid trying to do job control concurrently, which
+  // leads to situations like attempts to start a process that is already running.
+  protected async startAndStopProcesses(): Promise<void> {
+    const processControl = async (): Promise<void> => {
+      for (let index = 0; index < this.processes.length; index++) {
+        const process = this.processes[index];
+        const { enabled, reason } = await process.canStart();
+        if (enabled && !process.running) await process.start();
+        else if (!enabled && process.running) await process.stop(reason);
+      }
+    };
+    return this.manageProcesses(processControl);
+  }
+
+  protected async manageProcesses(handler: () => Promise<void>): Promise<void> {
+    this.stopJob();
+    try {
+      await handler();
+    } finally {
+      this.startJob();
+    }
+  }
+
+  protected startJob(): void {
+    if (this.jobInterval) return;
+
+    this.jobInterval = setInterval(this.startAndStopProcesses.bind(this), 1000);
+  }
+
+  protected stopJob(): void {
+    if (this.jobInterval) clearInterval(this.jobInterval);
+
+    this.jobInterval = undefined;
   }
 
   dispose(): void {
+    this.stopJob();
     this.processes.forEach((p) => p.dispose());
     this.disposables.forEach((d) => d.dispose());
   }

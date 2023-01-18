@@ -8,21 +8,25 @@ import NodeProcessServiceInstance from './nodeProcessServiceInstance';
 import { ProcessWatcher } from './processWatcher';
 import ErrorCode from '../telemetry/definitions/errorCodes';
 import { getModulePath, ProgramName, spawn } from './nodeDependencyProcess';
-import { ProjectStateServiceInstance } from './projectStateService';
 import { downloadFile, getLatestVersionInfo } from '../util';
-import AnalysisManager from './analysisManager';
 import { lookupAppMapDir } from '../lib/appmapDir';
 import lockfile from 'proper-lockfile';
+import IndexProcessWatcher from './indexProcessWatcher';
+import ScanProcessWatcher from './scanProcessWatcher';
+import ChangeEventDebouncer from './changeEventDebouncer';
+import { fileSync } from 'tmp';
+import Environment from '../configuration/environment';
 
 const YARN_JS = 'yarn.js';
 const PACKAGE_JSON = 'package.json';
 const INSTALL_SUCCESS_MESSAGE = 'Installation of AppMap services is complete.';
 
 export class NodeProcessService implements WorkspaceService<NodeProcessServiceInstance> {
+  public static outputChannel = vscode.window.createOutputChannel('AppMap: Services');
+
   protected externDir: string;
   protected globalStorageDir: string;
   protected COPY_FILES: string[] = [PACKAGE_JSON, YARN_JS];
-  protected static outputChannel = vscode.window.createOutputChannel('AppMap: Services');
   protected static readonly DEFAULT_APPMAP_DIR = '.';
 
   protected _hasCLIBin = false;
@@ -40,20 +44,13 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
     return this._onReady.event;
   }
 
-  constructor(
-    context: vscode.ExtensionContext,
-    protected projectStates: Readonly<Array<ProjectStateServiceInstance>>
-  ) {
+  constructor(protected context: vscode.ExtensionContext) {
     this.globalStorageDir = context.globalStorageUri.fsPath;
     this.externDir = path.join(context.extensionPath, 'extern');
   }
 
   async create(folder: vscode.WorkspaceFolder): Promise<NodeProcessServiceInstance> {
     const services: ProcessWatcher[] = [];
-    const projectState = this.projectStates.find((projectState) => projectState.folder === folder);
-    if (!projectState) {
-      throw new Error(`failed to resolve a project state for ${folder.name}`);
-    }
 
     let appMapDir = await lookupAppMapDir(folder.uri.fsPath);
     if (appMapDir) {
@@ -69,43 +66,79 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
       appMapDir = NodeProcessService.DEFAULT_APPMAP_DIR;
     }
 
-    try {
-      const env = process.env.APPMAP_TEST
+    const env =
+      Environment.isSystemTest || Environment.isIntegrationTest
         ? { ...process.env, APPMAP_WRITE_PIDFILE: 'true' }
         : undefined;
+
+    const tryModulePath = async (program: ProgramName): Promise<string | undefined> => {
+      try {
+        return await getModulePath({
+          dependency: program,
+          globalStoragePath: this.globalStorageDir,
+        });
+      } catch (e) {
+        Telemetry.sendEvent(DEBUG_EXCEPTION, {
+          exception: e as Error,
+          errorCode: ErrorCode.DependencyPathNotResolved,
+        });
+      }
+    };
+
+    const configPattern = new vscode.RelativePattern(folder, `**/appmap.yml`);
+    const configFiles = async (): Promise<vscode.Uri[]> => {
+      return await vscode.workspace.findFiles(configPattern);
+    };
+
+    const appmapModulePath = await tryModulePath(ProgramName.Appmap);
+    if (appmapModulePath) {
       services.push(
-        new ProcessWatcher({
-          id: 'index',
-          modulePath: await getModulePath({
-            dependency: ProgramName.Appmap,
-            globalStoragePath: this.globalStorageDir,
-          }),
-          log: NodeProcessService.outputChannel,
-          args: ['index', '--watch', '--appmap-dir', appMapDir],
-          cwd: folder.uri.fsPath,
-          env,
-        }),
-        new ProcessWatcher({
-          id: 'analysis',
-          startCondition: () => AnalysisManager.isAnalysisEnabled,
-          modulePath: await getModulePath({
-            dependency: ProgramName.Scanner,
-            globalStoragePath: this.globalStorageDir,
-          }),
-          log: NodeProcessService.outputChannel,
-          args: ['scan', '--watch', '--appmap-dir', appMapDir],
-          cwd: folder.uri.fsPath,
-        })
+        new IndexProcessWatcher(configFiles, appmapModulePath, appMapDir, folder.uri.fsPath, env)
       );
-    } catch (e) {
-      Telemetry.sendEvent(DEBUG_EXCEPTION, {
-        exception: e as Error,
-        errorCode: ErrorCode.DependencyPathNotResolved,
-      });
     }
 
-    const instance = new NodeProcessServiceInstance(folder, services, projectState);
-    await instance.initialize();
+    const scannerModulePath = await tryModulePath(ProgramName.Scanner);
+    if (scannerModulePath) {
+      services.push(
+        new ScanProcessWatcher(configFiles, scannerModulePath, appMapDir, folder.uri.fsPath, env)
+      );
+    }
+
+    const restartServices = () =>
+      services.forEach((service) => {
+        service.restart();
+      });
+
+    const configFileEvent = new ChangeEventDebouncer<vscode.Uri>(1000);
+    const watcher = vscode.workspace.createFileSystemWatcher(configPattern);
+
+    const files = new Set<string>();
+    const cloneFiles = () => [...files];
+    const addFile = (uri: vscode.Uri) => files.add(uri.fsPath);
+    const removeFile = (uri: vscode.Uri) => files.delete(uri.fsPath);
+
+    this.context.subscriptions.push(
+      watcher,
+      watcher.onDidChange((e) => {
+        const oldFiles = cloneFiles();
+        addFile(e);
+        if (oldFiles.join('\n') !== [...files].join('\n')) configFileEvent.fire(e);
+      }),
+      watcher.onDidCreate((e) => {
+        const oldFiles = cloneFiles();
+        addFile(e);
+        if (oldFiles.join('\n') !== [...files].join('\n')) configFileEvent.fire(e);
+      }),
+      watcher.onDidDelete((e) => {
+        const oldFiles = cloneFiles();
+        removeFile(e);
+        if (oldFiles.join('\n') !== [...files].join('\n')) configFileEvent.fire(e);
+      })
+    );
+    configFileEvent.event(restartServices);
+
+    const instance = new NodeProcessServiceInstance(folder, services);
+    instance.initialize();
 
     return instance;
   }
@@ -205,7 +238,7 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
       // to run `yarn install` to create it. `yarn up` will happilly update an empty lock file.
       await fs.appendFile(path.join(this.globalStorageDir, 'yarn.lock'), '');
 
-      const installProcess = await spawn({
+      const installProcess = spawn({
         modulePath: this.yarnPath,
         args: ['up', '-R', '@appland/appmap', '@appland/scanner'],
         cwd: this.globalStorageDir,

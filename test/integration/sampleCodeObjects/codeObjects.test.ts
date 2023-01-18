@@ -9,7 +9,7 @@ import {
   withAuthenticatedUser,
 } from '../util';
 
-describe('Sample Code Objects', () => {
+describe('Code Objects', () => {
   withAuthenticatedUser();
 
   beforeEach(initializeWorkspace);

@@ -28,7 +28,7 @@
       "type": "extensionHost",
       "request": "launch",
       "env": {
-        "TEST_FILE": "sequenceDiagram/compareSequenceDiagrams.test.js",
+        "TEST_FILE": "scanner/performAsAppMapsAreModified.test.js",
         "PROJECT_DIR": "${workspaceFolder}/test/fixtures/workspaces/project-a"
       },
       "args": [

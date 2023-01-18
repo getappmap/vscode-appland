@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-import TelemetryReporter from 'vscode-extension-telemetry';
 import { default as ExtensionSettings } from '../configuration/extensionSettings';
 import UriHandler from '../uri/uriHandler';
 import AppMapServerAuthenticationHandler from '../uri/appmapServerAuthenticationHandler';
@@ -115,7 +114,8 @@ export default class AppMapServerAuthenticationProvider implements vscode.Authen
         },
         async (_progress, token) => {
           return new Promise((resolve) => {
-            const dispose = (disposables) => disposables.forEach((d) => d.dispose());
+            const dispose = (disposables: vscode.Disposable[]) =>
+              disposables.forEach((d) => d.dispose());
             const disposables = [
               authnHandler.onCreateSession((session) => {
                 dispose(disposables);

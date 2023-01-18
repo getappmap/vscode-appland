@@ -211,7 +211,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     FindingsOverviewWebview.register(context);
     FindingInfoWebview.register(context);
 
-    const processService = new NodeProcessService(context, projectStates);
+    const processService = new NodeProcessService(context);
     (async function() {
       processService.onReady(activateUptodateService);
       await processService.install();
@@ -265,7 +265,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     });
 
     // Use this notification to track when the extension is activated.
-    if (Environment.isSmokeTest) {
+    if (Environment.isSystemTest) {
       // It may just be a nightly thing, but showErrorMessage has stopped working when called
       // immediately after the extension is activated. This is a workaround.
       const intervalHandle = setInterval(async () => {

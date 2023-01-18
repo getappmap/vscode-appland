@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { AUTHN_PROVIDER_NAME } from '../authentication';
+import { AUTHN_PROVIDER_NAME, getApiKey } from '../authentication';
 import ExtensionSettings from '../configuration/extensionSettings';
 import FindingsDiagnosticsProvider from '../diagnostics/findingsDiagnosticsProvider';
 import FindingsIndex from './findingsIndex';
@@ -64,7 +64,9 @@ export default class AnalysisManager {
       }),
       vscode.authentication.onDidChangeSessions((e) => {
         if (e.provider.id !== AUTHN_PROVIDER_NAME) return;
-        this.updateAnalysisState();
+
+        // The API key won't be available immediately. Wait a tick.
+        setTimeout(this.updateAnalysisState.bind(this), 0);
       })
     );
   }
@@ -99,12 +101,9 @@ export default class AnalysisManager {
   }
 
   public static async isUserAuthenticated(): Promise<boolean> {
-    if (Environment.isSmokeTest) return true;
+    if (Environment.isSystemTest) return true;
 
-    const session = await vscode.authentication.getSession(AUTHN_PROVIDER_NAME, ['default'], {
-      createIfNone: false,
-    });
-    return session !== undefined;
+    return !!(await getApiKey(false));
   }
 
   private static onAnalysisEnabled(): void {
