@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { AUTHN_PROVIDER_NAME } from '../authentication';
+import { AUTHN_PROVIDER_NAME, getApiKey } from '../authentication';
 import ExtensionSettings from '../configuration/extensionSettings';
 import FindingsDiagnosticsProvider from '../diagnostics/findingsDiagnosticsProvider';
 import FindingsIndex from './findingsIndex';
@@ -11,7 +11,6 @@ import { ResolvedFinding } from './resolvedFinding';
 import { WorkspaceServices } from './workspaceServices';
 import Environment from '../configuration/environment';
 import { ANALYSIS_DISABLE, ANALYSIS_ENABLE, Telemetry } from '../telemetry';
-import AppMapServerAuthenticationProvider from '../authentication/appmapServerAuthenticationProvider';
 
 export interface AnalysisToggleEvent {
   enabled: boolean;
@@ -104,7 +103,7 @@ export default class AnalysisManager {
   public static async isUserAuthenticated(): Promise<boolean> {
     if (Environment.isSystemTest) return true;
 
-    return !!(await AppMapServerAuthenticationProvider.getApiKey(false));
+    return !!(await getApiKey(false));
   }
 
   private static onAnalysisEnabled(): void {

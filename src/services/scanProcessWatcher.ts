@@ -1,4 +1,4 @@
-import AppMapServerAuthenticationProvider from '../authentication/appmapServerAuthenticationProvider';
+import { getApiKey } from '../authentication';
 import ExtensionSettings from '../configuration/extensionSettings';
 import { NodeProcessService } from './nodeProcessService';
 import { ProcessWatcher } from './processWatcher';
@@ -26,7 +26,7 @@ export default class ScanProcessWatcher extends ProcessWatcher {
   }
 
   async accessToken(): Promise<string | undefined> {
-    return AppMapServerAuthenticationProvider.getApiKey(false);
+    return getApiKey(false);
   }
 
   protected async loadEnvironment(): Promise<NodeJS.ProcessEnv> {

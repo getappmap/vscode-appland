@@ -14,7 +14,6 @@ import {
 } from '../telemetry';
 import ErrorCode from '../telemetry/definitions/errorCodes';
 import { AUTHN_PROVIDER_NAME } from './index';
-import Environment from '../configuration/environment';
 
 const APPMAP_SERVER_SESSION_KEY = 'appmap.server.session';
 
@@ -47,15 +46,6 @@ export default class AppMapServerAuthenticationProvider implements vscode.Authen
     Object.entries(queryParams).forEach(([k, v]) => url.searchParams.set(k, v));
 
     return vscode.Uri.parse(url.toString());
-  }
-
-  static async getApiKey(createIfNone: boolean): Promise<string | undefined> {
-    if (!createIfNone && Environment.appMapTestApiKey) return Environment.appMapTestApiKey;
-
-    const session = await vscode.authentication.getSession(AUTHN_PROVIDER_NAME, ['default'], {
-      createIfNone,
-    });
-    return session?.accessToken;
   }
 
   constructor(public context: vscode.ExtensionContext, public uriHandler: UriHandler) {}

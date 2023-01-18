@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import extensionSettings from '../configuration/extensionSettings';
 import { AppMap } from '@appland/client';
 import { UploadAppMapResponse } from '@appland/client/dist/src/appMap';
-import AppMapServerAuthenticationProvider from '../authentication/appmapServerAuthenticationProvider';
+import { getApiKey } from '../authentication';
 
 export class AppmapUploader {
   public static DIALOG_KEY = 'applandinc.appmap.uploadDialog';
@@ -40,7 +40,7 @@ export class AppmapUploader {
       return undefined;
     }
 
-    const appmapApiKey = await AppMapServerAuthenticationProvider.getApiKey(true);
+    const appmapApiKey = await getApiKey(true);
     if (!appmapApiKey) return;
 
     let upload: UploadAppMapResponse;
