@@ -1,3 +1,10 @@
+## [0.63.1](https://github.com/getappmap/vscode-appland/compare/v0.63.0...v0.63.1) (2023-01-20)
+
+
+### Bug Fixes
+
+* revert sidebar updates ([6464877](https://github.com/getappmap/vscode-appland/commit/6464877cfeb23cc70116f9b1eb4dd81ab149a239))
+
 # [0.63.0](https://github.com/getappmap/vscode-appland/compare/v0.62.0...v0.63.0) (2023-01-18)
 
 

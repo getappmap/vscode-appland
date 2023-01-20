@@ -3,7 +3,7 @@
   "name": "appmap",
   "displayName": "AppMap",
   "description": "Interactive maps of runtime code behavior",
-  "version": "0.63.0",
+  "version": "0.63.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/getappmap/vscode-appland"
