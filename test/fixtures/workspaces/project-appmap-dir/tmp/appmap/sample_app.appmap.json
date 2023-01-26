@@ -1,0 +1,127 @@
+{
+  "events": [
+    {
+      "id": 1,
+      "event": "call",
+      "thread_id": 5940,
+      "http_server_request": {
+        "request_method": "POST",
+        "path_info": "/good",
+        "normalized_path_info": "/good",
+        "headers": {
+          "Host": "www.example.com",
+          "Accept": "text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5",
+          "Content-Type": "application/x-www-form-urlencoded",
+          "Content-Length": "86"
+        }
+      }
+    },
+    {
+      "id": 2,
+      "event": "return",
+      "thread_id": 5940,
+      "parent_id": 1,
+      "elapsed": 0.007835499942302704,
+      "http_server_response": {
+        "headers": {
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-XSS-Protection": "1; mode=block",
+          "X-Content-Type-Options": "nosniff",
+          "X-Download-Options": "noopen",
+          "X-Permitted-Cross-Domain-Policies": "none",
+          "Referrer-Policy": "strict-origin-when-cross-origin",
+          "Location": "http://www.example.com/users/762146111"
+        },
+        "status_code": 302
+      }
+    }
+  ],
+  "metadata": {
+    "fingerprints": [
+      {
+        "appmap_digest": "2d46277c5c77a914ea13121a874742b6ba2a897935684e2077857de72d5e153e",
+        "canonicalization_algorithm": "classDependencies",
+        "digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "fingerprint_algorithm": "sha256"
+      },
+      {
+        "appmap_digest": "2d46277c5c77a914ea13121a874742b6ba2a897935684e2077857de72d5e153e",
+        "canonicalization_algorithm": "classes",
+        "digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "fingerprint_algorithm": "sha256"
+      },
+      {
+        "appmap_digest": "2d46277c5c77a914ea13121a874742b6ba2a897935684e2077857de72d5e153e",
+        "canonicalization_algorithm": "httpClientRequests",
+        "digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "fingerprint_algorithm": "sha256"
+      },
+      {
+        "appmap_digest": "2d46277c5c77a914ea13121a874742b6ba2a897935684e2077857de72d5e153e",
+        "canonicalization_algorithm": "httpServerRequests",
+        "digest": "451bcef81f6a579a6012cc0967b3f463b71e39299edd8fc03d1972a7a3f7fd5b",
+        "fingerprint_algorithm": "sha256"
+      },
+      {
+        "appmap_digest": "2d46277c5c77a914ea13121a874742b6ba2a897935684e2077857de72d5e153e",
+        "canonicalization_algorithm": "info",
+        "digest": "54f615cafe5f18d04a20ed217a76bfe192056087cd08bbb941e5b711d2a7254e",
+        "fingerprint_algorithm": "sha256"
+      },
+      {
+        "appmap_digest": "2d46277c5c77a914ea13121a874742b6ba2a897935684e2077857de72d5e153e",
+        "canonicalization_algorithm": "labels",
+        "digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "fingerprint_algorithm": "sha256"
+      },
+      {
+        "appmap_digest": "2d46277c5c77a914ea13121a874742b6ba2a897935684e2077857de72d5e153e",
+        "canonicalization_algorithm": "packageDependencies",
+        "digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "fingerprint_algorithm": "sha256"
+      },
+      {
+        "appmap_digest": "2d46277c5c77a914ea13121a874742b6ba2a897935684e2077857de72d5e153e",
+        "canonicalization_algorithm": "packages",
+        "digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "fingerprint_algorithm": "sha256"
+      },
+      {
+        "appmap_digest": "2d46277c5c77a914ea13121a874742b6ba2a897935684e2077857de72d5e153e",
+        "canonicalization_algorithm": "sqlNormalized",
+        "digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "fingerprint_algorithm": "sha256"
+      },
+      {
+        "appmap_digest": "2d46277c5c77a914ea13121a874742b6ba2a897935684e2077857de72d5e153e",
+        "canonicalization_algorithm": "sqlTables",
+        "digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "fingerprint_algorithm": "sha256"
+      },
+      {
+        "appmap_digest": "2d46277c5c77a914ea13121a874742b6ba2a897935684e2077857de72d5e153e",
+        "canonicalization_algorithm": "trace",
+        "digest": "54f615cafe5f18d04a20ed217a76bfe192056087cd08bbb941e5b711d2a7254e",
+        "fingerprint_algorithm": "sha256"
+      },
+      {
+        "appmap_digest": "2d46277c5c77a914ea13121a874742b6ba2a897935684e2077857de72d5e153e",
+        "canonicalization_algorithm": "update",
+        "digest": "b58b554b935a37168fab341bb8cb995462c3fd282ba0deb8078a5062b7c04266",
+        "fingerprint_algorithm": "sha256"
+      }
+    ]
+  },
+  "classMap": [
+    {
+      "type": "http",
+      "name": "HTTP server requests",
+      "children": [
+        {
+          "type": "route",
+          "name": "POST /good"
+        }
+      ]
+    }
+  ]
+}
