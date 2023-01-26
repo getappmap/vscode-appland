@@ -1,6 +1,7 @@
 import assert from 'assert';
 import * as vscode from 'vscode';
 import ExtensionState from '../configuration/extensionState';
+import { lookupAppMapDir } from '../lib/appmapDir';
 import chooseWorkspace from '../lib/chooseWorkspace';
 import {
   getModulePath,
@@ -36,9 +37,16 @@ export default async function generateOpenApi(
             dependency: ProgramName.Appmap,
             globalStoragePath: context.globalStorageUri.fsPath,
           });
+
+          let appmapDir = await lookupAppMapDir(workspaceFolder.uri.fsPath);
+          if (!appmapDir) {
+            appmapDir = '.';
+          }
+
           const openApiCmd = spawn({
             modulePath,
-            args: ['openapi', '--appmap-dir', workspaceFolder.uri.fsPath],
+            args: ['openapi', '--appmap-dir', appmapDir],
+            cwd: workspaceFolder.uri.fsPath,
             saveOutput: true,
           });
 
