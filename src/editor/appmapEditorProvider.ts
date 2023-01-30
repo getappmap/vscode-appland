@@ -151,6 +151,7 @@ export default class AppMapEditorProvider
       webviewPanel.webview.postMessage({
         type: 'update',
         text: document.data,
+        shareEnabled: extensionSettings.shareEnabled,
       });
 
       const { workspaceFolder } = document;

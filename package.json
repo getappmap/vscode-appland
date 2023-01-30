@@ -216,6 +216,10 @@
           "type": "boolean",
           "description": "Enable AppMap scanner and findings (preview)"
         },
+        "appMap.shareEnabled": {
+          "type": "boolean",
+          "description": "Enable AppMap sharing using the AppMap server"
+        },
         "appMap.inspectEnabled": {
           "type": "boolean",
           "description": "Enable detailed inspection of AppMap code objects (preview)"

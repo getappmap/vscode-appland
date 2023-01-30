@@ -13,9 +13,6 @@ export default function mountApp() {
     render(h) {
       return h(VVsCodeExtension, {
         ref: 'ui',
-        props: {
-          appMapUploadable: true,
-        },
       });
     },
     methods: {
@@ -30,6 +27,9 @@ export default function mountApp() {
             load_time: (new Date() - startTime) / 1000,
           },
         });
+      },
+      setShareEnabled(shareEnabled) {
+        this.$refs.ui.setShareEnabled(shareEnabled);
       },
       showInstructions() {
         this.$refs.ui.showInstructions();
@@ -142,8 +142,9 @@ export default function mountApp() {
     switch (message.type) {
       case 'update':
         {
-          const { text } = message;
+          const { text, shareEnabled } = message;
           app.loadData(text);
+          app.setShareEnabled(shareEnabled);
 
           // Then persist state information.
           // This state is returned in the call to `vscode.getState`
