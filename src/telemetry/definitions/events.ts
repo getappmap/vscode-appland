@@ -183,3 +183,7 @@ export const CLICK_CODE_OBJECT = new Event({
   name: 'click_code_object',
 });
 
+export const CLICK_DOCS_LINK_IN_TREE = new Event({
+  name: 'click_docs_link_in_tree',
+  properties: [Properties.DOCS_PATH],
+});

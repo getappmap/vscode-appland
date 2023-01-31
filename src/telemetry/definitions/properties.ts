@@ -275,3 +275,10 @@ export const FINDINGS_SUMMARY = new TelemetryDataProvider({
     };
   },
 });
+
+export const DOCS_PATH = new TelemetryDataProvider({
+  id: 'appmap.docs_path',
+  async value({ path }: { path: string }) {
+    return path;
+  },
+});
