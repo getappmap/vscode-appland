@@ -266,17 +266,17 @@
       },
       {
         "view": "appmap.views.findings",
-        "contents": "AppMap runtime analysis works right in your code editor, to help you find and fix problems in your code.\n[Sign Up](command:appmap.enableAnalysis)\n[Learn More](command:appmap.openInstallGuide?%5B%22investigate-findings%22%5D)",
+        "contents": "AppMap runtime analysis works right in your code editor, to help you find and fix problems in your code.\n[Sign Up](command:appmap.enableAnalysis)\n[Learn More](command:appmap.learnMoreRuntimeAnalysis)",
         "when": "appmap.initialized && !appmap.userAuthenticated"
       },
       {
         "view": "appmap.views.findings",
-        "contents": "AppMap runtime analysis works right in your code editor, to help you find and fix problems in your code.\n[Enable Runtime Analysis](command:appmap.enableAnalysis)\n[Learn More](command:appmap.openInstallGuide?%5B%22investigate-findings%22%5D)",
+        "contents": "AppMap runtime analysis works right in your code editor, to help you find and fix problems in your code.\n[Enable Runtime Analysis](command:appmap.enableAnalysis)\n[Learn More](command:appmap.learnMoreRuntimeAnalysis)",
         "when": "appmap.initialized && appmap.userAuthenticated && !appmap.findingsEnabled"
       },
       {
         "view": "appmap.views.findings",
-        "contents": "Runtime analysis is ready and waiting for AppMaps.\n[Learn More](command:appmap.openInstallGuide?%5B%22investigate-findings%22%5D)",
+        "contents": "Runtime analysis is ready and waiting for AppMaps.\n[Learn More](command:appmap.learnMoreRuntimeAnalysis)",
         "when": "appmap.initialized && appmap.analysisEnabled && !appmap.numFindings && !appmap.analysisPerformed"
       },
       {

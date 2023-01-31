@@ -53,6 +53,7 @@ import promptInstall from './actions/promptInstall';
 import FindingsOverviewWebview from './webviews/findingsWebview';
 import FindingInfoWebview from './webviews/findingInfoWebview';
 import { AppMapRecommenderService } from './services/appmapRecommenderService';
+import learnMoreRuntimeAnalysis from './commands/learnMoreRuntimeAnalysis';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   Telemetry.register(context);
@@ -121,6 +122,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     registerDecorationProvider(context, lineInfoIndex);
     outOfDateTests(context, appmapUptodateService);
     openCodeObjectInAppMap(context, classMapIndex);
+    learnMoreRuntimeAnalysis(context);
     appmapHoverProvider(context, lineInfoIndex);
 
     await workspaceServices.enroll(sourceFileWatcher);
