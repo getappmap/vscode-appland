@@ -69,6 +69,50 @@ export default function mountApp() {
       vscode.postMessage({ command: 'performAction', action: 'view_source' });
     });
 
+    app.$on('sidebarSearchFocused', () => {
+      vscode.postMessage({
+        command: 'performAction',
+        action: 'sidebar_search_focused',
+      });
+    });
+
+    app.$on('clickFilterButton', () => {
+      vscode.postMessage({
+        command: 'performAction',
+        action: 'click_filter_button',
+      });
+    });
+
+    app.$on('clickTab', (tabId) => {
+      vscode.postMessage({
+        command: 'performAction',
+        action: 'click_tab',
+        data: { tabId },
+      });
+    });
+
+    app.$on('selectObjectInSidebar', (type) => {
+      vscode.postMessage({
+        command: 'performAction',
+        action: 'select_object_in_sidebar',
+        data: { type },
+      });
+    });
+
+    app.$on('resetDiagram', () => {
+      vscode.postMessage({
+        command: 'performAction',
+        action: 'reset_diagram',
+      });
+    });
+
+    app.$on('copyToClipboard', (stringToCopy) => {
+      vscode.postMessage({
+        command: 'copyToClipboard',
+        stringToCopy,
+      });
+    });
+
     app.$on('clearSelection', () => {
       vscode.postMessage({ command: 'performAction', action: 'clear_selection' });
     });
@@ -181,14 +225,14 @@ export default function mountApp() {
           break;
       }
     });
-  });
 
-  // Webviews are normally torn down when not visible and re-created when they become visible again.
-  // State lets us save information across these re-loads
-  const state = vscode.getState();
-  if (state) {
-    app.loadData(state.text);
-  }
+    // Webviews are normally torn down when not visible and re-created when they become visible again.
+    // State lets us save information across these re-loads
+    const state = vscode.getState();
+    if (state) {
+      app.loadData(state.text);
+    }
+  });
 
   vscode.postMessage({ command: 'appmap-ready' });
 }
