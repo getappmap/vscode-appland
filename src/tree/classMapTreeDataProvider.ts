@@ -112,7 +112,7 @@ export class ClassMapTreeDataProvider implements vscode.TreeDataProvider<vscode.
         uri = vscode.Uri.joinPath(codeObject.folder.uri, codeObject.path);
       }
       treeItem.command = {
-        command: 'vscode.open',
+        command: 'appmap.openCodeObjectInSource',
         title: `Open ${basename(codeObject.path)}`,
         arguments: [uri, showOptions],
       };

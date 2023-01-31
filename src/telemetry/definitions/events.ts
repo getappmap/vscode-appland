@@ -178,3 +178,8 @@ export const ADD_RECOMMENDATION = new Event({
   name: 'recommend_extension:prompt',
   properties: [Properties.RESULT],
 });
+
+export const CLICK_CODE_OBJECT = new Event({
+  name: 'click_code_object',
+});
+
