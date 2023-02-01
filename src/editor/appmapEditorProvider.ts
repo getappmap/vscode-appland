@@ -185,6 +185,12 @@ export default class AppMapEditorProvider
         case 'ready':
           updateWebview();
           break;
+        case 'appmap-ready':
+          webviewPanel.webview.postMessage({
+            type: 'init-appmap',
+            shareEnabled: extensionSettings.shareEnabled,
+          });
+          break;
         case 'appmapStateResult':
           // Putting this directly on the clipboard is not what we always want;
           // although it is what appmap.getAppmapState wants.
