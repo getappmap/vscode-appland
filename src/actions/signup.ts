@@ -8,7 +8,7 @@ export class Signup {
       return true;
     }
 
-    Telemetry.sendEvent(ANALYSIS_CTA_INTERACTION);
+    Telemetry.sendEvent(ANALYSIS_CTA_INTERACTION, { id: 'sign-in' });
 
     const appmapApiKey = await getApiKey(true);
     if (!appmapApiKey) return false;

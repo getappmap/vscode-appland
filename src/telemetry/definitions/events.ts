@@ -153,7 +153,10 @@ export const AUTHENTICATION_SUCCESS = new Event({ name: 'authentication:success'
 export const AUTHENTICATION_FAILED = new Event({ name: 'authentication:failed' });
 export const ANALYSIS_ENABLE = new Event({ name: 'analysis:enable' });
 export const ANALYSIS_DISABLE = new Event({ name: 'analysis:disable' });
-export const ANALYSIS_CTA_INTERACTION = new Event({ name: 'analysis:cta_interaction' });
+export const ANALYSIS_CTA_INTERACTION = new Event({
+  name: 'analysis:cta_interaction',
+  properties: [Properties.CTA_ID],
+});
 
 export const ANALYSIS_VIEW_OVERVIEW = new Event({
   name: 'analysis:view_overview',
@@ -174,4 +177,13 @@ export const INSTALL_PROMPT = new Event({
 export const ADD_RECOMMENDATION = new Event({
   name: 'recommend_extension:prompt',
   properties: [Properties.RESULT],
+});
+
+export const CLICK_CODE_OBJECT = new Event({
+  name: 'click_code_object',
+});
+
+export const CLICK_DOCS_LINK_IN_TREE = new Event({
+  name: 'click_docs_link_in_tree',
+  properties: [Properties.DOCS_PATH],
 });

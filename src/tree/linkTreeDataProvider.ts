@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import svgLink from '../../web/static/media/tree/link.svg';
 import svgLinkVisited from '../../web/static/media/tree/link-visited.svg';
+import { CLICK_DOCS_LINK_IN_TREE, Telemetry } from '../telemetry';
 
 interface LinkDefinitions {
   [key: string]: {
@@ -39,6 +40,7 @@ export class LinkTreeDataProvider implements vscode.TreeDataProvider<vscode.Tree
       vscode.commands.registerCommand(
         'appmap.openLink',
         async (url: vscode.Uri, linkId: string, updateCallback: () => void) => {
+          Telemetry.sendEvent(CLICK_DOCS_LINK_IN_TREE, { path: url.path });
           vscode.env.openExternal(url);
 
           const visitedLinks = (context.globalState.get(LinkTreeDataProvider.VISITED_LINKS) ||

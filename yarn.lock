@@ -57,16 +57,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/appmap@npm:^3.43.2":
-  version: 3.54.0
-  resolution: "@appland/appmap@npm:3.54.0"
+"@appland/appmap@npm:^3.64.1":
+  version: 3.64.1
+  resolution: "@appland/appmap@npm:3.64.1"
   dependencies:
-    "@appland/components": 2.19.1
-    "@appland/diagrams": 1.5.3
-    "@appland/models": 1.22.0
-    "@appland/openapi": 1.2.1
-    "@appland/sequence-diagram": 1.3.0
-    "@datastructures-js/priority-queue": ^6.1.3
+    "@appland/components": ^2
+    "@appland/diagrams": ^1
+    "@appland/models": ^1.23.2
+    "@appland/openapi": ^1
+    "@appland/sequence-diagram": ^1
     "@sidvind/better-ajv-errors": ^0.9.1
     "@types/moo": ^0.5.5
     JSONStream: ^1.3.5
@@ -82,13 +81,14 @@ __metadata:
     console-table-printer: ^2.9.0
     crypto-js: ^4.0.0
     detect-indent: ^6.1.0
-    diff: ^5.0.0
+    diff: ^5.1.0
     fs-extra: ^10.1.0
     glob: ^7.2.3
     graceful-fs: ^4.2.10
     inquirer: ^8.1.2
     js-yaml: ^4.0.3
     jsdom: ^16.6.0
+    minimatch: ^5.1.2
     moo: ^0.5.1
     open: ^8.2.1
     ora: ^5.4.1
@@ -105,7 +105,7 @@ __metadata:
     yargs: ^17.1.1
   bin:
     appmap: built/cli.js
-  checksum: e3299b1a469f2e1c14c1dde973644506af3d2a5cc213de6a55f77f58fbb0d04e176e10fbb54e251c2f04f58f66df69c13ccacb72a01ec5ac16056f98f245dcc0
+  checksum: 9eaddd554a93fd36ac41ee63e2e47e6ce990ff2457409fbc6908f3a6960be8e94eb49ecfdb725c28b4e4a96a52a9ff96e6579ba016887f2e307a50969b9acc40
   languageName: node
   linkType: hard
 
@@ -121,24 +121,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/components@npm:2.19.1":
-  version: 2.19.1
-  resolution: "@appland/components@npm:2.19.1"
+"@appland/client@npm:^1.6.0":
+  version: 1.6.0
+  resolution: "@appland/client@npm:1.6.0"
   dependencies:
-    "@appland/diagrams": ^1.5.1
-    "@appland/models": ^1.9.0
-    buffer: ^6.0.3
-    highlight.js: ^10.7.2
-    sql-formatter: ^4.0.2
-    vue: ^2.6.11
-    vuex: ^3.6.0
-  checksum: 8ce9a4945f689e7f2dc12c07c066fed7014d8120686fb604aa2372dad2de2641a25d63d8d5d603063bf9ed4270f2e57122b2b57150dd6c9d158d4fe3d5f7f521
+    "@appland/models": 1.23.0
+    "@types/form-data": ^2.5.0
+    form-data: ^4.0.0
+    js-yaml: ^4.1.0
+  checksum: df448a652b610b0077c96a5b67fb111e575c9f0212d5b17d43093fa87c8cb070d2868e5017ac13574f9ae711bfce0a53d359f007c06ffc276f9e98500fd70aac
   languageName: node
   linkType: hard
 
-"@appland/components@npm:^2.25.2":
-  version: 2.25.2
-  resolution: "@appland/components@npm:2.25.2"
+"@appland/components@npm:^2, @appland/components@npm:^2.27.0":
+  version: 2.27.0
+  resolution: "@appland/components@npm:2.27.0"
   dependencies:
     "@appland/diagrams": ^1.6.0
     "@appland/models": ^1.23.0
@@ -147,26 +144,11 @@ __metadata:
     sql-formatter: ^4.0.2
     vue: ^2.7.14
     vuex: ^3.6.0
-  checksum: 9454380d18523d0fbd7eb92c247ba758f4cac74a9640b1258453fd40e2007b921aafd6ec5072988892e7df51e710ef62d5ef2e2de7f65f3bb7c1039a2206b52f
+  checksum: 8d54c6ca024ab89a40a1ef0c0d9c9400348b0274feb2bc84577f245f71fa0994503d0ee96939a013fbb2412b0ea6e00b885fa6c7580a7369206d4080ae073b2e
   languageName: node
   linkType: hard
 
-"@appland/diagrams@npm:1.5.3, @appland/diagrams@npm:^1.5.1":
-  version: 1.5.3
-  resolution: "@appland/diagrams@npm:1.5.3"
-  dependencies:
-    "@appland/models": ^1.9.0
-    d3-interpolate: ^1.4.0
-    d3-selection: ^1.4.2
-    d3-shape: ^1.3.7
-    d3-zoom: ^1.8.3
-    dagre: ^0.8.5
-    deepmerge: ^4.2.2
-  checksum: b4c41fead22448a5b5457fa5db619ffaee599aa296be0f5bdede98a7a2e6bd67ffc6fbe60f1ab8ac42e7400e6b3bf47b041af4146cd40b80a706bffbad43f659
-  languageName: node
-  linkType: hard
-
-"@appland/diagrams@npm:^1.6.0, @appland/diagrams@npm:^1.6.1":
+"@appland/diagrams@npm:^1, @appland/diagrams@npm:^1.6.0, @appland/diagrams@npm:^1.6.1":
   version: 1.6.1
   resolution: "@appland/diagrams@npm:1.6.1"
   dependencies:
@@ -191,7 +173,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/models@npm:1.22.0, @appland/models@npm:^1.18.1, @appland/models@npm:^1.9.0":
+"@appland/models@npm:1.22.0, @appland/models@npm:^1.18.1":
   version: 1.22.0
   resolution: "@appland/models@npm:1.22.0"
   dependencies:
@@ -201,7 +183,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/models@npm:^1.23.0":
+"@appland/models@npm:1.23.0, @appland/models@npm:^1.23.0":
   version: 1.23.0
   resolution: "@appland/models@npm:1.23.0"
   dependencies:
@@ -211,23 +193,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/openapi@npm:1.2.0":
-  version: 1.2.0
-  resolution: "@appland/openapi@npm:1.2.0"
+"@appland/models@npm:1.23.1":
+  version: 1.23.1
+  resolution: "@appland/models@npm:1.23.1"
   dependencies:
-    "@appland/models": 1.22.0
-    js-yaml: ^4.1.0
-  checksum: 113ad14837a22ada4cbf43a93430b0bfdfac6cb3194a9b6d60323f6d63d06cc99e8097a74e8c4938b107f6d62af97d835c2ed4a1d24ccb3df095eeedc202708c
+    "@appland/sql-parser": ^1.5.0
+    crypto-js: ^4.0.0
+  checksum: bd064e15c6c88cfd5c41108f9be2dc8645335df6b6d9e0cf40dd0fe9fb9ab1df1497caa1939fe930268e1b5cda815bc36b85df0af025b4559fce79a2a40ccc4d
   languageName: node
   linkType: hard
 
-"@appland/openapi@npm:1.2.1":
-  version: 1.2.1
-  resolution: "@appland/openapi@npm:1.2.1"
+"@appland/models@npm:^1.23.2":
+  version: 1.23.2
+  resolution: "@appland/models@npm:1.23.2"
   dependencies:
-    "@appland/models": 1.22.0
-    js-yaml: ^4.1.0
-  checksum: 0c1cc4a472e028d41042a44a3cd3f34e657e33379901792725572b97709da01ec95cf66c1dcebc3995f6954de5bdc36014dba8f4a957ad6941059a8e92ef6e12
+    "@appland/sql-parser": ^1.5.0
+    crypto-js: ^4.0.0
+  checksum: e9173eab243a94767395596bea5772d18b1d722c113f52b8087faade3c4ffd7bdbc0493481a3cefe8dd291626247f74d26efe2d5ea8ba9facc0a3541fedaef04
   languageName: node
   linkType: hard
 
@@ -241,13 +223,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/scanner@npm:^1.74.0":
-  version: 1.74.0
-  resolution: "@appland/scanner@npm:1.74.0"
+"@appland/openapi@npm:1.3.2, @appland/openapi@npm:^1":
+  version: 1.3.2
+  resolution: "@appland/openapi@npm:1.3.2"
+  dependencies:
+    "@appland/models": 1.23.1
+    js-yaml: ^4.1.0
+  checksum: 535fd95d0a0ca44e11fc04ff3b683efc3d93821d989845edc02f92025c57cc9752bd642281ed162fa7f416ad1abad72fac767c8bb2fed4679db3b64a91426258
+  languageName: node
+  linkType: hard
+
+"@appland/scanner@npm:^1.75.0":
+  version: 1.75.0
+  resolution: "@appland/scanner@npm:1.75.0"
   dependencies:
     "@appland/client": ^1.5.0
     "@appland/models": ^1.18.1
-    "@appland/openapi": 1.2.0
+    "@appland/openapi": 1.3.0
     "@appland/sql-parser": ^1.5.0
     "@types/cli-progress": ^3.9.2
     ajv: ^8.8.2
@@ -274,32 +266,19 @@ __metadata:
     yargs: ^17.1.1
   bin:
     scanner: built/cli.js
-  checksum: dcfd412de5015e015daf1b60478e98c530fd3af6e6c6a661609e74cb7420dfdb9c4bb8200db30b051260f9f43762bec0555a21c4b2030e3154b60a176c60ec1b
+  checksum: cb165a0bf966ede4c9e5a302aa8a16e7880d951149bed51014a4c2e02d9400131d56ee233ed28f327caa493362438bae093b5b58f95c2cc535aebff6b08f66cb
   languageName: node
   linkType: hard
 
-"@appland/sequence-diagram@npm:1.3.0":
-  version: 1.3.0
-  resolution: "@appland/sequence-diagram@npm:1.3.0"
+"@appland/sequence-diagram@npm:^1, @appland/sequence-diagram@npm:^1.3.2":
+  version: 1.3.2
+  resolution: "@appland/sequence-diagram@npm:1.3.2"
   dependencies:
-    "@appland/models": 1.22.0
-    diff: ^5.1.0
-  peerDependencies:
-    "@appland/openapi": ^1.2.1
-    "@datastructures-js/priority-queue": "*"
-  checksum: d8ac21d393c4d583d76ad3df40c3ef4be055ee0a942e0ae734fdf10d5c3c026e3243819e85bcc54b1255c1a91ae37e5b63bd412c1d6d4498f259cff41e29650d
-  languageName: node
-  linkType: hard
-
-"@appland/sequence-diagram@npm:^1.3.0":
-  version: 1.3.1
-  resolution: "@appland/sequence-diagram@npm:1.3.1"
-  dependencies:
-    "@appland/models": 1.22.0
-    "@appland/openapi": 1.3.0
+    "@appland/models": 1.23.1
+    "@appland/openapi": 1.3.2
     "@datastructures-js/priority-queue": ^6.1.3
     diff: ^5.1.0
-  checksum: b34bf2e9f26249e3fb8147c4071a5f14d4868c14393dc1ac3af55ac606171da2536578cd75ad5aad7b24e8dbe2fd02e7b4bc0d948f6b61dd0f41f8ccc9b03ab2
+  checksum: 783667801b9010e6ecf97787f7d9be94248a84e7567f33e15e833af604b8c012a3fd6a8a9bfabded2fdb18bbb8f521afe80dd5cce9d237484bcf38c74d288550
   languageName: node
   linkType: hard
 
@@ -3759,13 +3738,13 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "appmap@workspace:."
   dependencies:
-    "@appland/appmap": ^3.43.2
-    "@appland/client": ^1.5.0
-    "@appland/components": ^2.25.2
+    "@appland/appmap": ^3.64.1
+    "@appland/client": ^1.6.0
+    "@appland/components": ^2.27.0
     "@appland/diagrams": ^1.6.1
-    "@appland/models": ^1.23.0
-    "@appland/scanner": ^1.74.0
-    "@appland/sequence-diagram": ^1.3.0
+    "@appland/models": ^1.23.2
+    "@appland/scanner": ^1.75.0
+    "@appland/sequence-diagram": ^1.3.2
     "@babel/core": ^7.19.3
     "@babel/preset-env": ^7.14.2
     "@babel/preset-typescript": ^7.18.6
@@ -4337,6 +4316,15 @@ __metadata:
     balanced-match: ^1.0.0
     concat-map: 0.0.1
   checksum: faf34a7bb0c3fcf4b59c7808bc5d2a96a40988addf2e7e09dfbb67a2251800e0d14cd2bfc1aa79174f2f5095c54ff27f46fb1289fe2d77dac755b5eb3434cc07
+  languageName: node
+  linkType: hard
+
+"brace-expansion@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "brace-expansion@npm:2.0.1"
+  dependencies:
+    balanced-match: ^1.0.0
+  checksum: a61e7cd2e8a8505e9f0036b3b6108ba5e926b4b55089eeb5550cd04a471fe216c96d4fe7e4c7f995c728c554ae20ddfc4244cad10aef255e72b62930afd233d1
   languageName: node
   linkType: hard
 
@@ -9272,6 +9260,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"minimatch@npm:^5.1.2":
+  version: 5.1.6
+  resolution: "minimatch@npm:5.1.6"
+  dependencies:
+    brace-expansion: ^2.0.1
+  checksum: 7564208ef81d7065a370f788d337cd80a689e981042cb9a1d0e6580b6c6a8c9279eba80010516e258835a988363f99f54a6f711a315089b8b42694f5da9d0d77
+  languageName: node
+  linkType: hard
+
 "minimist-options@npm:4.1.0":
   version: 4.1.0
   resolution: "minimist-options@npm:4.1.0"
@@ -13498,13 +13495,6 @@ typescript@^4.1.3:
   version: 1.9.1
   resolution: "vue-template-es2015-compiler@npm:1.9.1"
   checksum: ad1e85662783be3ee262c323b05d12e6a5036fca24f16dc0f7ab92736b675919cb4fa4b79b28753eac73119b709d1b36789bf60e8ae423f50c4db35de9370e8b
-  languageName: node
-  linkType: hard
-
-"vue@npm:^2.6.11":
-  version: 2.6.14
-  resolution: "vue@npm:2.6.14"
-  checksum: 23524a1bdca094d62cb3491a46317eed75184b5d61d28fa846ea5d2b241c1cc7084fc67ee259d47a50a6d0bbc33ecaceb7bb52bff81312fe7da07263f3419942
   languageName: node
   linkType: hard
 

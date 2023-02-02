@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import ClassMapIndex from '../services/classMapIndex';
 import { CodeObjectEntry } from '../lib/CodeObjectEntry';
+import { CLICK_CODE_OBJECT, Telemetry } from '../telemetry';
 
 export default async function openCodeObjectInAppMap(
   context: vscode.ExtensionContext,
@@ -65,6 +66,7 @@ export default async function openCodeObjectInAppMap(
       selectedObject: codeObject.fqid,
     } as any; // eslint-disable-line @typescript-eslint/no-explicit-any
     const uri = vscode.Uri.parse(`file://${appMapFileName}#${JSON.stringify(state)}`);
+    Telemetry.sendEvent(CLICK_CODE_OBJECT);
     vscode.commands.executeCommand('vscode.open', uri);
   });
   context.subscriptions.push(command);
