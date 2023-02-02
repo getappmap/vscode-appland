@@ -1,3 +1,10 @@
+# [0.65.0](https://github.com/getappmap/vscode-appland/compare/v0.64.0...v0.65.0) (2023-02-02)
+
+
+### Features
+
+* telemetry to understand where to put sign-in ([4d6ffe6](https://github.com/getappmap/vscode-appland/commit/4d6ffe6b75e067eb115814be65368dce20f337be))
+
 # [0.64.0](https://github.com/getappmap/vscode-appland/compare/v0.63.1...v0.64.0) (2023-02-02)
 
 
