@@ -1,3 +1,15 @@
+# [0.64.0](https://github.com/getappmap/vscode-appland/compare/v0.63.1...v0.64.0) (2023-02-02)
+
+
+### Bug Fixes
+
+* Respect `appmap_dir` when generating OpenAPI ([d7a4010](https://github.com/getappmap/vscode-appland/commit/d7a40104db3db5dd6f7c38c1dbaaa2d9a346f527))
+
+
+### Features
+
+* share button behind feature flag ([fdee697](https://github.com/getappmap/vscode-appland/commit/fdee697da7def734aa8e175f1ab5b28fc7163ab7))
+
 ## [0.63.1](https://github.com/getappmap/vscode-appland/compare/v0.63.0...v0.63.1) (2023-01-20)
 
 
