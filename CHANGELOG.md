@@ -1,3 +1,10 @@
+## [0.65.1](https://github.com/getappmap/vscode-appland/compare/v0.65.0...v0.65.1) (2023-02-03)
+
+
+### Bug Fixes
+
+* Update [@appland](https://github.com/appland) dependencies ([65aeba9](https://github.com/getappmap/vscode-appland/commit/65aeba9e6cd89a7eacb2677f68e4a68fa7090894))
+
 # [0.65.0](https://github.com/getappmap/vscode-appland/compare/v0.64.0...v0.65.0) (2023-02-02)
 
 
