@@ -266,12 +266,12 @@
       },
       {
         "view": "appmap.views.findings",
-        "contents": "AppMap runtime analysis works right in your code editor, to help you find and fix problems in your code.\n[Sign Up](command:appmap.enableAnalysis)\n[Learn More](command:appmap.learnMoreRuntimeAnalysis)",
+        "contents": "AppMap runtime analysis works right in your code editor, to help you find and fix problems in your code.\n[Sign Up](command:appmap.enableAnalysis)\n Authenticating with AppMap is for granting feature access. AppMap cannot access your data.\n[Learn More](command:appmap.learnMoreRuntimeAnalysis)",
         "when": "appmap.initialized && !appmap.userAuthenticated"
       },
       {
         "view": "appmap.views.findings",
-        "contents": "AppMap runtime analysis works right in your code editor, to help you find and fix problems in your code.\n[Enable Runtime Analysis](command:appmap.enableAnalysis)\n[Learn More](command:appmap.learnMoreRuntimeAnalysis)",
+        "contents": "AppMap runtime analysis works right in your code editor, to help you find and fix problems in your code.\n[Enable Runtime Analysis](command:appmap.enableAnalysis)\nAuthenticating with AppMap is for granting feature access. AppMap cannot access your data.\n[Learn More](command:appmap.learnMoreRuntimeAnalysis)",
         "when": "appmap.initialized && appmap.userAuthenticated && !appmap.findingsEnabled"
       },
       {
@@ -503,7 +503,7 @@
   "dependencies": {
     "@appland/appmap": "^3.64.2",
     "@appland/client": "^1.6.0",
-    "@appland/components": "^2.28.0",
+    "@appland/components": "^2.29.0",
     "@appland/diagrams": "^1.6.2",
     "@appland/models": "^2.0.0",
     "@appland/scanner": "^1.75.1",
