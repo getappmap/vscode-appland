@@ -266,12 +266,12 @@
       },
       {
         "view": "appmap.views.findings",
-        "contents": "AppMap runtime analysis works right in your code editor, to help you find and fix problems in your code.\n[Sign Up](command:appmap.enableAnalysis)\n[Learn More](command:appmap.learnMoreRuntimeAnalysis)",
+        "contents": "AppMap runtime analysis works right in your code editor, to help you find and fix problems in your code.\n[Sign Up](command:appmap.enableAnalysis)\n Authenticating with AppMap is for granting feature access. AppMap cannot access your data.\n[Learn More](command:appmap.learnMoreRuntimeAnalysis)",
         "when": "appmap.initialized && !appmap.userAuthenticated"
       },
       {
         "view": "appmap.views.findings",
-        "contents": "AppMap runtime analysis works right in your code editor, to help you find and fix problems in your code.\n[Enable Runtime Analysis](command:appmap.enableAnalysis)\n[Learn More](command:appmap.learnMoreRuntimeAnalysis)",
+        "contents": "AppMap runtime analysis works right in your code editor, to help you find and fix problems in your code.\n[Enable Runtime Analysis](command:appmap.enableAnalysis)\nAuthenticating with AppMap is for granting feature access. AppMap cannot access your data.\n[Learn More](command:appmap.learnMoreRuntimeAnalysis)",
         "when": "appmap.initialized && appmap.userAuthenticated && !appmap.findingsEnabled"
       },
       {
