@@ -1,3 +1,10 @@
+# [0.66.0](https://github.com/getappmap/vscode-appland/compare/v0.65.1...v0.66.0) (2023-02-07)
+
+
+### Features
+
+* update sign up CTA text ([481783e](https://github.com/getappmap/vscode-appland/commit/481783ec17a835ee0d2b63c5405f674e9e75b86b))
+
 ## [0.65.1](https://github.com/getappmap/vscode-appland/compare/v0.65.0...v0.65.1) (2023-02-03)
 
 
