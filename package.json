@@ -503,7 +503,7 @@
   "dependencies": {
     "@appland/appmap": "^3.64.2",
     "@appland/client": "^1.6.0",
-    "@appland/components": "^2.28.0",
+    "@appland/components": "^2.29.0",
     "@appland/diagrams": "^1.6.2",
     "@appland/models": "^2.0.0",
     "@appland/scanner": "^1.75.1",
