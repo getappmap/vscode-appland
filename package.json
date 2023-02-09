@@ -212,6 +212,10 @@
           "type": "string",
           "description": "Default state of the AppMap view (obtain with AppMap: Copy Current State to Clipboard)"
         },
+        "appMap.defaultDiagramView": {
+          "type": "string",
+          "description": "Default view on which to open the AppMap: viewComponent, viewSequence, or viewFlow"
+        },
         "appMap.findingsEnabled": {
           "type": "boolean",
           "description": "Enable AppMap scanner and findings (preview)"
