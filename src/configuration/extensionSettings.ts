@@ -24,6 +24,10 @@ export default class ExtensionSettings {
     return vscode.workspace.getConfiguration('appMap').get('viewConfiguration');
   }
 
+  public static get defaultDiagramView(): string | undefined {
+    return vscode.workspace.getConfiguration('appMap').get('defaultDiagramView');
+  }
+
   public static get findingsEnabled(): boolean {
     return [true, 'true'].includes(
       vscode.workspace.getConfiguration('appMap').get('findingsEnabled') || false

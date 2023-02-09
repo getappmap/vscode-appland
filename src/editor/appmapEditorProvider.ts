@@ -190,6 +190,7 @@ export default class AppMapEditorProvider
           webviewPanel.webview.postMessage({
             type: 'init-appmap',
             shareEnabled: extensionSettings.shareEnabled,
+            defaultView: extensionSettings.defaultDiagramView,
           });
           break;
         case 'appmapStateResult':
