@@ -2878,10 +2878,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^14.16.0":
-  version: 14.18.26
-  resolution: "@types/node@npm:14.18.26"
-  checksum: c6ac3f9d4f6f77c0fa5ac17757779ad4d9835abfe3af5708b7552597cb5c7c1103e83499ccaf767a1cfa70040990bcf3f58761c547051dc8d5077f3c419091b1
+"@types/node@npm:^16":
+  version: 16.18.12
+  resolution: "@types/node@npm:16.18.12"
+  checksum: fc3271182414f8593018ef8f00b4718116a92f463f619081bd399d9460e7861e1dd7eebc7cf94c23567e418ff397babed077011711aae8d47171b5a81c5bd71d
   languageName: node
   linkType: hard
 
@@ -3791,7 +3791,7 @@ __metadata:
     "@types/js-yaml": ^4.0.5
     "@types/mocha": ^8.2.0
     "@types/mockery": ^1.4.30
-    "@types/node": ^14.16.0
+    "@types/node": ^16
     "@types/proper-lockfile": ^4.1.2
     "@types/semver": ^7.3.9
     "@types/sinon": ^10.0.2
