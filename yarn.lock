@@ -2908,6 +2908,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/ps-node@npm:^0.1.1":
+  version: 0.1.1
+  resolution: "@types/ps-node@npm:0.1.1"
+  checksum: 44c2cc83435d0bf7788fc221ef9baa4365c347bb1258c046d22491042ade75887c446b547874dd1ebb744214c168eb1aebc66ad564fc6be035f68e08a66439f8
+  languageName: node
+  linkType: hard
+
 "@types/retry@npm:*":
   version: 0.12.2
   resolution: "@types/retry@npm:0.12.2"
@@ -3793,6 +3800,7 @@ __metadata:
     "@types/mockery": ^1.4.30
     "@types/node": ^16
     "@types/proper-lockfile": ^4.1.2
+    "@types/ps-node": ^0.1.1
     "@types/semver": ^7.3.9
     "@types/sinon": ^10.0.2
     "@types/tmp": ^0.2.3
@@ -3830,6 +3838,7 @@ __metadata:
     prettier-eslint: ^12.0.0
     project-root-directory: ^1.0.3
     proper-lockfile: ^4.1.2
+    ps-node: ^0.1.6
     sass: ^1.32.2
     sass-loader: ^10.1.0
     semantic-release: ^17.3.8

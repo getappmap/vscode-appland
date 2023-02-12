@@ -150,8 +150,13 @@ export class ProcessWatcher implements vscode.Disposable {
         `${this.process?.spawnargs.join(' ')} process has been stopped` +
           (reason ? `: ${reason}` : '')
       );
-      this.process.kill();
+      this.process.removeAllListeners('exit');
+      let result: Promise<void> | void = new Promise<void>(
+        (resolve) => this.process?.once('exit', resolve) || resolve()
+      );
+      if (!this.process.kill()) result = undefined;
       this.process = undefined;
+      return result;
     }
   }
 
