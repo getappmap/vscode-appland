@@ -1,8 +1,5 @@
-import mockery from 'mockery';
-mockery.registerMock('vscode', {});
-mockery.enable({ warnOnUnregistered: false });
+import './support/mockVscode';
 import { ProcessLog } from '../../../src/services/nodeDependencyProcess';
-mockery.disable();
 
 import { expect } from 'chai';
 import { PassThrough } from 'stream';
