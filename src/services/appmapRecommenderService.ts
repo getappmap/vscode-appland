@@ -73,7 +73,8 @@ export class AppMapRecommenderServiceInstance implements WorkspaceServiceInstanc
 }
 
 export class AppMapRecommenderService
-  implements WorkspaceService<AppMapRecommenderServiceInstance> {
+  implements WorkspaceService<AppMapRecommenderServiceInstance>
+{
   constructor(protected extensionState: ExtensionState) {}
 
   async create(folder: vscode.WorkspaceFolder): Promise<AppMapRecommenderServiceInstance> {

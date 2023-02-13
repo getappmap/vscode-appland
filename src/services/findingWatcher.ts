@@ -49,8 +49,10 @@ class FindingWatcherInstance implements WorkspaceServiceInstance {
   }
 }
 
-export class FindingWatcher extends FileChangeEmitter
-  implements WorkspaceService<FindingWatcherInstance> {
+export class FindingWatcher
+  extends FileChangeEmitter
+  implements WorkspaceService<FindingWatcherInstance>
+{
   async create(folder: vscode.WorkspaceFolder): Promise<FindingWatcherInstance> {
     const watcher = new FindingWatcherInstance(
       folder,

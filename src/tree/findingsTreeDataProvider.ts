@@ -5,7 +5,8 @@ import AnalysisManager from '../services/analysisManager';
 const IMPACT_DOMAINS = ['Security', 'Performance', 'Stability', 'Maintainability'];
 
 export class FindingsTreeDataProvider
-  implements vscode.TreeDataProvider<vscode.TreeItem>, vscode.Disposable {
+  implements vscode.TreeDataProvider<vscode.TreeItem>, vscode.Disposable
+{
   private _onDidChangeTreeData = new vscode.EventEmitter<undefined>();
   public readonly onDidChangeTreeData = this._onDidChangeTreeData.event;
   private findingsIndex?: FindingsIndex;

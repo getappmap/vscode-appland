@@ -80,13 +80,11 @@ export default class FindingsIndex extends EventEmitter implements vscode.Dispos
     }
 
     const resolvedFindings = await Promise.all(
-      findings.map(
-        async (finding: Finding): Promise<ResolvedFinding> => {
-          const resolvedFinding = new ResolvedFinding(sourceUri, finding, checks);
-          await resolvedFinding.initialize();
-          return resolvedFinding;
-        }
-      )
+      findings.map(async (finding: Finding): Promise<ResolvedFinding> => {
+        const resolvedFinding = new ResolvedFinding(sourceUri, finding, checks);
+        await resolvedFinding.initialize();
+        return resolvedFinding;
+      })
     );
     this.findingsBySourceUri[sourceUri.toString()] = resolvedFindings;
 

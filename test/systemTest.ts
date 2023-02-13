@@ -47,10 +47,10 @@ async function main(): Promise<void> {
     }
 
     const TIMEOUT = Number(process.env.TEST_TIMEOUT || 60000);
-    const beforeAll: Mocha.Func = async function() {
+    const beforeAll: Mocha.Func = async function () {
       this.codePath = await downloadCode();
     };
-    const beforeEach: Mocha.Func = async function() {
+    const beforeEach: Mocha.Func = async function () {
       const project = new ProjectDirectory(projectPath);
 
       const { app, context, page } = await launchCode(
@@ -70,7 +70,7 @@ async function main(): Promise<void> {
       this.driver = driver;
       this.project = project;
     };
-    const afterEach: Mocha.Func = async function() {
+    const afterEach: Mocha.Func = async function () {
       await Promise.all([this.app.waitForEvent('close'), this.app.close()]);
     };
 

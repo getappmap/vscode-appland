@@ -14,8 +14,6 @@ export default class AppMapLoaderFile implements AppMapLoader {
 
   public async loadAppMap(): Promise<AppMap> {
     const buf = await fs.readFile(this.resourceUri.fsPath);
-    return buildAppMap(buf.toString())
-      .normalize()
-      .build();
+    return buildAppMap(buf.toString()).normalize().build();
   }
 }

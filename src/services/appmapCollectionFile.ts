@@ -9,9 +9,8 @@ import { fileExists } from '../util';
 import { AppMapsService } from '../appMapsService';
 
 export default class AppMapCollectionFile implements AppMapCollection, AppMapsService {
-  private _onUpdated: vscode.EventEmitter<AppMapCollection> = new ChangeEventDebouncer<
-    AppMapCollection
-  >();
+  private _onUpdated: vscode.EventEmitter<AppMapCollection> =
+    new ChangeEventDebouncer<AppMapCollection>();
   public readonly onUpdated: vscode.Event<AppMapCollection> = this._onUpdated.event;
 
   private loaders: Map<string, AppMapLoaderFile> = new Map<string, AppMapLoaderFile>();

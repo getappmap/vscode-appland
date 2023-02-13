@@ -51,8 +51,7 @@ export default async function analyze(folder: WorkspaceFolder): Promise<ProjectA
       features.web = {
         title: 'Django',
         score: 'ok',
-        text:
-          'This project uses Django. AppMap will automatically recognize web requests, SQL queries, and key framework functions during recording.',
+        text: 'This project uses Django. AppMap will automatically recognize web requests, SQL queries, and key framework functions during recording.',
       };
     } else if (dependency('flask')) {
       features.web = {
@@ -77,8 +76,7 @@ export default async function analyze(folder: WorkspaceFolder): Promise<ProjectA
     } else {
       features.test = {
         score: 'bad',
-        text:
-          "This project doesn't seem to use a supported test framework. Automatic test recording won't be possible.",
+        text: "This project doesn't seem to use a supported test framework. Automatic test recording won't be possible.",
       };
     }
   } catch (_) {

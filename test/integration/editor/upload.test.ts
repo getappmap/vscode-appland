@@ -54,7 +54,7 @@ describe('Upload', () => {
       const createStub = sandbox.stub(AppMap, 'create').resolves({ uuid: 'the-uuid' });
       const promptStub = sandbox
         .stub(
-          (AppmapUploader as unknown) as { userAcceptedTerms(): Promise<boolean> },
+          AppmapUploader as unknown as { userAcceptedTerms(): Promise<boolean> },
           'userAcceptedTerms'
         )
         .resolves(true);
@@ -71,7 +71,7 @@ describe('Upload', () => {
       const createStub = sandbox.stub(AppMap, 'create').resolves({ uuid: 'the-uuid' });
       const promptStub = sandbox
         .stub(
-          (AppmapUploader as unknown) as { userAcceptedTerms(): Promise<boolean> },
+          AppmapUploader as unknown as { userAcceptedTerms(): Promise<boolean> },
           'userAcceptedTerms'
         )
         .resolves(false);

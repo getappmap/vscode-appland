@@ -60,12 +60,10 @@ describe('Compare sequence diagram', () => {
     const openExternal = sinon.stub(vscode.env, 'openExternal');
 
     let tempFileUri: vscode.Uri | undefined;
-    openExternal.callsFake(
-      (target): Promise<boolean> => {
-        tempFileUri = target;
-        return Promise.resolve(true);
-      }
-    );
+    openExternal.callsFake((target): Promise<boolean> => {
+      tempFileUri = target;
+      return Promise.resolve(true);
+    });
 
     await vscode.commands.executeCommand('appmap.compareSequenceDiagrams');
     await waitFor(

@@ -35,8 +35,7 @@ export default async function analyze(folder: WorkspaceFolder): Promise<ProjectA
       features.web = {
         title: 'express.js',
         score: 'ok',
-        text:
-          'This project uses Express. AppMap will automatically recognize web requests, SQL queries, and key framework functions during recording.',
+        text: 'This project uses Express. AppMap will automatically recognize web requests, SQL queries, and key framework functions during recording.',
       };
     }
 
@@ -52,8 +51,7 @@ export default async function analyze(folder: WorkspaceFolder): Promise<ProjectA
         features.test = {
           title: 'mocha',
           score: 'bad',
-          text:
-            'This project uses an unsupported version of Mocha. You need at least version 8 to automatically record test execution.',
+          text: 'This project uses an unsupported version of Mocha. You need at least version 8 to automatically record test execution.',
         };
       }
     }

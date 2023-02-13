@@ -27,8 +27,7 @@ export default async function analyze(folder: WorkspaceFolder): Promise<ProjectA
       features.web = {
         title: 'Spring',
         score: 'good',
-        text:
-          'This project uses Spring. AppMap will automatically recognize web requests, SQL queries, and key framework functions during recording.',
+        text: 'This project uses Spring. AppMap will automatically recognize web requests, SQL queries, and key framework functions during recording.',
       };
     }
 

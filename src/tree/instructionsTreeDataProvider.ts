@@ -33,7 +33,7 @@ export const DocsPages = [
   },
 ] as const;
 
-type DocPage = typeof DocsPages[number];
+type DocPage = (typeof DocsPages)[number];
 export type DocPageId = DocPage['id'];
 
 const icons = {
