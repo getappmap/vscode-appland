@@ -10,6 +10,12 @@ async function exit(signal) {
   process.exit(0);
 }
 
-process.on('SIGTERM', exit).on('SIGQUIT', exit).on('SIGINT', exit);
+function ignore(signal) {
+  console.log(`got ${signal}, but ignoring!`);
+}
+
+if (process.argv[2] === 'ignore')
+  process.on('SIGTERM', ignore).on('SIGQUIT', ignore).on('SIGINT', ignore);
+else process.on('SIGTERM', exit).on('SIGQUIT', exit).on('SIGINT', exit);
 
 for (;;) await setTimeout(1000);
