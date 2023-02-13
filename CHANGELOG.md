@@ -1,3 +1,11 @@
+## [0.66.1](https://github.com/getappmap/vscode-appland/compare/v0.66.0...v0.66.1) (2023-02-13)
+
+
+### Bug Fixes
+
+* Make sure spawned processes quit correctly ([69dcf0f](https://github.com/getappmap/vscode-appland/commit/69dcf0f62be6466a3a5a4c74a37781db5ba48a29))
+* Wait for process termination in process watcher ([eb8486f](https://github.com/getappmap/vscode-appland/commit/eb8486f98666c67098eea37353cb142cfa879ec4))
+
 # [0.66.0](https://github.com/getappmap/vscode-appland/compare/v0.65.1...v0.66.0) (2023-02-07)
 
 
