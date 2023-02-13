@@ -115,8 +115,6 @@ export default class AppMap {
         break;
     }
 
-    return await this.instructionsTreeItem(step)
-      .locator(selector)
-      .waitFor();
+    return await this.instructionsTreeItem(step).locator(selector).waitFor();
   }
 }

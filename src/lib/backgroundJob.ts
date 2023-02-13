@@ -23,9 +23,7 @@ class Job<T> extends EventEmitter {
     };
 
     this.timeout = setTimeout(() => {
-      this.fn()
-        .then(emitAll('done'))
-        .catch(emitAll('error'));
+      this.fn().then(emitAll('done')).catch(emitAll('error'));
     }, delayMs);
   }
 }

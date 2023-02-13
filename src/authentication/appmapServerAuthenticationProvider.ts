@@ -18,9 +18,8 @@ import { AUTHN_PROVIDER_NAME } from './index';
 const APPMAP_SERVER_SESSION_KEY = 'appmap.server.session';
 
 export default class AppMapServerAuthenticationProvider implements vscode.AuthenticationProvider {
-  private _onDidChangeSessions = new vscode.EventEmitter<
-    vscode.AuthenticationProviderAuthenticationSessionsChangeEvent
-  >();
+  private _onDidChangeSessions =
+    new vscode.EventEmitter<vscode.AuthenticationProviderAuthenticationSessionsChangeEvent>();
   readonly onDidChangeSessions = this._onDidChangeSessions.event;
 
   static enroll(

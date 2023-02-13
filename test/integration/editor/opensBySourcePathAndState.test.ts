@@ -37,24 +37,21 @@ describe('AppMapEditorProvider', () => {
     await waitFor('AppMap diagram should be opened', () => editorProvider.openDocuments.length > 0);
 
     let clipboardContents: string | undefined;
-    await waitFor(
-      'AppMap state should match the instructed state',
-      async (): Promise<boolean> => {
-        await vscode.commands.executeCommand('appmap.getAppmapState');
-        clipboardContents = await vscode.env.clipboard.readText();
-        if (!clipboardContents) return false;
-        try {
-          assert.deepStrictEqual(
-            clipboardContents,
-            'eyJjdXJyZW50VmlldyI6InZpZXdGbG93Iiwic2VsZWN0ZWRPYmplY3QiOiJldmVudDo0MSIsImZpbHRlcnMiOnsibGltaXRSb290RXZlbnRzIjpmYWxzZX19'
-          );
-          return true;
-        } catch (e) {
-          // This happens normally as the view opens with a default state, and is subsequently reconfigured.
-          // console.log(`Clipboard state does not match expectation: ${e.message}`);
-          return false;
-        }
+    await waitFor('AppMap state should match the instructed state', async (): Promise<boolean> => {
+      await vscode.commands.executeCommand('appmap.getAppmapState');
+      clipboardContents = await vscode.env.clipboard.readText();
+      if (!clipboardContents) return false;
+      try {
+        assert.deepStrictEqual(
+          clipboardContents,
+          'eyJjdXJyZW50VmlldyI6InZpZXdGbG93Iiwic2VsZWN0ZWRPYmplY3QiOiJldmVudDo0MSIsImZpbHRlcnMiOnsibGltaXRSb290RXZlbnRzIjpmYWxzZX19'
+        );
+        return true;
+      } catch (e) {
+        // This happens normally as the view opens with a default state, and is subsequently reconfigured.
+        // console.log(`Clipboard state does not match expectation: ${e.message}`);
+        return false;
       }
-    );
+    });
   });
 });

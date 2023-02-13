@@ -20,7 +20,8 @@ export type FindingInfo = ResolvedFinding & {
  * Provider for AppLand scenario files.
  */
 export default class AppMapEditorProvider
-  implements vscode.CustomReadonlyEditorProvider<AppMapDocument> {
+  implements vscode.CustomReadonlyEditorProvider<AppMapDocument>
+{
   public static register(
     context: vscode.ExtensionContext,
     extensionState: ExtensionState

@@ -1,8 +1,8 @@
 import { strictEqual } from 'assert';
 import * as path from 'path';
 
-describe('Findings and scanning', function() {
-  beforeEach(async function() {
+describe('Findings and scanning', function () {
+  beforeEach(async function () {
     const { driver, project } = this;
 
     const pidfile = path.join(project.workspacePath, '**', 'index.pid');
@@ -14,7 +14,7 @@ describe('Findings and scanning', function() {
     await driver.waitForFile(pidfile);
   });
 
-  it('automatically identifies findings as AppMaps are created', async function() {
+  it('automatically identifies findings as AppMaps are created', async function () {
     const { driver, project } = this;
 
     await driver.appMap.openActionPanel();
@@ -26,7 +26,7 @@ describe('Findings and scanning', function() {
     await driver.appMap.findingsTreeItem(1).waitFor();
   });
 
-  it('shows the findings overview page', async function() {
+  it('shows the findings overview page', async function () {
     const { driver, project } = this;
 
     await driver.appMap.openActionPanel();
@@ -42,7 +42,7 @@ describe('Findings and scanning', function() {
     await driver.appMap.findingsOverviewWebview.assertNumberOfFindingsInOverview(3);
   });
 
-  it('opens the findings details page from the findings overview page', async function() {
+  it('opens the findings details page from the findings overview page', async function () {
     const { driver, project } = this;
 
     await driver.appMap.openActionPanel();
@@ -64,7 +64,7 @@ describe('Findings and scanning', function() {
     await driver.appMap.findingDetailsWebview.assertTitleRenders(expectedTitle);
   });
 
-  it('opens the findings details page from the runtime analysis tree view', async function() {
+  it('opens the findings details page from the runtime analysis tree view', async function () {
     const { driver, project } = this;
 
     await driver.appMap.openActionPanel();
@@ -82,7 +82,7 @@ describe('Findings and scanning', function() {
     await driver.appMap.findingDetailsWebview.assertTitleRenders(expectedTitle);
   });
 
-  it('reuses the finding details webview', async function() {
+  it('reuses the finding details webview', async function () {
     const { driver, project } = this;
 
     await driver.appMap.openActionPanel();

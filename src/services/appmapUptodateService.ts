@@ -16,8 +16,10 @@ import ChangeEventDebouncer from './changeEventDebouncer';
 import { WorkspaceService, WorkspaceServiceInstance } from './workspaceService';
 import { workspaceServices } from './workspaceServices';
 
-export default class AppmapUptodateServiceInstance extends EventEmitter
-  implements WorkspaceServiceInstance {
+export default class AppmapUptodateServiceInstance
+  extends EventEmitter
+  implements WorkspaceServiceInstance
+{
   modulePath: string | undefined;
   interval?: NodeJS.Timeout;
   process?: ChildProcess;
@@ -157,9 +159,8 @@ export default class AppmapUptodateServiceInstance extends EventEmitter
 }
 
 export class AppmapUptodateService implements WorkspaceService<AppmapUptodateServiceInstance> {
-  private _onUpdated: vscode.EventEmitter<AppmapUptodateService> = new ChangeEventDebouncer<
-    AppmapUptodateService
-  >();
+  private _onUpdated: vscode.EventEmitter<AppmapUptodateService> =
+    new ChangeEventDebouncer<AppmapUptodateService>();
   public readonly onUpdated: vscode.Event<AppmapUptodateService> = this._onUpdated.event;
   protected readonly globalStoragePath: string;
 

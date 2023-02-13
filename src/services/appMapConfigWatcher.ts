@@ -47,8 +47,10 @@ export class AppMapConfigWatcherInstance implements WorkspaceServiceInstance {
   }
 }
 
-export class AppMapConfigWatcher extends FileChangeEmitter
-  implements WorkspaceService<AppMapConfigWatcherInstance> {
+export class AppMapConfigWatcher
+  extends FileChangeEmitter
+  implements WorkspaceService<AppMapConfigWatcherInstance>
+{
   async create(folder: vscode.WorkspaceFolder): Promise<AppMapConfigWatcherInstance> {
     const watcher = new AppMapConfigWatcherInstance(
       folder,

@@ -61,9 +61,7 @@ export default async function compareSequenceDiagrams(
           if (!appmapUri) return;
 
           const data = await readFile(appmapUri.fsPath, 'utf-8');
-          const appmap: AppMap = buildAppMap()
-            .source(data)
-            .build();
+          const appmap: AppMap = buildAppMap().source(data).build();
 
           if (!specification) specification = await promptForSpecification(appmap);
 

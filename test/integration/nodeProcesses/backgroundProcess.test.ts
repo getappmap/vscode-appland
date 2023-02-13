@@ -172,11 +172,11 @@ describe('Background processes', () => {
         name: path.basename(tmpDir),
         index: -1,
       } as vscode.WorkspaceFolder;
-      service = new NodeProcessService(({
+      service = new NodeProcessService({
         globalStorageUri: directoryUri,
         extensionPath: path.join(__dirname, '..', '..', '..', '..'),
         subscriptions: [],
-      } as any) as vscode.ExtensionContext);
+      } as any as vscode.ExtensionContext);
       await fs.writeFile(path.join(tmpDir, 'appmap.yml'), `appmap_dir: ${appmapDir}`, 'utf8');
     });
 

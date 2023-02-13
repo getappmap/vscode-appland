@@ -20,10 +20,7 @@ export default class InstructionsWebview {
   }
 
   public getPageByTitle(title: string): Locator {
-    return this.currentPage
-      .locator('header, .qs-step__head')
-      .locator(`text="${title}"`)
-      .first();
+    return this.currentPage.locator('header, .qs-step__head').locator(`text="${title}"`).first();
   }
 
   public async ready(): Promise<void> {

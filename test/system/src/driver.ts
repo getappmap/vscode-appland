@@ -102,10 +102,7 @@ export default class Driver {
   }
 
   public async openActionView(name: string): Promise<void> {
-    await this.page
-      .locator(`.action-item  a.action-label[aria-label~="${name}"]`)
-      .first()
-      .click();
+    await this.page.locator(`.action-item  a.action-label[aria-label~="${name}"]`).first().click();
   }
 
   public async tabCount(): Promise<number> {

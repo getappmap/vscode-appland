@@ -28,11 +28,7 @@ export default class FindingsOverviewWebview {
   public async openFirstFindingDetail(): Promise<void> {
     if (!this.frame) throw Error(this.initializeErrorMsg);
 
-    this.frame
-      .locator('[data-cy="finding"]')
-      .first()
-      .locator('ul')
-      .click();
+    this.frame.locator('[data-cy="finding"]').first().locator('ul').click();
   }
 
   public async initialize(expectedFrames: number): Promise<void> {

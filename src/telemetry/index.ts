@@ -51,14 +51,12 @@ export class Telemetry {
 
     if (event.properties) {
       properties = await telemetry.resolve(
-        ...((event.properties as unknown) as DataResolverArray<string>)
+        ...(event.properties as unknown as DataResolverArray<string>)
       );
     }
 
     if (event.metrics) {
-      metrics = await telemetry.resolve(
-        ...((event.metrics as unknown) as DataResolverArray<number>)
-      );
+      metrics = await telemetry.resolve(...(event.metrics as unknown as DataResolverArray<number>));
     }
 
     this.debugChannel?.appendLine(

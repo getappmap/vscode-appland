@@ -5,10 +5,8 @@ import { WorkspaceService, WorkspaceServiceInstance } from './workspaceService';
 export class WorkspaceServices implements vscode.Disposable {
   workspaceServices: WorkspaceService<WorkspaceServiceInstance>[] = [];
   workspaceServiceInstances: Map<vscode.WorkspaceFolder, WorkspaceServiceInstance[]> = new Map();
-  instanceServices: Map<
-    WorkspaceServiceInstance,
-    WorkspaceService<WorkspaceServiceInstance>
-  > = new Map();
+  instanceServices: Map<WorkspaceServiceInstance, WorkspaceService<WorkspaceServiceInstance>> =
+    new Map();
 
   constructor() {
     const folderAdded = (folder: vscode.WorkspaceFolder) => {
