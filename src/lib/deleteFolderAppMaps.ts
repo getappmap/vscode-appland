@@ -7,7 +7,7 @@ export default async function deleteFolderAppMaps(
   folderName: string
 ): Promise<number> {
   const filteredAppMaps = appmaps.appMaps().filter((appmap) => {
-    const folderProperties = AppMapTreeDataProvider.appMapFolderProperties(appmap);
+    const folderProperties = AppMapTreeDataProvider.appMapFolderItems(appmap);
     return AppMapTreeDataProvider.folderName(folderProperties) === folderName;
   });
   await Promise.all(filteredAppMaps.map((appmap) => deleteAppMap(appmap.descriptor.resourceUri)));

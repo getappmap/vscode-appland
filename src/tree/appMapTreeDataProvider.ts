@@ -3,35 +3,33 @@ import { join } from 'path';
 import { isDeepStrictEqual } from 'util';
 import AppMapCollection from '../services/appmapCollection';
 import AppMapLoader from '../services/appmapLoader';
-import { AppMapDescriptor } from '../services/appmapLoader';
 import { AppmapUptodateService } from '../services/appmapUptodateService';
+import uniq from '../lib/uniq';
 
 const LABEL_NO_NAME = 'Untitled AppMap';
 
 const lightChangedIcon = join(__dirname, '../images/modified-file-icon-dark.svg');
 const darkChangedIcon = join(__dirname, '../images/modified-file-icon-light.svg');
 
-export type AppMapTreeItem = vscode.TreeItem & {
-  descriptor: AppMapDescriptor;
-};
+export interface FolderProperties {
+  recorderName: string;
+  recorderType?: string;
+  language?: string;
+  collection?: string;
+}
 
-export type RootTreeItem = vscode.TreeItem & {
-  folderProperties: FolderProperties;
-};
+export type FolderItem = FolderProperties & { name: string };
 
-class FolderProperties {
-  constructor(
-    public recorderName: string,
-    public recorderType?: string,
-    public language?: string,
-    public collection?: string
-  ) {}
+export type AppMapTreeItem = AppMapLoader | FolderItem;
+
+function isAppMapLoader(item: AppMapTreeItem): item is AppMapLoader {
+  return 'descriptor' in item;
 }
 
 type SortFunction = (a: AppMapLoader, b: AppMapLoader) => number;
 type NameFunction = (name: string) => string;
 
-export class AppMapTreeDataProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
+export class AppMapTreeDataProvider implements vscode.TreeDataProvider<AppMapTreeItem> {
   private appmaps: AppMapCollection;
   private appmapsUpToDate?: AppmapUptodateService;
 
@@ -62,47 +60,49 @@ export class AppMapTreeDataProvider implements vscode.TreeDataProvider<vscode.Tr
     }
   }
 
-  public getTreeItem(element: vscode.TreeItem): vscode.TreeItem {
-    return element;
-  }
+  public getTreeItem(element: AppMapTreeItem): vscode.TreeItem {
+    if (isAppMapLoader(element)) {
+      const iconPath = this.uptodate(element)
+        ? new vscode.ThemeIcon('file')
+        : { light: darkChangedIcon, dark: lightChangedIcon };
 
-  public getParent(): Thenable<vscode.TreeItem | null> {
-    return Promise.resolve(null);
-  }
+      const { descriptor } = element;
 
-  public getChildren(element?: vscode.TreeItem): Thenable<vscode.TreeItem[]> {
-    if (!element) {
-      return this.getRoots();
+      return {
+        iconPath,
+        label: descriptor.metadata?.name || LABEL_NO_NAME,
+        tooltip: element.descriptor.metadata?.name || LABEL_NO_NAME,
+        command: {
+          title: 'open',
+          command: 'vscode.openWith',
+          arguments: [descriptor.resourceUri, 'appmap.views.appMapFile'],
+        },
+        contextValue: 'appmap.views.local.appMap',
+      };
     } else {
-      const folderProperties = (element as RootTreeItem).folderProperties;
-      return this.getAppMapsForRecordingMethod(folderProperties);
+      return {
+        label: element.name,
+        collapsibleState: vscode.TreeItemCollapsibleState.Expanded,
+        contextValue: 'appmap.views.local.appMapCollection',
+      };
     }
   }
 
-  protected getRoots(): Thenable<RootTreeItem[]> {
-    const folderNames = new Set<string>();
-    const folderProperties = new Map<string, FolderProperties>();
+  public getChildren(): FolderItem[];
+  public getChildren(element: FolderItem): AppMapLoader[];
+  public getChildren(element: AppMapLoader): [];
+  public getChildren(element?: AppMapTreeItem): AppMapTreeItem[] {
+    if (!element) {
+      return this.getRoots();
+    } else {
+      if (isAppMapLoader(element)) return [];
+      return this.getAppMapsForRecordingMethod(element);
+    }
+  }
 
-    this.appmaps.appMaps().forEach((appMap) => {
-      const properties = AppMapTreeDataProvider.appMapFolderProperties(appMap);
-      const folderName = AppMapTreeDataProvider.folderName(properties);
-      if (!folderNames.has(folderName)) {
-        folderProperties.set(folderName, properties);
-      }
-      folderNames.add(folderName);
-    });
-
-    return Promise.resolve(
-      [...folderNames].sort().map(
-        (name) =>
-          ({
-            label: name,
-            collapsibleState: vscode.TreeItemCollapsibleState.Expanded,
-            folderProperties: folderProperties.get(name),
-            contextValue: 'appmap.views.local.appMapCollection',
-          } as RootTreeItem)
-      )
-    );
+  protected getRoots(): FolderItem[] {
+    const items = this.appmaps.appMaps().map(AppMapTreeDataProvider.appMapFolderItems);
+    return uniq(items, ({ name }) => name, true);
   }
 
   protected static sortByTimestamp(a: AppMapLoader, b: AppMapLoader): number {
@@ -140,22 +140,21 @@ export class AppMapTreeDataProvider implements vscode.TreeDataProvider<vscode.Tr
     return tokens.join(' - ');
   }
 
-  public static appMapFolderProperties(appMap: AppMapLoader): FolderProperties {
-    const metadata = appMap.descriptor.metadata;
+  public static appMapFolderItems(appMap: AppMapLoader): FolderItem {
+    const { metadata } = appMap.descriptor;
 
-    const name = metadata?.recorder?.name;
-    const type = metadata?.recorder?.type;
-    const language = metadata?.language?.name;
-    const collection = metadata?.collection;
-    return new FolderProperties(name || 'unknown recorder', type, language, collection);
+    const props: FolderProperties = {
+      collection: metadata?.collection,
+      language: metadata?.language?.name,
+      recorderName: metadata?.recorder?.name || 'unknown recorder',
+      recorderType: metadata?.recorder?.type,
+    };
+
+    return { name: AppMapTreeDataProvider.folderName(props), ...props };
   }
 
-  protected getAppMapsForRecordingMethod(
-    folderProperties: FolderProperties
-  ): Thenable<vscode.TreeItem[]> {
-    if (!this.appmaps) {
-      return Promise.resolve([]);
-    }
+  protected getAppMapsForRecordingMethod(folderProperties: FolderProperties): AppMapLoader[] {
+    if (!this.appmaps) [];
 
     const sortFunction =
       AppMapTreeDataProvider.SortMethod[folderProperties.recorderType || 'unknown recorder type'] ||
@@ -167,36 +166,16 @@ export class AppMapTreeDataProvider implements vscode.TreeDataProvider<vscode.Tr
     const listItems = this.appmaps
       .appMaps()
       .filter((appMap) =>
-        isDeepStrictEqual(AppMapTreeDataProvider.appMapFolderProperties(appMap), folderProperties)
+        isDeepStrictEqual(AppMapTreeDataProvider.appMapFolderItems(appMap), folderProperties)
       )
       .map((appmap) => {
         if (appmap.descriptor.metadata)
           appmap.descriptor.metadata.name = nameFunction(appmap.descriptor.metadata.name as string);
         return appmap;
       })
-      .sort(sortFunction)
-      .map(this.buildTreeItem.bind(this));
+      .sort(sortFunction);
 
-    return Promise.resolve(listItems);
-  }
-
-  protected buildTreeItem(appmap: AppMapLoader): AppMapTreeItem {
-    const iconPath = this.uptodate(appmap)
-      ? new vscode.ThemeIcon('file')
-      : { light: darkChangedIcon, dark: lightChangedIcon };
-
-    return {
-      iconPath,
-      label: (appmap.descriptor.metadata?.name as string) || LABEL_NO_NAME,
-      tooltip: (appmap.descriptor.metadata?.name as string) || LABEL_NO_NAME,
-      command: {
-        title: 'open',
-        command: 'vscode.openWith',
-        arguments: [appmap.descriptor.resourceUri, 'appmap.views.appMapFile'],
-      },
-      contextValue: 'appmap.views.local.appMap',
-      descriptor: appmap.descriptor,
-    };
+    return listItems;
   }
 
   protected uptodate(appmap: AppMapLoader): boolean {

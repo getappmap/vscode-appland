@@ -1,5 +1,3 @@
-import * as vscode from 'vscode';
-
 import { AppMapsService } from './appMapsService';
 import AppMapServerAuthenticationProvider from './authentication/appmapServerAuthenticationProvider';
 import { ClassMapService } from './classMapService';
@@ -14,6 +12,7 @@ import { NodeProcessService } from './services/nodeProcessService';
 import ProjectStateService from './services/projectStateService';
 import { SourceFileWatcher } from './services/sourceFileWatcher';
 import { WorkspaceServices } from './services/workspaceServices';
+import { AppMapTreeDataProvider } from './tree/appMapTreeDataProvider';
 
 export type Invocation = {
   command: Command;
@@ -26,7 +25,7 @@ export interface AppMapProcessService {
 }
 
 export type AppMapTreeDataProviders = {
-  appmaps: vscode.TreeDataProvider<vscode.TreeItem>;
+  appmaps: AppMapTreeDataProvider;
 };
 
 export default interface AppMapService {
