@@ -3,6 +3,7 @@ import assert from 'assert';
 import sinon from 'sinon';
 import * as vscode from 'vscode';
 import { AppmapUploader } from '../../../src/actions/appmapUploader';
+import MockExtensionContext from '../../mocks/mockExtensionContext';
 
 describe('Upload', () => {
   let sandbox: sinon.SinonSandbox;
@@ -13,9 +14,8 @@ describe('Upload', () => {
   afterEach(() => sandbox.restore());
 
   beforeEach(() => {
-    const globalState: vscode.Memento = sandbox.mock() as any;
-    context = { globalState } as vscode.ExtensionContext;
-    sandbox.stub(globalState, 'get').returns(true as any);
+    context = new MockExtensionContext();
+    sandbox.stub(context.globalState, 'get').returns(true);
   });
 
   let session: vscode.AuthenticationSession | undefined;
