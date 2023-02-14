@@ -35,7 +35,7 @@ you’ll see the full power of AppMap.
 
 - [Record](https://www.youtube.com/watch?v=-TWop5gpsFA) AppMap files of test cases and/or
   interactive sessions.
-- [Visualize](https://www.youtube.com/watch?v=LM8zqPUVlhI) detailed execution traces of HTP server
+- [Visualize](https://www.youtube.com/watch?v=LM8zqPUVlhI) detailed execution traces of HTTP server
   requests, function calls, parameters, return values, exceptions, RPC calls, SQL, etc.
 - &#x2728; **New** [Navigate](https://www.youtube.com/watch?v=_BiumbIh3-E) between code objects
   (classes, functions, HTTP routes, and SQL queries) and AppMap diagrams.
