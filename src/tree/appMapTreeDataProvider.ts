@@ -141,13 +141,12 @@ export class AppMapTreeDataProvider implements vscode.TreeDataProvider<vscode.Tr
   }
 
   public static appMapFolderProperties(appMap: AppMapLoader): FolderProperties {
-    // Not my fault; it's declared as a Record.
-    const metadata = appMap.descriptor.metadata as any;
+    const metadata = appMap.descriptor.metadata;
 
     const name = metadata?.recorder?.name;
     const type = metadata?.recorder?.type;
     const language = metadata?.language?.name;
-    const collection = metadata.collection;
+    const collection = metadata?.collection;
     return new FolderProperties(name || 'unknown recorder', type, language, collection);
   }
 

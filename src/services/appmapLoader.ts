@@ -1,10 +1,14 @@
 import * as vscode from 'vscode';
 import { AppMap } from '@appland/models';
 
+export type AppMapMetadata = Partial<AppMap['metadata']> & {
+  collection?: string;
+};
+
 export interface AppMapDescriptor {
   resourceUri: vscode.Uri;
   timestamp: number;
-  metadata?: Record<string, unknown>;
+  metadata?: AppMapMetadata;
   numRequests?: number;
   numQueries?: number;
   numFunctions?: number;
