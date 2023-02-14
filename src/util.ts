@@ -22,16 +22,13 @@ export function getNonce(): string {
   return text;
 }
 
-type Transformer = (value?: any) => unknown;
-const nopTransformer: Transformer = (value) => value;
-
 // Returns an object's string values with an optional key prefix
 // getStringRecords({ a: 'hello', b: [object Object] }, 'myApp') ->
 // { 'myApp.a': 'hello' }
 export function getRecords<T>(
-  obj: Record<string, unknown>,
+  obj?: Record<string, unknown>,
   keyPrefix?: string,
-  transformer = nopTransformer
+  transformer = (x: unknown) => x as T
 ): Record<string, T> {
   if (!obj) return {};
 
@@ -45,7 +42,7 @@ export function getRecords<T>(
           ...getRecords(v as Record<string, unknown>, key, transformer),
         };
       } else {
-        if (v) memo[key] = transformer(v) as T;
+        if (v) memo[key] = transformer(v);
       }
       return memo;
     }, {} as Record<string, T>);
@@ -336,7 +333,15 @@ export function downloadFile(url: string, destination: fs.WriteStream): Promise<
   });
 }
 
-export function getLatestVersionInfo(appmapPackage: string): Promise<any> {
+interface VersionInfo {
+  version: string;
+}
+
+function isVersionInfo(info: unknown): info is VersionInfo {
+  return !!info && typeof info === 'object' && typeof info['version'] === 'string';
+}
+
+export function getLatestVersionInfo(appmapPackage: string): Promise<VersionInfo> {
   return new Promise((resolve, reject) => {
     https
       .get(`https://registry.npmjs.org/@appland%2F${appmapPackage}/latest`, (response) => {
@@ -347,7 +352,9 @@ export function getLatestVersionInfo(appmapPackage: string): Promise<any> {
         });
 
         response.on('end', () => {
-          resolve(JSON.parse(body));
+          const result = JSON.parse(body) as unknown;
+          if (isVersionInfo(result)) resolve(result);
+          else reject(new Error('malformed response from npmjs'));
         });
       })
       .on('error', (err) => reject(err));
