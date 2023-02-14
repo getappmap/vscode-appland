@@ -5,6 +5,7 @@ import AppMapService from '../../../src/appMapService';
 import { initializeWorkspace, waitForExtension } from '../util';
 import { waitFor } from '../../waitFor';
 import { AUTHN_PROVIDER_NAME } from '../../../src/authentication';
+import { isNativeError } from 'util/types';
 
 describe('Authenticate', () => {
   let sandbox: sinon.SinonSandbox;
@@ -38,6 +39,7 @@ describe('Authenticate', () => {
             createIfNone: true,
           });
         } catch (e) {
+          assert(isNativeError(e));
           // The former happens when running with launch configuration.
           // The latter happens when running the test via CLI
           const messages = [
@@ -45,8 +47,8 @@ describe('Authenticate', () => {
             'DialogService: refused to show dialog in tests.',
           ];
           assert(
-            messages.indexOf((e as any).message) !== -1,
-            `Message ${(e as any).message} not found in ${messages}`
+            messages.indexOf(e.message) !== -1,
+            `Message ${e.message} not found in ${messages}`
           );
           return;
         }
