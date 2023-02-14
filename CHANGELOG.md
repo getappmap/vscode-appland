@@ -1,3 +1,10 @@
+## [0.66.2](https://github.com/getappmap/vscode-appland/compare/v0.66.1...v0.66.2) (2023-02-14)
+
+
+### Bug Fixes
+
+* Update README.md ([59344a1](https://github.com/getappmap/vscode-appland/commit/59344a1526504ef610dea1f2356718ce23bc13d3))
+
 ## [0.66.1](https://github.com/getappmap/vscode-appland/compare/v0.66.0...v0.66.1) (2023-02-13)
 
 
