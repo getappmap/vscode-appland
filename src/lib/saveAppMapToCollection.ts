@@ -67,7 +67,7 @@ export default async function saveAppMapToCollection(
   const collectionDir = join(collectionsDir, collectionName);
   await mkdir(collectionDir, { recursive: true });
 
-  const appmap = JSON.parse(await readFile(appmapUri.fsPath, 'utf-8')) as any;
+  const appmap = JSON.parse(await readFile(appmapUri.fsPath, 'utf-8'));
   if (!appmap['metadata']) appmap.metadata = {};
   appmap.metadata['collection'] = collectionName;
 
