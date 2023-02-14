@@ -14,7 +14,6 @@ import lockfile from 'proper-lockfile';
 import IndexProcessWatcher from './indexProcessWatcher';
 import ScanProcessWatcher from './scanProcessWatcher';
 import ChangeEventDebouncer from './changeEventDebouncer';
-import { fileSync } from 'tmp';
 import Environment from '../configuration/environment';
 
 const YARN_JS = 'yarn.js';
