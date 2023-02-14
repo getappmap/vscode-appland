@@ -1,12 +1,13 @@
 import * as vscode from 'vscode';
 import { promises as fs } from 'fs';
 import { CodeObjectTreeItem } from './classMapTreeDataProvider';
-import { AppMapTreeDataProvider, AppMapTreeItem, RootTreeItem } from './appMapTreeDataProvider';
+import { FolderItem } from './appMapTreeDataProvider';
 import deleteAppMap from '../lib/deleteAppMap';
 import deleteFolderAppMaps from '../lib/deleteFolderAppMaps';
 import AppMapCollection from '../services/appmapCollection';
 import saveAppMapToCollection from '../lib/saveAppMapToCollection';
 import { ProjectStateServiceInstance } from '../services/projectStateService';
+import AppMapLoader from '../services/appmapLoader';
 
 export default class ContextMenu {
   static async register(
@@ -17,7 +18,7 @@ export default class ContextMenu {
     context.subscriptions.push(
       vscode.commands.registerCommand(
         'appmap.context.openInFileExplorer',
-        async (item: AppMapTreeItem) => {
+        async (item: AppMapLoader) => {
           const { remoteName } = vscode.env;
           const command = remoteName === 'wsl' ? 'remote-wsl.revealInExplorer' : 'revealFileInOS';
           vscode.commands.executeCommand(command, item.descriptor.resourceUri);
@@ -25,12 +26,12 @@ export default class ContextMenu {
       )
     );
     context.subscriptions.push(
-      vscode.commands.registerCommand('appmap.context.openAsJson', async (item: AppMapTreeItem) => {
+      vscode.commands.registerCommand('appmap.context.openAsJson', async (item: AppMapLoader) => {
         vscode.commands.executeCommand('vscode.openWith', item.descriptor.resourceUri, 'default');
       })
     );
     context.subscriptions.push(
-      vscode.commands.registerCommand('appmap.context.rename', async (item: AppMapTreeItem) => {
+      vscode.commands.registerCommand('appmap.context.rename', async (item: AppMapLoader) => {
         const newName = await vscode.window.showInputBox({
           placeHolder: 'Enter AppMap name',
           value: item.descriptor.metadata?.name as string,
@@ -58,7 +59,7 @@ export default class ContextMenu {
     context.subscriptions.push(
       vscode.commands.registerCommand(
         'appmap.context.saveToCollection',
-        async (item: AppMapTreeItem) => {
+        async (item: AppMapLoader) => {
           saveAppMapToCollection(projectStates, item.descriptor.resourceUri);
         }
       )
@@ -66,31 +67,28 @@ export default class ContextMenu {
     context.subscriptions.push(
       vscode.commands.registerCommand(
         'appmap.context.sequenceDiagram',
-        async (item: AppMapTreeItem) => {
+        async (item: AppMapLoader) => {
           vscode.commands.executeCommand('appmap.sequenceDiagram', item.descriptor.resourceUri);
         }
       )
     );
     context.subscriptions.push(
-      vscode.commands.registerCommand(
-        'appmap.context.deleteAppMap',
-        async (item: AppMapTreeItem) => {
-          await deleteAppMap(item.descriptor.resourceUri);
-        }
-      )
+      vscode.commands.registerCommand('appmap.context.deleteAppMap', async (item: AppMapLoader) => {
+        await deleteAppMap(item.descriptor.resourceUri);
+      })
     );
     context.subscriptions.push(
       vscode.commands.registerCommand(
         'appmap.context.deleteAppMaps',
-        async (item: RootTreeItem) => {
-          deleteFolderAppMaps(appmaps, AppMapTreeDataProvider.folderName(item.folderProperties));
+        async ({ name }: FolderItem) => {
+          deleteFolderAppMaps(appmaps, name);
         }
       )
     );
     context.subscriptions.push(
       vscode.commands.registerCommand(
         'appmap.context.compareSequenceDiagrams',
-        async (item: AppMapTreeItem) => {
+        async (item: AppMapLoader) => {
           vscode.commands.executeCommand(
             'appmap.compareSequenceDiagrams',
             item.descriptor.resourceUri

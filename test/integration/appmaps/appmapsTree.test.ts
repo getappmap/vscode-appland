@@ -10,16 +10,16 @@ describe('AppMaps', () => {
     const trees = (await waitForExtension()).trees;
 
     const appmapsTree = trees.appmaps;
-    const roots = await appmapsTree.getChildren();
+    const roots = appmapsTree.getChildren();
 
     assert(roots, 'AppMaps tree is empty');
-    assert.deepStrictEqual(roots.map((root) => root.label).sort(), ['minitest']);
+    assert.deepStrictEqual(roots.map((root) => root.name).sort(), ['minitest']);
     const minitests = roots[0];
 
-    const appmaps = await appmapsTree.getChildren(minitests);
-    assert(appmaps, `No appmaps for ${minitests.label}`);
+    const appmaps = appmapsTree.getChildren(minitests);
+    assert(appmaps, `No appmaps for ${minitests.name}`);
     assert.deepStrictEqual(
-      appmaps.map((appmap) => (appmap as any).descriptor.metadata.name),
+      appmaps.map((appmap) => appmap.descriptor.metadata?.name),
       [
         'Microposts_controller can get microposts as JSON',
         'Microposts_interface micropost interface',
