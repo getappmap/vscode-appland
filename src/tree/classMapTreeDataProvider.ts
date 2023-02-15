@@ -105,16 +105,10 @@ export class ClassMapTreeDataProvider implements vscode.TreeDataProvider<vscode.
           new vscode.Position(codeObject.lineNo - 1, 0)
         );
       }
-      let uri: vscode.Uri;
-      if (isAbsolute(codeObject.path)) {
-        uri = vscode.Uri.file(codeObject.path);
-      } else {
-        uri = vscode.Uri.joinPath(codeObject.folder.uri, codeObject.path);
-      }
       treeItem.command = {
         command: 'appmap.openCodeObjectInSource',
         title: `Open ${basename(codeObject.path)}`,
-        arguments: [uri, showOptions],
+        arguments: [codeObject.path, codeObject.folder, showOptions],
       };
     } else if (InspectableTypes.includes(codeObject.type) && codeObject.children.length === 0) {
       treeItem.command = {
