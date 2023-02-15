@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { bestFilePath } from '../lib/bestFilePath';
 import { CLICK_CODE_OBJECT, Telemetry } from '../telemetry';
 
 export default async function openCodeObjectInSource(
@@ -6,9 +7,16 @@ export default async function openCodeObjectInSource(
 ): Promise<void> {
   const command = vscode.commands.registerCommand(
     'appmap.openCodeObjectInSource',
-    async (uri, showOptions) => {
+    async (
+      path: string,
+      folder?: vscode.WorkspaceFolder,
+      showOptions?: vscode.TextDocumentShowOptions,
+      prompt?: string
+    ) => {
       Telemetry.sendEvent(CLICK_CODE_OBJECT);
-      await vscode.commands.executeCommand('vscode.open', uri, showOptions);
+      const bestPath = await bestFilePath(path, folder, prompt);
+      if (!bestPath) return;
+      await vscode.commands.executeCommand('vscode.open', bestPath, showOptions);
     }
   );
   context.subscriptions.push(command);
