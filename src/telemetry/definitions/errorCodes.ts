@@ -8,6 +8,7 @@ enum ErrorCode {
   InitializationFailure,
   GenerateOpenApiFailure,
   SidebarSignInFailure,
+  ExportSvgError,
 }
 
 export default ErrorCode;

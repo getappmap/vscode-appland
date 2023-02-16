@@ -177,6 +177,10 @@ export default function mountApp() {
       vscode.postMessage({ command: 'closeUpdateNotification' });
     });
 
+    app.$on('exportSVG', (svgString) => {
+      vscode.postMessage({ command: 'exportSVG', svgString });
+    });
+
     window.addEventListener('error', (event) => {
       vscode.postMessage({
         command: 'reportError',
