@@ -1,6 +1,7 @@
 import { readFile } from 'fs';
 import { promisify } from 'util';
 import * as vscode from 'vscode';
+import * as path from 'path';
 import { ClassMapEntry, CodeObjectEntry, CodeObjectEntryRootType } from './CodeObjectEntry';
 
 const ROOT_ID = '<root>';
@@ -122,9 +123,9 @@ export async function buildClassMap(
           return;
         }
 
-        const classMapFileTokens = classMapFileURL.fsPath.split('/');
+        const classMapFileTokens = classMapFileURL.fsPath.split(/[\\/]/);
         classMapFileTokens.pop();
-        const indexDir = classMapFileTokens.join('/');
+        const indexDir = classMapFileTokens.join(path.sep);
         const appMapFilePath = [indexDir, 'appmap.json'].join('.');
         classMap.map(makeFolder).forEach(mergeCodeObject.bind(null, folder, appMapFilePath, root));
       })

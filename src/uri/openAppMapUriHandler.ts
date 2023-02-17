@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-import AppMapEditorProvider from '../editor/appmapEditorProvider';
 import { RequestHandler } from './uriHandler';
 
 export default class OpenAppMapUriHandler implements RequestHandler {
@@ -8,16 +7,11 @@ export default class OpenAppMapUriHandler implements RequestHandler {
   constructor(protected readonly context: vscode.ExtensionContext) {}
 
   handle(queryParams: URLSearchParams): void {
-    if (queryParams.get('uri')) {
-      vscode.commands.executeCommand(
-        'vscode.open',
-        vscode.Uri.parse(queryParams.get('uri') as string)
-      );
-    }
+    const uri = queryParams.get('uri');
+    if (!uri) return;
 
-    if (queryParams.get('state')) {
-      this.context.globalState.update(AppMapEditorProvider.INITIAL_STATE, queryParams.get('state'));
-    }
+    const state = queryParams.get('state');
+    vscode.commands.executeCommand('appmap.open', vscode.Uri.parse(uri), state);
   }
 
   dispose(): void {

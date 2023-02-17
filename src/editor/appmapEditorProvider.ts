@@ -62,17 +62,6 @@ export default class AppMapEditorProvider
       })
     );
 
-    context.subscriptions.push(
-      vscode.commands.registerCommand('appmap.setAppmapStateNoPrompt', async (state) => {
-        if (provider.currentWebView) {
-          provider.currentWebView.webview.postMessage({
-            type: 'setAppmapState',
-            state: state,
-          });
-        }
-      })
-    );
-
     return provider;
   }
 
@@ -80,8 +69,8 @@ export default class AppMapEditorProvider
   private static readonly INSTRUCTIONS_VIEWED = 'APPMAP_INSTRUCTIONS_VIEWED';
   private static readonly RELEASE_KEY = 'APPMAP_RELEASE_KEY';
   private static readonly analysisManager = AnalysisManager;
+  private static readonly openWebviewPanels = new Map<string, vscode.WebviewPanel>();
   public static readonly APPMAP_OPENED = 'APPMAP_OPENED';
-  public static readonly INITIAL_STATE = 'INITIAL_STATE';
   public currentWebView?: vscode.WebviewPanel;
 
   constructor(
@@ -134,21 +123,6 @@ export default class AppMapEditorProvider
       }
     });
 
-    const initialState = (() => {
-      const state = document.uri.fragment || extensionSettings.viewConfiguration;
-      if (state !== undefined && state !== '') {
-        try {
-          JSON.parse(state);
-          return state;
-        } catch (e) {
-          console.warn(e);
-        }
-      }
-    })();
-
-    if (initialState)
-      this.context.globalState.update(AppMapEditorProvider.INITIAL_STATE, initialState);
-
     const updateWebview = () => {
       webviewPanel.webview.postMessage({
         type: 'update',
@@ -168,12 +142,6 @@ export default class AppMapEditorProvider
           type: 'displayUpdateNotification',
           version,
         });
-      }
-
-      const initialState = this.context.globalState.get(AppMapEditorProvider.INITIAL_STATE);
-      if (initialState) {
-        vscode.commands.executeCommand('appmap.setAppmapStateNoPrompt', initialState);
-        this.context.globalState.update(AppMapEditorProvider.INITIAL_STATE, null);
       }
     };
 
@@ -201,6 +169,7 @@ export default class AppMapEditorProvider
           vscode.window.setStatusBarMessage('AppMap state was copied to clipboard', 5000);
           break;
         case 'onLoadComplete':
+          AppMapEditorProvider.openWebviewPanels.set(document.uri.toString(), webviewPanel);
           this.documents.push(document);
           Telemetry.sendEvent(APPMAP_OPEN, {
             rootDirectory: document.workspaceFolder?.uri.fsPath,
@@ -285,6 +254,7 @@ export default class AppMapEditorProvider
 
     webviewPanel.onDidDispose(() => {
       this.currentWebView = undefined;
+      AppMapEditorProvider.openWebviewPanels.delete(document.uri.toString());
       removeOne(this.documents, document);
       if (document.workspaceFolder)
         this.extensionState.setClosedAppMap(document.workspaceFolder, true);
@@ -327,7 +297,32 @@ export default class AppMapEditorProvider
     context.globalState.update(AppMapEditorProvider.INSTRUCTIONS_VIEWED, null);
     context.globalState.update(AppMapEditorProvider.RELEASE_KEY, null);
     context.globalState.update(AppMapEditorProvider.APPMAP_OPENED, null);
-    context.globalState.update(AppMapEditorProvider.INITIAL_STATE, null);
+  }
+
+  public static setState(uri: vscode.Uri, state: string | Record<string, unknown>): void {
+    const panel = this.openWebviewPanels.get(uri.toString());
+    if (panel) {
+      panel.webview.postMessage({
+        type: 'setAppmapState',
+        state:
+          typeof state === 'string'
+            ? state
+            : Buffer.from(JSON.stringify(state), 'utf-8').toString('base64url'),
+      });
+    }
+  }
+
+  public static async webviewReady(
+    uri: vscode.Uri,
+    timeoutSeconds = 10,
+    tickRateMs = 100
+  ): Promise<boolean> {
+    const startTime = Date.now();
+    while (Date.now() - startTime < timeoutSeconds * 1000) {
+      if (this.openWebviewPanels.has(uri.toString())) return true;
+      await new Promise((resolve) => setTimeout(resolve, tickRateMs));
+    }
+    return false;
   }
 }
 

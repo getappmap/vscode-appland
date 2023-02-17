@@ -57,6 +57,7 @@ import openCodeObjectInSource from './commands/openCodeObjectInSource';
 import learnMoreRuntimeAnalysis from './commands/learnMoreRuntimeAnalysis';
 import SignInViewProvider from './webviews/signInWebview';
 import SignInManager from './services/signInManager';
+import appMapOpen from './commands/openAppMap';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   Telemetry.register(context);
@@ -128,6 +129,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     openCodeObjectInSource(context);
     learnMoreRuntimeAnalysis(context);
     appmapHoverProvider(context, lineInfoIndex);
+    appMapOpen(context);
 
     await workspaceServices.enroll(sourceFileWatcher);
     await workspaceServices.enroll(classMapWatcher);
@@ -224,7 +226,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     FindingInfoWebview.register(context);
 
     const processService = new NodeProcessService(context);
-    (async function() {
+    (async function () {
       processService.onReady(activateUptodateService);
       await processService.install();
       await workspaceServices.enroll(processService);

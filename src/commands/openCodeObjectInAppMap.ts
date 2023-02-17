@@ -64,10 +64,10 @@ export default async function openCodeObjectInAppMap(
     const state = {
       currentView: 'viewComponent',
       selectedObject: codeObject.fqid,
-    } as any; // eslint-disable-line @typescript-eslint/no-explicit-any
-    const uri = vscode.Uri.parse(`file://${appMapFileName}#${JSON.stringify(state)}`);
+    };
+    const uri = vscode.Uri.file(appMapFileName);
     Telemetry.sendEvent(CLICK_CODE_OBJECT);
-    vscode.commands.executeCommand('vscode.open', uri);
+    vscode.commands.executeCommand('appmap.open', uri, state);
   });
   context.subscriptions.push(command);
 }
