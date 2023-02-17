@@ -6,7 +6,6 @@ import { WorkspaceServiceInstance } from '../../../src/services/workspaceService
 import { fileExists, retry } from '../../../src/util';
 import {
   initializeWorkspace,
-  mkTmpDir,
   ProjectA,
   restoreFile,
   waitForExtension,
@@ -15,6 +14,7 @@ import {
 import { promises as fs } from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
+import MockExtensionContext from '../../mocks/mockExtensionContext';
 
 async function waitForProcessState(
   processWatchers: ReadonlyArray<ProcessWatcher>,
@@ -156,31 +156,23 @@ describe('Background processes', () => {
 
   context('with appmap_dir specified in appmap.yml', () => {
     let tmpDir: string;
-    let cleanup: () => void;
     let directoryUri: vscode.Uri;
     let service: NodeProcessService;
     let workspaceFolder: vscode.WorkspaceFolder;
     const appmapDir = 'tmp/appmap';
 
     beforeEach(async () => {
-      const result = await mkTmpDir();
-      tmpDir = result.path;
-      cleanup = result.cleanup;
-      directoryUri = vscode.Uri.parse(tmpDir);
+      const context = new MockExtensionContext();
+      tmpDir = context.globalStoragePath;
+      directoryUri = context.globalStorageUri;
       workspaceFolder = {
         uri: directoryUri,
         name: path.basename(tmpDir),
         index: -1,
       } as vscode.WorkspaceFolder;
-      service = new NodeProcessService({
-        globalStorageUri: directoryUri,
-        extensionPath: path.join(__dirname, '..', '..', '..', '..'),
-        subscriptions: [],
-      } as any as vscode.ExtensionContext);
+      service = new NodeProcessService(context);
       await fs.writeFile(path.join(tmpDir, 'appmap.yml'), `appmap_dir: ${appmapDir}`, 'utf8');
     });
-
-    afterEach(async () => cleanup());
 
     it('specifies --appmap-dir', async () => {
       const instance = await service.create(workspaceFolder);
