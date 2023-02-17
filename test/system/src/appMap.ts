@@ -41,6 +41,10 @@ export default class AppMap {
     return this.page.locator('.pane:has(.title:text("Runtime Analysis"))');
   }
 
+  get codeObjectsTree(): Locator {
+    return this.page.locator('.pane:has(.title:text("Code Objects"))');
+  }
+
   get appMapTree(): Locator {
     return this.page.locator('.pane:has(.title:text("AppMaps"))');
   }
@@ -51,6 +55,10 @@ export default class AppMap {
 
   public findingsTreeItem(nth?: number): Locator {
     return this.findingsTree.locator('.pane-body >> [role="treeitem"]').nth(nth || 0);
+  }
+
+  public codeObjectTreeItem(nth?: number): Locator {
+    return this.codeObjectsTree.locator('.pane-body >> [role="treeitem"]').nth(nth || 0);
   }
 
   public finding(nth?: number): Locator {
@@ -64,6 +72,12 @@ export default class AppMap {
   public async expandFindings(): Promise<void> {
     if (await this.findingsTree.locator('.pane-body').isHidden()) {
       await this.findingsTree.click();
+    }
+  }
+
+  public async expandCodeObjects(): Promise<void> {
+    if (await this.codeObjectsTree.locator('.pane-body').isHidden()) {
+      await this.codeObjectsTree.click();
     }
   }
 

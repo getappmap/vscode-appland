@@ -1,6 +1,7 @@
 import { BrowserContext, ElectronApplication, Locator, Page } from '@playwright/test';
 import { glob } from 'glob';
 import AppMap from './appMap';
+import AppMapWebview from './appMapWebview';
 import FindingDetailsWebview from './findingDetailsWebview';
 import FindingsOverviewWebview from './findingsOverviewWebview';
 import InstructionsWebview from './instructionsWebview';
@@ -25,6 +26,7 @@ export default class Driver {
     this.findingsOverviewWebview,
     this.findingDetailsWebview
   );
+  public readonly appMapWebview = new AppMapWebview(this.page);
   public readonly panel = new Panel(this.page);
 
   constructor(
