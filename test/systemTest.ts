@@ -6,6 +6,15 @@ import Driver from './system/src/driver';
 import ProjectDirectory from './system/tests/support/project';
 import { TestStatus } from './TestStatus';
 import projectRootDirectory from 'project-root-directory';
+import { ElectronApplication } from '@playwright/test';
+
+declare module 'mocha' {
+  export interface Context {
+    app: ElectronApplication;
+    driver: Driver;
+    project: ProjectDirectory;
+  }
+}
 
 async function main(): Promise<void> {
   try {
