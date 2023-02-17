@@ -28,44 +28,48 @@ describe('Findings and scanning', function () {
 
   it('shows the findings overview page', async function () {
     const { driver, project } = this;
+    const findingsOverviewWebview = driver.appMap['findingsOverviewWebview'];
 
     await driver.appMap.openActionPanel();
     await driver.appMap.expandFindings();
     await driver.appMap.openFindingsOverview();
     const expectedFrames = 2;
-    await driver.appMap.findingsOverviewWebview.initialize(expectedFrames);
-    await driver.appMap.findingsOverviewWebview.assertTitleRenders();
-    await driver.appMap.findingsOverviewWebview.assertNumberOfFindingsInOverview(0);
+    await findingsOverviewWebview.initialize(expectedFrames);
+    await findingsOverviewWebview.assertTitleRenders();
+    await findingsOverviewWebview.assertNumberOfFindingsInOverview(0);
     await project.restoreFiles('**/*.appmap.json');
     await driver.waitForFile(path.join(project.workspacePath, 'tmp', '**', 'mtime')); // Wait for the indexer
     await driver.appMap.findingsTreeItem(1).waitFor();
-    await driver.appMap.findingsOverviewWebview.assertNumberOfFindingsInOverview(3);
+    await findingsOverviewWebview.assertNumberOfFindingsInOverview(3);
   });
 
   it('opens the findings details page from the findings overview page', async function () {
     const { driver, project } = this;
+    const findingsOverviewWebview = driver.appMap['findingsOverviewWebview'];
+    const findingDetailsWebview = driver.appMap['findingDetailsWebview'];
 
     await driver.appMap.openActionPanel();
     await driver.appMap.expandFindings();
     await driver.appMap.openFindingsOverview();
 
     let expectedFrames = 2;
-    await driver.appMap.findingsOverviewWebview.initialize(expectedFrames);
-    await driver.appMap.findingsOverviewWebview.assertTitleRenders();
+    await findingsOverviewWebview.initialize(expectedFrames);
+    await findingsOverviewWebview.assertTitleRenders();
     await project.restoreFiles('**/*.appmap.json');
     await driver.waitForFile(path.join(project.workspacePath, 'tmp', '**', 'mtime')); // Wait for the indexer
     await driver.appMap.findingsTreeItem(1).waitFor();
-    await driver.appMap.findingsOverviewWebview.openFirstFindingDetail();
+    await findingsOverviewWebview.openFirstFindingDetail();
 
     expectedFrames = 3;
-    await driver.appMap.findingDetailsWebview.initialize(expectedFrames);
+    await findingDetailsWebview.initialize(expectedFrames);
 
     const expectedTitle = 'N plus 1 SQL query';
-    await driver.appMap.findingDetailsWebview.assertTitleRenders(expectedTitle);
+    await findingDetailsWebview.assertTitleRenders(expectedTitle);
   });
 
   it('opens the findings details page from the runtime analysis tree view', async function () {
     const { driver, project } = this;
+    const findingDetailsWebview = driver.appMap['findingDetailsWebview'];
 
     await driver.appMap.openActionPanel();
     await driver.appMap.expandFindings();
@@ -76,30 +80,32 @@ describe('Findings and scanning', function () {
 
     await driver.appMap.openNthFinding(2);
     const expectedFrames = 2;
-    await driver.appMap.findingDetailsWebview.initialize(expectedFrames);
+    await findingDetailsWebview.initialize(expectedFrames);
 
     const expectedTitle = 'N plus 1 SQL query';
-    await driver.appMap.findingDetailsWebview.assertTitleRenders(expectedTitle);
+    await findingDetailsWebview.assertTitleRenders(expectedTitle);
   });
 
   it('reuses the finding details webview', async function () {
     const { driver, project } = this;
+    const findingsOverviewWebview = driver.appMap['findingsOverviewWebview'];
+    const findingDetailsWebview = driver.appMap['findingDetailsWebview'];
 
     await driver.appMap.openActionPanel();
     await driver.appMap.expandFindings();
     await driver.appMap.openFindingsOverview();
     let expectedFrames = 2;
-    await driver.appMap.findingsOverviewWebview.initialize(expectedFrames);
+    await findingsOverviewWebview.initialize(expectedFrames);
 
     await project.restoreFiles('**/*.appmap.json');
     await driver.waitForFile(path.join(project.workspacePath, 'tmp', '**', 'mtime')); // Wait for the indexer
     await driver.appMap.findingsTreeItem(1).waitFor();
 
-    await driver.appMap.findingsOverviewWebview.openFirstFindingDetail();
+    await findingsOverviewWebview.openFirstFindingDetail();
     expectedFrames = 3;
-    await driver.appMap.findingDetailsWebview.initialize(expectedFrames);
+    await findingDetailsWebview.initialize(expectedFrames);
     await driver.appMap.openNthFinding(2);
-    await driver.appMap.findingDetailsWebview.initialize(expectedFrames);
+    await findingDetailsWebview.initialize(expectedFrames);
 
     const numTabs = await driver.tabCount();
     strictEqual(numTabs, expectedFrames);
