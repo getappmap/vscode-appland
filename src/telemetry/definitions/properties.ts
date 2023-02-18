@@ -148,6 +148,12 @@ export const PROJECT_LANGUAGE_DISTRIBUTION = new TelemetryDataProvider({
   },
 });
 
+export const PROJECT_PATH = new TelemetryDataProvider<{ rootDirectory: string }, string>({
+  id: 'appmap.project.path',
+  cache: false,
+  value: ({ rootDirectory }) => rootDirectory,
+});
+
 export const RECORDING_ENDPOINT_URL = new TelemetryDataProvider({
   id: 'appmap.remote_recording.endpoint_url',
   async value({ url }: { url: string }) {

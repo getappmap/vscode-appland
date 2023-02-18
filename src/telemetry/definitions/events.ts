@@ -21,6 +21,7 @@ export const PROJECT_OPEN = new Event({
     Properties.IS_INSTALLABLE,
     Properties.HAS_DEVCONTAINER,
     Properties.DEPENDENCIES,
+    Properties.PROJECT_PATH,
   ],
   metrics: [Metrics.NUM_WORKSPACE_FOLDERS],
 });
