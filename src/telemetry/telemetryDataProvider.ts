@@ -6,7 +6,7 @@ export type TelemetryDataProviderOptions<DataType, ValueType> = {
   id: string;
   cache?: boolean;
   proxyCache?: Array<keyof DataType>;
-  value: (data: DataType) => Promise<ValueType>;
+  value: (data: DataType) => ValueType | Promise<ValueType>;
 };
 
 /**
@@ -24,7 +24,7 @@ export type TelemetryDataProviderOptions<DataType, ValueType> = {
  */
 export default class TelemetryDataProvider<DataType extends Record<string, unknown>, ValueType> {
   public readonly id;
-  private readonly valueCallback;
+  private readonly valueCallback: TelemetryDataProviderOptions<DataType, ValueType>['value'];
   private readonly cache?;
   private readonly argCache?: Array<keyof DataType>;
 
