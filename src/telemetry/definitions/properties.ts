@@ -10,6 +10,7 @@ import ProjectMetadata from '../../workspace/projectMetadata';
 import { TerminalConfig } from '../../commands/installAgent';
 import * as vscode from 'vscode';
 import { Finding } from '@appland/scanner';
+import { findRepository } from '../../lib/git';
 
 export const DEBUG_EXCEPTION = new TelemetryDataProvider({
   id: 'appmap.debug.exception',
@@ -152,6 +153,14 @@ export const PROJECT_PATH = new TelemetryDataProvider<{ rootDirectory: string },
   id: 'appmap.project.path',
   cache: false,
   value: ({ rootDirectory }) => rootDirectory,
+});
+
+export const VERSION_CONTROL_REPOSITORY = new TelemetryDataProvider({
+  id: 'appmap.version_control.repository',
+  cache: true,
+  value({ uri }: { uri: vscode.Uri }) {
+    return findRepository(uri);
+  },
 });
 
 export const RECORDING_ENDPOINT_URL = new TelemetryDataProvider({

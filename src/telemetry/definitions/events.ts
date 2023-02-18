@@ -22,6 +22,7 @@ export const PROJECT_OPEN = new Event({
     Properties.HAS_DEVCONTAINER,
     Properties.DEPENDENCIES,
     Properties.PROJECT_PATH,
+    Properties.VERSION_CONTROL_REPOSITORY,
   ],
   metrics: [Metrics.NUM_WORKSPACE_FOLDERS],
 });

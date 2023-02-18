@@ -2348,6 +2348,7 @@ __metadata:
     typescript: ^4.9.5
     vsce: ^2.11.0
     vscode-extension-telemetry: ^0.1.7
+    vscode-uri: ^3.0.7
     vue: ^2.7.14
     vue-template-compiler: ^2.7.14
     vuex: ^3.6.0
@@ -12164,6 +12165,13 @@ typescript@^3.9.3:
   dependencies:
     applicationinsights: 1.7.4
   checksum: 979ace4f38d63a3f85b0aec78700c1316ec3eaa067d41f97367725f01839e86a3aaf2c528927137b5b705ab297939da4f9e5000bbfd0db1614cd29e60b134ec2
+  languageName: node
+  linkType: hard
+
+"vscode-uri@npm:^3.0.7":
+  version: 3.0.7
+  resolution: "vscode-uri@npm:3.0.7"
+  checksum: c899a0334f9f6ba53021328e083f6307978c09b94407d7e5fe86fcd8fcb8f1da0cb344123a335e55769055007a46d51aff83f9ee1dfc0296ee54b78f34ef0e4f
   languageName: node
   linkType: hard
 

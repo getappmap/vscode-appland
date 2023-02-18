@@ -108,6 +108,7 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
     Telemetry.sendEvent(PROJECT_OPEN, {
       rootDirectory: this.folder.uri.fsPath,
       project: this.metadata,
+      uri: this.folder.uri,
     });
   }
 
