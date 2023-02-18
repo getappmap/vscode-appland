@@ -1,6 +1,21 @@
 import { WorkspaceFolder } from 'vscode';
 import LanguageResolver from '../services/languageResolver';
 import { systemNodeVersion, nvmNodeVersion } from '../services/command';
+import assert from 'assert';
+
+import JavaAnalyzer from './java';
+import JavascriptAnalyzer from './javascript';
+import PythonAnalyzer from './python';
+import RubyAnalyzer from './ruby';
+import UnknownAnalyzer from './unknown';
+
+const analyzers = {
+  java: JavaAnalyzer,
+  javascript: JavascriptAnalyzer,
+  python: PythonAnalyzer,
+  ruby: RubyAnalyzer,
+  unknown: UnknownAnalyzer,
+};
 
 export type Score = 'bad' | 'ok' | 'good';
 export const SCORE_VALUES = { bad: 0, ok: 1, good: 2 };
@@ -70,8 +85,9 @@ export async function analyze(
 ): Promise<ProjectAnalysis & Partial<WithAppMaps>> {
   // TODO: Use the 'language' field in appmap.yml instead
   const language = await LanguageResolver.getLanguage(folder);
-  const analyzer = (await import(`./${language}`)).default;
+  const analyzer = analyzers[language];
   const result = await analyzer(folder);
+  assert(result);
 
   result.nodeVersion = await getNodeVersion(folder);
   result.path = folder.uri.fsPath;
