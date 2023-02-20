@@ -86,56 +86,31 @@ stored states, please update this function to reset the new stored states.
 
 ## Testing
 
-This app uses a customized version @vscode/test-electron. Integration tests are located in
-`test/integration`. Unlike the default VSCode integration test script, each test case is run in its
-own Electron process. This keeps state changes from leaking across tests.
+This app uses a customized version of @vscode/test-electron. Integration tests are located in
+`test/integration` and `test/system`. Unlike the default VSCode integration test script, each test
+case is run in its own Electron process. This keeps state changes from leaking across tests.
+
+There are some unit tests which don't run in VSCode and mock it as required. These are located in
+`test/unit`. The web view part also has its own (currently rather limited) set of tests in
+`web/test`.
 
 ### Running tests
 
-```
-yarn run pretest && yarn run test:extension
-```
-
-Test case code is JavaScript in the `out/test` directory, so the test cases need to be compiled from
-`test/integration` to `out/test/integration`.
-
-Aside from pretest, another strategy that seems to work is to run these two commands in the terminal
-as I code:
+You can run the whole suite or select a specific set of tests:
 
 ```
-# Compile tests
-yarn run tsc --watch
-
-# Compile the extension
-yarn run watch
+$ yarn run test
+$ yarn run test:unit
+$ yarn run test:web-client
+$ yarn run test:system
+$ yarn run test:integration
 ```
 
-Here's a video showing how I do it (May 2022):
+Note the integration tests (so, `test:system` and `test:integration`) require the extension to be
+compiled first. You can do that with `yarn run compile` or by keeping `yarn run watch` running in
+the background.
 
-https://www.loom.com/share/bab18082ffba4c9fa5011364e452a6bb
-
-### Test side effects and state leakage
-
-Note that all the tests use the same VSCode process, so test cases must be sure and establish the
-state they want and be good citizens about cleaning up afterwards. This is not ideal, and unstable
-test cases due to state leaking across test cases is probably inevitable. But, it's also not really
-avoidable without making the test suite hella slow.
-
-There are utiliity functions to clean/reset the workspace - invoke them before and/or after each
-test.
-
-## Running a specified test
-
-You may be used to using the `-t` option to run a specific test. This will not work with VSCode
-extension tests, because the test runner is actually running inside the dedicated VSCode instance,
-no command line options are propagated through to it.
-
-To run a specific test, use the `TEST_PATH` option, which can be a file name or glob pattern. It's
-resolved relative to the `test/integration` directory. Here's an example:
-
-```
-yarn run pretest && TEST_PATH='appmapTextEditor.test.js' yarn run test:extension
-```
+## Terms and conditions
 
 By downloading and using AppMap you agree to the
 [Terms and Conditions](https://appmap.io/community/terms-and-conditions).
