@@ -66,7 +66,7 @@ const IGNORE_PACKAGES: Record<string, string[]> = {
 export async function plantUMLJarPath(): Promise<string | undefined> {
   let jarPath = ExtensionSettings.plantUMLJarPath();
   if (!jarPath) {
-    jarPath = join(__dirname, 'ext', 'plantuml-1.2022.8.jar');
+    jarPath = join(__dirname, 'plantuml-1.2022.8.jar');
   }
   if (!(await fileExists(jarPath))) {
     vscode.window.showErrorMessage(
