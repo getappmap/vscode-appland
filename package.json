@@ -432,10 +432,10 @@
   "scripts": {
     "vscode:prepublish": "yarn run compile",
     "lint": "eslint . --ext .ts",
-    "pretest": "yarn run lint && tsc",
+    "pretest": "yarn run lint && tsc --noEmit --strict",
     "test:integration": "ts-node ./test/integrationTest.ts",
     "test:web-client": "mocha web/test/*.test.mjs",
-    "test:system": "node out/test/systemTest.js",
+    "test:system": "ts-node test/systemTest.ts",
     "test:unit": "mocha --require ts-node/register test/unit/**/*.test.[tj]s",
     "test": "yarn test:unit && yarn test:web-client && yarn test:system && yarn test:integration",
     "compile": "NODE_ENV=production tsup --config tsup.config.ts",

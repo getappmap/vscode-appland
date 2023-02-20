@@ -7,6 +7,8 @@ import ProjectDirectory from './system/tests/support/project';
 import { TestStatus } from './TestStatus';
 import projectRootDirectory from 'project-root-directory';
 import { ElectronApplication } from '@playwright/test';
+import { access } from 'fs/promises';
+import { join } from 'path';
 
 declare module 'mocha' {
   export interface Context {
@@ -19,6 +21,11 @@ declare module 'mocha' {
 async function main(): Promise<void> {
   try {
     const extensionDevelopmentPath = projectRootDirectory;
+
+    await access(join(extensionDevelopmentPath, 'out', 'extension.js')).catch(() => {
+      throw new Error('Please build the extension first with `yarn compile`.');
+    });
+
     const userDataDir = path.resolve(projectRootDirectory, '.vscode-test', 'user-data');
     const projectPath = path.join(
       projectRootDirectory,
