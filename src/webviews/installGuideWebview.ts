@@ -1,10 +1,9 @@
-import * as path from 'path';
 import * as vscode from 'vscode';
 import { GenerateOpenApi } from '../commands/generateOpenApi';
 import { InstallAgent } from '../commands/installAgent';
 import { ProjectStateServiceInstance } from '../services/projectStateService';
 import { COPY_COMMAND, OPEN_VIEW, Telemetry } from '../telemetry';
-import { getNonce, getWorkspaceFolderFromPath } from '../util';
+import { getWorkspaceFolderFromPath } from '../util';
 import ProjectMetadata from '../workspace/projectMetadata';
 import * as semver from 'semver';
 import ExtensionState from '../configuration/extensionState';
@@ -13,6 +12,7 @@ import { Signup } from '../actions/signup';
 import AnalysisManager from '../services/analysisManager';
 import ExtensionSettings from '../configuration/extensionSettings';
 import { AUTHN_PROVIDER_NAME } from '../authentication';
+import getWebviewContent from './getWebviewContent';
 
 type PageMessage = {
   page: string;
@@ -83,7 +83,12 @@ export default class InstallGuideWebView {
 
         this.existingPanel = panel;
 
-        panel.webview.html = getWebviewContent(panel.webview, context);
+        panel.webview.html = getWebviewContent(
+          panel.webview,
+          context,
+          'Using AppMap',
+          'install-guide'
+        );
 
         const collectProjects = () => projectStates.map((project) => project.metadata);
         const disposables = projectStates.map((projectState) =>
@@ -199,29 +204,4 @@ export default class InstallGuideWebView {
       })
     );
   }
-}
-
-function getWebviewContent(webview: vscode.Webview, context: vscode.ExtensionContext): string {
-  const scriptUri = webview.asWebviewUri(
-    vscode.Uri.file(path.join(context.extensionPath, 'out', 'app.js'))
-  );
-  const nonce = getNonce();
-
-  return ` <!DOCTYPE html>
-  <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>AppLand Scenario</title>
-  </head>
-  <body>
-    <div id="app">
-    </div>
-    <script nonce="${nonce}" src="${scriptUri}"></script>
-    <script type="text/javascript" nonce="${nonce}">
-      AppLandWeb.mountInstallGuide();
-    </script>
-  </body>
-  </html>`;
 }

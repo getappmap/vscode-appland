@@ -1,8 +1,7 @@
-import path from 'path';
 import * as vscode from 'vscode';
 import AnalysisManager from '../services/analysisManager';
 import { ANALYSIS_VIEW_OVERVIEW, Telemetry } from '../telemetry';
-import { getNonce } from '../util';
+import getWebviewContent from './getWebviewContent';
 
 export default class FindingsOverviewWebview {
   private static existingPanel?: vscode.WebviewPanel;
@@ -36,7 +35,12 @@ export default class FindingsOverviewWebview {
         );
 
         this.existingPanel = panel;
-        panel.webview.html = getWebviewContent(panel.webview, context);
+        panel.webview.html = getWebviewContent(
+          panel.webview,
+          context,
+          'Findings Overview',
+          'findings-view'
+        );
 
         this.findingsIndex?.on('added', () => {
           this.existingPanel?.webview.postMessage({
@@ -80,29 +84,4 @@ export default class FindingsOverviewWebview {
       })
     );
   }
-}
-
-function getWebviewContent(webview: vscode.Webview, context: vscode.ExtensionContext): string {
-  const scriptUri = webview.asWebviewUri(
-    vscode.Uri.file(path.join(context.extensionPath, 'out', 'app.js'))
-  );
-  const nonce = getNonce();
-
-  return ` <!DOCTYPE html>
-  <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>AppLand Scenario</title>
-  </head>
-  <body>
-    <div id="app">
-    </div>
-    <script nonce="${nonce}" src="${scriptUri}"></script>
-    <script type="text/javascript" nonce="${nonce}">
-      AppLandWeb.mountFindingsView();
-    </script>
-  </body>
-  </html>`;
 }
