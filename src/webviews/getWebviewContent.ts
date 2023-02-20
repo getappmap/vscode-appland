@@ -18,6 +18,10 @@ export default function getWebviewContent(
     vscode.Uri.file(path.join(context.extensionPath, 'out', 'app.js'))
   );
 
+  const cssUri = webview.asWebviewUri(
+    vscode.Uri.file(path.join(context.extensionPath, 'out', 'app.css'))
+  );
+
   return ` <!DOCTYPE html>
   <html lang="en">
   <head>
@@ -27,8 +31,9 @@ export default function getWebviewContent(
       default-src 'none';
       img-src ${webview.cspSource} data:;
       script-src ${webview.cspSource};
-      style-src 'unsafe-inline';
+      style-src ${webview.cspSource} 'unsafe-inline';
     ">
+    <link href="${cssUri}" rel="stylesheet">
 
     <title>${title}</title>
   </head>
