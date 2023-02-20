@@ -2,10 +2,10 @@ import path from 'path';
 import * as vscode from 'vscode';
 import AnalysisManager from '../services/analysisManager';
 import { ResolvedFinding } from '../services/resolvedFinding';
-import { getNonce } from '../util';
 import { Finding, Rule } from '@appland/scanner';
 import { ANALYSIS_VIEW_FINDING, Telemetry } from '../telemetry';
 import { getStackLocations, StackLocation } from '../lib/getStackLocations';
+import getWebviewContent from './getWebviewContent';
 
 type FindingData = {
   finding: Finding;
@@ -112,7 +112,12 @@ export default class FindingInfoWebview {
         );
 
         this.existingPanels[hash] = panel;
-        panel.webview.html = getWebviewContent(panel.webview, context);
+        panel.webview.html = getWebviewContent(
+          panel.webview,
+          context,
+          panelTitle,
+          'finding-info-view'
+        );
 
         panel.onDidDispose(() => {
           delete this.existingPanels[hash];
@@ -156,29 +161,4 @@ export default class FindingInfoWebview {
       })
     );
   }
-}
-
-function getWebviewContent(webview: vscode.Webview, context: vscode.ExtensionContext): string {
-  const scriptUri = webview.asWebviewUri(
-    vscode.Uri.file(path.join(context.extensionPath, 'out', 'app.js'))
-  );
-  const nonce = getNonce();
-
-  return ` <!DOCTYPE html>
-  <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>AppLand Scenario</title>
-  </head>
-  <body>
-    <div id="app">
-    </div>
-    <script nonce="${nonce}" src="${scriptUri}"></script>
-    <script type="text/javascript" nonce="${nonce}">
-      AppLandWeb.mountFindingInfoView();
-    </script>
-  </body>
-  </html>`;
 }

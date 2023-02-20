@@ -1,7 +1,6 @@
-import { join } from 'path';
 import * as vscode from 'vscode';
 import { Telemetry, APPMAP_OPEN, APPMAP_UPLOAD } from '../telemetry';
-import { getNonce, getRecords } from '../util';
+import { getRecords } from '../util';
 import { version } from '../../package.json';
 import ExtensionState from '../configuration/extensionState';
 import extensionSettings from '../configuration/extensionSettings';
@@ -11,6 +10,7 @@ import AppMapDocument from './AppMapDocument';
 import AnalysisManager from '../services/analysisManager';
 import { getStackLocations, StackLocation } from '../lib/getStackLocations';
 import { ResolvedFinding } from '../services/resolvedFinding';
+import getWebviewContent from '../webviews/getWebviewContent';
 
 export type FindingInfo = ResolvedFinding & {
   stackLocations?: StackLocation[];
@@ -293,32 +293,7 @@ export default class AppMapEditorProvider
    * Get the static html used for the editor webviews.
    */
   private getHtmlForWebview(webview: vscode.Webview): string {
-    // Local path to script and css for the webview
-    const scriptUri = webview.asWebviewUri(
-      vscode.Uri.file(join(this.context.extensionPath, 'out', 'app.js'))
-    );
-
-    // Use a nonce to whitelist which scripts can be run
-    const nonce = getNonce();
-
-    return /* html */ `
-      <!DOCTYPE html>
-      <html lang="en">
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-        <title>AppLand Scenario</title>
-      </head>
-      <body>
-        <div id="app">
-        </div>
-        <script nonce="${nonce}" src="${scriptUri}"></script>
-        <script type="text/javascript" nonce="${nonce}">
-          AppLandWeb.mountApp();
-        </script>
-      </body>
-      </html>`;
+    return getWebviewContent(webview, this.context, 'AppLand Scenario', 'app');
   }
 
   //forget usage state set by this class
