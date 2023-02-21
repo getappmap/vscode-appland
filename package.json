@@ -288,31 +288,43 @@
     "views": {
       "appmap": [
         {
+          "id": "appmap.views.signIn",
+          "name": "Sign In",
+          "visibility": "visible",
+          "type": "webview",
+          "when": "appMap.showSignIn"
+        },
+        {
           "id": "appmap.views.instructions",
           "name": "Instructions",
-          "visibility": "visible"
+          "visibility": "visible",
+          "when": "!appMap.showSignIn"
         },
         {
           "id": "appmap.views.local",
           "name": "AppMaps",
           "contextualTitle": "AppMap",
           "visibility": "visible",
-          "icon": "images/logo.svg"
+          "icon": "images/logo.svg",
+          "when": "!appMap.showSignIn"
         },
         {
           "id": "appmap.views.findings",
           "name": "Runtime Analysis",
-          "visibility": "visible"
+          "visibility": "visible",
+          "when": "!appMap.showSignIn"
         },
         {
           "id": "appmap.views.codeObjects",
           "name": "Code Objects",
-          "visibility": "collapsed"
+          "visibility": "collapsed",
+          "when": "!appMap.showSignIn"
         },
         {
           "id": "appmap.views.documentation",
           "name": "Documentation",
-          "visibility": "visible"
+          "visibility": "visible",
+          "when": "!appMap.showSignIn"
         }
       ]
     },
