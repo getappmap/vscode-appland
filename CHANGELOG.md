@@ -1,3 +1,10 @@
+# [0.67.0](https://github.com/getappmap/vscode-appland/compare/v0.66.2...v0.67.0) (2023-02-22)
+
+
+### Features
+
+* require sign in for new users ([33efa92](https://github.com/getappmap/vscode-appland/commit/33efa92581609022b2cbd7f2f26b6d7314ea5d0f))
+
 ## [0.66.2](https://github.com/getappmap/vscode-appland/compare/v0.66.1...v0.66.2) (2023-02-14)
 
 
