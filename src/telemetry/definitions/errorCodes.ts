@@ -7,6 +7,7 @@ enum ErrorCode {
   AuthenticationFailure,
   InitializationFailure,
   GenerateOpenApiFailure,
+  SidebarSignInFailure,
 }
 
 export default ErrorCode;

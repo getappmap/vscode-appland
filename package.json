@@ -288,31 +288,43 @@
     "views": {
       "appmap": [
         {
+          "id": "appmap.views.signIn",
+          "name": "Sign In",
+          "visibility": "visible",
+          "type": "webview",
+          "when": "appMap.showSignIn"
+        },
+        {
           "id": "appmap.views.instructions",
           "name": "Instructions",
-          "visibility": "visible"
+          "visibility": "visible",
+          "when": "!appMap.showSignIn"
         },
         {
           "id": "appmap.views.local",
           "name": "AppMaps",
           "contextualTitle": "AppMap",
           "visibility": "visible",
-          "icon": "images/logo.svg"
+          "icon": "images/logo.svg",
+          "when": "!appMap.showSignIn"
         },
         {
           "id": "appmap.views.findings",
           "name": "Runtime Analysis",
-          "visibility": "visible"
+          "visibility": "visible",
+          "when": "!appMap.showSignIn"
         },
         {
           "id": "appmap.views.codeObjects",
           "name": "Code Objects",
-          "visibility": "collapsed"
+          "visibility": "collapsed",
+          "when": "!appMap.showSignIn"
         },
         {
           "id": "appmap.views.documentation",
           "name": "Documentation",
-          "visibility": "visible"
+          "visibility": "visible",
+          "when": "!appMap.showSignIn"
         }
       ]
     },
@@ -505,7 +517,7 @@
   "dependencies": {
     "@appland/appmap": "^3.64.2",
     "@appland/client": "^1.6.0",
-    "@appland/components": "^2.29.0",
+    "@appland/components": "^2.30.0",
     "@appland/diagrams": "^1.6.2",
     "@appland/models": "^2.0.0",
     "@appland/scanner": "^1.75.1",

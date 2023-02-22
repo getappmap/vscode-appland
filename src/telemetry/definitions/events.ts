@@ -187,3 +187,7 @@ export const CLICK_DOCS_LINK_IN_TREE = new Event({
   name: 'click_docs_link_in_tree',
   properties: [Properties.DOCS_PATH],
 });
+
+export const SIDEBAR_SIGN_IN = new Event({
+  name: 'sidebar_sign_in',
+});

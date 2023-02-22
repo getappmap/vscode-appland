@@ -55,6 +55,8 @@ import FindingInfoWebview from './webviews/findingInfoWebview';
 import { AppMapRecommenderService } from './services/appmapRecommenderService';
 import openCodeObjectInSource from './commands/openCodeObjectInSource';
 import learnMoreRuntimeAnalysis from './commands/learnMoreRuntimeAnalysis';
+import SignInViewProvider from './webviews/signInWebview';
+import SignInManager from './services/signInManager';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   Telemetry.register(context);
@@ -208,6 +210,12 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     vscode.commands.registerCommand('appmap.enableAnalysis', () => Signup.forAnalysis());
 
     tryDisplayEarlyAccessWelcome(context);
+
+    await SignInManager.register(extensionState);
+    const signInWebview = new SignInViewProvider(context);
+    context.subscriptions.push(
+      vscode.window.registerWebviewViewProvider(SignInViewProvider.viewType, signInWebview)
+    );
 
     InstallGuideWebView.register(context, projectStates, extensionState);
     const openedInstallGuide = InstallGuideWebView.tryOpen(extensionState);
