@@ -2,6 +2,8 @@ import * as vscode from 'vscode';
 import * as semver from 'semver';
 import { AUTHN_PROVIDER_NAME, getApiKey } from '../authentication';
 import ExtensionState from '../configuration/extensionState';
+import { DEBUG_EXCEPTION, SIDEBAR_SIGN_IN, Telemetry } from '../telemetry';
+import ErrorCode from '../telemetry/definitions/errorCodes';
 
 export default class SignInManager {
   private static contextKeyShowSignInWebview = 'appMap.showSignIn';
@@ -23,8 +25,18 @@ export default class SignInManager {
   public static async signIn(): Promise<void> {
     if (this.signedIn) return;
 
-    this.signedIn = !!(await getApiKey(true));
-    this.updateSignInState();
+    try {
+      this.signedIn = !!(await getApiKey(true));
+      this.updateSignInState();
+    } catch (e) {
+      Telemetry.sendEvent(DEBUG_EXCEPTION, {
+        exception: e as Error,
+        errorCode: ErrorCode.SidebarSignInFailure,
+      });
+      throw e;
+    }
+
+    Telemetry.sendEvent(SIDEBAR_SIGN_IN);
   }
 
   private static async isUserAuthenticated(): Promise<boolean> {
