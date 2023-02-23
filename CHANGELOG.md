@@ -1,3 +1,10 @@
+## [0.67.1](https://github.com/getappmap/vscode-appland/compare/v0.67.0...v0.67.1) (2023-02-23)
+
+
+### Bug Fixes
+
+* Avoid a crash on appmaps without collection metadata ([d915b90](https://github.com/getappmap/vscode-appland/commit/d915b90d8a8c1df37d06ec76f3ab74b56e4c3efc))
+
 # [0.67.0](https://github.com/getappmap/vscode-appland/compare/v0.66.2...v0.67.0) (2023-02-22)
 
 
