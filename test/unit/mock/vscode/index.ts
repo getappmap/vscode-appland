@@ -1,6 +1,6 @@
 import mockery from 'mockery';
-import MockEventEmitter from './MockEventEmitter';
+import EventEmitter from './EventEmitter';
 mockery.registerMock('vscode', {
-  EventEmitter: MockEventEmitter,
+  EventEmitter,
 });
 mockery.enable({ warnOnUnregistered: false });

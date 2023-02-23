@@ -1,13 +1,13 @@
-import type { Disposable, EventEmitter } from 'vscode';
+import type vscode from 'vscode';
 
-export default class MockEventEmitter<T> implements EventEmitter<T> {
-  private listeners: [(e: T) => unknown, unknown?, Disposable[]?][] = [];
+export default class EventEmitter<T> implements vscode.EventEmitter<T> {
+  private listeners: [(e: T) => unknown, unknown?, vscode.Disposable[]?][] = [];
 
   public readonly event = (
     listener: (e: T) => unknown,
     thisArgs?: unknown,
-    disposables?: Disposable[]
-  ): Disposable => {
+    disposables?: vscode.Disposable[]
+  ): vscode.Disposable => {
     this.listeners.push([listener, thisArgs, disposables]);
     return { dispose: this.dispose };
   };

@@ -1,4 +1,4 @@
-import './support/mockVscode';
+import '../mock/vscode';
 import { ProcessLog } from '../../../src/services/nodeDependencyProcess';
 
 import { expect } from 'chai';
