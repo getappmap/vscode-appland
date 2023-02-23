@@ -1,3 +1,4 @@
+import '../mock/vscode';
 import { expect } from 'chai';
 import assert from 'node:assert';
 import { join } from 'path';
@@ -10,7 +11,6 @@ import {
   ProcessWatcher,
   ProcessWatcherOptions,
 } from '../../../src/services/processWatcher';
-import './support/mockVscode';
 const testModule = join(__dirname, 'support', 'simpleProcess.mjs');
 
 describe('ProcessWatcher', () => {
