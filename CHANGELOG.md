@@ -1,3 +1,10 @@
+## [0.67.2](https://github.com/getappmap/vscode-appland/compare/v0.67.1...v0.67.2) (2023-02-24)
+
+
+### Bug Fixes
+
+* do not let users bypass sign-in ([c52a192](https://github.com/getappmap/vscode-appland/commit/c52a192128ec863b472ce68a67cceac8f0390b18))
+
 ## [0.67.1](https://github.com/getappmap/vscode-appland/compare/v0.67.0...v0.67.1) (2023-02-23)
 
 
