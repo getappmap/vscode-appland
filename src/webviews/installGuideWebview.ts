@@ -13,6 +13,7 @@ import AnalysisManager from '../services/analysisManager';
 import ExtensionSettings from '../configuration/extensionSettings';
 import { AUTHN_PROVIDER_NAME } from '../authentication';
 import getWebviewContent from './getWebviewContent';
+import SignInManager from '../services/signInManager';
 
 type PageMessage = {
   page: string;
@@ -43,7 +44,7 @@ export default class InstallGuideWebView {
       // time of installation. We will use this to determine whether or not our UX improvements are effective, without
       // before rolling them out to our existing user base.
 
-      if (!extensionState.hasViewedInstallGuide) {
+      if (!extensionState.hasViewedInstallGuide && !SignInManager.shouldShowSignIn()) {
         extensionState.hasViewedInstallGuide = true;
         vscode.commands.executeCommand(InstallGuideWebView.command, 'project-picker');
         return true;

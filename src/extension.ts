@@ -196,12 +196,18 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       projectState
     )) as ProjectStateServiceInstance[];
 
+    await AnalysisManager.register(context, projectStates, extensionState, workspaceServices);
+
+    await SignInManager.register(extensionState);
+    const signInWebview = new SignInViewProvider(context);
+    context.subscriptions.push(
+      vscode.window.registerWebviewViewProvider(SignInViewProvider.viewType, signInWebview)
+    );
+
     registerInspectCodeObject(context);
 
     registerSequenceDiagram(context, projectStates, appmapCollectionFile);
     registerCompareSequenceDiagrams(context, projectStates, appmapCollectionFile);
-
-    AnalysisManager.register(context, projectStates, extensionState, workspaceServices);
 
     const badge = new InstallationStatusBadge('appmap.views.instructions');
     badge.initialize(projectStates);
@@ -210,12 +216,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     vscode.commands.registerCommand('appmap.enableAnalysis', () => Signup.forAnalysis());
 
     tryDisplayEarlyAccessWelcome(context);
-
-    await SignInManager.register(extensionState);
-    const signInWebview = new SignInViewProvider(context);
-    context.subscriptions.push(
-      vscode.window.registerWebviewViewProvider(SignInViewProvider.viewType, signInWebview)
-    );
 
     InstallGuideWebView.register(context, projectStates, extensionState);
     const openedInstallGuide = InstallGuideWebView.tryOpen(extensionState);
@@ -268,7 +268,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
     registerUtilityCommands(context, extensionState);
 
-    if (!openedInstallGuide) promptInstall(workspaceServices, extensionState);
+    if (!openedInstallGuide && !SignInManager.shouldShowSignIn())
+      promptInstall(workspaceServices, extensionState);
 
     vscode.env.onDidChangeTelemetryEnabled((enabled: boolean) => {
       Telemetry.sendEvent(TELEMETRY_ENABLED, {
