@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { Telemetry, APPMAP_OPEN, APPMAP_UPLOAD, EXPORT_SVG, DEBUG_EXCEPTION } from '../telemetry';
-import { getNonce, getRecords } from '../util';
+import { getRecords } from '../util';
 import { version } from '../../package.json';
 import ExtensionState from '../configuration/extensionState';
 import extensionSettings from '../configuration/extensionSettings';
