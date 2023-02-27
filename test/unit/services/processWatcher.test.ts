@@ -1,12 +1,16 @@
-import './support/mockVscode';
-import { ProcessWatcher, ProcessWatcherOptions } from '../../../src/services/processWatcher';
-import { join } from 'path';
-import { Uri } from 'vscode';
 import { expect } from 'chai';
-import ps from 'ps-node';
 import assert from 'node:assert';
-import { promisify } from 'util';
+import { join } from 'path';
+import ps from 'ps-node';
 import sinon from 'sinon';
+import { promisify } from 'util';
+import { Uri } from 'vscode';
+import {
+  ConfigFileProvider,
+  ProcessWatcher,
+  ProcessWatcherOptions,
+} from '../../../src/services/processWatcher';
+import './support/mockVscode';
 const testModule = join(__dirname, 'support', 'simpleProcess.mjs');
 
 describe('ProcessWatcher', () => {
@@ -55,7 +59,16 @@ describe('ProcessWatcher', () => {
 });
 
 function makeWatcher(opts: Partial<ProcessWatcherOptions> = {}) {
-  return new ProcessWatcher(() => Promise.resolve([Uri.parse('test:///appmap.yml')]), {
+  const provider: ConfigFileProvider = {
+    files() {
+      return Promise.resolve([Uri.parse('test:///appmap.yml')]);
+    },
+
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    reset() {},
+  };
+
+  return new ProcessWatcher(provider, {
     id: 'test process',
     modulePath: testModule,
     ...opts,
