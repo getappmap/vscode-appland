@@ -1,4 +1,6 @@
 import { defineConfig } from 'tsup';
+import { NodeGlobalsPolyfillPlugin } from '@esbuild-plugins/node-globals-polyfill';
+import { NodeModulesPolyfillPlugin } from '@esbuild-plugins/node-modules-polyfill';
 
 const isProduction = process.env.NODE_ENV === 'production';
 const processSpoof = { env: {}, argv: [] };
@@ -23,9 +25,17 @@ export default defineConfig([
     noExternal: [/./],
     outExtension: () => ({ js: '.js' }),
     target: 'chrome102',
-    minify: isProduction,
+    minify: false,
     format: 'iife',
     sourcemap: true,
+    treeshake: true,
+    // plugins: [
+    //   NodeModulesPolyfillPlugin(),
+    //   NodeGlobalsPolyfillPlugin({
+    //     buffer: true,
+    //   }),
+    // ],
+    inject: ['web/global.ts', 'rollup-plugin-inject'],
     esbuildOptions(options) {
       options.define = {
         process: JSON.stringify(processSpoof),
@@ -35,23 +45,23 @@ export default defineConfig([
       options.resolveExtensions = ['.mjs', '.js', '.ts'];
       options.mainFields = ['browser', 'main'];
       options.logLevel = 'verbose';
-
-      const alias = (options.alias ||= {});
-      alias['buffer'] = './node_modules/buffer/index.js';
-      alias['crypto'] = './node_modules/crypto-browserify';
-      alias['events'] = './node_modules/events';
-      alias['http'] = './node_modules/stream-http';
-      alias['https'] = './node_modules/stream-http';
-      alias['fs'] = './node_modules/browserify-fs';
-      alias['fs/promises'] = './node_modules/fs.promises';
-      alias['path'] = './node_modules/path';
-      alias['stream'] = './node_modules/web-streams-polyfill';
-      alias['string_decoder'] = './node_modules/string_decoder';
-      alias['tty'] = './node_modules/tty-browserify';
-      alias['url'] = './node_modules/url-polyfill';
-      alias['util'] = './node_modules/util';
-      alias['vue'] = './node_modules/vue/dist/vue.esm.browser.js';
-      alias['vuex'] = './node_modules/vuex/dist/vuex.esm.browser.js';
+      options.alias = {
+        ...(options.alias || {}),
+        assert: 'rollup-plugin-node-polyfills/polyfills/assert',
+        buffer: 'rollup-plugin-node-polyfills/polyfills/buffer-es6',
+        events: 'rollup-plugin-node-polyfills/polyfills/events',
+        fs: 'browserify-fs',
+        'fs/promises': 'fs.promises',
+        path: 'rollup-plugin-node-polyfills/polyfills/path',
+        process: 'rollup-plugin-node-polyfills/polyfills/process-es6',
+        punycode: 'rollup-plugin-node-polyfills/polyfills/punycode',
+        querystring: 'rollup-plugin-node-polyfills/polyfills/qs',
+        stream: 'rollup-plugin-node-polyfills/polyfills/stream',
+        string_decoder: 'rollup-plugin-node-polyfills/polyfills/string-decoder',
+        tty: 'rollup-plugin-node-polyfills/polyfills/tty',
+        url: 'rollup-plugin-node-polyfills/polyfills/url',
+        util: 'rollup-plugin-node-polyfills/polyfills/util',
+      };
     },
     loader: {
       '.html': 'text',
