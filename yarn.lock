@@ -47,7 +47,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/appmap@npm:^3.64.2":
+"@appland/appmap@npm:^3.66.1":
   version: 3.66.1
   resolution: "@appland/appmap@npm:3.66.1"
   dependencies:
@@ -139,7 +139,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/components@npm:^2.30.0":
+"@appland/components@npm:^2.31.1":
   version: 2.31.1
   resolution: "@appland/components@npm:2.31.1"
   dependencies:
@@ -184,6 +184,21 @@ __metadata:
     dagre: ^0.8.5
     deepmerge: ^4.2.2
   checksum: 38a07edd9969ea1942c597a1ad76c9d0f502295a6fa317d8c26af3fdc11866e6577e403e8a33cd28fe1c6a540ad464c6db3f2836cd5f703bb2c64b135bf1e9eb
+  languageName: node
+  linkType: hard
+
+"@appland/diagrams@npm:^1.6.3":
+  version: 1.6.3
+  resolution: "@appland/diagrams@npm:1.6.3"
+  dependencies:
+    "@appland/models": ^2.2.0
+    d3-interpolate: ^1.4.0
+    d3-selection: ^1.4.2
+    d3-shape: ^1.3.7
+    d3-zoom: ^1.8.3
+    dagre: ^0.8.5
+    deepmerge: ^4.2.2
+  checksum: f10a796b3e27776313764f182e62c1dc4762bc17549482d06dc35621bd779c1ce5267f2fb31b57eef75e2eef1a14d785a86b30a8366772ab9239d57170815873
   languageName: node
   linkType: hard
 
@@ -247,17 +262,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/openapi@npm:1.3.3":
-  version: 1.3.3
-  resolution: "@appland/openapi@npm:1.3.3"
-  dependencies:
-    "@appland/models": ^2.0.0
-    js-yaml: ^4.1.0
-  checksum: bf572ee93d5fcf041ffd705b1ad4e7bd9e5c977ea6fcc95a56ef5561747dcc30de390352d601beb133341e91920878f2cb0c380f99c5f24157a8e49391405230
-  languageName: node
-  linkType: hard
-
-"@appland/openapi@npm:^1.4.3":
+"@appland/openapi@npm:1.4.4, @appland/openapi@npm:^1.4.3":
   version: 1.4.4
   resolution: "@appland/openapi@npm:1.4.4"
   dependencies:
@@ -267,13 +272,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/scanner@npm:^1.75.1":
-  version: 1.75.1
-  resolution: "@appland/scanner@npm:1.75.1"
+"@appland/scanner@npm:^1.76.6":
+  version: 1.76.6
+  resolution: "@appland/scanner@npm:1.76.6"
   dependencies:
     "@appland/client": ^1.5.0
-    "@appland/models": ^2.0.0
-    "@appland/openapi": 1.3.3
+    "@appland/models": ^2.2.0
+    "@appland/openapi": 1.4.4
     "@appland/sql-parser": ^1.5.0
     "@types/cli-progress": ^3.9.2
     ajv: ^8.8.2
@@ -289,7 +294,7 @@ __metadata:
     inquirer: ^8.1.2
     js-yaml: ^4.1.0
     lru-cache: ^6.0.0
-    minimatch: ^3.0.4
+    minimatch: ^5.1.2
     octokat: ^0.10.0
     openapi-diff: ^0.23.5
     ora: ~5
@@ -300,7 +305,7 @@ __metadata:
     yargs: ^17.1.1
   bin:
     scanner: built/cli.js
-  checksum: 549d922c12c79808b15c5f4060dde3a7f06bf09eaa2b0b9080658a4cf433244a956fa183ff56779f7cceea959e40b616194553f13e0f105606b44baee01fa230
+  checksum: 4625bc6643531b6e7a0bda239eb09292791da2e5eb94b3e1d0a627e8a35508860d677776341ec017b991a0e9f9147c4ec87b5ba617980b6b1759298cac1b94b6
   languageName: node
   linkType: hard
 
@@ -316,7 +321,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/sequence-diagram@npm:^1.3.3, @appland/sequence-diagram@npm:^1.4.0":
+"@appland/sequence-diagram@npm:^1.4.0, @appland/sequence-diagram@npm:^1.4.1":
   version: 1.4.1
   resolution: "@appland/sequence-diagram@npm:1.4.1"
   dependencies:
@@ -2272,13 +2277,13 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "appmap@workspace:."
   dependencies:
-    "@appland/appmap": ^3.64.2
+    "@appland/appmap": ^3.66.1
     "@appland/client": ^1.6.0
-    "@appland/components": ^2.30.0
-    "@appland/diagrams": ^1.6.2
-    "@appland/models": ^2.0.0
-    "@appland/scanner": ^1.75.1
-    "@appland/sequence-diagram": ^1.3.3
+    "@appland/components": ^2.31.1
+    "@appland/diagrams": ^1.6.3
+    "@appland/models": ^2.2.0
+    "@appland/scanner": ^1.76.6
+    "@appland/sequence-diagram": ^1.4.1
     "@playwright/test": ^1.22.2
     "@semantic-release/changelog": ^5.0.1
     "@semantic-release/exec": ^5.0.0
