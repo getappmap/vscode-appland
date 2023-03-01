@@ -1,3 +1,10 @@
+# [0.68.0](https://github.com/getappmap/vscode-appland/compare/v0.67.2...v0.68.0) (2023-03-01)
+
+
+### Features
+
+* Add sequence diagrams to the AppMap viewer ([#615](https://github.com/getappmap/vscode-appland/issues/615)) ([9be5d69](https://github.com/getappmap/vscode-appland/commit/9be5d69c370c470ccf4a1f47ab49623a5f03efa1))
+
 ## [0.67.2](https://github.com/getappmap/vscode-appland/compare/v0.67.1...v0.67.2) (2023-02-24)
 
 
