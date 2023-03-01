@@ -1,25 +1,50 @@
-import * as vscode from 'vscode';
-import * as path from 'path';
-import os from 'os';
-import { DEBUG_EXCEPTION, Telemetry } from '../telemetry';
 import { createWriteStream, promises as fs } from 'fs';
-import { WorkspaceService } from './workspaceService';
-import NodeProcessServiceInstance from './nodeProcessServiceInstance';
-import { ProcessWatcher } from './processWatcher';
-import ErrorCode from '../telemetry/definitions/errorCodes';
-import { getModulePath, ProgramName, spawn } from './nodeDependencyProcess';
-import { downloadFile, getLatestVersionInfo } from '../util';
-import { lookupAppMapDir } from '../lib/appmapDir';
+import os from 'os';
+import * as path from 'path';
 import lockfile from 'proper-lockfile';
-import IndexProcessWatcher from './indexProcessWatcher';
-import ScanProcessWatcher from './scanProcessWatcher';
-import ChangeEventDebouncer from './changeEventDebouncer';
+import * as vscode from 'vscode';
 import Environment from '../configuration/environment';
+import { lookupAppMapDir } from '../lib/appmapDir';
+import { DEBUG_EXCEPTION, Telemetry } from '../telemetry';
+import ErrorCode from '../telemetry/definitions/errorCodes';
+import { downloadFile, getLatestVersionInfo } from '../util';
+import ChangeEventDebouncer from './changeEventDebouncer';
+import IndexProcessWatcher from './indexProcessWatcher';
+import { getModulePath, ProgramName, spawn } from './nodeDependencyProcess';
+import NodeProcessServiceInstance from './nodeProcessServiceInstance';
+import { ConfigFileProvider, ProcessWatcher } from './processWatcher';
+import ScanProcessWatcher from './scanProcessWatcher';
+import { WorkspaceService } from './workspaceService';
 
 const YARN_JS = 'yarn.js';
 const PACKAGE_JSON = 'package.json';
 const INSTALL_SUCCESS_MESSAGE = 'Installation of AppMap services is complete.';
 
+class ConfigFileProviderImpl implements ConfigFileProvider {
+  private _files?: vscode.Uri[] = undefined;
+  private exclude: vscode.RelativePattern;
+
+  public constructor(private pattern: vscode.RelativePattern) {
+    const excludes = vscode.workspace
+      .getConfiguration('files')
+      .get<{ [pattern: string]: boolean }>('watcherExclude', {});
+
+    this.exclude = new vscode.RelativePattern(pattern.base, `${Object.keys(excludes).join(',')}}`);
+  }
+
+  public async files(): Promise<vscode.Uri[]> {
+    if (this._files) {
+      return this._files;
+    }
+
+    this._files = await vscode.workspace.findFiles(this.pattern, this.exclude);
+    return this._files;
+  }
+
+  public reset() {
+    this._files = undefined;
+  }
+}
 export class NodeProcessService implements WorkspaceService<NodeProcessServiceInstance> {
   public static outputChannel = vscode.window.createOutputChannel('AppMap: Services');
 
@@ -85,33 +110,45 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
     };
 
     const configPattern = new vscode.RelativePattern(folder, `**/appmap.yml`);
-    const configFiles = async (): Promise<vscode.Uri[]> => {
-      return await vscode.workspace.findFiles(configPattern);
-    };
-
+    const configFileProvider = new ConfigFileProviderImpl(configPattern);
+    const configFiles = await configFileProvider.files();
     const appmapModulePath = await tryModulePath(ProgramName.Appmap);
     if (appmapModulePath) {
       services.push(
-        new IndexProcessWatcher(configFiles, appmapModulePath, appMapDir, folder.uri.fsPath, env)
+        new IndexProcessWatcher(
+          configFileProvider,
+          appmapModulePath,
+          appMapDir,
+          folder.uri.fsPath,
+          env
+        )
       );
     }
 
     const scannerModulePath = await tryModulePath(ProgramName.Scanner);
     if (scannerModulePath) {
       services.push(
-        new ScanProcessWatcher(configFiles, scannerModulePath, appMapDir, folder.uri.fsPath, env)
+        new ScanProcessWatcher(
+          configFileProvider,
+          scannerModulePath,
+          appMapDir,
+          folder.uri.fsPath,
+          env
+        )
       );
     }
 
-    const restartServices = () =>
+    const restartServices = () => {
+      configFileProvider.reset();
       services.forEach((service) => {
         service.restart();
       });
+    };
 
     const configFileEvent = new ChangeEventDebouncer<vscode.Uri>(1000);
     const watcher = vscode.workspace.createFileSystemWatcher(configPattern);
 
-    const files = new Set<string>();
+    const files = new Set<string>(configFiles.map((uri: vscode.Uri) => uri.fsPath));
     const cloneFiles = () => [...files];
     const addFile = (uri: vscode.Uri) => files.add(uri.fsPath);
     const removeFile = (uri: vscode.Uri) => files.delete(uri.fsPath);
