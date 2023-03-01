@@ -1,3 +1,12 @@
+## [0.68.1](https://github.com/getappmap/vscode-appland/compare/v0.68.0...v0.68.1) (2023-03-01)
+
+
+### Bug Fixes
+
+* Opening AppMaps via the code objects tree works on Windows ([d48ff47](https://github.com/getappmap/vscode-appland/commit/d48ff47ac8c35261ac71b1b3b70d4c86b89c3367))
+* reduce scanning for appmap.yml ([a897e5d](https://github.com/getappmap/vscode-appland/commit/a897e5d7a585785736de7d90c7bdfcbb375d2e29))
+* Use best fit path when opening source of a code object ([3805634](https://github.com/getappmap/vscode-appland/commit/38056345ca6ae7226baca72f19e9508189388965))
+
 # [0.68.0](https://github.com/getappmap/vscode-appland/compare/v0.67.2...v0.68.0) (2023-03-01)
 
 
