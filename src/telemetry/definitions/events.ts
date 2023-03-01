@@ -191,3 +191,7 @@ export const CLICK_DOCS_LINK_IN_TREE = new Event({
 export const SIDEBAR_SIGN_IN = new Event({
   name: 'sidebar_sign_in',
 });
+
+export const EXPORT_SVG = new Event({
+  name: 'export_svg',
+});

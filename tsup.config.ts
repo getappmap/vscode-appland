@@ -1,4 +1,5 @@
 import { defineConfig } from 'tsup';
+import polyfills from 'node-libs-browser';
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -25,13 +26,27 @@ export default defineConfig([
     minify: isProduction,
     format: 'iife',
     sourcemap: true,
+    inject: ['web/polyfillShim.js'],
+    define: {
+      global: 'globalThis',
+      process: 'process',
+      Buffer: 'Buffer',
+    },
     esbuildOptions(options) {
       options.resolveExtensions = ['.mjs', '.js', '.ts'];
       options.mainFields = ['browser', 'main'];
-      const alias = (options.alias ||= {});
-      alias['vue'] = './node_modules/vue/dist/vue.esm.browser.js';
-      alias['vuex'] = './node_modules/vuex/dist/vuex.esm.browser.js';
-      alias['buffer'] = './node_modules/buffer/index.js';
+      options.alias = {
+        ...(options.alias || {}),
+        ...Object.entries(polyfills)
+          .filter(([, modulePath]) => Boolean(modulePath))
+          .reduce((memo, [name, modulePath]) => {
+            memo[name] = modulePath;
+            return memo;
+          }, {}),
+        fs: './node_modules/browserify-fs',
+        vue: './node_modules/vue/dist/vue.esm.browser.js',
+        vuex: './node_modules/vuex/dist/vuex.esm.browser.js',
+      };
     },
     loader: {
       '.html': 'text',

@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { Telemetry, APPMAP_OPEN, APPMAP_UPLOAD } from '../telemetry';
+import { Telemetry, APPMAP_OPEN, APPMAP_UPLOAD, EXPORT_SVG, DEBUG_EXCEPTION } from '../telemetry';
 import { getRecords } from '../util';
 import { version } from '../../package.json';
 import ExtensionState from '../configuration/extensionState';
@@ -11,6 +11,7 @@ import AnalysisManager from '../services/analysisManager';
 import { getStackLocations, StackLocation } from '../lib/getStackLocations';
 import { ResolvedFinding } from '../services/resolvedFinding';
 import getWebviewContent from '../webviews/getWebviewContent';
+import ErrorCode from '../telemetry/definitions/errorCodes';
 
 export type FindingInfo = ResolvedFinding & {
   stackLocations?: StackLocation[];
@@ -190,6 +191,7 @@ export default class AppMapEditorProvider
           webviewPanel.webview.postMessage({
             type: 'init-appmap',
             shareEnabled: extensionSettings.shareEnabled,
+            defaultView: extensionSettings.defaultDiagramView,
           });
           break;
         case 'appmapStateResult':
@@ -247,6 +249,30 @@ export default class AppMapEditorProvider
           break;
         case 'copyToClipboard':
           vscode.env.clipboard.writeText(message.stringToCopy);
+          break;
+        case 'exportSVG':
+          {
+            try {
+              const { svgString } = message;
+              if (svgString) {
+                const comment =
+                  '\n<!-- Save this SVG file with a .svg file extension ' +
+                  'and then open it in a web browswer to view your appmap! -->\n\n';
+                const document = await vscode.workspace.openTextDocument({
+                  language: 'svg',
+                  content: comment + svgString,
+                });
+
+                vscode.window.showTextDocument(document);
+                Telemetry.sendEvent(EXPORT_SVG);
+              }
+            } catch (e) {
+              Telemetry.sendEvent(DEBUG_EXCEPTION, {
+                exception: e as Error,
+                errorCode: ErrorCode.ExportSvgError,
+              });
+            }
+          }
           break;
       }
     });

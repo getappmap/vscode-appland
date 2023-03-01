@@ -11,16 +11,18 @@ export default function mountApp() {
   const messages = new MessagePublisher(vscode);
 
   messages.on('init-appmap', (initialData) => {
-    const { shareEnabled } = initialData;
+    const { shareEnabled, defaultView } = initialData;
+    const props = {
+      appMapUploadable: shareEnabled,
+    };
+    if (defaultView) props.defaultView = defaultView;
 
     const app = new Vue({
       el: '#app',
       render(h) {
         return h(VVsCodeExtension, {
           ref: 'ui',
-          props: {
-            appMapUploadable: shareEnabled,
-          },
+          props,
         });
       },
       methods: {
@@ -173,6 +175,10 @@ export default function mountApp() {
     app.$on('notificationClose', () => {
       vscode.postMessage({ command: 'performAction', action: 'dismiss_patch_notes' });
       vscode.postMessage({ command: 'closeUpdateNotification' });
+    });
+
+    app.$on('exportSVG', (svgString) => {
+      vscode.postMessage({ command: 'exportSVG', svgString });
     });
 
     window.addEventListener('error', (event) => {
