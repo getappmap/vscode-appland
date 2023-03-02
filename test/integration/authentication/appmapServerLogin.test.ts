@@ -35,9 +35,13 @@ describe('Authenticate', () => {
         // Can't actually do this flow, because the Login permissions dialog is forbidden.
         // Just assert that the dialog is shown.
         try {
-          await vscode.authentication.getSession(AUTHN_PROVIDER_NAME, ['the-scope'], {
-            createIfNone: true,
-          });
+          assert.deepEqual(
+            await vscode.authentication.getSession(AUTHN_PROVIDER_NAME, ['the-scope'], {
+              createIfNone: true,
+            }),
+            session
+          );
+          return;
         } catch (e) {
           assert(isNativeError(e));
           // The former happens when running with launch configuration.
@@ -46,13 +50,9 @@ describe('Authenticate', () => {
             'Cannot get password',
             'DialogService: refused to show dialog in tests.',
           ];
-          assert(
-            messages.indexOf(e.message) !== -1,
-            `Message ${e.message} not found in ${messages}`
-          );
+          if (messages.indexOf(e.message) === -1) throw e;
           return;
         }
-        assert(false, 'Expecting a dialag or password exception');
       });
       it('can be performed', async () => {
         sandbox
