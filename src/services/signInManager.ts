@@ -51,7 +51,7 @@ export default class SignInManager {
     return !!(meetsVersionRequirement && !this.signedIn);
   }
 
-  private static async updateSignInState(): Promise<void> {
+  public static async updateSignInState(): Promise<void> {
     this.signedIn = await this.isUserAuthenticated();
 
     await vscode.commands.executeCommand(
