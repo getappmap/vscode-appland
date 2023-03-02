@@ -5,7 +5,6 @@ import { ProjectStateServiceInstance } from '../services/projectStateService';
 import { COPY_COMMAND, OPEN_VIEW, Telemetry } from '../telemetry';
 import { getWorkspaceFolderFromPath } from '../util';
 import ProjectMetadata from '../workspace/projectMetadata';
-import * as semver from 'semver';
 import ExtensionState from '../configuration/extensionState';
 import { DocPageId, DocsPages } from '../tree/instructionsTreeDataProvider';
 import { Signup } from '../actions/signup';
@@ -13,7 +12,6 @@ import AnalysisManager from '../services/analysisManager';
 import ExtensionSettings from '../configuration/extensionSettings';
 import { AUTHN_PROVIDER_NAME } from '../authentication';
 import getWebviewContent from './getWebviewContent';
-import SignInManager from '../services/signInManager';
 
 type PageMessage = {
   page: string;
@@ -36,22 +34,6 @@ export default class InstallGuideWebView {
   public static readonly viewType = 'appmap.views.installGuide';
   public static readonly command = 'appmap.openInstallGuide';
   private static existingPanel?: vscode.WebviewPanel;
-
-  public static tryOpen(extensionState: ExtensionState): boolean {
-    const firstVersionInstalled = semver.coerce(extensionState.firstVersionInstalled);
-    if (firstVersionInstalled && semver.gte(firstVersionInstalled, '0.15.0')) {
-      // Logic within this block will only be executed if the extension was installed after we began tracking the
-      // time of installation. We will use this to determine whether or not our UX improvements are effective, without
-      // before rolling them out to our existing user base.
-
-      if (!extensionState.hasViewedInstallGuide && !SignInManager.shouldShowSignIn()) {
-        extensionState.hasViewedInstallGuide = true;
-        vscode.commands.executeCommand(InstallGuideWebView.command, 'project-picker');
-        return true;
-      }
-    }
-    return false;
-  }
 
   public static register(
     context: vscode.ExtensionContext,

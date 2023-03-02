@@ -4,17 +4,14 @@ import { AUTHN_PROVIDER_NAME, getApiKey } from '../authentication';
 import ExtensionState from '../configuration/extensionState';
 import { DEBUG_EXCEPTION, SIDEBAR_SIGN_IN, Telemetry } from '../telemetry';
 import ErrorCode from '../telemetry/definitions/errorCodes';
-import InstallGuideWebView from '../webviews/installGuideWebview';
 
 export default class SignInManager {
   private static contextKeyShowSignInWebview = 'appMap.showSignIn';
   private static signedIn: boolean;
   private static firstInstalledVersion: semver.SemVer | null;
   private static versionCutOff = '0.66.2';
-  private static extensionState: ExtensionState;
 
   public static async register(extensionState: ExtensionState): Promise<void> {
-    this.extensionState = extensionState;
     this.firstInstalledVersion = semver.coerce(extensionState.firstVersionInstalled);
     await this.updateSignInState();
 
@@ -31,7 +28,7 @@ export default class SignInManager {
     try {
       this.signedIn = !!(await getApiKey(true));
       this.updateSignInState();
-      if (this.signedIn) InstallGuideWebView.tryOpen(this.extensionState);
+      if (this.signedIn) vscode.commands.executeCommand('appmap.tryOpenInstallGuide');
     } catch (e) {
       Telemetry.sendEvent(DEBUG_EXCEPTION, {
         exception: e as Error,
