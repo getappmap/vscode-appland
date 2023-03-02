@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { basename, isAbsolute } from 'path';
+import { basename } from 'path';
 import * as vscode from 'vscode';
 import ClassMapIndex from '../services/classMapIndex';
 import { CodeObjectEntry, InspectableTypes } from '../lib/CodeObjectEntry';
