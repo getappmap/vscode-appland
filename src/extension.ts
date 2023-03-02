@@ -58,6 +58,7 @@ import learnMoreRuntimeAnalysis from './commands/learnMoreRuntimeAnalysis';
 import SignInViewProvider from './webviews/signInWebview';
 import SignInManager from './services/signInManager';
 import appMapOpen from './commands/openAppMap';
+import tryOpenInstallGuide from './commands/tryOpenInstallGuide';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   Telemetry.register(context);
@@ -130,6 +131,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     learnMoreRuntimeAnalysis(context);
     appmapHoverProvider(context, lineInfoIndex);
     appMapOpen(context);
+    tryOpenInstallGuide(extensionState);
 
     await workspaceServices.enroll(sourceFileWatcher);
     await workspaceServices.enroll(classMapWatcher);
@@ -220,7 +222,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     tryDisplayEarlyAccessWelcome(context);
 
     InstallGuideWebView.register(context, projectStates, extensionState);
-    const openedInstallGuide = InstallGuideWebView.tryOpen(extensionState);
+    const openedInstallGuide = await vscode.commands.executeCommand('appmap.tryOpenInstallGuide');
 
     FindingsOverviewWebview.register(context);
     FindingInfoWebview.register(context);
