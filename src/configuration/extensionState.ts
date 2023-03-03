@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import AppMapEditorProvider from '../editor/appmapEditorProvider';
 import { hasPreviouslyInstalledExtension } from '../util';
 
 export const Keys = {
@@ -7,6 +8,7 @@ export const Keys = {
     INSTALL_TIMESTAMP: 'appmap.applandinc.installTimestamp',
     INSTALL_VERSION: 'appmap.applandinc.installVersion',
     ANALYSIS_CTA_DISMISSED: 'appmap.applandinc.analysisCTADismissed',
+    SEQ_DIAGRAM_FEEDBACK_REQUESTED: AppMapEditorProvider.SEQ_DIAGRAM_FEEDBACK_REQUESTED,
   },
   Workspace: {
     CONFIGURED_AGENT: 'appmap.applandinc.agentConfigured',
