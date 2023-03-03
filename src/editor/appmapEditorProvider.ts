@@ -1,5 +1,12 @@
 import * as vscode from 'vscode';
-import { Telemetry, APPMAP_OPEN, APPMAP_UPLOAD, EXPORT_SVG, DEBUG_EXCEPTION } from '../telemetry';
+import {
+  Telemetry,
+  APPMAP_OPEN,
+  APPMAP_UPLOAD,
+  EXPORT_SVG,
+  DEBUG_EXCEPTION,
+  SEQ_DIAGRAM_FEEDBACK_CTA,
+} from '../telemetry';
 import { getRecords } from '../util';
 import { version } from '../../package.json';
 import ExtensionState from '../configuration/extensionState';
@@ -300,14 +307,39 @@ export default class AppMapEditorProvider
     }
 
     async function promptForFeedback(): Promise<void> {
+      let feedbackResponse: string;
+      let openUriResult: boolean | undefined;
       const message = 'Should we keep Sequence Diagrams in AppMap?';
-      const keepSeqDiagram = await vscode.window.showInformationMessage(message, 'Yes', 'No');
-      if (!keepSeqDiagram) return;
 
-      if (keepSeqDiagram === 'Yes') {
-        vscode.env.openExternal(vscode.Uri.parse('https://www.google.com'));
-      } else {
-        vscode.env.openExternal(vscode.Uri.parse('https://www.google.com'));
+      try {
+        const keepSeqDiagram = await vscode.window.showInformationMessage(message, 'Yes', 'No');
+
+        if (!keepSeqDiagram) {
+          feedbackResponse = 'Dismiss';
+          openUriResult = undefined;
+        } else {
+          feedbackResponse = keepSeqDiagram;
+
+          if (keepSeqDiagram === 'Yes') {
+            openUriResult = await vscode.env.openExternal(
+              vscode.Uri.parse('https://appmap.io/product/feedback/general.html')
+            );
+          } else {
+            openUriResult = await vscode.env.openExternal(
+              vscode.Uri.parse('https://appmap.io/product/feedback/sequence-diagrams-no.html')
+            );
+          }
+        }
+
+        Telemetry.sendEvent(SEQ_DIAGRAM_FEEDBACK_CTA, {
+          reaction: feedbackResponse,
+          result: openUriResult,
+        });
+      } catch (e) {
+        Telemetry.sendEvent(DEBUG_EXCEPTION, {
+          exception: e as Error,
+          errorCode: ErrorCode.SeqDiagramFeedbackCtaError,
+        });
       }
     }
   }

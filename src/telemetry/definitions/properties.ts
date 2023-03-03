@@ -297,3 +297,17 @@ export const DOCS_PATH = new TelemetryDataProvider({
     return path;
   },
 });
+
+export const YES_NO_PROMPT = new TelemetryDataProvider({
+  id: 'appmap.yes_no_prompt',
+  async value({ reaction }: { reaction: string }) {
+    return reaction;
+  },
+});
+
+export const OPEN_EXTERNAL = new TelemetryDataProvider({
+  id: 'appmap.open_external',
+  async value({ result }: { result: boolean | undefined }) {
+    return result;
+  },
+});

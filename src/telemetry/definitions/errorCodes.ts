@@ -9,6 +9,7 @@ enum ErrorCode {
   GenerateOpenApiFailure,
   SidebarSignInFailure,
   ExportSvgError,
+  SeqDiagramFeedbackCtaError,
 }
 
 export default ErrorCode;
