@@ -1,3 +1,16 @@
+# [0.69.0](https://github.com/getappmap/vscode-appland/compare/v0.68.1...v0.69.0) (2023-03-03)
+
+
+### Bug Fixes
+
+* Improve sign-in webview styling ([#641](https://github.com/getappmap/vscode-appland/issues/641)) ([cc1a990](https://github.com/getappmap/vscode-appland/commit/cc1a990491115f47a501eef526658c92a51b731a))
+
+
+### Features
+
+* Include git repository upstream url in telemetry ([3b91de1](https://github.com/getappmap/vscode-appland/commit/3b91de18a12c7361f9002d0947d37f712147ec83))
+* Report project directory in project:open telemetry message ([c2beaa2](https://github.com/getappmap/vscode-appland/commit/c2beaa25ebb5b299791cbfcf233717231d318c0b))
+
 ## [0.68.1](https://github.com/getappmap/vscode-appland/compare/v0.68.0...v0.68.1) (2023-03-01)
 
 
