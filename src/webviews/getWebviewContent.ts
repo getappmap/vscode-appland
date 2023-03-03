@@ -12,7 +12,8 @@ export default function getWebviewContent(
   webview: vscode.Webview,
   context: vscode.ExtensionContext,
   title: string,
-  appmapModule: AppmapModule
+  appmapModule: AppmapModule,
+  htmlStyle = ''
 ): string {
   const scriptUri = webview.asWebviewUri(
     vscode.Uri.file(path.join(context.extensionPath, 'out', 'app.js'))
@@ -23,7 +24,7 @@ export default function getWebviewContent(
   );
 
   return ` <!DOCTYPE html>
-  <html lang="en">
+  <html style="${htmlStyle}" lang="en">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
