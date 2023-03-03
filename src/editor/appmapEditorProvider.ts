@@ -68,9 +68,10 @@ export default class AppMapEditorProvider
   private static readonly viewType = 'appmap.views.appMapFile';
   private static readonly INSTRUCTIONS_VIEWED = 'APPMAP_INSTRUCTIONS_VIEWED';
   private static readonly RELEASE_KEY = 'APPMAP_RELEASE_KEY';
+  public static readonly APPMAP_OPENED = 'APPMAP_OPENED';
+  public static readonly SEQ_DIAGRAM_FEEDBACK_REQUESTED = 'SEQ_DIAGRAM_FEEDBACK_REQUESTED';
   private static readonly analysisManager = AnalysisManager;
   private static readonly openWebviewPanels = new Map<string, vscode.WebviewPanel>();
-  public static readonly APPMAP_OPENED = 'APPMAP_OPENED';
   public currentWebView?: vscode.WebviewPanel;
 
   constructor(
@@ -243,6 +244,20 @@ export default class AppMapEditorProvider
             }
           }
           break;
+
+        case 'seq-diagram-feedback':
+          {
+            if (
+              !this.context.globalState.get(AppMapEditorProvider.SEQ_DIAGRAM_FEEDBACK_REQUESTED)
+            ) {
+              this.context.globalState.update(
+                AppMapEditorProvider.SEQ_DIAGRAM_FEEDBACK_REQUESTED,
+                true
+              );
+              promptForFeedback();
+            }
+          }
+          break;
       }
     });
 
@@ -282,6 +297,18 @@ export default class AppMapEditorProvider
 
       const fileUri = await bestFilePath(path, document.workspaceFolder);
       if (fileUri) openFile(fileUri, lineNumber);
+    }
+
+    async function promptForFeedback(): Promise<void> {
+      const message = 'Should we keep Sequence Diagrams in AppMap?';
+      const keepSeqDiagram = await vscode.window.showInformationMessage(message, 'Yes', 'No');
+      if (!keepSeqDiagram) return;
+
+      if (keepSeqDiagram === 'Yes') {
+        vscode.env.openExternal(vscode.Uri.parse('https://www.google.com'));
+      } else {
+        vscode.env.openExternal(vscode.Uri.parse('https://www.google.com'));
+      }
     }
   }
 

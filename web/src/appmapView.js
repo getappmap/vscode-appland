@@ -181,6 +181,10 @@ export default function mountApp() {
       vscode.postMessage({ command: 'exportSVG', svgString });
     });
 
+    app.$on('seq-diagram-feedback', () => {
+      vscode.postMessage({ command: 'seq-diagram-feedback' });
+    });
+
     window.addEventListener('error', (event) => {
       vscode.postMessage({
         command: 'reportError',
