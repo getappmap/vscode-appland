@@ -13,7 +13,7 @@ export default function getWebviewContent(
   context: vscode.ExtensionContext,
   title: string,
   appmapModule: AppmapModule,
-  htmlStyle?: string
+  htmlStyle = ''
 ): string {
   const scriptUri = webview.asWebviewUri(
     vscode.Uri.file(path.join(context.extensionPath, 'out', 'app.js'))
