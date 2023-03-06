@@ -53,6 +53,9 @@ export default function mountApp() {
         setShareURL(url) {
           this.$refs.ui.setShareURL(url);
         },
+        setActive(isActive) {
+          this.$refs.ui.isActive = isActive;
+        },
       },
       mounted() {
         vscode.postMessage({ command: 'ready' });
@@ -230,6 +233,9 @@ export default function mountApp() {
           break;
         case 'setShareURL':
           app.setShareURL(message.url);
+          break;
+        case 'setActive':
+          app.setActive(message.active);
           break;
         default:
           break;
