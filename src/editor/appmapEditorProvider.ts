@@ -126,6 +126,11 @@ export default class AppMapEditorProvider
     this.currentWebView = webviewPanel;
 
     webviewPanel.onDidChangeViewState((e) => {
+      webviewPanel.webview.postMessage({
+        type: 'setActive',
+        active: webviewPanel.active,
+      });
+
       if (e.webviewPanel.active) {
         this.currentWebView = e.webviewPanel;
       }
