@@ -1,3 +1,11 @@
+# [0.70.0](https://github.com/getappmap/vscode-appland/compare/v0.69.0...v0.70.0) (2023-03-07)
+
+
+### Features
+
+* notify each webview when active editor tab changes ([9fa8fc3](https://github.com/getappmap/vscode-appland/commit/9fa8fc3d68305fe87e1cdb9106ce344d9d1baa67))
+* prompt user for feedback about sequence diagrams ([4bcf444](https://github.com/getappmap/vscode-appland/commit/4bcf444fa7b4157de1259f7ebebbc3c1857136ef))
+
 # [0.69.0](https://github.com/getappmap/vscode-appland/compare/v0.68.1...v0.69.0) (2023-03-03)
 
 
