@@ -19,7 +19,8 @@ describe('Code object tree', function () {
     await driver.appMap.expandCodeObjects();
     await driver.appMap.codeObjectTreeItem(2).click();
     await driver.appMap.codeObjectTreeItem(3).click();
-    await driver.appMapWebview.ready();
+    const expectedFrames = 2;
+    await driver.appMapWebview.initialize(expectedFrames);
 
     // TODO: We should be testing to see if the AppMap contains an active
     // selection (i.e. the proper state is reflected), however this appears
