@@ -67,7 +67,10 @@ export default async function openCodeObjectInAppMap(
     };
     const uri = vscode.Uri.file(appMapFileName);
     Telemetry.sendEvent(CLICK_CODE_OBJECT);
-    vscode.commands.executeCommand('appmap.open', uri, state);
+    return vscode.commands.executeCommand(
+      'vscode.open',
+      uri.with({ fragment: JSON.stringify(state) })
+    );
   });
   context.subscriptions.push(command);
 }

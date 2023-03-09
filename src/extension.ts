@@ -57,7 +57,6 @@ import openCodeObjectInSource from './commands/openCodeObjectInSource';
 import learnMoreRuntimeAnalysis from './commands/learnMoreRuntimeAnalysis';
 import SignInViewProvider from './webviews/signInWebview';
 import SignInManager from './services/signInManager';
-import appMapOpen from './commands/openAppMap';
 import tryOpenInstallGuide from './commands/tryOpenInstallGuide';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
@@ -130,7 +129,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     openCodeObjectInSource(context);
     learnMoreRuntimeAnalysis(context);
     appmapHoverProvider(context, lineInfoIndex);
-    appMapOpen(context);
     tryOpenInstallGuide(extensionState);
 
     await workspaceServices.enroll(sourceFileWatcher);
