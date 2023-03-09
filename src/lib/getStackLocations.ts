@@ -1,4 +1,3 @@
-import path from 'path';
 import * as vscode from 'vscode';
 import { ResolvedFinding } from '../services/resolvedFinding';
 
@@ -12,13 +11,13 @@ export function getStackLocations(finding: ResolvedFinding): StackLocation[] {
   const stackFrameIndex = finding.stackFrameIndex;
   return Array.from(stackFrameIndex.locationByFrame.values()).map((location) => {
     let truncatedPath = location.uri.path;
-    const splitPath = location.uri.path.split(path.sep);
+    const splitPath = location.uri.path.split('/');
 
     while (truncatedPath.length > STACK_TRACE_CHARACTER_LIMIT) {
       splitPath.shift();
-      truncatedPath = splitPath.join(path.sep);
+      truncatedPath = splitPath.join('/');
     }
-    truncatedPath = `...${path.sep}${truncatedPath}`;
+    truncatedPath = `...${'/'}${truncatedPath}`;
 
     return { ...location, truncatedPath };
   });
