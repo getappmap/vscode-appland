@@ -32,7 +32,10 @@ describe('AppMapEditorProvider', () => {
     };
     const uri = vscode.Uri.file(ExampleAppMap);
 
-    await vscode.commands.executeCommand('appmap.open', uri, state);
+    await vscode.commands.executeCommand(
+      'vscode.open',
+      uri.with({ fragment: JSON.stringify(state) })
+    );
 
     await waitFor('AppMap diagram should be opened', () => editorProvider.openDocuments.length > 0);
 

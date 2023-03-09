@@ -380,32 +380,6 @@ export default class AppMapEditorProvider
     context.globalState.update(AppMapEditorProvider.RELEASE_KEY, null);
     context.globalState.update(AppMapEditorProvider.APPMAP_OPENED, null);
   }
-
-  public static setState(uri: vscode.Uri, state: string | Record<string, unknown>): void {
-    const panel = this.openWebviewPanels.get(uri.toString());
-    if (panel) {
-      panel.webview.postMessage({
-        type: 'setAppmapState',
-        state:
-          typeof state === 'string'
-            ? state
-            : Buffer.from(JSON.stringify(state), 'utf-8').toString('base64url'),
-      });
-    }
-  }
-
-  public static async webviewReady(
-    uri: vscode.Uri,
-    timeoutSeconds = 10,
-    tickRateMs = 100
-  ): Promise<boolean> {
-    const startTime = Date.now();
-    while (Date.now() - startTime < timeoutSeconds * 1000) {
-      if (this.openWebviewPanels.has(uri.toString())) return true;
-      await new Promise((resolve) => setTimeout(resolve, tickRateMs));
-    }
-    return false;
-  }
 }
 
 /**
