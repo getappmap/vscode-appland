@@ -122,7 +122,9 @@ export class ResolvedFinding {
     if (finding.relatedEvents) {
       state.traceFilter = finding.relatedEvents.map((evt) => ['id', evt.id].join(':')).join(' ');
     }
-    return vscode.Uri.parse(`file://${filePath}#${JSON.stringify(state)}`);
+
+    const uri = vscode.Uri.file(filePath);
+    return uri.with({ fragment: JSON.stringify(state) });
   }
 
   // Resolve a finding stack frame path into a vscode.Location, prepending the correct workspace folder path if needed.
