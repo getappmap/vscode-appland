@@ -136,7 +136,7 @@ export default class AppMapEditorProvider
       }
     });
 
-    const updateWebview = () => {
+    const updateWebview = (initialState: string | undefined) => {
       webviewPanel.webview.postMessage({
         type: 'update',
         text: document.data,
@@ -156,7 +156,25 @@ export default class AppMapEditorProvider
           version,
         });
       }
+
+      if (initialState)
+        webviewPanel.webview.postMessage({
+          type: 'setAppmapState',
+          state: initialState,
+        });
     };
+
+    const initialState = (() => {
+      const state = document.uri.fragment;
+      if (state !== undefined && state !== '') {
+        try {
+          JSON.parse(state);
+          return state;
+        } catch (e) {
+          console.warn(e);
+        }
+      }
+    })();
 
     // Handle messages from the webview.
     // Note: this has to be set before setting the HTML to avoid a race.
@@ -166,7 +184,7 @@ export default class AppMapEditorProvider
           viewSource(message.text);
           break;
         case 'ready':
-          updateWebview();
+          updateWebview(initialState);
           break;
         case 'appmap-ready':
           webviewPanel.webview.postMessage({
