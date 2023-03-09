@@ -85,8 +85,8 @@ export default class AppMap {
     this.findingsTreeItem(0).click();
   }
 
-  public openNthFinding(nth: number): void {
-    this.finding(nth).click();
+  public async openNthFinding(nth: number): Promise<void> {
+    await this.finding(nth).click();
   }
 
   public async openActionPanel(): Promise<void> {

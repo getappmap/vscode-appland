@@ -29,4 +29,13 @@ export default class FindingDetailsWebview {
     await outerFrame.locator('iframe#active-frame').waitFor();
     this.frame = outerFrame.frameLocator('#active-frame');
   }
+
+  public async clickNthAssociatedMap(nth: number): Promise<void> {
+    if (!this.frame) throw Error(this.initializeErrorMsg);
+    await this.frame
+      .locator('[data-cy="associated-map"]')
+      .nth(nth || 0)
+      .locator('a')
+      .click();
+  }
 }
