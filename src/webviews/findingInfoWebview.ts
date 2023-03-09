@@ -140,15 +140,12 @@ export default class FindingInfoWebview {
               break;
             case 'open-map':
               {
-                let uri: vscode.Uri;
+                let state: string | undefined;
 
-                if (message.data.uri) {
-                  uri = vscode.Uri.from(message.data.uri);
-                } else {
-                  uri = vscode.Uri.file(message.data.mapFile);
-                }
+                if (message.data.uri) state = message.data.uri.fragment;
 
-                vscode.commands.executeCommand('vscode.open', uri);
+                const uri = vscode.Uri.file(message.data.mapFile);
+                vscode.commands.executeCommand('vscode.open', uri.with({ fragment: state }));
               }
               break;
             case 'open-findings-overview':

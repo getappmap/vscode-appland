@@ -7,11 +7,13 @@ export default class OpenAppMapUriHandler implements RequestHandler {
   constructor(protected readonly context: vscode.ExtensionContext) {}
 
   handle(queryParams: URLSearchParams): void {
-    const uri = queryParams.get('uri');
-    if (!uri) return;
+
+    const uriString = queryParams.get('uri');
+    if (!uriString) return;
 
     const state = queryParams.get('state');
-    vscode.commands.executeCommand('appmap.open', vscode.Uri.parse(uri), state);
+    const uri = vscode.Uri.file(uriString);
+    vscode.commands.executeCommand('appmap.open', uri, state);
   }
 
   dispose(): void {
