@@ -1,3 +1,12 @@
+## [0.70.1](https://github.com/getappmap/vscode-appland/compare/v0.70.0...v0.70.1) (2023-03-10)
+
+
+### Bug Fixes
+
+* correct stack trace rendering in findings webview ([fe01ce1](https://github.com/getappmap/vscode-appland/commit/fe01ce176abf87c4d4713c734696a66bb35e4d79))
+* correctly create uris in windows ([16b58cb](https://github.com/getappmap/vscode-appland/commit/16b58cb42f8336bf851e0c1edc365501ef0b804e))
+* re-enable initial state when opening an appmap ([bba1d52](https://github.com/getappmap/vscode-appland/commit/bba1d520f252da814f0e1f88dcd37fbb8d93efb0))
+
 # [0.70.0](https://github.com/getappmap/vscode-appland/compare/v0.69.0...v0.70.0) (2023-03-07)
 
 
