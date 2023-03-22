@@ -10,6 +10,7 @@ enum ErrorCode {
   SidebarSignInFailure,
   ExportSvgError,
   SeqDiagramFeedbackCtaError,
+  GenerateMapStatsError,
 }
 
 export default ErrorCode;

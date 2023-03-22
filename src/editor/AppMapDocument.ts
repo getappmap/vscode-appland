@@ -1,13 +1,23 @@
 import * as vscode from 'vscode';
-import { FindingInfo } from './appmapEditorProvider';
+import { FindingInfo, FunctionStats } from './appmapEditorProvider';
+
+type MapStats = {
+  functions?: FunctionStats[];
+};
 
 export default class AppMapDocument implements vscode.CustomDocument {
   public data: Record<string, unknown>;
   public metadata: Record<string, unknown> = {};
 
-  constructor(public uri: vscode.Uri, public raw: Uint8Array, public findings?: FindingInfo[]) {
+  constructor(
+    public uri: vscode.Uri,
+    public raw: Uint8Array,
+    stats: MapStats,
+    public findings?: FindingInfo[]
+  ) {
     const appMap = JSON.parse(raw.toString());
     if (findings && findings.length !== 0) appMap.findings = findings;
+    appMap.stats = stats || {};
     this.data = appMap;
     if ('metadata' in this.data) this.metadata = this.data.metadata as Record<string, unknown>;
   }
