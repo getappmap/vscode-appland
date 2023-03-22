@@ -1,89 +1,20 @@
 import assert from 'assert';
 import { NodeProcessService } from '../../../src/services/nodeProcessService';
-import NodeProcessServiceInstance from '../../../src/services/nodeProcessServiceInstance';
 import { ProcessWatcher } from '../../../src/services/processWatcher';
-import { WorkspaceServiceInstance } from '../../../src/services/workspaceService';
-import { fileExists, retry } from '../../../src/util';
-import {
-  initializeWorkspace,
-  ProjectA,
-  restoreFile,
-  waitForExtension,
-  withAuthenticatedUser,
-} from '../util';
+import { fileExists } from '../../../src/util';
+import { initializeWorkspace, ProjectA, restoreFile, withAuthenticatedUser } from '../util';
 import { promises as fs } from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
 import MockExtensionContext from '../../mocks/mockExtensionContext';
-
-async function waitForProcessState(
-  processWatchers: ReadonlyArray<ProcessWatcher>,
-  isRunning: boolean,
-  pidExclusions: (number | undefined)[], // If a process is identified by a PID in `pidExclusions`, it will not pass the conditional,
-  action: string
-): Promise<void> {
-  await retry(
-    () => {
-      if (
-        !processWatchers.every(
-          (p) => p.running == isRunning && !pidExclusions.includes(p.process?.pid)
-        )
-      ) {
-        throw new Error(`Waiting for processes to ${action}`);
-      }
-    },
-    15,
-    1000
-  );
-}
-
-const waitForUp = (
-  processWatchers: ReadonlyArray<ProcessWatcher>,
-  pidExclusions: (number | undefined)[] = []
-): Promise<void> => waitForProcessState(processWatchers, true, pidExclusions, 'start');
-
-const waitForDown = (
-  processWatchers: ReadonlyArray<ProcessWatcher>,
-  pidExclusions: (number | undefined)[] = []
-): Promise<void> => waitForProcessState(processWatchers, false, pidExclusions, 'shut down');
+import { waitForDown, waitForUp, initializeProcesses as getProcessWatchers } from './util';
 
 describe('Background processes', () => {
   withAuthenticatedUser();
 
-  let processService: NodeProcessService;
-  let processServiceInstance: NodeProcessServiceInstance;
   let processWatchers: ReadonlyArray<ProcessWatcher>;
-
   const initializeProcesses = async () => {
-    const extension = await waitForExtension();
-    processService = extension.processService;
-    assert.ok(processService, 'the service exists');
-
-    if (!processService.ready) {
-      await new Promise<void>((resolve): void => {
-        const disposable = processService?.onReady((): void => {
-          disposable?.dispose();
-          resolve();
-        });
-      });
-    }
-
-    let serviceInstances: WorkspaceServiceInstance[] = [];
-    await retry(
-      () => {
-        serviceInstances = extension.workspaceServices.getServiceInstances(processService);
-        if (serviceInstances.length === 0) {
-          throw new Error(`Waiting for service instance creation`);
-        }
-      },
-      5,
-      1000
-    );
-
-    assert.strictEqual(serviceInstances.length, 1, 'a single service instance exists');
-
-    processServiceInstance = serviceInstances[0] as NodeProcessServiceInstance;
-    processWatchers = processServiceInstance['processes'];
+    processWatchers = await getProcessWatchers();
   };
 
   context('monitoring appmap.yml', () => {
