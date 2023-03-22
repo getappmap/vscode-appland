@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import assert from 'assert';
 import {
   Telemetry,
   APPMAP_OPEN,
@@ -19,9 +20,23 @@ import { getStackLocations, StackLocation } from '../lib/getStackLocations';
 import { ResolvedFinding } from '../services/resolvedFinding';
 import getWebviewContent from '../webviews/getWebviewContent';
 import ErrorCode from '../telemetry/definitions/errorCodes';
+import {
+  getModulePath,
+  OutputStream,
+  ProgramName,
+  spawn,
+  verifyCommandOutput,
+} from '../services/nodeDependencyProcess';
 
 export type FindingInfo = ResolvedFinding & {
   stackLocations?: StackLocation[];
+};
+
+export type FunctionStats = {
+  count: number;
+  size: number;
+  function: string;
+  location: string;
 };
 
 /**
@@ -89,8 +104,52 @@ export default class AppMapEditorProvider
   async openCustomDocument(uri: vscode.Uri): Promise<AppMapDocument> {
     const data = await vscode.workspace.fs.readFile(uri);
     const findings = this.retrieveAndProcessFindings(uri);
+    const functions = await this.generateStats(uri);
+    const stats = { functions };
 
-    return new AppMapDocument(uri, data, findings);
+    return new AppMapDocument(uri, data, stats, findings);
+  }
+
+  async generateStats(uri: vscode.Uri): Promise<FunctionStats[] | undefined> {
+    const modulePath = await getModulePath({
+      dependency: ProgramName.Appmap,
+      globalStoragePath: this.context.globalStorageUri.fsPath,
+    });
+
+    const workspaceFolder = vscode.workspace.getWorkspaceFolder(uri);
+    assert(workspaceFolder);
+
+    const statsCommand = spawn({
+      modulePath,
+      args: [
+        'stats',
+        '--appmap-file',
+        uri.fsPath,
+        '--limit',
+        String(Number.MAX_SAFE_INTEGER),
+        '--format',
+        'json',
+      ],
+      saveOutput: true,
+    });
+
+    try {
+      await verifyCommandOutput(statsCommand);
+
+      const statsString = statsCommand.log
+        .filter((line) => line.stream === OutputStream.Stdout)
+        .map((line) => line.data)
+        .join('');
+
+      return JSON.parse(statsString);
+    } catch (e) {
+      Telemetry.sendEvent(DEBUG_EXCEPTION, {
+        exception: e as Error,
+        errorCode: ErrorCode.GenerateMapStatsError,
+        log: statsCommand.log.toString(),
+      });
+      return;
+    }
   }
 
   retrieveAndProcessFindings(uri: vscode.Uri): FindingInfo[] {
