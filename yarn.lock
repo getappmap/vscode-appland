@@ -139,13 +139,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/components@npm:^2.32.0":
-  version: 2.32.0
-  resolution: "@appland/components@npm:2.32.0"
+"@appland/components@npm:^2.33.2":
+  version: 2.33.2
+  resolution: "@appland/components@npm:2.33.2"
   dependencies:
     "@appland/diagrams": ^1.6.2
-    "@appland/models": ^2.2.0
-    "@appland/sequence-diagram": ^1.4.0
+    "@appland/models": ^2.4.0
+    "@appland/sequence-diagram": ^1.5.0
     buffer: ^6.0.3
     diff: ^5.1.0
     dom-to-svg: ^0.12.2
@@ -153,7 +153,7 @@ __metadata:
     sql-formatter: ^4.0.2
     vue: ^2.7.14
     vuex: ^3.6.0
-  checksum: 28fb1190adbefda66592e556ade421a85e65479bbda193f5d09f7b9fb2c388396f1c782c1230d3892b3c5c2fd54189105a5f3187c0e4c3cf29a5b35cb79707f7
+  checksum: 49714b3f2c3e4199cf12b844c39233638fbebeec602ad027a72e4d31db9b816df21c13049e22575ba04dc60cea1ae5bd45b69a4b918460a1c223ef20d805b771
   languageName: node
   linkType: hard
 
@@ -252,6 +252,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@appland/models@npm:^2.4.0":
+  version: 2.4.0
+  resolution: "@appland/models@npm:2.4.0"
+  dependencies:
+    "@appland/sql-parser": ^1.5.0
+    crypto-js: ^4.0.0
+  checksum: 9033a627ccda709c29eb68f3647d1e9d49fd44710d86d654e08363942dc239a4c72ea59874863d48ccc8415d3141d37224d3d0cfef532e5971c5ac7b51ebc4dd
+  languageName: node
+  linkType: hard
+
 "@appland/openapi@npm:1.3.2":
   version: 1.3.2
   resolution: "@appland/openapi@npm:1.3.2"
@@ -321,16 +331,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/sequence-diagram@npm:^1.4.0, @appland/sequence-diagram@npm:^1.4.1":
-  version: 1.4.1
-  resolution: "@appland/sequence-diagram@npm:1.4.1"
+"@appland/sequence-diagram@npm:^1.5.0":
+  version: 1.5.0
+  resolution: "@appland/sequence-diagram@npm:1.5.0"
   dependencies:
     "@appland/models": ^2.2.0
     "@appland/openapi": ^1.4.3
     "@datastructures-js/priority-queue": ^6.1.3
     crypto-js: ^4.1.1
     diff: ^5.1.0
-  checksum: 4dbe0926478dae01b700c2d33d9761d44a294372308c145bd355a53a36990117ad247bb825e04ab252196c23a327aa3871ab2c1dda47b5d492f026b908e61dc8
+  checksum: bc156693dd15e43d8aadd0a29512e121c813fe248cef33ee9128b16b3e4d65c6956ac1348a16bb6d065db2cfcd887bdaaac55aaffd256e6cbe3e98d6706d8ce0
   languageName: node
   linkType: hard
 
@@ -2279,11 +2289,11 @@ __metadata:
   dependencies:
     "@appland/appmap": ^3.66.1
     "@appland/client": ^1.6.0
-    "@appland/components": ^2.32.0
+    "@appland/components": ^2.33.2
     "@appland/diagrams": ^1.6.3
-    "@appland/models": ^2.2.0
+    "@appland/models": ^2.4.0
     "@appland/scanner": ^1.76.6
-    "@appland/sequence-diagram": ^1.4.1
+    "@appland/sequence-diagram": ^1.5.0
     "@playwright/test": ^1.22.2
     "@semantic-release/changelog": ^5.0.1
     "@semantic-release/exec": ^5.0.0
