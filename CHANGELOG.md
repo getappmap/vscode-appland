@@ -1,3 +1,11 @@
+## [0.70.2](https://github.com/getappmap/vscode-appland/compare/v0.70.1...v0.70.2) (2023-03-22)
+
+
+### Bug Fixes
+
+* Don't infinitely retry crashed processes ([cabfc49](https://github.com/getappmap/vscode-appland/commit/cabfc49ea768d7382d986db04483d891a0e3bca4))
+* Upgrade @appland/components, @appland/sequence-diagram ([dc60c08](https://github.com/getappmap/vscode-appland/commit/dc60c08e0d2d4ee3d8b624c6c166dfa877fcda23))
+
 ## [0.70.1](https://github.com/getappmap/vscode-appland/compare/v0.70.0...v0.70.1) (2023-03-10)
 
 
