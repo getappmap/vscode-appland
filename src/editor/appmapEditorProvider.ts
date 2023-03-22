@@ -19,6 +19,9 @@ import { getStackLocations, StackLocation } from '../lib/getStackLocations';
 import { ResolvedFinding } from '../services/resolvedFinding';
 import getWebviewContent from '../webviews/getWebviewContent';
 import ErrorCode from '../telemetry/definitions/errorCodes';
+import { promisify } from 'util';
+import { tmpName } from 'tmp';
+import { writeFile } from 'fs/promises';
 
 export type FindingInfo = ResolvedFinding & {
   stackLocations?: StackLocation[];
@@ -255,15 +258,10 @@ export default class AppMapEditorProvider
             try {
               const { svgString } = message;
               if (svgString) {
-                const comment =
-                  '\n<!-- Save this SVG file with a .svg file extension ' +
-                  'and then open it in a web browswer to view your appmap! -->\n\n';
-                const document = await vscode.workspace.openTextDocument({
-                  language: 'svg',
-                  content: comment + svgString,
-                });
-
-                vscode.window.showTextDocument(document);
+                const diagramFile = (await promisify(tmpName)()) + '.svg';
+                await writeFile(diagramFile, svgString);
+                const uri = vscode.Uri.file(diagramFile);
+                vscode.env.openExternal(uri);
                 Telemetry.sendEvent(EXPORT_SVG);
               }
             } catch (e) {
