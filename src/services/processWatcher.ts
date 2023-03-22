@@ -17,7 +17,7 @@ export type ProcessWatcherOptions = {
 } & RetryOptions &
   SpawnOptions;
 
-const DEFAULT_RETRY_OPTIONS: Required<RetryOptions> = {
+export const DEFAULT_RETRY_OPTIONS: Required<RetryOptions> = {
   retryTimes: 3,
   retryThreshold: 3 * 60 * 1000,
   retryBackoff: (retryNumber: number) => Math.pow(2, retryNumber) * 1000,
@@ -35,6 +35,7 @@ export class ProcessWatcher implements vscode.Disposable {
   protected _onAbort: vscode.EventEmitter<Error> = new vscode.EventEmitter<Error>();
 
   protected shouldRun = false;
+  protected hasAborted = false;
 
   // The number of times this process has crashed.
   protected crashCount = 0;
@@ -80,6 +81,7 @@ export class ProcessWatcher implements vscode.Disposable {
       this.process?.log.append('too many crashes - aborting', OutputStream.Stderr);
       this._onAbort.fire(new Error(`${this.process?.spawnargs.join(' ')} crashed too many times.`));
       this.process = undefined;
+      this.hasAborted = true;
       return;
     }
 
@@ -95,6 +97,8 @@ export class ProcessWatcher implements vscode.Disposable {
   }
 
   async canStart(): Promise<{ enabled: boolean; reason?: string }> {
+    if (this.hasAborted) return { enabled: false, reason: 'process has crashed too many times' };
+
     const configFiles = await this.configFileProvider.files();
     if (configFiles.length === 0) return { enabled: false, reason: 'appmap.yml does not exist' };
 
