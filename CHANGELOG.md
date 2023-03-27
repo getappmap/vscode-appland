@@ -1,3 +1,10 @@
+# [0.71.0](https://github.com/getappmap/vscode-appland/compare/v0.70.2...v0.71.0) (2023-03-27)
+
+
+### Features
+
+* attach stats to appmap ([18c8d28](https://github.com/getappmap/vscode-appland/commit/18c8d288ac40077865af5b790da1eaab0ed67e80))
+
 ## [0.70.2](https://github.com/getappmap/vscode-appland/compare/v0.70.1...v0.70.2) (2023-03-22)
 
 
