@@ -110,17 +110,20 @@ export default class AppMapEditorProvider
     return new AppMapDocument(uri, data, stats, findings);
   }
 
-  async generateStats(uri: vscode.Uri): Promise<FunctionStats[] | undefined> {
-    const modulePath = await getModulePath({
+  async cliPath(): Promise<string> {
+    return await getModulePath({
       dependency: ProgramName.Appmap,
       globalStoragePath: this.context.globalStorageUri.fsPath,
     });
+  }
 
+
+  async generateStats(uri: vscode.Uri): Promise<FunctionStats[] | undefined> {
     const workspaceFolder = vscode.workspace.getWorkspaceFolder(uri);
     assert(workspaceFolder);
 
     const statsCommand = spawn({
-      modulePath,
+      modulePath: await this.cliPath(),
       args: [
         'stats',
         '--appmap-file',
