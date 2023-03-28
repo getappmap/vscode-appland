@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import assert from 'assert';
+import * as fs from 'fs';
 import {
   Telemetry,
   APPMAP_OPEN,
@@ -93,6 +94,7 @@ export default class AppMapEditorProvider
   private static readonly RELEASE_KEY = 'APPMAP_RELEASE_KEY';
   public static readonly APPMAP_OPENED = 'APPMAP_OPENED';
   public static readonly SEQ_DIAGRAM_FEEDBACK_REQUESTED = 'SEQ_DIAGRAM_FEEDBACK_REQUESTED';
+  private static readonly LARGE_APPMAP_SIZE = 20 * 1000 * 1000; // 20 MB
   private static readonly analysisManager = AnalysisManager;
   private static readonly openWebviewPanels = new Map<string, vscode.WebviewPanel>();
   public currentWebView?: vscode.WebviewPanel;
@@ -103,10 +105,18 @@ export default class AppMapEditorProvider
   ) {}
 
   async openCustomDocument(uri: vscode.Uri): Promise<AppMapDocument> {
-    const data = await vscode.workspace.fs.readFile(uri);
-    const findings = this.retrieveAndProcessFindings(uri);
+    const appmapFileData = fs.statSync(uri.fsPath);
+    const appmapFileSize = appmapFileData.size;
     const functions = await this.generateStats(uri);
     const stats = { functions };
+
+    let data = (await vscode.workspace.fs.readFile(uri)).toString();
+    if (appmapFileSize > AppMapEditorProvider.LARGE_APPMAP_SIZE) {
+      const prunedData = await this.pruneMap(uri);
+      if (prunedData) data = prunedData;
+    }
+
+    const findings = this.retrieveAndProcessFindings(uri);
 
     return new AppMapDocument(uri, data, stats, findings);
   }
@@ -123,6 +133,31 @@ export default class AppMapEditorProvider
       .filter((line) => line.stream === OutputStream.Stdout)
       .map((line) => line.data)
       .join('');
+  }
+
+  async pruneMap(uri: vscode.Uri): Promise<string | undefined> {
+    const modulePath = await this.cliPath();
+
+    const workspaceFolder = vscode.workspace.getWorkspaceFolder(uri);
+    assert(workspaceFolder);
+
+    const pruneCommand = spawn({
+      modulePath,
+      args: ['prune', uri.fsPath, '--size', '20mb', '--output-data', '--auto'],
+      saveOutput: true,
+    });
+
+    try {
+      await verifyCommandOutput(pruneCommand);
+      const pruneString = this.outputLogToString(pruneCommand.log);
+      return pruneString;
+    } catch (e) {
+      Telemetry.sendEvent(DEBUG_EXCEPTION, {
+        exception: e as Error,
+        errorCode: ErrorCode.PruneLargeMapError,
+        log: pruneCommand.log.toString(),
+      });
+    }
   }
 
   async generateStats(uri: vscode.Uri): Promise<FunctionStats[] | undefined> {

@@ -11,11 +11,11 @@ export default class AppMapDocument implements vscode.CustomDocument {
 
   constructor(
     public uri: vscode.Uri,
-    public raw: Uint8Array,
+    public raw: string,
     stats: MapStats,
     public findings?: FindingInfo[]
   ) {
-    const appMap = JSON.parse(raw.toString());
+    const appMap = JSON.parse(raw);
     if (findings && findings.length !== 0) appMap.findings = findings;
     appMap.stats = stats || {};
     this.data = appMap;
