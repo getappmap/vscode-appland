@@ -23,6 +23,7 @@ import ErrorCode from '../telemetry/definitions/errorCodes';
 import {
   getModulePath,
   OutputStream,
+  ProcessLog,
   ProgramName,
   spawn,
   verifyCommandOutput,
@@ -117,6 +118,12 @@ export default class AppMapEditorProvider
     });
   }
 
+  outputLogToString(log: ProcessLog): string {
+    return log
+      .filter((line) => line.stream === OutputStream.Stdout)
+      .map((line) => line.data)
+      .join('');
+  }
 
   async generateStats(uri: vscode.Uri): Promise<FunctionStats[] | undefined> {
     const workspaceFolder = vscode.workspace.getWorkspaceFolder(uri);
@@ -138,12 +145,7 @@ export default class AppMapEditorProvider
 
     try {
       await verifyCommandOutput(statsCommand);
-
-      const statsString = statsCommand.log
-        .filter((line) => line.stream === OutputStream.Stdout)
-        .map((line) => line.data)
-        .join('');
-
+      const statsString = this.outputLogToString(statsCommand.log);
       return JSON.parse(statsString);
     } catch (e) {
       Telemetry.sendEvent(DEBUG_EXCEPTION, {
