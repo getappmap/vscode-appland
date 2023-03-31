@@ -145,9 +145,6 @@ export default class AppMapEditorProvider
   async pruneMap(uri: vscode.Uri): Promise<string | undefined> {
     const modulePath = await this.cliPath();
 
-    const workspaceFolder = vscode.workspace.getWorkspaceFolder(uri);
-    assert(workspaceFolder);
-
     const pruneCommand = spawn({
       modulePath,
       args: ['prune', uri.fsPath, '--size', '10mb', '--output-data', '--auto'],
@@ -168,9 +165,6 @@ export default class AppMapEditorProvider
   }
 
   async generateStats(uri: vscode.Uri): Promise<FunctionStats[] | undefined> {
-    const workspaceFolder = vscode.workspace.getWorkspaceFolder(uri);
-    assert(workspaceFolder);
-
     const statsCommand = spawn({
       modulePath: await this.cliPath(),
       args: [
