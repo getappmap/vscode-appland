@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import assert from 'assert';
+import * as fs from 'fs';
 import {
   Telemetry,
   APPMAP_OPEN,
@@ -23,6 +24,7 @@ import ErrorCode from '../telemetry/definitions/errorCodes';
 import {
   getModulePath,
   OutputStream,
+  ProcessLog,
   ProgramName,
   spawn,
   verifyCommandOutput,
@@ -92,6 +94,9 @@ export default class AppMapEditorProvider
   private static readonly RELEASE_KEY = 'APPMAP_RELEASE_KEY';
   public static readonly APPMAP_OPENED = 'APPMAP_OPENED';
   public static readonly SEQ_DIAGRAM_FEEDBACK_REQUESTED = 'SEQ_DIAGRAM_FEEDBACK_REQUESTED';
+  private static readonly LARGE_APPMAP_SIZE = 10 * 1000 * 1000; // 10 MB
+  private static readonly GIANT_APPMAP_SIZE = 200 * 1000 * 1000; // 200 MB
+  private static readonly EMPTY_APPMAP_DATA = '{}';
   private static readonly analysisManager = AnalysisManager;
   private static readonly openWebviewPanels = new Map<string, vscode.WebviewPanel>();
   public currentWebView?: vscode.WebviewPanel;
@@ -102,25 +107,71 @@ export default class AppMapEditorProvider
   ) {}
 
   async openCustomDocument(uri: vscode.Uri): Promise<AppMapDocument> {
-    const data = await vscode.workspace.fs.readFile(uri);
-    const findings = this.retrieveAndProcessFindings(uri);
+    const appmapFileData = fs.statSync(uri.fsPath);
+    const appmapFileSize = appmapFileData.size;
     const functions = await this.generateStats(uri);
     const stats = { functions };
+
+    let data = AppMapEditorProvider.EMPTY_APPMAP_DATA;
+
+    // If the map is Giant, don't read it into memory
+    if (appmapFileSize > AppMapEditorProvider.GIANT_APPMAP_SIZE)
+      return new AppMapDocument(uri, data, stats, []);
+
+    // If the map is Large, automatically prune it to ~ 10 MB
+    if (appmapFileSize > AppMapEditorProvider.LARGE_APPMAP_SIZE) {
+      const prunedData = await this.pruneMap(uri);
+      if (prunedData) data = prunedData;
+    }
+
+    // If map is not Giant or Large or if pruning failed, read the data from the file
+    if (data === AppMapEditorProvider.EMPTY_APPMAP_DATA)
+      data = (await vscode.workspace.fs.readFile(uri)).toString();
+
+    const findings = this.retrieveAndProcessFindings(uri);
 
     return new AppMapDocument(uri, data, stats, findings);
   }
 
-  async generateStats(uri: vscode.Uri): Promise<FunctionStats[] | undefined> {
-    const modulePath = await getModulePath({
+  async cliPath(): Promise<string> {
+    return await getModulePath({
       dependency: ProgramName.Appmap,
       globalStoragePath: this.context.globalStorageUri.fsPath,
     });
+  }
 
-    const workspaceFolder = vscode.workspace.getWorkspaceFolder(uri);
-    assert(workspaceFolder);
+  outputLogToString(log: ProcessLog): string {
+    return log
+      .filter((line) => line.stream === OutputStream.Stdout)
+      .map((line) => line.data)
+      .join('');
+  }
 
-    const statsCommand = spawn({
+  async pruneMap(uri: vscode.Uri): Promise<string | undefined> {
+    const modulePath = await this.cliPath();
+
+    const pruneCommand = spawn({
       modulePath,
+      args: ['prune', uri.fsPath, '--size', '10mb', '--output-data', '--auto'],
+      saveOutput: true,
+    });
+
+    try {
+      await verifyCommandOutput(pruneCommand);
+      const pruneString = this.outputLogToString(pruneCommand.log);
+      return pruneString;
+    } catch (e) {
+      Telemetry.sendEvent(DEBUG_EXCEPTION, {
+        exception: e as Error,
+        errorCode: ErrorCode.PruneLargeMapError,
+        log: pruneCommand.log.toString(),
+      });
+    }
+  }
+
+  async generateStats(uri: vscode.Uri): Promise<FunctionStats[] | undefined> {
+    const statsCommand = spawn({
+      modulePath: await this.cliPath(),
       args: [
         'stats',
         '--appmap-file',
@@ -135,12 +186,7 @@ export default class AppMapEditorProvider
 
     try {
       await verifyCommandOutput(statsCommand);
-
-      const statsString = statsCommand.log
-        .filter((line) => line.stream === OutputStream.Stdout)
-        .map((line) => line.data)
-        .join('');
-
+      const statsString = this.outputLogToString(statsCommand.log);
       return JSON.parse(statsString);
     } catch (e) {
       Telemetry.sendEvent(DEBUG_EXCEPTION, {

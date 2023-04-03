@@ -11,6 +11,7 @@ enum ErrorCode {
   ExportSvgError,
   SeqDiagramFeedbackCtaError,
   GenerateMapStatsError,
+  PruneLargeMapError,
 }
 
 export default ErrorCode;
