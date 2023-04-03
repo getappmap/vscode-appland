@@ -96,6 +96,7 @@ export default class AppMapEditorProvider
   public static readonly SEQ_DIAGRAM_FEEDBACK_REQUESTED = 'SEQ_DIAGRAM_FEEDBACK_REQUESTED';
   private static readonly LARGE_APPMAP_SIZE = 10 * 1000 * 1000; // 10 MB
   private static readonly GIANT_APPMAP_SIZE = 200 * 1000 * 1000; // 200 MB
+  private static readonly EMPTY_APPMAP_DATA = '{}';
   private static readonly analysisManager = AnalysisManager;
   private static readonly openWebviewPanels = new Map<string, vscode.WebviewPanel>();
   public currentWebView?: vscode.WebviewPanel;
@@ -111,17 +112,21 @@ export default class AppMapEditorProvider
     const functions = await this.generateStats(uri);
     const stats = { functions };
 
+    let data = AppMapEditorProvider.EMPTY_APPMAP_DATA;
+
     // If the map is Giant, don't read it into memory
     if (appmapFileSize > AppMapEditorProvider.GIANT_APPMAP_SIZE)
-      return new AppMapDocument(uri, '{}', stats, []);
-
-    let data = (await vscode.workspace.fs.readFile(uri)).toString();
+      return new AppMapDocument(uri, data, stats, []);
 
     // If the map is Large, automatically prune it to ~ 10 MB
     if (appmapFileSize > AppMapEditorProvider.LARGE_APPMAP_SIZE) {
       const prunedData = await this.pruneMap(uri);
       if (prunedData) data = prunedData;
     }
+
+    // If map is not Giant or Large or if pruning failed, read the data from the file
+    if (data === AppMapEditorProvider.EMPTY_APPMAP_DATA)
+      data = (await vscode.workspace.fs.readFile(uri)).toString();
 
     const findings = this.retrieveAndProcessFindings(uri);
 
