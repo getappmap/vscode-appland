@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-import assert from 'assert';
 import * as fs from 'fs';
 import {
   Telemetry,

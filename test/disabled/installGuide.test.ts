@@ -6,7 +6,7 @@ import MockExtensionContext from '../mocks/mockExtensionContext';
 import MockFileSystemWatcher from '../mocks/mockFileSystemWatcher';
 import { mockSingleProjectWorkspace } from '../mocks/mockWorkspace';
 import * as util from '../../src/util';
-import InstallGuideWebView from '../../src/webviews/installGuideWebview';
+// import InstallGuideWebView from '../../src/webviews/installGuideWebview';
 
 // KEG: These tests are not being run currently, because they directly run operations
 // like registerWorkspaceOverview that are already run by vscode when the extension loads.
