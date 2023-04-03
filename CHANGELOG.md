@@ -1,3 +1,10 @@
+## [0.71.1](https://github.com/getappmap/vscode-appland/compare/v0.71.0...v0.71.1) (2023-04-03)
+
+
+### Bug Fixes
+
+* eliminate linter warnings ([81d9756](https://github.com/getappmap/vscode-appland/commit/81d9756fefc57894d56009182f3389691239abd9))
+
 # [0.71.0](https://github.com/getappmap/vscode-appland/compare/v0.70.2...v0.71.0) (2023-03-27)
 
 
