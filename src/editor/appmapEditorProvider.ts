@@ -294,7 +294,7 @@ export default class AppMapEditorProvider
           webviewPanel.webview.postMessage({
             type: 'init-appmap',
             shareEnabled: extensionSettings.shareEnabled,
-            defaultView: extensionSettings.defaultDiagramView,
+            defaultView: extensionSettings.defaultDiagramView || 'viewSequence',
           });
           break;
         case 'appmapStateResult':

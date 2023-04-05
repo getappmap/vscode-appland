@@ -214,7 +214,8 @@
         },
         "appMap.defaultDiagramView": {
           "type": "string",
-          "description": "Default view on which to open the AppMap: viewComponent, viewSequence, or viewFlow"
+          "description": "Default view on which to open the AppMap: viewComponent, viewSequence, or viewFlow",
+          "default": "viewSequence"
         },
         "appMap.findingsEnabled": {
           "type": "boolean",

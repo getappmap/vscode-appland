@@ -14,8 +14,8 @@ export default function mountApp() {
     const { shareEnabled, defaultView } = initialData;
     const props = {
       appMapUploadable: shareEnabled,
+      defaultView,
     };
-    if (defaultView) props.defaultView = defaultView;
 
     const app = new Vue({
       el: '#app',
