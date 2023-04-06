@@ -1,3 +1,10 @@
+# [0.72.0](https://github.com/getappmap/vscode-appland/compare/v0.71.1...v0.72.0) (2023-04-06)
+
+
+### Features
+
+* make sequence diagram the default view ([e21f4a1](https://github.com/getappmap/vscode-appland/commit/e21f4a127133be669e0038ab4149183ef140d9d7))
+
 ## [0.71.1](https://github.com/getappmap/vscode-appland/compare/v0.71.0...v0.71.1) (2023-04-03)
 
 
