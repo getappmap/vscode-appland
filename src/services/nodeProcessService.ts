@@ -4,7 +4,7 @@ import * as path from 'path';
 import lockfile from 'proper-lockfile';
 import * as vscode from 'vscode';
 import Environment from '../configuration/environment';
-import { lookupAppMapDir } from '../lib/appmapDir';
+import { AppMapConfig, appMapConfigFromFile } from '../lib/appmapDir';
 import { DEBUG_EXCEPTION, Telemetry } from '../telemetry';
 import ErrorCode from '../telemetry/definitions/errorCodes';
 import { downloadFile, getLatestVersionInfo } from '../util';
@@ -29,7 +29,7 @@ class ConfigFileProviderImpl implements ConfigFileProvider {
       .getConfiguration('files')
       .get<{ [pattern: string]: boolean }>('watcherExclude', {});
 
-    this.exclude = new vscode.RelativePattern(pattern.base, `${Object.keys(excludes).join(',')}}`);
+    this.exclude = new vscode.RelativePattern(pattern.base, `{${Object.keys(excludes).join(',')}}`);
   }
 
   public async files(): Promise<vscode.Uri[]> {
@@ -76,19 +76,42 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
   async create(folder: vscode.WorkspaceFolder): Promise<NodeProcessServiceInstance> {
     const services: ProcessWatcher[] = [];
 
-    let appMapDir = await lookupAppMapDir(folder.uri.fsPath);
-    if (appMapDir) {
-      try {
-        await fs.mkdir(path.join(folder.uri.fsPath, appMapDir), { recursive: true });
-      } catch (e) {
-        appMapDir = NodeProcessService.DEFAULT_APPMAP_DIR;
-        Telemetry.sendEvent(DEBUG_EXCEPTION, {
-          exception: new Error('Failed to create appmap_dir: ' + String(e)),
-        });
-      }
-    } else {
-      appMapDir = NodeProcessService.DEFAULT_APPMAP_DIR;
-    }
+    const configPattern = new vscode.RelativePattern(folder, `**/appmap.yml`);
+    const configFileProvider = new ConfigFileProviderImpl(configPattern);
+    const configFiles = await configFileProvider.files();
+
+    const appmapConfigCandidates = await Promise.all(
+      configFiles.map(async (configFile) => {
+        return await appMapConfigFromFile(configFile.fsPath);
+      })
+    );
+
+    // remove invalid appmap-dirs
+    let appmapConfigs = appmapConfigCandidates.filter(
+      (appmapConfig) => appmapConfig && appmapConfig.appmapDir
+    ) as Array<AppMapConfig>;
+
+    if (appmapConfigs.length < 1)
+      appmapConfigs = [
+        {
+          appmapDir: NodeProcessService.DEFAULT_APPMAP_DIR,
+          configFolder: folder.uri.fsPath,
+        } as AppMapConfig,
+      ];
+
+    await Promise.all(
+      appmapConfigs.map(async (appmapConfig) => {
+        try {
+          await fs.mkdir(path.join(appmapConfig.configFolder, appmapConfig.appmapDir), {
+            recursive: true,
+          });
+        } catch (e) {
+          Telemetry.sendEvent(DEBUG_EXCEPTION, {
+            exception: new Error('Failed to create appmap_dir: ' + String(e)),
+          });
+        }
+      })
+    );
 
     const env =
       Environment.isSystemTest || Environment.isIntegrationTest
@@ -109,33 +132,34 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
       }
     };
 
-    const configPattern = new vscode.RelativePattern(folder, `**/appmap.yml`);
-    const configFileProvider = new ConfigFileProviderImpl(configPattern);
-    const configFiles = await configFileProvider.files();
     const appmapModulePath = await tryModulePath(ProgramName.Appmap);
     if (appmapModulePath) {
-      services.push(
-        new IndexProcessWatcher(
-          configFileProvider,
-          appmapModulePath,
-          appMapDir,
-          folder.uri.fsPath,
-          env
-        )
-      );
+      appmapConfigs.forEach((appmapConfig) => {
+        services.push(
+          new IndexProcessWatcher(
+            configFileProvider,
+            appmapModulePath,
+            appmapConfig.appmapDir,
+            appmapConfig.configFolder,
+            env
+          )
+        );
+      });
     }
 
     const scannerModulePath = await tryModulePath(ProgramName.Scanner);
     if (scannerModulePath) {
-      services.push(
-        new ScanProcessWatcher(
-          configFileProvider,
-          scannerModulePath,
-          appMapDir,
-          folder.uri.fsPath,
-          env
-        )
-      );
+      appmapConfigs.forEach((appmapConfig) => {
+        services.push(
+          new ScanProcessWatcher(
+            configFileProvider,
+            scannerModulePath,
+            appmapConfig.appmapDir,
+            appmapConfig.configFolder,
+            env
+          )
+        );
+      });
     }
 
     const restartServices = () => {
