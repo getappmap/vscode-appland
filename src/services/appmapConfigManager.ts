@@ -52,7 +52,7 @@ class ConfigFileProviderImpl implements ConfigFileProvider {
 
 export class AppmapConfigManager {
   private static readonly CONFIG_PATTERN = '**/appmap.yml';
-  private static readonly DEFAULT_APPMAP_DIR = '.';
+  public static readonly DEFAULT_APPMAP_DIR = '.';
   private static workspaceConfigs = {} as WorkspaceConfigs;
   private static _initialized = false;
 
