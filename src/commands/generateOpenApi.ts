@@ -12,7 +12,7 @@ import {
 } from '../services/nodeDependencyProcess';
 import { DEBUG_EXCEPTION, GENERATE_OPENAPI, Telemetry } from '../telemetry';
 import ErrorCode from '../telemetry/definitions/errorCodes';
-import { AppMapConfig, AppmapConfigManager } from '../services/appmapConfigManager';
+import { AppmapConfigManager } from '../services/appmapConfigManager';
 
 export const GenerateOpenApi = 'appmap.generateOpenApi';
 
@@ -42,23 +42,13 @@ export default async function generateOpenApi(
           let appmapDir = AppmapConfigManager.DEFAULT_APPMAP_DIR;
           let cwd = workspaceFolder.uri.fsPath;
 
-          const { configs } = await AppmapConfigManager.getWorkspaceConfig(workspaceFolder);
-          let configToUse: AppMapConfig | undefined;
+          const appmapConfig = await AppmapConfigManager.getAppmapConfigforWorkspace(
+            workspaceFolder
+          );
 
-          if (configs.length === 1) {
-            configToUse = configs[0];
-          } else {
-            const pick = await vscode.window.showQuickPick(
-              configs.map((config) => config.configFolder),
-              { canPickMany: false, placeholder: 'Choose a folder: ' } as vscode.QuickPickOptions
-            );
-
-            configToUse = configs.find((config) => config.configFolder === pick);
-          }
-
-          if (configToUse && configToUse.appmapDir && configToUse.configFolder) {
-            appmapDir = configToUse.appmapDir;
-            cwd = configToUse.configFolder;
+          if (appmapConfig && appmapConfig.appmapDir && appmapConfig.configFolder) {
+            appmapDir = appmapConfig.appmapDir;
+            cwd = appmapConfig.configFolder;
           }
 
           const openApiCmd = spawn({

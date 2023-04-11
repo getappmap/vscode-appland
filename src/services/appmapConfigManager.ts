@@ -107,6 +107,26 @@ export class AppmapConfigManager {
     return this.workspaceConfigs[folder.uri.fsPath];
   }
 
+  public static async getAppmapConfigforWorkspace(
+    folder: vscode.WorkspaceFolder
+  ): Promise<AppmapConfig | undefined> {
+    const { configs } = await this.getWorkspaceConfig(folder);
+    let configToUse: AppmapConfig | undefined;
+
+    if (configs.length === 1) {
+      configToUse = configs[0];
+    } else if (configs.length > 1) {
+      const pick = await vscode.window.showQuickPick(
+        configs.map((config) => config.configFolder),
+        { canPickMany: false, title: 'Choose a folder: ' } as vscode.QuickPickOptions
+      );
+
+      configToUse = configs.find((config) => config.configFolder === pick);
+    }
+
+    return configToUse;
+  }
+
   private static async makeAppmapDirs(configs: AppMapConfig[]): Promise<void> {
     await Promise.all(
       configs.map(async (appmapConfig) => {
