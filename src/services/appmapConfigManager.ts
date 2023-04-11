@@ -55,6 +55,7 @@ export class AppmapConfigManager {
   public static readonly DEFAULT_APPMAP_DIR = '.';
   private static workspaceConfigs = {} as WorkspaceConfigs;
   private static _initialized = false;
+  private static _usingDefault = new Set<string>();
 
   public static async initialize() {
     const workspaceFolders = vscode.workspace.workspaceFolders || [];
@@ -80,7 +81,7 @@ export class AppmapConfigManager {
           (appmapConfig) => appmapConfig && appmapConfig.appmapDir
         ) as Array<AppmapConfig>;
 
-        if (appmapConfigs.length < 1)
+        if (appmapConfigs.length < 1) {
           appmapConfigs = [
             {
               appmapDir: AppmapConfigManager.DEFAULT_APPMAP_DIR,
@@ -88,6 +89,8 @@ export class AppmapConfigManager {
               fileProvider: configFileProvider,
             } as AppmapConfig,
           ];
+          this._usingDefault.add(folder.uri.fsPath);
+        }
 
         this.workspaceConfigs[folder.uri.fsPath] = {
           configs: appmapConfigs,
@@ -125,6 +128,10 @@ export class AppmapConfigManager {
     }
 
     return configToUse;
+  }
+
+  public static isUsingDefaultConfig(projectPath: string): boolean {
+    return this._usingDefault.has(projectPath);
   }
 
   private static async makeAppmapDirs(configs: AppmapConfig[]): Promise<void> {
