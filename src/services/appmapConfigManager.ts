@@ -130,6 +130,12 @@ export class AppmapConfigManager {
     return configToUse;
   }
 
+  public static async getAppmapDirForWorkspace(
+    folder: vscode.WorkspaceFolder
+  ): Promise<string | undefined> {
+    return (await this.getAppmapConfigforWorkspace(folder))?.appmapDir;
+  }
+
   public static isUsingDefaultConfig(projectPath: string): boolean {
     return this._usingDefault.has(projectPath);
   }
