@@ -1,11 +1,11 @@
 import { mkdir, readFile, stat, writeFile } from 'fs/promises';
 import { glob } from 'glob';
-import { basename, join } from 'path';
+import { basename, join, relative } from 'path';
 import { promisify } from 'util';
 import * as vscode from 'vscode';
 import { ProjectStateServiceInstance } from '../services/projectStateService';
 import { fileExists, getWorkspaceFolderFromPath } from '../util';
-import { lookupAppMapDir, saveAppMapDir } from './appmapDir';
+import { AppmapConfigManager } from '../services/appmapConfigManager';
 
 const CREATE_NEW_PROMPT = '<create>';
 
@@ -18,18 +18,26 @@ export default async function saveAppMapToCollection(
     vscode.window.showErrorMessage(`Cannot determine workspace folder for ${appmapUri.fsPath}`);
     return;
   }
-  let appmapDir: string | undefined = await lookupAppMapDir(projectFolder.uri.fsPath);
-  if (!appmapDir) {
+
+  let appmapDir: string | undefined;
+  const appmapConfig = await AppmapConfigManager.getAppmapConfigforWorkspace(projectFolder);
+
+  if (appmapConfig && appmapConfig.appmapDir && appmapConfig.configFolder) {
+    const appmapDirFullPath = join(appmapConfig.configFolder, appmapConfig.appmapDir);
+    appmapDir = relative(projectFolder.uri.fsPath, appmapDirFullPath);
+  }
+
+  if (!appmapDir || AppmapConfigManager.isUsingDefaultConfig(projectFolder.uri.fsPath)) {
     appmapDir = await vscode.window.showInputBox({
       title: `Enter the AppMap directory for project ${projectFolder.name}`,
     });
     if (!appmapDir) return;
 
-    if (!(await fileExists(appmapDir))) {
+    if (!(await fileExists(join(projectFolder.uri.fsPath, appmapDir)))) {
       vscode.window.showInformationMessage(`Folder '${appmapDir}' does not exist`);
       return;
     }
-    saveAppMapDir(projectFolder.uri.fsPath, appmapDir);
+    await AppmapConfigManager.saveAppMapDir(projectFolder.uri.fsPath, appmapDir);
   }
 
   const collectionsDir = join(projectFolder.uri.fsPath, appmapDir, 'collections');

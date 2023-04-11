@@ -1,4 +1,4 @@
-import { readFile, mkdir } from 'fs/promises';
+import { readFile, mkdir, appendFile } from 'fs/promises';
 import { load } from 'js-yaml';
 import { dirname, join } from 'path';
 import assert from 'node:assert';
@@ -132,6 +132,23 @@ export class AppmapConfigManager {
 
   public static isUsingDefaultConfig(projectPath: string): boolean {
     return this._usingDefault.has(projectPath);
+  }
+
+  public static async saveAppMapDir(folder: string, appmapDir: string): Promise<void> {
+    const appmapConfigFilePath = join(folder, 'appmap.yml');
+    if (await fileExists(appmapConfigFilePath)) {
+      let appmapConfig: unknown;
+      try {
+        appmapConfig = load(await readFile(appmapConfigFilePath, 'utf-8'));
+        assert(appmapConfig && typeof appmapConfig === 'object');
+      } catch (e) {
+        // Unparseable AppMap config, or related error.
+        console.warn(e);
+        return;
+      }
+      await appendFile(appmapConfigFilePath, `appmap_dir: ${appmapDir}`);
+      await this.initialize();
+    }
   }
 
   private static async makeAppmapDirs(configs: AppmapConfig[]): Promise<void> {
