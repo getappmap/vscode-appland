@@ -8,13 +8,13 @@ import { fileExists } from '../util';
 import { DEBUG_EXCEPTION, Telemetry } from '../telemetry';
 import { ConfigFileProvider } from './processWatcher';
 
-export type AppMapConfig = {
+export type AppmapConfig = {
   appmapDir: string;
   configFolder: string;
 };
 
 type WorkspaceConfig = {
-  configs: AppMapConfig[];
+  configs: AppmapConfig[];
   fileProvider: ConfigFileProviderImpl;
   pattern: vscode.RelativePattern;
   files: vscode.Uri[];
@@ -78,7 +78,7 @@ export class AppmapConfigManager {
         // remove configs without an appmap_dir
         let appmapConfigs = appmapConfigCandidates.filter(
           (appmapConfig) => appmapConfig && appmapConfig.appmapDir
-        ) as Array<AppMapConfig>;
+        ) as Array<AppmapConfig>;
 
         if (appmapConfigs.length < 1)
           appmapConfigs = [
@@ -86,7 +86,7 @@ export class AppmapConfigManager {
               appmapDir: AppmapConfigManager.DEFAULT_APPMAP_DIR,
               configFolder: folder.uri.fsPath,
               fileProvider: configFileProvider,
-            } as AppMapConfig,
+            } as AppmapConfig,
           ];
 
         this.workspaceConfigs[folder.uri.fsPath] = {
@@ -127,7 +127,7 @@ export class AppmapConfigManager {
     return configToUse;
   }
 
-  private static async makeAppmapDirs(configs: AppMapConfig[]): Promise<void> {
+  private static async makeAppmapDirs(configs: AppmapConfig[]): Promise<void> {
     await Promise.all(
       configs.map(async (appmapConfig) => {
         try {
@@ -145,9 +145,9 @@ export class AppmapConfigManager {
 
   private static async appMapConfigFromFile(
     configFilePath: string
-  ): Promise<AppMapConfig | undefined> {
+  ): Promise<AppmapConfig | undefined> {
     if (await fileExists(configFilePath)) {
-      const result = {} as AppMapConfig;
+      const result = {} as AppmapConfig;
 
       try {
         const appmapConfig = load(await readFile(configFilePath, 'utf-8'));
