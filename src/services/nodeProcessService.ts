@@ -15,7 +15,9 @@ import NodeProcessServiceInstance from './nodeProcessServiceInstance';
 import { ProcessWatcher } from './processWatcher';
 import ScanProcessWatcher from './scanProcessWatcher';
 import { WorkspaceService } from './workspaceService';
-import { AppmapConfigManager } from './appmapConfigManager';
+import { AppmapConfigManager, AppmapConfigManagerInstance } from './appmapConfigManager';
+import { workspaceServices } from './workspaceServices';
+import assert from 'assert';
 
 const YARN_JS = 'yarn.js';
 const PACKAGE_JSON = 'package.json';
@@ -52,12 +54,18 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
   async create(folder: vscode.WorkspaceFolder): Promise<NodeProcessServiceInstance> {
     const services: ProcessWatcher[] = [];
 
+    const appmapConfigManagerInstance = workspaceServices().getServiceInstanceFromClass(
+      AppmapConfigManager,
+      folder
+    ) as AppmapConfigManagerInstance | undefined;
+    assert(appmapConfigManagerInstance);
+
     const {
       configs: appmapConfigs,
       fileProvider: configFileProvider,
       pattern: configPattern,
       files: configFiles,
-    } = await AppmapConfigManager.getWorkspaceConfig(folder);
+    } = appmapConfigManagerInstance.workspaceConfig;
 
     const env =
       Environment.isSystemTest || Environment.isIntegrationTest

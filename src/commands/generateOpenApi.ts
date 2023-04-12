@@ -12,7 +12,8 @@ import {
 } from '../services/nodeDependencyProcess';
 import { DEBUG_EXCEPTION, GENERATE_OPENAPI, Telemetry } from '../telemetry';
 import ErrorCode from '../telemetry/definitions/errorCodes';
-import { AppmapConfigManager } from '../services/appmapConfigManager';
+import { AppmapConfigManager, AppmapConfigManagerInstance } from '../services/appmapConfigManager';
+import { workspaceServices } from '../services/workspaceServices';
 
 export const GenerateOpenApi = 'appmap.generateOpenApi';
 
@@ -42,9 +43,13 @@ export default async function generateOpenApi(
           let appmapDir = AppmapConfigManager.DEFAULT_APPMAP_DIR;
           let cwd = workspaceFolder.uri.fsPath;
 
-          const appmapConfig = await AppmapConfigManager.getAppmapConfigforWorkspace(
+          const appmapConfigManagerInstance = workspaceServices().getServiceInstanceFromClass(
+            AppmapConfigManager,
             workspaceFolder
-          );
+          ) as AppmapConfigManagerInstance | undefined;
+          assert(appmapConfigManagerInstance);
+
+          const appmapConfig = await appmapConfigManagerInstance.getAppmapConfig();
 
           if (appmapConfig && appmapConfig.appmapDir && appmapConfig.configFolder) {
             appmapDir = appmapConfig.appmapDir;

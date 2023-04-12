@@ -5,7 +5,9 @@ import { promisify } from 'util';
 import * as vscode from 'vscode';
 import { ProjectStateServiceInstance } from '../services/projectStateService';
 import { fileExists, getWorkspaceFolderFromPath } from '../util';
-import { AppmapConfigManager } from '../services/appmapConfigManager';
+import { AppmapConfigManager, AppmapConfigManagerInstance } from '../services/appmapConfigManager';
+import { workspaceServices } from '../services/workspaceServices';
+import assert from 'assert';
 
 const CREATE_NEW_PROMPT = '<create>';
 
@@ -20,14 +22,20 @@ export default async function saveAppMapToCollection(
   }
 
   let appmapDir: string | undefined;
-  const appmapConfig = await AppmapConfigManager.getAppmapConfigforWorkspace(projectFolder);
+  const appmapConfigManagerInstance = workspaceServices().getServiceInstanceFromClass(
+    AppmapConfigManager,
+    projectFolder
+  ) as AppmapConfigManagerInstance | undefined;
+  assert(appmapConfigManagerInstance);
+
+  const appmapConfig = await appmapConfigManagerInstance.getAppmapConfig();
 
   if (appmapConfig && appmapConfig.appmapDir && appmapConfig.configFolder) {
     const appmapDirFullPath = join(appmapConfig.configFolder, appmapConfig.appmapDir);
     appmapDir = relative(projectFolder.uri.fsPath, appmapDirFullPath);
   }
 
-  if (!appmapDir || AppmapConfigManager.isUsingDefaultConfig(projectFolder.uri.fsPath)) {
+  if (!appmapDir || appmapConfigManagerInstance.isUsingDefaultConfig) {
     appmapDir = await vscode.window.showInputBox({
       title: `Enter the AppMap directory for project ${projectFolder.name}`,
     });
@@ -37,7 +45,7 @@ export default async function saveAppMapToCollection(
       vscode.window.showInformationMessage(`Folder '${appmapDir}' does not exist`);
       return;
     }
-    await AppmapConfigManager.saveAppMapDir(projectFolder.uri.fsPath, appmapDir);
+    await appmapConfigManagerInstance.saveAppMapDir(projectFolder.uri.fsPath, appmapDir);
   }
 
   const collectionsDir = join(projectFolder.uri.fsPath, appmapDir, 'collections');

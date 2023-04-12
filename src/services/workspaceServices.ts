@@ -105,6 +105,22 @@ export class WorkspaceServices implements vscode.Disposable {
   }
 
   /**
+   * Gets the single service instance (or `undefined`) from the class for a given folder.
+   */
+  getServiceInstanceFromClass<
+    ServiceInstanceType extends WorkspaceServiceInstance,
+    ServiceType extends WorkspaceService<ServiceInstanceType>
+  >(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    serviceClass: { new (...args: any[]): ServiceType },
+    folder: vscode.WorkspaceFolder
+  ): ServiceInstanceType | undefined {
+    const service = this.getService(serviceClass);
+    if (!service) return;
+    return this.getServiceInstance(service, folder) as ServiceInstanceType;
+  }
+
+  /**
    * Gets all instances of a given service, with an optional folder name.
    */
   getServiceInstances<ServiceInstanceType extends WorkspaceServiceInstance>(

@@ -98,7 +98,9 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
     const configWatcher = new AppMapConfigWatcher();
     await workspaceServices.enroll(configWatcher);
-    AppmapConfigManager.register(configWatcher);
+
+    const configManager = new AppmapConfigManager();
+    await workspaceServices.enroll(configManager);
 
     const classMapIndex = new ClassMapIndex();
     const lineInfoIndex = new LineInfoIndex(classMapIndex);
