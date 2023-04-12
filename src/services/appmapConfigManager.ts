@@ -7,6 +7,7 @@ import * as vscode from 'vscode';
 import { fileExists } from '../util';
 import { DEBUG_EXCEPTION, Telemetry } from '../telemetry';
 import { ConfigFileProvider } from './processWatcher';
+import { AppMapConfigWatcher } from './appMapConfigWatcher';
 
 export type AppmapConfig = {
   appmapDir: string;
@@ -56,53 +57,30 @@ export class AppmapConfigManager {
   private static workspaceConfigs = {} as WorkspaceConfigs;
   private static _initialized = false;
   private static _usingDefault = new Set<string>();
+  private static _configWatcher: AppMapConfigWatcher | undefined;
+  private static _watcherConfigured = false;
+
+  public static register(watcher: AppMapConfigWatcher): void {
+    this._configWatcher = watcher;
+  }
 
   public static async initialize() {
     const workspaceFolders = vscode.workspace.workspaceFolders || [];
 
     await Promise.all(
       workspaceFolders.map(async (folder) => {
-        const configPattern = new vscode.RelativePattern(
-          folder,
-          AppmapConfigManager.CONFIG_PATTERN
-        );
+        const workspaceConfig = await this.configForWorkspace(folder);
 
-        const configFileProvider = new ConfigFileProviderImpl(configPattern);
-        const configFiles = await configFileProvider.files();
+        this.workspaceConfigs[folder.uri.fsPath] = workspaceConfig;
+        await this.makeAppmapDirs(workspaceConfig.configs);
 
-        const appmapConfigCandidates = await Promise.all(
-          configFiles.map(async (configFile) => {
-            return await AppmapConfigManager.appMapConfigFromFile(configFile.fsPath);
-          })
-        );
-
-        // remove configs without an appmap_dir
-        let appmapConfigs = appmapConfigCandidates.filter(
-          (appmapConfig) => appmapConfig && appmapConfig.appmapDir
-        ) as Array<AppmapConfig>;
-
-        if (appmapConfigs.length < 1) {
-          appmapConfigs = [
-            {
-              appmapDir: AppmapConfigManager.DEFAULT_APPMAP_DIR,
-              configFolder: folder.uri.fsPath,
-              fileProvider: configFileProvider,
-            } as AppmapConfig,
-          ];
-          this._usingDefault.add(folder.uri.fsPath);
+        if (this._configWatcher) {
+          await this._configWatcher?.create(folder);
         }
-
-        this.workspaceConfigs[folder.uri.fsPath] = {
-          configs: appmapConfigs,
-          fileProvider: configFileProvider,
-          pattern: configPattern,
-          files: configFiles,
-        } as WorkspaceConfig;
-
-        await this.makeAppmapDirs(appmapConfigs);
       })
     );
     this._initialized = true;
+    this.setupWatcher();
   }
 
   public static async getWorkspaceConfig(folder: vscode.WorkspaceFolder): Promise<WorkspaceConfig> {
@@ -155,6 +133,74 @@ export class AppmapConfigManager {
       await appendFile(appmapConfigFilePath, `appmap_dir: ${appmapDir}`);
       await this.initialize();
     }
+  }
+
+  private static async configForWorkspace(
+    folder: vscode.WorkspaceFolder
+  ): Promise<WorkspaceConfig> {
+    const configPattern = new vscode.RelativePattern(folder, AppmapConfigManager.CONFIG_PATTERN);
+    const configFileProvider = new ConfigFileProviderImpl(configPattern);
+    const configFiles = await configFileProvider.files();
+
+    const appmapConfigCandidates = await Promise.all(
+      configFiles.map(async (configFile) => {
+        return await AppmapConfigManager.appMapConfigFromFile(configFile.fsPath);
+      })
+    );
+
+    // remove configs without an appmap_dir
+    let appmapConfigs = appmapConfigCandidates.filter(
+      (appmapConfig) => appmapConfig && appmapConfig.appmapDir
+    ) as Array<AppmapConfig>;
+
+    if (appmapConfigs.length < 1) {
+      appmapConfigs = [
+        {
+          appmapDir: AppmapConfigManager.DEFAULT_APPMAP_DIR,
+          configFolder: folder.uri.fsPath,
+          fileProvider: configFileProvider,
+        } as AppmapConfig,
+      ];
+      this._usingDefault.add(folder.uri.fsPath);
+    } else {
+      this._usingDefault.delete(folder.uri.fsPath);
+    }
+
+    return {
+      configs: appmapConfigs,
+      fileProvider: configFileProvider,
+      pattern: configPattern,
+      files: configFiles,
+    };
+  }
+
+  private static setupWatcher() {
+    if (!this._configWatcher || this._watcherConfigured) return;
+
+    this._configWatcher.onCreate(async ({ workspaceFolder, uri }) => {
+      const newConfig = await this.appMapConfigFromFile(uri.fsPath);
+      const currentWorkspaceConfig = this.workspaceConfigs[workspaceFolder.uri.fsPath];
+
+      if (newConfig) currentWorkspaceConfig.configs.push(newConfig);
+    });
+
+    this._configWatcher.onDelete(({ workspaceFolder, uri }) => {
+      const currentWorkspaceConfig = this.workspaceConfigs[workspaceFolder.uri.fsPath];
+
+      currentWorkspaceConfig.configs = currentWorkspaceConfig.configs.filter(
+        (config) => config.configFolder !== dirname(uri.fsPath)
+      );
+    });
+
+    this._configWatcher.onChange(async ({ workspaceFolder, uri }) => {
+      const newConfig = await this.appMapConfigFromFile(uri.fsPath);
+      const currentWorkspaceConfig = this.workspaceConfigs[workspaceFolder.uri.fsPath];
+
+      currentWorkspaceConfig.configs = currentWorkspaceConfig.configs.map((config) =>
+        config.configFolder === newConfig?.configFolder ? newConfig : config
+      );
+    });
+    this._watcherConfigured = true;
   }
 
   private static async makeAppmapDirs(configs: AppmapConfig[]): Promise<void> {
