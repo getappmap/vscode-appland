@@ -1,3 +1,10 @@
+# [0.73.0](https://github.com/getappmap/vscode-appland/compare/v0.72.0...v0.73.0) (2023-04-13)
+
+
+### Features
+
+* release updates to sidebar sign-in ([543aa69](https://github.com/getappmap/vscode-appland/commit/543aa69e34c6c67614c706ffc16520cabb69584f))
+
 # [0.72.0](https://github.com/getappmap/vscode-appland/compare/v0.71.1...v0.72.0) (2023-04-06)
 
 
