@@ -7,7 +7,7 @@ import * as vscode from 'vscode';
 import { fileExists } from '../util';
 import { DEBUG_EXCEPTION, Telemetry } from '../telemetry';
 import { ConfigFileProvider } from './processWatcher';
-import { AppMapConfigWatcher } from './appMapConfigWatcher';
+import { AppMapConfigWatcher, AppMapConfigWatcherInstance } from './appMapConfigWatcher';
 import { WorkspaceService, WorkspaceServiceInstance } from './workspaceService';
 import { workspaceServices } from './workspaceServices';
 
@@ -19,8 +19,6 @@ export type AppmapConfig = {
 type WorkspaceConfig = {
   configs: AppmapConfig[];
   fileProvider: ConfigFileProviderImpl;
-  pattern: vscode.RelativePattern;
-  files: vscode.Uri[];
 };
 
 class ConfigFileProviderImpl implements ConfigFileProvider {
@@ -53,30 +51,40 @@ export class AppmapConfigManagerInstance implements WorkspaceServiceInstance {
   private readonly CONFIG_PATTERN = '**/appmap.yml';
 
   private _configs: AppmapConfig[] = [];
-  private _configFiles: vscode.Uri[] = [];
-  private _configPattern: vscode.RelativePattern;
   private _configFileProvider: ConfigFileProviderImpl;
-  private _configWatcher: AppMapConfigWatcher | undefined;
+  private _configWatcher: AppMapConfigWatcherInstance;
   private _usingDefault = false;
   private _watcherConfigured = false;
+  private _onConfigChanged = new vscode.EventEmitter<void>();
+  public readonly onConfigChanged = this._onConfigChanged.event;
 
   constructor(public folder: vscode.WorkspaceFolder) {
-    this._configPattern = new vscode.RelativePattern(folder, this.CONFIG_PATTERN);
-    this._configFileProvider = new ConfigFileProviderImpl(this._configPattern);
-    this._configWatcher = workspaceServices().getService(AppMapConfigWatcher);
+    const configPattern = new vscode.RelativePattern(folder, this.CONFIG_PATTERN);
+    this._configFileProvider = new ConfigFileProviderImpl(configPattern);
+    const configWatcher = workspaceServices().getServiceInstanceFromClass(
+      AppMapConfigWatcher,
+      folder
+    ) as AppMapConfigWatcherInstance | undefined;
+    assert(configWatcher);
+    this._configWatcher = configWatcher;
   }
 
   public async initialize(): Promise<AppmapConfigManagerInstance> {
-    this._configFiles = await this._configFileProvider.files();
+    await this.update();
+    return this;
+  }
+
+  private async update(): Promise<void> {
+    const configFiles = await this._configFileProvider.files();
 
     const appmapConfigCandidates = await Promise.all(
-      this._configFiles.map(async (configFile) => {
+      configFiles.map(async (configFile) => {
         return await this.appMapConfigFromFile(configFile.fsPath);
       })
     );
 
     // remove configs without an appmap_dir
-    // this might need to change in the future if we expand this class' responsibilities
+    // might need to change if we expand the responsibilities of this class
     let appmapConfigs = appmapConfigCandidates.filter(
       (appmapConfig) => appmapConfig && appmapConfig.appmapDir
     ) as Array<AppmapConfig>;
@@ -89,21 +97,19 @@ export class AppmapConfigManagerInstance implements WorkspaceServiceInstance {
         } as AppmapConfig,
       ];
       this._usingDefault = true;
+    } else {
+      this._usingDefault = false;
     }
 
     this._configs = appmapConfigs;
     await this.makeAppmapDirs();
     this.setupWatcher();
-
-    return this;
   }
 
   public get workspaceConfig(): WorkspaceConfig {
     return {
       configs: this._configs,
       fileProvider: this._configFileProvider,
-      pattern: this._configPattern,
-      files: this._configFiles,
     };
   }
 
@@ -143,7 +149,7 @@ export class AppmapConfigManagerInstance implements WorkspaceServiceInstance {
         return;
       }
       await appendFile(appmapConfigFilePath, `appmap_dir: ${appmapDir}`);
-      await this.initialize();
+      await this.update();
     }
   }
 
@@ -184,39 +190,42 @@ export class AppmapConfigManagerInstance implements WorkspaceServiceInstance {
   }
 
   private setupWatcher(): void {
-    if (!this._configWatcher || this._watcherConfigured) return;
+    if (this._watcherConfigured) return;
 
-    this._configWatcher?.onCreate(async ({ workspaceFolder, uri }) => {
-      if (this.folder !== workspaceFolder) return;
+    this._configWatcher.onCreate(async ({ uri }) => {
       const newConfig = await this.appMapConfigFromFile(uri.fsPath);
       const currentWorkspaceConfig = this.workspaceConfig;
 
       if (newConfig) currentWorkspaceConfig.configs.push(newConfig);
-      await this.initialize();
+
+      await this.update();
+      this._onConfigChanged.fire();
     });
 
-    this._configWatcher?.onDelete(async ({ workspaceFolder, uri }) => {
-      if (this.folder !== workspaceFolder) return;
+    this._configWatcher.onDelete(async ({ uri }) => {
       const currentWorkspaceConfig = this.workspaceConfig;
 
       currentWorkspaceConfig.configs = currentWorkspaceConfig.configs.filter(
         (config) => config.configFolder !== dirname(uri.fsPath)
       );
-      await this.initialize();
+
+      await this.update();
+      this._onConfigChanged.fire();
     });
 
-    this._configWatcher?.onChange(async ({ workspaceFolder, uri }) => {
-      if (this.folder !== workspaceFolder) return;
+    this._configWatcher.onChange(async ({ uri }) => {
       const newConfig = await this.appMapConfigFromFile(uri.fsPath);
       const currentWorkspaceConfig = this.workspaceConfig;
 
       currentWorkspaceConfig.configs = currentWorkspaceConfig.configs.map((config) =>
         config.configFolder === newConfig?.configFolder ? newConfig : config
       );
-      await this.initialize();
+
+      await this.update();
+      this._onConfigChanged.fire();
     });
 
-    this._watcherConfigured;
+    this._watcherConfigured = true;
   }
 
   dispose(): void {

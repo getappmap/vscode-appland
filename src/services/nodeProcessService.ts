@@ -8,7 +8,6 @@ import Environment from '../configuration/environment';
 import { DEBUG_EXCEPTION, Telemetry } from '../telemetry';
 import ErrorCode from '../telemetry/definitions/errorCodes';
 import { downloadFile, getLatestVersionInfo } from '../util';
-import ChangeEventDebouncer from './changeEventDebouncer';
 import IndexProcessWatcher from './indexProcessWatcher';
 import { getModulePath, ProgramName, spawn } from './nodeDependencyProcess';
 import NodeProcessServiceInstance from './nodeProcessServiceInstance';
@@ -52,6 +51,39 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
   }
 
   async create(folder: vscode.WorkspaceFolder): Promise<NodeProcessServiceInstance> {
+    const services = await this.createServices(folder);
+    const instance = new NodeProcessServiceInstance(folder, services);
+    instance.initialize();
+
+    const configManagerInstance = workspaceServices().getServiceInstanceFromClass(
+      AppmapConfigManager,
+      folder
+    ) as AppmapConfigManagerInstance | undefined;
+    assert(configManagerInstance);
+
+    configManagerInstance.onConfigChanged(async () => this.handleConfigChange(folder));
+
+    return instance;
+  }
+
+  private async handleConfigChange(folder: vscode.WorkspaceFolder): Promise<void> {
+    const currentInstance = workspaceServices().getServiceInstanceFromClass(
+      NodeProcessService,
+      folder
+    ) as NodeProcessServiceInstance | undefined;
+    assert(currentInstance);
+
+    workspaceServices().unenrollServiceInstance(folder, currentInstance);
+    await currentInstance.stop();
+    currentInstance.dispose();
+
+    const newServices = await this.createServices(folder);
+    const newInstance = new NodeProcessServiceInstance(folder, newServices);
+    newInstance.initialize();
+    workspaceServices().enrollServiceInstance(folder, newInstance, this);
+  }
+
+  private async createServices(folder: vscode.WorkspaceFolder): Promise<ProcessWatcher[]> {
     const services: ProcessWatcher[] = [];
 
     const appmapConfigManagerInstance = workspaceServices().getServiceInstanceFromClass(
@@ -60,12 +92,8 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
     ) as AppmapConfigManagerInstance | undefined;
     assert(appmapConfigManagerInstance);
 
-    const {
-      configs: appmapConfigs,
-      fileProvider: configFileProvider,
-      pattern: configPattern,
-      files: configFiles,
-    } = appmapConfigManagerInstance.workspaceConfig;
+    const { configs: appmapConfigs, fileProvider: configFileProvider } =
+      appmapConfigManagerInstance.workspaceConfig;
 
     const env =
       Environment.isSystemTest || Environment.isIntegrationTest
@@ -116,45 +144,7 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
       });
     }
 
-    const restartServices = () => {
-      configFileProvider.reset();
-      services.forEach((service) => {
-        service.restart();
-      });
-    };
-
-    const configFileEvent = new ChangeEventDebouncer<vscode.Uri>(1000);
-    const watcher = vscode.workspace.createFileSystemWatcher(configPattern);
-
-    const files = new Set<string>(configFiles.map((uri: vscode.Uri) => uri.fsPath));
-    const cloneFiles = () => [...files];
-    const addFile = (uri: vscode.Uri) => files.add(uri.fsPath);
-    const removeFile = (uri: vscode.Uri) => files.delete(uri.fsPath);
-
-    this.context.subscriptions.push(
-      watcher,
-      watcher.onDidChange((e) => {
-        const oldFiles = cloneFiles();
-        addFile(e);
-        if (oldFiles.join('\n') !== [...files].join('\n')) configFileEvent.fire(e);
-      }),
-      watcher.onDidCreate((e) => {
-        const oldFiles = cloneFiles();
-        addFile(e);
-        if (oldFiles.join('\n') !== [...files].join('\n')) configFileEvent.fire(e);
-      }),
-      watcher.onDidDelete((e) => {
-        const oldFiles = cloneFiles();
-        removeFile(e);
-        if (oldFiles.join('\n') !== [...files].join('\n')) configFileEvent.fire(e);
-      })
-    );
-    configFileEvent.event(restartServices);
-
-    const instance = new NodeProcessServiceInstance(folder, services);
-    instance.initialize();
-
-    return instance;
+    return services;
   }
 
   protected get yarnPath(): string {

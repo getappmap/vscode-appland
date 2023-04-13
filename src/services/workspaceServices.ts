@@ -135,7 +135,7 @@ export class WorkspaceServices implements vscode.Disposable {
     ) as ServiceInstanceType[];
   }
 
-  private enrollServiceInstance(
+  enrollServiceInstance(
     folder: vscode.WorkspaceFolder,
     instance: WorkspaceServiceInstance,
     service: WorkspaceService<WorkspaceServiceInstance>
@@ -147,6 +147,17 @@ export class WorkspaceServices implements vscode.Disposable {
     }
     instances.push(instance);
     this.instanceServices.set(instance, service);
+  }
+
+  unenrollServiceInstance(
+    folder: vscode.WorkspaceFolder,
+    instanceToRemove: WorkspaceServiceInstance
+  ) {
+    const instances = this.workspaceServiceInstances.get(folder);
+    if (!instances) return;
+    const updatedInstances = instances.filter((instance) => instance !== instanceToRemove);
+    this.workspaceServiceInstances.set(folder, updatedInstances);
+    this.instanceServices.delete(instanceToRemove);
   }
 
   dispose(): void {
