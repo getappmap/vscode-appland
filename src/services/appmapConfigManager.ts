@@ -129,6 +129,7 @@ export class AppmapConfigManagerInstance implements WorkspaceServiceInstance {
         { canPickMany: false, title: 'Choose a folder: ' } as vscode.QuickPickOptions
       );
 
+      if (!pick) return;
       configToUse = configs.find((config) => config.configFolder === pick);
     }
 
@@ -167,8 +168,9 @@ export class AppmapConfigManagerInstance implements WorkspaceServiceInstance {
           result.appmapDir = appmapConfig.appmap_dir;
 
         return result;
-      } catch {
+      } catch (e) {
         // Unparseable AppMap config, or related error.
+        console.warn(e);
       }
     }
   }
@@ -228,13 +230,16 @@ export class AppmapConfigManagerInstance implements WorkspaceServiceInstance {
     this._watcherConfigured = true;
   }
 
-  dispose(): void {
-    return;
+  public dispose(): void {
+    this._onConfigChanged.dispose();
+    this._configWatcher.dispose();
+    this._configFileProvider.reset();
+    this._configs = [];
   }
 }
 
 export class AppmapConfigManager implements WorkspaceService<AppmapConfigManagerInstance> {
-  public static readonly DEFAULT_APPMAP_DIR = '.';
+  public static readonly DEFAULT_APPMAP_DIR = 'tmp/appmap';
 
   public async create(folder: vscode.WorkspaceFolder): Promise<AppmapConfigManagerInstance> {
     const instance = new AppmapConfigManagerInstance(folder);

@@ -50,8 +50,9 @@ export default async function generateOpenApi(
           assert(appmapConfigManagerInstance);
 
           const appmapConfig = await appmapConfigManagerInstance.getAppmapConfig();
+          if (!appmapConfig) return;
 
-          if (appmapConfig && appmapConfig.appmapDir && appmapConfig.configFolder) {
+          if (appmapConfig.appmapDir && appmapConfig.configFolder) {
             appmapDir = appmapConfig.appmapDir;
             cwd = appmapConfig.configFolder;
           }

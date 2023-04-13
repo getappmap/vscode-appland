@@ -29,8 +29,9 @@ export default async function saveAppMapToCollection(
   assert(appmapConfigManagerInstance);
 
   const appmapConfig = await appmapConfigManagerInstance.getAppmapConfig();
+  if (!appmapConfig) return;
 
-  if (appmapConfig && appmapConfig.appmapDir && appmapConfig.configFolder) {
+  if (appmapConfig.appmapDir && appmapConfig.configFolder) {
     const appmapDirFullPath = join(appmapConfig.configFolder, appmapConfig.appmapDir);
     appmapDir = relative(projectFolder.uri.fsPath, appmapDirFullPath);
   }
