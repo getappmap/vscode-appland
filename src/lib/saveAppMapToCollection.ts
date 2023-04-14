@@ -22,6 +22,8 @@ export default async function saveAppMapToCollection(
   }
 
   let appmapDir: string | undefined;
+  let configFolder = projectFolder.uri.fsPath;
+
   const appmapConfigManagerInstance = workspaceServices().getServiceInstanceFromClass(
     AppmapConfigManager,
     projectFolder
@@ -29,14 +31,14 @@ export default async function saveAppMapToCollection(
   assert(appmapConfigManagerInstance);
 
   const appmapConfig = await appmapConfigManagerInstance.getAppmapConfig();
-  if (!appmapConfig) return;
 
-  if (appmapConfig.appmapDir && appmapConfig.configFolder) {
+  if (appmapConfig) {
     const appmapDirFullPath = join(appmapConfig.configFolder, appmapConfig.appmapDir);
     appmapDir = relative(projectFolder.uri.fsPath, appmapDirFullPath);
+    configFolder = appmapConfig.configFolder;
   }
 
-  if (!appmapDir || appmapConfigManagerInstance.isUsingDefaultConfig) {
+  if (appmapConfig?.usingDefault || appmapConfigManagerInstance.isUsingDefaultConfig) {
     appmapDir = await vscode.window.showInputBox({
       title: `Enter the AppMap directory for project ${projectFolder.name}`,
     });
@@ -46,10 +48,13 @@ export default async function saveAppMapToCollection(
       vscode.window.showInformationMessage(`Folder '${appmapDir}' does not exist`);
       return;
     }
-    await appmapConfigManagerInstance.saveAppMapDir(projectFolder.uri.fsPath, appmapDir);
-  }
 
-  const collectionsDir = join(projectFolder.uri.fsPath, appmapDir, 'collections');
+    if (appmapConfig && appmapConfig.configFolder)
+      await appmapConfigManagerInstance.saveAppMapDir(appmapConfig.configFolder, appmapDir);
+  }
+  if (!appmapDir) return;
+
+  const collectionsDir = join(configFolder, appmapDir, 'collections');
 
   let collectionNames: string[];
   {

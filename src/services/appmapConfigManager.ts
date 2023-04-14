@@ -14,6 +14,7 @@ import { workspaceServices } from './workspaceServices';
 export type AppmapConfig = {
   appmapDir: string;
   configFolder: string;
+  usingDefault?: boolean;
 };
 
 type WorkspaceConfig = {
@@ -96,6 +97,7 @@ export class AppmapConfigManagerInstance implements WorkspaceServiceInstance {
         {
           appmapDir: AppmapConfigManager.DEFAULT_APPMAP_DIR,
           configFolder: this.folder.uri.fsPath,
+          usingDefault: true,
         } as AppmapConfig,
       ];
       this._usingDefault = true;
@@ -142,8 +144,8 @@ export class AppmapConfigManagerInstance implements WorkspaceServiceInstance {
     return configToUse;
   }
 
-  public async saveAppMapDir(folder: string, appmapDir: string): Promise<void> {
-    const appmapConfigFilePath = join(folder, 'appmap.yml');
+  public async saveAppMapDir(configFolder: string, appmapDir: string): Promise<void> {
+    const appmapConfigFilePath = join(configFolder, 'appmap.yml');
 
     if (await fileExists(appmapConfigFilePath)) {
       let appmapConfig: unknown;
@@ -166,12 +168,19 @@ export class AppmapConfigManagerInstance implements WorkspaceServiceInstance {
 
       try {
         const appmapConfig = load(await readFile(configFilePath, 'utf-8'));
-        assert(appmapConfig && typeof appmapConfig === 'object');
-
         result.configFolder = dirname(configFilePath);
-
-        if ('appmap_dir' in appmapConfig && typeof appmapConfig.appmap_dir === 'string')
+        if (
+          appmapConfig &&
+          typeof appmapConfig === 'object' &&
+          'appmap_dir' in appmapConfig &&
+          typeof appmapConfig.appmap_dir === 'string'
+        ) {
           result.appmapDir = appmapConfig.appmap_dir;
+          result.usingDefault = false;
+        } else {
+          result.appmapDir = AppmapConfigManager.DEFAULT_APPMAP_DIR;
+          result.usingDefault = true;
+        }
 
         return result;
       } catch (e) {
