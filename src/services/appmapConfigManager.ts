@@ -53,6 +53,7 @@ export class AppmapConfigManagerInstance implements WorkspaceServiceInstance {
   private _configs: AppmapConfig[] = [];
   private _configFileProvider: ConfigFileProviderImpl;
   private _configWatcher: AppMapConfigWatcherInstance;
+  private _hasConfigFile = false;
   private _usingDefault = false;
   private _watcherConfigured = false;
   private _onConfigChanged = new vscode.EventEmitter<void>();
@@ -76,6 +77,7 @@ export class AppmapConfigManagerInstance implements WorkspaceServiceInstance {
 
   private async update(): Promise<void> {
     const configFiles = await this._configFileProvider.files();
+    this._hasConfigFile = configFiles.length > 0;
 
     const appmapConfigCandidates = await Promise.all(
       configFiles.map(async (configFile) => {
@@ -89,7 +91,7 @@ export class AppmapConfigManagerInstance implements WorkspaceServiceInstance {
       (appmapConfig) => appmapConfig && appmapConfig.appmapDir
     ) as Array<AppmapConfig>;
 
-    if (appmapConfigs.length < 1) {
+    if (this._hasConfigFile && appmapConfigs.length === 0) {
       appmapConfigs = [
         {
           appmapDir: AppmapConfigManager.DEFAULT_APPMAP_DIR,
@@ -115,6 +117,10 @@ export class AppmapConfigManagerInstance implements WorkspaceServiceInstance {
 
   public get isUsingDefaultConfig(): boolean {
     return this._usingDefault;
+  }
+
+  public get hasConfigFile(): boolean {
+    return this._hasConfigFile;
   }
 
   public async getAppmapConfig(): Promise<AppmapConfig | undefined> {

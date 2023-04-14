@@ -119,7 +119,7 @@ export const AGENT_CONFIG_PRESENT = new TelemetryDataProvider({
       workspaceFolder
     ) as AppmapConfigManagerInstance | undefined;
 
-    const isPresent = configManager && !configManager.isUsingDefaultConfig;
+    const isPresent = !!(configManager && configManager.hasConfigFile);
     return String(isPresent);
   },
 });

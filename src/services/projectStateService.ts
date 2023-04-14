@@ -225,7 +225,7 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
       AppmapConfigManager,
       this.folder
     ) as AppmapConfigManagerInstance | undefined;
-    return !!(configManager && !configManager.isUsingDefaultConfig);
+    return !!(configManager && configManager.hasConfigFile);
   }
 
   private async syncConfigurationState(): Promise<void> {
