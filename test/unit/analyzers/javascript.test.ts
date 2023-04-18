@@ -24,12 +24,21 @@ describe('JavaScript analyzer', () => {
   test('rejects old mocha', { devDependencies: { mocha: '^7' } }, (f) =>
     expect(f.test).to.include({ title: 'mocha', score: 'bad' })
   );
+
+  test('detects jest', { devDependencies: { jest: 'latest' } }, (f) =>
+    expect(f.test).to.include({ title: 'jest', score: 'ok' })
+  );
+
+  test('rejects old jest', { devDependencies: { jest: '^24' } }, (f) =>
+    expect(f.test).to.include({ title: 'jest', score: 'bad' })
+  );
 });
 
 function test(title: string, json: unknown, verifier: (f: Features) => void) {
   it(title, async () => {
     const fs = usePackageJson(json);
     const features = (await analyze(testFolder))?.features;
+    expect(features).to.exist;
     assert(features);
     verifier(features);
     fs.verify();
@@ -54,3 +63,5 @@ function usePackageJson(json: unknown) {
 
   return fs;
 }
+
+afterEach(sinon.restore);
