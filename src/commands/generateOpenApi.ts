@@ -40,7 +40,7 @@ export default async function generateOpenApi(
             globalStoragePath: context.globalStorageUri.fsPath,
           });
 
-          let appmapDir = AppmapConfigManager.DEFAULT_APPMAP_DIR;
+          let appmapDir = '.';
           let cwd = workspaceFolder.uri.fsPath;
 
           const appmapConfigManagerInstance = workspaceServices().getServiceInstanceFromClass(
@@ -50,9 +50,8 @@ export default async function generateOpenApi(
           assert(appmapConfigManagerInstance);
 
           const appmapConfig = await appmapConfigManagerInstance.getAppmapConfig();
-          if (!appmapConfig) return;
 
-          if (appmapConfig.appmapDir && appmapConfig.configFolder) {
+          if (appmapConfig && appmapConfig.appmapDir && appmapConfig.configFolder) {
             appmapDir = appmapConfig.appmapDir;
             cwd = appmapConfig.configFolder;
           }

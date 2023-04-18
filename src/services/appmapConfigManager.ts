@@ -209,38 +209,15 @@ export class AppmapConfigManagerInstance implements WorkspaceServiceInstance {
   private setupWatcher(): void {
     if (this._watcherConfigured) return;
 
-    this._configWatcher.onCreate(async ({ uri }) => {
-      const newConfig = await this.appMapConfigFromFile(uri.fsPath);
-      const currentWorkspaceConfig = this.workspaceConfig;
-
-      if (newConfig) currentWorkspaceConfig.configs.push(newConfig);
-
+    const handleConfigChange = async () => {
+      this._configFileProvider.reset();
       await this.update();
       this._onConfigChanged.fire();
-    });
+    };
 
-    this._configWatcher.onDelete(async ({ uri }) => {
-      const currentWorkspaceConfig = this.workspaceConfig;
-
-      currentWorkspaceConfig.configs = currentWorkspaceConfig.configs.filter(
-        (config) => config.configFolder !== dirname(uri.fsPath)
-      );
-
-      await this.update();
-      this._onConfigChanged.fire();
-    });
-
-    this._configWatcher.onChange(async ({ uri }) => {
-      const newConfig = await this.appMapConfigFromFile(uri.fsPath);
-      const currentWorkspaceConfig = this.workspaceConfig;
-
-      currentWorkspaceConfig.configs = currentWorkspaceConfig.configs.map((config) =>
-        config.configFolder === newConfig?.configFolder ? newConfig : config
-      );
-
-      await this.update();
-      this._onConfigChanged.fire();
-    });
+    this._configWatcher.onCreate(handleConfigChange);
+    this._configWatcher.onDelete(handleConfigChange);
+    this._configWatcher.onChange(handleConfigChange);
 
     this._watcherConfigured = true;
   }

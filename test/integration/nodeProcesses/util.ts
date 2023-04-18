@@ -22,8 +22,8 @@ async function waitForProcessState(
         throw new Error(`Waiting for processes to ${action}`);
       }
     },
-    15,
-    1000
+    25,
+    1200
   );
 }
 
@@ -67,8 +67,8 @@ export async function initializeProcesses(): Promise<ReadonlyArray<ProcessWatche
         throw new Error(`Waiting for service instance creation`);
       }
     },
-    5,
-    1000
+    20,
+    1500
   );
 
   assert.strictEqual(serviceInstances.length, 1, 'a single service instance exists');

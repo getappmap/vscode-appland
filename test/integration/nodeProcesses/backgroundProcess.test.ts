@@ -1,12 +1,16 @@
 import assert from 'assert';
-import { NodeProcessService } from '../../../src/services/nodeProcessService';
 import { ProcessWatcher } from '../../../src/services/processWatcher';
 import { fileExists } from '../../../src/util';
-import { initializeWorkspace, ProjectA, restoreFile, withAuthenticatedUser } from '../util';
+import {
+  initializeWorkspace,
+  ProjectA,
+  restoreFile,
+  waitFor,
+  withAuthenticatedUser,
+} from '../util';
 import { promises as fs } from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
-import MockExtensionContext from '../../mocks/mockExtensionContext';
 import { waitForDown, waitForUp, initializeProcesses as getProcessWatchers } from './util';
 
 describe('Background processes', () => {
@@ -104,45 +108,39 @@ describe('Background processes', () => {
       processWatchers
         .map((p) => p['options'].args?.join(' ') || ' ')
         .forEach((cmd) => {
-          assert(cmd.includes('--appmap-dir .'));
+          assert(cmd.includes('--appmap-dir tmp/appmap'));
+        });
+    });
+  });
+
+  context('with appmap_dir specified in appmap.yml', () => {
+    const appmapDir = 'fake/appmap';
+    const configFile = path.join(ProjectA, 'appmap.yml');
+    const expectedPath = path.join(ProjectA, appmapDir);
+
+    beforeEach(async () => {
+      await initializeWorkspace();
+      assert(!(await fileExists(expectedPath)), 'the appmap_dir provided should not yet exist');
+      await fs.appendFile(configFile, `\nappmap_dir: ${appmapDir}`);
+      await initializeProcesses();
+      await waitFor('appmap_dir being created', async () => await fileExists(expectedPath));
+    });
+
+    afterEach(async () => await initializeWorkspace());
+
+    it('specifies --appmap-dir', async () => {
+      // wait for new processes to spawn after change to appmap.yml
+      await initializeProcesses();
+      processWatchers
+        .map((p) => p['options'].args?.join(' ') || ' ')
+        .forEach((cmd) => {
+          console.log('COMMAND: ', cmd);
+          assert(cmd.includes(`--appmap-dir ${appmapDir}`));
         });
     });
 
-    context('with appmap_dir specified in appmap.yml', () => {
-      let tmpDir: string;
-      let directoryUri: vscode.Uri;
-      let service: NodeProcessService;
-      let workspaceFolder: vscode.WorkspaceFolder;
-      const appmapDir = 'tmp/appmap';
-
-      beforeEach(async () => {
-        const context = new MockExtensionContext();
-        tmpDir = context.globalStoragePath;
-        directoryUri = context.globalStorageUri;
-        workspaceFolder = {
-          uri: directoryUri,
-          name: path.basename(tmpDir),
-          index: -1,
-        } as vscode.WorkspaceFolder;
-        service = new NodeProcessService(context);
-        await fs.writeFile(path.join(tmpDir, 'appmap.yml'), `appmap_dir: ${appmapDir}`, 'utf8');
-      });
-
-      it('specifies --appmap-dir', async () => {
-        const instance = await service.create(workspaceFolder);
-        instance['processes']
-          .map((p) => p['options'].args?.join(' ') || ' ')
-          .forEach((cmd) => {
-            assert(cmd.includes(`--appmap-dir ${appmapDir}`));
-          });
-      });
-
-      it("creates the AppMap directory if it doesn't already exist", async () => {
-        const expectedPath = path.join(tmpDir, appmapDir);
-        assert(!(await fileExists(expectedPath)), 'the appmap_dir provided should not exist');
-        await service.create(workspaceFolder);
-        assert(await fileExists(expectedPath), 'the appmap_dir provided does not exist');
-      });
+    it("creates the AppMap directory if it doesn't already exist", async () => {
+      assert(await fileExists(expectedPath), 'the appmap_dir provided does not exist');
     });
   });
 });
