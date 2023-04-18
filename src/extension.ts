@@ -312,6 +312,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
         return AnalysisManager.findingsIndex;
       },
       recommender,
+      configManager,
     };
   } catch (exception) {
     Telemetry.sendEvent(DEBUG_EXCEPTION, {
