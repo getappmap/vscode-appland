@@ -158,6 +158,7 @@ export class WorkspaceServices implements vscode.Disposable {
     const updatedInstances = instances.filter((instance) => instance !== instanceToRemove);
     this.workspaceServiceInstances.set(folder, updatedInstances);
     this.instanceServices.delete(instanceToRemove);
+    instanceToRemove.dispose();
   }
 
   dispose(): void {

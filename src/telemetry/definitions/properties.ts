@@ -112,7 +112,7 @@ export const AGENT_CONFIG_PRESENT = new TelemetryDataProvider({
   id: 'appmap.agent.config_present',
   async value({ uri }: { uri: vscode.Uri }) {
     const workspaceFolder = vscode.workspace.getWorkspaceFolder(uri);
-    if (!workspaceFolder) return String('false');
+    if (!workspaceFolder) return 'false';
 
     const configManager = workspaceServices().getServiceInstanceFromClass(
       AppmapConfigManager,

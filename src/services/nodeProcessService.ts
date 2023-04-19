@@ -73,9 +73,8 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
     ) as NodeProcessServiceInstance | undefined;
     assert(currentInstance);
 
-    workspaceServices().unenrollServiceInstance(folder, currentInstance);
     await currentInstance.stop();
-    currentInstance.dispose();
+    workspaceServices().unenrollServiceInstance(folder, currentInstance);
 
     const newServices = await this.createServices(folder);
     const newInstance = new NodeProcessServiceInstance(folder, newServices);

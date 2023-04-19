@@ -86,10 +86,9 @@ export class AppmapConfigManagerInstance implements WorkspaceServiceInstance {
       })
     );
 
-    // remove configs without an appmap_dir
-    // might need to change if we expand the responsibilities of this class
+    // remove undefined values (if the file couldn't be read, for example)
     let appmapConfigs = appmapConfigCandidates.filter(
-      (appmapConfig) => appmapConfig && appmapConfig.appmapDir
+      (appmapConfig) => appmapConfig
     ) as Array<AppmapConfig>;
 
     if (this._hasConfigFile && appmapConfigs.length === 0) {
@@ -163,30 +162,29 @@ export class AppmapConfigManagerInstance implements WorkspaceServiceInstance {
   }
 
   private async appMapConfigFromFile(configFilePath: string): Promise<AppmapConfig | undefined> {
-    if (await fileExists(configFilePath)) {
-      const result = {} as AppmapConfig;
+    const result = {
+      configFolder: dirname(configFilePath),
+      appmapDir: AppmapConfigManager.DEFAULT_APPMAP_DIR,
+      usingDefault: true,
+    } as AppmapConfig;
 
-      try {
-        const appmapConfig = load(await readFile(configFilePath, 'utf-8'));
-        result.configFolder = dirname(configFilePath);
-        if (
-          appmapConfig &&
-          typeof appmapConfig === 'object' &&
-          'appmap_dir' in appmapConfig &&
-          typeof appmapConfig.appmap_dir === 'string'
-        ) {
-          result.appmapDir = appmapConfig.appmap_dir;
-          result.usingDefault = false;
-        } else {
-          result.appmapDir = AppmapConfigManager.DEFAULT_APPMAP_DIR;
-          result.usingDefault = true;
-        }
+    try {
+      const appmapConfig = load(await readFile(configFilePath, 'utf-8'));
 
-        return result;
-      } catch (e) {
-        // Unparseable AppMap config, or related error.
-        console.warn(e);
+      if (
+        appmapConfig &&
+        typeof appmapConfig === 'object' &&
+        'appmap_dir' in appmapConfig &&
+        typeof appmapConfig.appmap_dir === 'string'
+      ) {
+        result.appmapDir = appmapConfig.appmap_dir;
+        result.usingDefault = false;
       }
+
+      return result;
+    } catch (e) {
+      // Unparseable AppMap config, or related error.
+      console.warn(e);
     }
   }
 

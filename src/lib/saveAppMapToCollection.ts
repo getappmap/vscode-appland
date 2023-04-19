@@ -49,7 +49,7 @@ export default async function saveAppMapToCollection(
       return;
     }
 
-    if (appmapConfig && appmapConfig.configFolder)
+    if (appmapConfig && appmapConfigManagerInstance.hasConfigFile)
       await appmapConfigManagerInstance.saveAppMapDir(appmapConfig.configFolder, appmapDir);
   }
   if (!appmapDir) return;
