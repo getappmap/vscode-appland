@@ -1,5 +1,5 @@
-import { readFile, mkdir, appendFile } from 'fs/promises';
-import { load } from 'js-yaml';
+import { readFile, mkdir, writeFile } from 'fs/promises';
+import { dump, load } from 'js-yaml';
 import { dirname, join } from 'path';
 import assert from 'node:assert';
 import * as vscode from 'vscode';
@@ -147,7 +147,8 @@ export class AppmapConfigManagerInstance implements WorkspaceServiceInstance {
     const appmapConfigFilePath = join(configFolder, 'appmap.yml');
 
     if (await fileExists(appmapConfigFilePath)) {
-      let appmapConfig: unknown;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      let appmapConfig: any;
       try {
         appmapConfig = load(await readFile(appmapConfigFilePath, 'utf-8'));
         assert(appmapConfig && typeof appmapConfig === 'object');
@@ -156,7 +157,8 @@ export class AppmapConfigManagerInstance implements WorkspaceServiceInstance {
         console.warn(e);
         return;
       }
-      await appendFile(appmapConfigFilePath, `appmap_dir: ${appmapDir}`);
+      appmapConfig.appmap_dir = appmapDir;
+      await writeFile(appmapConfigFilePath, dump(appmapConfig));
       await this.update();
     }
   }
