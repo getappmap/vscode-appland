@@ -20,4 +20,8 @@ export default function mountSignInView() {
   app.$on('sign-in', () => {
     messages.rpc('sign-in');
   });
+
+  app.$on('click-sign-in-link', (linkType) => {
+    messages.rpc('click-sign-in-link', linkType);
+  });
 }
