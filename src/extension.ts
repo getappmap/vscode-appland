@@ -58,6 +58,7 @@ import learnMoreRuntimeAnalysis from './commands/learnMoreRuntimeAnalysis';
 import SignInViewProvider from './webviews/signInWebview';
 import SignInManager from './services/signInManager';
 import tryOpenInstallGuide from './commands/tryOpenInstallGuide';
+import { AppmapConfigManager } from './services/appmapConfigManager';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   Telemetry.register(context);
@@ -97,6 +98,9 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
     const configWatcher = new AppMapConfigWatcher();
     await workspaceServices.enroll(configWatcher);
+
+    const configManager = new AppmapConfigManager();
+    await workspaceServices.enroll(configManager);
 
     const classMapIndex = new ClassMapIndex();
     const lineInfoIndex = new LineInfoIndex(classMapIndex);
@@ -308,6 +312,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
         return AnalysisManager.findingsIndex;
       },
       recommender,
+      configManager,
     };
   } catch (exception) {
     Telemetry.sendEvent(DEBUG_EXCEPTION, {

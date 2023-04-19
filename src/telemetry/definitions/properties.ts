@@ -11,6 +11,11 @@ import { TerminalConfig } from '../../commands/installAgent';
 import * as vscode from 'vscode';
 import { Finding } from '@appland/scanner';
 import { findRepository } from '../../lib/git';
+import { workspaceServices } from '../../services/workspaceServices';
+import {
+  AppmapConfigManager,
+  AppmapConfigManagerInstance,
+} from '../../services/appmapConfigManager';
 
 export const DEBUG_EXCEPTION = new TelemetryDataProvider({
   id: 'appmap.debug.exception',
@@ -105,8 +110,16 @@ export const FILE_METADATA = new TelemetryDataProvider({
 
 export const AGENT_CONFIG_PRESENT = new TelemetryDataProvider({
   id: 'appmap.agent.config_present',
-  async value({ rootDirectory }: { rootDirectory: PathLike }) {
-    const isPresent = await fileExists(path.join(rootDirectory.toString(), 'appmap.yml'));
+  async value({ uri }: { uri: vscode.Uri }) {
+    const workspaceFolder = vscode.workspace.getWorkspaceFolder(uri);
+    if (!workspaceFolder) return 'false';
+
+    const configManager = workspaceServices().getServiceInstanceFromClass(
+      AppmapConfigManager,
+      workspaceFolder
+    ) as AppmapConfigManagerInstance | undefined;
+
+    const isPresent = !!(configManager && configManager.hasConfigFile);
     return String(isPresent);
   },
 });

@@ -9,7 +9,8 @@ import AppMapLoader from '../services/appmapLoader';
 import { ProjectStateServiceInstance } from '../services/projectStateService';
 import TelemetryDataProvider from '../telemetry/telemetryDataProvider';
 import { fileExists, getWorkspaceFolderFromPath, timeAgo } from '../util';
-import { lookupAppMapDir } from './appmapDir';
+import { AppmapConfigManager, AppmapConfigManagerInstance } from '../services/appmapConfigManager';
+import { workspaceServices } from '../services/workspaceServices';
 
 export const NUM_ACTORS = new TelemetryDataProvider({
   id: 'sequence_diagram.num_actors',
@@ -100,7 +101,13 @@ export async function promptForAppMap(
           if (projectFolder) {
             path = path.slice(projectFolder.uri.fsPath.length + 1);
 
-            const detectedAppMapDir = await lookupAppMapDir(projectFolder.uri.fsPath);
+            const appmapConfigMangerInstance = workspaceServices().getServiceInstanceFromClass(
+              AppmapConfigManager,
+              projectFolder
+            ) as AppmapConfigManagerInstance | undefined;
+            assert(appmapConfigMangerInstance);
+            const detectedAppMapDir = (await appmapConfigMangerInstance.getAppmapConfig())
+              ?.appmapDir;
 
             if (detectedAppMapDir && path.startsWith(detectedAppMapDir)) {
               const filename = basename(path);

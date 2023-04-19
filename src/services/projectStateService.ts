@@ -12,11 +12,11 @@ import ChangeEventDebouncer from './changeEventDebouncer';
 import ClassMapIndex from './classMapIndex';
 import { CodeObjectEntry } from '../lib/CodeObjectEntry';
 
-import glob from 'glob';
-import { promisify } from 'util';
 import AnalysisManager from './analysisManager';
 import AppMapLoader from './appmapLoader';
 import { PROJECT_OPEN, Telemetry } from '../telemetry';
+import { workspaceServices } from './workspaceServices';
+import { AppmapConfigManager, AppmapConfigManagerInstance } from './appmapConfigManager';
 
 type SimpleCodeObject = {
   name: string;
@@ -221,8 +221,11 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
   }
 
   private async configurationInWorkspace(): Promise<boolean> {
-    const existingConfigs = await promisify(glob)(`${this.folder.uri.fsPath}/**/appmap.yml`);
-    return existingConfigs.length !== 0;
+    const configManager = workspaceServices().getServiceInstanceFromClass(
+      AppmapConfigManager,
+      this.folder
+    ) as AppmapConfigManagerInstance | undefined;
+    return !!(configManager && configManager.hasConfigFile);
   }
 
   private async syncConfigurationState(): Promise<void> {

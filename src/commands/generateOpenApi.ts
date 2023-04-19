@@ -1,7 +1,7 @@
 import assert from 'assert';
 import * as vscode from 'vscode';
+
 import ExtensionState from '../configuration/extensionState';
-import { lookupAppMapDir } from '../lib/appmapDir';
 import chooseWorkspace from '../lib/chooseWorkspace';
 import {
   getModulePath,
@@ -12,6 +12,8 @@ import {
 } from '../services/nodeDependencyProcess';
 import { DEBUG_EXCEPTION, GENERATE_OPENAPI, Telemetry } from '../telemetry';
 import ErrorCode from '../telemetry/definitions/errorCodes';
+import { AppmapConfigManager, AppmapConfigManagerInstance } from '../services/appmapConfigManager';
+import { workspaceServices } from '../services/workspaceServices';
 
 export const GenerateOpenApi = 'appmap.generateOpenApi';
 
@@ -38,15 +40,26 @@ export default async function generateOpenApi(
             globalStoragePath: context.globalStorageUri.fsPath,
           });
 
-          let appmapDir = await lookupAppMapDir(workspaceFolder.uri.fsPath);
-          if (!appmapDir) {
-            appmapDir = '.';
+          let appmapDir = '.';
+          let cwd = workspaceFolder.uri.fsPath;
+
+          const appmapConfigManagerInstance = workspaceServices().getServiceInstanceFromClass(
+            AppmapConfigManager,
+            workspaceFolder
+          ) as AppmapConfigManagerInstance | undefined;
+          assert(appmapConfigManagerInstance);
+
+          const appmapConfig = await appmapConfigManagerInstance.getAppmapConfig();
+
+          if (appmapConfig) {
+            appmapDir = appmapConfig.appmapDir;
+            cwd = appmapConfig.configFolder;
           }
 
           const openApiCmd = spawn({
             modulePath,
             args: ['openapi', '--appmap-dir', appmapDir],
-            cwd: workspaceFolder.uri.fsPath,
+            cwd,
             saveOutput: true,
           });
 

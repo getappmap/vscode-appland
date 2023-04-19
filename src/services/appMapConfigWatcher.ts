@@ -7,28 +7,31 @@ export class AppMapConfigWatcherInstance implements WorkspaceServiceInstance {
   watcher: vscode.FileSystemWatcher;
   protected disposables: vscode.Disposable[] = [];
   protected configPattern = new vscode.RelativePattern(this.folder, `**/appmap.yml`);
+  public onChange = this._onChange.event;
+  public onCreate = this._onCreate.event;
+  public onDelete = this._onDelete.event;
 
   constructor(
     public folder: vscode.WorkspaceFolder,
-    protected onChange: vscode.EventEmitter<FileChangeEvent>,
-    protected onCreate: vscode.EventEmitter<FileChangeEvent>,
-    protected onDelete: vscode.EventEmitter<FileChangeEvent>
+    private _onChange: vscode.EventEmitter<FileChangeEvent>,
+    private _onCreate: vscode.EventEmitter<FileChangeEvent>,
+    private _onDelete: vscode.EventEmitter<FileChangeEvent>
   ) {
     this.watcher = vscode.workspace.createFileSystemWatcher(this.configPattern);
     this.disposables.push(
       this.watcher,
-      this.watcher.onDidChange((uri) => this.onChange.fire({ uri, workspaceFolder: this.folder })),
-      this.watcher.onDidCreate((uri) => this.onCreate.fire({ uri, workspaceFolder: this.folder })),
+      this.watcher.onDidChange((uri) => this._onChange.fire({ uri, workspaceFolder: this.folder })),
+      this.watcher.onDidCreate((uri) => this._onCreate.fire({ uri, workspaceFolder: this.folder })),
       this.watcher.onDidDelete(async (uri) => {
         if (await fileExists(uri.fsPath)) return;
-        this.onDelete.fire({ uri, workspaceFolder: this.folder });
+        this._onDelete.fire({ uri, workspaceFolder: this.folder });
       })
     );
   }
 
   async initialize(): Promise<AppMapConfigWatcherInstance> {
     (await vscode.workspace.findFiles(this.configPattern)).forEach((uri) => {
-      this.onCreate.fire({ uri, workspaceFolder: this.folder });
+      this._onCreate.fire({ uri, workspaceFolder: this.folder });
     });
     return this;
   }
@@ -40,7 +43,7 @@ export class AppMapConfigWatcherInstance implements WorkspaceServiceInstance {
         '**/node_modules/**'
       )
     ).forEach((uri) => {
-      this.onDelete.fire({ uri, workspaceFolder: this.folder });
+      this._onDelete.fire({ uri, workspaceFolder: this.folder });
     });
 
     this.disposables.forEach((d) => d.dispose());
