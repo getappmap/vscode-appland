@@ -1,3 +1,10 @@
+# [0.74.0](https://github.com/getappmap/vscode-appland/compare/v0.73.0...v0.74.0) (2023-04-19)
+
+
+### Features
+
+* improved support for monorepos ([496c4ee](https://github.com/getappmap/vscode-appland/commit/496c4ee5eec8258f1094fd5f5382421f428fcb61))
+
 # [0.73.0](https://github.com/getappmap/vscode-appland/compare/v0.72.0...v0.73.0) (2023-04-13)
 
 
