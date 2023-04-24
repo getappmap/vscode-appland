@@ -34,10 +34,10 @@ calls it observes at runtime.
 ## Security
 
 [Open source MIT
-license\](https://github.com/getappmap/vscode-appland/blob/master/LICENSE)
+license](https://github.com/getappmap/vscode-appland/blob/master/LICENSE)
 
 [Terms and
-conditions\](https://appmap.io/community/terms-and-conditions.html)
+conditions](https://appmap.io/community/terms-and-conditions.html)
 
 Data usage: AppMap runs locally and does not require centralized access
 to your code or code repositories. Your code is your code, and no
@@ -45,12 +45,12 @@ information is uploaded out of your computer when AppMap runs.
 
 ## Getting started with AppMap
 
-[Documentation\](https://appmap.io/docs/appmap-overview.html)
-[GitHub\](https://github.com/getappmap)
-[Blog\](https://appmap.io/blog/)
+[Documentation](https://appmap.io/docs/appmap-overview.html)
+[GitHub](https://github.com/getappmap)
+[Blog](https://appmap.io/blog/)
 
-[Slack\](https://appmap.io/slack) for support and community
+[Slack](https://appmap.io/slack) for support and community
 conversations Email for support: support@appmap.io
 
-Follow us on [Twitter \@GetAppMap\](https://twitter.com/getappmap)
-Watch our demos on [YouTube\](https://www.youtube.com/channel/UCxVv4gVnr2Uf2PSzoELZUcg)
+Follow us on [Twitter @GetAppMap](https://twitter.com/getappmap)
+Watch our demos on [YouTube](https://www.youtube.com/channel/UCxVv4gVnr2Uf2PSzoELZUcg)
