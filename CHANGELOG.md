@@ -1,3 +1,10 @@
+# [0.75.0](https://github.com/getappmap/vscode-appland/compare/v0.74.0...v0.75.0) (2023-04-24)
+
+
+### Features
+
+* Recognize jest support in the project picker ([a6cba2e](https://github.com/getappmap/vscode-appland/commit/a6cba2e62d346ca9f78315e3b72b0d021a3f0329))
+
 # [0.74.0](https://github.com/getappmap/vscode-appland/compare/v0.73.0...v0.74.0) (2023-04-19)
 
 
