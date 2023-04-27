@@ -73,16 +73,13 @@ export class AppmapConfigManagerInstance implements WorkspaceServiceInstance {
     const configFiles = await this._configFileProvider.files();
     this._hasConfigFile = configFiles.length > 0;
 
-    const appmapConfigCandidates = await Promise.all(
-      configFiles.map(async (configFile) => {
-        return await this.appMapConfigFromFile(configFile.fsPath);
-      })
-    );
-
-    // remove undefined values (if the file couldn't be read, for example)
-    let appmapConfigs = appmapConfigCandidates.filter(
-      (appmapConfig) => appmapConfig
-    ) as Array<AppmapConfig>;
+    let appmapConfigs = (
+      await Promise.all(
+        configFiles.map(async (configFile) => {
+          return await this.appMapConfigFromFile(configFile.fsPath);
+        })
+      )
+    ).filter(Boolean) as Array<AppmapConfig>;
 
     if (this._hasConfigFile && appmapConfigs.length === 0) {
       appmapConfigs = [
@@ -163,24 +160,26 @@ export class AppmapConfigManagerInstance implements WorkspaceServiceInstance {
       usingDefault: true,
     } as AppmapConfig;
 
+    let appmapConfig: any | undefined;
     try {
-      const appmapConfig = load(await readFile(configFilePath, 'utf-8'));
-
-      if (
-        appmapConfig &&
-        typeof appmapConfig === 'object' &&
-        'appmap_dir' in appmapConfig &&
-        typeof appmapConfig.appmap_dir === 'string'
-      ) {
-        result.appmapDir = appmapConfig.appmap_dir;
-        result.usingDefault = false;
-      }
-
-      return result;
+      appmapConfig = load(await readFile(configFilePath, 'utf-8'));
     } catch (e) {
       // Unparseable AppMap config, or related error.
       console.warn(e);
+      return;
     }
+
+    if (
+      appmapConfig &&
+      typeof appmapConfig === 'object' &&
+      'appmap_dir' in appmapConfig &&
+      typeof appmapConfig.appmap_dir === 'string'
+    ) {
+      result.appmapDir = appmapConfig.appmap_dir;
+      result.usingDefault = false;
+    }
+
+    return result as AppmapConfig;
   }
 
   private async makeAppmapDirs(): Promise<void> {
