@@ -24,22 +24,15 @@ type WorkspaceConfig = {
 
 class ConfigFileProviderImpl implements ConfigFileProvider {
   private _files?: vscode.Uri[] = undefined;
-  private exclude: vscode.RelativePattern;
 
-  public constructor(private pattern: vscode.RelativePattern) {
-    const excludes = vscode.workspace
-      .getConfiguration('files')
-      .get<{ [pattern: string]: boolean }>('watcherExclude', {});
-
-    this.exclude = new vscode.RelativePattern(pattern.base, `{${Object.keys(excludes).join(',')}}`);
-  }
+  public constructor(private pattern: vscode.RelativePattern) {}
 
   public async files(): Promise<vscode.Uri[]> {
     if (this._files) {
       return this._files;
     }
 
-    this._files = await vscode.workspace.findFiles(this.pattern, this.exclude);
+    this._files = await vscode.workspace.findFiles(this.pattern);
     return this._files;
   }
 
