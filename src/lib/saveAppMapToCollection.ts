@@ -21,44 +21,22 @@ export default async function saveAppMapToCollection(
     return;
   }
 
-  let appmapDir: string | undefined;
-  let configFolder = projectFolder.uri.fsPath;
-
-  const appmapConfigManagerInstance = workspaceServices().getServiceInstanceFromClass(
-    AppmapConfigManager,
-    projectFolder
-  ) as AppmapConfigManagerInstance | undefined;
-  assert(appmapConfigManagerInstance);
-
-  const appmapConfig = await appmapConfigManagerInstance.getAppmapConfig();
-
-  if (appmapConfig) {
-    const appmapDirFullPath = join(appmapConfig.configFolder, appmapConfig.appmapDir);
-    appmapDir = relative(projectFolder.uri.fsPath, appmapDirFullPath);
-    configFolder = appmapConfig.configFolder;
-  }
-
-  if (appmapConfig?.usingDefault || appmapConfigManagerInstance.isUsingDefaultConfig) {
-    appmapDir = await vscode.window.showInputBox({
-      title: `Enter the AppMap directory for project ${projectFolder.name}`,
-    });
-    if (!appmapDir) return;
-
-    if (!(await fileExists(join(projectFolder.uri.fsPath, appmapDir)))) {
-      vscode.window.showInformationMessage(`Folder '${appmapDir}' does not exist`);
-      return;
+  const collectionsDir = join(projectFolder.uri.fsPath, '.appmap', 'collections');
+  await mkdir(collectionsDir, { recursive: true });
+  const gitIgnore = join(projectFolder.uri.fsPath, '.gitignore');
+  if (!(await fileExists(gitIgnore))) {
+    await writeFile(gitIgnore, '.appmap');
+  } else {
+    const gitIgnoreLines = (await readFile(gitIgnore, 'utf-8')).split('\n');
+    if (gitIgnoreLines.includes('.appmap')) {
+      gitIgnoreLines.push('.appmap');
+      await writeFile(gitIgnore, gitIgnoreLines.join('\n'));
     }
-
-    if (appmapConfig && appmapConfigManagerInstance.hasConfigFile)
-      await appmapConfigManagerInstance.saveAppMapDir(appmapConfig.configFolder, appmapDir);
   }
-  if (!appmapDir) return;
-
-  const collectionsDir = join(configFolder, appmapDir, 'collections');
 
   let collectionNames: string[];
   {
-    const folderContents = await promisify(glob)(`${collectionsDir}/*`);
+    const folderContents = await promisify(glob)(`${collectionsDir}/*`, { dot: true });
     const isDirectory = new Map<string, boolean>();
     await Promise.all(
       folderContents.map(async (file) =>
