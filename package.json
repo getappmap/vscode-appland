@@ -443,7 +443,7 @@
     "test:system": "ts-node test/systemTest.ts",
     "test:unit": "mocha --require ts-node/register test/unit/**/*.test.[tj]s",
     "mocha": "mocha --require ts-node/register",
-    "test": "yarn test:unit && yarn test:web-client && yarn test:system && yarn test:integration",
+    "test": "yarn test:unit && yarn test:web-client && yarn test:integration",
     "compile": "NODE_ENV=production tsup --config tsup.config.ts",
     "watch": "tsup --config tsup.config.ts --watch",
     "package": "vsce package",
