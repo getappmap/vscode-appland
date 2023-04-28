@@ -324,3 +324,10 @@ export const OPEN_EXTERNAL = new TelemetryDataProvider({
     return result;
   },
 });
+
+export const LINK_TYPE = new TelemetryDataProvider({
+  id: 'appmap.link_type',
+  async value({ linkType }: { linkType: string }) {
+    return linkType;
+  },
+});
