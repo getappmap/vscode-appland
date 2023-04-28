@@ -131,12 +131,15 @@ describe('Background processes', () => {
     it('specifies --appmap-dir', async () => {
       // wait for new processes to spawn after change to appmap.yml
       await initializeProcesses();
-      processWatchers
-        .map((p) => p['options'].args?.join(' ') || ' ')
-        .forEach((cmd) => {
-          console.log('COMMAND: ', cmd);
-          assert(cmd.includes(`--appmap-dir ${appmapDir}`));
-        });
+
+      waitFor('Processes pick up the change to appmap_dir', async () =>
+        processWatchers
+          .map((p) => p['options'].args?.join(' ') || ' ')
+          .every((cmd) => {
+            console.log('COMMAND: ', cmd);
+            return cmd.includes(`--appmap-dir ${appmapDir}`);
+          })
+      );
     });
 
     it("creates the AppMap directory if it doesn't already exist", async () => {
