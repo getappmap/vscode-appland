@@ -3,7 +3,7 @@ import { VSidebarSignIn } from '@appland/components';
 import MessagePublisher from './messagePublisher';
 
 export default function mountSignInView() {
-  document.body.style = 'height: 100%; margin: 0; overflow-y: hidden;';
+  document.body.style = 'height: 100%; margin: 0; overflow-y: scroll;';
 
   const vscode = window.acquireVsCodeApi();
   const messages = new MessagePublisher(vscode);
