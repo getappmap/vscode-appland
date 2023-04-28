@@ -18,3 +18,12 @@ extern/yarn.lock
 !.yarn/sdks
 !.yarn/versions
 .pnp.*
+
+# Uncomment these when you want to make a commit and hide the temp files.
+# Leaving these permanently uncommented may cause test cases to fail.
+# index.pid
+# test/fixtures/workspaces/project-a/tmp/appmap/minitest/Microposts_controller_can_get_microposts_as_JSON
+# test/fixtures/workspaces/project-a/tmp/appmap/minitest/Microposts_interface_micropost_interface
+# test/fixtures/workspaces/project-a/tmp/appmap/minitest/**/*.svg
+# test/fixtures/workspaces/project-a/tmp/appmap/minitest/**/*.uml
+# test/fixtures/workspaces/project-no-findings/tmp/appmap/minitest/test_future_meetings
