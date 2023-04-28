@@ -1,11 +1,5 @@
 import * as vscode from 'vscode';
 
-export interface FileChangeHandler {
-  onChange(uri: vscode.Uri, workspaceFolder: vscode.WorkspaceFolder): void;
-  onCreate(uri: vscode.Uri, workspaceFolder: vscode.WorkspaceFolder, initializing?: boolean): void;
-  onDelete(uri: vscode.Uri, workspaceFolder: vscode.WorkspaceFolder): void;
-}
-
 export interface FileChangeEvent {
   uri: vscode.Uri;
   workspaceFolder: vscode.WorkspaceFolder;
