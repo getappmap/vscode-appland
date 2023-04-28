@@ -118,11 +118,19 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       })
     );
 
-    const classMapWatcher = new ClassMapWatcher({
-      onCreate: classMapIndex.addClassMapFile.bind(classMapIndex),
-      onChange: classMapIndex.addClassMapFile.bind(classMapIndex),
-      onDelete: classMapIndex.removeClassMapFile.bind(classMapIndex),
-    });
+    const classMapWatcher = new ClassMapWatcher();
+    context.subscriptions.push(
+      // TODO: workspaceFolder is available for these three events as well, if you want to use it.
+      classMapWatcher.onCreate(({ uri }) => {
+        classMapIndex.addClassMapFile(uri);
+      }),
+      classMapWatcher.onChange(({ uri }) => {
+        classMapIndex.addClassMapFile(uri);
+      }),
+      classMapWatcher.onDelete(({ uri }) => {
+        classMapIndex.removeClassMapFile(uri);
+      })
+    );
 
     const appmapUptodateService = new AppmapUptodateService(context);
     const sourceFileWatcher = new SourceFileWatcher(classMapIndex);

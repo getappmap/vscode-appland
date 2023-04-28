@@ -30,11 +30,6 @@ describe('Scanner', () => {
   afterEach(initializeWorkspace);
 
   it('is performed as AppMaps are modified', async () => {
-    await promisify(rename)(
-      join(ProjectA, 'appmap-findings.json'),
-      join(ProjectA, 'appmap-findings.json.bak')
-    );
-
     await vscode.commands.executeCommand('appmap.deleteAllAppMaps');
     await waitFor('Diagnostics were not cleared', hasNoDiagnostics);
 

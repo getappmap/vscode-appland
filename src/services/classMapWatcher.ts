@@ -1,53 +1,33 @@
 import * as vscode from 'vscode';
-import { fileExists } from '../util';
 import FileChangeHandler from './fileChangeHandler';
 import { WorkspaceService, WorkspaceServiceInstance } from './workspaceService';
+import Watcher from './watcher';
+import { FileChangeEmitter } from './fileChangeEmitter';
 
-class ClassMapWatcherInstance implements WorkspaceServiceInstance {
-  watcher: vscode.FileSystemWatcher;
-
+class ClassMapWatcherInstance extends Watcher implements WorkspaceServiceInstance {
   constructor(public folder: vscode.WorkspaceFolder, public handler: FileChangeHandler) {
-    const classMapPattern = new vscode.RelativePattern(this.folder, `**/classMap.json`);
-    this.watcher = vscode.workspace.createFileSystemWatcher(classMapPattern);
-    this.watcher.onDidChange((uri) => {
-      handler.onChange(uri);
-    });
-    this.watcher.onDidCreate((uri) => {
-      handler.onCreate(uri);
-    });
-    this.watcher.onDidDelete(async (uri) => {
-      if (await fileExists(uri.fsPath)) return;
-
-      handler.onDelete(uri);
-    });
-  }
-
-  async initialize() {
-    (
-      await vscode.workspace.findFiles(
-        new vscode.RelativePattern(this.folder, '**/classMap.json'),
-        '**/node_modules/**'
-      )
-    ).forEach(this.handler.onCreate);
-    return this;
-  }
-
-  async dispose() {
-    (
-      await vscode.workspace.findFiles(
-        new vscode.RelativePattern(this.folder, '**/classMap.json'),
-        '**/node_modules/**'
-      )
-    ).forEach(this.handler.onDelete);
-    this.watcher.dispose();
+    super('classMap.json', folder, handler);
   }
 }
 
-export class ClassMapWatcher implements WorkspaceService<ClassMapWatcherInstance> {
-  constructor(public handler: FileChangeHandler) {}
-
+export class ClassMapWatcher
+  extends FileChangeEmitter
+  implements WorkspaceService<ClassMapWatcherInstance>
+{
   async create(folder: vscode.WorkspaceFolder): Promise<ClassMapWatcherInstance> {
-    const watcher = new ClassMapWatcherInstance(folder, this.handler);
-    return watcher.initialize();
+    const watcher = new ClassMapWatcherInstance(folder, {
+      onChange: (uri, workspaceFolder) => {
+        this._onChange.fire({ uri, workspaceFolder });
+      },
+      onCreate: (uri, workspaceFolder) => {
+        this._onCreate.fire({ uri, workspaceFolder });
+      },
+      onDelete: (uri, workspaceFolder) => {
+        this._onDelete.fire({ uri, workspaceFolder });
+      },
+    });
+
+    await watcher.initialize();
+    return watcher;
   }
 }

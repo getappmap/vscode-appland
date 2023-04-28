@@ -54,7 +54,6 @@ describe('Background processes', () => {
 
   context('with processes initialized', () => {
     beforeEach(initializeWorkspace);
-
     beforeEach(initializeProcesses);
 
     afterEach(initializeWorkspace);

@@ -1,42 +1,12 @@
 import * as vscode from 'vscode';
-import { FileChangeHandler, FileChangeEmitter } from './fileChangeEmitter';
+import { FileChangeEmitter } from './fileChangeEmitter';
 import { WorkspaceService, WorkspaceServiceInstance } from './workspaceService';
+import FileChangeHandler from './fileChangeHandler';
+import Watcher from './watcher';
 
-class AppMapWatcherInstance implements WorkspaceServiceInstance {
-  watcher: vscode.FileSystemWatcher;
-
+class AppMapWatcherInstance extends Watcher implements WorkspaceServiceInstance {
   constructor(public folder: vscode.WorkspaceFolder, public handler: FileChangeHandler) {
-    const appmapPattern = new vscode.RelativePattern(this.folder, `**/*.appmap.json`);
-    this.watcher = vscode.workspace.createFileSystemWatcher(appmapPattern);
-    this.watcher.onDidChange((uri) => {
-      handler.onChange(uri, this.folder);
-    });
-    this.watcher.onDidCreate((uri) => {
-      handler.onCreate(uri, this.folder);
-    });
-    this.watcher.onDidDelete((uri) => {
-      handler.onDelete(uri, this.folder);
-    });
-  }
-
-  async initialize() {
-    (
-      await vscode.workspace.findFiles(
-        new vscode.RelativePattern(this.folder, '**/*.appmap.json'),
-        '**/node_modules/**'
-      )
-    ).map((uri) => this.handler.onCreate(uri, this.folder, true));
-    return this;
-  }
-
-  async dispose() {
-    (
-      await vscode.workspace.findFiles(
-        new vscode.RelativePattern(this.folder, '**/*.appmap.json'),
-        '**/node_modules/**'
-      )
-    ).map((uri) => this.handler.onDelete(uri, this.folder));
-    this.watcher.dispose();
+    super('*.appmap.json', folder, handler);
   }
 }
 
@@ -51,14 +21,15 @@ export class AppMapWatcher
       onChange: (uri, workspaceFolder) => {
         this._onChange.fire({ uri, workspaceFolder });
       },
-      onCreate: (uri, workspaceFolder, initializing) => {
-        this._onCreate.fire({ uri, workspaceFolder, initializing });
+      onCreate: (uri, workspaceFolder) => {
+        this._onCreate.fire({ uri, workspaceFolder });
       },
       onDelete: (uri, workspaceFolder) => {
         this._onDelete.fire({ uri, workspaceFolder });
       },
     });
-    return watcher.initialize();
+    await watcher.initialize();
+    return watcher;
   }
 }
 
