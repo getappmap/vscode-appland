@@ -3,11 +3,16 @@ import { FileChangeEmitter } from './fileChangeEmitter';
 import { WorkspaceService, WorkspaceServiceInstance } from './workspaceService';
 import FileChangeHandler from './fileChangeHandler';
 import Watcher from './watcher';
+import { dirname } from 'path';
 
 class AppMapWatcherInstance extends Watcher implements WorkspaceServiceInstance {
   constructor(public folder: vscode.WorkspaceFolder, public handler: FileChangeHandler) {
-    super('*.appmap.json', folder, handler);
+    super('metadata.json', folder, handler);
   }
+}
+
+function appmapUri(uri: vscode.Uri): vscode.Uri {
+  return vscode.Uri.file([dirname(uri.fsPath), 'appmap.json'].join('.'));
 }
 
 export class AppMapWatcher
@@ -19,13 +24,13 @@ export class AppMapWatcher
 
     const watcher = new AppMapWatcherInstance(folder, {
       onChange: (uri, workspaceFolder) => {
-        this._onChange.fire({ uri, workspaceFolder });
+        this._onChange.fire({ uri: appmapUri(uri), workspaceFolder });
       },
       onCreate: (uri, workspaceFolder) => {
-        this._onCreate.fire({ uri, workspaceFolder });
+        this._onCreate.fire({ uri: appmapUri(uri), workspaceFolder });
       },
       onDelete: (uri, workspaceFolder) => {
-        this._onDelete.fire({ uri, workspaceFolder });
+        this._onDelete.fire({ uri: appmapUri(uri), workspaceFolder });
       },
     });
     await watcher.initialize();
