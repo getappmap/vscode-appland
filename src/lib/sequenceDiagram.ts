@@ -101,12 +101,12 @@ export async function promptForAppMap(
           if (projectFolder) {
             path = path.slice(projectFolder.uri.fsPath.length + 1);
 
-            const appmapConfigMangerInstance = workspaceServices().getServiceInstanceFromClass(
+            const appmapConfigManagerInstance = workspaceServices().getServiceInstanceFromClass(
               AppmapConfigManager,
               projectFolder
             ) as AppmapConfigManagerInstance | undefined;
-            assert(appmapConfigMangerInstance);
-            const detectedAppMapDir = (await appmapConfigMangerInstance.getAppmapConfig())
+            assert(appmapConfigManagerInstance);
+            const detectedAppMapDir = (await appmapConfigManagerInstance.getAppmapConfig())
               ?.appmapDir;
 
             if (detectedAppMapDir && path.startsWith(detectedAppMapDir)) {
