@@ -14,7 +14,7 @@ import registerDecorationProvider from './decorations/decorationProvider';
 import AppMapEditorProvider from './editor/appmapEditorProvider';
 import appmapHoverProvider from './hover/appmapHoverProvider';
 import ProcessServiceImpl from './processServiceImpl';
-import { registerUtilityCommands } from './registerUtilityCommands';
+import { resetUsageState } from './commands/resetUsageState';
 import AppMapCollectionFile from './services/appmapCollectionFile';
 import { AppMapConfigWatcher } from './services/appMapConfigWatcher';
 import AppmapUptodateServiceInstance, {
@@ -280,7 +280,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       })
     );
 
-    registerUtilityCommands(context, extensionState);
+    resetUsageState(context, extensionState);
 
     if (!openedInstallGuide && !SignInManager.shouldShowSignIn())
       promptInstall(workspaceServices, extensionState);
