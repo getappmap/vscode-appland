@@ -5,6 +5,7 @@ import ClassMapIndex from '../services/classMapIndex';
 import { AppmapConfigManager, AppmapConfigManagerInstance } from '../services/appmapConfigManager';
 import { workspaceServices } from '../services/workspaceServices';
 import assert from 'assert';
+import { join } from 'path';
 
 export default function deleteAllAppMaps(
   context: vscode.ExtensionContext,
@@ -23,7 +24,7 @@ export default function deleteAllAppMaps(
       return;
     }
 
-    deleteAppMaps(appmapDir);
+    deleteAppMaps(join(folder.uri.fsPath, appmapDir));
   }
 
   context.subscriptions.push(
