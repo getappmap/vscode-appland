@@ -1,11 +1,8 @@
 import * as vscode from 'vscode';
 import { SinonSandbox, createSandbox } from 'sinon';
 import { initializeWorkspace, waitForExtension, waitFor } from '../util';
-import {
-  AppMapQuickPickItem,
-  EXPAND_PACKAGES_TITLE,
-  PACKAGES_TITLE,
-} from '../../../src/lib/sequenceDiagram';
+import { EXPAND_PACKAGES_TITLE, PACKAGES_TITLE } from '../../../src/lib/sequenceDiagram';
+import { AppMapQuickPickItem } from '../../../src/lib/AppMapQuickPickItem';
 import { join } from 'path';
 import assert from 'assert';
 import { fileExists } from '../../../src/util';

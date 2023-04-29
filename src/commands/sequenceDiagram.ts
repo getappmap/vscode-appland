@@ -11,9 +11,9 @@ import {
   NUM_ACTIONS,
   NUM_ACTORS,
   plantUMLJarPath,
-  promptForAppMap,
   promptForSpecification,
 } from '../lib/sequenceDiagram';
+import { promptForAppMap } from '../lib/promptForAppMap';
 import { ProjectStateServiceInstance } from '../services/projectStateService';
 import assert from 'assert';
 import { Telemetry } from '../telemetry';

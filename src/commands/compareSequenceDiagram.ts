@@ -11,9 +11,9 @@ import {
   NUM_ACTORS,
   NUM_CHANGES,
   plantUMLJarPath,
-  promptForAppMap,
   promptForSpecification,
 } from '../lib/sequenceDiagram';
+import { promptForAppMap } from '../lib/promptForAppMap';
 import { tmpName } from 'tmp';
 import { promisify } from 'util';
 import { ProjectStateServiceInstance } from '../services/projectStateService';
