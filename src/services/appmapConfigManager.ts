@@ -163,24 +163,26 @@ export class AppmapConfigManagerInstance implements WorkspaceServiceInstance {
       usingDefault: true,
     } as AppmapConfig;
 
+    let appmapConfig: any | undefined;
     try {
-      const appmapConfig = load(await readFile(configFilePath, 'utf-8'));
-
-      if (
-        appmapConfig &&
-        typeof appmapConfig === 'object' &&
-        'appmap_dir' in appmapConfig &&
-        typeof appmapConfig.appmap_dir === 'string'
-      ) {
-        result.appmapDir = appmapConfig.appmap_dir;
-        result.usingDefault = false;
-      }
-
-      return result;
+      appmapConfig = load(await readFile(configFilePath, 'utf-8'));
     } catch (e) {
       // Unparseable AppMap config, or related error.
       console.warn(e);
+      return;
     }
+
+    if (
+      appmapConfig &&
+      typeof appmapConfig === 'object' &&
+      'appmap_dir' in appmapConfig &&
+      typeof appmapConfig.appmap_dir === 'string'
+    ) {
+      result.appmapDir = appmapConfig.appmap_dir;
+      result.usingDefault = false;
+    }
+
+    return result as AppmapConfig;
   }
 
   private async makeAppmapDirs(): Promise<void> {
