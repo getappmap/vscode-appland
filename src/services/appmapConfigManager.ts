@@ -73,16 +73,13 @@ export class AppmapConfigManagerInstance implements WorkspaceServiceInstance {
     const configFiles = await this._configFileProvider.files();
     this._hasConfigFile = configFiles.length > 0;
 
-    const appmapConfigCandidates = await Promise.all(
-      configFiles.map(async (configFile) => {
-        return await this.appMapConfigFromFile(configFile.fsPath);
-      })
-    );
-
-    // remove undefined values (if the file couldn't be read, for example)
-    let appmapConfigs = appmapConfigCandidates.filter(
-      (appmapConfig) => appmapConfig
-    ) as Array<AppmapConfig>;
+    let appmapConfigs = (
+      await Promise.all(
+        configFiles.map(async (configFile) => {
+          return await this.appMapConfigFromFile(configFile.fsPath);
+        })
+      )
+    ).filter(Boolean) as Array<AppmapConfig>;
 
     if (this._hasConfigFile && appmapConfigs.length === 0) {
       appmapConfigs = [
