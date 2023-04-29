@@ -10,7 +10,7 @@ export default class NodeProcessServiceInstance implements WorkspaceServiceInsta
 
   constructor(
     public folder: vscode.WorkspaceFolder,
-    protected readonly processes: Readonly<ProcessWatcher[]>
+    public readonly processes: Readonly<ProcessWatcher[]>
   ) {
     this.processes.forEach((p) => {
       this.disposables.push(

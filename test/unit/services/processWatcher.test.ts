@@ -8,6 +8,7 @@ import { promisify } from 'util';
 import { Uri } from 'vscode';
 import {
   ConfigFileProvider,
+  ProcessId,
   ProcessWatcher,
   ProcessWatcherOptions,
 } from '../../../src/services/processWatcher';
@@ -69,7 +70,7 @@ function makeWatcher(opts: Partial<ProcessWatcherOptions> = {}) {
   };
 
   return new ProcessWatcher(provider, {
-    id: 'test process',
+    id: 'test process' as any as ProcessId,
     modulePath: testModule,
     ...opts,
   });

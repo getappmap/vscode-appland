@@ -24,19 +24,22 @@ describe('AppMapIndex', () => {
   afterEach(initializeWorkspace);
 
   it('updates as AppMaps are modified', async () => {
-    const appmapFiles = (await vscode.workspace.findFiles(`**/*.appmap.json`)).map(
+    const appmapFiles = (await vscode.workspace.findFiles(`tmp/appmap/**/*.appmap.json`)).map(
       (uri) => uri.fsPath
     );
-    const mtimeFiles = async () => vscode.workspace.findFiles(`**/mtime`);
 
-    waitFor(
+    const mtimeFiles = async () => await vscode.workspace.findFiles(`tmp/appmap/**/mtime`);
+
+    await waitFor(
       `AppMaps have not all been indexed`,
-      async () => (await mtimeFiles()).length !== appmapFiles.length
+      async () => (await mtimeFiles()).length === appmapFiles.length
     );
 
-    await Promise.all((await mtimeFiles()).map(async (f) => promisify(unlink)(f.fsPath)));
-
-    assert.strictEqual((await mtimeFiles()).length, 0, `mtime files should all be erased`);
+    await repeatUntil(
+      async () => Promise.all((await mtimeFiles()).map(async (f) => promisify(unlink)(f.fsPath))),
+      `mtime files have not all been erased`,
+      async () => (await mtimeFiles()).length === 0
+    );
 
     const appmapFileCount = (await vscode.workspace.findFiles(`**/*.appmap.json`)).length;
 

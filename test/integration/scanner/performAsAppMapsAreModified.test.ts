@@ -31,6 +31,7 @@ describe('Scanner', () => {
 
   it('is performed as AppMaps are modified', async () => {
     await vscode.commands.executeCommand('appmap.deleteAllAppMaps');
+
     await waitFor('Diagnostics were not cleared', hasNoDiagnostics);
 
     await waitFor(
