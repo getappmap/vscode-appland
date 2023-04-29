@@ -131,7 +131,7 @@ describe('Background processes', () => {
       // wait for new processes to spawn after change to appmap.yml
       await initializeProcesses();
 
-      waitFor('Processes pick up the change to appmap_dir', async () =>
+      await waitFor('Processes pick up the change to appmap_dir', async () =>
         processWatchers
           .map((p) => p['options'].args?.join(' ') || ' ')
           .every((cmd) => {
