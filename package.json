@@ -22,7 +22,10 @@
   "license": "MIT",
   "main": "./out/extension.js",
   "categories": [
-    "Visualization"
+    "Visualization",
+    "Debuggers",
+    "Programming Languages",
+    "Linters"
   ],
   "keywords": [
     "diagram",
@@ -30,6 +33,10 @@
     "software design",
     "code analysis",
     "uml",
+    "sequence diagram",
+    "openapi",
+    "swagger",
+    "observability",
     "map",
     "trace",
     "technical debt",
