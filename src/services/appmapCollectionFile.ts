@@ -21,7 +21,7 @@ export default class AppMapCollectionFile implements AppMapCollection, AppMapsSe
   async onDelete(uri: vscode.Uri): Promise<void> {
     if (await fileExists(uri.fsPath)) return;
 
-    delete this.loaders[uri.fsPath];
+    this.loaders.delete(uri.fsPath);
     this._onUpdated.fire(this);
   }
 
@@ -29,7 +29,7 @@ export default class AppMapCollectionFile implements AppMapCollection, AppMapsSe
     const metadata = await AppMapCollectionFile.collectAppMapDescriptor(uri);
     if (metadata) {
       const descriptor = new AppMapDescriptorFile(uri, metadata);
-      this.loaders[uri.fsPath] = descriptor;
+      this.loaders.set(uri.fsPath, descriptor);
     } else {
       this.onDelete(uri);
     }
@@ -40,7 +40,7 @@ export default class AppMapCollectionFile implements AppMapCollection, AppMapsSe
     const metadata = await AppMapCollectionFile.collectAppMapDescriptor(uri);
     if (metadata) {
       const descriptor = new AppMapDescriptorFile(uri, metadata);
-      this.loaders[uri.fsPath] = descriptor;
+      this.loaders.set(uri.fsPath, descriptor);
       this._onUpdated.fire(this);
     }
   }
@@ -84,11 +84,7 @@ export default class AppMapCollectionFile implements AppMapCollection, AppMapsSe
   async initialize(): Promise<void> {
     this.setFilter('');
 
-    vscode.commands.executeCommand(
-      'setContext',
-      'appmap.hasData',
-      Object.keys(this.loaders).length > 0
-    );
+    vscode.commands.executeCommand('setContext', 'appmap.hasData', this.loaders.size > 0);
     vscode.commands.executeCommand('setContext', 'appmap.initialized', true);
   }
 
@@ -108,7 +104,7 @@ export default class AppMapCollectionFile implements AppMapCollection, AppMapsSe
   }
 
   public findByName(name: string): AppMapLoader | undefined {
-    return Object.values(this.loaders).find(
+    return [...this.loaders.values()].find(
       (d: AppMapLoaderFile) => d.descriptor.metadata?.name === name
     );
   }
@@ -126,7 +122,7 @@ export default class AppMapCollectionFile implements AppMapCollection, AppMapsSe
   }
 
   public allAppMaps(): AppMapLoader[] {
-    return Object.values(this.loaders);
+    return [...this.loaders.values()];
   }
 
   public allAppMapsForWorkspaceFolder(workspaceFolder: vscode.WorkspaceFolder): AppMapLoader[] {
