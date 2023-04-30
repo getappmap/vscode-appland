@@ -1,4 +1,3 @@
-import { rmdir } from 'fs';
 import { glob } from 'glob';
 import { promisify } from 'util';
 import * as vscode from 'vscode';
@@ -17,5 +16,5 @@ export default async function deleteAppMap(uri: vscode.Uri): Promise<void> {
   await Promise.all(
     filesToDelete.map((file) => retry(async () => await rm(file, { force: true })))
   );
-  await retry(async () => await promisify(rmdir)(indexDir, { recursive: true }));
+  await retry(async () => await rm(indexDir, { recursive: true }));
 }
