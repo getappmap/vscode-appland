@@ -5,7 +5,7 @@ import { InstructionStep, InstructionStepStatus } from '../src/appMap';
 describe('Instructions tree view', function () {
   beforeEach(async function () {
     const { driver, project } = this;
-    await project.reset('**/*.appmap.json', 'appmap.yml', 'appmap-findings.json');
+    await project.reset('**/*.appmap.json', 'appmap.yml', '**/appmap-findings.json');
 
     await driver.closePanel();
     await driver.resetUsage();
