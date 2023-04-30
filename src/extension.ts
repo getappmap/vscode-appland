@@ -34,7 +34,6 @@ import registerTrees from './tree';
 import { ClassMapTreeDataProvider } from './tree/classMapTreeDataProvider';
 import ContextMenu from './tree/contextMenu';
 import { FindingsTreeDataProvider } from './tree/findingsTreeDataProvider';
-import { notEmpty } from './util';
 import InstallGuideWebView from './webviews/installGuideWebview';
 import InstallationStatusBadge from './workspace/installationStatus';
 import UriHandler from './uri/uriHandler';
@@ -59,6 +58,7 @@ import SignInViewProvider from './webviews/signInWebview';
 import SignInManager from './services/signInManager';
 import tryOpenInstallGuide from './commands/tryOpenInstallGuide';
 import { AppmapConfigManager } from './services/appmapConfigManager';
+import { findByName } from './commands/findByName';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   Telemetry.register(context);
@@ -256,30 +256,9 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     const editorProvider = AppMapEditorProvider.register(context, extensionState);
     RemoteRecording.register(context);
     ContextMenu.register(context, projectStates, appmapCollectionFile);
+
     generateOpenApi(context, extensionState);
-
-    context.subscriptions.push(
-      vscode.commands.registerCommand('appmap.findByName', async () => {
-        const items = appmapCollectionFile
-          .allAppMaps()
-          .map((loader) => loader.descriptor.metadata?.name as string)
-          .filter(notEmpty)
-          .sort();
-
-        const name = await vscode.window.showQuickPick(items, {});
-        if (!name) {
-          return;
-        }
-
-        const loader = appmapCollectionFile.findByName(name);
-        if (!loader) {
-          return;
-        }
-
-        vscode.commands.executeCommand('vscode.open', loader.descriptor.resourceUri);
-      })
-    );
-
+    findByName(context, projectStates, appmapCollectionFile);
     resetUsageState(context, extensionState);
 
     if (!openedInstallGuide && !SignInManager.shouldShowSignIn())
