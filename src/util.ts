@@ -89,6 +89,7 @@ export async function retry(
     if (retries === 0) {
       throw e;
     }
+    console.warn(`Retrying after error: ${e}`);
     await new Promise((resolve) => setTimeout(resolve, interval));
     await retry(fn, retries - 1, interval);
   }
