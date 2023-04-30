@@ -44,14 +44,6 @@ export default class ProjectDirectory {
     return path.join(this.workspacePath, 'tmp', 'appmap');
   }
 
-  get findingsFilePath(): string {
-    return path.join(this.workspacePath, 'appmap-findings.json');
-  }
-
-  get configFilePath(): string {
-    return path.join(this.workspacePath, 'appmap.yml');
-  }
-
   async simulateAppMapInstall(): Promise<void> {
     const configContents = [
       `name: ${path.dirname(this.workspacePath)}`,
