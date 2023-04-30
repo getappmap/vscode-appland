@@ -57,10 +57,6 @@
     ],
     "commands": [
       {
-        "command": "appmap.openMostRecentlyModifiedAppMap",
-        "title": "AppMap: Open Most Recently Modified AppMap File"
-      },
-      {
         "command": "appmap.getAppmapState",
         "title": "AppMap: Copy Current AppMap State to Clipboard"
       },
