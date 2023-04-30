@@ -136,10 +136,9 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     const sourceFileWatcher = new SourceFileWatcher(classMapIndex);
 
     registerDecorationProvider(context, lineInfoIndex);
-    outOfDateTests(context, appmapUptodateService);
-    openCodeObjectInAppMap(context, classMapIndex);
-    openCodeObjectInSource(context);
-    learnMoreRuntimeAnalysis(context);
+    await outOfDateTests(context, appmapUptodateService);
+    await openCodeObjectInSource(context);
+    await learnMoreRuntimeAnalysis(context);
     appmapHoverProvider(context, lineInfoIndex);
     tryOpenInstallGuide(extensionState);
 
@@ -210,6 +209,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       projectState
     )) as ProjectStateServiceInstance[];
 
+    openCodeObjectInAppMap(context, projectStates, appmapCollectionFile, classMapIndex);
     await AnalysisManager.register(context, projectStates, extensionState, workspaceServices);
 
     await SignInManager.register(extensionState);

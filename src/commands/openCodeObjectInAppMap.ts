@@ -2,11 +2,16 @@ import * as vscode from 'vscode';
 import ClassMapIndex from '../services/classMapIndex';
 import { CodeObjectEntry } from '../lib/CodeObjectEntry';
 import { CLICK_CODE_OBJECT, Telemetry } from '../telemetry';
+import { promptForAppMap } from '../lib/promptForAppMap';
+import AppMapCollection from '../services/appmapCollection';
+import { ProjectStateServiceInstance } from '../services/projectStateService';
 
-export default async function openCodeObjectInAppMap(
+export default function openCodeObjectInAppMap(
   context: vscode.ExtensionContext,
+  projectStates: ReadonlyArray<ProjectStateServiceInstance>,
+  appmapCollection: AppMapCollection,
   classMapIndex: ClassMapIndex
-): Promise<void> {
+) {
   const command = vscode.commands.registerCommand('appmap.openCodeObjectInAppMap', async (fqid) => {
     if (!fqid) {
       const collectFqids = (fqids: string[], codeObject: CodeObjectEntry) => {
@@ -40,25 +45,15 @@ export default async function openCodeObjectInAppMap(
     if (codeObject.appMapFiles.length === 1) {
       appMapFileName = codeObject.appMapFiles[0];
     } else {
-      const appMapMetadata = await codeObject.appMapMetadata();
-      const appMapsByName = {};
-      Object.keys(appMapMetadata).forEach(
-        (fileName) => (appMapsByName[appMapMetadata[fileName].name] = fileName)
-      );
-      const options: vscode.QuickPickOptions = {
-        canPickMany: false,
-        placeHolder: 'Choose AppMap to open',
-      };
-      const appMapName = await vscode.window.showQuickPick(
-        Object.keys(appMapsByName).sort(),
-        options
-      );
+      const appmapFiles = new Set(Object.keys(await codeObject.appMapMetadata()));
+      const appmaps = appmapCollection
+        .allAppMaps()
+        .filter((appmap) => appmapFiles.has(appmap.descriptor.resourceUri.fsPath));
 
-      if (!appMapName) {
-        return false;
-      }
+      const selectedAppMap = await promptForAppMap(projectStates, appmaps);
+      if (!selectedAppMap) return;
 
-      appMapFileName = appMapsByName[appMapName];
+      appMapFileName = selectedAppMap.fsPath;
     }
 
     const state = {
