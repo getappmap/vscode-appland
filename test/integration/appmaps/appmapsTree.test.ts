@@ -1,7 +1,9 @@
 import assert from 'assert';
-import { initializeWorkspace, waitForExtension } from '../util';
+import { initializeWorkspace, waitFor, waitForExtension, withAuthenticatedUser } from '../util';
 
 describe('AppMaps', () => {
+  withAuthenticatedUser();
+
   beforeEach(initializeWorkspace);
   beforeEach(waitForExtension);
   afterEach(initializeWorkspace);
@@ -10,11 +12,22 @@ describe('AppMaps', () => {
     const trees = (await waitForExtension()).trees;
 
     const appmapsTree = trees.appmaps;
-    const roots = appmapsTree.getChildren();
 
-    assert(roots, 'AppMaps tree is empty');
-    assert.deepStrictEqual(roots.map((root) => root.name).sort(), ['minitest']);
-    const minitests = roots[0];
+    await waitFor(
+      `AppMaps tree first root should be 'minitest'`,
+      () =>
+        appmapsTree
+          .getChildren()
+          .map((root) => root.name)
+          .sort()
+          .shift() === 'minitest'
+    );
+    const minitests = appmapsTree.getChildren()[0];
+
+    await waitFor(
+      `'minitest' should contain two children`,
+      () => appmapsTree.getChildren(minitests)?.length === 2
+    );
 
     const appmaps = appmapsTree.getChildren(minitests);
     assert(appmaps, `No appmaps for ${minitests.name}`);

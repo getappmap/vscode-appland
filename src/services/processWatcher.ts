@@ -12,8 +12,15 @@ export type RetryOptions = {
   retryBackoff?: (retryNumber: number) => number;
 };
 
+export enum ProcessId {
+  Index = 'index',
+  Analysis = 'analysis',
+}
+
+export const AllProcessIds = [ProcessId.Index, ProcessId.Analysis];
+
 export type ProcessWatcherOptions = {
-  id: string;
+  id: ProcessId;
 } & RetryOptions &
   SpawnOptions;
 
@@ -30,15 +37,14 @@ export interface ConfigFileProvider {
 
 export class ProcessWatcher implements vscode.Disposable {
   public process?: ChildProcess;
-  protected options: ProcessWatcherOptions & Required<RetryOptions>;
+  public crashCount = 0;
+  public options: ProcessWatcherOptions & Required<RetryOptions>;
+
   protected _onError: vscode.EventEmitter<Error> = new vscode.EventEmitter<Error>();
   protected _onAbort: vscode.EventEmitter<Error> = new vscode.EventEmitter<Error>();
 
   protected shouldRun = false;
   protected hasAborted = false;
-
-  // The number of times this process has crashed.
-  protected crashCount = 0;
 
   // A timeout period in which the crash count is to be reset if the timer is fulfilled.
   protected crashTimeout?: NodeJS.Timeout;
@@ -54,7 +60,7 @@ export class ProcessWatcher implements vscode.Disposable {
     return this._onAbort.event;
   }
 
-  public get id(): string {
+  public get id(): ProcessId {
     return this.options.id;
   }
 

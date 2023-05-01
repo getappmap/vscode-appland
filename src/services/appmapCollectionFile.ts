@@ -7,6 +7,8 @@ import AppMapLoaderFile from './appmapLoaderFile';
 import ChangeEventDebouncer from './changeEventDebouncer';
 import { fileExists } from '../util';
 import { AppMapsService } from '../appMapsService';
+import { basename, dirname, join } from 'path';
+import { CodeObject } from '@appland/models';
 
 export default class AppMapCollectionFile implements AppMapCollection, AppMapsService {
   private _onUpdated: vscode.EventEmitter<AppMapCollection> =
@@ -45,38 +47,32 @@ export default class AppMapCollectionFile implements AppMapCollection, AppMapsSe
 
   static async collectAppMapDescriptor(uri: vscode.Uri): Promise<AppMapDescriptor | undefined> {
     try {
-      const buf = await fs.readFile(uri.fsPath);
       const timestamp = (await fs.stat(uri.fsPath)).mtimeMs;
-      const appmap = JSON.parse(buf.toString());
-      let numRequests = 0;
-      let numQueries = 0;
-      let numFunctions = 0;
+      const indexDir = join(dirname(uri.fsPath), basename(uri.fsPath, '.appmap.json'));
+      const metadata = JSON.parse(await fs.readFile(join(indexDir, 'metadata.json'), 'utf-8'));
+      const httpServerRequests = JSON.parse(
+        await fs.readFile(join(indexDir, 'canonical.httpServerRequests.json'), 'utf-8')
+      );
+      const sqlQueries = JSON.parse(
+        await fs.readFile(join(indexDir, 'canonical.sqlNormalized.json'), 'utf-8')
+      );
+      const classMap = JSON.parse(
+        await fs.readFile(join(indexDir, 'classMap.json'), 'utf-8')
+      ) as CodeObject[];
+      let functionCount = 0;
+      const visitClass = (codeObject: CodeObject) => {
+        if (codeObject.type === 'function') functionCount += 1;
 
-      (appmap.events || []).forEach((event) => {
-        if (event.http_server_request) {
-          ++numRequests;
-        }
-
-        if (event.sql_query) {
-          ++numQueries;
-        }
-      });
-
-      const stack = appmap.classMap || [];
-      while (stack.length > 0) {
-        const obj = stack.pop();
-        if (obj.type === 'function') {
-          ++numFunctions;
-        }
-        (obj.children || []).forEach((child) => stack.push(child));
-      }
+        (codeObject.children || []).forEach(visitClass);
+      };
+      classMap.forEach(visitClass);
 
       return {
-        metadata: appmap.metadata,
+        metadata,
         timestamp: timestamp,
-        numRequests,
-        numQueries,
-        numFunctions,
+        numRequests: httpServerRequests.length,
+        numQueries: sqlQueries.length,
+        numFunctions: functionCount,
         resourceUri: uri,
       };
     } catch (e) {

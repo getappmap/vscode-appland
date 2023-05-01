@@ -1,78 +1,58 @@
-import { ProcessWatcher } from '../../../src/services/processWatcher';
-import { retry } from '../../../src/util';
+import * as vscode from 'vscode';
 import assert from 'assert';
 import NodeProcessServiceInstance from '../../../src/services/nodeProcessServiceInstance';
 import { WorkspaceServiceInstance } from '../../../src/services/workspaceService';
-import { waitForExtension } from '../util';
-import { NodeProcessService } from '../../../src/services/nodeProcessService';
+import { waitFor, waitForExtension } from '../util';
+import { AllProcessIds, ProcessId, ProcessWatcher } from '../../../src/services/processWatcher';
+
+export type ProcessWatchers = { [key in ProcessId]: ProcessWatcher };
 
 async function waitForProcessState(
-  processWatchers: ReadonlyArray<ProcessWatcher>,
+  processIds: ReadonlyArray<ProcessId> = [ProcessId.Index, ProcessId.Analysis],
   isRunning: boolean,
   pidExclusions: (number | undefined)[], // If a process is identified by a PID in `pidExclusions`, it will not pass the conditional,
   action: string
 ): Promise<void> {
-  await retry(
-    () => {
-      if (
-        !processWatchers.every(
-          (p) => p.running == isRunning && !pidExclusions.includes(p.process?.pid)
-        )
-      ) {
-        throw new Error(`Waiting for processes to ${action}`);
-      }
-    },
-    25,
-    1200
+  await waitFor(`Background processes should ${action}`, async () =>
+    Object.values(await getBackgroundProcesses())
+      .filter((process) => processIds.includes(process.id))
+      .every((p) => p.running == isRunning && !pidExclusions.includes(p.process?.pid))
   );
 }
 
 /* eslint-disable-next-line @typescript-eslint/naming-convention */
 export const waitForUp = (
-  processWatchers: ReadonlyArray<ProcessWatcher>,
+  processIds: ProcessId[] = AllProcessIds,
   pidExclusions: (number | undefined)[] = []
-): Promise<void> => waitForProcessState(processWatchers, true, pidExclusions, 'start');
+): Promise<void> => waitForProcessState(processIds, true, pidExclusions, 'start');
 
 /* eslint-disable-next-line @typescript-eslint/naming-convention */
 export const waitForDown = (
-  processWatchers: ReadonlyArray<ProcessWatcher>,
+  processIds: ReadonlyArray<ProcessId> = [ProcessId.Index, ProcessId.Analysis],
   pidExclusions: (number | undefined)[] = []
-): Promise<void> => waitForProcessState(processWatchers, false, pidExclusions, 'shut down');
+): Promise<void> => waitForProcessState(processIds, false, pidExclusions, 'shut down');
 
-export interface InitializedProcessService {
-  processService: NodeProcessService;
-  processServiceInstance: NodeProcessServiceInstance;
-  processWatchers: ReadonlyArray<ProcessWatcher>;
-}
-
-export async function initializeProcesses(): Promise<ReadonlyArray<ProcessWatcher>> {
+export async function getBackgroundProcesses(): Promise<ProcessWatchers> {
   const extension = await waitForExtension();
   const processService = extension.processService;
   assert.ok(processService, 'the service exists');
 
-  if (!processService.ready) {
-    await new Promise<void>((resolve): void => {
-      const disposable = processService?.onReady((): void => {
-        disposable?.dispose();
-        resolve();
-      });
-    });
-  }
-
   let serviceInstances: WorkspaceServiceInstance[] = [];
-  await retry(
+  await waitFor(
+    `${vscode.workspace.workspaceFolders?.length} service instances should be created`,
     () => {
       serviceInstances = extension.workspaceServices.getServiceInstances(processService);
-      if (serviceInstances.length === 0) {
-        throw new Error(`Waiting for service instance creation`);
-      }
-    },
-    20,
-    1500
+      return serviceInstances.length === vscode.workspace.workspaceFolders?.length;
+    }
   );
 
-  assert.strictEqual(serviceInstances.length, 1, 'a single service instance exists');
+  // assert(
+  //   serviceInstances[0] instanceof NodeProcessServiceInstance,
+  //   `${serviceInstances[0]} is not a NodeProcessServiceInstance`
+  // );
 
-  const processServiceInstance = serviceInstances[0] as NodeProcessServiceInstance;
-  return processServiceInstance['processes'];
+  return (serviceInstances[0] as NodeProcessServiceInstance).processes.reduce(
+    (acc, processWatcher) => ((acc[processWatcher.id] = processWatcher), acc),
+    {} as ProcessWatchers
+  );
 }

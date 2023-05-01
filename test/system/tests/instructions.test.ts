@@ -5,7 +5,7 @@ import { InstructionStep, InstructionStepStatus } from '../src/appMap';
 describe('Instructions tree view', function () {
   beforeEach(async function () {
     const { driver, project } = this;
-    await project.reset('**/*.appmap.json', 'appmap.yml', 'appmap-findings.json');
+    await project.reset('**/*.appmap.json', 'appmap.yml', '**/appmap-findings.json');
 
     await driver.closePanel();
     await driver.resetUsage();
@@ -106,7 +106,7 @@ describe('Instructions tree view', function () {
     for (let i = 0; i < pages.length; i++) {
       const page = pages[i];
       await driver.appMap.openInstruction(page.step);
-      waitFor(
+      await waitFor(
         `Expected page '${page.title}' to be visible`,
         async (): Promise<boolean> => (await driver.instructionsWebview.pageTitle()) === page.title
       );

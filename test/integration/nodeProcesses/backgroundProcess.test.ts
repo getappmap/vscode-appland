@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { ProcessWatcher } from '../../../src/services/processWatcher';
+import { AllProcessIds, ProcessId } from '../../../src/services/processWatcher';
 import { fileExists } from '../../../src/util';
 import {
   initializeWorkspace,
@@ -11,15 +11,10 @@ import {
 import { promises as fs } from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
-import { waitForDown, waitForUp, initializeProcesses as getProcessWatchers } from './util';
+import { waitForDown, waitForUp, getBackgroundProcesses } from './util';
 
 describe('Background processes', () => {
   withAuthenticatedUser();
-
-  let processWatchers: ReadonlyArray<ProcessWatcher>;
-  const initializeProcesses = async () => {
-    processWatchers = await getProcessWatchers();
-  };
 
   context('monitoring appmap.yml', () => {
     beforeEach(initializeWorkspace);
@@ -30,83 +25,81 @@ describe('Background processes', () => {
       console.log(`unlinking ${configFile}`);
 
       await fs.unlink(configFile);
-      assert(!(await fileExists(configFile)));
-
-      await initializeProcesses();
+      await waitFor(`${configFile} still exists`, async () => !(await fileExists(configFile)));
 
       await restoreFile('appmap.yml', ProjectA);
-      await waitForUp(processWatchers);
+      await waitForUp();
     });
 
     it('process state reflects the presence of appmap.yml', async () => {
-      await initializeProcesses();
-      await waitForUp(processWatchers);
-      const originalPids = processWatchers.map((p) => p.process?.pid);
+      await waitForUp();
+
+      const originalPids = Object.values(await getBackgroundProcesses()).map((p) => p.process?.pid);
       assert.ok(originalPids.every((pid) => pid !== undefined));
 
       await fs.unlink(path.join(ProjectA, 'appmap.yml'));
-      await waitForDown(processWatchers);
+      await waitForDown();
 
       await restoreFile('appmap.yml', ProjectA);
-      await waitForUp(processWatchers, originalPids);
+      await waitForUp(AllProcessIds, originalPids);
     });
   });
 
   context('with processes initialized', () => {
     beforeEach(initializeWorkspace);
-
-    beforeEach(initializeProcesses);
+    beforeEach(getBackgroundProcesses);
 
     afterEach(initializeWorkspace);
 
     it('automatically runs background processes', async () => {
-      await waitForUp(processWatchers);
+      await waitForUp();
 
       const waitSeconds = 10;
       await new Promise((resolve) => setTimeout(resolve, waitSeconds * 1000));
 
       assert.ok(
-        processWatchers.every((p) => p.running && p['crashCount'] === 0),
+        Object.values(await getBackgroundProcesses()).every((p) => p.running && p.crashCount === 0),
         `background processes have not crashed after ${waitSeconds}s`
       );
     });
 
     it('restores crashed processes', async () => {
-      await waitForUp(processWatchers);
+      await waitForUp();
 
-      const pids = processWatchers.map((p) => p.process?.pid);
+      const backgroundProcesses = Object.values(await getBackgroundProcesses());
+      const pids = backgroundProcesses.map((p) => p.process?.pid);
+
       assert.ok(pids.every((pid) => pid !== undefined));
-
       assert.ok(
-        processWatchers.map((p) => p.process?.kill()).every((killed) => killed),
+        backgroundProcesses.map((p) => p.process?.kill()).every((killed) => killed),
         'every process is killed'
       );
 
-      await waitForUp(processWatchers, pids);
+      await waitForUp(AllProcessIds, pids);
 
-      const newPids = processWatchers.map((p) => p.process?.pid);
+      const newPids = Object.values(await getBackgroundProcesses()).map((p) => p.process?.pid);
       assert.ok(newPids.every((pid) => pid !== undefined));
     });
 
     it('analysis process state reflects whether or not analysis is enabled', async () => {
-      await waitForUp(processWatchers);
+      await waitForUp();
 
-      const analysisService = processWatchers.find((p) => p.id === 'analysis');
-      const analysisPid = analysisService?.process?.pid;
+      const analysisService = (await getBackgroundProcesses()).analysis;
       assert(analysisService);
+      const analysisPid = analysisService.process?.pid;
       assert(analysisPid);
 
       vscode.workspace.getConfiguration('appMap').update('findingsEnabled', false);
-      await waitForDown([analysisService]);
+      await waitForDown([ProcessId.Analysis]);
 
       vscode.workspace.getConfiguration('appMap').update('findingsEnabled', true);
-      await waitForUp([analysisService], [analysisPid]);
+      await waitForUp([ProcessId.Analysis], [analysisPid]);
     });
 
     it('specifies --appmap-dir', async () => {
-      await waitForUp(processWatchers);
-      processWatchers
-        .map((p) => p['options'].args?.join(' ') || ' ')
+      await waitForUp();
+      Object.values(await getBackgroundProcesses())
+        .map((p) => p.options.args?.join(' ') || ' ')
         .forEach((cmd) => {
           assert(cmd.includes('--appmap-dir tmp/appmap'));
         });
@@ -120,27 +113,29 @@ describe('Background processes', () => {
 
     beforeEach(async () => {
       await initializeWorkspace();
+
       assert(!(await fileExists(expectedPath)), 'the appmap_dir provided should not yet exist');
       await fs.appendFile(configFile, `\nappmap_dir: ${appmapDir}`);
-      await initializeProcesses();
-      await waitFor('appmap_dir being created', async () => await fileExists(expectedPath));
     });
 
-    afterEach(async () => await initializeWorkspace());
+    afterEach(initializeWorkspace);
 
-    it('specifies --appmap-dir', async () => {
-      // wait for new processes to spawn after change to appmap.yml
-      await initializeProcesses();
-      processWatchers
-        .map((p) => p['options'].args?.join(' ') || ' ')
-        .forEach((cmd) => {
-          console.log('COMMAND: ', cmd);
-          assert(cmd.includes(`--appmap-dir ${appmapDir}`));
-        });
+    it('spawns background processes with updated --appmap-dir', async () => {
+      await waitFor('Processes should pick up the change to appmap_dir', async () =>
+        Object.values(await getBackgroundProcesses())
+          .map((p) => p.options.args?.join(' ') || ' ')
+          .every((cmd) => {
+            console.log('COMMAND: ', cmd);
+            return cmd.includes(`--appmap-dir ${appmapDir}`);
+          })
+      );
     });
 
     it("creates the AppMap directory if it doesn't already exist", async () => {
-      assert(await fileExists(expectedPath), 'the appmap_dir provided does not exist');
+      await waitFor(
+        `appmap_dir ${appmapDir} should be created`,
+        async () => await fileExists(expectedPath)
+      );
     });
   });
 });

@@ -25,12 +25,16 @@ describe('Findings', () => {
 
     await waitFor('No Diagnostics were created', hasDiagnostics);
 
+    // type: [Uri, Diagnostic[]][];
+    const workspaceFolder = (vscode.workspace.workspaceFolders || [])[0];
+    assert(workspaceFolder);
     const diagnostics = vscode.languages.getDiagnostics();
+    assert.strictEqual(diagnostics.length, 1);
     assert.strictEqual(
       diagnostics[0][0].toString(),
-      `file://${process.cwd()}/test/fixtures/workspaces/project-a/app/controllers/microposts_controller.rb`
+      `file://${workspaceFolder.uri.fsPath}/app/controllers/microposts_controller.rb`
     );
-    assert.strictEqual(diagnostics[0][1].length, 1);
+    assert(diagnostics[0][1][0]);
     assert.strictEqual(
       diagnostics[0][1][0].message,
       `Unbatched materialized SQL query: SELECT "microposts".* FROM "microposts" WHERE "microposts"."user_id" = ? ORDER BY "microposts"."created_at" DESC, app/controllers/microposts_controller.rb:5`

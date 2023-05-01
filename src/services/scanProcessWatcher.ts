@@ -1,7 +1,7 @@
 import { getApiKey } from '../authentication';
 import ExtensionSettings from '../configuration/extensionSettings';
 import { NodeProcessService } from './nodeProcessService';
-import { ConfigFileProvider, ProcessWatcher } from './processWatcher';
+import { ConfigFileProvider, ProcessId, ProcessWatcher } from './processWatcher';
 
 export default class ScanProcessWatcher extends ProcessWatcher {
   constructor(
@@ -12,7 +12,7 @@ export default class ScanProcessWatcher extends ProcessWatcher {
     env?: NodeJS.ProcessEnv
   ) {
     super(configFileProvider, {
-      id: 'analysis',
+      id: ProcessId.Analysis,
       modulePath: modulePath,
       log: NodeProcessService.outputChannel,
       args: ['scan', '--watch', '--appmap-dir', appmapDir],
