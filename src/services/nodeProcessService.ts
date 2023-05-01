@@ -28,7 +28,6 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
   protected externDir: string;
   protected globalStorageDir: string;
   protected COPY_FILES: string[] = [PACKAGE_JSON, YARN_JS];
-  protected static readonly DEFAULT_APPMAP_DIR = '.';
 
   protected _hasCLIBin = false;
   get hasCLIBin(): boolean {

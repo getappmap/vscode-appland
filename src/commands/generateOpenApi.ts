@@ -12,8 +12,7 @@ import {
 } from '../services/nodeDependencyProcess';
 import { DEBUG_EXCEPTION, GENERATE_OPENAPI, Telemetry } from '../telemetry';
 import ErrorCode from '../telemetry/definitions/errorCodes';
-import { AppmapConfigManager, AppmapConfigManagerInstance } from '../services/appmapConfigManager';
-import { workspaceServices } from '../services/workspaceServices';
+import { AppmapConfigManager, DEFAULT_APPMAP_DIR } from '../services/appmapConfigManager';
 
 export const GenerateOpenApi = 'appmap.generateOpenApi';
 
@@ -40,40 +39,25 @@ export default function generateOpenApi(
             globalStoragePath: context.globalStorageUri.fsPath,
           });
 
-          let appmapDir = '.';
-          let cwd = workspaceFolder.uri.fsPath;
-
-          const appmapConfigManagerInstance = workspaceServices().getServiceInstanceFromClass(
-            AppmapConfigManager,
-            workspaceFolder
-          ) as AppmapConfigManagerInstance | undefined;
-          assert(appmapConfigManagerInstance);
-
-          const appmapConfig = await appmapConfigManagerInstance.getAppmapConfig();
-
-          if (appmapConfig) {
-            appmapDir = appmapConfig.appmapDir;
-            cwd = appmapConfig.configFolder;
-          }
+          const config = await AppmapConfigManager.getAppMapConfig(workspaceFolder);
 
           const openApiCmd = spawn({
             modulePath,
-            args: ['openapi', '--appmap-dir', appmapDir],
-            cwd,
+            args: ['openapi', '--appmap-dir', config?.appmapDir || DEFAULT_APPMAP_DIR],
+            cwd: config?.configFolder || workspaceFolder.uri.fsPath,
             saveOutput: true,
           });
 
           try {
             await verifyCommandOutput(openApiCmd);
           } catch (e) {
+            console.error(e);
             Telemetry.sendEvent(DEBUG_EXCEPTION, {
               exception: e as Error,
               errorCode: ErrorCode.GenerateOpenApiFailure,
               log: openApiCmd.log.toString(),
             });
-            vscode.window.showWarningMessage(
-              'Failed to generate OpenAPI definitions. Please try again later.'
-            );
+            vscode.window.showWarningMessage(`An error occurred generating OpenAPI`);
             return;
           }
 

@@ -59,6 +59,10 @@ import SignInManager from './services/signInManager';
 import tryOpenInstallGuide from './commands/tryOpenInstallGuide';
 import { AppmapConfigManager } from './services/appmapConfigManager';
 import { findByName } from './commands/findByName';
+import archive from './commands/archive';
+import restore from './commands/restore';
+import compare from './commands/compare';
+import reCompare from './commands/reCompare';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   Telemetry.register(context);
@@ -258,6 +262,10 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     ContextMenu.register(context, projectStates, appmapCollectionFile);
 
     generateOpenApi(context, extensionState);
+    archive(context);
+    restore(context);
+    compare(context);
+    reCompare(context);
     findByName(context, projectStates, appmapCollectionFile);
     resetUsageState(context, extensionState);
 
