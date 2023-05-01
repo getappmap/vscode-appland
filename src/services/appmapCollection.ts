@@ -4,6 +4,15 @@ import AppMapLoader from './appmapLoader';
 export default interface AppMapCollection {
   readonly onUpdated: Event<AppMapCollection>;
 
+  /**
+   * Lists all known AppMaps.
+   */
+  allAppMaps(): AppMapLoader[];
+
+  /**
+   * Lists all AppMaps that match any active filter.
+   */
   appMaps(): AppMapLoader[];
+
   allAppMapsForWorkspaceFolder(workspaceFolder: WorkspaceFolder): AppMapLoader[];
 }

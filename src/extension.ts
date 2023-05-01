@@ -14,7 +14,7 @@ import registerDecorationProvider from './decorations/decorationProvider';
 import AppMapEditorProvider from './editor/appmapEditorProvider';
 import appmapHoverProvider from './hover/appmapHoverProvider';
 import ProcessServiceImpl from './processServiceImpl';
-import { registerUtilityCommands } from './registerUtilityCommands';
+import { resetUsageState } from './commands/resetUsageState';
 import AppMapCollectionFile from './services/appmapCollectionFile';
 import { AppMapConfigWatcher } from './services/appMapConfigWatcher';
 import AppmapUptodateServiceInstance, {
@@ -34,7 +34,6 @@ import registerTrees from './tree';
 import { ClassMapTreeDataProvider } from './tree/classMapTreeDataProvider';
 import ContextMenu from './tree/contextMenu';
 import { FindingsTreeDataProvider } from './tree/findingsTreeDataProvider';
-import { notEmpty } from './util';
 import InstallGuideWebView from './webviews/installGuideWebview';
 import InstallationStatusBadge from './workspace/installationStatus';
 import UriHandler from './uri/uriHandler';
@@ -59,6 +58,7 @@ import SignInViewProvider from './webviews/signInWebview';
 import SignInManager from './services/signInManager';
 import tryOpenInstallGuide from './commands/tryOpenInstallGuide';
 import { AppmapConfigManager } from './services/appmapConfigManager';
+import { findByName } from './commands/findByName';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   Telemetry.register(context);
@@ -136,10 +136,9 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     const sourceFileWatcher = new SourceFileWatcher(classMapIndex);
 
     registerDecorationProvider(context, lineInfoIndex);
-    outOfDateTests(context, appmapUptodateService);
-    openCodeObjectInAppMap(context, classMapIndex);
-    openCodeObjectInSource(context);
-    learnMoreRuntimeAnalysis(context);
+    await outOfDateTests(context, appmapUptodateService);
+    await openCodeObjectInSource(context);
+    await learnMoreRuntimeAnalysis(context);
     appmapHoverProvider(context, lineInfoIndex);
     tryOpenInstallGuide(extensionState);
 
@@ -210,6 +209,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       projectState
     )) as ProjectStateServiceInstance[];
 
+    openCodeObjectInAppMap(context, projectStates, appmapCollectionFile, classMapIndex);
     await AnalysisManager.register(context, projectStates, extensionState, workspaceServices);
 
     await SignInManager.register(extensionState);
@@ -256,31 +256,10 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     const editorProvider = AppMapEditorProvider.register(context, extensionState);
     RemoteRecording.register(context);
     ContextMenu.register(context, projectStates, appmapCollectionFile);
+
     generateOpenApi(context, extensionState);
-
-    context.subscriptions.push(
-      vscode.commands.registerCommand('appmap.findByName', async () => {
-        const items = appmapCollectionFile
-          .allAppMaps()
-          .map((loader) => loader.descriptor.metadata?.name as string)
-          .filter(notEmpty)
-          .sort();
-
-        const name = await vscode.window.showQuickPick(items, {});
-        if (!name) {
-          return;
-        }
-
-        const loader = appmapCollectionFile.findByName(name);
-        if (!loader) {
-          return;
-        }
-
-        vscode.commands.executeCommand('vscode.open', loader.descriptor.resourceUri);
-      })
-    );
-
-    registerUtilityCommands(context, extensionState);
+    findByName(context, projectStates, appmapCollectionFile);
+    resetUsageState(context, extensionState);
 
     if (!openedInstallGuide && !SignInManager.shouldShowSignIn())
       promptInstall(workspaceServices, extensionState);

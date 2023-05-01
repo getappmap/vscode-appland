@@ -17,10 +17,10 @@ import { workspaceServices } from '../services/workspaceServices';
 
 export const GenerateOpenApi = 'appmap.generateOpenApi';
 
-export default async function generateOpenApi(
+export default function generateOpenApi(
   context: vscode.ExtensionContext,
   extensionState: ExtensionState
-): Promise<void> {
+) {
   const command = vscode.commands.registerCommand(
     GenerateOpenApi,
     async (
