@@ -1,3 +1,26 @@
+# [0.77.0](https://github.com/getappmap/vscode-appland/compare/v0.76.0...v0.77.0) (2023-05-01)
+
+
+### Bug Fixes
+
+* Don't catch the wrong exception ([d11f8e0](https://github.com/getappmap/vscode-appland/commit/d11f8e019fa8c3d8ebd08b81997d39a21a975083))
+* Don't parse every AppMap as its observed ([7c69a92](https://github.com/getappmap/vscode-appland/commit/7c69a92162e603a8fe27ae340ee0d2232583c1db))
+* Remove command 'openMostRecentlyModifiedAppMap' since it has no implementation ([701fe47](https://github.com/getappmap/vscode-appland/commit/701fe47fb8c2a384a1595ef0213dacd019bd8cfb))
+* Remove unneeded async ([a01e19d](https://github.com/getappmap/vscode-appland/commit/a01e19d573f1854b6615c0987703e82e1fedf5a5))
+* Typo ([d184b49](https://github.com/getappmap/vscode-appland/commit/d184b49b5288d0a80c975df3a13b598c51f618c2))
+* Use Map as a Map, not as an Object ([5504466](https://github.com/getappmap/vscode-appland/commit/550446627a1ae0f9de50b6ffeedba2391734b87e))
+
+
+### Features
+
+* Delete all AppMaps only from appmap_dir ([9ce14a4](https://github.com/getappmap/vscode-appland/commit/9ce14a4c7a76f53bfc20dc3f2267110a106ffab5))
+* Open AppMap by Name uses enhanced prompt ([48f5850](https://github.com/getappmap/vscode-appland/commit/48f5850eb0e3c0e03a0c570f3311f1fd9421cff0))
+* Open Code Object in AppMap uses enhanced prompt ([b21deb4](https://github.com/getappmap/vscode-appland/commit/b21deb406bc72ee018bc6c81a6bbcea676f9bddc))
+* Print a debug log message when deleting an AppMap ([41a444a](https://github.com/getappmap/vscode-appland/commit/41a444ac84aa72052c252424d6c0fe39cc447074))
+* Print a warning before retrying ([ac45350](https://github.com/getappmap/vscode-appland/commit/ac453501bcbd0697d25c6ab144048f3e4dc21ff0))
+* Use default exclude configuration for identifying appmap.yml ([89da5c0](https://github.com/getappmap/vscode-appland/commit/89da5c0c2754fd65a3db48336995d98293f98b9e))
+* Watch only legal appmap dirs for appmap changes ([ecb81f6](https://github.com/getappmap/vscode-appland/commit/ecb81f65c4976ede56b3a14e80a63cb472d89852))
+
 # [0.76.0](https://github.com/getappmap/vscode-appland/compare/v0.75.0...v0.76.0) (2023-04-28)
 
 
