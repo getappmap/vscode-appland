@@ -167,6 +167,10 @@
         "title": "AppMap: Compare AppMap Archives"
       },
       {
+        "command": "appmap.reCompare",
+        "title": "AppMap: Re-Run Last Comparison"
+      },
+      {
         "command": "appmap.context.openInFileExplorer",
         "title": "AppMap View: Open in File Explorer"
       },
