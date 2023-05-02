@@ -142,7 +142,11 @@ export default function compare(context: vscode.ExtensionContext) {
             `Comparison is available at ${compareDir}/report.md`
           );
 
-          vscode.commands.executeCommand('vscode.open', `${compareDir}/report.md`);
+          await vscode.commands.executeCommand(
+            'vscode.open',
+            vscode.Uri.file(join(compareDir, 'report.md'))
+          );
+          await vscode.commands.executeCommand('markdown.showPreview');
         }
       );
     }
