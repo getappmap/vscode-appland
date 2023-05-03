@@ -4,10 +4,10 @@ import ErrorCode from '../telemetry/definitions/errorCodes';
 import { AppmapConfigManager, DEFAULT_APPMAP_DIR } from '../services/appmapConfigManager';
 import { join, relative } from 'path';
 import { rm, symlink, unlink } from 'fs/promises';
-import { listRevisions } from './validation';
-import assert from 'assert';
+import { listRevisions } from './listRevisions';
 import runCommand from './runCommand';
 import { existsSync } from 'fs';
+import chooseRevision from './chooseRevision';
 
 export const ArchiveAppMaps = 'appmap.compare';
 
@@ -23,35 +23,20 @@ export default function compare(context: vscode.ExtensionContext) {
       const appmapDir = config?.appmapDir || DEFAULT_APPMAP_DIR;
 
       const revisions = await listRevisions(cwd);
-      if (!revisions) return;
+      if (!revisions || revisions.length === 0) return;
 
-      async function chooseRevision(
-        revisionName: string,
-        exclude: string[] = [],
-        extraRevisions: string[] = []
-      ): Promise<string | undefined> {
-        assert(revisions);
-        const options: vscode.QuickPickOptions = {
-          canPickMany: false,
-          placeHolder: `Choose the ${revisionName} revision`,
-        };
-        const avaliableRevisions = revisions?.filter((rev) => !exclude.includes(rev));
-        return await vscode.window.showQuickPick(
-          [...extraRevisions, ...avaliableRevisions],
-          options
-        );
-      }
-
-      const baseRevision = await chooseRevision('base');
+      const baseRevision = await chooseRevision(revisions, `Choose the base revision`);
       if (!baseRevision) return;
 
-      const currentAppMapsName = `AppMaps in ${appmapDir}`;
-      const headRevision = await chooseRevision('head', [baseRevision], [currentAppMapsName]);
+      const firstRevision = revisions[0].revision;
+      const headRevision = await chooseRevision(revisions, 'Choose the head revision', [
+        baseRevision,
+      ]);
       if (!headRevision) return;
 
       let headRevisionFolder: string;
 
-      if (headRevision === currentAppMapsName) {
+      if (headRevision === firstRevision) {
         headRevisionFolder = 'head';
       } else {
         headRevisionFolder = headRevision;
@@ -85,7 +70,7 @@ export default function compare(context: vscode.ExtensionContext) {
 
             if (existsSync(join(compareDir, revisionName))) return;
 
-            if (revision === currentAppMapsName) {
+            if (revision === firstRevision) {
               await symlink(relative(compareDir, appmapDir), join(cwd, compareDir, revisionName));
             } else {
               await runCommand(
@@ -141,6 +126,8 @@ export default function compare(context: vscode.ExtensionContext) {
           vscode.window.showInformationMessage(
             `Comparison is available at ${compareDir}/report.md`
           );
+
+          await new Promise((resolve) => setTimeout(resolve, 250));
 
           await vscode.commands.executeCommand(
             'vscode.open',

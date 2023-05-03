@@ -1,13 +1,12 @@
 import * as vscode from 'vscode';
 import chooseWorkspace from '../lib/chooseWorkspace';
 import ErrorCode from '../telemetry/definitions/errorCodes';
-import { AppmapConfigManager, DEFAULT_APPMAP_DIR } from '../services/appmapConfigManager';
-import { promisify } from 'util';
+import { AppmapConfigManager } from '../services/appmapConfigManager';
 import { join } from 'path';
-import { glob } from 'glob';
 import { rm, symlink, unlink } from 'fs/promises';
-import { listRevisions } from './validation';
+import { listRevisions } from './listRevisions';
 import runCommand from './runCommand';
+import chooseRevision from './chooseRevision';
 
 export const ArchiveAppMaps = 'appmap.restore';
 
@@ -24,11 +23,7 @@ export default function restore(context: vscode.ExtensionContext) {
       const revisions = await listRevisions(cwd);
       if (!revisions) return;
 
-      const options: vscode.QuickPickOptions = {
-        canPickMany: false,
-        placeHolder: 'Choose a revision to restore',
-      };
-      const revision = await vscode.window.showQuickPick(revisions, options);
+      const revision = await chooseRevision(revisions, `Choose a revision to restore`);
       if (!revision) return;
 
       vscode.window.withProgress(
