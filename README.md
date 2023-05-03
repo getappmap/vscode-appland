@@ -15,8 +15,7 @@ templates, HTTP client requests, caching, authentication, and SQL.
 Bugs, loops, calls, dependencies, security issues, and more are found
 with ease in trace views and sequence diagrams.
 
-![AppMap](https://vscode-appmap.s3.us-east-2.amazonaws.com/media/vscode-sidebyside.png)
-[![AppMap video](https://img.youtube.com/vi/8l4-hNih_GQ/0.jpg)](https://www.youtube.com/watch?v=8l4-hNih_GQ)
+[![AppMap video](https://img.youtube.com/vi/8l4-hNih_GQ/0.jpg)](https://https://www.youtube.com/watch?v=UYcJVfF7v_c)
 
 ---
 
@@ -24,7 +23,9 @@ with ease in trace views and sequence diagrams.
 
 AppMap helps you understand any codebase or project that is written in a
 supported web application or API framework, including Ruby on Rails,
-Django, Flask, Express, and Spring. AppMap supports the following
+Django, Flask, Express, and Spring. 
+
+AppMap supports the following
 programming languages: Java, Python, Ruby, Typescript, and JavaScript.
 
 AppMap can also be used to map a database-backed web application or API
@@ -39,18 +40,25 @@ license](https://github.com/getappmap/vscode-appland/blob/master/LICENSE)
 [Terms and
 conditions](https://appmap.io/community/terms-and-conditions.html)
 
-Data usage: AppMap runs locally and does not require centralized access
-to your code or code repositories. Your code is your code, and no
-information is uploaded out of your computer when AppMap runs.
+Data usage: AppMap runtime recordings and diagrams are created and stored locally on your machine. AppMap does not require any permissions to your web hosted code repo in order to run. 
+
+Sign-in via GitHub or GitLab is required to obtain a license key, and start using AppMap in your code editor.
+There is no fee for personal use of AppMap.
+There are methods of manually generating AppMap data files without a license key. Reach out to an AppMap team member in our community [Slack](https://appmap.io/slack) or drop us a line at support@appmap.io for guidance on how to do that.
+
 
 ## Getting started with AppMap
 
-[Documentation](https://appmap.io/docs/appmap-overview.html)
-[GitHub](https://github.com/getappmap)
-[Blog](https://appmap.io/blog/)
+[Documentation](https://appmap.io/docs/appmap-overview.html) for guides and videos.
 
-[Slack](https://appmap.io/slack) for support and community
-conversations Email for support: support@appmap.io
+[GitHub](https://github.com/getappmap) for our repository and open source project.
 
-Follow us on [Twitter @GetAppMap](https://twitter.com/getappmap)
-Watch our demos on [YouTube](https://www.youtube.com/channel/UCxVv4gVnr2Uf2PSzoELZUcg)
+[Blog](https://appmap.io/blog/) for user stories and product announcements.
+
+[Slack](https://appmap.io/slack) or email for support and community conversations: support@appmap.io
+
+Follow us on [Twitter @GetAppMap](https://twitter.com/getappmap).
+
+Watch our demos on [YouTube](https://www.youtube.com/channel/UCxVv4gVnr2Uf2PSzoELZUcg).
+
+![AppMap](https://vscode-appmap.s3.us-east-2.amazonaws.com/media/vscode-sidebyside.png)
