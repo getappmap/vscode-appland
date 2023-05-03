@@ -15,7 +15,7 @@ templates, HTTP client requests, caching, authentication, and SQL.
 Bugs, loops, calls, dependencies, security issues, and more are found
 with ease in trace views and sequence diagrams.
 
-[![AppMap video](https://img.youtube.com/vi/8l4-hNih_GQ/0.jpg)](https://https://www.youtube.com/watch?v=UYcJVfF7v_c)
+[![AppMap video](https://img.youtube.com/vi/8l4-hNih_GQ/0.jpg)](https://www.youtube.com/watch?v=UYcJVfF7v_c)
 
 ---
 
@@ -42,8 +42,10 @@ conditions](https://appmap.io/community/terms-and-conditions.html)
 
 Data usage: AppMap runtime recordings and diagrams are created and stored locally on your machine. AppMap does not require any permissions to your web hosted code repo in order to run. 
 
-Sign-in via GitHub or GitLab is required to obtain a license key, and start using AppMap in your code editor.
+Sign-in via GitHub or GitLab is required to obtain a license key to start using AppMap in your code editor.
+
 There is no fee for personal use of AppMap.
+
 There are methods of manually generating AppMap data files without a license key. Reach out to an AppMap team member in our community [Slack](https://appmap.io/slack) or drop us a line at support@appmap.io for guidance on how to do that.
 
 
