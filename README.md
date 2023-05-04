@@ -48,7 +48,6 @@ There is no fee for personal use of AppMap.
 
 There are methods of manually generating AppMap data files without a license key. Reach out to an AppMap team member in our community [Slack](https://appmap.io/slack) or drop us a line at support@appmap.io for guidance on how to do that.
 
-
 ## Getting started with AppMap
 
 [Documentation](https://appmap.io/docs/appmap-overview.html) for guides and videos.
