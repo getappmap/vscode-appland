@@ -155,6 +155,10 @@
         "title": "AppMap: Logout"
       },
       {
+        "command": "appmap.update",
+        "title": "AppMap: Update Out-of-Date AppMaps"
+      },
+      {
         "command": "appmap.archive",
         "title": "AppMap: Archive Current AppMaps"
       },
@@ -168,7 +172,7 @@
       },
       {
         "command": "appmap.reCompare",
-        "title": "AppMap: Re-Run Last Comparison"
+        "title": "AppMap: Re-Compare AppMap Archives"
       },
       {
         "command": "appmap.context.openInFileExplorer",

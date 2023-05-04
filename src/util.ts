@@ -81,7 +81,8 @@ export async function fileExists(filename: string): Promise<boolean> {
 export async function retry(
   fn: () => void | Promise<void>,
   retries = 3,
-  interval = 100
+  interval = 100,
+  warnOnFailure = true
 ): Promise<void> {
   try {
     await fn();
@@ -89,9 +90,9 @@ export async function retry(
     if (retries === 0) {
       throw e;
     }
-    console.warn(`Retrying after error: ${e}`);
+    if (warnOnFailure) console.warn(`Retrying after error: ${e}`);
     await new Promise((resolve) => setTimeout(resolve, interval));
-    await retry(fn, retries - 1, interval);
+    await retry(fn, retries - 1, interval * 2);
   }
 }
 
