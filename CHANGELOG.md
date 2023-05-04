@@ -1,3 +1,10 @@
+# [0.78.0](https://github.com/getappmap/vscode-appland/compare/v0.77.0...v0.78.0) (2023-05-04)
+
+
+### Features
+
+* Trigger release of new marketplace desc ([13e425a](https://github.com/getappmap/vscode-appland/commit/13e425aa99926ac202d0289160e37d0cc1e3cee9))
+
 # [0.77.0](https://github.com/getappmap/vscode-appland/compare/v0.76.0...v0.77.0) (2023-05-01)
 
 
