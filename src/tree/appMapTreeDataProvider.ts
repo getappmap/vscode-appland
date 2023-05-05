@@ -62,9 +62,11 @@ export class AppMapTreeDataProvider implements vscode.TreeDataProvider<AppMapTre
 
   public getTreeItem(element: AppMapTreeItem): vscode.TreeItem {
     if (isAppMapLoader(element)) {
-      const iconPath = this.uptodate(element)
-        ? new vscode.ThemeIcon('file')
-        : { light: darkChangedIcon, dark: lightChangedIcon };
+      let iconPath: vscode.ThemeIcon | { light: string; dark: string } = new vscode.ThemeIcon(
+        'file'
+      );
+      if (!this.isUptodate(element)) iconPath = { light: darkChangedIcon, dark: lightChangedIcon };
+      if (this.isFailed(element)) iconPath = new vscode.ThemeIcon('warning');
 
       const { descriptor } = element;
 
@@ -178,7 +180,11 @@ export class AppMapTreeDataProvider implements vscode.TreeDataProvider<AppMapTre
     return listItems;
   }
 
-  protected uptodate(appmap: AppMapLoader): boolean {
+  protected isFailed(appmap: AppMapLoader): boolean {
+    return appmap.descriptor.metadata?.test_status === 'failed';
+  }
+
+  protected isUptodate(appmap: AppMapLoader): boolean {
     if (!this.appmapsUpToDate) return true;
 
     return this.appmapsUpToDate.isUpToDate(appmap.descriptor.resourceUri);
