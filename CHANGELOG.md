@@ -1,3 +1,10 @@
+# [0.79.0](https://github.com/getappmap/vscode-appland/compare/v0.78.0...v0.79.0) (2023-05-08)
+
+
+### Features
+
+* update sign-in flow ([8e651dd](https://github.com/getappmap/vscode-appland/commit/8e651dd2eac8152023451dbe406e775254b919f2))
+
 # [0.78.0](https://github.com/getappmap/vscode-appland/compare/v0.77.0...v0.78.0) (2023-05-04)
 
 
