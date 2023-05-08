@@ -147,12 +147,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/components@npm:^2.39.0":
-  version: 2.39.0
-  resolution: "@appland/components@npm:2.39.0"
+"@appland/components@npm:^2.41.1":
+  version: 2.41.1
+  resolution: "@appland/components@npm:2.41.1"
   dependencies:
     "@appland/diagrams": ^1.6.2
-    "@appland/models": ^2.4.3
+    "@appland/models": ^2.6.0
     "@appland/sequence-diagram": ^1.5.0
     buffer: ^6.0.3
     diff: ^5.1.0
@@ -161,7 +161,7 @@ __metadata:
     sql-formatter: ^4.0.2
     vue: ^2.7.14
     vuex: ^3.6.0
-  checksum: b87ab9e732028cd7d884d6629217474085ba659cb4268e0c5ed09aaa8f2021762aa020f6dc1af8c40cdf9a0d951f2e48c9b02c3184efd35790ce39478c4786a0
+  checksum: 097ed506e3341ac8d0201a2e0afef25d971047dade05d18a0791b8c41884cef73678dd0a0c11f3ff877138b467bae447e815266c97580a52c33054b210cb4d7e
   languageName: node
   linkType: hard
 
@@ -220,13 +220,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/models@npm:^2.4.3":
-  version: 2.5.0
-  resolution: "@appland/models@npm:2.5.0"
+"@appland/models@npm:^2.6.0":
+  version: 2.6.0
+  resolution: "@appland/models@npm:2.6.0"
   dependencies:
     "@appland/sql-parser": ^1.5.0
     crypto-js: ^4.0.0
-  checksum: 0404b151d721afcfa4d0a2621676d387e08a7e903b4adce4691a4e15dcb54367733e803fed025700e661dcddf0f9b692a1a7208786273ee731e641c39075efaf
+  checksum: 390e76397cc8a89457d918b4dfa71773eba91b2aa381724bc8d0a8511ad29e8dd50b931284ffc31242aa87f60995e3457a8ca370ffd79ee393ac10d333792af5
   languageName: node
   linkType: hard
 
@@ -2267,7 +2267,7 @@ __metadata:
   dependencies:
     "@appland/appmap": ^3.75.0
     "@appland/client": ^1.6.0
-    "@appland/components": ^2.39.0
+    "@appland/components": ^2.41.1
     "@appland/diagrams": ^1.6.3
     "@appland/models": ^2.4.2
     "@appland/scanner": ^1.76.6
