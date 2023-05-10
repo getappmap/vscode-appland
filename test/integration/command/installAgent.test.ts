@@ -140,6 +140,8 @@ describe('generateInstallInfo function', () => {
     });
 
     describe('with a space in the path', () => {
+      const expectedBin = 'code';
+
       before(() => {
         cwd = '/home/user/projects/directory with spaces';
         globalStorageDir = '/home/user/.config/Code/user folder/globalStorage';
@@ -163,6 +165,7 @@ describe('generateInstallInfo function', () => {
         assert.deepStrictEqual(env, { ELECTRON_RUN_AS_NODE: 'true' });
         assert(command.startsWith(expectedStart));
         assert(command.includes(expectedEnd));
+        assert(command.includes(expectedBin));
 
         const pythonCommand = generateInstallInfo(cwd, 'Python', false, globalStorageDir);
         command = pythonCommand.command;
@@ -170,6 +173,7 @@ describe('generateInstallInfo function', () => {
         assert.deepStrictEqual(env, { ELECTRON_RUN_AS_NODE: 'true' });
         assert(command.startsWith(expectedStart));
         assert(command.includes(expectedEnd));
+        assert(command.includes(expectedBin));
       });
     });
 

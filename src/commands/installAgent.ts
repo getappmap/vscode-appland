@@ -89,7 +89,9 @@ function escapePath(str: string): string {
 }
 
 function electronCommand(globalStorageDir: string, installLocation: string): string {
-  const nodePath = escapePath(process.argv0);
+  // `child_process.fork` uses `process.execPath` from the parent process to spawn a new process.
+  // This is the exact behavior we want to emulate in the terminal, so we'll use it here as well.
+  const nodePath = escapePath(process.execPath);
   const cliPath = join(globalStorageDir, 'node_modules', '@appland', 'appmap', 'built', 'cli.js');
   const flags = ['--ms-enable-electron-run-as-node', '-d', installLocation];
   return `ELECTRON_RUN_AS_NODE=true ${nodePath} ${cliPath} install ${flags.join(' ')}`;
