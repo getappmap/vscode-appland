@@ -1,3 +1,10 @@
+## [0.79.1](https://github.com/getappmap/vscode-appland/compare/v0.79.0...v0.79.1) (2023-05-11)
+
+
+### Bug Fixes
+
+* Use a stable node bin path when running the install CLI ([812fd79](https://github.com/getappmap/vscode-appland/commit/812fd79f16c8df18215e080c01f4fb7d3a3ea5a3))
+
 # [0.79.0](https://github.com/getappmap/vscode-appland/compare/v0.78.0...v0.79.0) (2023-05-08)
 
 
