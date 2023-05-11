@@ -12,13 +12,13 @@ export default {
       label: 'How to use AppMap diagrams',
       link: 'https://appmap.io/docs/how-to-use-appmap-diagrams',
     },
+    DOC_SEQUENCE_DIAGRAMS: {
+      label: 'Sequence diagrams',
+      link: 'https://appmap.io/docs/diagrams/sequence-diagrams.html',
+    },
     DOC_REFERENCE: {
       label: 'Reference',
       link: 'https://appmap.io/docs/reference',
-    },
-    DOC_TROUBLESHOOTING: {
-      label: 'Troubleshooting',
-      link: 'https://appmap.io/docs/troubleshooting',
     },
     DOC_RECORDING_METHODS: {
       label: 'Recording methods',
@@ -27,10 +27,6 @@ export default {
     DOC_COMMUNITY: {
       label: 'Community',
       link: 'https://appmap.io/docs/community',
-    },
-    DOC_FAQ: {
-      label: 'FAQ',
-      link: 'https://appmap.io/docs/faq',
     },
   },
 };
