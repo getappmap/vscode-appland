@@ -1,3 +1,10 @@
+## [0.79.2](https://github.com/getappmap/vscode-appland/compare/v0.79.1...v0.79.2) (2023-05-11)
+
+
+### Bug Fixes
+
+* remove broken docs links ([0907a5e](https://github.com/getappmap/vscode-appland/commit/0907a5ea6fb4d997672b31dcf79496683e82e8c5))
+
 ## [0.79.1](https://github.com/getappmap/vscode-appland/compare/v0.79.0...v0.79.1) (2023-05-11)
 
 
