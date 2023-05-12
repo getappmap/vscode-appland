@@ -84,7 +84,7 @@ export class AppmapConfigManagerInstance implements WorkspaceServiceInstance {
     if (this._hasConfigFile && appmapConfigs.length === 0) {
       appmapConfigs = [
         {
-          appmapDir: AppmapConfigManager.DEFAULT_APPMAP_DIR,
+          appmapDir: DEFAULT_APPMAP_DIR,
           configFolder: this.folder.uri.fsPath,
           usingDefault: true,
         } as AppmapConfig,
@@ -156,7 +156,7 @@ export class AppmapConfigManagerInstance implements WorkspaceServiceInstance {
   private async appMapConfigFromFile(configFilePath: string): Promise<AppmapConfig | undefined> {
     const result = {
       configFolder: dirname(configFilePath),
-      appmapDir: AppmapConfigManager.DEFAULT_APPMAP_DIR,
+      appmapDir: DEFAULT_APPMAP_DIR,
       usingDefault: true,
     } as AppmapConfig;
 
@@ -222,8 +222,24 @@ export class AppmapConfigManagerInstance implements WorkspaceServiceInstance {
   }
 }
 
+export const DEFAULT_APPMAP_DIR = 'tmp/appmap';
+
 export class AppmapConfigManager implements WorkspaceService<AppmapConfigManagerInstance> {
-  public static readonly DEFAULT_APPMAP_DIR = 'tmp/appmap';
+  static async getAppMapConfig(
+    workspaceFolder: vscode.WorkspaceFolder
+  ): Promise<undefined | { configFolder: string; appmapDir: string }> {
+    const appmapConfigManagerInstance = workspaceServices().getServiceInstanceFromClass(
+      AppmapConfigManager,
+      workspaceFolder
+    ) as AppmapConfigManagerInstance | undefined;
+    assert(appmapConfigManagerInstance);
+
+    const appmapConfig = await appmapConfigManagerInstance.getAppmapConfig();
+    if (!appmapConfig) return;
+
+    const { configFolder, appmapDir } = appmapConfig;
+    return { configFolder, appmapDir };
+  }
 
   public async create(folder: vscode.WorkspaceFolder): Promise<AppmapConfigManagerInstance> {
     const instance = new AppmapConfigManagerInstance(folder);

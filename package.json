@@ -141,6 +141,46 @@
         "title": "AppMap: Copy Out-of-Date Tests to Clipboard"
       },
       {
+        "command": "appmap.generateOpenApi",
+        "title": "AppMap: Generate OpenAPI"
+      },
+      {
+        "command": "appmap.sequenceDiagram",
+        "title": "AppMap: Generate Sequence Diagram"
+      },
+      {
+        "command": "appmap.compareSequenceDiagrams",
+        "title": "AppMap: Compare Sequence Diagrams"
+      },
+      {
+        "command": "appmap.login",
+        "title": "AppMap: Login"
+      },
+      {
+        "command": "appmap.logout",
+        "title": "AppMap: Logout"
+      },
+      {
+        "command": "appmap.update",
+        "title": "AppMap: Update Out-of-Date AppMaps"
+      },
+      {
+        "command": "appmap.archive",
+        "title": "AppMap: Archive Current AppMaps"
+      },
+      {
+        "command": "appmap.restore",
+        "title": "AppMap: Restore AppMap Archive"
+      },
+      {
+        "command": "appmap.compare",
+        "title": "AppMap: Compare AppMap Archives"
+      },
+      {
+        "command": "appmap.reCompare",
+        "title": "AppMap: Re-Compare AppMap Archives"
+      },
+      {
         "command": "appmap.context.openInFileExplorer",
         "title": "AppMap View: Open in File Explorer"
       },
@@ -175,26 +215,6 @@
       {
         "command": "appmap.context.deleteAppMaps",
         "title": "AppMap View: Delete AppMaps"
-      },
-      {
-        "command": "appmap.generateOpenApi",
-        "title": "AppMap: Generate OpenAPI"
-      },
-      {
-        "command": "appmap.sequenceDiagram",
-        "title": "AppMap: Generate Sequence Diagram"
-      },
-      {
-        "command": "appmap.compareSequenceDiagrams",
-        "title": "AppMap: Compare Sequence Diagrams"
-      },
-      {
-        "command": "appmap.login",
-        "title": "AppMap: Login"
-      },
-      {
-        "command": "appmap.logout",
-        "title": "AppMap: Logout"
       }
     ],
     "configuration": {

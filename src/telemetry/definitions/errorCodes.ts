@@ -12,6 +12,10 @@ enum ErrorCode {
   SeqDiagramFeedbackCtaError,
   GenerateMapStatsError,
   PruneLargeMapError,
+  ArchiveAppMapsFailure,
+  RestoreAppMapsFailure,
+  CompareAppMapsFailure,
+  CompareReportAppMapsFailure,
 }
 
 export default ErrorCode;
