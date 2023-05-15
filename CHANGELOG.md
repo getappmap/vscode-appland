@@ -1,3 +1,10 @@
+# [0.80.0](https://github.com/getappmap/vscode-appland/compare/v0.79.2...v0.80.0) (2023-05-15)
+
+
+### Features
+
+* expand packages in seq diagram ([0a63f62](https://github.com/getappmap/vscode-appland/commit/0a63f62c186ec3223bb88acb8b3dfd35262076c1))
+
 ## [0.79.2](https://github.com/getappmap/vscode-appland/compare/v0.79.1...v0.79.2) (2023-05-11)
 
 
