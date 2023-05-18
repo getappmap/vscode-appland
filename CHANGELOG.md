@@ -1,3 +1,10 @@
+# [0.81.0](https://github.com/getappmap/vscode-appland/compare/v0.80.0...v0.81.0) (2023-05-18)
+
+
+### Features
+
+* add web and test framework to project:open ([a2fe20c](https://github.com/getappmap/vscode-appland/commit/a2fe20c28904847e2f5c0ba5b39ee512f3fa2d4a))
+
 # [0.80.0](https://github.com/getappmap/vscode-appland/compare/v0.79.2...v0.80.0) (2023-05-15)
 
 
