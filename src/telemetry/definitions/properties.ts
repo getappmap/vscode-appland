@@ -153,6 +153,20 @@ export const PROJECT_LANGUAGE = new TelemetryDataProvider({
   },
 });
 
+export const WEB_FRAMEWORK = new TelemetryDataProvider({
+  id: 'appmap.project.web_framework',
+  async value({ project }: { project: ProjectMetadata }) {
+    return project?.webFramework?.name;
+  },
+});
+
+export const TEST_FRAMEWORK = new TelemetryDataProvider({
+  id: 'appmap.project.test_framework',
+  async value({ project }: { project: ProjectMetadata }) {
+    return project?.testFramework?.name;
+  },
+});
+
 export const PROJECT_LANGUAGE_DISTRIBUTION = new TelemetryDataProvider({
   id: 'appmap.project.language_distribution',
   cache: true,

@@ -18,6 +18,8 @@ export const PROJECT_OPEN = new Event({
     Properties.SCANNER_CONFIG_PRESENT,
     Properties.PROJECT_LANGUAGE,
     Properties.PROJECT_LANGUAGE_DISTRIBUTION,
+    Properties.WEB_FRAMEWORK,
+    Properties.TEST_FRAMEWORK,
     Properties.IS_INSTALLABLE,
     Properties.HAS_DEVCONTAINER,
     Properties.DEPENDENCIES,
