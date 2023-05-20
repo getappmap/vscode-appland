@@ -44,7 +44,7 @@ export default class Watcher {
 
   get watchPatterns(): vscode.RelativePattern[] {
     return ['tmp/appmap', 'build/appmap', 'target/appmap'].map((dir) => {
-      return new vscode.RelativePattern(this.folder, `${dir}/**/${this.filePattern}`);
+      return new vscode.RelativePattern(this.folder, `**/${dir}/**/${this.filePattern}`);
     });
   }
 }
