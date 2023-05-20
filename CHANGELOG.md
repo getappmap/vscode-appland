@@ -1,3 +1,10 @@
+## [0.81.1](https://github.com/getappmap/vscode-appland/compare/v0.81.0...v0.81.1) (2023-05-20)
+
+
+### Bug Fixes
+
+* Look for appmaps in subprojects ([6290bbd](https://github.com/getappmap/vscode-appland/commit/6290bbd88cf15b06e3bfc08b012951a5f39c3b8d))
+
 # [0.81.0](https://github.com/getappmap/vscode-appland/compare/v0.80.0...v0.81.0) (2023-05-18)
 
 
