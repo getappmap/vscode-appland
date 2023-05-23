@@ -104,6 +104,17 @@ describe('Background processes', () => {
           assert(cmd.includes('--appmap-dir tmp/appmap'));
         });
     });
+
+    it('inherits identity from the extension host', async () => {
+      await waitForUp();
+      const processes = await getBackgroundProcesses();
+      Object.values(processes)
+        .map((p) => p.options.env)
+        .forEach((env) => {
+          assert(env?.APPMAP_SESSION_ID === vscode.env.sessionId);
+          assert(env?.APPMAP_USER_ID === vscode.env.machineId);
+        });
+    });
   });
 
   context('with appmap_dir specified in appmap.yml', () => {

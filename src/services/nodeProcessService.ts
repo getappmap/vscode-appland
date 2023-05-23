@@ -96,7 +96,12 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
 
     const env =
       Environment.isSystemTest || Environment.isIntegrationTest
-        ? { ...process.env, APPMAP_WRITE_PIDFILE: 'true' }
+        ? {
+            ...process.env,
+            APPMAP_WRITE_PIDFILE: 'true',
+            APPMAP_USER_ID: vscode.env.machineId,
+            APPMAP_SESSION_ID: vscode.env.sessionId,
+          }
         : undefined;
 
     const tryModulePath = async (program: ProgramName): Promise<string | undefined> => {
