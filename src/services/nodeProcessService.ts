@@ -17,6 +17,7 @@ import { WorkspaceService } from './workspaceService';
 import { AppmapConfigManager, AppmapConfigManagerInstance } from './appmapConfigManager';
 import { workspaceServices } from './workspaceServices';
 import assert from 'assert';
+import { isNativeError } from 'util/types';
 
 const YARN_JS = 'yarn.js';
 const PACKAGE_JSON = 'package.json';
@@ -27,7 +28,7 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
 
   protected externDir: string;
   protected globalStorageDir: string;
-  protected COPY_FILES: string[] = [PACKAGE_JSON, YARN_JS];
+  protected static COPY_FILES: string[] = [PACKAGE_JSON, YARN_JS];
   protected static readonly DEFAULT_APPMAP_DIR = '.';
 
   protected _hasCLIBin = false;
@@ -163,74 +164,90 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
   }
 
   async install(): Promise<void> {
-    const { outputChannel: log } = NodeProcessService;
+    const storagePath = this.globalStorageDir;
+    const output = NodeProcessService.outputChannel;
 
-    try {
-      await fs.mkdir(this.globalStorageDir, { recursive: true });
-    } catch (e) {
-      // Ignore this error, it's probably because the directory already exists.
-      log.appendLine('Failed to create the global storage directory.');
-      log.appendLine(String(e));
+    const logLines: string[] = [];
+
+    function log(line: string) {
+      logLines.push(line);
+      output.appendLine(line);
     }
 
-    let lockfileRelease: () => Promise<void> | undefined;
-    try {
-      // If multiple VS Code windows are open, we may have multiple processes racing to install.
-      // Only let one process continue.
-      lockfileRelease = await lockfile.lock(this.globalStorageDir);
-    } catch (e) {
+    async function createStorageDir(): Promise<void> {
+      try {
+        log(`Creating storage directory "${storagePath}"`);
+        await fs.mkdir(storagePath, { recursive: true });
+      } catch (e) {
+        // Ignore this error, it's probably because the directory already exists.
+        log('Failed to create the global storage directory.');
+        log(String(e));
+      }
+    }
+
+    async function tryLock(): Promise<(() => Promise<void>) | undefined> {
+      try {
+        log(`Trying to acquire lock on "${storagePath}"`);
+        return await lockfile.lock(storagePath);
+      } catch (e) {
+        assert(isNativeError(e));
+        if ('code' in e && e.code === 'ELOCKED') return;
+        throw e;
+      }
+    }
+
+    async function wait(maxMs = 5 * 60 * 1000) {
       // We didn't aquire the lock, so we'll assume that another process is already installing.
       // We'll just wait for it to finish.
-      log.appendLine('Another process is currently installing dependencies. Waiting...');
+      log('Another process is currently installing dependencies. Waiting...');
 
-      let installSuccess = true;
-      for (;;) {
+      let giveUp = false;
+      setTimeout(() => {
+        giveUp = true;
+      }, maxMs).unref();
+
+      let lastException: Error | undefined;
+      while (!giveUp) {
         // Add a little randomness to avoid multiple processes checking all at once.
-        const nextCheckMs = 500 + Math.random() * 500;
+        const nextCheckMs = 5000 + Math.random() * 500;
         await new Promise((resolve) => setTimeout(resolve, nextCheckMs));
 
         try {
-          const isLocked = await lockfile.check(this.globalStorageDir);
-          if (!isLocked) break;
+          if (!(await lockfile.check(storagePath))) return;
         } catch (e) {
-          // This is likely not resolvable as ENOENT is gracefully handled by the library.
-          // The best we can do is log the error and continue on as best we can. It's possible there's
-          // a viable installation already installed.
-          Telemetry.sendEvent(DEBUG_EXCEPTION, {
-            exception: e as Error,
-            errorCode: ErrorCode.DependencyLockFailure,
-          });
-
-          log.appendLine('An error occurred while checking the installation status:');
-          log.appendLine(String(e));
-
-          // Note that we're not returning here. We'll still be reporting a ready state, whether or not it's true.
-          // If no viable installation is present we can expect another error down the line.
-          installSuccess = false;
+          assert(isNativeError(e));
+          lastException = e;
+          // On error, will just try again. After the time limit has elapsed
+          // we can report the last error, if any.
         }
       }
 
-      // By this point, the other process should have finished installing.
-      // TODO: we have no way of telling if the installation was actually successful, we're just
-      //       assuming that it was.
-      this._ready = true;
-      this._onReady.fire();
+      if (lastException) {
+        // This is likely not resolvable as ENOENT is gracefully handled by the library.
+        // The best we can do is log the error and continue on as best we can. It's possible there's
+        // a viable installation already installed.
+        log('An error occurred while checking the installation status:');
+        log(String(lastException));
 
-      if (installSuccess) log.appendLine(INSTALL_SUCCESS_MESSAGE);
+        Telemetry.sendEvent(DEBUG_EXCEPTION, {
+          exception: lastException,
+          errorCode: ErrorCode.DependencyLockFailure,
+          log: logLines.join('\n'),
+        });
+      }
 
-      return;
+      throw new Error(`Gave up waiting for installation in ${storagePath} to finish`);
     }
 
-    // We have the lock, so we'll install.
-    try {
-      await Promise.all(
-        this.COPY_FILES.map((fileName) =>
-          fs.copyFile(
-            path.join(this.externDir, fileName),
-            path.join(this.globalStorageDir, fileName)
-          )
-        )
-      );
+    const perform = async () => {
+      log(`Performing tools installation in ${storagePath}...`);
+
+      for (const fileName of NodeProcessService.COPY_FILES) {
+        await fs.copyFile(
+          path.join(this.externDir, fileName),
+          path.join(this.globalStorageDir, fileName)
+        );
+      }
 
       await fs.writeFile(
         path.join(this.globalStorageDir, '.yarnrc.yml'),
@@ -259,7 +276,7 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
 
       installProcess.log.append('Installing dependencies...');
 
-      await new Promise<void>((resolve, reject) => {
+      return new Promise<void>((resolve, reject) => {
         installProcess.once('error', (err) => reject(err));
         installProcess.once('exit', async (code, signal) => {
           if (code && code !== 0) {
@@ -275,31 +292,36 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
           if (os.platform() === 'win32') {
             this._hasCLIBin = await this.installCLIBin();
           }
-
-          installProcess.log.append(INSTALL_SUCCESS_MESSAGE);
-
-          this._ready = true;
-          this._onReady.fire();
-
           resolve();
         });
       });
+    };
+
+    let release: (() => Promise<void>) | undefined;
+    try {
+      await createStorageDir();
+      release = await tryLock();
+      if (release) {
+        await perform();
+      } else {
+        await wait();
+      }
+
+      log(INSTALL_SUCCESS_MESSAGE);
     } catch (e) {
       const err =
         e instanceof Error ? e : new Error(`failed to install node dependencies: ${String(e)}`);
+      log(`${err.stack}`);
       Telemetry.sendEvent(DEBUG_EXCEPTION, {
         exception: err,
         errorCode: ErrorCode.DependencyInstallFailure,
+        log: logLines.join('\n'),
       });
     } finally {
-      try {
-        if (lockfileRelease) await lockfileRelease();
-      } catch (e) {
-        Telemetry.sendEvent(DEBUG_EXCEPTION, {
-          exception: e as Error,
-          errorCode: ErrorCode.DependencyLockFailure,
-        });
-      }
+      if (release) release(); // intentionally no waiting
+
+      this._ready = true;
+      this._onReady.fire();
     }
   }
 }
