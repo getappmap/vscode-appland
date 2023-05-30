@@ -1,3 +1,10 @@
+## [0.81.2](https://github.com/getappmap/vscode-appland/compare/v0.81.1...v0.81.2) (2023-05-30)
+
+
+### Bug Fixes
+
+* More verbose telemetry on locking and tool installation failure ([741bd53](https://github.com/getappmap/vscode-appland/commit/741bd53844c997c21a27c3227d2e308777d6d5a1))
+
 ## [0.81.1](https://github.com/getappmap/vscode-appland/compare/v0.81.0...v0.81.1) (2023-05-20)
 
 
