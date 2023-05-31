@@ -1,4 +1,7 @@
 export default {
+  /* When making changes, make sure to also update
+   * https://github.com/getappmap/appmap-intellij-plugin/blob/main/plugin-core/src/main/java/appland/toolwindow/AppMapWindowPanel.java
+   */
   Documentation: {
     DOC_QUICKSTART: {
       label: 'Quickstart',
