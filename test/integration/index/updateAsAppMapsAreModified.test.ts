@@ -1,4 +1,3 @@
-import assert from 'assert';
 import { unlink } from 'fs';
 import { promisify } from 'util';
 import * as vscode from 'vscode';

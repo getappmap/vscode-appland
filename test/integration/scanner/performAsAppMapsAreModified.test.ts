@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import assert from 'assert';
-import { exists, rename } from 'fs';
+import { exists } from 'fs';
 import { join, relative } from 'path';
 import { promisify } from 'util';
 import {
