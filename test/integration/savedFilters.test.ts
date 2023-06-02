@@ -25,13 +25,13 @@ describe('Saved filters', () => {
   let editorProvider: AppMapEditorProvider;
   let updateFiltersSpy: sinon.SinonSpy;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     sandbox = sinon.createSandbox();
     context = new MockExtensionContext();
     extensionState = new ExtensionState(context);
     editorProvider = new AppMapEditorProvider(context, extensionState);
     updateFiltersSpy = sinon.spy(editorProvider, 'updateFilters');
-    initializeDefaultFilter(context);
+    await initializeDefaultFilter(context);
   });
   afterEach(() => sandbox.restore());
 

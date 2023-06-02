@@ -71,7 +71,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
   const autoScanServiceImpl = new ProcessServiceImpl();
 
   try {
-    initializeDefaultFilter(context);
+    await initializeDefaultFilter(context);
     const extensionState = new ExtensionState(context);
     context.subscriptions.push(extensionState);
 

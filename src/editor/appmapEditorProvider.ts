@@ -248,13 +248,11 @@ export default class AppMapEditorProvider
     const savedFilters = this.getSavedFilters();
     if (!savedFilters) return;
 
-    const newSavedFilters = savedFilters.map((savedFilter) => {
-      const defaultValue = savedFilter.filterName === filter.filterName;
-      savedFilter.default = defaultValue;
-      return savedFilter;
-    });
+    savedFilters.forEach(
+      (savedFilter) => (savedFilter.default = savedFilter.filterName === filter.filterName)
+    );
 
-    await this.context.workspaceState.update(AppMapEditorProvider.SAVED_FILTERS, newSavedFilters);
+    await this.context.workspaceState.update(AppMapEditorProvider.SAVED_FILTERS, savedFilters);
     this.updateFilters();
   }
 

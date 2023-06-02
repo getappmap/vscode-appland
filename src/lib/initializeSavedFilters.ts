@@ -2,7 +2,9 @@ import * as vscode from 'vscode';
 import { AppMapFilter, base64UrlEncode, serializeFilter } from '@appland/models';
 import AppMapEditorProvider, { SavedFilter } from '../editor/appmapEditorProvider';
 
-export default function initializeDefaultFilter(context: vscode.ExtensionContext) {
+export default async function initializeDefaultFilter(
+  context: vscode.ExtensionContext
+): Promise<void> {
   const savedFilters = context.workspaceState.get(AppMapEditorProvider.SAVED_FILTERS) as
     | SavedFilter[]
     | undefined;
@@ -19,5 +21,5 @@ export default function initializeDefaultFilter(context: vscode.ExtensionContext
     default: true,
   } as SavedFilter;
 
-  context.workspaceState.update(AppMapEditorProvider.SAVED_FILTERS, [filterObject]);
+  await context.workspaceState.update(AppMapEditorProvider.SAVED_FILTERS, [filterObject]);
 }
