@@ -11,10 +11,11 @@ export default function mountApp() {
   const messages = new MessagePublisher(vscode);
 
   messages.on('init-appmap', (initialData) => {
-    const { shareEnabled, defaultView } = initialData;
+    const { shareEnabled, defaultView, savedFilters } = initialData;
     const props = {
       appMapUploadable: shareEnabled,
       defaultView,
+      savedFilters,
     };
 
     const app = new Vue({
@@ -55,6 +56,9 @@ export default function mountApp() {
         },
         setActive(isActive) {
           this.$refs.ui.isActive = isActive;
+        },
+        updateFilters(updatedSavedFilters) {
+          this.$refs.ui.updateFilters(updatedSavedFilters);
         },
       },
       mounted() {
@@ -188,6 +192,18 @@ export default function mountApp() {
       vscode.postMessage({ command: 'seq-diagram-feedback' });
     });
 
+    app.$on('saveFilter', (filter) => {
+      vscode.postMessage({ command: 'saveFilter', filter });
+    });
+
+    app.$on('deleteFilter', (filter) => {
+      vscode.postMessage({ command: 'deleteFilter', filter });
+    });
+
+    app.$on('defaultFilter', (filter) => {
+      vscode.postMessage({ command: 'defaultFilter', filter });
+    });
+
     window.addEventListener('error', (event) => {
       vscode.postMessage({
         command: 'reportError',
@@ -236,6 +252,9 @@ export default function mountApp() {
           break;
         case 'setActive':
           app.setActive(message.active);
+          break;
+        case 'updateSavedFilters':
+          app.updateFilters(message.savedFilters);
           break;
         default:
           break;
