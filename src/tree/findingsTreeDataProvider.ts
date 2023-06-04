@@ -79,18 +79,14 @@ export class FindingsTreeDataProvider
     };
     overviewTreeItem.iconPath = new vscode.ThemeIcon('preview');
 
-    return topLevelTreeLabels.reduce(
-      (treeItems, impactDomain) => {
-        const treeItem = new vscode.TreeItem(
-          impactDomain,
-          vscode.TreeItemCollapsibleState.Expanded
-        );
+    const topLevelTreeItems = [overviewTreeItem];
 
-        treeItems.push(treeItem);
-        return treeItems;
-      },
-      [overviewTreeItem]
-    );
+    return topLevelTreeLabels.reduce((treeItems, impactDomain) => {
+      const treeItem = new vscode.TreeItem(impactDomain, vscode.TreeItemCollapsibleState.Expanded);
+
+      treeItems.push(treeItem);
+      return treeItems;
+    }, topLevelTreeItems);
   }
 
   getChildrenForImpactDomain(impactDomain: string): vscode.TreeItem[] {
