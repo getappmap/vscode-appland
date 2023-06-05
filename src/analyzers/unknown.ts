@@ -5,8 +5,8 @@ export default function analyze(folder: WorkspaceFolder): ProjectAnalysis {
   return {
     features: {
       lang: {
-        score: 'bad',
-        text: `This project looks like it's written in a language not currently supported by AppMap.`,
+        score: 'unsupported',
+        text: `AppMap works with Ruby, Java, Python and JavaScript. None of those languages were detected in this project.`,
       },
     },
     name: folder.name,

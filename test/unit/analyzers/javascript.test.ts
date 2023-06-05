@@ -10,27 +10,29 @@ import { Features } from '../../../src/analyzers';
 
 describe('JavaScript analyzer', () => {
   test('notes the lack of package.json', null, (f) =>
-    expect(f.lang.text).to.include('without a dependency file')
+    expect(f.lang.text).to.include(
+      'You can add AppMap to this project by creating a package.json file'
+    )
   );
 
   test('detects express.js', { dependencies: { express: 'latest' } }, (f) =>
-    expect(f.web?.score).to.equal('ok')
+    expect(f.web?.score).to.equal('early-access')
   );
 
   test('detects mocha', { devDependencies: { mocha: 'latest' } }, (f) =>
-    expect(f.test).to.include({ title: 'mocha', score: 'ok' })
+    expect(f.test).to.include({ title: 'mocha', score: 'early-access' })
   );
 
   test('rejects old mocha', { devDependencies: { mocha: '^7' } }, (f) =>
-    expect(f.test).to.include({ title: 'mocha', score: 'bad' })
+    expect(f.test).to.include({ title: 'mocha', score: 'unsupported' })
   );
 
   test('detects jest', { devDependencies: { jest: 'latest' } }, (f) =>
-    expect(f.test).to.include({ title: 'jest', score: 'ok' })
+    expect(f.test).to.include({ title: 'jest', score: 'early-access' })
   );
 
   test('rejects old jest', { devDependencies: { jest: '^24' } }, (f) =>
-    expect(f.test).to.include({ title: 'jest', score: 'bad' })
+    expect(f.test).to.include({ title: 'jest', score: 'unsupported' })
   );
 });
 

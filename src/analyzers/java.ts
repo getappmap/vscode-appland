@@ -6,8 +6,8 @@ export default async function analyze(folder: WorkspaceFolder): Promise<ProjectA
   const features: Features = {
     lang: {
       title: 'Java',
-      score: 'good',
-      text: "This project looks like Java. It's one of the languages supported by AppMap.",
+      score: 'ga',
+      text: "This project uses Java. It's one of the languages supported by AppMap.",
     },
   };
 
@@ -26,8 +26,8 @@ export default async function analyze(folder: WorkspaceFolder): Promise<ProjectA
     if (dependency('spring')) {
       features.web = {
         title: 'Spring',
-        score: 'good',
-        text: 'This project uses Spring. AppMap will automatically recognize web requests, SQL queries, and key framework functions during recording.',
+        score: 'ga',
+        text: 'This project uses Spring. AppMap can record the HTTP requests served by your app.',
       };
     }
 
@@ -35,8 +35,8 @@ export default async function analyze(folder: WorkspaceFolder): Promise<ProjectA
       if (dependency(framework)) {
         features.test = {
           title: framework,
-          score: 'good',
-          text: `This project uses ${framework}. Test execution can be automatically recorded.`,
+          score: 'ga',
+          text: `This project uses ${framework}. AppMap can record your tests.`,
         };
         break;
       }
@@ -44,8 +44,8 @@ export default async function analyze(folder: WorkspaceFolder): Promise<ProjectA
   } catch (_) {
     features.lang = {
       title: 'Java',
-      score: 'ok',
-      text: `This project looks like Java. It's one of the languages supported by AppMap, but no supported dependency file was found.`,
+      score: 'early-access',
+      text: `This project uses Java. It's one of the languages supported by AppMap, but no supported dependency file was found.`,
     };
   }
 

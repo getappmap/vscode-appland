@@ -1,5 +1,5 @@
 import { Uri, workspace, WorkspaceFolder } from 'vscode';
-import { Features, ProjectAnalysis, overallScore, Feature } from '.';
+import { Features, ProjectAnalysis, Feature, overallScore } from '.';
 import utfDecoder from '../utfDecoder';
 import semverIntersects from 'semver/ranges/intersects';
 import assert from 'assert';
@@ -10,21 +10,32 @@ export default async function analyze(folder: WorkspaceFolder): Promise<ProjectA
   const features: Features = {
     lang: {
       title: 'JavaScript',
-      score: 'ok',
-      text: `JavaScript is currently in Open Beta. Please read the docs before proceeding.`,
+      score: 'early-access',
+      text: `This project uses JavaScript. AppMap provides early access support for JavaScript, primarily for Node.js.`,
       depFile: 'package.json',
       plugin: '@appland/appmap-agent-js',
       pluginType: 'package',
     },
   };
 
+  let packageConfig:
+    | {
+        dependencies?: Dependency;
+        devDependencies?: Dependency;
+      }
+    | undefined;
   try {
-    const { dependencies, devDependencies } = await readPkg(folder.uri);
+    packageConfig = await readPkg(folder.uri);
+  } catch (e) {
+    console.warn(e);
+  }
 
+  if (packageConfig) {
+    const { dependencies, devDependencies } = packageConfig;
     if (dependencies?.express) {
       features.web = {
         title: 'express.js',
-        score: 'ok',
+        score: 'early-access',
         text: 'This project uses Express. AppMap will automatically recognize web requests, SQL queries, and key framework functions during recording.',
       };
     }
@@ -32,11 +43,11 @@ export default async function analyze(folder: WorkspaceFolder): Promise<ProjectA
     const testFeature =
       detectTest(devDependencies, 'mocha', '>= 8') || detectTest(devDependencies, 'jest', '>= 25');
     if (testFeature) features.test = testFeature;
-  } catch (_) {
+  } else {
     features.lang = {
       title: 'JavaScript',
-      score: 'ok',
-      text: `This looks like a JavaScript project without a dependency file. JavaScript is currently in Open Beta. Please read the docs before proceeding.`,
+      score: 'early-access',
+      text: `This project uses JavaScript. You can add AppMap to this project by creating a package.json file.`,
     };
   }
 
@@ -72,13 +83,13 @@ function detectTest(
   if (version === 'latest' || semverIntersects(constraint, version))
     return {
       title: testPackage,
-      score: 'ok',
-      text: `This project uses ${testPackage}. Test execution can be automatically recorded.`,
+      score: 'early-access',
+      text: `This project uses ${testPackage}. You can record AppMaps of your tests.`,
     };
   else
     return {
       title: testPackage,
-      score: 'bad',
-      text: `This project uses an unsupported version of ${testPackage}. You need version ${constraint} to automatically record test execution.`,
+      score: 'unsupported',
+      text: `This project uses an unsupported version of ${testPackage}. You need version ${constraint} to record AppMaps of your tests.`,
     };
 }

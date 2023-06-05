@@ -26,7 +26,7 @@ describe('JavaScript project analyzer', () => {
 
         assert(result);
         assert(result.features.test);
-        assert(result.features.test.score == 'ok');
+        assert(result.features.test.score == 'early-access');
       });
     });
   });
