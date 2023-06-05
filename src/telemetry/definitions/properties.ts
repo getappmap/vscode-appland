@@ -59,6 +59,20 @@ export const RESULT = new TelemetryDataProvider({
   },
 });
 
+export const OPTIONAL_RESULT = new TelemetryDataProvider({
+  id: 'appmap.result',
+  async value({ result }: { result?: string }): Promise<string | undefined> {
+    return result;
+  },
+});
+
+export const REASON = new TelemetryDataProvider({
+  id: 'appmap.reason',
+  async value({ reason }: { reason: string }): Promise<string> {
+    return reason;
+  },
+});
+
 export const CTA_ID = new TelemetryDataProvider({
   id: 'appmap.cta.id',
   async value({ id }: { id: string }): Promise<string> {
