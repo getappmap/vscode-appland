@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import FindingsIndex from '../services/findingsIndex';
 import AnalysisManager from '../services/analysisManager';
+import AppMapCollection from '../services/appmapCollection';
 
 const IMPACT_DOMAINS = ['Security', 'Performance', 'Stability', 'Maintainability'];
 
@@ -12,7 +13,7 @@ export class FindingsTreeDataProvider
   private findingsIndex?: FindingsIndex;
   private onChangeDisposable?: vscode.Disposable;
 
-  constructor(context: vscode.ExtensionContext) {
+  constructor(context: vscode.ExtensionContext, private appmaps: AppMapCollection) {
     AnalysisManager.onAnalysisToggled(
       () => this.setFindingsIndex(AnalysisManager.findingsIndex),
       undefined,
@@ -58,6 +59,8 @@ export class FindingsTreeDataProvider
 
   getTopLevelTreeItems(): vscode.TreeItem[] {
     if (!this.findingsIndex) return [];
+
+    if (this.appmaps.appMaps().length === 0) return [];
 
     const topLevelTreeLabels = this.findingsIndex
       .findings()

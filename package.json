@@ -267,29 +267,24 @@
         "when": "appmap.initialized && appmap.hasData && appmap.numResults == 0"
       },
       {
+        "view": "appmap.views.codeObjects",
+        "contents": "AppMap is initializing...",
+        "when": "!appmap.initialized"
+      },
+      {
+        "view": "appmap.views.codeObjects",
+        "contents": "Once you've recorded AppMaps, this panel will contain a tree view of all the packages, classes, functions, SQL, and HTTP requests that were recorded.\nThere are no AppMaps in this project yet.\n[Open Instructions](command:appmap.openInstallGuide)\n",
+        "when": "appmap.initialized"
+      },
+      {
         "view": "appmap.views.findings",
-        "contents": "Loading...",
+        "contents": "AppMap is initializing...",
         "when": "!appmap.initialized"
       },
       {
         "view": "appmap.views.findings",
-        "contents": "AppMap runtime analysis works right in your code editor, to help you find and fix problems in your code.\n[Sign Up](command:appmap.enableAnalysis)\n Authenticating with AppMap is for granting feature access. AppMap cannot access your data.\n[Learn More](command:appmap.learnMoreRuntimeAnalysis)",
-        "when": "appmap.initialized && !appmap.userAuthenticated"
-      },
-      {
-        "view": "appmap.views.findings",
-        "contents": "AppMap runtime analysis works right in your code editor, to help you find and fix problems in your code.\n[Enable Runtime Analysis](command:appmap.enableAnalysis)\nAuthenticating with AppMap is for granting feature access. AppMap cannot access your data.\n[Learn More](command:appmap.learnMoreRuntimeAnalysis)",
-        "when": "appmap.initialized && appmap.userAuthenticated && !appmap.findingsEnabled"
-      },
-      {
-        "view": "appmap.views.findings",
-        "contents": "Runtime analysis is ready and waiting for AppMaps.\n[Learn More](command:appmap.learnMoreRuntimeAnalysis)",
-        "when": "appmap.initialized && appmap.analysisEnabled && !appmap.numFindings && !appmap.analysisPerformed"
-      },
-      {
-        "view": "appmap.views.findings",
-        "contents": "You're good to go! AppMap has scanned your application and found no flaws. We'll continue scanning for flaws automatically.",
-        "when": "appmap.initialized && appmap.analysisEnabled && appmap.numFindings == 0 && appmap.analysisPerformed"
+        "contents": "Once you've recorded AppMaps, they will be automatically analyzed for common anti-patterns and flaws.\nThere are no AppMaps in this project yet.\n[Open Instructions](command:appmap.openInstallGuide)\n",
+        "when": "appmap.initialized"
       }
     ],
     "views": {
