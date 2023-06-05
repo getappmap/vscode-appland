@@ -45,10 +45,4 @@ export default class ExtensionSettings {
   public static async enableFindings(): Promise<void> {
     vscode.workspace.getConfiguration('appMap').update('findingsEnabled', true);
   }
-
-  public static get flamegraphEnabled(): boolean {
-    return [true, 'true'].includes(
-      vscode.workspace.getConfiguration('appMap').get('flamegraphEnabled') || false
-    );
-  }
 }
