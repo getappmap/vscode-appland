@@ -1,3 +1,10 @@
+# [0.82.0](https://github.com/getappmap/vscode-appland/compare/v0.81.2...v0.82.0) (2023-06-05)
+
+
+### Features
+
+* add flame graph setting ([3f4769c](https://github.com/getappmap/vscode-appland/commit/3f4769cfce4dc62689faa377626662343af431d4))
+
 ## [0.81.2](https://github.com/getappmap/vscode-appland/compare/v0.81.1...v0.81.2) (2023-05-30)
 
 
