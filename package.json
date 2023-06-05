@@ -252,17 +252,17 @@
     },
     "viewsWelcome": [
       {
-        "view": "appmap.views.local",
-        "contents": " There are no AppMaps in this project yet.\n[Get started](command:appmap.openInstallGuide)\n",
-        "when": "appmap.initialized && !appmap.hasData"
-      },
-      {
-        "view": "appmap.views.local",
-        "contents": "Loading...",
+        "view": "appmap.views.appmaps",
+        "contents": "AppMap is initializing...",
         "when": "!appmap.initialized"
       },
       {
-        "view": "appmap.views.local",
+        "view": "appmap.views.appmaps",
+        "contents": "Once you've recorded AppMaps, they will be listed here.\nThere are no AppMaps in this project yet.\n[Open Instructions](command:appmap.openInstallGuide)\n",
+        "when": "appmap.initialized"
+      },
+      {
+        "view": "appmap.views.appmaps",
         "contents": "Filter matched 0 results.\n[Apply a new filter](command:appmap.applyFilter)",
         "when": "appmap.initialized && appmap.hasData && appmap.numResults == 0"
       },
@@ -308,7 +308,7 @@
           "when": "!appMap.showSignIn"
         },
         {
-          "id": "appmap.views.local",
+          "id": "appmap.views.appmaps",
           "name": "AppMaps",
           "contextualTitle": "AppMap",
           "visibility": "visible",
@@ -377,57 +377,57 @@
       "view/title": [
         {
           "command": "appmap.applyFilter",
-          "when": "view == appmap.views.local && appmap.hasData",
+          "when": "view == appmap.views.appmaps && appmap.hasData",
           "group": "navigation@2"
         },
         {
           "command": "appmap.findByName",
-          "when": "view == appmap.views.local && appmap.hasData",
+          "when": "view == appmap.views.appmaps && appmap.hasData",
           "group": "navigation@1"
         },
         {
           "command": "appmap.startRemoteRecording",
-          "when": "view == appmap.views.local && !appmap.recordingIsRunning",
+          "when": "view == appmap.views.appmaps && !appmap.recordingIsRunning",
           "group": "navigation@0"
         },
         {
           "command": "appmap.stopCurrentRemoteRecording",
-          "when": "view == appmap.views.local && appmap.recordingIsRunning",
+          "when": "view == appmap.views.appmaps && appmap.recordingIsRunning",
           "group": "navigation@0"
         }
       ],
       "view/item/context": [
         {
           "command": "appmap.context.openInFileExplorer",
-          "when": "view == appmap.views.local && viewItem == appmap.views.local.appMap"
+          "when": "view == appmap.views.appmaps && viewItem == appmap.views.appmaps.appMap"
         },
         {
           "command": "appmap.context.openAsJson",
-          "when": "view == appmap.views.local && viewItem == appmap.views.local.appMap"
+          "when": "view == appmap.views.appmaps && viewItem == appmap.views.appmaps.appMap"
         },
         {
           "command": "appmap.context.rename",
-          "when": "view == appmap.views.local && viewItem == appmap.views.local.appMap"
+          "when": "view == appmap.views.appmaps && viewItem == appmap.views.appmaps.appMap"
         },
         {
           "command": "appmap.context.saveToCollection",
-          "when": "view == appmap.views.local && viewItem == appmap.views.local.appMap"
+          "when": "view == appmap.views.appmaps && viewItem == appmap.views.appmaps.appMap"
         },
         {
           "command": "appmap.context.sequenceDiagram",
-          "when": "view == appmap.views.local && viewItem == appmap.views.local.appMap"
+          "when": "view == appmap.views.appmaps && viewItem == appmap.views.appmaps.appMap"
         },
         {
           "command": "appmap.context.compareSequenceDiagrams",
-          "when": "view == appmap.views.local && viewItem == appmap.views.local.appMap"
+          "when": "view == appmap.views.appmaps && viewItem == appmap.views.appmaps.appMap"
         },
         {
           "command": "appmap.context.deleteAppMap",
-          "when": "view == appmap.views.local && viewItem == appmap.views.local.appMap"
+          "when": "view == appmap.views.appmaps && viewItem == appmap.views.appmaps.appMap"
         },
         {
           "command": "appmap.context.deleteAppMaps",
-          "when": "view == appmap.views.local && viewItem == appmap.views.local.appMapCollection"
+          "when": "view == appmap.views.appmaps && viewItem == appmap.views.appmaps.appMapCollection"
         },
         {
           "command": "appmap.context.inspectCodeObject",

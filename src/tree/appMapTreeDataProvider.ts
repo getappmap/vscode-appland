@@ -79,13 +79,13 @@ export class AppMapTreeDataProvider implements vscode.TreeDataProvider<AppMapTre
           command: 'vscode.openWith',
           arguments: [descriptor.resourceUri, 'appmap.views.appMapFile'],
         },
-        contextValue: 'appmap.views.local.appMap',
+        contextValue: 'appmap.views.appmaps.appMap',
       };
     } else {
       return {
         label: element.name,
         collapsibleState: vscode.TreeItemCollapsibleState.Expanded,
-        contextValue: 'appmap.views.local.appMapCollection',
+        contextValue: 'appmap.views.appmaps.appMapCollection',
       };
     }
   }

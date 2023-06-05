@@ -22,7 +22,7 @@ export default function registerTrees(
   });
 
   const localAppMapsProvider = new AppMapTreeDataProvider(localAppMaps, appmapsUptodate);
-  const localAppMapsTree = vscode.window.createTreeView('appmap.views.local', {
+  const localAppMapsTree = vscode.window.createTreeView('appmap.views.appmaps', {
     treeDataProvider: localAppMapsProvider,
   });
   context.subscriptions.push(localAppMapsTree);
