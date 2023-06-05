@@ -146,22 +146,9 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
     return this._metadata as Readonly<ProjectMetadata>;
   }
 
-  // Returns true if the project is installable and the agent has yet to be configured or
-  // AppMaps have yet to be recorded
+  // Returns true if the project is installable and the agent has yet to be configured.
   get installable(): boolean {
-    return (
-      this.metadata.score !== undefined &&
-      this.metadata.score >= 2 &&
-      !(this.isAgentConfigured && this.hasRecordedAppMaps && this.metadata.analysisPerformed)
-    );
-  }
-
-  get supported(): boolean {
-    return (
-      (this.metadata.language?.score || 0) >= SCORE_VALUES.good &&
-      ((this.metadata.webFramework?.score || 0) >= SCORE_VALUES.ok ||
-        (this.metadata.testFramework?.score || 0) >= SCORE_VALUES.ok)
-    );
+    return this.metadata.score !== undefined && this.metadata.score >= 2 && !this.isAgentConfigured;
   }
 
   get complete(): boolean {
