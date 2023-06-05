@@ -209,3 +209,8 @@ export const CLICKED_SIGN_IN_LINK = new Event({
   name: 'clicked_sign_in_link',
   properties: [Properties.LINK_TYPE],
 });
+
+export const INSTALL_BUTTON_ABORT = new Event({
+  name: 'install_button:abort',
+  properties: [Properties.REASON, Properties.OPTIONAL_RESULT],
+});
