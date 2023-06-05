@@ -34,7 +34,8 @@ describe('LanguageResolver', () => {
     });
 
     it('correctly identifies the project language', async () => {
-      const language = await LanguageResolver.getLanguage(ProjectRuby);
+      const languages = await LanguageResolver.getLanguages(ProjectRuby);
+      const language = languages[0];
       assert.strictEqual(language, 'ruby');
     });
 
@@ -48,7 +49,8 @@ describe('LanguageResolver', () => {
         await fs.writeFile(join(ProjectRuby, 'ignored_dir', '.gitignore'), '*');
       });
 
-      const language = await LanguageResolver.getLanguage(ProjectRuby);
+      const languages = await LanguageResolver.getLanguages(ProjectRuby);
+      const language = languages[0];
       assert.strictEqual(language, 'ruby');
     });
   });

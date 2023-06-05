@@ -9,7 +9,13 @@ export const UNKNOWN_LANGUAGE = 'unknown' as const;
 
 export type RecognizedLanguage = (typeof SUPPORTED_LANGUAGES)[number] | typeof UNKNOWN_LANGUAGE;
 
-const LANGUAGES = [
+type LanguageDefinition = {
+  id: string;
+  name: string;
+  extensions: string[];
+};
+
+const LANGUAGES: LanguageDefinition[] = [
   {
     id: 'clojure',
     name: 'Clojure',
@@ -166,7 +172,7 @@ const LANGUAGES = [
 /**
  * Reverse mapping of file extensions to language id
  */
-const LANGUAGE_EXTENSIONS = LANGUAGES.reduce((memo, lang) => {
+const LANGUAGE_EXTENSIONS = LANGUAGES.reduce<Record<string, string>>((memo, lang) => {
   const extensions = lang.extensions || [];
 
   extensions.forEach((ext) => {
@@ -205,7 +211,7 @@ export default class LanguageResolver {
       return cachedValue;
     }
 
-    const extensions: LanguageStats = {};
+    const countByFileExtension: Record<string, number> = {};
     const gitProperties = new GitProperties();
     await gitProperties.initialize(folderPath(folder));
 
@@ -218,36 +224,38 @@ export default class LanguageResolver {
         .forEach((file) => {
           const fileExtension = extname(file.fsPath);
           if (fileExtension !== '' && LANGUAGE_EXTENSIONS[fileExtension]) {
-            extensions[fileExtension] = (extensions[fileExtension] || 0) + 1;
+            countByFileExtension[fileExtension] = (countByFileExtension[fileExtension] || 0) + 1;
           }
         });
     });
 
-    const languages = Object.entries(extensions).reduce((memo, [ext, count]) => {
+    const countByLanguage = Object.entries(countByFileExtension).reduce((memo, [ext, count]) => {
       const language = LANGUAGE_EXTENSIONS[ext];
-      memo[language] = memo[language] + count || count;
+      if (language) memo[language] = (memo[language] || 0) + count;
       return memo;
-    }, {} as LanguageStats);
+    }, {} as Record<string, number>);
 
-    const totalFiles = Object.values(languages).reduce((a, b) => a + b, 0);
+    // Convert each count to a ratio
+    const totalFiles = Object.values(countByLanguage).reduce((a, b) => a + b, 0);
     if (totalFiles > 0) {
-      Object.keys(languages).forEach((key) => {
-        languages[key] /= totalFiles;
+      Object.keys(countByLanguage).forEach((key) => {
+        countByLanguage[key] /= totalFiles;
       });
     }
 
-    LANGUAGE_DISTRIBUTION_CACHE[folderPath(folder)] = languages;
+    LANGUAGE_DISTRIBUTION_CACHE[folderPath(folder)] = countByLanguage;
 
-    return languages;
+    return countByLanguage;
   }
 
   /**
-   * Retrieve the most frequently used language id for a given directory. The language returned must be supported (i.e.,
-   * it must be registered in LANGUAGE_AGENTS). If the language is not supported, returns 'unknown'.
+   * Retrieve the language ids for a given directory. Each language returned will be a language
+   * that is registered in LANGUAGE_AGENTS). If the language is not supported, returns 'unknown'.
+   * The languages are sorted by frequency of occurrence.
    */
-  private static async identifyLanguage(
+  private static async identifyLanguages(
     folder: vscode.WorkspaceFolder | string
-  ): Promise<RecognizedLanguage> {
+  ): Promise<RecognizedLanguage[]> {
     let languageStats = LANGUAGE_CACHE[folderPath(folder)];
     if (!languageStats) {
       languageStats = await backgroundJob<LanguageStats>(
@@ -266,11 +274,8 @@ export default class LanguageResolver {
       setTimeout(() => delete LANGUAGE_CACHE[folderPath(folder)], LANGUAGE_CACHE_EXPIRY);
     }
 
-    const best = Object.entries(languageStats).sort((a, b) => b[1] - a[1])?.[0]?.[0];
-    if ((SUPPORTED_LANGUAGES as readonly string[]).indexOf(best) !== -1) {
-      return best as RecognizedLanguage;
-    }
-    return UNKNOWN_LANGUAGE;
+    const sortedEntries = Object.entries(languageStats).sort((a, b) => b[1] - a[1]);
+    return sortedEntries.map(([language]) => language) as RecognizedLanguage[];
   }
 
   /**
@@ -279,9 +284,9 @@ export default class LanguageResolver {
    *
    * @returns unknown if the most used language is not supported
    */
-  public static async getLanguage(
+  public static async getLanguages(
     folder: vscode.WorkspaceFolder | string
-  ): Promise<RecognizedLanguage> {
-    return await this.identifyLanguage(folder);
+  ): Promise<RecognizedLanguage[]> {
+    return await this.identifyLanguages(folder);
   }
 }

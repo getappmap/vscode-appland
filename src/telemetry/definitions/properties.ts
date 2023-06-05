@@ -6,7 +6,7 @@ import TelemetryDataProvider from '../telemetryDataProvider';
 import LanguageResolver, { UNKNOWN_LANGUAGE } from '../../services/languageResolver';
 import { fileExists, getRecords } from '../../util';
 import ErrorCode from './errorCodes';
-import ProjectMetadata from '../../workspace/projectMetadata';
+import ProjectMetadata, { isLanguageSupported } from '../../workspace/projectMetadata';
 import { TerminalConfig } from '../../commands/installAgent';
 import * as vscode from 'vscode';
 import { Finding } from '@appland/scanner';
@@ -137,6 +137,7 @@ export const PROJECT_LANGUAGE = new TelemetryDataProvider({
   cache: true,
   async value(data: { rootDirectory?: string; metadata?: Record<string, unknown> }) {
     // If metadata is available, use the language property.
+    // TODO: what is this record string,unknown?
     if (data.metadata) {
       const language = data.metadata.language as Record<string, string> | undefined;
       if (language?.name) {
@@ -149,7 +150,7 @@ export const PROJECT_LANGUAGE = new TelemetryDataProvider({
       return UNKNOWN_LANGUAGE;
     }
 
-    return (await LanguageResolver.getLanguage(data.rootDirectory)) || UNKNOWN_LANGUAGE;
+    return (await LanguageResolver.getLanguages(data.rootDirectory)) || UNKNOWN_LANGUAGE;
   },
 });
 
@@ -214,15 +215,14 @@ export const IS_TELEMETRY_ENABLED = new TelemetryDataProvider({
 export const IS_INSTALLABLE = new TelemetryDataProvider({
   id: 'appmap.project.installable',
   async value({ project }: { project: ProjectMetadata }) {
-    const isInstallable = project?.score && project.score > 1;
-    return String(isInstallable);
+    return String(isLanguageSupported(project));
   },
 });
 
 export const HAS_INSTALLABLE_PROJECT = new TelemetryDataProvider({
   id: 'appmap.project.any_installable',
   async value({ projects }: { projects: ProjectMetadata[] }) {
-    const isInstallable = projects.some((project) => project?.score && project.score > 1);
+    const isInstallable = projects.some((project) => isLanguageSupported(project));
     return String(isInstallable);
   },
 });

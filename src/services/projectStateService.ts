@@ -5,7 +5,7 @@ import ExtensionState, { Keys } from '../configuration/extensionState';
 import { FileChangeEmitter } from './fileChangeEmitter';
 import FindingsIndex from './findingsIndex';
 import { ResolvedFinding } from './resolvedFinding';
-import { analyze, scoreValue, NodeVersion, SCORE_VALUES, AppMapSummary } from '../analyzers';
+import { analyze, NodeVersion, AppMapSummary, scoreValue } from '../analyzers';
 import ProjectMetadata from '../workspace/projectMetadata';
 import AppMapCollection from './appmapCollection';
 import ChangeEventDebouncer from './changeEventDebouncer';
@@ -275,30 +275,43 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
   }
 
   private async analyzeProject(): Promise<void> {
-    const analysis = await analyze(this.folder);
+    const analyses = await analyze(this.folder);
 
-    this._metadata.hasNode = this.hasNode(analysis.nodeVersion);
-    this._metadata.language = {
-      name: analysis.features.lang.title,
-      score: scoreValue(analysis.features.lang.score),
-      text: analysis.features.lang.text,
-    };
-    this._metadata.score = analysis.score;
+    this._metadata.hasNode = !!analyses.some((a) => this.hasNode(a.nodeVersion));
 
-    if (analysis.features.test) {
-      this._metadata.testFramework = {
-        name: analysis.features.test.title,
-        score: scoreValue(analysis.features.test.score),
-        text: analysis.features.test.text,
+    let preferred = analyses.find((a) => a.features.web);
+    if (!preferred) preferred = analyses[0];
+
+    this._metadata.languages = analyses
+      .map((a) => a.features.lang)
+      .filter(Boolean)
+      .map((lang) => ({
+        name: lang.title,
+        score: scoreValue(lang.score),
+        text: lang.text,
+      }));
+    if (preferred) {
+      this._metadata.language = {
+        name: preferred.features.lang.title,
+        score: scoreValue(preferred.features.lang.score),
+        text: preferred.features.lang.text,
       };
-    }
+      this._metadata.score = preferred.score;
+      if (preferred.features.test) {
+        this._metadata.testFramework = {
+          name: preferred.features.test.title,
+          score: scoreValue(preferred.features.test.score),
+          text: preferred.features.test.text,
+        };
+      }
 
-    if (analysis.features.web) {
-      this._metadata.webFramework = {
-        name: analysis.features.web.title,
-        score: scoreValue(analysis.features.web.score),
-        text: analysis.features.web.text,
-      };
+      if (preferred.features.web) {
+        this._metadata.webFramework = {
+          name: preferred.features.web.title,
+          score: scoreValue(preferred.features.web.score),
+          text: preferred.features.web.text,
+        };
+      }
     }
 
     this._onStateChange.fire(this._metadata);

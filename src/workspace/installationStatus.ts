@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { ProjectStateServiceInstance } from '../services/projectStateService';
+import { isLanguageSupported } from './projectMetadata';
 
 export default class InstallationStatusBadge {
   protected watcher?: vscode.Disposable;
@@ -14,7 +15,7 @@ export default class InstallationStatusBadge {
 
     const installableProjects: ProjectStateServiceInstance[] = [];
     for (const projectState of projectStates) {
-      if (projectState.installable) {
+      if (isLanguageSupported(projectState.metadata)) {
         installableProjects.push(projectState);
       }
     }

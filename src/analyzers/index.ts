@@ -80,17 +80,22 @@ export type NodeVersion = {
 
 export async function analyze(
   folder: WorkspaceFolder
-): Promise<ProjectAnalysis & Partial<WithAppMaps>> {
-  // TODO: Use the 'language' field in appmap.yml instead
-  const language = await LanguageResolver.getLanguage(folder);
-  const analyzer = analyzers[language];
-  const result = await analyzer(folder);
-  assert(result);
+): Promise<(ProjectAnalysis & Partial<WithAppMaps>)[]> {
+  const languages = await LanguageResolver.getLanguages(folder);
+  const results: (ProjectAnalysis & Partial<WithAppMaps>)[] = [];
+  for (let i = 0; i < languages.length; i++) {
+    const language = languages[i];
+    const analyzer = analyzers[language];
+    if (analyzer) {
+      const result = await analyzer(folder);
+      assert(result);
 
-  result.nodeVersion = await getNodeVersion(folder);
-  result.path = folder.uri.fsPath;
-
-  return result;
+      result.nodeVersion = await getNodeVersion(folder);
+      result.path = folder.uri.fsPath;
+      results[i] = result;
+    }
+  }
+  return results.filter(Boolean);
 }
 
 async function getNodeVersion(folder: WorkspaceFolder): Promise<NodeVersion | undefined> {
