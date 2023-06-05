@@ -238,6 +238,10 @@
         "appMap.commandLineToolsPath": {
           "type": "string",
           "description": "Location of AppMap command line tools (used for extension development only)"
+        },
+        "appMap.flamegraphEnabled": {
+          "type": "boolean",
+          "description": "Enable flamegraph diagram"
         }
       }
     },
@@ -514,7 +518,7 @@
   "dependencies": {
     "@appland/appmap": "^3.75.0",
     "@appland/client": "^1.6.0",
-    "@appland/components": "^2.42.0",
+    "@appland/components": "^2.44.0",
     "@appland/diagrams": "^1.6.3",
     "@appland/models": "^2.4.2",
     "@appland/scanner": "^1.76.6",

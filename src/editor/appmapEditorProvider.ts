@@ -295,6 +295,7 @@ export default class AppMapEditorProvider
             type: 'init-appmap',
             shareEnabled: extensionSettings.shareEnabled,
             defaultView: extensionSettings.defaultDiagramView || 'viewSequence',
+            flamegraphEnabled: extensionSettings.flamegraphEnabled,
           });
           break;
         case 'appmapStateResult':
