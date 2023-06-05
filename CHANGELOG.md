@@ -1,3 +1,11 @@
+## [0.82.1](https://github.com/getappmap/vscode-appland/compare/v0.82.0...v0.82.1) (2023-06-05)
+
+
+### Bug Fixes
+
+* revert "build: bump components peer dependency" ([3d80170](https://github.com/getappmap/vscode-appland/commit/3d80170cfdab7f8c17554700a85259632bbc4dc0))
+* revert "feat: add flame graph setting" ([877f5b2](https://github.com/getappmap/vscode-appland/commit/877f5b2cef2a4b3f50f4934222e5510429825492))
+
 # [0.82.0](https://github.com/getappmap/vscode-appland/compare/v0.81.2...v0.82.0) (2023-06-05)
 
 
