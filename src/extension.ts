@@ -261,8 +261,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     findByName(context, projectStates, appmapCollectionFile);
     resetUsageState(context, extensionState);
 
-    if (!openedInstallGuide && !SignInManager.shouldShowSignIn())
-      promptInstall(workspaceServices, extensionState);
+    if (!openedInstallGuide) promptInstall(workspaceServices, extensionState);
 
     vscode.env.onDidChangeTelemetryEnabled((enabled: boolean) => {
       Telemetry.sendEvent(TELEMETRY_ENABLED, {
