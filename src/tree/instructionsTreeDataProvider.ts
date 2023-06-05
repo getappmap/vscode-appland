@@ -5,14 +5,17 @@ import { ProjectStateServiceInstance } from '../services/projectStateService';
 import InstallGuideWebView from '../webviews/installGuideWebview';
 import AnalysisManager from '../services/analysisManager';
 
+export const ProjectPicker = 'project-picker';
+export const RecordAppMaps = 'record-appmaps';
+
 export const DocsPages = [
   {
-    id: 'project-picker',
+    id: ProjectPicker,
     title: 'Add AppMap to your project',
     completion: 'agentInstalled',
   },
   {
-    id: 'record-appmaps',
+    id: RecordAppMaps,
     title: 'Record AppMaps',
     completion: 'appMapsRecorded',
   },

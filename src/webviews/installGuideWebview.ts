@@ -6,7 +6,7 @@ import { COPY_COMMAND, OPEN_VIEW, Telemetry } from '../telemetry';
 import { getWorkspaceFolderFromPath } from '../util';
 import ProjectMetadata from '../workspace/projectMetadata';
 import ExtensionState from '../configuration/extensionState';
-import { DocPageId, DocsPages } from '../tree/instructionsTreeDataProvider';
+import { DocPageId, ProjectPicker, RecordAppMaps } from '../tree/instructionsTreeDataProvider';
 import { Signup } from '../actions/signup';
 import AnalysisManager from '../services/analysisManager';
 import ExtensionSettings from '../configuration/extensionSettings';
@@ -24,10 +24,10 @@ type ClipboardMessage = {
 } & PageMessage;
 
 function defaultPageId(projectStates: ProjectStateServiceInstance[]): DocPageId {
-  const fallback = DocsPages[0].id;
-  if (projectStates.length !== 1) return fallback;
-  const { metadata } = projectStates[0];
-  return DocsPages.find(({ completion }) => !metadata[completion])?.id || fallback;
+  const anyInstalled = projectStates.some((project) => project.metadata.agentInstalled);
+  if (!anyInstalled) return ProjectPicker;
+
+  return RecordAppMaps;
 }
 
 export default class InstallGuideWebView {
