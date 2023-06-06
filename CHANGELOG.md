@@ -1,3 +1,18 @@
+# [0.83.0](https://github.com/getappmap/vscode-appland/compare/v0.82.1...v0.83.0) (2023-06-06)
+
+
+### Bug Fixes
+
+* Don't introduce extra newlines parsing depends ([6425250](https://github.com/getappmap/vscode-appland/commit/6425250c27f23fc637278ee422943e3c0e2383bf))
+
+
+### Features
+
+* Prefer first language with a web framework ([b560d78](https://github.com/getappmap/vscode-appland/commit/b560d7892333ee9db73bbd5ce13ea2651ea7630a))
+* Rename language and feature status ([b99d805](https://github.com/getappmap/vscode-appland/commit/b99d80589fd382b1e0a073acc18791ee7c22c189))
+* Tighten install prompt criteria slightly ([5c7bd7c](https://github.com/getappmap/vscode-appland/commit/5c7bd7c54c27dd8cb79e4cb40914d8eda3c03aab))
+* Use warning icon when AppMap test_status is failed ([12ce3e2](https://github.com/getappmap/vscode-appland/commit/12ce3e2761f0bd5fc8d364987b04189f62d98d85))
+
 ## [0.82.1](https://github.com/getappmap/vscode-appland/compare/v0.82.0...v0.82.1) (2023-06-05)
 
 
