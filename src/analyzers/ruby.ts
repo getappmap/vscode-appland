@@ -8,8 +8,8 @@ export default async function analyze(folder: WorkspaceFolder): Promise<ProjectA
   const features: Features = {
     lang: {
       title: 'Ruby',
-      score: 'good',
-      text: "This project looks like Ruby. It's one of the languages supported by AppMap.",
+      score: 'ga',
+      text: "This project uses Ruby. It's one of the languages supported by AppMap.",
     },
   };
 
@@ -19,27 +19,23 @@ export default async function analyze(folder: WorkspaceFolder): Promise<ProjectA
     if (dependency('rails')) {
       features.web = {
         title: 'Rails',
-        score: 'good',
-        text: 'This project uses Rails. AppMap will automatically recognize web requests, SQL queries, and key framework functions during recording.',
+        score: 'ga',
+        text: 'This project uses Rails. AppMap can record the HTTP requests served by your app.',
       };
     }
 
-    for (const framework of ['minitest', 'rspec', 'cucumber']) {
+    for (const framework of ['minitest', 'rspec']) {
       if (dependency(framework)) {
         features.test = {
           title: framework,
-          score: 'good',
-          text: `This project uses ${framework}. Test execution can be automatically recorded.`,
+          score: 'ga',
+          text: `This project uses ${framework}. AppMap can record your tests.`,
         };
         break;
       }
     }
-  } catch (_) {
-    features.lang = {
-      title: 'Ruby',
-      score: 'ok',
-      text: `This project looks like Ruby. It's one of the languages supported by AppMap, but no Gemfile was detected.`,
-    };
+  } catch (e) {
+    console.warn(e);
   }
 
   return {

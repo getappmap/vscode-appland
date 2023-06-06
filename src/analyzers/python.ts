@@ -1,5 +1,5 @@
 import { RelativePattern, Uri, workspace, WorkspaceFolder } from 'vscode';
-import { ProjectAnalysis, overallScore, Features } from '.';
+import { ProjectAnalysis, Features, overallScore } from '.';
 import { fileWordScanner, DependencyFinder } from './deps';
 import utfDecoder from '../utfDecoder';
 const fs = workspace.fs;
@@ -35,8 +35,8 @@ export default async function analyze(folder: WorkspaceFolder): Promise<ProjectA
   const features: Features = {
     lang: {
       title: 'Python',
-      score: 'ok',
-      text: `Python is currently in Open Beta and is not fully supported. Please read the docs before proceeding.`,
+      score: 'ga',
+      text: `This project uses Python. It's one of the languages supported by AppMap.`,
     },
   };
 
@@ -50,41 +50,32 @@ export default async function analyze(folder: WorkspaceFolder): Promise<ProjectA
     if (dependency('django')) {
       features.web = {
         title: 'Django',
-        score: 'ok',
-        text: 'This project uses Django. AppMap will automatically recognize web requests, SQL queries, and key framework functions during recording.',
+        score: 'ga',
+        text: 'This project uses Django. AppMap can record the HTTP requests served by your app.',
       };
     } else if (dependency('flask')) {
       features.web = {
         title: 'flask',
-        score: 'ok',
-        text: 'Flask support is currently in Beta. Please read the docs.',
+        score: 'ga',
+        text: 'This project uses Flask. AppMap can record the HTTP requests served by your app.',
       };
     }
 
     if (dependency('pytest')) {
       features.test = {
-        score: 'ok',
         title: 'pytest',
-        text: 'This project uses pytest. Test execution can be automatically recorded.',
+        score: 'ga',
+        text: 'This project uses pytest. AppMap can record your  tests.',
       };
     } else if (await grepFiles('unittest', folder)) {
       features.test = {
-        score: 'ok',
+        score: 'ga',
         title: 'unittest',
-        text: 'This project uses unittest. Test execution can be automatically recorded.',
-      };
-    } else {
-      features.test = {
-        score: 'bad',
-        text: "This project doesn't seem to use a supported test framework. Automatic test recording won't be possible.",
+        text: 'This project uses unittest. AppMap can record your tests.',
       };
     }
-  } catch (_) {
-    features.lang = {
-      title: 'Python',
-      score: 'ok',
-      text: `This looks like a Python project without a package manager. Python is currently in Open Beta and is not fully supported. Please read the docs before proceeding.`,
-    };
+  } catch (e) {
+    console.warn(e);
   }
 
   return {

@@ -109,7 +109,7 @@ export default class AppmapUptodateServiceInstance
       processLog
         .filter((line) => line.stream === OutputStream.Stdout)
         .map((line) => line.data)
-        .join('\n')
+        .join('')
         .split('\n')
         .map((line) => line.trim())
         .filter((line) => line.length > 0)

@@ -17,9 +17,13 @@ const analyzers = {
   unknown: UnknownAnalyzer,
 };
 
-export type Score = 'bad' | 'ok' | 'good';
-export const SCORE_VALUES = { bad: 0, ok: 1, good: 2 };
-export const OVERALL_SCORE_VALUES = { bad: 1, ok: 2, good: 3 };
+export type Score = 'unsupported' | 'early-access' | 'ga';
+export const SCORE_VALUES: Record<Score, number> = { unsupported: 0, 'early-access': 1, ga: 2 };
+export const OVERALL_SCORE_VALUES: Record<Score, number> = {
+  unsupported: 1,
+  'early-access': 2,
+  ga: 3,
+};
 
 export function scoreValue(...scores: Score[]): number {
   return scores.reduce((s, x) => s + SCORE_VALUES[x], 0);
@@ -27,14 +31,8 @@ export function scoreValue(...scores: Score[]): number {
 
 export function overallScore(result: Features): number {
   const languageScore = result.lang.score;
-  const webFrameworkScore = result?.web?.score || 'bad';
-  const testFrameworkScore = result?.test?.score || 'bad';
 
-  // score edge cases
-  if (languageScore === 'bad') return OVERALL_SCORE_VALUES['bad'];
-  if (languageScore === 'ok' && (webFrameworkScore === 'ok' || testFrameworkScore === 'ok')) {
-    return OVERALL_SCORE_VALUES['ok'];
-  }
+  if (languageScore === 'unsupported') return OVERALL_SCORE_VALUES['unsupported'];
 
   // standard scoring
   return scoreValue(...Object.entries(result).map(([, t]) => t.score));
@@ -82,17 +80,22 @@ export type NodeVersion = {
 
 export async function analyze(
   folder: WorkspaceFolder
-): Promise<ProjectAnalysis & Partial<WithAppMaps>> {
-  // TODO: Use the 'language' field in appmap.yml instead
-  const language = await LanguageResolver.getLanguage(folder);
-  const analyzer = analyzers[language];
-  const result = await analyzer(folder);
-  assert(result);
+): Promise<(ProjectAnalysis & Partial<WithAppMaps>)[]> {
+  const languages = await LanguageResolver.getLanguages(folder);
+  const results: (ProjectAnalysis & Partial<WithAppMaps>)[] = [];
+  for (let i = 0; i < languages.length; i++) {
+    const language = languages[i];
+    const analyzer = analyzers[language];
+    if (analyzer) {
+      const result = await analyzer(folder);
+      assert(result);
 
-  result.nodeVersion = await getNodeVersion(folder);
-  result.path = folder.uri.fsPath;
-
-  return result;
+      result.nodeVersion = await getNodeVersion(folder);
+      result.path = folder.uri.fsPath;
+      results[i] = result;
+    }
+  }
+  return results.filter(Boolean);
 }
 
 async function getNodeVersion(folder: WorkspaceFolder): Promise<NodeVersion | undefined> {
