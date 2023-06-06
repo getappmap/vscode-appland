@@ -47,14 +47,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/appmap@npm:^3.75.0":
-  version: 3.75.0
-  resolution: "@appland/appmap@npm:3.75.0"
+"@appland/appmap@npm:^3.80.1":
+  version: 3.80.1
+  resolution: "@appland/appmap@npm:3.80.1"
   dependencies:
     "@appland/client": ^1
     "@appland/components": ^2
-    "@appland/diagrams": ^1
-    "@appland/models": ^2.4.2
+    "@appland/diagrams": ^1.7.0
+    "@appland/models": ^2.6.2
     "@appland/openapi": ^1.4.3
     "@appland/sequence-diagram": ^1
     "@sidvind/better-ajv-errors": ^0.9.1
@@ -101,7 +101,7 @@ __metadata:
       optional: true
   bin:
     appmap: built/cli.js
-  checksum: 2e12f77ee776d350a2fd34a916b081ca8a0fdd35a98f9ff47f03f7fa5426802da6989bcadbc051a9c8eb882a4c7a7c1319db1f79d2a669ee45db8762f1255dd0
+  checksum: 36b4aba7d3214a2725cad083a8b40cda0bd5e5e58cd084642b58d935d92fef75778c9f57c780ec036644e4bcda267a3a383cbdbdc0cea287f991fafc7eddc514
   languageName: node
   linkType: hard
 
@@ -129,7 +129,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/components@npm:^2, @appland/components@npm:^2.45.0":
+"@appland/components@npm:^2":
   version: 2.45.0
   resolution: "@appland/components@npm:2.45.0"
   dependencies:
@@ -149,7 +149,27 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/diagrams@npm:^1, @appland/diagrams@npm:^1.6.2, @appland/diagrams@npm:^1.6.3":
+"@appland/components@npm:^2.46.1":
+  version: 2.46.1
+  resolution: "@appland/components@npm:2.46.1"
+  dependencies:
+    "@appland/diagrams": ^1.7.0
+    "@appland/models": ^2.6.2
+    "@appland/sequence-diagram": ^1.5.2
+    buffer: ^6.0.3
+    d3: ^7.8.4
+    d3-flame-graph: ^4.1.3
+    diff: ^5.1.0
+    dom-to-svg: ^0.12.2
+    highlight.js: ^10.7.2
+    sql-formatter: ^4.0.2
+    vue: ^2.7.14
+    vuex: ^3.6.0
+  checksum: 76e07fd9c26e7d20744ad271c4a6ad2a5e53549c9a8a0c9739f19940558b1e0a0e2fb9d385fdd640de49c57cb67f2bd2afe63f3d1427e4de6903b3ba42c14ef6
+  languageName: node
+  linkType: hard
+
+"@appland/diagrams@npm:^1.6.2":
   version: 1.6.3
   resolution: "@appland/diagrams@npm:1.6.3"
   dependencies:
@@ -161,6 +181,21 @@ __metadata:
     dagre: ^0.8.5
     deepmerge: ^4.2.2
   checksum: f10a796b3e27776313764f182e62c1dc4762bc17549482d06dc35621bd779c1ce5267f2fb31b57eef75e2eef1a14d785a86b30a8366772ab9239d57170815873
+  languageName: node
+  linkType: hard
+
+"@appland/diagrams@npm:^1.7.0":
+  version: 1.7.0
+  resolution: "@appland/diagrams@npm:1.7.0"
+  dependencies:
+    "@appland/models": ^2.2.0
+    d3-interpolate: ^3.0.1
+    d3-selection: ^3.0.0
+    d3-shape: ^3.2.0
+    d3-zoom: ^3.0.0
+    dagre: ^0.8.5
+    deepmerge: ^4.2.2
+  checksum: 532ce3155ddbe4ea566310ab8d26549ae5b39706ba95952b56811e03f3e5cbcd73676536bb25062ed05ba560407562f7ea388a4444be4edbf99f7edc0e362893
   languageName: node
   linkType: hard
 
@@ -184,7 +219,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/models@npm:^2.2.0, @appland/models@npm:^2.4.2, @appland/models@npm:^2.6.2":
+"@appland/models@npm:^2.2.0, @appland/models@npm:^2.6.2":
   version: 2.6.2
   resolution: "@appland/models@npm:2.6.2"
   dependencies:
@@ -2239,10 +2274,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "appmap@workspace:."
   dependencies:
-    "@appland/appmap": ^3.75.0
+    "@appland/appmap": ^3.80.1
     "@appland/client": ^1.6.0
-    "@appland/components": ^2.45.0
-    "@appland/diagrams": ^1.6.3
+    "@appland/components": ^2.46.1
+    "@appland/diagrams": ^1.7.0
     "@appland/models": ^2.6.2
     "@appland/scanner": ^1.76.6
     "@appland/sequence-diagram": ^1.5.0
@@ -4180,7 +4215,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"d3-interpolate@npm:1 - 3, d3-interpolate@npm:1.2.0 - 3, d3-interpolate@npm:3":
+"d3-interpolate@npm:1 - 3, d3-interpolate@npm:1.2.0 - 3, d3-interpolate@npm:3, d3-interpolate@npm:^3.0.1":
   version: 3.0.1
   resolution: "d3-interpolate@npm:3.0.1"
   dependencies:
@@ -4270,7 +4305,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"d3-shape@npm:3":
+"d3-shape@npm:3, d3-shape@npm:^3.2.0":
   version: 3.2.0
   resolution: "d3-shape@npm:3.2.0"
   dependencies:
@@ -4349,7 +4384,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"d3-zoom@npm:3":
+"d3-zoom@npm:3, d3-zoom@npm:^3.0.0":
   version: 3.0.0
   resolution: "d3-zoom@npm:3.0.0"
   dependencies:
