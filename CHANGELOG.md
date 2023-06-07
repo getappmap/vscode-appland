@@ -1,3 +1,10 @@
+# [0.84.0](https://github.com/getappmap/vscode-appland/compare/v0.83.0...v0.84.0) (2023-06-07)
+
+
+### Features
+
+* User can configure default appmap filter settings ([#683](https://github.com/getappmap/vscode-appland/issues/683)) ([60a41c6](https://github.com/getappmap/vscode-appland/commit/60a41c6ffab6c81a35e51d816f56e552736c8075))
+
 # [0.83.0](https://github.com/getappmap/vscode-appland/compare/v0.82.1...v0.83.0) (2023-06-06)
 
 
