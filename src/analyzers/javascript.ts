@@ -3,6 +3,7 @@ import { Features, ProjectAnalysis, Feature, overallScore } from '.';
 import utfDecoder from '../utfDecoder';
 import semverIntersects from 'semver/ranges/intersects';
 import assert from 'assert';
+import { parseSyml } from '@yarnpkg/parsers';
 
 const fs = workspace.fs;
 
@@ -18,20 +19,18 @@ export default async function analyze(folder: WorkspaceFolder): Promise<ProjectA
     },
   };
 
-  let packageConfig:
-    | {
-        dependencies?: Dependency;
-        devDependencies?: Dependency;
-      }
-    | undefined;
+  let dependencies: Dependencies | undefined;
   try {
-    packageConfig = await readPkg(folder.uri);
+    dependencies = {
+      ...(await readPkg(folder.uri)),
+      ...(await readPkgLock(folder.uri)),
+      ...(await readYarnLock(folder.uri)),
+    };
   } catch (e) {
     console.warn(e);
   }
 
-  if (packageConfig) {
-    const { dependencies, devDependencies } = packageConfig;
+  if (dependencies) {
     if (dependencies?.express) {
       features.web = {
         title: 'express.js',
@@ -41,7 +40,7 @@ export default async function analyze(folder: WorkspaceFolder): Promise<ProjectA
     }
 
     const testFeature =
-      detectTest(devDependencies, 'mocha', '>= 8') || detectTest(devDependencies, 'jest', '>= 25');
+      detectTest(dependencies, 'mocha', '>= 8') || detectTest(dependencies, 'jest', '>= 25');
     if (testFeature) features.test = testFeature;
   } else {
     features.lang = {
@@ -58,23 +57,67 @@ export default async function analyze(folder: WorkspaceFolder): Promise<ProjectA
   };
 }
 
-type Dependency = Record<string, string | undefined>;
+type Dependencies = Record<string, string | undefined>;
 
-async function readPkg(uri: Uri): Promise<{
-  dependencies?: Dependency;
-  devDependencies?: Dependency;
-}> {
-  const file = await fs.readFile(Uri.joinPath(uri, 'package.json'));
+async function readPkg(uri: Uri): Promise<Dependencies> {
+  const pkg = await readJsonObject(Uri.joinPath(uri, 'package.json'));
+
+  let result: Dependencies = {};
+
+  if ('dependencies' in pkg) {
+    assert(typeof pkg.dependencies === 'object');
+    result = { ...pkg.dependencies };
+  }
+
+  if ('devDependencies' in pkg) {
+    assert(typeof pkg.devDependencies === 'object');
+    result = { ...result, ...pkg.devDependencies };
+  }
+
+  return result;
+}
+
+async function readPkgLock(uri: Uri): Promise<Dependencies> {
+  try {
+    const pkgLock = await readJsonObject(Uri.joinPath(uri, 'package-lock.json'));
+    assert(
+      'dependencies' in pkgLock && pkgLock.dependencies && typeof pkgLock.dependencies === 'object'
+    );
+    const { dependencies } = pkgLock;
+    const versions = Object.entries(dependencies).map(([pkg, { version }]) => [pkg, version]);
+    return Object.fromEntries(versions);
+  } catch {
+    // failure reading this file is not fatal
+    return {};
+  }
+}
+
+async function readJsonObject(uri: Uri): Promise<object> {
+  const file = await fs.readFile(uri);
   const json = utfDecoder(file);
   const pkg: unknown = JSON.parse(json);
   assert(pkg && typeof pkg === 'object');
-  assert(!('dependencies' in pkg) || typeof pkg.dependencies === 'object');
-  assert(!('devDependencies' in pkg) || typeof pkg.devDependencies === 'object');
   return pkg;
 }
 
+async function readYarnLock(uri: Uri): Promise<Dependencies> {
+  try {
+    const file = await fs.readFile(Uri.joinPath(uri, 'yarn.lock'));
+    const packages = parseSyml(utfDecoder(file));
+    assert(packages && typeof packages === 'object');
+    const versions = Object.entries(packages).map(([pkg, { version }]) => [
+      parseYarnPkgSpec(pkg).name,
+      version,
+    ]);
+    return Object.fromEntries(versions);
+  } catch {
+    // failure reading this file is not fatal
+    return {};
+  }
+}
+
 function detectTest(
-  dep: Dependency | undefined,
+  dep: Dependencies | undefined,
   testPackage: string,
   constraint: string
 ): Feature | undefined {
@@ -92,4 +135,14 @@ function detectTest(
       score: 'unsupported',
       text: `This project uses an unsupported version of ${testPackage}. You need version ${constraint} to record AppMaps of your tests.`,
     };
+}
+
+type YarnPkgSpec = {
+  name: string;
+  srcVer?: string;
+};
+
+export function parseYarnPkgSpec(spec: string): YarnPkgSpec {
+  const [name, srcVer] = spec.split(/(?!^)@/, 2);
+  return { name, srcVer };
 }

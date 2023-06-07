@@ -501,6 +501,7 @@
     "@appland/models": "^2.6.2",
     "@appland/scanner": "^1.76.6",
     "@appland/sequence-diagram": "^1.5.0",
+    "@yarnpkg/parsers": "^3.0.0-rc.45",
     "bent": "^7.3.12",
     "bootstrap": "^4.5.3",
     "bootstrap-autocomplete": "^2.3.7",
