@@ -2323,6 +2323,7 @@ __metadata:
     jquery: ^3.5.1
     js-yaml: ^4.1.0
     mocha: ^8.1.3
+    mocha-suppress-logs: ^0.3.1
     mockery: ^2.1.0
     node-libs-browser: ^2.2.1
     openapi-types: ^11.0.1
@@ -8591,6 +8592,13 @@ __metadata:
   bin:
     mkdirp: bin/cmd.js
   checksum: a96865108c6c3b1b8e1d5e9f11843de1e077e57737602de1b82030815f311be11f96f09cce59bd5b903d0b29834733e5313f9301e3ed6d6f6fba2eae0df4298f
+  languageName: node
+  linkType: hard
+
+"mocha-suppress-logs@npm:^0.3.1":
+  version: 0.3.1
+  resolution: "mocha-suppress-logs@npm:0.3.1"
+  checksum: 933498150ea3daff4a88c9d7c0ed4f8d11552433ab1a13242b278e1629080b57318d67995438efcd0a09b070064cff7a80c1322554799aca0b55c5b847efcc45
   languageName: node
   linkType: hard
 
