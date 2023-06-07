@@ -258,7 +258,7 @@
       },
       {
         "view": "appmap.views.appmaps",
-        "contents": "Once you've recorded AppMaps, they will be listed here.\nThere are no AppMaps in this project yet.\n[Open Instructions](command:appmap.openInstallGuide)\n",
+        "contents": "All the AppMaps that are present in this workspace will be listed here.\n[Open Instructions](command:appmap.openInstallGuide)\n",
         "when": "appmap.initialized"
       },
       {
@@ -272,19 +272,9 @@
         "when": "!appmap.initialized"
       },
       {
-        "view": "appmap.views.codeObjects",
-        "contents": "Once you've recorded AppMaps, this panel will contain a tree view of all the packages, classes, functions, SQL, and HTTP requests that were recorded.\nThere are no AppMaps in this project yet.\n[Open Instructions](command:appmap.openInstallGuide)\n",
-        "when": "appmap.initialized"
-      },
-      {
         "view": "appmap.views.findings",
         "contents": "AppMap is initializing...",
         "when": "!appmap.initialized"
-      },
-      {
-        "view": "appmap.views.findings",
-        "contents": "Once you've recorded AppMaps, they will be automatically analyzed for common anti-patterns and flaws.\nThere are no AppMaps in this project yet.\n[Open Instructions](command:appmap.openInstallGuide)\n",
-        "when": "appmap.initialized"
       }
     ],
     "views": {
@@ -313,20 +303,17 @@
         {
           "id": "appmap.views.findings",
           "name": "Runtime Analysis",
-          "visibility": "visible",
-          "when": "!appMap.showSignIn"
+          "visibility": "collapsed"
         },
         {
           "id": "appmap.views.codeObjects",
           "name": "Code Objects",
-          "visibility": "collapsed",
-          "when": "!appMap.showSignIn"
+          "visibility": "collapsed"
         },
         {
           "id": "appmap.views.documentation",
           "name": "Documentation",
-          "visibility": "visible",
-          "when": "!appMap.showSignIn"
+          "visibility": "collapsed"
         }
       ]
     },
