@@ -59,6 +59,7 @@ import SignInManager from './services/signInManager';
 import tryOpenInstallGuide from './commands/tryOpenInstallGuide';
 import { AppmapConfigManager } from './services/appmapConfigManager';
 import { findByName } from './commands/findByName';
+import initializeDefaultFilter from './lib/initializeSavedFilters';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   Telemetry.register(context);
@@ -70,6 +71,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
   const autoScanServiceImpl = new ProcessServiceImpl();
 
   try {
+    await initializeDefaultFilter(context);
     const extensionState = new ExtensionState(context);
     context.subscriptions.push(extensionState);
 

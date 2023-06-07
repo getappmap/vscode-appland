@@ -40,6 +40,12 @@ export type FunctionStats = {
   location: string;
 };
 
+export type SavedFilter = {
+  filterName: string;
+  state: string;
+  default: boolean;
+};
+
 /**
  * Provider for AppLand scenario files.
  */
@@ -93,6 +99,7 @@ export default class AppMapEditorProvider
   private static readonly RELEASE_KEY = 'APPMAP_RELEASE_KEY';
   public static readonly APPMAP_OPENED = 'APPMAP_OPENED';
   public static readonly SEQ_DIAGRAM_FEEDBACK_REQUESTED = 'SEQ_DIAGRAM_FEEDBACK_REQUESTED';
+  public static readonly SAVED_FILTERS = 'SAVED_FILTERS';
   private static readonly LARGE_APPMAP_SIZE = 10 * 1000 * 1000; // 10 MB
   private static readonly GIANT_APPMAP_SIZE = 200 * 1000 * 1000; // 200 MB
   private static readonly EMPTY_APPMAP_DATA = '{}';
@@ -210,6 +217,54 @@ export default class AppMapEditorProvider
     });
   }
 
+  getSavedFilters(): SavedFilter[] | undefined {
+    return this.context.workspaceState.get(AppMapEditorProvider.SAVED_FILTERS) as
+      | SavedFilter[]
+      | undefined;
+  }
+
+  async saveFilter(filter: SavedFilter): Promise<void> {
+    let savedFilters = this.getSavedFilters();
+    if (!savedFilters) savedFilters = [];
+
+    savedFilters.push(filter);
+    await this.context.workspaceState.update(AppMapEditorProvider.SAVED_FILTERS, savedFilters);
+    this.updateFilters();
+  }
+
+  async deleteFilter(filter: SavedFilter): Promise<void> {
+    const savedFilters = this.getSavedFilters();
+    if (!savedFilters) return;
+
+    const newSavedFilters = savedFilters.filter(
+      (savedFilter) => savedFilter.filterName !== filter.filterName
+    );
+
+    await this.context.workspaceState.update(AppMapEditorProvider.SAVED_FILTERS, newSavedFilters);
+    this.updateFilters();
+  }
+
+  async defaultFilter(filter: SavedFilter): Promise<void> {
+    const savedFilters = this.getSavedFilters();
+    if (!savedFilters) return;
+
+    savedFilters.forEach(
+      (savedFilter) => (savedFilter.default = savedFilter.filterName === filter.filterName)
+    );
+
+    await this.context.workspaceState.update(AppMapEditorProvider.SAVED_FILTERS, savedFilters);
+    this.updateFilters();
+  }
+
+  updateFilters(): void {
+    AppMapEditorProvider.openWebviewPanels.forEach((webviewPanel) =>
+      webviewPanel.webview.postMessage({
+        type: 'updateSavedFilters',
+        savedFilters: this.context.workspaceState.get(AppMapEditorProvider.SAVED_FILTERS),
+      })
+    );
+  }
+
   private documents = new Array<AppMapDocument>();
 
   /**
@@ -295,6 +350,7 @@ export default class AppMapEditorProvider
             type: 'init-appmap',
             shareEnabled: extensionSettings.shareEnabled,
             defaultView: extensionSettings.defaultDiagramView || 'viewSequence',
+            savedFilters: this.context.workspaceState.get(AppMapEditorProvider.SAVED_FILTERS),
           });
           break;
         case 'appmapStateResult':
@@ -378,7 +434,6 @@ export default class AppMapEditorProvider
             }
           }
           break;
-
         case 'seq-diagram-feedback':
           {
             if (
@@ -392,6 +447,27 @@ export default class AppMapEditorProvider
             }
           }
           break;
+        case 'saveFilter': {
+          const { filter } = message;
+          if (!filter) break;
+
+          this.saveFilter(filter);
+          break;
+        }
+        case 'deleteFilter': {
+          const { filter } = message;
+          if (!filter) break;
+
+          this.deleteFilter(filter);
+          break;
+        }
+        case 'defaultFilter': {
+          const { filter } = message;
+          if (!filter) break;
+
+          this.defaultFilter(filter);
+          break;
+        }
       }
     });
 

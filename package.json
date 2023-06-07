@@ -512,11 +512,11 @@
     "yaml": "^2.1.1"
   },
   "dependencies": {
-    "@appland/appmap": "^3.75.0",
+    "@appland/appmap": "^3.80.1",
     "@appland/client": "^1.6.0",
-    "@appland/components": "^2.42.0",
-    "@appland/diagrams": "^1.6.3",
-    "@appland/models": "^2.4.2",
+    "@appland/components": "^2.46.1",
+    "@appland/diagrams": "^1.7.0",
+    "@appland/models": "^2.6.2",
     "@appland/scanner": "^1.76.6",
     "@appland/sequence-diagram": "^1.5.0",
     "bent": "^7.3.12",
