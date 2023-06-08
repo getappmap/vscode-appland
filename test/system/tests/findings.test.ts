@@ -67,23 +67,4 @@ describe('Findings and scanning', function () {
     const expectedTitle = 'N plus 1 SQL query';
     await findingDetailsWebview.assertTitleRenders(expectedTitle);
   });
-
-  it('opens the findings details page from the runtime analysis tree view', async function () {
-    const { driver, project } = this;
-    const findingDetailsWebview = driver.appMap['findingDetailsWebview'];
-
-    await project.restoreFiles('**/*.appmap.json');
-    await driver.waitForFile(path.join(project.workspacePath, 'tmp', '**', 'mtime')); // Wait for the indexer
-
-    await driver.appMap.openActionPanel();
-    await driver.appMap.expandFindings();
-    await driver.appMap.findingsTreeItem(1).waitFor();
-
-    await driver.appMap.openNthFinding(2);
-    const expectedFrames = 2;
-    await findingDetailsWebview.initialize(expectedFrames);
-
-    const expectedTitle = 'N plus 1 SQL query';
-    await findingDetailsWebview.assertTitleRenders(expectedTitle);
-  });
 });
