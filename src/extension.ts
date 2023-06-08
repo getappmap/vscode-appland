@@ -193,7 +193,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       appmapServerAuthenticationProvider.removeSession();
     });
 
-    const findingsTreeProvider = new FindingsTreeDataProvider(context);
+    const findingsTreeProvider = new FindingsTreeDataProvider(context, appmapCollectionFile);
     vscode.window.createTreeView('appmap.views.findings', {
       treeDataProvider: findingsTreeProvider,
     });

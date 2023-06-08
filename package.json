@@ -252,44 +252,29 @@
     },
     "viewsWelcome": [
       {
-        "view": "appmap.views.local",
-        "contents": " There are no AppMaps in this project yet.\n[Get started](command:appmap.openInstallGuide)\n",
-        "when": "appmap.initialized && !appmap.hasData"
-      },
-      {
-        "view": "appmap.views.local",
-        "contents": "Loading...",
+        "view": "appmap.views.appmaps",
+        "contents": "AppMap is initializing...",
         "when": "!appmap.initialized"
       },
       {
-        "view": "appmap.views.local",
+        "view": "appmap.views.appmaps",
+        "contents": "All the AppMaps that are present in this workspace will be listed here.\n[Open Instructions](command:appmap.openInstallGuide)\n",
+        "when": "appmap.initialized"
+      },
+      {
+        "view": "appmap.views.appmaps",
         "contents": "Filter matched 0 results.\n[Apply a new filter](command:appmap.applyFilter)",
         "when": "appmap.initialized && appmap.hasData && appmap.numResults == 0"
       },
       {
-        "view": "appmap.views.findings",
-        "contents": "Loading...",
+        "view": "appmap.views.codeObjects",
+        "contents": "AppMap is initializing...",
         "when": "!appmap.initialized"
       },
       {
         "view": "appmap.views.findings",
-        "contents": "AppMap runtime analysis works right in your code editor, to help you find and fix problems in your code.\n[Sign Up](command:appmap.enableAnalysis)\n Authenticating with AppMap is for granting feature access. AppMap cannot access your data.\n[Learn More](command:appmap.learnMoreRuntimeAnalysis)",
-        "when": "appmap.initialized && !appmap.userAuthenticated"
-      },
-      {
-        "view": "appmap.views.findings",
-        "contents": "AppMap runtime analysis works right in your code editor, to help you find and fix problems in your code.\n[Enable Runtime Analysis](command:appmap.enableAnalysis)\nAuthenticating with AppMap is for granting feature access. AppMap cannot access your data.\n[Learn More](command:appmap.learnMoreRuntimeAnalysis)",
-        "when": "appmap.initialized && appmap.userAuthenticated && !appmap.findingsEnabled"
-      },
-      {
-        "view": "appmap.views.findings",
-        "contents": "Runtime analysis is ready and waiting for AppMaps.\n[Learn More](command:appmap.learnMoreRuntimeAnalysis)",
-        "when": "appmap.initialized && appmap.analysisEnabled && !appmap.numFindings && !appmap.analysisPerformed"
-      },
-      {
-        "view": "appmap.views.findings",
-        "contents": "You're good to go! AppMap has scanned your application and found no flaws. We'll continue scanning for flaws automatically.",
-        "when": "appmap.initialized && appmap.analysisEnabled && appmap.numFindings == 0 && appmap.analysisPerformed"
+        "contents": "AppMap is initializing...",
+        "when": "!appmap.initialized"
       }
     ],
     "views": {
@@ -308,7 +293,7 @@
           "when": "!appMap.showSignIn"
         },
         {
-          "id": "appmap.views.local",
+          "id": "appmap.views.appmaps",
           "name": "AppMaps",
           "contextualTitle": "AppMap",
           "visibility": "visible",
@@ -318,20 +303,17 @@
         {
           "id": "appmap.views.findings",
           "name": "Runtime Analysis",
-          "visibility": "visible",
-          "when": "!appMap.showSignIn"
+          "visibility": "collapsed"
         },
         {
           "id": "appmap.views.codeObjects",
           "name": "Code Objects",
-          "visibility": "collapsed",
-          "when": "!appMap.showSignIn"
+          "visibility": "collapsed"
         },
         {
           "id": "appmap.views.documentation",
           "name": "Documentation",
-          "visibility": "visible",
-          "when": "!appMap.showSignIn"
+          "visibility": "collapsed"
         }
       ]
     },
@@ -377,57 +359,57 @@
       "view/title": [
         {
           "command": "appmap.applyFilter",
-          "when": "view == appmap.views.local && appmap.hasData",
+          "when": "view == appmap.views.appmaps && appmap.hasData",
           "group": "navigation@2"
         },
         {
           "command": "appmap.findByName",
-          "when": "view == appmap.views.local && appmap.hasData",
+          "when": "view == appmap.views.appmaps && appmap.hasData",
           "group": "navigation@1"
         },
         {
           "command": "appmap.startRemoteRecording",
-          "when": "view == appmap.views.local && !appmap.recordingIsRunning",
+          "when": "view == appmap.views.appmaps && !appmap.recordingIsRunning",
           "group": "navigation@0"
         },
         {
           "command": "appmap.stopCurrentRemoteRecording",
-          "when": "view == appmap.views.local && appmap.recordingIsRunning",
+          "when": "view == appmap.views.appmaps && appmap.recordingIsRunning",
           "group": "navigation@0"
         }
       ],
       "view/item/context": [
         {
           "command": "appmap.context.openInFileExplorer",
-          "when": "view == appmap.views.local && viewItem == appmap.views.local.appMap"
+          "when": "view == appmap.views.appmaps && viewItem == appmap.views.appmaps.appMap"
         },
         {
           "command": "appmap.context.openAsJson",
-          "when": "view == appmap.views.local && viewItem == appmap.views.local.appMap"
+          "when": "view == appmap.views.appmaps && viewItem == appmap.views.appmaps.appMap"
         },
         {
           "command": "appmap.context.rename",
-          "when": "view == appmap.views.local && viewItem == appmap.views.local.appMap"
+          "when": "view == appmap.views.appmaps && viewItem == appmap.views.appmaps.appMap"
         },
         {
           "command": "appmap.context.saveToCollection",
-          "when": "view == appmap.views.local && viewItem == appmap.views.local.appMap"
+          "when": "view == appmap.views.appmaps && viewItem == appmap.views.appmaps.appMap"
         },
         {
           "command": "appmap.context.sequenceDiagram",
-          "when": "view == appmap.views.local && viewItem == appmap.views.local.appMap"
+          "when": "view == appmap.views.appmaps && viewItem == appmap.views.appmaps.appMap"
         },
         {
           "command": "appmap.context.compareSequenceDiagrams",
-          "when": "view == appmap.views.local && viewItem == appmap.views.local.appMap"
+          "when": "view == appmap.views.appmaps && viewItem == appmap.views.appmaps.appMap"
         },
         {
           "command": "appmap.context.deleteAppMap",
-          "when": "view == appmap.views.local && viewItem == appmap.views.local.appMap"
+          "when": "view == appmap.views.appmaps && viewItem == appmap.views.appmaps.appMap"
         },
         {
           "command": "appmap.context.deleteAppMaps",
-          "when": "view == appmap.views.local && viewItem == appmap.views.local.appMapCollection"
+          "when": "view == appmap.views.appmaps && viewItem == appmap.views.appmaps.appMapCollection"
         },
         {
           "command": "appmap.context.inspectCodeObject",
