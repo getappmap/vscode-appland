@@ -1,3 +1,13 @@
+# [0.85.0](https://github.com/getappmap/vscode-appland/compare/v0.84.0...v0.85.0) (2023-06-08)
+
+
+### Features
+
+* Collapse views until the user opens them ([ee7b5ba](https://github.com/getappmap/vscode-appland/commit/ee7b5baf2a0f72aa5791376213a8aa0aaa7ebba9))
+* Limit choices for default instructions ([d23170c](https://github.com/getappmap/vscode-appland/commit/d23170c899499a97f4c8026ac76a6ab7e2c2341b))
+* Prompt the user to perform setup ([1109490](https://github.com/getappmap/vscode-appland/commit/11094904f967005822fbefbb1a8ab6183b603729))
+* Python installer leverages the Python extension ([289912e](https://github.com/getappmap/vscode-appland/commit/289912e6ce86cfd09f4271318bd8c916f9f18b4b))
+
 # [0.84.0](https://github.com/getappmap/vscode-appland/compare/v0.83.0...v0.84.0) (2023-06-07)
 
 
