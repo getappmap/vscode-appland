@@ -77,6 +77,15 @@ describe('Instructions tree view', function () {
       InstructionStep.GenerateOpenApi,
       InstructionStepStatus.Complete
     );
+
+    // "Delete All AppMaps" is working, but this assertion fails for other reasons.
+    // FIXME: https://github.com/getappmap/vscode-appland/issues/716
+    //
+    // await driver.runCommand('AppMap: Delete All AppMaps');
+    // await driver.appMap.assertInstructionStepStatus(
+    //   InstructionStep.RecordAppMaps,
+    //   InstructionStepStatus.Pending
+    // );
   });
 
   it('opens up the expected web views', async function () {
