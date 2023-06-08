@@ -55,19 +55,13 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
     protected readonly extensionState: ExtensionState,
     protected readonly appMapCollection: AppMapCollection,
     protected readonly classMapIndex: ClassMapIndex,
-    appMapWatcher: FileChangeEmitter,
     configWatcher: FileChangeEmitter
   ) {
     this.disposables.push(
       this._onStateChange,
-      appMapWatcher.onChange(({ workspaceFolder }) => {
+      this.appMapCollection.onUpdated((workspaceFolder) => {
         if (workspaceFolder === folder) {
-          this.onAppMapCreated();
-        }
-      }),
-      appMapWatcher.onCreate(({ workspaceFolder }) => {
-        if (workspaceFolder === folder) {
-          this.onAppMapCreated();
+          this.onUpdateAppMaps();
         }
       }),
       configWatcher.onCreate(({ workspaceFolder }) => {
@@ -104,7 +98,7 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
   }
 
   public async initialize(): Promise<void> {
-    await Promise.all([this.analyzeProject(), this.onAppMapCreated()]);
+    await Promise.all([this.analyzeProject(), this.onUpdateAppMaps()]);
     Telemetry.sendEvent(PROJECT_OPEN, {
       rootDirectory: this.folder.uri.fsPath,
       project: this.metadata,
@@ -127,7 +121,7 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
   }
 
   private get hasRecordedAppMaps(): boolean {
-    return this.extensionState.getWorkspaceRecordedAppMap(this.folder);
+    return (this.metadata.numAppMaps || 0) > 0;
   }
 
   private get hasOpenedAppMap(): boolean {
@@ -186,17 +180,13 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
     return findingsDomainCounts;
   }
 
-  onAppMapCreated(): void {
-    if (!this.hasRecordedAppMaps) {
-      this.extensionState.setWorkspaceRecordedAppMap(this.folder, true);
-    }
-
+  async onUpdateAppMaps(): Promise<void> {
     const appMaps = this.appMapCollection.allAppMapsForWorkspaceFolder(this.folder);
     this._metadata.appMaps = this.getBestAppMaps(appMaps);
     this._metadata.numHttpRequests = this.countRoutes(appMaps);
     this._metadata.numAppMaps = appMaps.length;
 
-    this._onStateChange.fire(this._metadata);
+    this.updateMetadata();
   }
 
   onConfigurationCreated(): void {
@@ -351,7 +341,6 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
 export default class ProjectStateService implements WorkspaceService<ProjectStateServiceInstance> {
   constructor(
     protected extensionState: ExtensionState,
-    protected readonly appMapWatcher: FileChangeEmitter,
     protected readonly configWatcher: FileChangeEmitter,
     protected readonly appMapCollection: AppMapCollection,
     protected readonly classMapIndex: ClassMapIndex,
@@ -364,7 +353,6 @@ export default class ProjectStateService implements WorkspaceService<ProjectStat
       this.extensionState,
       this.appMapCollection,
       this.classMapIndex,
-      this.appMapWatcher,
       this.configWatcher
     );
     await project.initialize();

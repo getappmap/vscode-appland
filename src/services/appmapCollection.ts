@@ -2,7 +2,7 @@ import { Event, WorkspaceFolder } from 'vscode';
 import AppMapLoader from './appmapLoader';
 
 export default interface AppMapCollection {
-  readonly onUpdated: Event<AppMapCollection>;
+  readonly onUpdated: Event<WorkspaceFolder | undefined>;
 
   /**
    * Lists all known AppMaps.
