@@ -3,21 +3,12 @@ import os from 'os';
 import { join } from 'path';
 import { CLICK_INSTALL_BUTTON, INSTALL_BUTTON_ERROR, Telemetry } from '../telemetry';
 import { NodeProcessService } from '../services/nodeProcessService';
+import { Installer } from './installer';
+import DefaultInstaller from './installer/default';
+import PythonInstaller from './installer/python';
 
 export const InstallAgent = 'appmap.installAgent';
 const ELECTRON_COMMAND_PLATFORMS = ['linux', 'darwin'];
-
-// these are in order of precedence
-const CONFIG_LOCATIONS = [
-  'workspaceFolderLanguageValue',
-  'workspaceLanguageValue',
-  'globalLanguageValue',
-  'defaultLanguageValue',
-  'workspaceFolderValue',
-  'workspaceValue',
-  'globalValue',
-  'defaultValue',
-];
 
 let pendingTask: Thenable<unknown> | undefined;
 
@@ -40,42 +31,6 @@ export type TerminalConfig = {
   defaultProfile: TerminalsByOS | undefined;
   shell: TerminalsByOS | undefined;
 };
-
-function getConfigTargetFromConfigLocation(
-  configLocation: string
-): vscode.ConfigurationTarget | undefined {
-  if (
-    ['defaultValue', 'globalValue', 'globalLanguageValue', 'defaultLanguageValue'].includes(
-      configLocation
-    )
-  ) {
-    return vscode.ConfigurationTarget.Global;
-  } else if (['workspaceValue', 'workspaceLanguageValue'].includes(configLocation)) {
-    return vscode.ConfigurationTarget.Workspace;
-  } else if (['workspaceFolderValue', 'workspaceFolderLanguageValue'].includes(configLocation)) {
-    return vscode.ConfigurationTarget.WorkspaceFolder;
-  }
-}
-
-function getActiveConfigLocation(config: vscode.WorkspaceConfiguration, scope: string): string {
-  const configInfo = config.inspect(scope) || {};
-  const activeConfig = CONFIG_LOCATIONS.find((configLocation) => {
-    const terminalSettings = configInfo[configLocation]?.terminal;
-    return terminalSettings && Object.keys(terminalSettings).includes('activateEnvironment');
-  });
-
-  return activeConfig || '';
-}
-
-function createTerminal(command: string, path: string, env: InstallEnv): void {
-  const terminal = vscode.window.createTerminal({
-    name: 'install-appmap',
-    cwd: path,
-    env,
-  });
-  terminal.show();
-  terminal.sendText(command);
-}
 
 function escapePath(str: string): string {
   // on windows, quote everything except the drive letter (e.g. C:"\Users\user\projects\directory with spaces")
@@ -137,6 +92,19 @@ function getDefaultTerminals(): TerminalConfig {
   };
 }
 
+// Installers are run in order of precedence
+// The default installer should always be last
+const installers: Array<Installer> = [new PythonInstaller(), new DefaultInstaller()];
+
+async function getAvailableInstaller(
+  projectPath: string,
+  language: string
+): Promise<Installer | undefined> {
+  for (const installer of installers) {
+    if (await installer.canInstall(language, projectPath)) return installer;
+  }
+}
+
 export default async function installAgent(
   context: vscode.ExtensionContext,
   hasCLIBin: boolean
@@ -183,26 +151,18 @@ export default async function installAgent(
         context.globalStorageUri.fsPath
       );
 
-      // check if we need to temporarily suppress terminal activation in python
-      if (language === 'Python') {
-        const config = vscode.workspace.getConfiguration();
-        const originalValue = config.get('python.terminal.activateEnvironment');
-
-        if (originalValue) {
-          const activePythonConfig = getActiveConfigLocation(config, 'python');
-          const configTarget = getConfigTargetFromConfigLocation(activePythonConfig);
-          await config.update('python.terminal.activateEnvironment', false, configTarget);
-          createTerminal(command, path, env);
-
-          // restore settings to original state
-          await config.update('python.terminal.activateEnvironment', originalValue, configTarget);
-          Telemetry.sendEvent(CLICK_INSTALL_BUTTON, { rootDirectory: path, defaultTerminals });
-          return;
-        }
+      const installer = await getAvailableInstaller(path, language);
+      if (!installer) {
+        // As long as the default installer is available this shouldn't ever happen
+        vscode.window.showErrorMessage(
+          'The AppMap extension is unable to install the AppMap agent for this project'
+        );
+        return;
       }
 
-      createTerminal(command, path, env);
       Telemetry.sendEvent(CLICK_INSTALL_BUTTON, { rootDirectory: path, defaultTerminals });
+
+      await installer.execute(command, path, env);
     } catch (err) {
       const exception = err as Error;
       Telemetry.sendEvent(INSTALL_BUTTON_ERROR, {
