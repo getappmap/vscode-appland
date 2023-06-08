@@ -123,15 +123,6 @@ export default class ExtensionState {
     return this.context.globalState.get(Keys.Global.INSTALL_VERSION, 'unknown');
   }
 
-  /** Returns whether or not the user has recorded an AppMap from within the given workspace folder. */
-  getWorkspaceRecordedAppMap(workspaceFolder: vscode.WorkspaceFolder): boolean {
-    return this.getWorkspaceFlag(Keys.Workspace.RECORDED_APPMAP, workspaceFolder.uri.fsPath);
-  }
-
-  setWorkspaceRecordedAppMap(workspaceFolder: vscode.WorkspaceFolder, value: boolean): void {
-    return this.setWorkspaceFlag(Keys.Workspace.RECORDED_APPMAP, value, workspaceFolder);
-  }
-
   /** Returns whether or not the user has opened an AppMap from within the given workspace folder. */
   getWorkspaceOpenedAppMap(workspaceFolder: vscode.WorkspaceFolder): boolean {
     return this.getWorkspaceFlag(Keys.Workspace.OPENED_APPMAP, workspaceFolder.uri.fsPath);

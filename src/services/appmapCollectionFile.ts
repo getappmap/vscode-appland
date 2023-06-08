@@ -11,9 +11,10 @@ import { basename, dirname, join } from 'path';
 import { CodeObject } from '@appland/models';
 
 export default class AppMapCollectionFile implements AppMapCollection, AppMapsService {
-  private _onUpdated: vscode.EventEmitter<AppMapCollection> =
-    new ChangeEventDebouncer<AppMapCollection>();
-  public readonly onUpdated: vscode.Event<AppMapCollection> = this._onUpdated.event;
+  private _onUpdated: vscode.EventEmitter<vscode.WorkspaceFolder | undefined> =
+    new ChangeEventDebouncer<vscode.WorkspaceFolder | undefined>();
+  public readonly onUpdated: vscode.Event<vscode.WorkspaceFolder | undefined> =
+    this._onUpdated.event;
 
   private loaders: Map<string, AppMapLoaderFile> = new Map<string, AppMapLoaderFile>();
   private currentFilter = '';
@@ -22,7 +23,7 @@ export default class AppMapCollectionFile implements AppMapCollection, AppMapsSe
     if (await fileExists(uri.fsPath)) return;
 
     this.loaders.delete(uri.fsPath);
-    this._onUpdated.fire(this);
+    this.emitUpdated(uri);
   }
 
   async onChange(uri: vscode.Uri): Promise<void> {
@@ -33,7 +34,7 @@ export default class AppMapCollectionFile implements AppMapCollection, AppMapsSe
     } else {
       this.onDelete(uri);
     }
-    this._onUpdated.fire(this);
+    this.emitUpdated(uri);
   }
 
   async onCreate(uri: vscode.Uri): Promise<void> {
@@ -41,8 +42,13 @@ export default class AppMapCollectionFile implements AppMapCollection, AppMapsSe
     if (metadata) {
       const descriptor = new AppMapDescriptorFile(uri, metadata);
       this.loaders.set(uri.fsPath, descriptor);
-      this._onUpdated.fire(this);
+      this.emitUpdated(uri);
     }
+  }
+
+  private emitUpdated(uri?: vscode.Uri): void {
+    const workspaceFolder = uri && vscode.workspace.getWorkspaceFolder(uri);
+    this._onUpdated.fire(workspaceFolder);
   }
 
   static async collectAppMapDescriptor(uri: vscode.Uri): Promise<AppMapDescriptor | undefined> {
@@ -91,7 +97,7 @@ export default class AppMapCollectionFile implements AppMapCollection, AppMapsSe
   public setFilter(filter: string): void {
     this.currentFilter = filter;
     vscode.commands.executeCommand('setContext', 'appmap.numResults', this.appMaps().length);
-    this._onUpdated.fire(this);
+    this.emitUpdated(undefined);
   }
 
   public filterDescriptor(appmapDescriptor: AppMapDescriptor, filter: string): boolean {

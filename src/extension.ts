@@ -205,7 +205,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
     const projectState = new ProjectStateService(
       extensionState,
-      appmapWatcher,
       configWatcher,
       appmapCollectionFile,
       classMapIndex
