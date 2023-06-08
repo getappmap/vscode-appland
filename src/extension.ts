@@ -64,6 +64,7 @@ import { RunConfigService } from './services/runConfigService';
 import updateAppMapConfigs from './commands/updateConfigs';
 import AssetManager from './services/assetManager';
 import downloadLatestJavaJar from './commands/downloadLatestJavaJar';
+import IndexJanitor from './lib/indexJanitor';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   Telemetry.register(context);
@@ -137,6 +138,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
         classMapIndex.removeClassMapFile(uri);
       })
     );
+
+    context.subscriptions.push(new IndexJanitor(appmapWatcher, classMapWatcher));
 
     const appmapUptodateService = new AppmapUptodateService(context);
     const sourceFileWatcher = new SourceFileWatcher(classMapIndex);

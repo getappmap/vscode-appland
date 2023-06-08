@@ -4,6 +4,9 @@ import * as vscode from 'vscode';
 import { retry } from '../util';
 import { rm } from 'fs/promises';
 
+// Deletes an AppMap file along with the contents of its index directory.
+// The index directory itself will be later deleted by the IndexJanitor once the relevant FileSystemWatcher events have
+// been emitted.
 export default async function deleteAppMap(uri: vscode.Uri): Promise<void> {
   // Remove AppMap file, remove index directory contents, then remove index directory.
   // In this order, we expect that the file change events will be reliable.
@@ -17,5 +20,4 @@ export default async function deleteAppMap(uri: vscode.Uri): Promise<void> {
   await Promise.all(
     filesToDelete.map((file) => retry(async () => await rm(file, { force: true })))
   );
-  await retry(async () => await rm(indexDir, { recursive: true }));
 }
