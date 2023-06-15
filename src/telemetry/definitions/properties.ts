@@ -16,6 +16,9 @@ import {
   AppmapConfigManager,
   AppmapConfigManagerInstance,
 } from '../../services/appmapConfigManager';
+import ProjectStateService, {
+  ProjectStateServiceInstance,
+} from '../../services/projectStateService';
 
 export const DEBUG_EXCEPTION = new TelemetryDataProvider({
   id: 'appmap.debug.exception',
@@ -148,8 +151,12 @@ export const SCANNER_CONFIG_PRESENT = new TelemetryDataProvider({
 
 export const PROJECT_LANGUAGE = new TelemetryDataProvider({
   id: 'appmap.project.language',
-  cache: true,
-  async value(data: { rootDirectory?: string; metadata?: Record<string, unknown> }) {
+  cache: false,
+  value(data: {
+    rootDirectory?: string;
+    metadata?: Record<string, unknown>;
+    project?: ProjectMetadata;
+  }) {
     // If metadata is available, use the language property.
     // TODO: what is this record string,unknown?
     if (data.metadata) {
@@ -159,12 +166,30 @@ export const PROJECT_LANGUAGE = new TelemetryDataProvider({
       }
     }
 
+    if (data.project?.language?.name) {
+      return data.project.language.name.toLowerCase();
+    }
+
     // If no root directory is specified, we cannot resolve a langauge, so exit early.
     if (!data.rootDirectory) {
       return UNKNOWN_LANGUAGE;
     }
 
-    return (await LanguageResolver.getLanguages(data.rootDirectory)) || UNKNOWN_LANGUAGE;
+    const workspaceFolder = vscode.workspace.getWorkspaceFolder(
+      vscode.Uri.file(data.rootDirectory)
+    );
+    if (!workspaceFolder) {
+      return UNKNOWN_LANGUAGE;
+    }
+    const projectStateService = workspaceServices().getServiceInstanceFromClass<
+      ProjectStateServiceInstance,
+      ProjectStateService
+    >(ProjectStateService, workspaceFolder);
+    if (!projectStateService) {
+      return UNKNOWN_LANGUAGE;
+    }
+
+    return projectStateService.metadata?.language?.name?.toLowerCase() || UNKNOWN_LANGUAGE;
   },
 });
 
