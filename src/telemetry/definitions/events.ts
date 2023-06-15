@@ -220,3 +220,7 @@ export const DOWNLOADED_JAVA_JAR = new Event({
   properties: [Properties.SYMLINK_CREATED, Properties.VERSION],
 });
 
+export const CONFIG_ADDED = new Event({
+  name: 'config_added',
+  properties: [Properties.CONFIG_TYPE],
+});
