@@ -22,18 +22,26 @@ export class AppMapWatcher
   async create(folder: vscode.WorkspaceFolder): Promise<AppMapWatcherInstance> {
     validateConfiguration();
 
+    // Sometimes its important to know if `onCreated` is firing due to the creation of a new
+    // AppMap, or if it's just firing because the watcher is being initialized. AppMaps present
+    // in the workspace when the watcher starts will all fire `onCreated` events.
+    let initializing = true;
+
     const watcher = new AppMapWatcherInstance(folder, {
       onChange: (uri, workspaceFolder) => {
         this._onChange.fire({ uri: appmapUri(uri), workspaceFolder });
       },
       onCreate: (uri, workspaceFolder) => {
-        this._onCreate.fire({ uri: appmapUri(uri), workspaceFolder });
+        this._onCreate.fire({ uri: appmapUri(uri), workspaceFolder, initializing });
       },
       onDelete: (uri, workspaceFolder) => {
         this._onDelete.fire({ uri: appmapUri(uri), workspaceFolder });
       },
     });
+
     await watcher.initialize();
+    initializing = false;
+
     return watcher;
   }
 }
