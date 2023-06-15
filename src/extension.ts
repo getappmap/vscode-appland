@@ -61,6 +61,7 @@ import { AppmapConfigManager } from './services/appmapConfigManager';
 import { findByName } from './commands/findByName';
 import initializeDefaultFilter from './lib/initializeSavedFilters';
 import { RunConfigService } from './services/runConfigService';
+import updateAppMapConfigs from './commands/updateConfigs';
 import AssetManager from './services/assetManager';
 import downloadLatestJavaJar from './commands/downloadLatestJavaJar';
 
@@ -269,6 +270,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     generateOpenApi(context, extensionState);
     findByName(context, projectStates, appmapCollectionFile);
     resetUsageState(context, extensionState);
+    updateAppMapConfigs(context, runConfigService, workspaceServices);
     downloadLatestJavaJar(context);
 
     if (!openedInstallGuide && !SignInManager.shouldShowSignIn())
