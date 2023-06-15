@@ -1,8 +1,10 @@
 import * as vscode from 'vscode';
-import { Check, Finding, Rule } from '@appland/scanner';
+import { Check, Finding, ImpactDomain, Rule } from '@appland/scanner';
 import { resolveFilePath } from '../util';
 import present from '../lib/present';
 import ValueCache from '../lib/ValueCache';
+import assert from 'assert';
+import { warn } from 'console';
 
 class StackFrameIndex {
   locationByFrame = new Map<string, vscode.Location>();
@@ -23,33 +25,104 @@ class StackFrameIndex {
 const locationLabels = new ValueCache<ResolvedFinding, string | undefined>();
 const groupDetailsCache = new ValueCache<ResolvedFinding, string | undefined>();
 
+function lessThanDaysAgo(days: number): (finding: Finding) => boolean {
+  return (finding: Finding) => {
+    const modifiedDate = finding.eventsModifiedDate || finding.scopeModifiedDate;
+    if (!modifiedDate) return false;
+
+    const cutoff = new Date(new Date().getTime() - days * 24 * 60 * 60 * 1000);
+    return new Date(modifiedDate) >= cutoff;
+  };
+}
+
+function moreThanDaysAgo(days: number): (finding: Finding) => boolean {
+  return (finding: Finding) => {
+    const modifiedDate = finding.eventsModifiedDate || finding.scopeModifiedDate;
+    if (!modifiedDate) return false;
+
+    const cutoff = new Date(new Date().getTime() - days * 24 * 60 * 60 * 1000);
+    return new Date(modifiedDate) < cutoff;
+  };
+}
+
+function noDateIndicated(finding: Finding): boolean {
+  const modifiedDate = finding.eventsModifiedDate || finding.scopeModifiedDate;
+  return modifiedDate === undefined;
+}
+
+export type DateBucket = {
+  label: string;
+  expanded?: boolean;
+  icon?: string;
+  filter: (finding: Finding) => boolean;
+};
+
+export const DATE_BUCKETS: DateBucket[] = [
+  { label: 'Last 24 hours', filter: lessThanDaysAgo(1), expanded: true, icon: 'bell' },
+  { label: 'Last 7 days', filter: lessThanDaysAgo(7) },
+  { label: 'Last 30 days', filter: lessThanDaysAgo(30) },
+  { label: 'More than 30 days ago', filter: moreThanDaysAgo(30) },
+  { label: 'No date indicated', filter: noDateIndicated },
+];
+
 export class ResolvedFinding {
-  public appMapUri?: vscode.Uri;
-  public problemLocation?: vscode.Location;
-  public rule?: Rule;
+  constructor(
+    public sourceUri: vscode.Uri,
+    public finding: Finding,
+    public checks: Check[],
+    public folder: vscode.WorkspaceFolder,
+    public appMapUri: vscode.Uri,
+    public dateBucket: DateBucket,
+    public rule: Rule,
+    public stackFrameIndex: StackFrameIndex,
+    public problemLocation?: vscode.Location
+  ) {}
 
-  stackFrameIndex = new StackFrameIndex();
+  static async resolve(
+    folder: vscode.WorkspaceFolder,
+    sourceUri: vscode.Uri,
+    finding: Finding,
+    checks: Check[]
+  ): Promise<ResolvedFinding | undefined> {
+    const stackFrameIndex = new StackFrameIndex();
 
-  constructor(public sourceUri: vscode.Uri, public finding: Finding, public checks: Check[]) {}
-
-  async initialize(): Promise<void> {
     await Promise.all(
-      (this.finding.stack || []).map(async (path: string) => {
-        if (this.stackFrameIndex.get(this.sourceUri, path)) return;
+      (finding.stack || []).map(async (path: string) => {
+        if (stackFrameIndex.get(sourceUri, path)) return;
 
-        const location = await ResolvedFinding.resolvePathLocation(this.sourceUri, path);
-        if (location) this.stackFrameIndex.put(this.sourceUri, path, location);
+        const location = await ResolvedFinding.resolvePathLocation(sourceUri, path);
+        if (location) stackFrameIndex.put(sourceUri, path, location);
       })
     );
 
-    this.rule = this.checks.find((check) => check.id === this.finding.checkId)?.rule;
+    const rule = checks.find((check) => check.id === finding.checkId)?.rule;
+    if (!rule) {
+      warn(`No rule found for check ${finding.checkId}`);
+      return;
+    }
+    const dateBucket = DATE_BUCKETS.find((bucket) => bucket.filter(finding));
+    // There should always be a fallback bucket
+    assert(dateBucket);
+    const problemLocation = ResolvedFinding.preferredLocation(stackFrameIndex, sourceUri, finding);
+    const appMapUri = await ResolvedFinding.resolveAppMapUri(finding);
+    if (!appMapUri) return;
 
-    this.problemLocation = ResolvedFinding.preferredLocation(
-      this.stackFrameIndex,
-      this.sourceUri,
-      this.finding
+    return new ResolvedFinding(
+      sourceUri,
+      finding,
+      checks,
+      folder,
+      appMapUri,
+      dateBucket,
+      rule,
+      stackFrameIndex,
+      problemLocation
     );
-    this.appMapUri = await ResolvedFinding.resolveAppMapUri(this.finding);
+  }
+
+  get impactDomain(): ImpactDomain | undefined {
+    assert(this.rule);
+    return this.rule.impactDomain;
   }
 
   get locationLabel(): string | undefined {
