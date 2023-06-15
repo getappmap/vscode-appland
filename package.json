@@ -197,6 +197,14 @@
         "title": "AppMap: Logout"
       },
       {
+        "command": "appmap.updateAppMapTestConfig",
+        "title": "AppMap: Add AppMap Test Configuration"
+      },
+      {
+        "command": "appmap.updateAppMapLaunchConfig",
+        "title": "AppMap: Add AppMap Launch Configuration"
+      },
+      {
         "command": "appmap.downloadLatestJavaJar",
         "title": "AppMap: Download Latest Java Jar"
       }
