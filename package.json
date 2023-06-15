@@ -195,6 +195,10 @@
       {
         "command": "appmap.logout",
         "title": "AppMap: Logout"
+      },
+      {
+        "command": "appmap.downloadLatestJavaJar",
+        "title": "AppMap: Download Latest Java Jar"
       }
     ],
     "configuration": {
