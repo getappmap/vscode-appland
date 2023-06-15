@@ -15,6 +15,7 @@ export enum CodeObjectEntryChildType {
   QUERY = 'query',
   CLASS = 'class',
   FUNCTION = 'function',
+  EXTERNAL_SERVICE = 'external-service',
 }
 
 export const InspectableTypes = [
@@ -23,6 +24,7 @@ export const InspectableTypes = [
   CodeObjectEntryChildType.FUNCTION,
   CodeObjectEntryChildType.QUERY,
   CodeObjectEntryChildType.ROUTE,
+  CodeObjectEntryChildType.EXTERNAL_SERVICE,
 ];
 
 export type MinimalCodeObject = CodeObjectEntry | ClassMapEntry;
