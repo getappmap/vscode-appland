@@ -60,6 +60,7 @@ import tryOpenInstallGuide from './commands/tryOpenInstallGuide';
 import { AppmapConfigManager } from './services/appmapConfigManager';
 import { findByName } from './commands/findByName';
 import initializeDefaultFilter from './lib/initializeSavedFilters';
+import AssetManager from './services/assetManager';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   Telemetry.register(context);
@@ -240,6 +241,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     FindingInfoWebview.register(context);
 
     const processService = new NodeProcessService(context);
+    AssetManager.register();
     (async function () {
       processService.onReady(activateUptodateService);
       await processService.install();

@@ -214,3 +214,9 @@ export const INSTALL_BUTTON_ABORT = new Event({
   name: 'install_button:abort',
   properties: [Properties.REASON, Properties.OPTIONAL_RESULT],
 });
+
+export const DOWNLOADED_JAVA_JAR = new Event({
+  name: 'downloaded_java_jar',
+  properties: [Properties.SYMLINK_CREATED, Properties.VERSION],
+});
+

@@ -359,3 +359,17 @@ export const LINK_TYPE = new TelemetryDataProvider({
     return linkType;
   },
 });
+
+export const SYMLINK_CREATED = new TelemetryDataProvider({
+  id: 'appmap.symlink_created',
+  async value({ symlinkCreated }: { symlinkCreated: boolean }) {
+    return String(symlinkCreated);
+  },
+});
+
+export const VERSION = new TelemetryDataProvider({
+  id: 'appmap.version',
+  async value({ version }: { version: string }) {
+    return version;
+  },
+});
