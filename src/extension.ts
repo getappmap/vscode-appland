@@ -61,6 +61,7 @@ import { AppmapConfigManager } from './services/appmapConfigManager';
 import { findByName } from './commands/findByName';
 import initializeDefaultFilter from './lib/initializeSavedFilters';
 import AssetManager from './services/assetManager';
+import downloadLatestJavaJar from './commands/downloadLatestJavaJar';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   Telemetry.register(context);
@@ -264,6 +265,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     generateOpenApi(context, extensionState);
     findByName(context, projectStates, appmapCollectionFile);
     resetUsageState(context, extensionState);
+    downloadLatestJavaJar(context);
 
     if (!openedInstallGuide && !SignInManager.shouldShowSignIn())
       promptInstall(workspaceServices, extensionState);
