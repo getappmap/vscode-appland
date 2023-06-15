@@ -23,8 +23,9 @@ export const ProjectUptodate = join(
   __dirname,
   '../../../test/fixtures/workspaces/project-uptodate'
 );
+export const ProjectJava = join(__dirname, '../../../test/fixtures/workspaces/project-java');
 
-const PROJECTS = [ProjectA, ProjectUptodate];
+const PROJECTS = [ProjectA, ProjectUptodate, ProjectJava];
 
 export async function withTmpDir(fn: (tmpDir: string) => void | Promise<void>): Promise<void> {
   const tmpDir = await promisify(tmp.dir)();
