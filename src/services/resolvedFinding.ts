@@ -1,8 +1,9 @@
 import * as vscode from 'vscode';
-import { Check, Finding, Rule } from '@appland/scanner';
+import { Check, Finding, ImpactDomain, Rule } from '@appland/scanner';
 import { resolveFilePath } from '../util';
 import present from '../lib/present';
 import ValueCache from '../lib/ValueCache';
+import assert from 'assert';
 
 class StackFrameIndex {
   locationByFrame = new Map<string, vscode.Location>();
@@ -23,9 +24,48 @@ class StackFrameIndex {
 const locationLabels = new ValueCache<ResolvedFinding, string | undefined>();
 const groupDetailsCache = new ValueCache<ResolvedFinding, string | undefined>();
 
+function lessThanDaysAgo(days: number): (finding: Finding) => boolean {
+  return (finding: Finding) => {
+    const modifiedDate = finding.eventsModifiedDate || finding.scopeModifiedDate;
+    if (!modifiedDate) return false;
+
+    const cutoff = new Date(new Date().getTime() - days * 24 * 60 * 60 * 1000);
+    return new Date(modifiedDate) >= cutoff;
+  };
+}
+
+function moreThanDaysAgo(days: number): (finding: Finding) => boolean {
+  return (finding: Finding) => {
+    const modifiedDate = finding.eventsModifiedDate || finding.scopeModifiedDate;
+    if (!modifiedDate) return false;
+
+    const cutoff = new Date(new Date().getTime() - days * 24 * 60 * 60 * 1000);
+    return new Date(modifiedDate) < cutoff;
+  };
+}
+
+function noDateIndicated(finding: Finding): boolean {
+  const modifiedDate = finding.eventsModifiedDate || finding.scopeModifiedDate;
+  return modifiedDate === undefined;
+}
+
+export type DateBucket = {
+  label: string;
+  filter: (finding: Finding) => boolean;
+};
+
+export const DATE_BUCKETS: DateBucket[] = [
+  { label: 'Last 24 hours', filter: lessThanDaysAgo(1) },
+  { label: 'Last 7 days', filter: lessThanDaysAgo(7) },
+  { label: 'Last 30 days', filter: lessThanDaysAgo(30) },
+  { label: 'More than 30 days ago', filter: moreThanDaysAgo(30) },
+  { label: 'No date indicated', filter: noDateIndicated },
+];
+
 export class ResolvedFinding {
   public appMapUri?: vscode.Uri;
   public problemLocation?: vscode.Location;
+  public dateBucket?: DateBucket;
   public rule?: Rule;
 
   stackFrameIndex = new StackFrameIndex();
@@ -43,13 +83,18 @@ export class ResolvedFinding {
     );
 
     this.rule = this.checks.find((check) => check.id === this.finding.checkId)?.rule;
-
+    this.dateBucket = DATE_BUCKETS.find((bucket) => bucket.filter(this.finding));
     this.problemLocation = ResolvedFinding.preferredLocation(
       this.stackFrameIndex,
       this.sourceUri,
       this.finding
     );
     this.appMapUri = await ResolvedFinding.resolveAppMapUri(this.finding);
+  }
+
+  get impactDomain(): ImpactDomain | undefined {
+    assert(this.rule);
+    return this.rule.impactDomain;
   }
 
   get locationLabel(): string | undefined {

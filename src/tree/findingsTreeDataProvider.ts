@@ -2,8 +2,33 @@ import * as vscode from 'vscode';
 import FindingsIndex from '../services/findingsIndex';
 import AnalysisManager from '../services/analysisManager';
 import AppMapCollection from '../services/appmapCollection';
+import { ImpactDomain, Rule } from '@appland/scanner';
+import assert from 'assert';
+import { DATE_BUCKETS, DateBucket } from '../services/resolvedFinding';
 
 const IMPACT_DOMAINS = ['Security', 'Performance', 'Stability', 'Maintainability'];
+
+class DateBucketTreeItem extends vscode.TreeItem {
+  constructor(public dateBucket: DateBucket, collapsibleState: vscode.TreeItemCollapsibleState) {
+    super(dateBucket.label, collapsibleState);
+  }
+}
+
+class ImpactDomainTreeItem extends vscode.TreeItem {
+  constructor(
+    public dateBucket: DateBucket,
+    public impactDomain: ImpactDomain,
+    collapsibleState: vscode.TreeItemCollapsibleState
+  ) {
+    super(impactDomain, collapsibleState);
+  }
+}
+
+class RuleTreeItem extends vscode.TreeItem {
+  constructor(public rule: Rule, collapsibleState: vscode.TreeItemCollapsibleState) {
+    super(rule.title, collapsibleState);
+  }
+}
 
 export class FindingsTreeDataProvider
   implements vscode.TreeDataProvider<vscode.TreeItem>, vscode.Disposable
@@ -50,30 +75,25 @@ export class FindingsTreeDataProvider
     }
 
     const label = String(element.label);
-    if (IMPACT_DOMAINS.includes(label)) {
-      return this.getChildrenForImpactDomain(label);
+    const dateBucket = DATE_BUCKETS.find((bucket) => bucket.label === label);
+    if (dateBucket) {
+      return this.getChildrenForDateBucket(dateBucket);
+    } else if (IMPACT_DOMAINS.includes(label)) {
+      const impactDomainTreeItem = element as ImpactDomainTreeItem;
+      return this.getChildrenForImpactDomain(
+        impactDomainTreeItem.dateBucket,
+        impactDomainTreeItem.impactDomain
+      );
+    } else {
+      const ruleTreeItem = element as RuleTreeItem;
+      return this.getChildrenForRule(ruleTreeItem.rule);
     }
-
-    return this.getChildrenForRule(label);
   }
 
   getTopLevelTreeItems(): vscode.TreeItem[] {
     if (!this.findingsIndex) return [];
 
     if (this.appmaps.appMaps().length === 0) return [];
-
-    const topLevelTreeLabels = this.findingsIndex
-      .findings()
-      .reduce((impactDomains, finding) => {
-        const impactDomain = finding.finding.impactDomain;
-
-        if (impactDomain && !impactDomains.includes(impactDomain)) {
-          impactDomains.push(impactDomain);
-        }
-
-        return impactDomains;
-      }, [] as string[])
-      .sort((labelA, labelB) => IMPACT_DOMAINS.indexOf(labelA) - IMPACT_DOMAINS.indexOf(labelB));
 
     const overviewTreeItem = new vscode.TreeItem('Overview');
     overviewTreeItem.command = {
@@ -82,44 +102,71 @@ export class FindingsTreeDataProvider
     };
     overviewTreeItem.iconPath = new vscode.ThemeIcon('preview');
 
-    const topLevelTreeItems = [overviewTreeItem];
-
-    return topLevelTreeLabels.reduce((treeItems, impactDomain) => {
-      const treeItem = new vscode.TreeItem(impactDomain, vscode.TreeItemCollapsibleState.Expanded);
-
-      treeItems.push(treeItem);
-      return treeItems;
-    }, topLevelTreeItems);
-  }
-
-  getChildrenForImpactDomain(impactDomain: string): vscode.TreeItem[] {
-    if (!this.findingsIndex) return [];
-
-    const findingsInImpactDomain = this.findingsIndex.findingsByImpactDomain(impactDomain);
-
-    const ruleTitles = findingsInImpactDomain.reduce((titles, finding) => {
-      const ruleTitle = finding.finding.ruleTitle;
-
-      if (!titles.includes(ruleTitle)) {
-        titles.push(ruleTitle);
+    const findingBuckets = new Set(
+      this.findingsIndex?.findings().map((finding) => finding.dateBucket)
+    );
+    const dateBucketTreeItems = DATE_BUCKETS.filter((bucket) => findingBuckets.has(bucket)).map(
+      (bucket) => {
+        return new DateBucketTreeItem(bucket, vscode.TreeItemCollapsibleState.Expanded);
       }
+    );
 
-      return titles;
-    }, [] as string[]);
-
-    return ruleTitles
-      .sort((ruleA, ruleB) => (ruleA < ruleB ? -1 : 1))
-      .map((title) => {
-        return new vscode.TreeItem(title, vscode.TreeItemCollapsibleState.Expanded);
-      });
+    return [overviewTreeItem, ...dateBucketTreeItems];
   }
 
-  getChildrenForRule(ruleTitle: string): vscode.TreeItem[] {
+  getChildrenForDateBucket(dateBucket: DateBucket): vscode.TreeItem[] {
+    assert(this.findingsIndex);
+    const findings = this.findingsIndex
+      ?.findings()
+      .filter((finding) => dateBucket.filter(finding.finding));
+
+    const impactDomains = findings
+      .reduce((impactDomains, finding) => {
+        const impactDomain = finding.finding.impactDomain;
+
+        if (impactDomain && !impactDomains.includes(impactDomain)) {
+          impactDomains.push(impactDomain);
+        }
+
+        return impactDomains;
+      }, [] as ImpactDomain[])
+      .sort((labelA, labelB) => IMPACT_DOMAINS.indexOf(labelA) - IMPACT_DOMAINS.indexOf(labelB));
+
+    return impactDomains.map((impactDomain) => {
+      return new ImpactDomainTreeItem(
+        dateBucket,
+        impactDomain,
+        vscode.TreeItemCollapsibleState.Expanded
+      );
+    }, []);
+  }
+
+  getChildrenForImpactDomain(
+    dateBucket: DateBucket,
+    impactDomain: ImpactDomain
+  ): vscode.TreeItem[] {
     if (!this.findingsIndex) return [];
 
-    const uniqueFindingsByRuleTitle = this.findingsIndex.uniqueFindingsByRuleTitle(ruleTitle);
+    const findings = this.findingsIndex
+      .findingsByImpactDomain(impactDomain)
+      .filter((finding) => dateBucket.filter(finding.finding));
 
-    return uniqueFindingsByRuleTitle.map((finding) => {
+    const ruleByRuleId = findings.reduce((ruleByRuleId, finding) => {
+      assert(finding.rule);
+      if (!ruleByRuleId.has(finding.finding.ruleId))
+        ruleByRuleId.set(finding.finding.ruleId, finding.rule);
+      return ruleByRuleId;
+    }, new Map<string, Rule>());
+    return [...ruleByRuleId.values()]
+      .sort((a, b) => a.title.localeCompare(b.title))
+      .map((rule) => new RuleTreeItem(rule, vscode.TreeItemCollapsibleState.Collapsed));
+  }
+
+  getChildrenForRule(rule: Rule): vscode.TreeItem[] {
+    if (!this.findingsIndex) return [];
+
+    const findings = this.findingsIndex.distinctFindingsByRuleId(rule.id);
+    return findings.map((finding) => {
       const hashV2 = finding.finding.hash_v2;
       const { event } = finding.finding;
       const req = event['http_server_request'];
