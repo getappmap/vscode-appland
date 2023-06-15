@@ -12,6 +12,7 @@ enum ErrorCode {
   SeqDiagramFeedbackCtaError,
   GenerateMapStatsError,
   PruneLargeMapError,
+  ConfigUpdateError,
   AssetAcquisitionFailure,
 }
 

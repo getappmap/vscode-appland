@@ -367,6 +367,13 @@ export const SYMLINK_CREATED = new TelemetryDataProvider({
   },
 });
 
+export const CONFIG_TYPE = new TelemetryDataProvider({
+  id: 'appmap.config_type',
+  async value({ configType }: { configType: string }) {
+    return configType;
+  },
+});
+
 export const VERSION = new TelemetryDataProvider({
   id: 'appmap.version',
   async value({ version }: { version: string }) {

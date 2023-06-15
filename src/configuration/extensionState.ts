@@ -18,6 +18,8 @@ export const Keys = {
     GENERATED_OPENAPI: 'appmap.applandinc.generatedOpenApi',
     HIDE_INSTALL_PROMPT: 'appmap.applandinc.hideInstallPrompt',
     CLOSED_APPMAP: 'appmap.applandinc.closedAppMap',
+    UPDATED_RUN_CONFIG: 'appmap.applandinc.UpdatedLaunchConfig',
+    UPDATED_TEST_CONFIG: 'appmap.applandinc.UpdatedTestConfig',
   },
 };
 
@@ -179,6 +181,22 @@ export default class ExtensionState {
 
   setClosedAppMap(workspaceFolder: vscode.WorkspaceFolder, value: boolean): void {
     this.setWorkspaceFlag(Keys.Workspace.CLOSED_APPMAP, value, workspaceFolder);
+  }
+
+  getUpdatedLaunchConfig(workspaceFolder: vscode.WorkspaceFolder): boolean {
+    return this.getWorkspaceFlag(Keys.Workspace.UPDATED_RUN_CONFIG, workspaceFolder.uri.fsPath);
+  }
+
+  setUpdatedLaunchConfig(workspaceFolder: vscode.WorkspaceFolder, value: boolean): void {
+    this.setWorkspaceFlag(Keys.Workspace.UPDATED_RUN_CONFIG, value, workspaceFolder);
+  }
+
+  getUpdatedTestConfig(workspaceFolder: vscode.WorkspaceFolder): boolean {
+    return this.getWorkspaceFlag(Keys.Workspace.UPDATED_TEST_CONFIG, workspaceFolder.uri.fsPath);
+  }
+
+  setUpdatedTestConfig(workspaceFolder: vscode.WorkspaceFolder, value: boolean): void {
+    this.setWorkspaceFlag(Keys.Workspace.UPDATED_TEST_CONFIG, value, workspaceFolder);
   }
 
   resetState(): void {

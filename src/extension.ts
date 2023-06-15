@@ -60,6 +60,7 @@ import tryOpenInstallGuide from './commands/tryOpenInstallGuide';
 import { AppmapConfigManager } from './services/appmapConfigManager';
 import { findByName } from './commands/findByName';
 import initializeDefaultFilter from './lib/initializeSavedFilters';
+import { RunConfigService } from './services/runConfigService';
 import AssetManager from './services/assetManager';
 import downloadLatestJavaJar from './commands/downloadLatestJavaJar';
 
@@ -242,7 +243,10 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     FindingInfoWebview.register(context);
 
     const processService = new NodeProcessService(context);
+    const runConfigService = new RunConfigService(projectState, workspaceServices, extensionState);
     AssetManager.register();
+    await workspaceServices.enroll(runConfigService);
+
     (async function () {
       processService.onReady(activateUptodateService);
       await processService.install();
@@ -306,6 +310,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       },
       recommender,
       configManager,
+      runConfigService,
     };
   } catch (exception) {
     Telemetry.sendEvent(DEBUG_EXCEPTION, {
