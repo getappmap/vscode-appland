@@ -1,3 +1,14 @@
+# [0.86.0](https://github.com/getappmap/vscode-appland/compare/v0.85.0...v0.86.0) (2023-06-15)
+
+
+### Features
+
+* add run and test configs for java users ([8ffacbe](https://github.com/getappmap/vscode-appland/commit/8ffacbefb510808a24e72319d28325fdd1b64965))
+* command to download latest java agent jar ([8cc8966](https://github.com/getappmap/vscode-appland/commit/8cc896609abed5564baa6b4760ecf976f8f1b4e1))
+* commands to update launch and test configs ([e5e1aeb](https://github.com/getappmap/vscode-appland/commit/e5e1aeb83ee1d13e7c69988d00f9f541989ebc22))
+* download latest java agent jar file ([5e8c694](https://github.com/getappmap/vscode-appland/commit/5e8c6949aeb298daf47b4a40566380cf3bcff898))
+* Look for JavaScript dependencies in lockfiles ([face65f](https://github.com/getappmap/vscode-appland/commit/face65fd797adc2f06931298fac9052668d78362)), closes [#711](https://github.com/getappmap/vscode-appland/issues/711)
+
 # [0.85.0](https://github.com/getappmap/vscode-appland/compare/v0.84.0...v0.85.0) (2023-06-08)
 
 
