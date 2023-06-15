@@ -12,6 +12,7 @@ enum ErrorCode {
   SeqDiagramFeedbackCtaError,
   GenerateMapStatsError,
   PruneLargeMapError,
+  AssetAcquisitionFailure,
 }
 
 export default ErrorCode;
