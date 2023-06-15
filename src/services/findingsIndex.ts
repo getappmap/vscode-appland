@@ -112,10 +112,8 @@ export default class FindingsIndex extends EventEmitter implements vscode.Dispos
     return this.findings().filter(({ finding }) => finding.hash_v2 === hash);
   }
 
-  uniqueFindingsByRuleTitle(ruleTitle: string): ResolvedFinding[] {
-    const findingsByRuleTitle = this.findings().filter(
-      ({ finding }) => finding.ruleTitle === ruleTitle
-    );
+  distinctFindingsByRuleId(ruleId: string): ResolvedFinding[] {
+    const findingsByRuleTitle = this.findings().filter(({ finding }) => finding.ruleId === ruleId);
 
     const uniqueFindingsByHash = findingsByRuleTitle.reduce((accumulator, finding) => {
       const hashV2 = finding.finding.hash_v2;
