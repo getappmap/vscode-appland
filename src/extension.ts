@@ -65,6 +65,7 @@ import updateAppMapConfigs from './commands/updateConfigs';
 import AssetManager from './services/assetManager';
 import downloadLatestJavaJar from './commands/downloadLatestJavaJar';
 import IndexJanitor from './lib/indexJanitor';
+import { unregister as unregisterTerminal } from './commands/installer/terminals';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   Telemetry.register(context);
@@ -293,6 +294,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
         clearInterval(intervalHandle);
       }, 1000);
     }
+
+    vscode.window.onDidCloseTerminal(unregisterTerminal, null, context.subscriptions);
 
     return {
       editorProvider,
