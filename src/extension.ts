@@ -66,6 +66,8 @@ import AssetManager from './services/assetManager';
 import downloadLatestJavaJar from './commands/downloadLatestJavaJar';
 import IndexJanitor from './lib/indexJanitor';
 import { unregister as unregisterTerminal } from './commands/installer/terminals';
+import { default as fixFinding } from './commands/fixFinding';
+import { default as fixTest } from './commands/fixTest';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   Telemetry.register(context);
@@ -220,6 +222,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
     openCodeObjectInAppMap(context, projectStates, appmapCollectionFile, classMapIndex);
     await AnalysisManager.register(context, projectStates, extensionState, workspaceServices);
+    fixFinding(context);
+    fixTest(context, appmapCollectionFile);
 
     await SignInManager.register(extensionState);
     const signInWebview = new SignInViewProvider(context);
