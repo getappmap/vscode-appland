@@ -20,7 +20,6 @@ export default function mountInstallGuide() {
             projects: this.projects,
             editor: 'vscode',
             analysisEnabled: this.analysisEnabled,
-            findingsEnabled: this.findingsEnabled,
             userAuthenticated: this.userAuthenticated,
             javaAgentStatus: this.javaAgentStatus,
             featureFlags: new Set(['ar-python']),
@@ -31,7 +30,6 @@ export default function mountInstallGuide() {
         return {
           projects: initialData.projects,
           analysisEnabled: initialData.analysisEnabled,
-          findingsEnabled: initialData.findingsEnabled,
           userAuthenticated: initialData.userAuthenticated,
           javaAgentStatus: initialData.javaAgentStatus,
         };
@@ -117,7 +115,6 @@ export default function mountInstallGuide() {
     });
 
     messages.on('analysis-toggle', (message) => {
-      app.findingsEnabled = message.findingsEnabled;
       app.analysisEnabled = message.enabled;
       app.userAuthenticated = message.userAuthenticated;
       app.$forceUpdate();

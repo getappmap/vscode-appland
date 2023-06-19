@@ -1,5 +1,4 @@
 import { getApiKey } from '../authentication';
-import ExtensionSettings from '../configuration/extensionSettings';
 import { NodeProcessService } from './nodeProcessService';
 import { ConfigFileProvider, ProcessId, ProcessWatcher } from './processWatcher';
 
@@ -24,9 +23,6 @@ export default class ScanProcessWatcher extends ProcessWatcher {
   async canStart(): Promise<{ enabled: boolean; reason?: string }> {
     const result = await super.canStart();
     if (!result.enabled) return result;
-
-    if (!ExtensionSettings.findingsEnabled)
-      return { enabled: false, reason: 'appMap.findingsEnabled is false' };
 
     if (!(await this.accessToken()))
       return { enabled: false, reason: 'User is not logged in to AppMap' };

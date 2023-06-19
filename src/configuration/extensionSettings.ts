@@ -28,22 +28,12 @@ export default class ExtensionSettings {
     return vscode.workspace.getConfiguration('appMap').get('defaultDiagramView');
   }
 
-  public static get findingsEnabled(): boolean {
-    return [true, 'true'].includes(
-      vscode.workspace.getConfiguration('appMap').get('findingsEnabled') || false
-    );
-  }
-
   public static plantUMLJarPath(): string | undefined {
     return vscode.workspace.getConfiguration('appMap').get<string>('plantUmlJarPath');
   }
 
   public static get appMapCommandLineToolsPath(): string | undefined {
     return vscode.workspace.getConfiguration('appMap').get('commandLineToolsPath');
-  }
-
-  public static async enableFindings(): Promise<void> {
-    vscode.workspace.getConfiguration('appMap').update('findingsEnabled', true);
   }
 
   public static get flamegraphEnabled(): boolean {

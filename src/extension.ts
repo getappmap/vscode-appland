@@ -37,12 +37,10 @@ import InstallGuideWebView from './webviews/installGuideWebview';
 import InstallationStatusBadge from './workspace/installationStatus';
 import UriHandler from './uri/uriHandler';
 import OpenAppMapUriHandler from './uri/openAppMapUriHandler';
-import EarlyAccessUriHandler, { tryDisplayEarlyAccessWelcome } from './uri/earlyAccessUriHandler';
 import generateOpenApi from './commands/generateOpenApi';
 import AppMapServerConfiguration from './services/appmapServerConfiguration';
 import AppMapServerAuthenticationProvider from './authentication/appmapServerAuthenticationProvider';
 import installAgent from './commands/installAgent';
-import { Signup } from './actions/signup';
 import AnalysisManager from './services/analysisManager';
 import Environment from './configuration/environment';
 import ErrorCode from './telemetry/definitions/errorCodes';
@@ -178,8 +176,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
     const uriHandler = new UriHandler();
     const openAppMapUriHandler = new OpenAppMapUriHandler(context);
-    const earlyAccessUriHandler = new EarlyAccessUriHandler(context);
-    uriHandler.registerHandlers(openAppMapUriHandler, earlyAccessUriHandler);
+    uriHandler.registerHandlers(openAppMapUriHandler);
     context.subscriptions.push(vscode.window.registerUriHandler(uriHandler));
 
     const appmapServerAuthenticationProvider = AppMapServerAuthenticationProvider.enroll(
@@ -223,10 +220,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     const badge = new InstallationStatusBadge('appmap.views.instructions');
     badge.initialize(projectStates);
     context.subscriptions.push(badge);
-
-    vscode.commands.registerCommand('appmap.enableAnalysis', () => Signup.forAnalysis());
-
-    tryDisplayEarlyAccessWelcome(context);
 
     InstallGuideWebView.register(context, projectStates, extensionState);
     const openedInstallGuide = await vscode.commands.executeCommand('appmap.tryOpenInstallGuide');
@@ -299,6 +292,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       localAppMaps: appmapCollectionFile,
       autoIndexService: autoIndexServiceImpl,
       autoScanService: autoScanServiceImpl,
+      signInManager: SignInManager,
       sourceFileWatcher,
       configWatcher,
       workspaceServices,

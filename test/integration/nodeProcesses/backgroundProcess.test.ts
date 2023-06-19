@@ -81,21 +81,6 @@ describe('Background processes', () => {
       assert.ok(newPids.every((pid) => pid !== undefined));
     });
 
-    it('analysis process state reflects whether or not analysis is enabled', async () => {
-      await waitForUp();
-
-      const analysisService = (await getBackgroundProcesses()).analysis;
-      assert(analysisService);
-      const analysisPid = analysisService.process?.pid;
-      assert(analysisPid);
-
-      vscode.workspace.getConfiguration('appMap').update('findingsEnabled', false);
-      await waitForDown([ProcessId.Analysis]);
-
-      vscode.workspace.getConfiguration('appMap').update('findingsEnabled', true);
-      await waitForUp([ProcessId.Analysis], [analysisPid]);
-    });
-
     it('specifies --appmap-dir', async () => {
       await waitForUp();
       Object.values(await getBackgroundProcesses())

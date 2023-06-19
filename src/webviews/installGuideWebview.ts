@@ -6,9 +6,7 @@ import { COPY_COMMAND, OPEN_VIEW, Telemetry } from '../telemetry';
 import ProjectMetadata from '../workspace/projectMetadata';
 import ExtensionState from '../configuration/extensionState';
 import { DocPageId, ProjectPicker, RecordAppMaps } from '../tree/instructionsTreeDataProvider';
-import { Signup } from '../actions/signup';
 import AnalysisManager from '../services/analysisManager';
-import ExtensionSettings from '../configuration/extensionSettings';
 import { AUTHN_PROVIDER_NAME } from '../authentication';
 import getWebviewContent from './getWebviewContent';
 import AssetManager, { AssetStatus } from '../services/javaAssets';
@@ -125,18 +123,19 @@ export default class InstallGuideWebView {
 
         panel.webview.onDidReceiveMessage(async (message) => {
           switch (message.command) {
-            case 'ready':
+            case 'ready': {
+              const isUserAuthenticated = await AnalysisManager.isUserAuthenticated();
               panel.webview.postMessage({
                 type: 'init',
                 projects: collectProjects(),
                 page,
                 analysisEnabled: AnalysisManager.isAnalysisEnabled,
-                userAuthenticated: await AnalysisManager.isUserAuthenticated(),
-                findingsEnabled: ExtensionSettings.findingsEnabled,
+                userAuthenticated: isUserAuthenticated,
                 debugConfigurationStatus: 1,
                 javaAgentStatus: isJavaAgentDownloaded ? AssetStatus.UpToDate : AssetManager.status,
               });
               break;
+            }
 
             case 'open-file':
               vscode.commands.executeCommand('vscode.open', vscode.Uri.file(message.file));
@@ -197,11 +196,6 @@ export default class InstallGuideWebView {
                 vscode.commands.executeCommand(InstallAgent, path, language);
               }
               break;
-
-            case 'perform-auth': {
-              Signup.forAnalysis();
-              break;
-            }
 
             case 'add-java-configs':
               {
