@@ -2134,6 +2134,40 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@vscode/vsce@npm:^2.19.0":
+  version: 2.19.0
+  resolution: "@vscode/vsce@npm:2.19.0"
+  dependencies:
+    azure-devops-node-api: ^11.0.1
+    chalk: ^2.4.2
+    cheerio: ^1.0.0-rc.9
+    commander: ^6.1.0
+    glob: ^7.0.6
+    hosted-git-info: ^4.0.2
+    jsonc-parser: ^3.2.0
+    keytar: ^7.7.0
+    leven: ^3.1.0
+    markdown-it: ^12.3.2
+    mime: ^1.3.4
+    minimatch: ^3.0.3
+    parse-semver: ^1.1.1
+    read: ^1.0.7
+    semver: ^5.1.0
+    tmp: ^0.2.1
+    typed-rest-client: ^1.8.4
+    url-join: ^4.0.1
+    xml2js: ^0.5.0
+    yauzl: ^2.3.1
+    yazl: ^2.2.2
+  dependenciesMeta:
+    keytar:
+      optional: true
+  bin:
+    vsce: vsce
+  checksum: 9f06978c431949041dfeb790953427fc8e1f2ba614824b9ab5ad715b20baf7a5d680144dfd9d800c26a23e15fefa3cc0ffec432dc9970fd6751c4b0794ca7a0f
+  languageName: node
+  linkType: hard
+
 "@vue/compiler-core@npm:3.2.37":
   version: 3.2.37
   resolution: "@vue/compiler-core@npm:3.2.37"
@@ -2582,6 +2616,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": ^5.52.0
     "@typescript-eslint/parser": ^5.52.0
     "@vscode/test-electron": ^2.1.3
+    "@vscode/vsce": ^2.19.0
     "@vue/compiler-sfc": ^3.2.37
     "@yarnpkg/parsers": ^3.0.0-rc.45
     bent: ^7.3.12
@@ -2625,7 +2660,6 @@ __metadata:
     tslib: ^2.1.0
     tsup: ^6.6.3
     typescript: ^4.9.5
-    vsce: ^2.11.0
     vscode-extension-telemetry: ^0.1.7
     vscode-uri: ^3.0.7
     vue: ^2.7.14
@@ -7731,6 +7765,13 @@ __metadata:
   bin:
     json5: lib/cli.js
   checksum: e88fc5274bb58fc99547baa777886b069d2dd96d9cfc4490b305fd16d711dabd5979e35a4f90873cefbeb552e216b041a304fe56702bedba76e19bc7845f208d
+  languageName: node
+  linkType: hard
+
+"jsonc-parser@npm:^3.2.0":
+  version: 3.2.0
+  resolution: "jsonc-parser@npm:3.2.0"
+  checksum: 946dd9a5f326b745aa326d48a7257e3f4a4b62c5e98ec8e49fa2bdd8d96cef7e6febf1399f5c7016114fd1f68a1c62c6138826d5d90bc650448e3cf0951c53c7
   languageName: node
   linkType: hard
 
@@ -12913,36 +12954,6 @@ typescript@^3.9.3:
   languageName: node
   linkType: hard
 
-"vsce@npm:^2.11.0":
-  version: 2.11.0
-  resolution: "vsce@npm:2.11.0"
-  dependencies:
-    azure-devops-node-api: ^11.0.1
-    chalk: ^2.4.2
-    cheerio: ^1.0.0-rc.9
-    commander: ^6.1.0
-    glob: ^7.0.6
-    hosted-git-info: ^4.0.2
-    keytar: ^7.7.0
-    leven: ^3.1.0
-    markdown-it: ^12.3.2
-    mime: ^1.3.4
-    minimatch: ^3.0.3
-    parse-semver: ^1.1.1
-    read: ^1.0.7
-    semver: ^5.1.0
-    tmp: ^0.2.1
-    typed-rest-client: ^1.8.4
-    url-join: ^4.0.1
-    xml2js: ^0.4.23
-    yauzl: ^2.3.1
-    yazl: ^2.2.2
-  bin:
-    vsce: vsce
-  checksum: 334a3d74a70cf8259dae2c03b47c109697bf4165646dbd587dca4fd803e3baa97a330888f5686fdf97e2f55224e7de8c3eb55a7031aba5aceabd178dc9061a9f
-  languageName: node
-  linkType: hard
-
 "vscode-extension-telemetry@npm:^0.1.7":
   version: 0.1.7
   resolution: "vscode-extension-telemetry@npm:0.1.7"
@@ -13288,13 +13299,23 @@ typescript@^3.9.3:
   languageName: node
   linkType: hard
 
-"xml2js@npm:^0.4.19, xml2js@npm:^0.4.23":
+"xml2js@npm:^0.4.19":
   version: 0.4.23
   resolution: "xml2js@npm:0.4.23"
   dependencies:
     sax: ">=0.6.0"
     xmlbuilder: ~11.0.0
   checksum: ca0cf2dfbf6deeaae878a891c8fbc0db6fd04398087084edf143cdc83d0509ad0fe199b890f62f39c4415cf60268a27a6aed0d343f0658f8779bd7add690fa98
+  languageName: node
+  linkType: hard
+
+"xml2js@npm:^0.5.0":
+  version: 0.5.0
+  resolution: "xml2js@npm:0.5.0"
+  dependencies:
+    sax: ">=0.6.0"
+    xmlbuilder: ~11.0.0
+  checksum: 1aa71d62e5bc2d89138e3929b9ea46459157727759cbc62ef99484b778641c0cd21fb637696c052d901a22f82d092a3e740a16b4ce218e81ac59b933535124ea
   languageName: node
   linkType: hard
 
