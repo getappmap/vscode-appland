@@ -85,10 +85,6 @@
         "title": "AppMap: Open Install Guide"
       },
       {
-        "command": "appmap.enableAnalysis",
-        "title": "AppMap: Enable Analysis"
-      },
-      {
         "command": "appmap.view.focusAppMap",
         "title": "AppMap: Open AppMaps View"
       },
@@ -227,10 +223,6 @@
           "type": "string",
           "description": "Default view on which to open the AppMap: viewComponent, viewSequence, or viewFlow",
           "default": "viewSequence"
-        },
-        "appMap.findingsEnabled": {
-          "type": "boolean",
-          "description": "Enable AppMap scanner and findings (preview)"
         },
         "appMap.shareEnabled": {
           "type": "boolean",

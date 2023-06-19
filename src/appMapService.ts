@@ -12,6 +12,7 @@ import Command from './services/command';
 import { NodeProcessService } from './services/nodeProcessService';
 import ProjectStateService from './services/projectStateService';
 import { RunConfigService } from './services/runConfigService';
+import SignInManager from './services/signInManager';
 import { SourceFileWatcher } from './services/sourceFileWatcher';
 import { WorkspaceServices } from './services/workspaceServices';
 import { AppMapTreeDataProvider } from './tree/appMapTreeDataProvider';
@@ -39,6 +40,7 @@ export default interface AppMapService {
   autoIndexService: AppMapProcessService;
   autoScanService: AppMapProcessService;
   configWatcher: AppMapConfigWatcher;
+  signInManager: typeof SignInManager;
   sourceFileWatcher?: SourceFileWatcher;
   uptodate?: AppmapUptodateService;
   workspaceServices: WorkspaceServices;

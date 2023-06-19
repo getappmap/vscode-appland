@@ -9,7 +9,6 @@ import * as tmp from 'tmp';
 import { promisify } from 'util';
 import * as vscode from 'vscode';
 import AppMapService from '../../src/appMapService';
-import { AUTHN_PROVIDER_NAME } from '../../src/authentication';
 import { CodeObjectEntry } from '../../src/lib/CodeObjectEntry';
 import { touch } from '../../src/lib/touch';
 import { repeatUntil, wait, waitFor } from '../waitFor';
@@ -285,19 +284,22 @@ export async function appmapFiles(): Promise<vscode.Uri[]> {
 // Tests which have anything to do with findings require analysis to
 // be enabled, and thus the user must be authenticated.
 export function withAuthenticatedUser(): void {
-  beforeEach(() => {
-    sinon
-      .stub(vscode.authentication, 'getSession')
-      .withArgs(AUTHN_PROVIDER_NAME, ['default'], sinon.match.any)
-      .resolves({
-        id: 'id',
-        accessToken: 'accessToken',
-        scopes: ['default'],
-        account: { id: 'id', label: 'label' },
-      });
+  before(async () => {
+    const { appmapServerAuthenticationProvider, signInManager } = await waitForExtension();
+    sinon.stub(appmapServerAuthenticationProvider, 'performSignIn').resolves({
+      id: 'id',
+      accessToken: 'accessToken',
+      scopes: ['default'],
+      account: { id: 'id', label: 'label' },
+    });
+    await signInManager.signIn();
   });
 
-  afterEach(sinon.restore);
+  after(async () => {
+    const { appmapServerAuthenticationProvider } = await waitForExtension();
+    sinon.restore();
+    await appmapServerAuthenticationProvider.removeSession();
+  });
 }
 
 export function unsafeCast<T>(val: unknown): T {

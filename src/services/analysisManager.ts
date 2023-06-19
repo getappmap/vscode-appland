@@ -1,6 +1,5 @@
 import * as vscode from 'vscode';
 import { AUTHN_PROVIDER_NAME, getApiKey } from '../authentication';
-import ExtensionSettings from '../configuration/extensionSettings';
 import FindingsDiagnosticsProvider from '../diagnostics/findingsDiagnosticsProvider';
 import FindingsIndex from './findingsIndex';
 import { FindingWatcher } from './findingWatcher';
@@ -15,7 +14,6 @@ import { ANALYSIS_DISABLE, ANALYSIS_ENABLE, Telemetry } from '../telemetry';
 export interface AnalysisToggleEvent {
   enabled: boolean;
   userAuthenticated: boolean;
-  findingsEnabled: boolean;
 }
 
 export default class AnalysisManager {
@@ -29,7 +27,6 @@ export default class AnalysisManager {
   private static readonly _onAnalysisToggled = new vscode.EventEmitter<AnalysisToggleEvent>();
   private static readonly contextKeyAnalysisEnabled = 'appmap.analysisEnabled';
   private static readonly contextKeyUserAuthenticated = 'appmap.userAuthenticated';
-  private static readonly contextKeyFindingsEnabled = 'appmap.findingsEnabled';
 
   private static _isAnalysisEnabled?: boolean;
 
@@ -58,10 +55,6 @@ export default class AnalysisManager {
     await this.updateAnalysisState();
 
     context.subscriptions.push(
-      vscode.workspace.onDidChangeConfiguration((e) => {
-        if (!e.affectsConfiguration('appMap.findingsEnabled')) return;
-        this.updateAnalysisState();
-      }),
       vscode.authentication.onDidChangeSessions((e) => {
         if (e.provider.id !== AUTHN_PROVIDER_NAME) return;
 
@@ -73,11 +66,9 @@ export default class AnalysisManager {
 
   private static async updateAnalysisState(): Promise<void> {
     const userAuthenticated = await this.isUserAuthenticated();
-    const findingsEnabled = ExtensionSettings.findingsEnabled;
-    const enabled = findingsEnabled && userAuthenticated;
+    const enabled = userAuthenticated;
 
     vscode.commands.executeCommand('setContext', this.contextKeyAnalysisEnabled, enabled);
-    vscode.commands.executeCommand('setContext', this.contextKeyFindingsEnabled, findingsEnabled);
     vscode.commands.executeCommand(
       'setContext',
       this.contextKeyUserAuthenticated,
@@ -96,7 +87,7 @@ export default class AnalysisManager {
         if (!initializing) Telemetry.sendEvent(ANALYSIS_DISABLE);
       }
 
-      this._onAnalysisToggled.fire({ enabled, userAuthenticated, findingsEnabled });
+      this._onAnalysisToggled.fire({ enabled, userAuthenticated });
     }
   }
 
