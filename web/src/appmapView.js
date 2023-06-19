@@ -11,11 +11,12 @@ export default function mountApp() {
   const messages = new MessagePublisher(vscode);
 
   messages.on('init-appmap', (initialData) => {
-    const { shareEnabled, defaultView, savedFilters } = initialData;
+    const { shareEnabled, defaultView, savedFilters, flamegraphEnabled } = initialData;
     const props = {
       appMapUploadable: shareEnabled,
       defaultView,
       savedFilters,
+      flamegraphEnabled,
     };
 
     const app = new Vue({
