@@ -132,6 +132,14 @@
         "title": "AppMap: Open Code Object in AppMap"
       },
       {
+        "command": "appmap.fixFinding",
+        "title": "AppMap: Suggest a Fix for an Analysis Finding"
+      },
+      {
+        "command": "appmap.fixTest",
+        "title": "AppMap: Suggest a Fix for a Failing Test"
+      },
+      {
         "command": "appmap.touchOutOfDateTestFiles",
         "title": "AppMap: Touch Out-of-Date Test Files"
       },
@@ -498,6 +506,7 @@
     "diff": "^5.1.0",
     "jquery": "^3.5.1",
     "js-yaml": "^4.1.0",
+    "openai": "^3.3.0",
     "popper.js": "^1.16.1",
     "proper-lockfile": "^4.1.2",
     "semver": "^7.3.5",
