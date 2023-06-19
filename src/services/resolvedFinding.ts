@@ -4,6 +4,7 @@ import { resolveFilePath } from '../util';
 import present from '../lib/present';
 import ValueCache from '../lib/ValueCache';
 import assert from 'assert';
+import { warn } from 'console';
 
 class StackFrameIndex {
   locationByFrame = new Map<string, vscode.Location>();
@@ -51,11 +52,13 @@ function noDateIndicated(finding: Finding): boolean {
 
 export type DateBucket = {
   label: string;
+  expanded?: boolean;
+  icon?: string;
   filter: (finding: Finding) => boolean;
 };
 
 export const DATE_BUCKETS: DateBucket[] = [
-  { label: 'Last 24 hours', filter: lessThanDaysAgo(1) },
+  { label: 'Last 24 hours', filter: lessThanDaysAgo(1), expanded: true, icon: 'bell' },
   { label: 'Last 7 days', filter: lessThanDaysAgo(7) },
   { label: 'Last 30 days', filter: lessThanDaysAgo(30) },
   { label: 'More than 30 days ago', filter: moreThanDaysAgo(30) },
@@ -63,33 +66,58 @@ export const DATE_BUCKETS: DateBucket[] = [
 ];
 
 export class ResolvedFinding {
-  public appMapUri?: vscode.Uri;
-  public problemLocation?: vscode.Location;
-  public dateBucket?: DateBucket;
-  public rule?: Rule;
+  constructor(
+    public sourceUri: vscode.Uri,
+    public finding: Finding,
+    public checks: Check[],
+    public folder: vscode.WorkspaceFolder,
+    public appMapUri: vscode.Uri,
+    public dateBucket: DateBucket,
+    public rule: Rule,
+    public stackFrameIndex: StackFrameIndex,
+    public problemLocation?: vscode.Location
+  ) {}
 
-  stackFrameIndex = new StackFrameIndex();
+  static async resolve(
+    folder: vscode.WorkspaceFolder,
+    sourceUri: vscode.Uri,
+    finding: Finding,
+    checks: Check[]
+  ): Promise<ResolvedFinding | undefined> {
+    const stackFrameIndex = new StackFrameIndex();
 
-  constructor(public sourceUri: vscode.Uri, public finding: Finding, public checks: Check[]) {}
-
-  async initialize(): Promise<void> {
     await Promise.all(
-      (this.finding.stack || []).map(async (path: string) => {
-        if (this.stackFrameIndex.get(this.sourceUri, path)) return;
+      (finding.stack || []).map(async (path: string) => {
+        if (stackFrameIndex.get(sourceUri, path)) return;
 
-        const location = await ResolvedFinding.resolvePathLocation(this.sourceUri, path);
-        if (location) this.stackFrameIndex.put(this.sourceUri, path, location);
+        const location = await ResolvedFinding.resolvePathLocation(sourceUri, path);
+        if (location) stackFrameIndex.put(sourceUri, path, location);
       })
     );
 
-    this.rule = this.checks.find((check) => check.id === this.finding.checkId)?.rule;
-    this.dateBucket = DATE_BUCKETS.find((bucket) => bucket.filter(this.finding));
-    this.problemLocation = ResolvedFinding.preferredLocation(
-      this.stackFrameIndex,
-      this.sourceUri,
-      this.finding
+    const rule = checks.find((check) => check.id === finding.checkId)?.rule;
+    if (!rule) {
+      warn(`No rule found for check ${finding.checkId}`);
+      return;
+    }
+    const dateBucket = DATE_BUCKETS.find((bucket) => bucket.filter(finding));
+    // There should always be a fallback bucket
+    assert(dateBucket);
+    const problemLocation = ResolvedFinding.preferredLocation(stackFrameIndex, sourceUri, finding);
+    const appMapUri = await ResolvedFinding.resolveAppMapUri(finding);
+    if (!appMapUri) return;
+
+    return new ResolvedFinding(
+      sourceUri,
+      finding,
+      checks,
+      folder,
+      appMapUri,
+      dateBucket,
+      rule,
+      stackFrameIndex,
+      problemLocation
     );
-    this.appMapUri = await ResolvedFinding.resolveAppMapUri(this.finding);
   }
 
   get impactDomain(): ImpactDomain | undefined {
