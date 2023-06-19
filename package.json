@@ -146,7 +146,13 @@
       },
       {
         "command": "appmap.context.openAsJson",
-        "title": "AppMap View: Open as JSON"
+        "title": "AppMap View: Open as JSON",
+        "icon": "$(bracket)"
+      },
+      {
+        "command": "appmap.context.deleteAppMap",
+        "title": "AppMap View: Delete AppMap",
+        "icon": "$(trash)"
       },
       {
         "command": "appmap.context.rename",
@@ -167,10 +173,6 @@
       {
         "command": "appmap.context.inspectCodeObject",
         "title": "AppMap View: Inspect Code Object"
-      },
-      {
-        "command": "appmap.context.deleteAppMap",
-        "title": "AppMap View: Delete AppMap"
       },
       {
         "command": "appmap.context.deleteAppMaps",
@@ -340,10 +342,6 @@
           "when": "false"
         },
         {
-          "command": "appmap.context.openAsJson",
-          "when": "false"
-        },
-        {
           "command": "appmap.context.rename",
           "when": "false"
         },
@@ -361,10 +359,6 @@
         },
         {
           "command": "appmap.context.compareSequenceDiagrams",
-          "when": "false"
-        },
-        {
-          "command": "appmap.context.deleteAppMap",
           "when": "false"
         },
         {
@@ -396,11 +390,17 @@
       ],
       "view/item/context": [
         {
-          "command": "appmap.context.openInFileExplorer",
-          "when": "view == appmap.views.appmaps && viewItem == appmap.views.appmaps.appMap"
+          "command": "appmap.context.openAsJson",
+          "when": "view == appmap.views.appmaps && viewItem == appmap.views.appmaps.appMap",
+          "group": "inline"
         },
         {
-          "command": "appmap.context.openAsJson",
+          "command": "appmap.context.deleteAppMap",
+          "when": "view == appmap.views.appmaps && viewItem == appmap.views.appmaps.appMap",
+          "group": "inline"
+        },
+        {
+          "command": "appmap.context.openInFileExplorer",
           "when": "view == appmap.views.appmaps && viewItem == appmap.views.appmaps.appMap"
         },
         {
@@ -417,10 +417,6 @@
         },
         {
           "command": "appmap.context.compareSequenceDiagrams",
-          "when": "view == appmap.views.appmaps && viewItem == appmap.views.appmaps.appMap"
-        },
-        {
-          "command": "appmap.context.deleteAppMap",
           "when": "view == appmap.views.appmaps && viewItem == appmap.views.appmaps.appMap"
         },
         {
