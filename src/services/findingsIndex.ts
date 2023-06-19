@@ -15,22 +15,22 @@ export default class FindingsIndex extends EventEmitter implements vscode.Dispos
   private findingsBySourceUri = new Map<string, ResolvedFinding[]>();
 
   uniqueFindingsForWorkspace(workspaceFolder: vscode.WorkspaceFolder): ResolvedFinding[] {
-    const all = Object.entries(this.findingsBySourceUri)
-      .filter(([sourceUri]) => sourceUri.startsWith(workspaceFolder.uri.toString()))
-      .flatMap(([, findings]) => findings);
+    const all = [...this.findingsBySourceUri.values()]
+      .map((findings) => findings.filter((finding) => finding.folder === workspaceFolder))
+      .flat();
     return uniq(all, (rf) => rf.finding.hash);
   }
 
   findingsForUri(uri: vscode.Uri): ResolvedFinding[] {
-    return this.findingsBySourceUri[uri.toString()] || [];
+    return this.findingsBySourceUri.get(uri.toString()) || [];
   }
 
   findings(): ResolvedFinding[] {
-    return Object.values(this.findingsBySourceUri).flat();
+    return [...this.findingsBySourceUri.values()].flat();
   }
 
   clear(): void {
-    const sourceUris = Object.keys(this.findingsBySourceUri);
+    const sourceUris = [...this.findingsBySourceUri.keys()];
     const workspaceFolders = vscode.workspace.workspaceFolders || [];
     const affectedWorkspaces = workspaceFolders.filter((wsFolder) =>
       sourceUris.find((sourceUri) => sourceUri.startsWith(wsFolder.uri.toString()))
@@ -79,14 +79,15 @@ export default class FindingsIndex extends EventEmitter implements vscode.Dispos
       return;
     }
 
-    const resolvedFindings = await Promise.all(
-      findings.map(async (finding: Finding): Promise<ResolvedFinding> => {
-        const resolvedFinding = new ResolvedFinding(sourceUri, finding, checks);
-        await resolvedFinding.initialize();
-        return resolvedFinding;
-      })
-    );
-    this.findingsBySourceUri[sourceUri.toString()] = resolvedFindings;
+    const resolvedFindings = (
+      await Promise.all(
+        findings.map(
+          async (finding: Finding): Promise<ResolvedFinding | undefined> =>
+            ResolvedFinding.resolve(workspaceFolder, sourceUri, finding, checks)
+        )
+      )
+    ).filter(Boolean) as ResolvedFinding[];
+    this.findingsBySourceUri.set(sourceUri.toString(), resolvedFindings);
 
     this.emit('added', sourceUri, resolvedFindings);
     this._onChanged.fire(workspaceFolder);
@@ -98,7 +99,7 @@ export default class FindingsIndex extends EventEmitter implements vscode.Dispos
   ): Promise<void> {
     if (await fileExists(sourceUri.fsPath)) return;
 
-    delete this.findingsBySourceUri[sourceUri.toString()];
+    this.findingsBySourceUri.delete(sourceUri.toString());
 
     this.emit('removed', sourceUri);
     this._onChanged.fire(workspaceFolder);
