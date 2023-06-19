@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import assert from 'assert';
-import { exists } from 'fs';
+import { exists, stat } from 'fs';
 import { join, relative } from 'path';
 import { promisify } from 'util';
 import {
@@ -25,6 +25,9 @@ describe('Scanner', () => {
     await waitForAppMapServices(
       'tmp/appmap/minitest/Microposts_controller_can_get_microposts_as_JSON.appmap.json'
     );
+    await waitFor('Index directory exists', async () => {
+      return Boolean(await promisify(stat)(ExampleAppMapIndexDir));
+    });
   });
 
   afterEach(initializeWorkspace);
