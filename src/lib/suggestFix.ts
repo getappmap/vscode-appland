@@ -2,8 +2,11 @@ import * as vscode from 'vscode';
 import assert from 'assert';
 import { ChatCompletionRequestMessage, CreateChatCompletionResponse, OpenAIApi } from 'openai';
 
+const MAX_TITLE = 30;
+
 export async function suggestFix(
   openAI: OpenAIApi,
+  title: string,
   systemMessages: ChatCompletionRequestMessage[],
   userMessages: ChatCompletionRequestMessage[]
 ) {
@@ -41,8 +44,14 @@ export async function suggestFix(
     .map((choice) => (assert(choice.message), choice.message.content))
     .filter(Boolean)
     .join('\n');
+
+  title = title.replaceAll('\n', ' ');
+  if (title.length > MAX_TITLE) title = title.slice(0, MAX_TITLE) + '...';
+
   const newDocument = await vscode.workspace.openTextDocument({
-    content: [`## Prompt`, promptContent, `## Response`, responseContent].join('\n\n'),
+    content: [`## Analysis of '${title}'`, responseContent, `## Prompt`, promptContent].join(
+      '\n\n'
+    ),
   });
   vscode.window.showTextDocument(newDocument);
 }

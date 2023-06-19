@@ -128,7 +128,8 @@ async function fixFailedTest(appmapLoader: AppMapLoader, openAI: OpenAIApi) {
     role: 'user' as ChatCompletionRequestMessageRoleEnum,
   });
 
-  await suggestFix(openAI, systemMessages, userMessages);
+  const title = appmap.metadata.test_failure?.message || appmap.metadata.name || 'Test failure';
+  await suggestFix(openAI, title, systemMessages, userMessages);
 }
 
 export default function register(

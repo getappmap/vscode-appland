@@ -98,7 +98,7 @@ export async function fixFinding(finding: ResolvedFinding, openAI: OpenAIApi) {
     role: 'user' as ChatCompletionRequestMessageRoleEnum,
   });
 
-  await suggestFix(openAI, systemMessages, userMessages);
+  await suggestFix(openAI, finding.rule.title, systemMessages, userMessages);
 }
 
 export default function register(context: vscode.ExtensionContext): void {
