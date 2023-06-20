@@ -75,7 +75,7 @@ export class AppMapTreeDataProvider implements vscode.TreeDataProvider<AppMapTre
         label: descriptor.metadata?.name || LABEL_NO_NAME,
         tooltip: element.descriptor.metadata?.name || LABEL_NO_NAME,
         command: {
-          title: 'open',
+          title: 'Open',
           command: 'vscode.openWith',
           arguments: [descriptor.resourceUri, 'appmap.views.appMapFile'],
         },
