@@ -186,7 +186,7 @@ export class FindingsTreeDataProvider
 
     const projects = vscode.workspace.workspaceFolders || [];
 
-    const overviewTreeItem = new vscode.TreeItem('Overview');
+    const overviewTreeItem = new vscode.TreeItem('Findings table');
     overviewTreeItem.command = {
       command: 'appmap.openFindingsOverview',
       title: `Open in AppMap`,
