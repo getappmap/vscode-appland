@@ -200,11 +200,6 @@ export const EXPORT_SVG = new Event({
   name: 'export_svg',
 });
 
-export const SEQ_DIAGRAM_FEEDBACK_CTA = new Event({
-  name: 'sequence_diagram_feedback_cta',
-  properties: [Properties.YES_NO_PROMPT, Properties.OPEN_EXTERNAL],
-});
-
 export const CLICKED_SIGN_IN_LINK = new Event({
   name: 'clicked_sign_in_link',
   properties: [Properties.LINK_TYPE],

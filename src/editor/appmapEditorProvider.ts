@@ -1,13 +1,6 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
-import {
-  Telemetry,
-  APPMAP_OPEN,
-  APPMAP_UPLOAD,
-  EXPORT_SVG,
-  DEBUG_EXCEPTION,
-  SEQ_DIAGRAM_FEEDBACK_CTA,
-} from '../telemetry';
+import { Telemetry, APPMAP_OPEN, APPMAP_UPLOAD, EXPORT_SVG, DEBUG_EXCEPTION } from '../telemetry';
 import { getRecords } from '../util';
 import { version } from '../../package.json';
 import ExtensionState from '../configuration/extensionState';
@@ -98,7 +91,6 @@ export default class AppMapEditorProvider
   private static readonly INSTRUCTIONS_VIEWED = 'APPMAP_INSTRUCTIONS_VIEWED';
   private static readonly RELEASE_KEY = 'APPMAP_RELEASE_KEY';
   public static readonly APPMAP_OPENED = 'APPMAP_OPENED';
-  public static readonly SEQ_DIAGRAM_FEEDBACK_REQUESTED = 'SEQ_DIAGRAM_FEEDBACK_REQUESTED';
   public static readonly SAVED_FILTERS = 'SAVED_FILTERS';
   private static readonly LARGE_APPMAP_SIZE = 10 * 1000 * 1000; // 10 MB
   private static readonly GIANT_APPMAP_SIZE = 200 * 1000 * 1000; // 200 MB
@@ -434,19 +426,6 @@ export default class AppMapEditorProvider
             }
           }
           break;
-        case 'seq-diagram-feedback':
-          {
-            if (
-              !this.context.globalState.get(AppMapEditorProvider.SEQ_DIAGRAM_FEEDBACK_REQUESTED)
-            ) {
-              this.context.globalState.update(
-                AppMapEditorProvider.SEQ_DIAGRAM_FEEDBACK_REQUESTED,
-                true
-              );
-              promptForFeedback();
-            }
-          }
-          break;
         case 'saveFilter': {
           const { filter } = message;
           if (!filter) break;
@@ -507,43 +486,6 @@ export default class AppMapEditorProvider
 
       const fileUri = await bestFilePath(path, document.workspaceFolder);
       if (fileUri) openFile(fileUri, lineNumber);
-    }
-
-    async function promptForFeedback(): Promise<void> {
-      let feedbackResponse: string;
-      let openUriResult: boolean | undefined;
-      const message = 'Should we keep Sequence Diagrams in AppMap?';
-
-      try {
-        const keepSeqDiagram = await vscode.window.showInformationMessage(message, 'Yes', 'No');
-
-        if (!keepSeqDiagram) {
-          feedbackResponse = 'Dismiss';
-          openUriResult = undefined;
-        } else {
-          feedbackResponse = keepSeqDiagram;
-
-          if (keepSeqDiagram === 'Yes') {
-            openUriResult = await vscode.env.openExternal(
-              vscode.Uri.parse('https://appmap.io/product/feedback/general.html')
-            );
-          } else {
-            openUriResult = await vscode.env.openExternal(
-              vscode.Uri.parse('https://appmap.io/product/feedback/sequence-diagrams-no.html')
-            );
-          }
-        }
-
-        Telemetry.sendEvent(SEQ_DIAGRAM_FEEDBACK_CTA, {
-          reaction: feedbackResponse,
-          result: openUriResult,
-        });
-      } catch (e) {
-        Telemetry.sendEvent(DEBUG_EXCEPTION, {
-          exception: e as Error,
-          errorCode: ErrorCode.SeqDiagramFeedbackCtaError,
-        });
-      }
     }
   }
 
