@@ -1,3 +1,12 @@
+## [0.87.1](https://github.com/getappmap/vscode-appland/compare/v0.87.0...v0.87.1) (2023-06-20)
+
+
+### Bug Fixes
+
+* `appmap.project.language` is now sourced from project metadata ([264c51d](https://github.com/getappmap/vscode-appland/commit/264c51d4d9519b168ae4ed7ca81d7c4b863e5f3d))
+* Don't send `appmap:create` on initialization ([0fc5a90](https://github.com/getappmap/vscode-appland/commit/0fc5a90cf43c6fb1bd21d7a1da3e8e361a7bc9d0))
+* Drop the sequence diagram feedback prompt ([fd11b69](https://github.com/getappmap/vscode-appland/commit/fd11b698d70fb39c87e5d94af75e3426711052bf))
+
 # [0.87.0](https://github.com/getappmap/vscode-appland/compare/v0.86.0...v0.87.0) (2023-06-20)
 
 
