@@ -1,3 +1,16 @@
+# [0.87.0](https://github.com/getappmap/vscode-appland/compare/v0.86.0...v0.87.0) (2023-06-20)
+
+
+### Bug Fixes
+
+* AppMaps are now removed from the list after deletion ([d4dca78](https://github.com/getappmap/vscode-appland/commit/d4dca780b45920ec12164ca8dbd992df660961a2))
+* Record AppMaps instructions state is consistent across views ([f7ba65d](https://github.com/getappmap/vscode-appland/commit/f7ba65d1eb48f8b84bdb9de0a57eb201dde733de))
+
+
+### Features
+
+* Updated instructions content ([9050959](https://github.com/getappmap/vscode-appland/commit/90509590e36788efc7f1f9f2ccd94067b031da8f))
+
 # [0.86.0](https://github.com/getappmap/vscode-appland/compare/v0.85.0...v0.86.0) (2023-06-15)
 
 
