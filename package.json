@@ -154,13 +154,23 @@
       },
       {
         "command": "appmap.context.openAsJson",
-        "title": "AppMap View: Open as JSON",
+        "title": "Open as JSON",
         "icon": "$(bracket)"
       },
       {
         "command": "appmap.context.deleteAppMap",
-        "title": "AppMap View: Delete AppMap",
+        "title": "Delete",
         "icon": "$(trash)"
+      },
+      {
+        "command": "appmap.context.fixTest",
+        "title": "Fix",
+        "icon": "$(wrench)"
+      },
+      {
+        "command": "appmap.context.fixFinding",
+        "title": "Fix",
+        "icon": "$(wrench)"
       },
       {
         "command": "appmap.context.rename",
@@ -401,6 +411,16 @@
         {
           "command": "appmap.context.deleteAppMap",
           "when": "view == appmap.views.appmaps && viewItem == appmap.views.appmaps.appMap",
+          "group": "inline"
+        },
+        {
+          "command": "appmap.context.fixTest",
+          "when": "view == appmap.views.findings && viewItem == appmap.views.analysis.failedTest",
+          "group": "inline"
+        },
+        {
+          "command": "appmap.context.fixFinding",
+          "when": "view == appmap.views.findings && viewItem == appmap.views.analysis.finding",
           "group": "inline"
         },
         {
