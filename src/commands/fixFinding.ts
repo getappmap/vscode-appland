@@ -10,7 +10,7 @@ import {
 import assert from 'assert';
 import { Event, buildAppMap } from '@appland/models';
 import { readFile } from 'fs/promises';
-import loadSnippet from '../lib/snippet';
+import loadSnippet, { DEFAULT_SPAN } from '../lib/snippet';
 import { suggestFix } from '../lib/suggestFix';
 import { debug } from 'console';
 
@@ -30,8 +30,8 @@ export async function fixFinding(finding: ResolvedFinding, openAI: OpenAIApi) {
     .build();
   const language = appmap.metadata?.language?.name;
 
-  const scopeEvent = appmap.events[finding.finding.scope.id];
-  const event = appmap.events[finding.finding.event.id];
+  const scopeEvent = appmap.events[finding.finding.scope.id - 1];
+  const event = appmap.events[finding.finding.event.id - 1];
   const stackFunctions: string[] = [];
   {
     let parent: Event | undefined = event;
@@ -54,7 +54,8 @@ export async function fixFinding(finding: ResolvedFinding, openAI: OpenAIApi) {
   for (const location of locations) {
     if (snippetLocations.has(location)) continue;
 
-    const snippet = await loadSnippet(finding.folder, location);
+    // TODO: Determine the function span more accurately
+    const snippet = await loadSnippet(finding.folder, location, 0, DEFAULT_SPAN * 2);
     if (!snippet) continue;
 
     if (snippet) snippetLocations.add(location);
