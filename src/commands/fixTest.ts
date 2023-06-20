@@ -97,6 +97,7 @@ async function fixFailedTest(appmapLoader: AppMapLoader, openAI: OpenAIApi) {
     ...(await filesModifiedInGit(folder.uri.fsPath)),
   ]);
   const snippetLocations = new Set<string>();
+  const snippetMessages: string[] = [];
   for (const event of appmap.events) {
     if (!(event.path && event.lineno)) continue;
 
@@ -118,8 +119,14 @@ async function fixFailedTest(appmapLoader: AppMapLoader, openAI: OpenAIApi) {
       '',
       snippet.lines.join('\n'),
     ].join('\n');
-    userMessages.push({ content, role: 'user' });
+    snippetMessages.push(content);
   }
+
+  userMessages.push(
+    ...snippetMessages
+      .slice(0, 5) // TODO: Limiting to 5 of these for now, to stay under the token limit
+      .map((content) => ({ content, role: 'user' as ChatCompletionRequestMessageRoleEnum }))
+  );
 
   userMessages.push({
     content: `Decribe the problem and suggest how to fix it, using diff / patch format for code suggestions${
