@@ -61,7 +61,7 @@ export const DATE_BUCKETS: DateBucket[] = [
   { label: 'Last 24 hours', filter: lessThanDaysAgo(1), expanded: true, icon: 'bell' },
   { label: 'Last 7 days', filter: lessThanDaysAgo(7) },
   { label: 'Last 30 days', filter: lessThanDaysAgo(30) },
-  { label: 'More than 30 days ago', filter: moreThanDaysAgo(30) },
+  { label: 'More than 30 days old', filter: moreThanDaysAgo(30) },
   { label: 'No date indicated', filter: noDateIndicated },
 ];
 

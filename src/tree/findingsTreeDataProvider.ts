@@ -16,6 +16,17 @@ const IMPACT_DOMAIN_ICONS = {
   Maintainability: 'tools',
 };
 
+type AppMapIndexException = {
+  class: string;
+  message: string;
+  location: string;
+  stack: string[];
+};
+
+class AppMapException {
+  constructor(public appmap: AppMapLoader, public exception: AppMapIndexException) {}
+}
+
 class WorkspaceFolderTreeItem extends vscode.TreeItem {
   constructor(public folder: vscode.WorkspaceFolder) {
     super(folder.name, vscode.TreeItemCollapsibleState.Expanded);
@@ -38,6 +49,22 @@ class FailedTestsTreeItem extends vscode.TreeItem {
   constructor(public workspaceFolderTreeItem: WorkspaceFolderTreeItem) {
     super('Failed tests', vscode.TreeItemCollapsibleState.Expanded);
   }
+
+  filterAppMaps(appmaps: AppMapLoader[]) {
+    return this.workspaceFolderTreeItem.filterAppMaps(appmaps);
+  }
+}
+
+class ExceptionsTreeItem extends vscode.TreeItem {
+  constructor(public workspaceFolderTreeItem: WorkspaceFolderTreeItem) {
+    super('Exceptions', vscode.TreeItemCollapsibleState.Expanded);
+  }
+
+  filterAppMaps(appmaps: AppMapLoader[]) {
+    return this.workspaceFolderTreeItem
+      .filterAppMaps(appmaps)
+      .filter((appmap) => appmap.descriptor.exceptions);
+  }
 }
 
 class FindingsTreeItem extends vscode.TreeItem {
@@ -59,7 +86,26 @@ class FailedTestTreeItem extends vscode.TreeItem {
   }
 }
 
-class DateBucketTreeItem extends vscode.TreeItem {
+class ExceptionDateBucketTreeItem extends vscode.TreeItem {
+  constructor(public exceptionsTreeItem: ExceptionsTreeItem, public dateBucket: DateBucket) {
+    super(
+      dateBucket.label,
+      dateBucket.expanded
+        ? vscode.TreeItemCollapsibleState.Expanded
+        : vscode.TreeItemCollapsibleState.Collapsed
+    );
+
+    if (dateBucket.icon) this.iconPath = new vscode.ThemeIcon(dateBucket.icon);
+  }
+
+  filterAppMaps(appmaps: AppMapLoader[]): AppMapException[] {
+    return this.exceptionsTreeItem
+      .filterAppMaps(appmaps)
+      .filter((appmap) => this.dateBucket.filter(appmap.descriptor.exceptionModifiedDate));
+  }
+}
+
+class FindingDateBucketTreeItem extends vscode.TreeItem {
   constructor(
     public workspaceFolderTreeItem: WorkspaceFolderTreeItem,
     public dateBucket: DateBucket
@@ -82,7 +128,10 @@ class DateBucketTreeItem extends vscode.TreeItem {
 }
 
 class ImpactDomainTreeItem extends vscode.TreeItem {
-  constructor(public dateBucketTreeItem: DateBucketTreeItem, public impactDomain: ImpactDomain) {
+  constructor(
+    public dateBucketTreeItem: FindingDateBucketTreeItem,
+    public impactDomain: ImpactDomain
+  ) {
     super(impactDomain, vscode.TreeItemCollapsibleState.Collapsed);
 
     const icon = IMPACT_DOMAIN_ICONS[impactDomain];
@@ -247,7 +296,7 @@ export class FindingsTreeDataProvider
       return this.getFailedTestsTreeItems(element);
     } else if (element instanceof FindingsTreeItem) {
       return this.getFindingsTreeItems(element);
-    } else if (element instanceof DateBucketTreeItem) {
+    } else if (element instanceof FindingDateBucketTreeItem) {
       return this.getChildrenForDateBucket(element);
     } else if (element instanceof ImpactDomainTreeItem) {
       return this.getChildrenForImpactDomain(element);
@@ -279,17 +328,17 @@ export class FindingsTreeDataProvider
     );
     const findingBuckets = new Set(findings.map((finding) => finding.dateBucket));
     return DATE_BUCKETS.filter((bucket) => findingBuckets.has(bucket)).map((bucket) => {
-      return new DateBucketTreeItem(findingsTreeItem.workspaceFolderTreeItem, bucket);
+      return new FindingDateBucketTreeItem(findingsTreeItem.workspaceFolderTreeItem, bucket);
     });
   }
 
   getFailedTestsTreeItems(failedTestsTreeItem: FailedTestsTreeItem): vscode.TreeItem[] {
-    return failedTestsTreeItem.workspaceFolderTreeItem
+    return failedTestsTreeItem
       .filterAppMaps(this.appmaps.allAppMaps())
       .map((appmap) => new FailedTestTreeItem(failedTestsTreeItem, appmap));
   }
 
-  getChildrenForDateBucket(dateBucketTreeItem: DateBucketTreeItem): vscode.TreeItem[] {
+  getChildrenForDateBucket(dateBucketTreeItem: FindingDateBucketTreeItem): vscode.TreeItem[] {
     assert(this.findingsIndex);
     const findings = dateBucketTreeItem.filterFindings(this.findingsIndex?.findings());
     const impactDomains = findings
