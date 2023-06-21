@@ -13,7 +13,12 @@ export default class GithubRelease {
   async getLatestAssets(): Promise<Array<GithubReleaseAsset>> {
     const url = `https://api.github.com/repos/${this.repoOwner}/${this.repoName}/releases/latest`;
     const response = await fetch(url);
-    const { assets } = (await response.json()) as { assets: Array<GithubReleaseAsset> };
+    if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+    if (!response.body) throw new Error('Response body is empty');
+
+    const responseJson = await response.json();
+    const { assets } = responseJson as { assets: Array<GithubReleaseAsset> };
+    if (!assets) throw new Error(`No assets in response. Response: ${responseJson}`);
     return assets;
   }
 
