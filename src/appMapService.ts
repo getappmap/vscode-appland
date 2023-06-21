@@ -3,7 +3,7 @@ import AppMapServerAuthenticationProvider from './authentication/appmapServerAut
 import { ClassMapService } from './classMapService';
 import ExtensionState from './configuration/extensionState';
 import AppMapEditorProvider from './editor/appmapEditorProvider';
-import { FindingsService } from './findingsService';
+import AnalysisManager from './services/analysisManager';
 import { AppMapConfigWatcher } from './services/appMapConfigWatcher';
 import { AppmapConfigManager } from './services/appmapConfigManager';
 import { AppMapRecommenderService } from './services/appmapRecommenderService';
@@ -33,6 +33,7 @@ export type AppMapTreeDataProviders = {
 };
 
 export default interface AppMapService {
+  analysisManager: typeof AnalysisManager;
   editorProvider: AppMapEditorProvider;
   localAppMaps: AppMapsService;
   autoIndexService: AppMapProcessService;
@@ -41,7 +42,6 @@ export default interface AppMapService {
   sourceFileWatcher?: SourceFileWatcher;
   uptodate?: AppmapUptodateService;
   workspaceServices: WorkspaceServices;
-  findings?: FindingsService;
   classMap?: ClassMapService;
   processService: NodeProcessService;
   extensionState: ExtensionState;

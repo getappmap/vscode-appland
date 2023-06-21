@@ -196,8 +196,8 @@ export async function waitForAppMapServices(touchFile: string): Promise<AppMapSe
   );
 
   assert(appMapService.classMap, `Expected classMap service to be available`);
-  assert(appMapService.findings, `Expected findings service to be available`);
-  const services = [appMapService.classMap, appMapService.findings];
+  assert(appMapService.analysisManager.findingsIndex, `Expected findings service to be available`);
+  const services = [appMapService.classMap, appMapService.analysisManager.findingsIndex];
 
   return await new Promise<AppMapService>((resolve, reject) => {
     let completionCount = 0;
@@ -221,7 +221,7 @@ export async function waitForAppMapServices(touchFile: string): Promise<AppMapSe
     };
 
     appMapService.classMap?.onChanged(succeeded.bind(null, 'classMap'));
-    appMapService.findings?.onChanged(succeeded.bind(null, 'findings'));
+    appMapService.analysisManager.findingsIndex?.onChanged(succeeded.bind(null, 'findings'));
     setTimeout(failed, APP_SERVICES_TIMEOUT);
   });
 }

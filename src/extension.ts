@@ -44,7 +44,6 @@ import AppMapServerAuthenticationProvider from './authentication/appmapServerAut
 import installAgent from './commands/installAgent';
 import { Signup } from './actions/signup';
 import AnalysisManager from './services/analysisManager';
-import { FindingsService } from './findingsService';
 import Environment from './configuration/environment';
 import ErrorCode from './telemetry/definitions/errorCodes';
 import promptInstall from './actions/promptInstall';
@@ -295,6 +294,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     if (extensionState.isNewInstall) vscode.commands.executeCommand('appmap.views.signIn.focus');
 
     return {
+      analysisManager: AnalysisManager,
       editorProvider,
       localAppMaps: appmapCollectionFile,
       autoIndexService: autoIndexServiceImpl,
@@ -309,9 +309,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       projectState,
       trees,
       appmapServerAuthenticationProvider,
-      get findings(): FindingsService | undefined {
-        return AnalysisManager.findingsIndex;
-      },
       recommender,
       configManager,
       runConfigService,
