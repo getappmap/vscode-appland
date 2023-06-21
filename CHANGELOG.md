@@ -1,3 +1,10 @@
+## [0.88.1](https://github.com/getappmap/vscode-appland/compare/v0.88.0...v0.88.1) (2023-06-21)
+
+
+### Bug Fixes
+
+* users can update an existing filter ([d7aa7df](https://github.com/getappmap/vscode-appland/commit/d7aa7df0e382cbd95ae6fb2a65284e0a8931a1c0))
+
 # [0.88.0](https://github.com/getappmap/vscode-appland/compare/v0.87.1...v0.88.0) (2023-06-21)
 
 
