@@ -65,27 +65,33 @@ async function fixFailedTest(appmapLoader: AppMapLoader, openAI: OpenAIApi) {
     const snippet = await loadSnippet(folder, appmap.metadata.test_failure.location);
     if (snippet) {
       const content = [
-        `Test failure${snippet.lineno ? ' occurred at line' + snippet.lineno : ''}: ${
+        '',
+        `Test failure${snippet.lineno ? ' occurred at line ' + snippet.lineno : ''}: ${
           snippet.path
         }`,
-        '',
         snippet.lines.join('\n'),
       ].join('\n');
       userMessages.push({ content, role: 'user' });
     }
   }
 
+  const uniqueExceptions = new Set<string>();
   for (const exceptionEvent of appmap.events.filter(
     (event) => event.exceptions && event.exceptions.length
   )) {
     for (const exception of exceptionEvent.exceptions) {
       const location = [exception.path, exception.lineno].filter(Boolean).join(':');
+      const exceptionId = [exception.class, location].filter(Boolean).join(':');
+      if (uniqueExceptions.has(exceptionId)) continue;
+
+      uniqueExceptions.add(exceptionId);
+
       const snippet = await loadSnippet(folder, location);
       if (!snippet) continue;
 
       const content = [
-        `Exception occurred at line ${snippet.lineno}: ${snippet.path}`,
         '',
+        `Exception ${snippet.lineno ? ' occurred at line ' + snippet.lineno : ''}: ${snippet.path}`,
         snippet.lines.join('\n'),
       ].join('\n');
       userMessages.push({ content, role: 'user' });
@@ -115,8 +121,8 @@ async function fixFailedTest(appmapLoader: AppMapLoader, openAI: OpenAIApi) {
     if (!snippet) continue;
 
     const content = [
-      `Code executed at line ${snippet.lineno}: ${snippet.path}`,
       '',
+      `Code executed ${snippet.lineno ? ' at line ' + snippet.lineno : ''}: ${snippet.path}`,
       snippet.lines.join('\n'),
     ].join('\n');
     snippetMessages.push(content);
@@ -124,7 +130,7 @@ async function fixFailedTest(appmapLoader: AppMapLoader, openAI: OpenAIApi) {
 
   userMessages.push(
     ...snippetMessages
-      .slice(0, 5) // TODO: Limiting to 5 of these for now, to stay under the token limit
+      .slice(0, 4) // TODO: Limiting to 4 of these for now, to stay under the token limit
       .map((content) => ({ content, role: 'user' as ChatCompletionRequestMessageRoleEnum }))
   );
 

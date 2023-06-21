@@ -59,7 +59,7 @@ export async function fixFinding(finding: ResolvedFinding, openAI: OpenAIApi) {
     if (!snippet) continue;
 
     if (snippet) snippetLocations.add(location);
-    codeSnippets.push([`Source file: ${snippet.path}`, '', snippet.lines.join('\n')].join('\n'));
+    codeSnippets.push(['', `Source file: ${snippet.path}`, snippet.lines.join('\n')].join('\n'));
   }
 
   const systemMessages: ChatCompletionRequestMessage[] = [
@@ -77,16 +77,11 @@ export async function fixFinding(finding: ResolvedFinding, openAI: OpenAIApi) {
       .map(([key, value]) => [key, value].join(' '))
       .map((reference) => `Related reference: ${reference}`);
 
-  const ancestors = [event];
-
   const userMessages: ChatCompletionRequestMessage[] = [
-    `Type: ${finding.rule.impactDomain}`,
-    `Name: ${finding.rule.title}`,
-    `Description: ${finding.finding.message}`,
+    `The code contains a ${finding.rule.impactDomain} problem: ${finding.rule.title}`,
+    `Specifically: ${finding.finding.message}`,
     ...relatedReferences,
-    `The problem occurs within ${scopeEvent.codeObject.fqid}`,
-    `Stack trace (file locations): ${finding.finding.stack.reverse().join(' -> ')}`,
-    `Stack trace (event names): ${ancestors.join(' -> ')}`,
+    `The problem occurs within ${scopeEvent.codeObject.fqid}. It's related to the following code:`,
     ...codeSnippets,
   ].map((message) => ({
     content: message,

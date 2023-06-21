@@ -43,9 +43,11 @@ export default async function loadSnippet(
   const lines = fileContents.toString().split('\n');
   let snippet: string[];
   if (lineno) {
+    const startLine = Math.max(lineno - behindSpan - 1, 0);
+    const endLine = Math.min(lineno + aheadSpan - 1, lines.length);
     snippet = lines
-      .slice(Math.max(lineno - behindSpan, 0), Math.min(lineno + aheadSpan, lines.length))
-      .map((line, index) => `${index + (lineno || 0) + 1}: ${line}`);
+      .slice(startLine, endLine)
+      .map((line, index) => `${index + startLine + 1}: ${line}`);
   } else {
     snippet = lines;
   }
