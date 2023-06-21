@@ -78,8 +78,6 @@ export class InstructionsTreeDataProvider implements vscode.TreeDataProvider<Doc
   }
 
   getIcon(id: DocPageId): string | vscode.ThemeIcon {
-    if (id === 'investigate-findings' && !AnalysisManager.isAnalysisEnabled) return icons.lock;
-
     switch (this.completion.get(id)) {
       case true:
         return icons.done;
