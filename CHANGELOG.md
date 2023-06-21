@@ -1,3 +1,11 @@
+## [0.89.1](https://github.com/getappmap/vscode-appland/compare/v0.89.0...v0.89.1) (2023-06-21)
+
+
+### Bug Fixes
+
+* do not report error when lockfile exists ([a393599](https://github.com/getappmap/vscode-appland/commit/a3935991f485c679f11943e2df65a56d0c4ba82d))
+* throw error when assets not retrieved from github ([2e2bb85](https://github.com/getappmap/vscode-appland/commit/2e2bb85fa8339e1483fbbe94e0af997959a3f3f9))
+
 # [0.89.0](https://github.com/getappmap/vscode-appland/compare/v0.88.1...v0.89.0) (2023-06-21)
 
 
