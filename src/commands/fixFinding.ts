@@ -88,9 +88,9 @@ export async function fixFinding(finding: ResolvedFinding, openAI: OpenAIApi) {
     role: 'user' as ChatCompletionRequestMessageRoleEnum,
   }));
   userMessages.push({
-    content: `Decribe the problem and suggest how to fix it, using diff / patch format for code suggestions${
-      language ? ' in ' + language : ''
-    }`,
+    content: `Describe the problem in the style of a code review comment, then suggest a fixed version of the code by generating one or more complete ${
+      language ? language : ''
+    } functions`,
     role: 'user' as ChatCompletionRequestMessageRoleEnum,
   });
 

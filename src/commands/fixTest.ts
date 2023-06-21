@@ -135,9 +135,9 @@ async function fixFailedTest(appmapLoader: AppMapLoader, openAI: OpenAIApi) {
   );
 
   userMessages.push({
-    content: `Decribe the problem and suggest how to fix it, using diff / patch format for code suggestions${
-      language ? ' in ' + language : ''
-    }`,
+    content: `Analyze the problem, then provide a fixed version of the code, by generating one or more complete ${
+      language ? language : ''
+    } functions`,
     role: 'user' as ChatCompletionRequestMessageRoleEnum,
   });
 
