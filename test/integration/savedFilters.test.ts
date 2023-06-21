@@ -53,6 +53,24 @@ describe('Saved filters', () => {
     assert.deepEqual(updateFiltersSpy.callCount, 2);
   });
 
+  it('updates an already extant saved filter', async () => {
+    await editorProvider.saveFilter(testFilter);
+    let savedFilters = editorProvider.getSavedFilters();
+    assert.deepEqual(savedFilters, [defaultFilter, testFilter]);
+
+    const updatedFilter = {
+      filterName: 'test',
+      state: 'eyJmaWx0ZXJzIjp7ImxpbWl0Um9vdEV2ZW50cyI6ZmFsc2UsImhpZGVVbmxhYmVsZWQiOnRydWV9fQ',
+      default: false,
+    };
+
+    await editorProvider.saveFilter(updatedFilter);
+    savedFilters = editorProvider.getSavedFilters();
+
+    assert.deepEqual(savedFilters, [defaultFilter, updatedFilter]);
+    assert.deepEqual(updateFiltersSpy.callCount, 2);
+  });
+
   it('saves a new filter and makes it default', async () => {
     await editorProvider.saveFilter(testFilter);
     let savedFilters = editorProvider.getSavedFilters();

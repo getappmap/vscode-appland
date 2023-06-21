@@ -216,10 +216,19 @@ export default class AppMapEditorProvider
   }
 
   async saveFilter(filter: SavedFilter): Promise<void> {
-    let savedFilters = this.getSavedFilters();
-    if (!savedFilters) savedFilters = [];
+    let savedFilters = this.getSavedFilters() || [];
 
-    savedFilters.push(filter);
+    let filterOverwritten = false;
+    savedFilters = savedFilters.map((savedFilter) => {
+      if (savedFilter.filterName === filter.filterName) {
+        filterOverwritten = true;
+        return filter;
+      }
+      return savedFilter;
+    });
+
+    if (!filterOverwritten) savedFilters.push(filter);
+
     await this.context.workspaceState.update(AppMapEditorProvider.SAVED_FILTERS, savedFilters);
     this.updateFilters();
   }
