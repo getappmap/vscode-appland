@@ -1,3 +1,10 @@
+# [0.88.0](https://github.com/getappmap/vscode-appland/compare/v0.87.1...v0.88.0) (2023-06-21)
+
+
+### Features
+
+* Ensure the latest cli version is used when installing agent in JS ([fc96f38](https://github.com/getappmap/vscode-appland/commit/fc96f38a9ae5f3c4add4d65927b92d81209520d2))
+
 ## [0.87.1](https://github.com/getappmap/vscode-appland/compare/v0.87.0...v0.87.1) (2023-06-20)
 
 
