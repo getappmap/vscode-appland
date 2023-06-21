@@ -45,7 +45,7 @@ sinon
   .withArgs('AppMap: Assets')
   .returns(fakeOutputChannel);
 
-describe('node process service installation with existing lockfile for jar download', () => {
+describe('asset manager when the java agent jar lockfile exists', () => {
   let assetPath: string;
   let lockfile: string;
 

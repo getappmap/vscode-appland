@@ -10,7 +10,7 @@ import GithubRelease from '../../../src/lib/githubRelease';
 const expectedJavaDir = path.join(ProjectA, '.appmap', 'lib', 'java');
 const expectedLatestJarPath = path.join(expectedJavaDir, 'appmap.jar');
 
-describe('node process service installation', () => {
+describe('asset manager', () => {
   let sinon: SinonSandbox;
 
   before(async () => {

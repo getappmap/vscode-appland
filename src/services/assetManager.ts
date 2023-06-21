@@ -32,13 +32,12 @@ export default class AssetManager {
     return asset;
   }
 
-  private static async createLockfile(assetName: string): Promise<string> {
+  private static async createLockfile(assetName: string): Promise<string | undefined> {
     const lockfilePath = path.join(this.javaAgentDir, assetName + '.downloading');
     if (await fileExists(lockfilePath)) {
       const lockfileCreationTime = statSync(lockfilePath).mtime;
       const timeSinceCreation = new Date().getTime() - lockfileCreationTime.getTime();
-      if (timeSinceCreation < AssetManager.FIVE_MINUTES_IN_MILLISECONDS)
-        throw Error(`Could not download ${assetName} because lockfile already exists`);
+      if (timeSinceCreation < AssetManager.FIVE_MINUTES_IN_MILLISECONDS) return;
     }
     await touch(lockfilePath);
     return lockfilePath;
@@ -67,6 +66,11 @@ export default class AssetManager {
       if (await fileExists(assetPath)) return;
 
       const lockfilePath = await this.createLockfile(asset.name);
+      if (!lockfilePath) {
+        this.log(`Did not download ${asset.name} because lockfile already exists.`);
+        return;
+      }
+
       this.log(`Downloading AppMap Java agent ${asset.name}`);
       await GithubRelease.downloadAsset(asset, assetPath);
 
