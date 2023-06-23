@@ -12,13 +12,8 @@ import * as vscode from 'vscode';
 import { Finding } from '@appland/scanner';
 import { findRepository } from '../../lib/git';
 import { workspaceServices } from '../../services/workspaceServices';
-import {
-  AppmapConfigManager,
-  AppmapConfigManagerInstance,
-} from '../../services/appmapConfigManager';
-import ProjectStateService, {
-  ProjectStateServiceInstance,
-} from '../../services/projectStateService';
+import { AppmapConfigManager } from '../../services/appmapConfigManager';
+import ProjectStateService from '../../services/projectStateService';
 
 export const DEBUG_EXCEPTION = new TelemetryDataProvider({
   id: 'appmap.debug.exception',
@@ -134,7 +129,7 @@ export const AGENT_CONFIG_PRESENT = new TelemetryDataProvider({
     const configManager = workspaceServices().getServiceInstanceFromClass(
       AppmapConfigManager,
       workspaceFolder
-    ) as AppmapConfigManagerInstance | undefined;
+    );
 
     const isPresent = !!(configManager && configManager.hasConfigFile);
     return String(isPresent);
@@ -181,10 +176,10 @@ export const PROJECT_LANGUAGE = new TelemetryDataProvider({
     if (!workspaceFolder) {
       return UNKNOWN_LANGUAGE;
     }
-    const projectStateService = workspaceServices().getServiceInstanceFromClass<
-      ProjectStateServiceInstance,
-      ProjectStateService
-    >(ProjectStateService, workspaceFolder);
+    const projectStateService = workspaceServices().getServiceInstanceFromClass(
+      ProjectStateService,
+      workspaceFolder
+    );
     if (!projectStateService) {
       return UNKNOWN_LANGUAGE;
     }

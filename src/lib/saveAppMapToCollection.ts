@@ -4,7 +4,7 @@ import { basename, join, relative } from 'path';
 import { promisify } from 'util';
 import * as vscode from 'vscode';
 import { fileExists, getWorkspaceFolderFromPath } from '../util';
-import { AppmapConfigManager, AppmapConfigManagerInstance } from '../services/appmapConfigManager';
+import { AppmapConfigManager } from '../services/appmapConfigManager';
 import { workspaceServices } from '../services/workspaceServices';
 import assert from 'assert';
 
@@ -25,7 +25,7 @@ export default async function saveAppMapToCollection(
   const appmapConfigManagerInstance = workspaceServices().getServiceInstanceFromClass(
     AppmapConfigManager,
     projectFolder
-  ) as AppmapConfigManagerInstance | undefined;
+  );
   assert(appmapConfigManagerInstance);
 
   const appmapConfig = await appmapConfigManagerInstance.getAppmapConfig();

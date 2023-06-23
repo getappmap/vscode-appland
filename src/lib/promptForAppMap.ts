@@ -3,7 +3,7 @@ import { basename } from 'path';
 import * as vscode from 'vscode';
 import AppMapLoader from '../services/appmapLoader';
 import { getWorkspaceFolderFromPath, timeAgo } from '../util';
-import { AppmapConfigManager, AppmapConfigManagerInstance } from '../services/appmapConfigManager';
+import { AppmapConfigManager } from '../services/appmapConfigManager';
 import { workspaceServices } from '../services/workspaceServices';
 import { AppMapQuickPickItem } from './AppMapQuickPickItem';
 
@@ -28,7 +28,7 @@ export async function promptForAppMap(
             const appmapConfigManagerInstance = workspaceServices().getServiceInstanceFromClass(
               AppmapConfigManager,
               projectFolder
-            ) as AppmapConfigManagerInstance | undefined;
+            );
             assert(appmapConfigManagerInstance);
             const detectedAppMapDir = (await appmapConfigManagerInstance.getAppmapConfig())
               ?.appmapDir;

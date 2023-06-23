@@ -15,9 +15,7 @@ describe('Findings impact domains (several findings)', () => {
   beforeEach(async () => {
     extension = await waitForExtension();
     const { projectState } = extension;
-    serviceInstances = extension.workspaceServices.getServiceInstances(
-      projectState
-    ) as ProjectStateServiceInstance[];
+    serviceInstances = extension.workspaceServices.getServiceInstances(projectState);
     workspaceFolder = (vscode.workspace.workspaceFolders || [])[0];
     assert(workspaceFolder);
   });

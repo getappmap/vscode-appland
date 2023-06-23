@@ -75,6 +75,7 @@ export class AppMapRecommenderServiceInstance implements WorkspaceServiceInstanc
 export class AppMapRecommenderService
   implements WorkspaceService<AppMapRecommenderServiceInstance>
 {
+  public static readonly serviceId = 'AppMapRecommenderService';
   constructor(protected extensionState: ExtensionState) {}
 
   async create(folder: vscode.WorkspaceFolder): Promise<AppMapRecommenderServiceInstance> {

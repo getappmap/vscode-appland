@@ -13,9 +13,7 @@ describe('Findings impact domains (one finding)', () => {
   beforeEach(async () => {
     extension = await waitForExtension();
     const { projectState } = extension;
-    serviceInstances = extension.workspaceServices.getServiceInstances(
-      projectState
-    ) as ProjectStateServiceInstance[];
+    serviceInstances = extension.workspaceServices.getServiceInstances(projectState);
     await waitFor('Analysis was not performed', () =>
       serviceInstances.every(({ metadata }) => metadata.analysisPerformed)
     );

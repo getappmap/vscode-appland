@@ -54,6 +54,7 @@ export class AppMapConfigWatcher
   extends FileChangeEmitter
   implements WorkspaceService<AppMapConfigWatcherInstance>
 {
+  public static readonly serviceId = 'AppMapConfigWatcher';
   async create(folder: vscode.WorkspaceFolder): Promise<AppMapConfigWatcherInstance> {
     const watcher = new AppMapConfigWatcherInstance(
       folder,

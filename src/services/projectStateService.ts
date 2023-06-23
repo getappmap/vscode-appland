@@ -16,7 +16,7 @@ import AnalysisManager from './analysisManager';
 import AppMapLoader from './appmapLoader';
 import { PROJECT_OPEN, Telemetry } from '../telemetry';
 import { workspaceServices } from './workspaceServices';
-import { AppmapConfigManager, AppmapConfigManagerInstance } from './appmapConfigManager';
+import { AppmapConfigManager } from './appmapConfigManager';
 import { RunConfigService, RunConfigStatus } from './runConfigService';
 
 type SimpleCodeObject = {
@@ -205,7 +205,7 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
     const configManager = workspaceServices().getServiceInstanceFromClass(
       AppmapConfigManager,
       this.folder
-    ) as AppmapConfigManagerInstance | undefined;
+    );
     return !!(configManager && configManager.hasConfigFile);
   }
 
@@ -348,6 +348,8 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
 }
 
 export default class ProjectStateService implements WorkspaceService<ProjectStateServiceInstance> {
+  public static readonly serviceId = 'ProjectStateService';
+
   constructor(
     protected extensionState: ExtensionState,
     protected readonly configWatcher: FileChangeEmitter,
