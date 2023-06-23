@@ -4,8 +4,6 @@ import assert from 'assert';
 import AppMapService from '../../../src/appMapService';
 import { ProjectStateServiceInstance } from '../../../src/services/projectStateService';
 import { waitForExtension, withAuthenticatedUser, waitFor } from '../util';
-import { cp, rm } from 'fs/promises';
-import { join } from 'path';
 
 describe('Findings impact domains (several findings)', () => {
   withAuthenticatedUser();
@@ -22,17 +20,6 @@ describe('Findings impact domains (several findings)', () => {
     ) as ProjectStateServiceInstance[];
     workspaceFolder = (vscode.workspace.workspaceFolders || [])[0];
     assert(workspaceFolder);
-    // Findings must be in appmap_dir to be recognized.
-    await cp(
-      join(workspaceFolder.uri.fsPath, 'appmap-findings.json'),
-      join(workspaceFolder.uri.fsPath, 'tmp/appmap', 'appmap-findings.json')
-    );
-  });
-
-  afterEach(async () => {
-    await rm(join(workspaceFolder.uri.fsPath, 'tmp/appmap', 'appmap-findings.json'), {
-      force: true,
-    });
   });
 
   it('has the expected domain counts', async () => {
@@ -46,11 +33,25 @@ describe('Findings impact domains (several findings)', () => {
 
     assert.strictEqual(domainCounts.length, 1, 'there is one workspace in the project');
 
-    domainCounts.forEach((domainCount) => {
-      assert.strictEqual(domainCount?.performance, 1, 'there is one performance issue');
-      assert.strictEqual(domainCount?.maintainability, 0, 'there are no maintainability issues');
-      assert.strictEqual(domainCount?.security, 1, 'there is one security issue');
-      assert.strictEqual(domainCount?.stability, 0, 'there are no stability issues');
-    });
+    const countFindings = async (domain: string, expected: number): Promise<boolean> => {
+      const domainCountsAry = serviceInstances.map(
+        (serviceInstance) => serviceInstance.metadata.findingsDomainCounts
+      );
+      if (domainCountsAry.length !== 1) return false;
+
+      const domainCounts = domainCountsAry[0];
+      assert(domainCounts);
+
+      return domainCounts[domain] === expected;
+    };
+
+    for (const [domain, number] of Object.entries({
+      performance: 2,
+      maintainability: 2,
+      security: 1,
+      stability: 0,
+    })) {
+      await waitFor(`Expected ${number} ${domain} issues`, () => countFindings(domain, number));
+    }
   });
 });

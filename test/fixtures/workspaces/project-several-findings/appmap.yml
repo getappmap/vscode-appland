@@ -1,1 +1,5 @@
-# dummy
+name: project-several-findings
+language: ruby
+appmap_dir: tmp/appmap
+packages:
+  - app
