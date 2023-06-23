@@ -1,3 +1,11 @@
+# [0.90.0](https://github.com/getappmap/vscode-appland/compare/v0.89.1...v0.90.0) (2023-06-23)
+
+
+### Features
+
+* Introduce the installation status bar ([bb311e0](https://github.com/getappmap/vscode-appland/commit/bb311e06778d05c03aa0ed0564e13514cc981983))
+* Reuse existing terminals when rerunning installer if possible ([1256af3](https://github.com/getappmap/vscode-appland/commit/1256af3e6699a2427956c21259e7c8d3475a8219)), closes [#703](https://github.com/getappmap/vscode-appland/issues/703)
+
 ## [0.89.1](https://github.com/getappmap/vscode-appland/compare/v0.89.0...v0.89.1) (2023-06-21)
 
 
