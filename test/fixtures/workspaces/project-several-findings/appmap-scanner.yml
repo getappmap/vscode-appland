@@ -1,3 +1,0 @@
-checks:
-  - rule: unbatchedMaterializedQuery
-  - rule: secretInLog
