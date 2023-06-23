@@ -48,8 +48,8 @@ __metadata:
   linkType: hard
 
 "@appland/appmap@npm:^3.80.1":
-  version: 3.80.1
-  resolution: "@appland/appmap@npm:3.80.1"
+  version: 3.80.2
+  resolution: "@appland/appmap@npm:3.80.2"
   dependencies:
     "@appland/client": ^1
     "@appland/components": ^2
@@ -101,57 +101,25 @@ __metadata:
       optional: true
   bin:
     appmap: built/cli.js
-  checksum: 36b4aba7d3214a2725cad083a8b40cda0bd5e5e58cd084642b58d935d92fef75778c9f57c780ec036644e4bcda267a3a383cbdbdc0cea287f991fafc7eddc514
+  checksum: 89bdfcfe4e36d578d95bb1a8ecd75e3a0bfc5a364ca237f86a98e70ccae869f945f713d2a45eea974746c306a0973f77b7cc3fea3c7d1f38c75c0e5596902960
   languageName: node
   linkType: hard
 
-"@appland/client@npm:^1, @appland/client@npm:^1.6.0":
-  version: 1.6.0
-  resolution: "@appland/client@npm:1.6.0"
+"@appland/client@npm:^1, @appland/client@npm:^1.5.0, @appland/client@npm:^1.6.0":
+  version: 1.7.0
+  resolution: "@appland/client@npm:1.7.0"
   dependencies:
-    "@appland/models": 1.23.0
+    "@appland/models": 2.2.0
     "@types/form-data": ^2.5.0
     form-data: ^4.0.0
     js-yaml: ^4.1.0
-  checksum: df448a652b610b0077c96a5b67fb111e575c9f0212d5b17d43093fa87c8cb070d2868e5017ac13574f9ae711bfce0a53d359f007c06ffc276f9e98500fd70aac
+  checksum: 8b55a59bac0c209aafeb7b6b7f0ea69407b63ba24e8bf96f4b95215013c30f773009572d11b01d943ce086acee29ceb0e15562c1bfed382e6d8eaedf58885a0b
   languageName: node
   linkType: hard
 
-"@appland/client@npm:^1.5.0":
-  version: 1.5.0
-  resolution: "@appland/client@npm:1.5.0"
-  dependencies:
-    "@appland/models": 1.20.0
-    "@types/form-data": ^2.5.0
-    form-data: ^4.0.0
-    js-yaml: ^4.1.0
-  checksum: 68d5c0d6f3943e2887f1f8f2c5f71625925fb141eb84c717eb49dac7a2fd1e73c1503abaa4ab9086c82dc20535c8bd27e8b4159a82c410cb9e2759c9486207a3
-  languageName: node
-  linkType: hard
-
-"@appland/components@npm:^2":
-  version: 2.45.0
-  resolution: "@appland/components@npm:2.45.0"
-  dependencies:
-    "@appland/diagrams": ^1.6.2
-    "@appland/models": ^2.6.2
-    "@appland/sequence-diagram": ^1.5.2
-    buffer: ^6.0.3
-    d3: ^7.8.4
-    d3-flame-graph: ^4.1.3
-    diff: ^5.1.0
-    dom-to-svg: ^0.12.2
-    highlight.js: ^10.7.2
-    sql-formatter: ^4.0.2
-    vue: ^2.7.14
-    vuex: ^3.6.0
-  checksum: bd0d92402e1897baea66c28421a39c1a5eeec01bc0418febcd65657ccdf31a5b43e6dc31c364a8df1820ee597a8f33883fbeaa5057a7cad394debfea00a77167
-  languageName: node
-  linkType: hard
-
-"@appland/components@npm:^2.48.0":
-  version: 2.48.0
-  resolution: "@appland/components@npm:2.48.0"
+"@appland/components@npm:^2, @appland/components@npm:^2.49.0":
+  version: 2.49.0
+  resolution: "@appland/components@npm:2.49.0"
   dependencies:
     "@appland/diagrams": ^1.7.0
     "@appland/models": ^2.6.2
@@ -165,22 +133,7 @@ __metadata:
     sql-formatter: ^4.0.2
     vue: ^2.7.14
     vuex: ^3.6.0
-  checksum: 01ef8e3996f6ee7c955545f2c41d99f62f7ae034e66f01f029128fb014e9f8f9b2bf39bb8e4904e2c44ba4ac92773d54e7c9cf0a87df5eb425c7a3eb82042058
-  languageName: node
-  linkType: hard
-
-"@appland/diagrams@npm:^1.6.2":
-  version: 1.6.3
-  resolution: "@appland/diagrams@npm:1.6.3"
-  dependencies:
-    "@appland/models": ^2.2.0
-    d3-interpolate: ^1.4.0
-    d3-selection: ^1.4.2
-    d3-shape: ^1.3.7
-    d3-zoom: ^1.8.3
-    dagre: ^0.8.5
-    deepmerge: ^4.2.2
-  checksum: f10a796b3e27776313764f182e62c1dc4762bc17549482d06dc35621bd779c1ce5267f2fb31b57eef75e2eef1a14d785a86b30a8366772ab9239d57170815873
+  checksum: 0cc604595c59981ba4e030ddafb148b6ef5146b3e2151abcee49de66b569068359787a9cd47661253b5dac4b716461da493069f12d7ad52b760adc772908f8ce
   languageName: node
   linkType: hard
 
@@ -199,23 +152,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/models@npm:1.20.0":
-  version: 1.20.0
-  resolution: "@appland/models@npm:1.20.0"
+"@appland/models@npm:2.2.0":
+  version: 2.2.0
+  resolution: "@appland/models@npm:2.2.0"
   dependencies:
     "@appland/sql-parser": ^1.5.0
     crypto-js: ^4.0.0
-  checksum: 37d7fbef688cfc3ec98eabcc38f10ba553083779c1457a2c125ef115c2262f51e533a2a56d9afc86e91be644537acc9930ecae1e895031a30ed08f22716a35f5
-  languageName: node
-  linkType: hard
-
-"@appland/models@npm:1.23.0":
-  version: 1.23.0
-  resolution: "@appland/models@npm:1.23.0"
-  dependencies:
-    "@appland/sql-parser": ^1.5.0
-    crypto-js: ^4.0.0
-  checksum: f6750f00e9ae45c1180f370b9182147b0241a635fbe8d097f1e6c596fd1be74cc2eef647b0da39e391bb5f468313ba88c5c9128e6b99263595df67e775932e63
+  checksum: 5fe92dca223c2988c4f692b32926e5eccc68821359d2e20288f3527bf7a26b0fc0737471c7102b5724a377e2a9b67f61eb6d7fb81a12c9cc03ad49a05ed1855f
   languageName: node
   linkType: hard
 
@@ -229,17 +172,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/openapi@npm:1.4.4":
-  version: 1.4.4
-  resolution: "@appland/openapi@npm:1.4.4"
-  dependencies:
-    "@appland/models": ^2.2.0
-    js-yaml: ^4.1.0
-  checksum: cfb791c5008bc4b3e48921d2404e89fffe78ed9b52ec5d37fc40ea192045f9f9a81009c7d9db57ff209dbffa4dd5dd11aa755ae6a007b5bf08b6e4cd900fa44a
-  languageName: node
-  linkType: hard
-
-"@appland/openapi@npm:^1.4.3":
+"@appland/openapi@npm:1.5.0, @appland/openapi@npm:^1.4.3":
   version: 1.5.0
   resolution: "@appland/openapi@npm:1.5.0"
   dependencies:
@@ -250,12 +183,12 @@ __metadata:
   linkType: hard
 
 "@appland/scanner@npm:^1.76.6":
-  version: 1.76.6
-  resolution: "@appland/scanner@npm:1.76.6"
+  version: 1.78.0
+  resolution: "@appland/scanner@npm:1.78.0"
   dependencies:
     "@appland/client": ^1.5.0
-    "@appland/models": ^2.2.0
-    "@appland/openapi": 1.4.4
+    "@appland/models": ^2.6.2
+    "@appland/openapi": 1.5.0
     "@appland/sql-parser": ^1.5.0
     "@types/cli-progress": ^3.9.2
     ajv: ^8.8.2
@@ -282,7 +215,7 @@ __metadata:
     yargs: ^17.1.1
   bin:
     scanner: built/cli.js
-  checksum: 4625bc6643531b6e7a0bda239eb09292791da2e5eb94b3e1d0a627e8a35508860d677776341ec017b991a0e9f9147c4ec87b5ba617980b6b1759298cac1b94b6
+  checksum: e5ac1cc98ad8ca0b140bbe7ec408e5c11300c5758dba8973e9c8e5b5ea94586d89ce52e4e29a8b3f1a26e444e72068cdcf4f06c2c39ead13cc9485c963f26f54
   languageName: node
   linkType: hard
 
@@ -2286,7 +2219,7 @@ __metadata:
   dependencies:
     "@appland/appmap": ^3.80.1
     "@appland/client": ^1.6.0
-    "@appland/components": ^2.48.0
+    "@appland/components": ^2.49.0
     "@appland/diagrams": ^1.7.0
     "@appland/models": ^2.6.2
     "@appland/scanner": ^1.76.6
@@ -4067,13 +4000,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"d3-color@npm:1":
-  version: 1.4.1
-  resolution: "d3-color@npm:1.4.1"
-  checksum: a214b61458b5fcb7ad1a84faed0e02918037bab6be37f2d437bf0e2915cbd854d89fbf93754f17b0781c89e39d46704633d05a2bfae77e6209f0f4b140f9894b
-  languageName: node
-  linkType: hard
-
 "d3-color@npm:1 - 3, d3-color@npm:3":
   version: 3.1.0
   resolution: "d3-color@npm:3.1.0"
@@ -4099,27 +4025,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"d3-dispatch@npm:1":
-  version: 1.0.6
-  resolution: "d3-dispatch@npm:1.0.6"
-  checksum: b4ecb016b6dda8b99aa4263b2d0a0c7b12e7dea93e4b0ce3013c94dca4d360d9ba00f5bdc15dc944cc4543af8e341067bd628f061f7b8deb642257e2ac90d06c
-  languageName: node
-  linkType: hard
-
 "d3-dispatch@npm:1 - 3, d3-dispatch@npm:3, d3-dispatch@npm:^3.0.1":
   version: 3.0.1
   resolution: "d3-dispatch@npm:3.0.1"
   checksum: fdfd4a230f46463e28e5b22a45dd76d03be9345b605e1b5dc7d18bd7ebf504e6c00ae123fd6d03e23d9e2711e01f0e14ea89cd0632545b9f0c00b924ba4be223
-  languageName: node
-  linkType: hard
-
-"d3-drag@npm:1":
-  version: 1.2.5
-  resolution: "d3-drag@npm:1.2.5"
-  dependencies:
-    d3-dispatch: 1
-    d3-selection: 1
-  checksum: 6e86e89aa8d511979eea1b5326709c05c2a3c2d43a93a82ed6b6f98528b2ab03b2f58f5e4f66582f2f1c0ae44f9c19f6f4f857249eb66aabc46e4942295fa0a7
   languageName: node
   linkType: hard
 
@@ -4151,13 +4060,6 @@ __metadata:
     tsv2csv: bin/dsv2dsv.js
     tsv2json: bin/dsv2json.js
   checksum: 5fc0723647269d5dccd181d74f2265920ab368a2868b0b4f55ffa2fecdfb7814390ea28622cd61ee5d9594ab262879509059544e9f815c54fe76fbfb4ffa4c8a
-  languageName: node
-  linkType: hard
-
-"d3-ease@npm:1":
-  version: 1.0.7
-  resolution: "d3-ease@npm:1.0.7"
-  checksum: 117811d51dfc4a126e8d23d249252df792fbbe30a93615e1d67158c482eff69b900e45a4cc92746fe65b1143287455406a89aae04eb4ca1ba5b1dc2a42af5b85
   languageName: node
   linkType: hard
 
@@ -4236,22 +4138,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"d3-interpolate@npm:1, d3-interpolate@npm:^1.4.0":
-  version: 1.4.0
-  resolution: "d3-interpolate@npm:1.4.0"
-  dependencies:
-    d3-color: 1
-  checksum: d98988bd1e2f59d01f100d0a19315ad8f82ef022aa09a65aff76f747a44f9b52f2d64c6578b8f47e01f2b14a8f0ef88f5460d11173c0dd2d58238c217ac0ec03
-  languageName: node
-  linkType: hard
-
-"d3-path@npm:1":
-  version: 1.0.9
-  resolution: "d3-path@npm:1.0.9"
-  checksum: d4382573baf9509a143f40944baeff9fead136926aed6872f7ead5b3555d68925f8a37935841dd51f1d70b65a294fe35c065b0906fb6e42109295f6598fc16d0
-  languageName: node
-  linkType: hard
-
 "d3-path@npm:1 - 3, d3-path@npm:3, d3-path@npm:^3.1.0":
   version: 3.1.0
   resolution: "d3-path@npm:3.1.0"
@@ -4303,13 +4189,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"d3-selection@npm:1, d3-selection@npm:^1.1.0, d3-selection@npm:^1.4.2":
-  version: 1.4.2
-  resolution: "d3-selection@npm:1.4.2"
-  checksum: 2484b392259b087a98f546f2610e6a11c90f38dae6b6b20a3fc85171038fcab4c72e702788b1960a4fece88bed2e36f268096358b5b48d3c7f0d35cfbe305da6
-  languageName: node
-  linkType: hard
-
 "d3-selection@npm:2 - 3, d3-selection@npm:3, d3-selection@npm:^3.0.0":
   version: 3.0.0
   resolution: "d3-selection@npm:3.0.0"
@@ -4323,15 +4202,6 @@ __metadata:
   dependencies:
     d3-path: ^3.1.0
   checksum: de2af5fc9a93036a7b68581ca0bfc4aca2d5a328aa7ba7064c11aedd44d24f310c20c40157cb654359d4c15c3ef369f95ee53d71221017276e34172c7b719cfa
-  languageName: node
-  linkType: hard
-
-"d3-shape@npm:^1.3.7":
-  version: 1.3.7
-  resolution: "d3-shape@npm:1.3.7"
-  dependencies:
-    d3-path: 1
-  checksum: 46566a3ab64a25023653bf59d64e81e9e6c987e95be985d81c5cedabae5838bd55f4a201a6b69069ca862eb63594cd263cac9034afc2b0e5664dfe286c866129
   languageName: node
   linkType: hard
 
@@ -4353,31 +4223,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"d3-timer@npm:1":
-  version: 1.0.10
-  resolution: "d3-timer@npm:1.0.10"
-  checksum: f7040953672deb2dfa03830ace80dbbcb212f80890218eba15dcca6f33f74102d943023ccc2a563295195cd8c63639bb2410ef1691c8fecff4a114fdf5c666f4
-  languageName: node
-  linkType: hard
-
 "d3-timer@npm:1 - 3, d3-timer@npm:3":
   version: 3.0.1
   resolution: "d3-timer@npm:3.0.1"
   checksum: 1cfddf86d7bca22f73f2c427f52dfa35c49f50d64e187eb788dcad6e927625c636aa18ae4edd44d084eb9d1f81d8ca4ec305dae7f733c15846a824575b789d73
-  languageName: node
-  linkType: hard
-
-"d3-transition@npm:1":
-  version: 1.3.2
-  resolution: "d3-transition@npm:1.3.2"
-  dependencies:
-    d3-color: 1
-    d3-dispatch: 1
-    d3-ease: 1
-    d3-interpolate: 1
-    d3-selection: ^1.1.0
-    d3-timer: 1
-  checksum: 1b4a0cfa7aeb4033ab20e26a310488cfac989de44c6c2bf10e9f0808af915a33add6dca23fbafcefe8c08613fd0d6a933e48b4de24c0779163c2852a1c7c16f4
   languageName: node
   linkType: hard
 
@@ -4406,19 +4255,6 @@ __metadata:
     d3-selection: 2 - 3
     d3-transition: 2 - 3
   checksum: 8056e3527281cfd1ccbcbc458408f86973b0583e9dac00e51204026d1d36803ca437f970b5736f02fafed9f2b78f145f72a5dbc66397e02d4d95d4c594b8ff54
-  languageName: node
-  linkType: hard
-
-"d3-zoom@npm:^1.8.3":
-  version: 1.8.3
-  resolution: "d3-zoom@npm:1.8.3"
-  dependencies:
-    d3-dispatch: 1
-    d3-drag: 1
-    d3-interpolate: 1
-    d3-selection: 1
-    d3-transition: 1
-  checksum: de408e5dc6df1481ef6854a3d495f8e963dbf5b0de41bcbd35def0602abda55b3f2c1fa751c75c2f0a9bafd3b278f30795c27503fe609b3dbe06a0720d01d5be
   languageName: node
   linkType: hard
 

@@ -31,7 +31,7 @@ export default function getWebviewContent(
     <meta http-equiv="Content-Security-Policy" content="
       default-src 'none';
       img-src ${webview.cspSource} data:;
-      script-src ${webview.cspSource};
+      script-src ${webview.cspSource} 'unsafe-eval';
       style-src ${webview.cspSource} 'unsafe-inline';
     ">
     <link href="${cssUri}" rel="stylesheet">

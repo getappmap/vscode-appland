@@ -133,6 +133,15 @@ export default class InstallGuideWebView {
                 });
                 if (page === 'open-appmaps') {
                   vscode.commands.executeCommand('appmap.view.focusCodeObjects');
+                } else if (page === 'investigate-findings') {
+                  if (!project) break;
+
+                  const workspaceFolder = vscode.workspace.getWorkspaceFolder(
+                    vscode.Uri.parse(project.path)
+                  );
+                  if (!workspaceFolder) break;
+
+                  extensionState.setFindingsInvestigated(workspaceFolder, true);
                 }
               }
               break;
@@ -150,12 +159,6 @@ export default class InstallGuideWebView {
 
             case 'view-problems':
               {
-                const workspaceFolder = getWorkspaceFolderFromPath(projectStates, message.data);
-
-                if (workspaceFolder) {
-                  extensionState.setFindingsInvestigated(workspaceFolder, true);
-                }
-
                 vscode.commands.executeCommand('workbench.panel.markers.view.focus');
               }
               break;
