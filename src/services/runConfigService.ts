@@ -17,6 +17,8 @@ type JavaTestConfig = {
 
 export class RunConfigServiceInstance implements WorkspaceServiceInstance {
   private static JAVA_TEST_RUNNER_EXTENSION_ID = 'vscjava.vscode-java-test';
+  private outputDirVmarg = '-Dappmap.output.directory=${command:appmap.getAppmapDir}';
+  private testConfigName = 'Test with AppMap';
   protected disposables: vscode.Disposable[] = [];
 
   public get appmapLaunchConfig(): vscode.DebugConfiguration {
@@ -31,8 +33,8 @@ export class RunConfigServiceInstance implements WorkspaceServiceInstance {
 
   public get appmapTestConfig(): JavaTestConfig {
     return {
-      name: 'Test with AppMap',
-      vmArgs: [`-javaagent:${this.javaJarPath}`],
+      name: this.testConfigName,
+      vmArgs: [`-javaagent:${this.javaJarPath}`, this.outputDirVmarg],
     };
   }
 
@@ -59,10 +61,14 @@ export class RunConfigServiceInstance implements WorkspaceServiceInstance {
     this.updateConfigs();
   }
 
-  private async updateConfigs(): Promise<void> {
+  public async updateConfigs(): Promise<void> {
     if (!this.isJavaProject()) return;
     if (!this.hasPreviouslyUpdatedLaunchConfig) await this.updateLaunchConfig();
-    if (!this.hasPreviouslyUpdatedTestConfig) await this.updateTestConfig();
+    if (this.hasPreviouslyUpdatedTestConfig) {
+      await this.updateExistingTestConfig();
+    } else {
+      await this.updateTestConfig();
+    }
   }
 
   public async updateLaunchConfig(): Promise<void> {
@@ -90,6 +96,29 @@ export class RunConfigServiceInstance implements WorkspaceServiceInstance {
       }
     }
     return false;
+  }
+
+  private async updateExistingTestConfig(): Promise<void> {
+    if (this.hasJavaTestExtension()) {
+      try {
+        const parentConfig = vscode.workspace.getConfiguration('java.test');
+        const configs = parentConfig.get<Array<JavaTestConfig>>('config');
+        if (!configs || !Array.isArray(configs)) return;
+
+        configs.forEach((config) => {
+          if (
+            config.name === this.testConfigName &&
+            config.vmArgs &&
+            !config.vmArgs.some((vmArg) => vmArg.includes('appmap.output.directory'))
+          )
+            config.vmArgs.push(this.outputDirVmarg);
+        });
+
+        await parentConfig.update('config', configs);
+      } catch (e) {
+        this.sendConfigUpdateError(e);
+      }
+    }
   }
 
   private async updateConfig(
