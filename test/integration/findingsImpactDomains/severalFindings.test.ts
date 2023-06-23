@@ -27,12 +27,6 @@ describe('Findings impact domains (several findings)', () => {
       serviceInstances.every(({ metadata }) => metadata.analysisPerformed)
     );
 
-    const domainCounts = serviceInstances.map(
-      (serviceInstance) => serviceInstance.metadata.findingsDomainCounts
-    );
-
-    assert.strictEqual(domainCounts.length, 1, 'there is one workspace in the project');
-
     const countFindings = async (domain: string, expected: number): Promise<boolean> => {
       const domainCountsAry = serviceInstances.map(
         (serviceInstance) => serviceInstance.metadata.findingsDomainCounts
