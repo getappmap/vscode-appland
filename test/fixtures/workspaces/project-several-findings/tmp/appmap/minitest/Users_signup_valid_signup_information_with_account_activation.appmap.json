@@ -6,7 +6,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Integration::Runner",
       "method_id": "before_setup",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/testing/integration.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/testing/integration.rb",
       "lineno": 320,
       "static": false,
       "receiver": {
@@ -21,7 +21,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_before",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 512,
       "static": false,
       "parameters": [
@@ -59,7 +59,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_after",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 516,
       "static": false,
       "parameters": [
@@ -86,7 +86,7 @@
       "elapsed_instrumentation": 0.0000400003045797348,
       "return_value": {
         "class": "Array",
-        "value": "[#<Proc:0x00007fafea753018 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
+        "value": "[#<Proc:0x00007fafea753018 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
         "object_id": 40880,
         "size": 1
       }
@@ -97,7 +97,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -151,7 +151,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -188,7 +188,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -225,7 +225,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -262,7 +262,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_before",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 512,
       "static": false,
       "parameters": [
@@ -289,7 +289,7 @@
       "elapsed_instrumentation": 0.00004700012505054474,
       "return_value": {
         "class": "Array",
-        "value": "[#<Proc:0x00007faf88958230 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf88958398 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
+        "value": "[#<Proc:0x00007faf88958230 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf88958398 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
         "object_id": 28600,
         "size": 2
       }
@@ -300,7 +300,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_after",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 516,
       "static": false,
       "parameters": [
@@ -351,7 +351,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_before",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 512,
       "static": false,
       "parameters": [
@@ -378,7 +378,7 @@
       "elapsed_instrumentation": 0.0000700000673532486,
       "return_value": {
         "class": "Array",
-        "value": "[#<Proc:0x00007faf88a82890 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf88a82a70 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf88a82bd8 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf88a82db8 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf88a82fe8 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
+        "value": "[#<Proc:0x00007faf88a82890 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf88a82a70 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf88a82bd8 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf88a82db8 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf88a82fe8 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
         "object_id": 28940,
         "size": 5
       }
@@ -389,7 +389,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_after",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 516,
       "static": false,
       "parameters": [
@@ -465,7 +465,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -531,7 +531,7 @@
       "thread_id": 4480,
       "defined_class": "ActionController::Instrumentation",
       "method_id": "process_action",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_controller/metal/instrumentation.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_controller/metal/instrumentation.rb",
       "lineno": 19,
       "static": false,
       "parameters": [
@@ -556,7 +556,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -593,7 +593,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_before",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 512,
       "static": false,
       "parameters": [
@@ -617,7 +617,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Request::Session",
       "method_id": "[]",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
       "lineno": 91,
       "static": false,
       "parameters": [
@@ -641,7 +641,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Cookies::CookieJar",
       "method_id": "update",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/middleware/cookies.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/middleware/cookies.rb",
       "lineno": 333,
       "static": false,
       "parameters": [
@@ -679,7 +679,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Cookies::CookieJar",
       "method_id": "[]",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/middleware/cookies.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/middleware/cookies.rb",
       "lineno": 317,
       "static": false,
       "parameters": [
@@ -722,7 +722,7 @@
       "elapsed_instrumentation": 0.00008099991828203201,
       "return_value": {
         "class": "Array",
-        "value": "[#<Proc:0x00007fafbfedb0b8 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbfedb478 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbfedb5e0 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbfedb748 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbfedb950 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbfedbb58 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
+        "value": "[#<Proc:0x00007fafbfedb0b8 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbfedb478 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbfedb5e0 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbfedb748 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbfedb950 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbfedbb58 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
         "object_id": 39900,
         "size": 6
       }
@@ -761,7 +761,7 @@
       "thread_id": 4480,
       "defined_class": "ActionView::Resolver",
       "method_id": "find_all",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionview-6.0.4.1/lib/action_view/template/resolver.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionview-6.0.4.1/lib/action_view/template/resolver.rb",
       "lineno": 116,
       "static": false,
       "parameters": [
@@ -813,7 +813,7 @@
       "receiver": {
         "class": "ActionView::OptimizedFileSystemResolver",
         "object_id": 50340,
-        "value": "/Users/kgilpin/source/land-of-apps/sample_app_6th_ed/app/views"
+        "value": "/Users/h4x0r-55/source/land-of-apps/sample_app_6th_ed/app/views"
       }
     },
     {
@@ -836,7 +836,7 @@
       "thread_id": 4480,
       "defined_class": "ActionController::Renderers",
       "method_id": "render_to_body",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_controller/metal/renderers.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_controller/metal/renderers.rb",
       "lineno": 141,
       "static": false,
       "parameters": [
@@ -844,7 +844,7 @@
           "name": "options",
           "class": "Hash",
           "object_id": 133880,
-          "value": "{:prefixes=>[users, application], :template=>new, :layout=>#<Proc:0x00007faf8a914f60 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionview-6}",
+          "value": "{:prefixes=>[users, application], :template=>new, :layout=>#<Proc:0x00007faf8a914f60 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionview-6}",
           "kind": "req",
           "size": 3
         }
@@ -875,7 +875,7 @@
       "thread_id": 4480,
       "defined_class": "ActionView::Resolver",
       "method_id": "find_all",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionview-6.0.4.1/lib/action_view/template/resolver.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionview-6.0.4.1/lib/action_view/template/resolver.rb",
       "lineno": 116,
       "static": false,
       "parameters": [
@@ -927,7 +927,7 @@
       "receiver": {
         "class": "ActionView::OptimizedFileSystemResolver",
         "object_id": 50340,
-        "value": "/Users/kgilpin/source/land-of-apps/sample_app_6th_ed/app/views"
+        "value": "/Users/h4x0r-55/source/land-of-apps/sample_app_6th_ed/app/views"
       }
     },
     {
@@ -950,7 +950,7 @@
       "thread_id": 4480,
       "defined_class": "ActionView::Resolver",
       "method_id": "find_all",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionview-6.0.4.1/lib/action_view/template/resolver.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionview-6.0.4.1/lib/action_view/template/resolver.rb",
       "lineno": 116,
       "static": false,
       "parameters": [
@@ -1002,7 +1002,7 @@
       "receiver": {
         "class": "ActionView::OptimizedFileSystemResolver",
         "object_id": 50340,
-        "value": "/Users/kgilpin/source/land-of-apps/sample_app_6th_ed/app/views"
+        "value": "/Users/h4x0r-55/source/land-of-apps/sample_app_6th_ed/app/views"
       }
     },
     {
@@ -1025,7 +1025,7 @@
       "thread_id": 4480,
       "defined_class": "ActionView::Resolver",
       "method_id": "find_all",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionview-6.0.4.1/lib/action_view/template/resolver.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionview-6.0.4.1/lib/action_view/template/resolver.rb",
       "lineno": 116,
       "static": false,
       "parameters": [
@@ -1077,7 +1077,7 @@
       "receiver": {
         "class": "ActionView::OptimizedFileSystemResolver",
         "object_id": 50620,
-        "value": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actiontext-6.0.4.1/app/views"
+        "value": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actiontext-6.0.4.1/app/views"
       }
     },
     {
@@ -1100,7 +1100,7 @@
       "thread_id": 4480,
       "defined_class": "ActionView::Resolver",
       "method_id": "find_all",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionview-6.0.4.1/lib/action_view/template/resolver.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionview-6.0.4.1/lib/action_view/template/resolver.rb",
       "lineno": 116,
       "static": false,
       "parameters": [
@@ -1152,7 +1152,7 @@
       "receiver": {
         "class": "ActionView::OptimizedFileSystemResolver",
         "object_id": 50640,
-        "value": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionmailbox-6.0.4.1/app/views"
+        "value": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionmailbox-6.0.4.1/app/views"
       }
     },
     {
@@ -1175,7 +1175,7 @@
       "thread_id": 4480,
       "defined_class": "ActionView::Resolver",
       "method_id": "find_all",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionview-6.0.4.1/lib/action_view/template/resolver.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionview-6.0.4.1/lib/action_view/template/resolver.rb",
       "lineno": 116,
       "static": false,
       "parameters": [
@@ -1227,7 +1227,7 @@
       "receiver": {
         "class": "ActionView::OptimizedFileSystemResolver",
         "object_id": 50340,
-        "value": "/Users/kgilpin/source/land-of-apps/sample_app_6th_ed/app/views"
+        "value": "/Users/h4x0r-55/source/land-of-apps/sample_app_6th_ed/app/views"
       }
     },
     {
@@ -1250,7 +1250,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -1301,7 +1301,7 @@
       "thread_id": 4480,
       "defined_class": "ActionView::Resolver",
       "method_id": "find_all",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionview-6.0.4.1/lib/action_view/template/resolver.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionview-6.0.4.1/lib/action_view/template/resolver.rb",
       "lineno": 116,
       "static": false,
       "parameters": [
@@ -1353,7 +1353,7 @@
       "receiver": {
         "class": "ActionView::OptimizedFileSystemResolver",
         "object_id": 50340,
-        "value": "/Users/kgilpin/source/land-of-apps/sample_app_6th_ed/app/views"
+        "value": "/Users/h4x0r-55/source/land-of-apps/sample_app_6th_ed/app/views"
       }
     },
     {
@@ -1376,7 +1376,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -1421,7 +1421,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -1583,7 +1583,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::MarshalWithAutoloading",
       "method_id": "load",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/core_ext/marshal.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/core_ext/marshal.rb",
       "lineno": 5,
       "static": true,
       "parameters": [
@@ -5677,7 +5677,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -5756,7 +5756,7 @@
       "thread_id": 4480,
       "defined_class": "ActionView::Resolver",
       "method_id": "find_all",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionview-6.0.4.1/lib/action_view/template/resolver.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionview-6.0.4.1/lib/action_view/template/resolver.rb",
       "lineno": 116,
       "static": false,
       "parameters": [
@@ -5808,7 +5808,7 @@
       "receiver": {
         "class": "ActionView::OptimizedFileSystemResolver",
         "object_id": 50340,
-        "value": "/Users/kgilpin/source/land-of-apps/sample_app_6th_ed/app/views"
+        "value": "/Users/h4x0r-55/source/land-of-apps/sample_app_6th_ed/app/views"
       }
     },
     {
@@ -5831,7 +5831,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -5890,7 +5890,7 @@
       "thread_id": 4480,
       "defined_class": "ActionView::Resolver",
       "method_id": "find_all",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionview-6.0.4.1/lib/action_view/template/resolver.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionview-6.0.4.1/lib/action_view/template/resolver.rb",
       "lineno": 116,
       "static": false,
       "parameters": [
@@ -5942,7 +5942,7 @@
       "receiver": {
         "class": "ActionView::OptimizedFileSystemResolver",
         "object_id": 50340,
-        "value": "/Users/kgilpin/source/land-of-apps/sample_app_6th_ed/app/views"
+        "value": "/Users/h4x0r-55/source/land-of-apps/sample_app_6th_ed/app/views"
       }
     },
     {
@@ -5995,7 +5995,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Request::Session",
       "method_id": "[]",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
       "lineno": 91,
       "static": false,
       "parameters": [
@@ -6027,7 +6027,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Cookies::CookieJar",
       "method_id": "[]",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/middleware/cookies.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/middleware/cookies.rb",
       "lineno": 317,
       "static": false,
       "parameters": [
@@ -6075,7 +6075,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -6120,7 +6120,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Request::Session",
       "method_id": "[]",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
       "lineno": 91,
       "static": false,
       "parameters": [
@@ -6166,7 +6166,7 @@
       "thread_id": 4480,
       "defined_class": "ActionView::Resolver",
       "method_id": "find_all",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionview-6.0.4.1/lib/action_view/template/resolver.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionview-6.0.4.1/lib/action_view/template/resolver.rb",
       "lineno": 116,
       "static": false,
       "parameters": [
@@ -6218,7 +6218,7 @@
       "receiver": {
         "class": "ActionView::OptimizedFileSystemResolver",
         "object_id": 50340,
-        "value": "/Users/kgilpin/source/land-of-apps/sample_app_6th_ed/app/views"
+        "value": "/Users/h4x0r-55/source/land-of-apps/sample_app_6th_ed/app/views"
       }
     },
     {
@@ -6241,7 +6241,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -6307,7 +6307,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_after",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 516,
       "static": false,
       "parameters": [
@@ -6334,7 +6334,7 @@
       "elapsed_instrumentation": 0.000050999224185943604,
       "return_value": {
         "class": "Array",
-        "value": "[#<Proc:0x00007fafbfedb2e8 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
+        "value": "[#<Proc:0x00007fafbfedb2e8 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
         "object_id": 39920,
         "size": 1
       }
@@ -6345,7 +6345,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -6414,7 +6414,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_before",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 512,
       "static": false,
       "parameters": [
@@ -6441,7 +6441,7 @@
       "elapsed_instrumentation": 0.00005600042641162872,
       "return_value": {
         "class": "Array",
-        "value": "[#<Proc:0x00007fafbf7b7840 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbf7b79a8 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbf7b7b88 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
+        "value": "[#<Proc:0x00007fafbf7b7840 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbf7b79a8 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbf7b7b88 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
         "object_id": 38840,
         "size": 3
       }
@@ -6452,7 +6452,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_after",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 516,
       "static": false,
       "parameters": [
@@ -6479,7 +6479,7 @@
       "elapsed_instrumentation": 0.00003600027412176132,
       "return_value": {
         "class": "Array",
-        "value": "[#<Proc:0x00007fafbf7b7cf0 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
+        "value": "[#<Proc:0x00007fafbf7b7cf0 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
         "object_id": 38860,
         "size": 1
       }
@@ -6521,7 +6521,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -6588,7 +6588,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_before",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 512,
       "static": false,
       "parameters": [
@@ -6615,7 +6615,7 @@
       "elapsed_instrumentation": 0.00009900052100419998,
       "return_value": {
         "class": "Array",
-        "value": "[#<Proc:0x00007faf88a82890 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf88a82a70 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf88a82bd8 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf88a82db8 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf88a82fe8 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
+        "value": "[#<Proc:0x00007faf88a82890 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf88a82a70 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf88a82bd8 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf88a82db8 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf88a82fe8 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
         "object_id": 28940,
         "size": 5
       }
@@ -6626,7 +6626,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_after",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 516,
       "static": false,
       "parameters": [
@@ -6702,7 +6702,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -6793,7 +6793,7 @@
       "thread_id": 4480,
       "defined_class": "ActionController::Instrumentation",
       "method_id": "process_action",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_controller/metal/instrumentation.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_controller/metal/instrumentation.rb",
       "lineno": 19,
       "static": false,
       "parameters": [
@@ -6818,7 +6818,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -6855,7 +6855,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -6892,7 +6892,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_before",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 512,
       "static": false,
       "parameters": [
@@ -6916,7 +6916,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Request::Session",
       "method_id": "[]",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
       "lineno": 91,
       "static": false,
       "parameters": [
@@ -6940,7 +6940,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Cookies::CookieJar",
       "method_id": "update",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/middleware/cookies.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/middleware/cookies.rb",
       "lineno": 333,
       "static": false,
       "parameters": [
@@ -6978,7 +6978,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Cookies::CookieJar",
       "method_id": "[]",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/middleware/cookies.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/middleware/cookies.rb",
       "lineno": 317,
       "static": false,
       "parameters": [
@@ -7021,7 +7021,7 @@
       "elapsed_instrumentation": 0.0000700000673532486,
       "return_value": {
         "class": "Array",
-        "value": "[#<Proc:0x00007fafbfedb0b8 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbfedb478 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbfedb5e0 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbfedb748 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbfedb950 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbfedbb58 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
+        "value": "[#<Proc:0x00007fafbfedb0b8 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbfedb478 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbfedb5e0 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbfedb748 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbfedb950 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbfedbb58 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
         "object_id": 39900,
         "size": 6
       }
@@ -7111,7 +7111,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_before",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 512,
       "static": false,
       "parameters": [
@@ -7149,7 +7149,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_before",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 512,
       "static": false,
       "parameters": [
@@ -7173,7 +7173,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -7227,7 +7227,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -7284,7 +7284,7 @@
       "elapsed_instrumentation": 0.00009899958968162537,
       "return_value": {
         "class": "Array",
-        "value": "[#<Proc:0x00007faf8a00c4b8 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf8a00c620 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf8a00c788 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf8a00c8f0 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf8a00ca58 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf8a00cbc0 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf8a00cdc8 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf8a00cfd0 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf8a00d1d8 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf8a00d3e0 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor (...6 more items)]",
+        "value": "[#<Proc:0x00007faf8a00c4b8 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf8a00c620 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf8a00c788 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf8a00c8f0 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf8a00ca58 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf8a00cbc0 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf8a00cdc8 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf8a00cfd0 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf8a00d1d8 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf8a00d3e0 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor (...6 more items)]",
         "object_id": 113000,
         "size": 16
       }
@@ -7295,7 +7295,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_after",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 516,
       "static": false,
       "parameters": [
@@ -7333,7 +7333,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_after",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 516,
       "static": false,
       "parameters": [
@@ -7360,7 +7360,7 @@
       "elapsed_instrumentation": 0.000035999342799186707,
       "return_value": {
         "class": "Array",
-        "value": "[#<Proc:0x00007faf8a00efd8 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
+        "value": "[#<Proc:0x00007faf8a00efd8 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
         "object_id": 113040,
         "size": 1
       }
@@ -7371,7 +7371,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_before",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 512,
       "static": false,
       "parameters": [
@@ -7409,7 +7409,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_before",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 512,
       "static": false,
       "parameters": [
@@ -7436,7 +7436,7 @@
       "elapsed_instrumentation": 0.000031999312341213226,
       "return_value": {
         "class": "Array",
-        "value": "[#<Proc:0x00007fafcf78f830 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
+        "value": "[#<Proc:0x00007fafcf78f830 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
         "object_id": 37420,
         "size": 1
       }
@@ -7447,7 +7447,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_before",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 512,
       "static": false,
       "parameters": [
@@ -7647,7 +7647,7 @@
       "elapsed_instrumentation": 0.00003900006413459778,
       "return_value": {
         "class": "Array",
-        "value": "[#<Proc:0x00007fafbf715f18 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
+        "value": "[#<Proc:0x00007fafbf715f18 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
         "object_id": 139200,
         "size": 1
       }
@@ -7658,7 +7658,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -7712,7 +7712,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_after",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 516,
       "static": false,
       "parameters": [
@@ -7739,7 +7739,7 @@
       "elapsed_instrumentation": 0.00006899982690811157,
       "return_value": {
         "class": "Array",
-        "value": "[#<Proc:0x00007fafbf715c98 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbf715a90 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbf715888 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbf715680 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbf715478 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
+        "value": "[#<Proc:0x00007fafbf715c98 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbf715a90 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbf715888 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbf715680 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbf715478 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
         "object_id": 139240,
         "size": 5
       }
@@ -7750,7 +7750,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_after",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 516,
       "static": false,
       "parameters": [
@@ -7788,7 +7788,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_after",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 516,
       "static": false,
       "parameters": [
@@ -7826,7 +7826,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -7919,7 +7919,7 @@
       "thread_id": 4480,
       "defined_class": "ActionView::Resolver",
       "method_id": "find_all",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionview-6.0.4.1/lib/action_view/template/resolver.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionview-6.0.4.1/lib/action_view/template/resolver.rb",
       "lineno": 116,
       "static": false,
       "parameters": [
@@ -7971,7 +7971,7 @@
       "receiver": {
         "class": "ActionView::OptimizedFileSystemResolver",
         "object_id": 84800,
-        "value": "/Users/kgilpin/source/land-of-apps/sample_app_6th_ed/app/views"
+        "value": "/Users/h4x0r-55/source/land-of-apps/sample_app_6th_ed/app/views"
       }
     },
     {
@@ -8008,7 +8008,7 @@
       "thread_id": 4480,
       "defined_class": "ActionView::Resolver",
       "method_id": "find_all",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionview-6.0.4.1/lib/action_view/template/resolver.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionview-6.0.4.1/lib/action_view/template/resolver.rb",
       "lineno": 116,
       "static": false,
       "parameters": [
@@ -8060,7 +8060,7 @@
       "receiver": {
         "class": "ActionView::OptimizedFileSystemResolver",
         "object_id": 84800,
-        "value": "/Users/kgilpin/source/land-of-apps/sample_app_6th_ed/app/views"
+        "value": "/Users/h4x0r-55/source/land-of-apps/sample_app_6th_ed/app/views"
       }
     },
     {
@@ -8083,7 +8083,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -8120,7 +8120,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -8179,7 +8179,7 @@
       "thread_id": 4480,
       "defined_class": "ActionView::Resolver",
       "method_id": "find_all",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionview-6.0.4.1/lib/action_view/template/resolver.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionview-6.0.4.1/lib/action_view/template/resolver.rb",
       "lineno": 116,
       "static": false,
       "parameters": [
@@ -8231,7 +8231,7 @@
       "receiver": {
         "class": "ActionView::OptimizedFileSystemResolver",
         "object_id": 84800,
-        "value": "/Users/kgilpin/source/land-of-apps/sample_app_6th_ed/app/views"
+        "value": "/Users/h4x0r-55/source/land-of-apps/sample_app_6th_ed/app/views"
       }
     },
     {
@@ -8254,7 +8254,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -8291,7 +8291,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -8349,7 +8349,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -8386,7 +8386,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -8423,7 +8423,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -8473,7 +8473,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Request::Session",
       "method_id": "[]",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
       "lineno": 91,
       "static": false,
       "parameters": [
@@ -8505,7 +8505,7 @@
       "thread_id": 4480,
       "defined_class": "ActionController::Instrumentation",
       "method_id": "redirect_to",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_controller/metal/instrumentation.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_controller/metal/instrumentation.rb",
       "lineno": 62,
       "static": false,
       "parameters": [
@@ -8530,7 +8530,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -8593,7 +8593,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_after",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 516,
       "static": false,
       "parameters": [
@@ -8620,7 +8620,7 @@
       "elapsed_instrumentation": 0.00004600081592798233,
       "return_value": {
         "class": "Array",
-        "value": "[#<Proc:0x00007fafbfedb2e8 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
+        "value": "[#<Proc:0x00007fafbfedb2e8 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
         "object_id": 39920,
         "size": 1
       }
@@ -8631,7 +8631,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -8700,7 +8700,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Request::Session",
       "method_id": "[]=",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
       "lineno": 131,
       "static": false,
       "parameters": [
@@ -8784,7 +8784,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Request::Session",
       "method_id": "[]",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
       "lineno": 91,
       "static": false,
       "parameters": [
@@ -8859,7 +8859,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::MessageEncryptor",
       "method_id": "encrypt_and_sign",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/message_encryptor.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/message_encryptor.rb",
       "lineno": 150,
       "static": false,
       "parameters": [
@@ -8980,7 +8980,7 @@
       "thread_id": 4480,
       "defined_class": "OpenSSL::Cipher",
       "method_id": "random_iv",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/openssl/cipher.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/openssl/cipher.rb",
       "lineno": 55,
       "static": false,
       "receiver": {
@@ -9406,7 +9406,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Cookies::CookieJar",
       "method_id": "[]=",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/middleware/cookies.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/middleware/cookies.rb",
       "lineno": 373,
       "static": false,
       "parameters": [
@@ -9451,7 +9451,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_before",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 512,
       "static": false,
       "parameters": [
@@ -9478,7 +9478,7 @@
       "elapsed_instrumentation": 0.00006099976599216461,
       "return_value": {
         "class": "Array",
-        "value": "[#<Proc:0x00007fafbf7b7840 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbf7b79a8 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbf7b7b88 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
+        "value": "[#<Proc:0x00007fafbf7b7840 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbf7b79a8 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbf7b7b88 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
         "object_id": 38840,
         "size": 3
       }
@@ -9489,7 +9489,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_after",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 516,
       "static": false,
       "parameters": [
@@ -9516,7 +9516,7 @@
       "elapsed_instrumentation": 0.000037999823689460754,
       "return_value": {
         "class": "Array",
-        "value": "[#<Proc:0x00007fafbf7b7cf0 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
+        "value": "[#<Proc:0x00007fafbf7b7cf0 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
         "object_id": 38860,
         "size": 1
       }
@@ -9558,7 +9558,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -9625,7 +9625,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_before",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 512,
       "static": false,
       "parameters": [
@@ -9652,7 +9652,7 @@
       "elapsed_instrumentation": 0.0000790013000369072,
       "return_value": {
         "class": "Array",
-        "value": "[#<Proc:0x00007faf88a82890 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf88a82a70 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf88a82bd8 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf88a82db8 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf88a82fe8 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
+        "value": "[#<Proc:0x00007faf88a82890 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf88a82a70 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf88a82bd8 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf88a82db8 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf88a82fe8 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
         "object_id": 28940,
         "size": 5
       }
@@ -9663,7 +9663,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_after",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 516,
       "static": false,
       "parameters": [
@@ -9739,7 +9739,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -9827,7 +9827,7 @@
       "thread_id": 4480,
       "defined_class": "ActionController::Instrumentation",
       "method_id": "process_action",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_controller/metal/instrumentation.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_controller/metal/instrumentation.rb",
       "lineno": 19,
       "static": false,
       "parameters": [
@@ -9852,7 +9852,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -9889,7 +9889,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -9926,7 +9926,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_before",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 512,
       "static": false,
       "parameters": [
@@ -9950,7 +9950,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Request::Session",
       "method_id": "[]",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
       "lineno": 91,
       "static": false,
       "parameters": [
@@ -9974,7 +9974,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Cookies::CookieJar",
       "method_id": "update",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/middleware/cookies.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/middleware/cookies.rb",
       "lineno": 333,
       "static": false,
       "parameters": [
@@ -10012,7 +10012,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Cookies::CookieJar",
       "method_id": "[]",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/middleware/cookies.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/middleware/cookies.rb",
       "lineno": 317,
       "static": false,
       "parameters": [
@@ -10049,7 +10049,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Messages::Rotator::Encryptor",
       "method_id": "decrypt_and_verify",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/messages/rotator.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/messages/rotator.rb",
       "lineno": 20,
       "static": false,
       "parameters": [
@@ -10065,7 +10065,7 @@
           "name": "on_rotation",
           "class": "Proc",
           "object_id": 140740,
-          "value": "#<Proc:0x00007faf88999578 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6",
+          "value": "#<Proc:0x00007faf88999578 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6",
           "kind": "key"
         },
         {
@@ -10565,7 +10565,7 @@
       "elapsed_instrumentation": 0.00005599949508905411,
       "return_value": {
         "class": "Array",
-        "value": "[#<Proc:0x00007fafcf747198 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafcf7475d0 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafcf747788 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
+        "value": "[#<Proc:0x00007fafcf747198 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafcf7475d0 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafcf747788 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
         "object_id": 36980,
         "size": 3
       }
@@ -10591,7 +10591,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -10645,7 +10645,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Request::Session",
       "method_id": "[]",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
       "lineno": 91,
       "static": false,
       "parameters": [
@@ -10683,7 +10683,7 @@
       "thread_id": 4480,
       "defined_class": "ActionController::Instrumentation",
       "method_id": "redirect_to",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_controller/metal/instrumentation.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_controller/metal/instrumentation.rb",
       "lineno": 62,
       "static": false,
       "parameters": [
@@ -10708,7 +10708,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -10771,7 +10771,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_after",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 516,
       "static": false,
       "parameters": [
@@ -10798,7 +10798,7 @@
       "elapsed_instrumentation": 0.000041000545024871826,
       "return_value": {
         "class": "Array",
-        "value": "[#<Proc:0x00007fafcf747418 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
+        "value": "[#<Proc:0x00007fafcf747418 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
         "object_id": 38260,
         "size": 1
       }
@@ -10809,7 +10809,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -10878,7 +10878,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Request::Session",
       "method_id": "[]=",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
       "lineno": 131,
       "static": false,
       "parameters": [
@@ -10924,7 +10924,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Request::Session",
       "method_id": "[]",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
       "lineno": 91,
       "static": false,
       "parameters": [
@@ -10999,7 +10999,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::MessageEncryptor",
       "method_id": "encrypt_and_sign",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/message_encryptor.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/message_encryptor.rb",
       "lineno": 150,
       "static": false,
       "parameters": [
@@ -11120,7 +11120,7 @@
       "thread_id": 4480,
       "defined_class": "OpenSSL::Cipher",
       "method_id": "random_iv",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/openssl/cipher.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/openssl/cipher.rb",
       "lineno": 55,
       "static": false,
       "receiver": {
@@ -11546,7 +11546,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Cookies::CookieJar",
       "method_id": "[]=",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/middleware/cookies.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/middleware/cookies.rb",
       "lineno": 373,
       "static": false,
       "parameters": [
@@ -11591,7 +11591,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_before",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 512,
       "static": false,
       "parameters": [
@@ -11618,7 +11618,7 @@
       "elapsed_instrumentation": 0.000053999945521354675,
       "return_value": {
         "class": "Array",
-        "value": "[#<Proc:0x00007fafbf7b7840 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbf7b79a8 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbf7b7b88 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
+        "value": "[#<Proc:0x00007fafbf7b7840 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbf7b79a8 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbf7b7b88 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
         "object_id": 38840,
         "size": 3
       }
@@ -11629,7 +11629,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_after",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 516,
       "static": false,
       "parameters": [
@@ -11656,7 +11656,7 @@
       "elapsed_instrumentation": 0.00003499910235404968,
       "return_value": {
         "class": "Array",
-        "value": "[#<Proc:0x00007fafbf7b7cf0 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
+        "value": "[#<Proc:0x00007fafbf7b7cf0 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
         "object_id": 38860,
         "size": 1
       }
@@ -11667,7 +11667,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Request::Session",
       "method_id": "[]",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
       "lineno": 91,
       "static": false,
       "parameters": [
@@ -11743,7 +11743,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_before",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 512,
       "static": false,
       "parameters": [
@@ -11770,7 +11770,7 @@
       "elapsed_instrumentation": 0.00009999983012676239,
       "return_value": {
         "class": "Array",
-        "value": "[#<Proc:0x00007faf88a82890 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf88a82a70 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf88a82bd8 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf88a82db8 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf88a82fe8 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
+        "value": "[#<Proc:0x00007faf88a82890 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf88a82a70 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf88a82bd8 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf88a82db8 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf88a82fe8 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
         "object_id": 28940,
         "size": 5
       }
@@ -11781,7 +11781,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_after",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 516,
       "static": false,
       "parameters": [
@@ -11857,7 +11857,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -11980,7 +11980,7 @@
       "thread_id": 4480,
       "defined_class": "ActionController::Instrumentation",
       "method_id": "process_action",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_controller/metal/instrumentation.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_controller/metal/instrumentation.rb",
       "lineno": 19,
       "static": false,
       "parameters": [
@@ -12005,7 +12005,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -12042,7 +12042,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -12079,7 +12079,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_before",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 512,
       "static": false,
       "parameters": [
@@ -12103,7 +12103,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Request::Session",
       "method_id": "[]",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
       "lineno": 91,
       "static": false,
       "parameters": [
@@ -12127,7 +12127,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Cookies::CookieJar",
       "method_id": "update",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/middleware/cookies.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/middleware/cookies.rb",
       "lineno": 333,
       "static": false,
       "parameters": [
@@ -12165,7 +12165,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Cookies::CookieJar",
       "method_id": "[]",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/middleware/cookies.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/middleware/cookies.rb",
       "lineno": 317,
       "static": false,
       "parameters": [
@@ -12202,7 +12202,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Messages::Rotator::Encryptor",
       "method_id": "decrypt_and_verify",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/messages/rotator.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/messages/rotator.rb",
       "lineno": 20,
       "static": false,
       "parameters": [
@@ -12218,7 +12218,7 @@
           "name": "on_rotation",
           "class": "Proc",
           "object_id": 142240,
-          "value": "#<Proc:0x00007faf88ad3718 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6",
+          "value": "#<Proc:0x00007faf88ad3718 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6",
           "kind": "key"
         },
         {
@@ -12718,7 +12718,7 @@
       "elapsed_instrumentation": 0.0000550001859664917,
       "return_value": {
         "class": "Array",
-        "value": "[#<Proc:0x00007fafcf747198 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafcf7475d0 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafcf747788 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
+        "value": "[#<Proc:0x00007fafcf747198 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafcf7475d0 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafcf747788 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
         "object_id": 36980,
         "size": 3
       }
@@ -12744,7 +12744,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -12837,7 +12837,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Request::Session",
       "method_id": "[]",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
       "lineno": 91,
       "static": false,
       "parameters": [
@@ -12875,7 +12875,7 @@
       "thread_id": 4480,
       "defined_class": "ActionController::Instrumentation",
       "method_id": "redirect_to",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_controller/metal/instrumentation.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_controller/metal/instrumentation.rb",
       "lineno": 62,
       "static": false,
       "parameters": [
@@ -12900,7 +12900,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -12963,7 +12963,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_after",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 516,
       "static": false,
       "parameters": [
@@ -12990,7 +12990,7 @@
       "elapsed_instrumentation": 0.0000400003045797348,
       "return_value": {
         "class": "Array",
-        "value": "[#<Proc:0x00007fafcf747418 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
+        "value": "[#<Proc:0x00007fafcf747418 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
         "object_id": 38260,
         "size": 1
       }
@@ -13001,7 +13001,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -13070,7 +13070,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Request::Session",
       "method_id": "[]=",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
       "lineno": 131,
       "static": false,
       "parameters": [
@@ -13116,7 +13116,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Request::Session",
       "method_id": "[]",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
       "lineno": 91,
       "static": false,
       "parameters": [
@@ -13191,7 +13191,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::MessageEncryptor",
       "method_id": "encrypt_and_sign",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/message_encryptor.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/message_encryptor.rb",
       "lineno": 150,
       "static": false,
       "parameters": [
@@ -13312,7 +13312,7 @@
       "thread_id": 4480,
       "defined_class": "OpenSSL::Cipher",
       "method_id": "random_iv",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/openssl/cipher.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/openssl/cipher.rb",
       "lineno": 55,
       "static": false,
       "receiver": {
@@ -13738,7 +13738,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Cookies::CookieJar",
       "method_id": "[]=",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/middleware/cookies.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/middleware/cookies.rb",
       "lineno": 373,
       "static": false,
       "parameters": [
@@ -13783,7 +13783,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_before",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 512,
       "static": false,
       "parameters": [
@@ -13810,7 +13810,7 @@
       "elapsed_instrumentation": 0.00005400087684392929,
       "return_value": {
         "class": "Array",
-        "value": "[#<Proc:0x00007fafbf7b7840 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbf7b79a8 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbf7b7b88 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
+        "value": "[#<Proc:0x00007fafbf7b7840 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbf7b79a8 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbf7b7b88 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
         "object_id": 38840,
         "size": 3
       }
@@ -13821,7 +13821,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_after",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 516,
       "static": false,
       "parameters": [
@@ -13848,7 +13848,7 @@
       "elapsed_instrumentation": 0.000033999793231487274,
       "return_value": {
         "class": "Array",
-        "value": "[#<Proc:0x00007fafbf7b7cf0 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
+        "value": "[#<Proc:0x00007fafbf7b7cf0 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
         "object_id": 38860,
         "size": 1
       }
@@ -13859,7 +13859,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Request::Session",
       "method_id": "[]",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
       "lineno": 91,
       "static": false,
       "parameters": [
@@ -13891,7 +13891,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_before",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 512,
       "static": false,
       "parameters": [
@@ -13918,7 +13918,7 @@
       "elapsed_instrumentation": 0.00007600057870149612,
       "return_value": {
         "class": "Array",
-        "value": "[#<Proc:0x00007faf88a82890 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf88a82a70 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf88a82bd8 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf88a82db8 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf88a82fe8 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
+        "value": "[#<Proc:0x00007faf88a82890 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf88a82a70 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf88a82bd8 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf88a82db8 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf88a82fe8 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
         "object_id": 28940,
         "size": 5
       }
@@ -13929,7 +13929,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_after",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 516,
       "static": false,
       "parameters": [
@@ -14005,7 +14005,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -14084,7 +14084,7 @@
       "thread_id": 4480,
       "defined_class": "ActionController::Instrumentation",
       "method_id": "process_action",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_controller/metal/instrumentation.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_controller/metal/instrumentation.rb",
       "lineno": 19,
       "static": false,
       "parameters": [
@@ -14109,7 +14109,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -14146,7 +14146,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -14183,7 +14183,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_before",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 512,
       "static": false,
       "parameters": [
@@ -14207,7 +14207,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Request::Session",
       "method_id": "[]",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
       "lineno": 91,
       "static": false,
       "parameters": [
@@ -14231,7 +14231,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Cookies::CookieJar",
       "method_id": "update",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/middleware/cookies.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/middleware/cookies.rb",
       "lineno": 333,
       "static": false,
       "parameters": [
@@ -14269,7 +14269,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Cookies::CookieJar",
       "method_id": "[]",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/middleware/cookies.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/middleware/cookies.rb",
       "lineno": 317,
       "static": false,
       "parameters": [
@@ -14306,7 +14306,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Messages::Rotator::Encryptor",
       "method_id": "decrypt_and_verify",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/messages/rotator.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/messages/rotator.rb",
       "lineno": 20,
       "static": false,
       "parameters": [
@@ -14322,7 +14322,7 @@
           "name": "on_rotation",
           "class": "Proc",
           "object_id": 143620,
-          "value": "#<Proc:0x00007fafcf7759a8 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6",
+          "value": "#<Proc:0x00007fafcf7759a8 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6",
           "kind": "key"
         },
         {
@@ -14822,7 +14822,7 @@
       "elapsed_instrumentation": 0.00005900021642446518,
       "return_value": {
         "class": "Array",
-        "value": "[#<Proc:0x00007fafcf747198 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafcf7475d0 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafcf747788 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
+        "value": "[#<Proc:0x00007fafcf747198 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafcf7475d0 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafcf747788 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
         "object_id": 36980,
         "size": 3
       }
@@ -14848,7 +14848,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -14902,7 +14902,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Request::Session",
       "method_id": "[]",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
       "lineno": 91,
       "static": false,
       "parameters": [
@@ -14940,7 +14940,7 @@
       "thread_id": 4480,
       "defined_class": "ActionController::Instrumentation",
       "method_id": "redirect_to",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_controller/metal/instrumentation.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_controller/metal/instrumentation.rb",
       "lineno": 62,
       "static": false,
       "parameters": [
@@ -14965,7 +14965,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -15028,7 +15028,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_after",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 516,
       "static": false,
       "parameters": [
@@ -15055,7 +15055,7 @@
       "elapsed_instrumentation": 0.000040998682379722595,
       "return_value": {
         "class": "Array",
-        "value": "[#<Proc:0x00007fafcf747418 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
+        "value": "[#<Proc:0x00007fafcf747418 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
         "object_id": 38260,
         "size": 1
       }
@@ -15066,7 +15066,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -15135,7 +15135,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Request::Session",
       "method_id": "[]=",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
       "lineno": 131,
       "static": false,
       "parameters": [
@@ -15181,7 +15181,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Request::Session",
       "method_id": "[]",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
       "lineno": 91,
       "static": false,
       "parameters": [
@@ -15256,7 +15256,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::MessageEncryptor",
       "method_id": "encrypt_and_sign",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/message_encryptor.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/message_encryptor.rb",
       "lineno": 150,
       "static": false,
       "parameters": [
@@ -15377,7 +15377,7 @@
       "thread_id": 4480,
       "defined_class": "OpenSSL::Cipher",
       "method_id": "random_iv",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/openssl/cipher.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/openssl/cipher.rb",
       "lineno": 55,
       "static": false,
       "receiver": {
@@ -15803,7 +15803,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Cookies::CookieJar",
       "method_id": "[]=",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/middleware/cookies.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/middleware/cookies.rb",
       "lineno": 373,
       "static": false,
       "parameters": [
@@ -15848,7 +15848,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_before",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 512,
       "static": false,
       "parameters": [
@@ -15875,7 +15875,7 @@
       "elapsed_instrumentation": 0.00005900021642446518,
       "return_value": {
         "class": "Array",
-        "value": "[#<Proc:0x00007fafbf7b7840 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbf7b79a8 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbf7b7b88 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
+        "value": "[#<Proc:0x00007fafbf7b7840 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbf7b79a8 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbf7b7b88 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
         "object_id": 38840,
         "size": 3
       }
@@ -15886,7 +15886,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_after",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 516,
       "static": false,
       "parameters": [
@@ -15913,7 +15913,7 @@
       "elapsed_instrumentation": 0.000037000514566898346,
       "return_value": {
         "class": "Array",
-        "value": "[#<Proc:0x00007fafbf7b7cf0 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
+        "value": "[#<Proc:0x00007fafbf7b7cf0 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
         "object_id": 38860,
         "size": 1
       }
@@ -15924,7 +15924,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Request::Session",
       "method_id": "[]",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
       "lineno": 91,
       "static": false,
       "parameters": [
@@ -15956,7 +15956,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_before",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 512,
       "static": false,
       "parameters": [
@@ -15983,7 +15983,7 @@
       "elapsed_instrumentation": 0.00011199992150068283,
       "return_value": {
         "class": "Array",
-        "value": "[#<Proc:0x00007faf88a82890 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf88a82a70 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf88a82bd8 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf88a82db8 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf88a82fe8 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
+        "value": "[#<Proc:0x00007faf88a82890 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf88a82a70 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf88a82bd8 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf88a82db8 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf88a82fe8 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
         "object_id": 28940,
         "size": 5
       }
@@ -15994,7 +15994,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_after",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 516,
       "static": false,
       "parameters": [
@@ -16070,7 +16070,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -16149,7 +16149,7 @@
       "thread_id": 4480,
       "defined_class": "ActionController::Instrumentation",
       "method_id": "process_action",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_controller/metal/instrumentation.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_controller/metal/instrumentation.rb",
       "lineno": 19,
       "static": false,
       "parameters": [
@@ -16174,7 +16174,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -16211,7 +16211,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -16248,7 +16248,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_before",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 512,
       "static": false,
       "parameters": [
@@ -16272,7 +16272,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Request::Session",
       "method_id": "[]",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
       "lineno": 91,
       "static": false,
       "parameters": [
@@ -16296,7 +16296,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Cookies::CookieJar",
       "method_id": "update",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/middleware/cookies.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/middleware/cookies.rb",
       "lineno": 333,
       "static": false,
       "parameters": [
@@ -16334,7 +16334,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Cookies::CookieJar",
       "method_id": "[]",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/middleware/cookies.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/middleware/cookies.rb",
       "lineno": 317,
       "static": false,
       "parameters": [
@@ -16371,7 +16371,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Messages::Rotator::Encryptor",
       "method_id": "decrypt_and_verify",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/messages/rotator.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/messages/rotator.rb",
       "lineno": 20,
       "static": false,
       "parameters": [
@@ -16387,7 +16387,7 @@
           "name": "on_rotation",
           "class": "Proc",
           "object_id": 144960,
-          "value": "#<Proc:0x00007fafbf78f0e8 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6",
+          "value": "#<Proc:0x00007fafbf78f0e8 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6",
           "kind": "key"
         },
         {
@@ -16887,7 +16887,7 @@
       "elapsed_instrumentation": 0.00005100015550851822,
       "return_value": {
         "class": "Array",
-        "value": "[#<Proc:0x00007fafcf747198 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafcf7475d0 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafcf747788 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
+        "value": "[#<Proc:0x00007fafcf747198 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafcf7475d0 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafcf747788 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
         "object_id": 36980,
         "size": 3
       }
@@ -16913,7 +16913,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -17026,7 +17026,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_before",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 512,
       "static": false,
       "parameters": [
@@ -17064,7 +17064,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_before",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 512,
       "static": false,
       "parameters": [
@@ -17091,7 +17091,7 @@
       "elapsed_instrumentation": 0.00004199892282485962,
       "return_value": {
         "class": "Array",
-        "value": "[#<Proc:0x00007fafcf78f830 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
+        "value": "[#<Proc:0x00007fafcf78f830 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
         "object_id": 37420,
         "size": 1
       }
@@ -17102,7 +17102,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_before",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 512,
       "static": false,
       "parameters": [
@@ -17140,7 +17140,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -17194,7 +17194,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -17248,7 +17248,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_after",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 516,
       "static": false,
       "parameters": [
@@ -17275,7 +17275,7 @@
       "elapsed_instrumentation": 0.00007499940693378448,
       "return_value": {
         "class": "Array",
-        "value": "[#<Proc:0x00007fafcf78c298 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafcf78c090 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafcf797e68 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafcf797c60 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafcf797a58 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
+        "value": "[#<Proc:0x00007fafcf78c298 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafcf78c090 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafcf797e68 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafcf797c60 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafcf797a58 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
         "object_id": 37600,
         "size": 5
       }
@@ -17286,7 +17286,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_after",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 516,
       "static": false,
       "parameters": [
@@ -17324,7 +17324,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_after",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 516,
       "static": false,
       "parameters": [
@@ -17362,7 +17362,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -17416,7 +17416,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_before",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 512,
       "static": false,
       "parameters": [
@@ -17454,7 +17454,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_before",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 512,
       "static": false,
       "parameters": [
@@ -17481,7 +17481,7 @@
       "elapsed_instrumentation": 0.00003499910235404968,
       "return_value": {
         "class": "Array",
-        "value": "[#<Proc:0x00007fafcf78f830 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
+        "value": "[#<Proc:0x00007fafcf78f830 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
         "object_id": 37420,
         "size": 1
       }
@@ -17492,7 +17492,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_before",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 512,
       "static": false,
       "parameters": [
@@ -17530,7 +17530,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -17584,7 +17584,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -17638,7 +17638,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_after",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 516,
       "static": false,
       "parameters": [
@@ -17665,7 +17665,7 @@
       "elapsed_instrumentation": 0.00006899889558553696,
       "return_value": {
         "class": "Array",
-        "value": "[#<Proc:0x00007fafcf78c298 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafcf78c090 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafcf797e68 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafcf797c60 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafcf797a58 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
+        "value": "[#<Proc:0x00007fafcf78c298 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafcf78c090 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafcf797e68 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafcf797c60 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafcf797a58 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
         "object_id": 37600,
         "size": 5
       }
@@ -17676,7 +17676,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_after",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 516,
       "static": false,
       "parameters": [
@@ -17714,7 +17714,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_after",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 516,
       "static": false,
       "parameters": [
@@ -17752,7 +17752,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -17843,7 +17843,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Request::Session",
       "method_id": "[]=",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
       "lineno": 131,
       "static": false,
       "parameters": [
@@ -17900,7 +17900,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Request::Session",
       "method_id": "[]",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
       "lineno": 91,
       "static": false,
       "parameters": [
@@ -17938,7 +17938,7 @@
       "thread_id": 4480,
       "defined_class": "ActionController::Instrumentation",
       "method_id": "redirect_to",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_controller/metal/instrumentation.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_controller/metal/instrumentation.rb",
       "lineno": 62,
       "static": false,
       "parameters": [
@@ -17963,7 +17963,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -18026,7 +18026,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_after",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 516,
       "static": false,
       "parameters": [
@@ -18053,7 +18053,7 @@
       "elapsed_instrumentation": 0.000037999823689460754,
       "return_value": {
         "class": "Array",
-        "value": "[#<Proc:0x00007fafcf747418 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
+        "value": "[#<Proc:0x00007fafcf747418 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
         "object_id": 38260,
         "size": 1
       }
@@ -18064,7 +18064,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -18133,7 +18133,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Request::Session",
       "method_id": "[]=",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
       "lineno": 131,
       "static": false,
       "parameters": [
@@ -18179,7 +18179,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Request::Session",
       "method_id": "[]",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
       "lineno": 91,
       "static": false,
       "parameters": [
@@ -18254,7 +18254,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::MessageEncryptor",
       "method_id": "encrypt_and_sign",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/message_encryptor.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/message_encryptor.rb",
       "lineno": 150,
       "static": false,
       "parameters": [
@@ -18375,7 +18375,7 @@
       "thread_id": 4480,
       "defined_class": "OpenSSL::Cipher",
       "method_id": "random_iv",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/openssl/cipher.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/openssl/cipher.rb",
       "lineno": 55,
       "static": false,
       "receiver": {
@@ -18801,7 +18801,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Cookies::CookieJar",
       "method_id": "[]=",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/middleware/cookies.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/middleware/cookies.rb",
       "lineno": 373,
       "static": false,
       "parameters": [
@@ -18846,7 +18846,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_before",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 512,
       "static": false,
       "parameters": [
@@ -18873,7 +18873,7 @@
       "elapsed_instrumentation": 0.00006099976599216461,
       "return_value": {
         "class": "Array",
-        "value": "[#<Proc:0x00007fafbf7b7840 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbf7b79a8 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbf7b7b88 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
+        "value": "[#<Proc:0x00007fafbf7b7840 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbf7b79a8 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbf7b7b88 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
         "object_id": 38840,
         "size": 3
       }
@@ -18884,7 +18884,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_after",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 516,
       "static": false,
       "parameters": [
@@ -18911,7 +18911,7 @@
       "elapsed_instrumentation": 0.00003699958324432373,
       "return_value": {
         "class": "Array",
-        "value": "[#<Proc:0x00007fafbf7b7cf0 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
+        "value": "[#<Proc:0x00007fafbf7b7cf0 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
         "object_id": 38860,
         "size": 1
       }
@@ -18922,7 +18922,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -18976,7 +18976,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_before",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 512,
       "static": false,
       "parameters": [
@@ -19003,7 +19003,7 @@
       "elapsed_instrumentation": 0.0000859992578625679,
       "return_value": {
         "class": "Array",
-        "value": "[#<Proc:0x00007faf88a82890 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf88a82a70 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf88a82bd8 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf88a82db8 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf88a82fe8 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
+        "value": "[#<Proc:0x00007faf88a82890 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf88a82a70 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf88a82bd8 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf88a82db8 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007faf88a82fe8 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
         "object_id": 28940,
         "size": 5
       }
@@ -19014,7 +19014,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_after",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 516,
       "static": false,
       "parameters": [
@@ -19090,7 +19090,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -19163,7 +19163,7 @@
       "thread_id": 4480,
       "defined_class": "ActionController::Instrumentation",
       "method_id": "process_action",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_controller/metal/instrumentation.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_controller/metal/instrumentation.rb",
       "lineno": 19,
       "static": false,
       "parameters": [
@@ -19188,7 +19188,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -19225,7 +19225,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -19262,7 +19262,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_before",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 512,
       "static": false,
       "parameters": [
@@ -19286,7 +19286,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Request::Session",
       "method_id": "[]",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
       "lineno": 91,
       "static": false,
       "parameters": [
@@ -19310,7 +19310,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Cookies::CookieJar",
       "method_id": "update",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/middleware/cookies.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/middleware/cookies.rb",
       "lineno": 333,
       "static": false,
       "parameters": [
@@ -19348,7 +19348,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Cookies::CookieJar",
       "method_id": "[]",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/middleware/cookies.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/middleware/cookies.rb",
       "lineno": 317,
       "static": false,
       "parameters": [
@@ -19385,7 +19385,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Messages::Rotator::Encryptor",
       "method_id": "decrypt_and_verify",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/messages/rotator.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/messages/rotator.rb",
       "lineno": 20,
       "static": false,
       "parameters": [
@@ -19401,7 +19401,7 @@
           "name": "on_rotation",
           "class": "Proc",
           "object_id": 146560,
-          "value": "#<Proc:0x00007fafbff032c0 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6",
+          "value": "#<Proc:0x00007fafbff032c0 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6",
           "kind": "key"
         },
         {
@@ -19901,7 +19901,7 @@
       "elapsed_instrumentation": 0.00006999913603067398,
       "return_value": {
         "class": "Array",
-        "value": "[#<Proc:0x00007fafbfedb0b8 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbfedb478 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbfedb5e0 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbfedb748 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbfedb950 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbfedbb58 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
+        "value": "[#<Proc:0x00007fafbfedb0b8 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbfedb478 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbfedb5e0 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbfedb748 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbfedb950 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbfedbb58 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
         "object_id": 39900,
         "size": 6
       }
@@ -19927,7 +19927,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -20022,7 +20022,7 @@
       "thread_id": 4480,
       "defined_class": "ActionView::Resolver",
       "method_id": "find_all",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionview-6.0.4.1/lib/action_view/template/resolver.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionview-6.0.4.1/lib/action_view/template/resolver.rb",
       "lineno": 116,
       "static": false,
       "parameters": [
@@ -20074,7 +20074,7 @@
       "receiver": {
         "class": "ActionView::OptimizedFileSystemResolver",
         "object_id": 50340,
-        "value": "/Users/kgilpin/source/land-of-apps/sample_app_6th_ed/app/views"
+        "value": "/Users/h4x0r-55/source/land-of-apps/sample_app_6th_ed/app/views"
       }
     },
     {
@@ -20097,7 +20097,7 @@
       "thread_id": 4480,
       "defined_class": "ActionController::Renderers",
       "method_id": "render_to_body",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_controller/metal/renderers.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_controller/metal/renderers.rb",
       "lineno": 141,
       "static": false,
       "parameters": [
@@ -20105,7 +20105,7 @@
           "name": "options",
           "class": "Hash",
           "object_id": 147080,
-          "value": "{:prefixes=>[users, application], :template=>show, :layout=>#<Proc:0x00007fafbff887e0 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionview-6}",
+          "value": "{:prefixes=>[users, application], :template=>show, :layout=>#<Proc:0x00007fafbff887e0 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionview-6}",
           "kind": "req",
           "size": 3
         }
@@ -20136,7 +20136,7 @@
       "thread_id": 4480,
       "defined_class": "ActionView::Resolver",
       "method_id": "find_all",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionview-6.0.4.1/lib/action_view/template/resolver.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionview-6.0.4.1/lib/action_view/template/resolver.rb",
       "lineno": 116,
       "static": false,
       "parameters": [
@@ -20188,7 +20188,7 @@
       "receiver": {
         "class": "ActionView::OptimizedFileSystemResolver",
         "object_id": 50340,
-        "value": "/Users/kgilpin/source/land-of-apps/sample_app_6th_ed/app/views"
+        "value": "/Users/h4x0r-55/source/land-of-apps/sample_app_6th_ed/app/views"
       }
     },
     {
@@ -20211,7 +20211,7 @@
       "thread_id": 4480,
       "defined_class": "ActionView::Resolver",
       "method_id": "find_all",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionview-6.0.4.1/lib/action_view/template/resolver.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionview-6.0.4.1/lib/action_view/template/resolver.rb",
       "lineno": 116,
       "static": false,
       "parameters": [
@@ -20263,7 +20263,7 @@
       "receiver": {
         "class": "ActionView::OptimizedFileSystemResolver",
         "object_id": 50340,
-        "value": "/Users/kgilpin/source/land-of-apps/sample_app_6th_ed/app/views"
+        "value": "/Users/h4x0r-55/source/land-of-apps/sample_app_6th_ed/app/views"
       }
     },
     {
@@ -20286,7 +20286,7 @@
       "thread_id": 4480,
       "defined_class": "ActionView::Resolver",
       "method_id": "find_all",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionview-6.0.4.1/lib/action_view/template/resolver.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionview-6.0.4.1/lib/action_view/template/resolver.rb",
       "lineno": 116,
       "static": false,
       "parameters": [
@@ -20338,7 +20338,7 @@
       "receiver": {
         "class": "ActionView::OptimizedFileSystemResolver",
         "object_id": 50620,
-        "value": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actiontext-6.0.4.1/app/views"
+        "value": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actiontext-6.0.4.1/app/views"
       }
     },
     {
@@ -20361,7 +20361,7 @@
       "thread_id": 4480,
       "defined_class": "ActionView::Resolver",
       "method_id": "find_all",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionview-6.0.4.1/lib/action_view/template/resolver.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionview-6.0.4.1/lib/action_view/template/resolver.rb",
       "lineno": 116,
       "static": false,
       "parameters": [
@@ -20413,7 +20413,7 @@
       "receiver": {
         "class": "ActionView::OptimizedFileSystemResolver",
         "object_id": 50640,
-        "value": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionmailbox-6.0.4.1/app/views"
+        "value": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionmailbox-6.0.4.1/app/views"
       }
     },
     {
@@ -20436,7 +20436,7 @@
       "thread_id": 4480,
       "defined_class": "ActionView::Resolver",
       "method_id": "find_all",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionview-6.0.4.1/lib/action_view/template/resolver.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionview-6.0.4.1/lib/action_view/template/resolver.rb",
       "lineno": 116,
       "static": false,
       "parameters": [
@@ -20488,7 +20488,7 @@
       "receiver": {
         "class": "ActionView::OptimizedFileSystemResolver",
         "object_id": 50340,
-        "value": "/Users/kgilpin/source/land-of-apps/sample_app_6th_ed/app/views"
+        "value": "/Users/h4x0r-55/source/land-of-apps/sample_app_6th_ed/app/views"
       }
     },
     {
@@ -20511,7 +20511,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -20606,7 +20606,7 @@
       "thread_id": 4480,
       "defined_class": "ActionView::Resolver",
       "method_id": "find_all",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionview-6.0.4.1/lib/action_view/template/resolver.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionview-6.0.4.1/lib/action_view/template/resolver.rb",
       "lineno": 116,
       "static": false,
       "parameters": [
@@ -20658,7 +20658,7 @@
       "receiver": {
         "class": "ActionView::OptimizedFileSystemResolver",
         "object_id": 50340,
-        "value": "/Users/kgilpin/source/land-of-apps/sample_app_6th_ed/app/views"
+        "value": "/Users/h4x0r-55/source/land-of-apps/sample_app_6th_ed/app/views"
       }
     },
     {
@@ -20681,7 +20681,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -20735,7 +20735,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -20789,7 +20789,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -20864,7 +20864,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Request::Session",
       "method_id": "[]",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
       "lineno": 91,
       "static": false,
       "parameters": [
@@ -20901,7 +20901,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -20995,7 +20995,7 @@
       "thread_id": 4480,
       "defined_class": "ActionView::Resolver",
       "method_id": "find_all",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionview-6.0.4.1/lib/action_view/template/resolver.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionview-6.0.4.1/lib/action_view/template/resolver.rb",
       "lineno": 116,
       "static": false,
       "parameters": [
@@ -21047,7 +21047,7 @@
       "receiver": {
         "class": "ActionView::OptimizedFileSystemResolver",
         "object_id": 50340,
-        "value": "/Users/kgilpin/source/land-of-apps/sample_app_6th_ed/app/views"
+        "value": "/Users/h4x0r-55/source/land-of-apps/sample_app_6th_ed/app/views"
       }
     },
     {
@@ -21109,7 +21109,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Request::Session",
       "method_id": "[]",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
       "lineno": 91,
       "static": false,
       "parameters": [
@@ -21172,7 +21172,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -21217,7 +21217,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -21271,7 +21271,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -21433,7 +21433,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::MarshalWithAutoloading",
       "method_id": "load",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/core_ext/marshal.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/core_ext/marshal.rb",
       "lineno": 5,
       "static": true,
       "parameters": [
@@ -25527,7 +25527,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -25606,7 +25606,7 @@
       "thread_id": 4480,
       "defined_class": "ActionView::Resolver",
       "method_id": "find_all",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionview-6.0.4.1/lib/action_view/template/resolver.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionview-6.0.4.1/lib/action_view/template/resolver.rb",
       "lineno": 116,
       "static": false,
       "parameters": [
@@ -25658,7 +25658,7 @@
       "receiver": {
         "class": "ActionView::OptimizedFileSystemResolver",
         "object_id": 50340,
-        "value": "/Users/kgilpin/source/land-of-apps/sample_app_6th_ed/app/views"
+        "value": "/Users/h4x0r-55/source/land-of-apps/sample_app_6th_ed/app/views"
       }
     },
     {
@@ -25681,7 +25681,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -25740,7 +25740,7 @@
       "thread_id": 4480,
       "defined_class": "ActionView::Resolver",
       "method_id": "find_all",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionview-6.0.4.1/lib/action_view/template/resolver.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionview-6.0.4.1/lib/action_view/template/resolver.rb",
       "lineno": 116,
       "static": false,
       "parameters": [
@@ -25792,7 +25792,7 @@
       "receiver": {
         "class": "ActionView::OptimizedFileSystemResolver",
         "object_id": 50340,
-        "value": "/Users/kgilpin/source/land-of-apps/sample_app_6th_ed/app/views"
+        "value": "/Users/h4x0r-55/source/land-of-apps/sample_app_6th_ed/app/views"
       }
     },
     {
@@ -25845,7 +25845,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Request::Session",
       "method_id": "[]",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
       "lineno": 91,
       "static": false,
       "parameters": [
@@ -25923,7 +25923,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Request::Session",
       "method_id": "[]",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
       "lineno": 91,
       "static": false,
       "parameters": [
@@ -25988,7 +25988,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Request::Session",
       "method_id": "[]",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
       "lineno": 91,
       "static": false,
       "parameters": [
@@ -26038,7 +26038,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -26083,7 +26083,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Request::Session",
       "method_id": "[]",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
       "lineno": 91,
       "static": false,
       "parameters": [
@@ -26135,7 +26135,7 @@
       "thread_id": 4480,
       "defined_class": "ActionView::Resolver",
       "method_id": "find_all",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionview-6.0.4.1/lib/action_view/template/resolver.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionview-6.0.4.1/lib/action_view/template/resolver.rb",
       "lineno": 116,
       "static": false,
       "parameters": [
@@ -26187,7 +26187,7 @@
       "receiver": {
         "class": "ActionView::OptimizedFileSystemResolver",
         "object_id": 50340,
-        "value": "/Users/kgilpin/source/land-of-apps/sample_app_6th_ed/app/views"
+        "value": "/Users/h4x0r-55/source/land-of-apps/sample_app_6th_ed/app/views"
       }
     },
     {
@@ -26210,7 +26210,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -26276,7 +26276,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_after",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 516,
       "static": false,
       "parameters": [
@@ -26303,7 +26303,7 @@
       "elapsed_instrumentation": 0.000045999884605407715,
       "return_value": {
         "class": "Array",
-        "value": "[#<Proc:0x00007fafbfedb2e8 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
+        "value": "[#<Proc:0x00007fafbfedb2e8 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
         "object_id": 39920,
         "size": 1
       }
@@ -26314,7 +26314,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -26383,7 +26383,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Request::Session",
       "method_id": "[]=",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
       "lineno": 131,
       "static": false,
       "parameters": [
@@ -26422,7 +26422,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Request::Session",
       "method_id": "[]",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
       "lineno": 91,
       "static": false,
       "parameters": [
@@ -26454,7 +26454,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Request::Session",
       "method_id": "delete",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
       "lineno": 165,
       "static": false,
       "parameters": [
@@ -26523,7 +26523,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::MessageEncryptor",
       "method_id": "encrypt_and_sign",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/message_encryptor.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/message_encryptor.rb",
       "lineno": 150,
       "static": false,
       "parameters": [
@@ -26644,7 +26644,7 @@
       "thread_id": 4480,
       "defined_class": "OpenSSL::Cipher",
       "method_id": "random_iv",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/openssl/cipher.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/openssl/cipher.rb",
       "lineno": 55,
       "static": false,
       "receiver": {
@@ -27070,7 +27070,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Cookies::CookieJar",
       "method_id": "[]=",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/middleware/cookies.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/middleware/cookies.rb",
       "lineno": 373,
       "static": false,
       "parameters": [
@@ -27115,7 +27115,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_before",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 512,
       "static": false,
       "parameters": [
@@ -27142,7 +27142,7 @@
       "elapsed_instrumentation": 0.000054999254643917084,
       "return_value": {
         "class": "Array",
-        "value": "[#<Proc:0x00007fafbf7b7840 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbf7b79a8 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbf7b7b88 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
+        "value": "[#<Proc:0x00007fafbf7b7840 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbf7b79a8 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbf7b7b88 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
         "object_id": 38840,
         "size": 3
       }
@@ -27153,7 +27153,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_after",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 516,
       "static": false,
       "parameters": [
@@ -27180,7 +27180,7 @@
       "elapsed_instrumentation": 0.00003699958324432373,
       "return_value": {
         "class": "Array",
-        "value": "[#<Proc:0x00007fafbf7b7cf0 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
+        "value": "[#<Proc:0x00007fafbf7b7cf0 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
         "object_id": 38860,
         "size": 1
       }
@@ -27191,7 +27191,7 @@
       "thread_id": 4480,
       "defined_class": "ActionDispatch::Request::Session",
       "method_id": "[]",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb",
       "lineno": 91,
       "static": false,
       "parameters": [
@@ -27228,7 +27228,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_before",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 512,
       "static": false,
       "parameters": [
@@ -27266,7 +27266,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_after",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 516,
       "static": false,
       "parameters": [
@@ -27293,7 +27293,7 @@
       "elapsed_instrumentation": 0.00003900006413459778,
       "return_value": {
         "class": "Array",
-        "value": "[#<Proc:0x00007fafbff63dc8 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbff63c60 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
+        "value": "[#<Proc:0x00007fafbff63dc8 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbff63c60 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
         "object_id": 40520,
         "size": 2
       }
@@ -27304,7 +27304,7 @@
       "thread_id": 4480,
       "defined_class": "Logger::LogDevice",
       "method_id": "write",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb",
       "lineno": 31,
       "static": false,
       "parameters": [
@@ -27358,7 +27358,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_before",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 512,
       "static": false,
       "parameters": [
@@ -27396,7 +27396,7 @@
       "thread_id": 4480,
       "defined_class": "ActiveSupport::Callbacks::CallbackSequence",
       "method_id": "invoke_after",
-      "path": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
+      "path": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb",
       "lineno": 516,
       "static": false,
       "parameters": [
@@ -27423,7 +27423,7 @@
       "elapsed_instrumentation": 0.00004000123590230942,
       "return_value": {
         "class": "Array",
-        "value": "[#<Proc:0x00007fafbfc26390 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbfc26228 /Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
+        "value": "[#<Proc:0x00007fafbfc26390 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor, #<Proc:0x00007fafbfc26228 /Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesuppor]",
         "object_id": 40620,
         "size": 2
       }
@@ -27500,7 +27500,7 @@
                         "lang.eval.safe"
                       ],
                       "static": false,
-                      "location": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/testing/integration.rb:320"
+                      "location": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/testing/integration.rb:320"
                     }
                   ]
                 }
@@ -27521,7 +27521,7 @@
                         "http.session.read"
                       ],
                       "static": false,
-                      "location": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb:91"
+                      "location": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb:91"
                     },
                     {
                       "name": "[]=",
@@ -27530,7 +27530,7 @@
                         "http.session.write"
                       ],
                       "static": false,
-                      "location": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb:131"
+                      "location": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb:131"
                     },
                     {
                       "name": "delete",
@@ -27539,7 +27539,7 @@
                         "http.session.write"
                       ],
                       "static": false,
-                      "location": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb:165"
+                      "location": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/request/session.rb:165"
                     }
                   ]
                 }
@@ -27560,7 +27560,7 @@
                         "http.session.write"
                       ],
                       "static": false,
-                      "location": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/middleware/cookies.rb:333"
+                      "location": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/middleware/cookies.rb:333"
                     },
                     {
                       "name": "[]",
@@ -27569,7 +27569,7 @@
                         "http.session.read"
                       ],
                       "static": false,
-                      "location": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/middleware/cookies.rb:317"
+                      "location": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/middleware/cookies.rb:317"
                     },
                     {
                       "name": "[]=",
@@ -27578,7 +27578,7 @@
                         "http.session.write"
                       ],
                       "static": false,
-                      "location": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/middleware/cookies.rb:373"
+                      "location": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_dispatch/middleware/cookies.rb:373"
                     }
                   ]
                 }
@@ -27601,7 +27601,7 @@
                     "mvc.controller"
                   ],
                   "static": false,
-                  "location": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_controller/metal/instrumentation.rb:19"
+                  "location": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_controller/metal/instrumentation.rb:19"
                 },
                 {
                   "name": "redirect_to",
@@ -27610,7 +27610,7 @@
                     "mvc.controller"
                   ],
                   "static": false,
-                  "location": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_controller/metal/instrumentation.rb:62"
+                  "location": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_controller/metal/instrumentation.rb:62"
                 }
               ]
             },
@@ -27625,7 +27625,7 @@
                     "mvc.render"
                   ],
                   "static": false,
-                  "location": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_controller/metal/renderers.rb:141"
+                  "location": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionpack-6.0.4.1/lib/action_controller/metal/renderers.rb:141"
                 }
               ]
             }
@@ -27656,7 +27656,7 @@
                         "mvc.before_action"
                       ],
                       "static": false,
-                      "location": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb:512"
+                      "location": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb:512"
                     },
                     {
                       "name": "invoke_after",
@@ -27665,7 +27665,7 @@
                         "mvc.after_action"
                       ],
                       "static": false,
-                      "location": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb:516"
+                      "location": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/callbacks.rb:516"
                     }
                   ]
                 }
@@ -27679,7 +27679,7 @@
                   "name": "encrypt_and_sign",
                   "type": "function",
                   "static": false,
-                  "location": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/message_encryptor.rb:150"
+                  "location": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/message_encryptor.rb:150"
                 }
               ]
             },
@@ -27699,7 +27699,7 @@
                           "name": "decrypt_and_verify",
                           "type": "function",
                           "static": false,
-                          "location": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/messages/rotator.rb:20"
+                          "location": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/messages/rotator.rb:20"
                         }
                       ]
                     }
@@ -27730,7 +27730,7 @@
                     "log"
                   ],
                   "static": false,
-                  "location": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb:31"
+                  "location": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/logger/log_device.rb:31"
                 }
               ]
             }
@@ -27796,7 +27796,7 @@
                     "deserialize.unsafe"
                   ],
                   "static": true,
-                  "location": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/core_ext/marshal.rb:5"
+                  "location": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/activesupport-6.0.4.1/lib/active_support/core_ext/marshal.rb:5"
                 }
               ]
             }
@@ -28211,7 +28211,7 @@
                     "mvc.template.resolver"
                   ],
                   "static": false,
-                  "location": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionview-6.0.4.1/lib/action_view/template/resolver.rb:116"
+                  "location": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/gems/3.0.0/gems/actionview-6.0.4.1/lib/action_view/template/resolver.rb:116"
                 }
               ]
             }
@@ -28324,7 +28324,7 @@
                   "name": "random_iv",
                   "type": "function",
                   "static": false,
-                  "location": "/Users/kgilpin/.rbenv/versions/3.0.2/lib/ruby/3.0.0/openssl/cipher.rb:55"
+                  "location": "/Users/h4x0r-55/.rbenv/versions/3.0.2/lib/ruby/3.0.0/openssl/cipher.rb:55"
                 },
                 {
                   "name": "iv=",

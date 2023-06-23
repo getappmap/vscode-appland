@@ -7,10 +7,11 @@ import { LinkTreeDataProvider } from './linkTreeDataProvider';
 import { ProjectStateServiceInstance } from '../services/projectStateService';
 import { AppmapUptodateService } from '../services/appmapUptodateService';
 import { AppMapTreeDataProviders } from '../appMapService';
+import { FindingsTreeDataProvider } from './findingsTreeDataProvider';
 
 export default function registerTrees(
   context: vscode.ExtensionContext,
-  localAppMaps: AppMapCollectionFile,
+  appmapCollection: AppMapCollectionFile,
   projectStates: ProjectStateServiceInstance[],
   appmapsUptodate?: AppmapUptodateService
 ): AppMapTreeDataProviders {
@@ -21,7 +22,7 @@ export default function registerTrees(
     treeDataProvider: instructionsTreeProvider,
   });
 
-  const localAppMapsProvider = new AppMapTreeDataProvider(localAppMaps, appmapsUptodate);
+  const localAppMapsProvider = new AppMapTreeDataProvider(appmapCollection, appmapsUptodate);
   const localAppMapsTree = vscode.window.createTreeView('appmap.views.appmaps', {
     treeDataProvider: localAppMapsProvider,
   });
@@ -33,9 +34,15 @@ export default function registerTrees(
   });
   context.subscriptions.push(documentationTree);
 
+  const findingsTreeProvider = new FindingsTreeDataProvider(context, appmapCollection);
+  vscode.window.createTreeView('appmap.views.findings', {
+    treeDataProvider: findingsTreeProvider,
+  });
+  context.subscriptions.push(findingsTreeProvider);
+
   context.subscriptions.push(
     vscode.commands.registerCommand('appmap.view.focusAppMap', () => {
-      localAppMapsTree.reveal(localAppMaps.appMaps[0], { select: false });
+      localAppMapsTree.reveal(appmapCollection.appMaps[0], { select: false });
     })
   );
 
@@ -56,10 +63,10 @@ export default function registerTrees(
           'Enter a case sensitive partial match or leave this input empty to clear an existing filter',
       });
 
-      localAppMaps.setFilter(filter || '');
-      localAppMapsTree.reveal(localAppMaps.appMaps[0], { select: false });
+      appmapCollection.setFilter(filter || '');
+      localAppMapsTree.reveal(appmapCollection.appMaps[0], { select: false });
     })
   );
 
-  return { appmaps: localAppMapsProvider };
+  return { appmaps: localAppMapsProvider, analysis: findingsTreeProvider };
 }

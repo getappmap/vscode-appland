@@ -33,7 +33,6 @@ import appmapLinkProvider from './terminalLink/appmapLinkProvider';
 import registerTrees from './tree';
 import { ClassMapTreeDataProvider } from './tree/classMapTreeDataProvider';
 import ContextMenu from './tree/contextMenu';
-import { FindingsTreeDataProvider } from './tree/findingsTreeDataProvider';
 import InstallGuideWebView from './webviews/installGuideWebview';
 import InstallationStatusBadge from './workspace/installationStatus';
 import UriHandler from './uri/uriHandler';
@@ -202,12 +201,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       appmapServerAuthenticationProvider.removeSession();
     });
 
-    const findingsTreeProvider = new FindingsTreeDataProvider(context, appmapCollectionFile);
-    vscode.window.createTreeView('appmap.views.findings', {
-      treeDataProvider: findingsTreeProvider,
-    });
-    context.subscriptions.push(findingsTreeProvider);
-
     const projectState = new ProjectStateService(
       extensionState,
       configWatcher,
@@ -220,8 +213,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     )) as ProjectStateServiceInstance[];
 
     openCodeObjectInAppMap(context, projectStates, appmapCollectionFile, classMapIndex);
-    await AnalysisManager.register(context, projectStates, extensionState, workspaceServices);
-
     await SignInManager.register(extensionState);
     const signInWebview = new SignInViewProvider(context);
     context.subscriptions.push(
@@ -298,6 +289,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     }
 
     vscode.window.onDidCloseTerminal(unregisterTerminal, null, context.subscriptions);
+
+    await AnalysisManager.register(context, projectStates, extensionState, workspaceServices);
 
     return {
       editorProvider,
