@@ -21,5 +21,8 @@ export const ExpectedLaunchConfig = {
 
 export const ExpectedTestConfig = {
   name: 'Test with AppMap',
-  vmArgs: [`-javaagent:${expectedJarPath}`],
+  vmArgs: [
+    `-javaagent:${expectedJarPath}`,
+    '-Dappmap.output.directory=${command:appmap.getAppmapDir}',
+  ],
 };

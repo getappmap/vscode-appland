@@ -66,6 +66,7 @@ import AssetManager from './services/assetManager';
 import downloadLatestJavaJar from './commands/downloadLatestJavaJar';
 import IndexJanitor from './lib/indexJanitor';
 import { unregister as unregisterTerminal } from './commands/installer/terminals';
+import getAppmapDir from './commands/getAppmapDir';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   Telemetry.register(context);
@@ -275,6 +276,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     resetUsageState(context, extensionState);
     updateAppMapConfigs(context, runConfigService, workspaceServices);
     downloadLatestJavaJar(context);
+    getAppmapDir(context, workspaceServices);
 
     if (!openedInstallGuide && !SignInManager.shouldShowSignIn())
       promptInstall(workspaceServices, extensionState);
