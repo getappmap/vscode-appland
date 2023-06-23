@@ -13,6 +13,8 @@ class TestServiceInstance implements WorkspaceServiceInstance {
   }
 }
 class TestService implements WorkspaceService<TestServiceInstance> {
+  public static readonly serviceId = 'TestService';
+
   create(folder: vscode.WorkspaceFolder) {
     return new TestServiceInstance(folder);
   }

@@ -159,6 +159,7 @@ export default class AppmapUptodateServiceInstance
 }
 
 export class AppmapUptodateService implements WorkspaceService<AppmapUptodateServiceInstance> {
+  public static readonly serviceId = 'AppmapUptodateService';
   private _onUpdated: vscode.EventEmitter<AppmapUptodateService> =
     new ChangeEventDebouncer<AppmapUptodateService>();
   public readonly onUpdated: vscode.Event<AppmapUptodateService> = this._onUpdated.event;
@@ -185,10 +186,10 @@ export class AppmapUptodateService implements WorkspaceService<AppmapUptodateSer
   async outOfDateTestLocations(workspaceFolder?: vscode.WorkspaceFolder): Promise<string[]> {
     const result = new Set<string>();
 
-    const serviceInstances = workspaceServices().getServiceInstances(
+    const serviceInstances = workspaceServices().getServiceInstances<AppmapUptodateService>(
       this,
       workspaceFolder
-    ) as AppmapUptodateServiceInstance[];
+    );
 
     await Promise.all(
       serviceInstances.map((service) =>
@@ -205,10 +206,8 @@ export class AppmapUptodateService implements WorkspaceService<AppmapUptodateSer
    */
   isUpToDate(appmapUri: vscode.Uri): boolean {
     const serviceInstance = workspaceServices()
-      .getServiceInstances(this)
-      .find((service) =>
-        appmapUri.fsPath.startsWith(service.folder.uri.fsPath)
-      ) as AppmapUptodateServiceInstance;
+      .getServiceInstances<AppmapUptodateService>(this)
+      .find((service) => appmapUri.fsPath.startsWith(service.folder.uri.fsPath));
     if (!serviceInstance) return true;
 
     return !serviceInstance.isOutOfDate(

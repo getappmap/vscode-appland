@@ -245,6 +245,7 @@ export class RunConfigServiceInstance implements WorkspaceServiceInstance {
 export class RunConfigService implements WorkspaceService<RunConfigServiceInstance> {
   private static _onStatusChange = new vscode.EventEmitter<RunConfigServiceInstance>();
   public static readonly onStatusChange = RunConfigService._onStatusChange.event;
+  public static readonly serviceId = 'RunConfigService';
 
   constructor(
     private projectStateService: ProjectStateService,
@@ -256,7 +257,7 @@ export class RunConfigService implements WorkspaceService<RunConfigServiceInstan
     const projectStateServiceInstance = this.workspaceServices.getServiceInstance(
       this.projectStateService,
       folder
-    ) as ProjectStateServiceInstance | undefined;
+    );
     assert(projectStateServiceInstance);
 
     return new RunConfigServiceInstance(

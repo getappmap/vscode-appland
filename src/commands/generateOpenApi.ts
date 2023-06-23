@@ -12,7 +12,7 @@ import {
 } from '../services/nodeDependencyProcess';
 import { DEBUG_EXCEPTION, GENERATE_OPENAPI, Telemetry } from '../telemetry';
 import ErrorCode from '../telemetry/definitions/errorCodes';
-import { AppmapConfigManager, AppmapConfigManagerInstance } from '../services/appmapConfigManager';
+import { AppmapConfigManager } from '../services/appmapConfigManager';
 import { workspaceServices } from '../services/workspaceServices';
 
 export const GenerateOpenApi = 'appmap.generateOpenApi';
@@ -46,7 +46,7 @@ export default function generateOpenApi(
           const appmapConfigManagerInstance = workspaceServices().getServiceInstanceFromClass(
             AppmapConfigManager,
             workspaceFolder
-          ) as AppmapConfigManagerInstance | undefined;
+          );
           assert(appmapConfigManagerInstance);
 
           const appmapConfig = await appmapConfigManagerInstance.getAppmapConfig();

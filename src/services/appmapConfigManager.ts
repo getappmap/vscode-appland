@@ -59,7 +59,7 @@ export class AppmapConfigManagerInstance implements WorkspaceServiceInstance {
     const configWatcher = workspaceServices().getServiceInstanceFromClass(
       AppMapConfigWatcher,
       folder
-    ) as AppMapConfigWatcherInstance | undefined;
+    );
     assert(configWatcher);
     this._configWatcher = configWatcher;
   }
@@ -223,6 +223,7 @@ export class AppmapConfigManagerInstance implements WorkspaceServiceInstance {
 }
 
 export class AppmapConfigManager implements WorkspaceService<AppmapConfigManagerInstance> {
+  public static readonly serviceId = 'AppmapConfigManager';
   public static readonly DEFAULT_APPMAP_DIR = 'tmp/appmap';
 
   public async create(folder: vscode.WorkspaceFolder): Promise<AppmapConfigManagerInstance> {

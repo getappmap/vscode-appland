@@ -164,7 +164,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
         const uptodateService = workspaceServices.getServiceInstance(
           appmapUptodateService,
           workspaceFolder
-        ) as AppmapUptodateServiceInstance | undefined;
+        );
         if (uptodateService) uptodateService.update();
       };
 
@@ -206,9 +206,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       classMapIndex
     );
 
-    const projectStates = (await workspaceServices.enroll(
-      projectState
-    )) as ProjectStateServiceInstance[];
+    const projectStates = await workspaceServices.enroll(projectState);
 
     openCodeObjectInAppMap(context, appmapCollectionFile, classMapIndex);
 

@@ -1,6 +1,12 @@
 import assert from 'assert';
 import * as vscode from 'vscode';
-import { WorkspaceService, WorkspaceServiceInstance } from './workspaceService';
+import {
+  WorkspaceService,
+  WorkspaceServiceConstructor,
+  WorkspaceServiceInstance,
+  WorkspaceServiceInstanceType,
+  workspaceServiceId,
+} from './workspaceService';
 
 export class WorkspaceServices implements vscode.Disposable {
   workspaceServices: WorkspaceService<WorkspaceServiceInstance>[] = [];
@@ -12,7 +18,7 @@ export class WorkspaceServices implements vscode.Disposable {
     const folderAdded = (folder: vscode.WorkspaceFolder) => {
       this.workspaceServices.map(async (service) => {
         console.log(
-          `Creating workspace service ${service.constructor.name} for ${folder.uri.toString()}`
+          `Creating workspace service ${workspaceServiceId(service)} for ${folder.uri.toString()}`
         );
         const instance = await service.create(folder);
         this.enrollServiceInstance(folder, instance, service);
@@ -24,11 +30,9 @@ export class WorkspaceServices implements vscode.Disposable {
       if (!serviceInstances) return;
 
       serviceInstances.forEach((service) => {
-        console.log(
-          `Removing workspace service instance ${
-            service.constructor.name
-          } for ${folder.uri.toString()}`
-        );
+        const parent = this.instanceServices.get(service);
+        const name = parent ? workspaceServiceId(parent) : service.constructor.name;
+        console.log(`Removing workspace service instance ${name} for ${folder.uri.toString()}`);
 
         service.dispose();
       });
@@ -42,15 +46,16 @@ export class WorkspaceServices implements vscode.Disposable {
     (vscode.workspace.workspaceFolders || []).forEach(folderAdded);
   }
 
-  async enroll(
-    service: WorkspaceService<WorkspaceServiceInstance>
-  ): Promise<WorkspaceServiceInstance[]> {
+  async enroll<
+    T extends WorkspaceService<I>,
+    I extends WorkspaceServiceInstance = WorkspaceServiceInstanceType<T>
+  >(service: T): Promise<I[]> {
     this.workspaceServices.push(service);
 
     return Promise.all(
       (vscode.workspace.workspaceFolders || []).map(async (folder) => {
         console.log(
-          `Creating workspace service ${service.constructor.name} for ${folder.uri.toString()}`
+          `Creating workspace service ${workspaceServiceId(service)} for ${folder.uri.toString()}`
         );
         const instance = await service.create(folder);
         this.enrollServiceInstance(folder, instance, service);
@@ -85,22 +90,22 @@ export class WorkspaceServices implements vscode.Disposable {
     removedServiceInstances.forEach((s) => s.dispose());
   }
 
-  getService<
-    ServiceInstanceType extends WorkspaceServiceInstance,
-    ServiceType extends WorkspaceService<ServiceInstanceType>
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  >(c: { new (...args: any[]): ServiceType }): ServiceType | undefined {
-    return this.workspaceServices.find((service) => service.constructor === c) as ServiceType;
+  getService<ServiceType extends WorkspaceService<WorkspaceServiceInstance>>(
+    c: WorkspaceServiceConstructor<ServiceType>
+  ): ServiceType | undefined {
+    return this.workspaceServices.find(
+      (service) => workspaceServiceId(service) === c.serviceId
+    ) as ServiceType;
   }
 
   /**
    * Gets the single service instance (or `undefined`) for a given folder.
    */
-  getServiceInstance(
-    service: WorkspaceService<WorkspaceServiceInstance>,
-    folder: vscode.WorkspaceFolder
-  ): WorkspaceServiceInstance | undefined {
-    const serviceInstances = this.getServiceInstances(service, folder);
+  getServiceInstance<
+    T extends WorkspaceService<I>,
+    I extends WorkspaceServiceInstance = WorkspaceServiceInstanceType<T>
+  >(service: T, folder: vscode.WorkspaceFolder): I | undefined {
+    const serviceInstances = this.getServiceInstances<T, I>(service, folder);
     return serviceInstances.length > 0 ? serviceInstances[0] : undefined;
   }
 
@@ -108,31 +113,27 @@ export class WorkspaceServices implements vscode.Disposable {
    * Gets the single service instance (or `undefined`) from the class for a given folder.
    */
   getServiceInstanceFromClass<
-    ServiceInstanceType extends WorkspaceServiceInstance,
-    ServiceType extends WorkspaceService<ServiceInstanceType>
-  >(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    serviceClass: { new (...args: any[]): ServiceType },
-    folder: vscode.WorkspaceFolder
-  ): ServiceInstanceType | undefined {
+    T extends WorkspaceService<I>,
+    I extends WorkspaceServiceInstance = WorkspaceServiceInstanceType<T>
+  >(serviceClass: WorkspaceServiceConstructor<T>, folder: vscode.WorkspaceFolder): I | undefined {
     const service = this.getService(serviceClass);
     if (!service) return;
-    return this.getServiceInstance(service, folder) as ServiceInstanceType;
+    return this.getServiceInstance(service, folder);
   }
 
   /**
    * Gets all instances of a given service, with an optional folder name.
    */
-  getServiceInstances<ServiceInstanceType extends WorkspaceServiceInstance>(
-    service: WorkspaceService<ServiceInstanceType>,
-    folder?: vscode.WorkspaceFolder
-  ): ServiceInstanceType[] {
+  getServiceInstances<
+    T extends WorkspaceService<I>,
+    I extends WorkspaceServiceInstance = WorkspaceServiceInstanceType<T>
+  >(service: T, folder?: vscode.WorkspaceFolder): I[] {
     const serviceInstances = folder
       ? this.workspaceServiceInstances.get(folder) || []
       : Array(...this.workspaceServiceInstances.values()).flat();
     return serviceInstances.filter(
       (instance) => this.instanceServices.get(instance) === service
-    ) as ServiceInstanceType[];
+    ) as I[];
   }
 
   enrollServiceInstance(

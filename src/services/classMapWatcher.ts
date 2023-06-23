@@ -14,6 +14,7 @@ export class ClassMapWatcher
   extends FileChangeEmitter
   implements WorkspaceService<ClassMapWatcherInstance>
 {
+  public static readonly serviceId = 'ClassMapWatcher';
   async create(folder: vscode.WorkspaceFolder): Promise<ClassMapWatcherInstance> {
     const watcher = new ClassMapWatcherInstance(folder, {
       onChange: (uri, workspaceFolder) => {

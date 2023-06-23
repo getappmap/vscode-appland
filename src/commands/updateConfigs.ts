@@ -20,7 +20,7 @@ export default async function updateAppMapConfigs(
     const runConfigServiceInstance = workspaceServices.getServiceInstance(
       runConfigService,
       workspace
-    ) as RunConfigServiceInstance | undefined;
+    );
     assert(runConfigServiceInstance);
 
     return runConfigServiceInstance;

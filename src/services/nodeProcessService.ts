@@ -13,7 +13,7 @@ import NodeProcessServiceInstance from './nodeProcessServiceInstance';
 import { ProcessWatcher } from './processWatcher';
 import ScanProcessWatcher from './scanProcessWatcher';
 import { WorkspaceService } from './workspaceService';
-import { AppmapConfigManager, AppmapConfigManagerInstance } from './appmapConfigManager';
+import { AppmapConfigManager } from './appmapConfigManager';
 import { workspaceServices } from './workspaceServices';
 import assert from 'assert';
 import LockfileSynchronizer, {
@@ -26,6 +26,7 @@ const PACKAGE_JSON = 'package.json';
 const INSTALL_SUCCESS_MESSAGE = 'Installation of AppMap services is complete.';
 
 export class NodeProcessService implements WorkspaceService<NodeProcessServiceInstance> {
+  public static readonly serviceId = 'NodeProcessService';
   public static outputChannel = vscode.window.createOutputChannel('AppMap: Services');
 
   protected externDir: string;
@@ -61,7 +62,7 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
     const configManagerInstance = workspaceServices().getServiceInstanceFromClass(
       AppmapConfigManager,
       folder
-    ) as AppmapConfigManagerInstance | undefined;
+    );
     assert(configManagerInstance);
 
     configManagerInstance.onConfigChanged(async () => this.handleConfigChange(folder));
@@ -73,7 +74,7 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
     const currentInstance = workspaceServices().getServiceInstanceFromClass(
       NodeProcessService,
       folder
-    ) as NodeProcessServiceInstance | undefined;
+    );
     assert(currentInstance);
 
     await currentInstance.stop();
@@ -91,7 +92,7 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
     const appmapConfigManagerInstance = workspaceServices().getServiceInstanceFromClass(
       AppmapConfigManager,
       folder
-    ) as AppmapConfigManagerInstance | undefined;
+    );
     assert(appmapConfigManagerInstance);
 
     const { configs: appmapConfigs, fileProvider: configFileProvider } =

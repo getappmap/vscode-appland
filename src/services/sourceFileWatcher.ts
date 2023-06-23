@@ -49,6 +49,8 @@ class SourceFileWatcherInstance implements WorkspaceServiceInstance {
 }
 
 export class SourceFileWatcher implements WorkspaceService<SourceFileWatcherInstance> {
+  public static readonly serviceId = 'SourceFileWatcher';
+
   protected _onChange = new vscode.EventEmitter<FileChangeEvent>();
   public onChange = this._onChange.event;
 
