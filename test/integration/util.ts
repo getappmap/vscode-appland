@@ -24,6 +24,10 @@ export const ProjectUptodate = join(
   '../../../test/fixtures/workspaces/project-uptodate'
 );
 export const ProjectJava = join(__dirname, '../../../test/fixtures/workspaces/project-java');
+export const ProjectSeveralFindings = join(
+  __dirname,
+  '../../../test/fixtures/workspaces/project-several-findings'
+);
 
 const PROJECTS = [ProjectA, ProjectUptodate, ProjectJava];
 

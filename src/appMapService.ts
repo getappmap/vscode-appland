@@ -15,6 +15,7 @@ import { RunConfigService } from './services/runConfigService';
 import { SourceFileWatcher } from './services/sourceFileWatcher';
 import { WorkspaceServices } from './services/workspaceServices';
 import { AppMapTreeDataProvider } from './tree/appMapTreeDataProvider';
+import { FindingsTreeDataProvider } from './tree/findingsTreeDataProvider';
 
 export type Invocation = {
   command: Command;
@@ -28,6 +29,7 @@ export interface AppMapProcessService {
 
 export type AppMapTreeDataProviders = {
   appmaps: AppMapTreeDataProvider;
+  analysis: FindingsTreeDataProvider;
 };
 
 export default interface AppMapService {

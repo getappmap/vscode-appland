@@ -1,3 +1,5 @@
+import assert from 'assert';
+
 export async function repeatUntil(
   fn: () => void | void[] | Promise<void> | Promise<void | void[]>,
   message: string,
@@ -20,10 +22,25 @@ export async function waitFor(
   const startTime = Date.now();
   let delay = 100;
   console.log(`Waiting because: ${message}`);
-  while (!(await test())) {
+
+  let exception: any;
+  let result: boolean | undefined;
+
+  const check = async () => {
+    try {
+      result = await test();
+      return result;
+    } catch (e) {
+      exception = e;
+      return false;
+    }
+  };
+
+  while (!(await check())) {
     const elapsed = Date.now() - startTime;
     if (elapsed > timeout) {
-      throw new Error(message);
+      if (exception) throw exception;
+      else throw new Error(message);
     }
 
     delay = delay * 2;

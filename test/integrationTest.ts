@@ -56,9 +56,12 @@ async function integrationTest() {
 
   const resolvedTestFiles = fileArgs.map((file) => {
     // Accept file paths relative to the project root or to the test dir.
-    return [resolve(testDir, file), resolve(projectRootDir, file)].find((fullPath) => {
+    const fullPath = [resolve(testDir, file), resolve(projectRootDir, file)].find((fullPath) => {
       return existsSync(fullPath);
     });
+    if (!fullPath) throw new Error(`Could not find test file ${file}`);
+
+    return fullPath;
   });
   fileArgs.forEach((file, index) => {
     if (!resolvedTestFiles[index]) {
