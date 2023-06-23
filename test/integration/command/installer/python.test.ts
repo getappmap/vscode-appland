@@ -74,7 +74,7 @@ describe('Install agent command', () => {
       () => {
         const activeTerminal = vscode.window.activeTerminal;
         if (!activeTerminal) throw new Error('No active terminal');
-        if (activeTerminal.name !== 'install-appmap')
+        if (!activeTerminal.name.startsWith('AppMap installer'))
           throw new Error('The active terminal is not the install-appmap terminal');
       },
       60,

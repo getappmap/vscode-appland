@@ -18,7 +18,7 @@ describe('Install agent command', () => {
   it('opens a terminal', async () => {
     const terminals = vscode.window.terminals;
     assert.strictEqual(terminals.length, 1);
-    assert.strictEqual(terminals[0].name, 'install-appmap');
+    assert(terminals[0].name.startsWith('AppMap installer'));
   });
 });
 

@@ -1,20 +1,19 @@
 import { Installer } from '.';
 import * as vscode from 'vscode';
+import * as Terminals from './terminals';
 
 export default class DefaultInstaller implements Installer {
   protected createTerminal(
-    cliCommand: string,
     projectPath: string,
     env?: { [key: string]: string | null | undefined }
-  ) {
-    const terminal = vscode.window.createTerminal({
-      name: 'install-appmap',
-      cwd: projectPath,
-      env,
-    });
-
-    terminal.show();
-    terminal.sendText(cliCommand);
+  ): vscode.Terminal {
+    return Terminals.register(
+      vscode.window.createTerminal({
+        name: `AppMap installer (${projectPath})`,
+        cwd: projectPath,
+        env,
+      })
+    );
   }
 
   async execute(
@@ -22,7 +21,10 @@ export default class DefaultInstaller implements Installer {
     projectPath: string,
     env?: { [key: string]: string | null | undefined }
   ): Promise<void> {
-    this.createTerminal(cliCommand, projectPath, env);
+    const terminal =
+      Terminals.getMatching(projectPath, env) || this.createTerminal(projectPath, env);
+    terminal.show();
+    terminal.sendText(cliCommand);
   }
 
   // These variables must be present otherwise children classes cannot
