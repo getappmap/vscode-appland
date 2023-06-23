@@ -138,6 +138,7 @@ export default class AnalysisManager {
     );
 
     this.workspaceServices.enroll(findingWatcher);
+    this.findingsWatcher = findingWatcher;
   }
 
   private static onAnalysisDisabled(): void {
