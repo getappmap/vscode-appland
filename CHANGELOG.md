@@ -1,3 +1,10 @@
+## [0.90.1](https://github.com/getappmap/vscode-appland/compare/v0.90.0...v0.90.1) (2023-06-23)
+
+
+### Bug Fixes
+
+* java test config respects appmap_dir ([cfb3604](https://github.com/getappmap/vscode-appland/commit/cfb360439d34b6d7ea3eff76f5f16d9a944f905b))
+
 # [0.90.0](https://github.com/getappmap/vscode-appland/compare/v0.89.1...v0.90.0) (2023-06-23)
 
 
