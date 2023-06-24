@@ -5,7 +5,16 @@ import assert from 'assert';
 import { withAuthenticatedUser, ProjectSeveralFindings, waitFor } from '../util';
 import { FindingsTreeDataProvider } from '../../../src/tree/findingsTreeDataProvider';
 
-import treeItems from './treeItems.json';
+import enumerateTree from './enumerateTree';
+import { glob } from 'glob';
+import { promisify } from 'util';
+import { removeFindingModifiedDate } from './removeFindingModifiedDate';
+import { waitForAnalysisTree } from './waitForAnalysisTree';
+import { Metadata } from '@appland/models';
+import { join } from 'path';
+import { readFile, writeFile } from 'fs/promises';
+
+import treeItems from './failedTestTreeItems.json';
 import findingsTreeItems_noDateIndicated from './findingsTreeItems_noDateIndicated.json';
 (
   treeItems
@@ -13,17 +22,17 @@ import findingsTreeItems_noDateIndicated from './findingsTreeItems_noDateIndicat
     .children.find((item) => item.label === 'Findings') as any
 ).children = findingsTreeItems_noDateIndicated;
 
-import enumerateTree from './enumerateTree';
-import { glob } from 'glob';
-import { promisify } from 'util';
-import { removeFindingModifiedDate } from './removeFindingModifiedDate';
-import { waitForAnalysisTree } from './waitForAnalysisTree';
+const appmapFileName = join(
+  ProjectSeveralFindings,
+  'tmp/appmap/minitest/Microposts_interface_micropost_interface.appmap.json'
+);
 
-describe('Runtime analysis findings tree items', () => {
+describe('Runtime analysis failed test tree item', () => {
   withAuthenticatedUser();
 
   let analysisTree: FindingsTreeDataProvider;
   let prepareFindingsTask: NodeJS.Timer;
+  let appmapRawData: any;
 
   const prepareFindings = async () => {
     await Promise.all(
@@ -33,11 +42,28 @@ describe('Runtime analysis findings tree items', () => {
         })
       ).map(removeFindingModifiedDate)
     );
+
+    if (!appmapRawData) appmapRawData = await readFile(appmapFileName, 'utf-8');
+    const appmapData = JSON.parse(appmapRawData);
+    const metadata = appmapData.metadata as Metadata;
+    if (metadata.test_status === 'succeeded') {
+      metadata.test_status = 'failed';
+      metadata.test_failure = {
+        message: 'Null pointer exception',
+        location: 'app/models/user.rb:47',
+      };
+      await writeFile(appmapFileName, JSON.stringify(appmapData, null, 2));
+    }
+  };
+
+  const restoreAppMapData = async () => {
+    if (appmapRawData) await writeFile(appmapFileName, appmapRawData);
   };
 
   beforeEach(async () => (analysisTree = await waitForAnalysisTree()));
   beforeEach(() => (prepareFindingsTask = setInterval(prepareFindings, 1000)));
   afterEach(() => (prepareFindingsTask ? clearTimeout(prepareFindingsTask) : undefined));
+  afterEach(restoreAppMapData);
 
   it('has the expected tree items', async () => {
     await waitFor(`Expecting tree items to match expectation`, async () => {
