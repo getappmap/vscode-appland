@@ -29,7 +29,7 @@ export const ProjectSeveralFindings = join(
   '../../../test/fixtures/workspaces/project-several-findings'
 );
 
-const PROJECTS = [ProjectA, ProjectUptodate, ProjectJava];
+const PROJECTS = [ProjectA, ProjectRuby, ProjectUptodate, ProjectJava, ProjectSeveralFindings];
 
 export async function withTmpDir(fn: (tmpDir: string) => void | Promise<void>): Promise<void> {
   const tmpDir = await promisify(tmp.dir)();
@@ -245,7 +245,7 @@ export async function executeWorkspaceOSCommand(cmd: string, workspaceName: stri
 
 async function cleanWorkspace(): Promise<void> {
   async function cleanProject(project: string) {
-    const commands = [`git checkout HEAD .`, `git clean -fd .`];
+    const commands = [`git checkout HEAD .`, `git clean -f -d .`];
     for (const command of commands) {
       try {
         await executeWorkspaceOSCommand(command, project);

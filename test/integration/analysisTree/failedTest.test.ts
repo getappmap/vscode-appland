@@ -2,7 +2,12 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import assert from 'assert';
 
-import { withAuthenticatedUser, ProjectSeveralFindings, waitFor } from '../util';
+import {
+  withAuthenticatedUser,
+  ProjectSeveralFindings,
+  waitFor,
+  initializeWorkspace,
+} from '../util';
 import { FindingsTreeDataProvider } from '../../../src/tree/findingsTreeDataProvider';
 
 import enumerateTree from './enumerateTree';
@@ -56,14 +61,11 @@ describe('Runtime analysis failed test tree item', () => {
     }
   };
 
-  const restoreAppMapData = async () => {
-    if (appmapRawData) await writeFile(appmapFileName, appmapRawData);
-  };
-
+  beforeEach(initializeWorkspace);
   beforeEach(async () => (analysisTree = await waitForAnalysisTree()));
   beforeEach(() => (prepareFindingsTask = setInterval(prepareFindings, 1000)));
   afterEach(() => (prepareFindingsTask ? clearTimeout(prepareFindingsTask) : undefined));
-  afterEach(restoreAppMapData);
+  afterEach(initializeWorkspace);
 
   it('has the expected tree items', async () => {
     await waitFor(`Expecting tree items to match expectation`, async () => {
