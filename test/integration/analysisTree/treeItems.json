@@ -5,63 +5,7 @@
     "children": [
       {
         "label": "Findings",
-        "children": [
-          {
-            "label": "No date indicated",
-            "children": [
-              {
-                "label": "Security",
-                "children": [
-                  {
-                    "label": "Secret in log",
-                    "children": [
-                      {
-                        "label": "log_device.rb",
-                        "children": []
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "label": "Performance",
-                "children": [
-                  {
-                    "label": "N plus 1 SQL query",
-                    "children": [
-                      {
-                        "label": "_micropost.html.erb",
-                        "children": []
-                      },
-                      {
-                        "label": "_micropost.html.erb",
-                        "children": []
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "label": "Maintainability",
-                "children": [
-                  {
-                    "label": "Data update performed in GET or HEAD request",
-                    "children": [
-                      {
-                        "label": "user.rb:72",
-                        "children": []
-                      },
-                      {
-                        "label": "user.rb:72",
-                        "children": []
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
+        "children": []
       }
     ]
   }

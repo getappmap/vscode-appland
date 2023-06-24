@@ -1,0 +1,23 @@
+[
+  {
+    "label": "Findings table",
+    "children": []
+  },
+  {
+    "label": "project-several-findings",
+    "children": [
+      {
+        "label": "Failed tests",
+        "children": [
+          {
+            "label": "Microposts_interface micropost interface",
+            "children": []
+          }
+        ]
+      },
+      {
+        "label": "Findings"
+      }
+    ]
+  }
+]

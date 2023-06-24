@@ -5,14 +5,14 @@ import { Finding } from '@appland/scanner';
 import { debug } from 'console';
 
 export async function removeFindingModifiedDate(findingsPath: string) {
-  let findingsStr: string;
+  let findingsData: any;
   try {
-    findingsStr = await readFile(join(ProjectSeveralFindings, findingsPath), 'utf8');
+    const findingsStr = await readFile(join(ProjectSeveralFindings, findingsPath), 'utf8');
+    findingsData = JSON.parse(findingsStr);
   } catch (e) {
     debug(e);
     return;
   }
-  const findingsData = JSON.parse(findingsStr);
   const findings = findingsData.findings as Finding[];
   let modified = false;
   for (const finding of findings) {
