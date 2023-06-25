@@ -1,24 +1,25 @@
 import assert from 'assert';
-import { existsSync, lstatSync } from 'fs';
-import os from 'os';
-import path from 'path';
+import { lstatSync } from 'fs';
+import os, { tmpdir } from 'os';
+import path, { join } from 'path';
 import { SinonSandbox, createSandbox } from 'sinon';
 
-import { ProjectA, initializeWorkspace, waitFor, waitForExtension } from '../util';
-import GithubRelease from '../../../src/lib/githubRelease';
-
-const expectedJavaDir = path.join(ProjectA, '.appmap', 'lib', 'java');
-const expectedLatestJarPath = path.join(expectedJavaDir, 'appmap.jar');
+import { initializeWorkspace, waitFor, waitForExtension } from '../util';
+import { randomUUID } from 'crypto';
+import { readdir } from 'fs/promises';
 
 describe('asset manager', () => {
+  let tmpDir: string;
   let sinon: SinonSandbox;
 
   before(async () => {
-    sinon = createSandbox();
-    sinon.stub(os, 'homedir').returns(ProjectA);
+    tmpDir = path.join(tmpdir(), randomUUID());
 
+    sinon = createSandbox();
+    sinon.stub(os, 'homedir').returns(tmpDir);
+
+    await initializeWorkspace();
     await waitForExtension();
-    await waitFor('Waiting for jar to be downloaded', () => existsSync(expectedLatestJarPath));
   });
 
   after(async () => {
@@ -26,20 +27,25 @@ describe('asset manager', () => {
     await initializeWorkspace();
   });
 
+  // More complex behavior, such as the lock file, is tested in test/unit/lib/assetManager/assetManager.test.ts
   it('downloads the latest jar', async () => {
-    const release = new GithubRelease('getappmap', 'appmap-java');
-    const assets = await release.getLatestAssets();
-    const asset = assets.find((a) => a.content_type === 'application/java-archive');
-    assert(asset);
-    const expectedAssetPath = path.join(expectedJavaDir, asset.name);
-    assert(existsSync(expectedAssetPath));
-    const stats = lstatSync(expectedAssetPath);
-    assert(stats.isFile());
-  });
+    const javaDir = join(tmpDir, '.appmap', 'lib', 'java');
 
-  it('creates a symlink to the latest jar', () => {
-    assert(existsSync(expectedLatestJarPath));
-    const stats = lstatSync(expectedLatestJarPath);
-    assert(stats.isSymbolicLink());
+    let jarFile: string | undefined;
+    let symlinkFile: string | undefined;
+    await waitFor('Waiting for jar to be downloaded', async () => {
+      const assetFiles = await readdir(javaDir);
+
+      if (!jarFile) jarFile = assetFiles.find((f) => /^appmap-\d+\.\d+\.\d+\.jar$/.test(f));
+      if (!symlinkFile) symlinkFile = assetFiles.find((f) => f == 'appmap.jar');
+
+      return !!jarFile && !!symlinkFile;
+    });
+
+    assert(jarFile);
+    assert(symlinkFile);
+
+    assert(lstatSync(join(javaDir, jarFile)).isFile());
+    assert(lstatSync(join(javaDir, symlinkFile)).isSymbolicLink());
   });
 });

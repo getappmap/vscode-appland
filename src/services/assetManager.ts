@@ -1,120 +1,58 @@
 import * as vscode from 'vscode';
-
-import {
-  copyFileSync,
-  existsSync,
-  mkdirSync,
-  rmSync,
-  statSync,
-  symlinkSync,
-  unlinkSync,
-  writeFileSync,
-} from 'fs';
 import os from 'os';
-import path from 'path';
 
-import GithubRelease, { GithubReleaseAsset } from '../lib/githubRelease';
 import { DEBUG_EXCEPTION, DOWNLOADED_JAVA_JAR, Telemetry } from '../telemetry';
-import { fileExists } from '../util';
 import ErrorCode from '../telemetry/definitions/errorCodes';
+import AssetManager, { ProgressReporter } from '../lib/assetManager';
 
-export default class AssetManager {
-  private static FIVE_MINUTES_IN_MILLISECONDS = 5 * 60 * 1000;
-  private static appmapJavaRelease = new GithubRelease('getappmap', 'appmap-java');
-  private static outputChannel = vscode.window.createOutputChannel('AppMap: Assets');
-  public static logLines: string[] = [];
+class ProgressReporterImpl implements ProgressReporter {
+  logLines: string[] = [];
+  outputChannel = vscode.window.createOutputChannel('AppMap: Assets');
 
-  private static get javaAgentDir(): string {
-    return path.join(os.homedir(), '.appmap', 'lib', 'java');
+  identifiedAsset(assetName: string): void {
+    this.log(`Identified asset to download: ${assetName}`);
   }
 
-  private static log(line: string) {
+  unableToSymlink(assetName: string, symlinkPath: string) {
+    this.log(
+      `Unable to symlink ${assetName} to ${symlinkPath}. Maybe ${os.type()} ${os.platform()} doesn't support symlinks?`
+    );
+  }
+
+  downloadLocked(assetName: string) {
+    this.log(`Will not download ${assetName} because a recent lockfile already exists.`);
+  }
+
+  downloading(name: string): void {
+    this.log(`Downloading AppMap Java agent ${name}`);
+  }
+
+  downloaded(assetPath: string, symlinkCreated: boolean, version: string) {
+    this.log(`Finished downloading AppMap Java agent to ${assetPath}`);
+    Telemetry.sendEvent(DOWNLOADED_JAVA_JAR, { symlinkCreated, version });
+  }
+
+  symlinked(assetName: string, symlinkPath: string): void {
+    this.log(`Symlinked ${assetName} to ${symlinkPath}`);
+  }
+
+  error(err: Error): void {
+    this.log(err.message);
+
+    Telemetry.sendEvent(DEBUG_EXCEPTION, {
+      exception: err,
+      errorCode: ErrorCode.AssetAcquisitionFailure,
+      log: this.logLines.join('\n'),
+    });
+  }
+
+  protected log(line: string) {
     this.logLines.push(line);
-    this.outputChannel.appendLine(line);
+    if (this.outputChannel) this.outputChannel.appendLine(line);
   }
+}
 
-  private static async getLatestJavaJarInfo(): Promise<GithubReleaseAsset> {
-    const assets = await this.appmapJavaRelease.getLatestAssets();
-    const asset = assets.find((a) => a.content_type === 'application/java-archive');
-    if (!asset) throw Error('Could not retrieve latest Java agent release');
-    return asset;
-  }
-
-  // Note that this method is synchronous, to avoid possible race conditions with the
-  // file update locking process.
-  //
-  // Returns the lockfile path, or undefined if the asset download is already locked.
-  private static acquireDownloadLock(assetName: string): string | undefined {
-    const lockfilePath = path.join(this.javaAgentDir, assetName + '.downloading');
-    if (existsSync(lockfilePath)) {
-      const lockfileCreationTime = statSync(lockfilePath).mtime;
-      const timeSinceCreation = new Date().getTime() - lockfileCreationTime.getTime();
-      if (timeSinceCreation < AssetManager.FIVE_MINUTES_IN_MILLISECONDS) return;
-    }
-    writeFileSync(lockfilePath, 'lockfile');
-    return lockfilePath;
-  }
-
-  private static updateLatestFile(
-    assetName: string,
-    assetPath: string,
-    symlinkPath: string
-  ): boolean {
-    let symlinkCreated = true;
-    try {
-      symlinkSync(assetName, symlinkPath, 'file');
-    } catch (e) {
-      this.log(
-        `Unable to symlink ${assetName} to ${symlinkPath}. Maybe ${os.type()} ${os.platform()} doesn't support symlinks?`
-      );
-
-      copyFileSync(assetPath, symlinkPath);
-      symlinkCreated = false;
-    }
-    return symlinkCreated;
-  }
-
-  public static async getLatestJavaJar(): Promise<void> {
-    try {
-      const asset = await this.getLatestJavaJarInfo();
-      if (!(await fileExists(this.javaAgentDir))) mkdirSync(this.javaAgentDir, { recursive: true });
-      const assetPath = path.join(this.javaAgentDir, asset.name);
-      if (await fileExists(assetPath)) return;
-
-      const lockfilePath = this.acquireDownloadLock(asset.name);
-      if (!lockfilePath) {
-        this.log(`Will not download ${asset.name} because a recent lockfile already exists.`);
-        return;
-      }
-
-      this.log(`Downloading AppMap Java agent ${asset.name}`);
-      await GithubRelease.downloadAsset(asset, assetPath);
-
-      const symlinkPath = path.join(this.javaAgentDir, 'appmap.jar');
-      try {
-        unlinkSync(symlinkPath);
-      } catch (e) {
-        // if the symlink that we're trying to remove does not exist, don't do anything
-      }
-
-      const symlinkCreated = this.updateLatestFile(asset.name, assetPath, symlinkPath);
-      rmSync(lockfilePath);
-
-      this.log(`Finished downloading AppMap Java agent to ${assetPath}`);
-      Telemetry.sendEvent(DOWNLOADED_JAVA_JAR, { symlinkCreated, version: asset.name });
-    } catch (e) {
-      const err = e as Error;
-      this.log(err.message);
-
-      Telemetry.sendEvent(DEBUG_EXCEPTION, {
-        exception: err,
-        errorCode: ErrorCode.AssetAcquisitionFailure,
-        log: this.logLines.join('\n'),
-      });
-    }
-  }
-
-  public static async register(): Promise<void> {
-    await this.getLatestJavaJar();
-  }
+export default async function installLatestJavaJar(raiseOnError: boolean) {
+  const assetManager = new AssetManager(raiseOnError, new ProgressReporterImpl());
+  assetManager.installLatestJavaJar();
 }
