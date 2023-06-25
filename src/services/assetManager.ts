@@ -1,11 +1,19 @@
 import * as vscode from 'vscode';
 
-import { copyFileSync, mkdirSync, statSync, symlinkSync, unlinkSync } from 'fs';
+import {
+  copyFileSync,
+  existsSync,
+  mkdirSync,
+  rmSync,
+  statSync,
+  symlinkSync,
+  unlinkSync,
+  writeFileSync,
+} from 'fs';
 import os from 'os';
 import path from 'path';
 
 import GithubRelease, { GithubReleaseAsset } from '../lib/githubRelease';
-import { touch } from '../lib/touch';
 import { DEBUG_EXCEPTION, DOWNLOADED_JAVA_JAR, Telemetry } from '../telemetry';
 import { fileExists } from '../util';
 import ErrorCode from '../telemetry/definitions/errorCodes';
@@ -32,14 +40,18 @@ export default class AssetManager {
     return asset;
   }
 
-  private static async createLockfile(assetName: string): Promise<string | undefined> {
+  // Note that this method is synchronous, to avoid possible race conditions with the
+  // file update locking process.
+  //
+  // Returns the lockfile path, or undefined if the asset download is already locked.
+  private static acquireDownloadLock(assetName: string): string | undefined {
     const lockfilePath = path.join(this.javaAgentDir, assetName + '.downloading');
-    if (await fileExists(lockfilePath)) {
+    if (existsSync(lockfilePath)) {
       const lockfileCreationTime = statSync(lockfilePath).mtime;
       const timeSinceCreation = new Date().getTime() - lockfileCreationTime.getTime();
       if (timeSinceCreation < AssetManager.FIVE_MINUTES_IN_MILLISECONDS) return;
     }
-    await touch(lockfilePath);
+    writeFileSync(lockfilePath, 'lockfile');
     return lockfilePath;
   }
 
@@ -52,6 +64,10 @@ export default class AssetManager {
     try {
       symlinkSync(assetName, symlinkPath, 'file');
     } catch (e) {
+      this.log(
+        `Unable to symlink ${assetName} to ${symlinkPath}. Maybe ${os.type()} ${os.platform()} doesn't support symlinks?`
+      );
+
       copyFileSync(assetPath, symlinkPath);
       symlinkCreated = false;
     }
@@ -65,9 +81,9 @@ export default class AssetManager {
       const assetPath = path.join(this.javaAgentDir, asset.name);
       if (await fileExists(assetPath)) return;
 
-      const lockfilePath = await this.createLockfile(asset.name);
+      const lockfilePath = this.acquireDownloadLock(asset.name);
       if (!lockfilePath) {
-        this.log(`Did not download ${asset.name} because lockfile already exists.`);
+        this.log(`Will not download ${asset.name} because a recent lockfile already exists.`);
         return;
       }
 
@@ -82,7 +98,7 @@ export default class AssetManager {
       }
 
       const symlinkCreated = this.updateLatestFile(asset.name, assetPath, symlinkPath);
-      unlinkSync(lockfilePath);
+      rmSync(lockfilePath);
 
       this.log(`Finished downloading AppMap Java agent to ${assetPath}`);
       Telemetry.sendEvent(DOWNLOADED_JAVA_JAR, { symlinkCreated, version: asset.name });
