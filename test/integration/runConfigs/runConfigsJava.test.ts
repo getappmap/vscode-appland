@@ -19,7 +19,10 @@ describe('run config service in a Java Project', () => {
   let state: ExtensionState;
   let getConfigStub: SinonStub;
 
+  // NOTE: This is a before 'all' because each of the tests is designed to run in sequence in the same workspace instance.
   before(async () => {
+    await initializeWorkspace();
+
     sinon = createSandbox();
     sinon.stub(os, 'homedir').returns(ProjectJava);
 
@@ -36,8 +39,13 @@ describe('run config service in a Java Project', () => {
     assert.strictEqual(runConfigServiceInstances.length, 1);
     runConfigServiceInstance = runConfigServiceInstances[0];
 
-    // Pretend that the Test Runner for Java extension is installed
+    // Test Runner for Java extension is installed
     sinon.stub(runConfigServiceInstance, 'hasJavaTestExtension').returns(true);
+    // Run config hasn't already been created
+    sinon.stub(runConfigServiceInstance, 'hasPreviouslyUpdatedLaunchConfig').returns(false);
+
+    // This is tested in testConfigsJava.test.ts so we can ignore it here
+    sinon.stub(runConfigServiceInstance, 'updateTestConfig');
   });
 
   after(async () => {

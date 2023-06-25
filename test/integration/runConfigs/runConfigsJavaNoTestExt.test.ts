@@ -21,7 +21,10 @@ describe('run config service in a Java Project without the Test Runner for Java 
   let fakeConfigUpdateSpy: SinonSpy;
   let getConfigStub: SinonStub;
 
+  // NOTE: This is a before 'all' because each of the tests is designed to run in sequence in the same workspace instance.
   before(async () => {
+    await initializeWorkspace();
+
     sinon = createSandbox();
     sinon.stub(os, 'homedir').returns(ProjectJava);
 
