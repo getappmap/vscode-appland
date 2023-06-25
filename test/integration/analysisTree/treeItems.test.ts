@@ -18,11 +18,13 @@ describe('Runtime analysis findings tree items', () => {
   let prepareFindingsTask: NodeJS.Timer;
 
   const prepareFindings = async () => {
-    (
-      await promisify(glob)('**/appmap-findings.json', {
-        cwd: ProjectSeveralFindings,
-      })
-    ).map(removeFindingModifiedDate);
+    await Promise.all(
+      (
+        await promisify(glob)('**/appmap-findings.json', {
+          cwd: ProjectSeveralFindings,
+        })
+      ).map(removeFindingModifiedDate)
+    );
   };
 
   beforeEach(async () => (analysisTree = await waitForAnalysisTree()));
