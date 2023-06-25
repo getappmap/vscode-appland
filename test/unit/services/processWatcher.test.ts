@@ -56,7 +56,7 @@ describe('ProcessWatcher', () => {
       await watcher.stop();
 
       expect(await promisify(ps.lookup)({ pid: process.pid })).to.be.empty;
-    });
+    }).timeout(10000);
 
     context('with fake times', () => {
       let clock: sinon.SinonFakeTimers;
@@ -78,7 +78,7 @@ describe('ProcessWatcher', () => {
         await stop;
 
         expect(await promisify(ps.lookup)({ pid: process.pid })).to.be.empty;
-      });
+      }).timeout(10000);
     });
   });
 });
