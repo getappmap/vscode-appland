@@ -24,7 +24,6 @@ describe('run config service in a Ruby project', () => {
     await initializeWorkspace();
 
     sinon = createSandbox();
-    sinon.stub(os, 'homedir').returns(ProjectA);
 
     fakeConfigGetSpy = sinon.spy(FakeConfig, 'get');
     fakeConfigUpdateSpy = sinon.spy(FakeConfig, 'update');
