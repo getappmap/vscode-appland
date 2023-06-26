@@ -24,7 +24,7 @@ export default function deleteAllAppMaps(
       return;
     }
 
-    deleteAppMaps(join(folder.uri.fsPath, appmapDir));
+    await deleteAppMaps(join(folder.uri.fsPath, appmapDir));
   }
 
   context.subscriptions.push(
