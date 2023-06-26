@@ -3,6 +3,7 @@ import { promisify } from 'util';
 import * as vscode from 'vscode';
 import { retry } from '../util';
 import { rm } from 'fs/promises';
+import { debug } from 'console';
 
 // Deletes an AppMap file along with the contents of its index directory.
 // The index directory itself will be later deleted by the IndexJanitor once the relevant FileSystemWatcher events have
@@ -13,11 +14,13 @@ export default async function deleteAppMap(uri: vscode.Uri): Promise<void> {
   // Need to use native filesystem operations here here, for some reason. vscode.findAllFiles isn't returning the index
   // contents, and fs.delete doesn't remove files.
   console.debug(`Deleting AppMap ${uri.fsPath}`);
+
   const indexDir = uri.fsPath.substring(0, uri.fsPath.lastIndexOf('.appmap.json'));
-  const filesToDelete = await promisify(glob)(`${indexDir}/*`);
 
   await retry(async () => rm(uri.fsPath, { force: true }));
-  await Promise.all(
-    filesToDelete.map((file) => retry(async () => await rm(file, { force: true })))
-  );
+  await retry(async () => {
+    for (const file of await promisify(glob)(`${indexDir}/*`)) {
+      await rm(file, { force: true });
+    }
+  });
 }
