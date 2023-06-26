@@ -37,7 +37,7 @@ describe('Runtime analysis failed test tree item', () => {
 
   let analysisTree: FindingsTreeDataProvider;
   let prepareFindingsTask: NodeJS.Timer;
-  let appmapRawData: any;
+  let appmapStr: any;
 
   const prepareFindings = async () => {
     await Promise.all(
@@ -48,8 +48,8 @@ describe('Runtime analysis failed test tree item', () => {
       ).map(removeFindingModifiedDate)
     );
 
-    if (!appmapRawData) appmapRawData = await readFile(appmapFileName, 'utf-8');
-    const appmapData = JSON.parse(appmapRawData);
+    if (!appmapStr) appmapStr = await readFile(appmapFileName, 'utf-8');
+    const appmapData = JSON.parse(appmapStr);
     const metadata = appmapData.metadata as Metadata;
     if (metadata.test_status === 'succeeded') {
       metadata.test_status = 'failed';
@@ -57,7 +57,8 @@ describe('Runtime analysis failed test tree item', () => {
         message: 'Null pointer exception',
         location: 'app/models/user.rb:47',
       };
-      await writeFile(appmapFileName, JSON.stringify(appmapData, null, 2));
+      appmapStr = JSON.stringify(appmapData, null, 2);
+      await writeFile(appmapFileName, appmapStr);
     }
   };
 
