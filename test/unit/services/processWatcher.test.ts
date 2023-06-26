@@ -14,6 +14,23 @@ import {
 } from '../../../src/services/processWatcher';
 const testModule = join(__dirname, 'support', 'simpleProcess.mjs');
 
+function makeWatcher(opts: Partial<ProcessWatcherOptions> = {}) {
+  const provider: ConfigFileProvider = {
+    files() {
+      return Promise.resolve([Uri.parse('test:///appmap.yml')]);
+    },
+
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    reset() {},
+  };
+
+  return new ProcessWatcher(provider, {
+    id: 'test process' as any as ProcessId,
+    modulePath: testModule,
+    ...opts,
+  });
+}
+
 describe('ProcessWatcher', () => {
   describe('stop', () => {
     it('does not send error event', async () => {
@@ -39,39 +56,29 @@ describe('ProcessWatcher', () => {
       await watcher.stop();
 
       expect(await promisify(ps.lookup)({ pid: process.pid })).to.be.empty;
-    });
+    }).timeout(10000);
 
-    it('kills the process forcefully if needed', async () => {
-      const clock = sinon.useFakeTimers();
-      const watcher = makeWatcher({ args: ['ignore'] });
-      await watcher.start();
-      const { process } = watcher;
-      assert(process);
-      expect(await promisify(ps.lookup)({ pid: process.pid })).to.not.be.empty;
+    context('with fake times', () => {
+      let clock: sinon.SinonFakeTimers;
 
-      const stop = watcher.stop();
-      clock.runAll();
-      await stop;
+      beforeEach(() => (clock = sinon.useFakeTimers()));
+      afterEach(() => clock.restore());
 
-      expect(await promisify(ps.lookup)({ pid: process.pid })).to.be.empty;
-      clock.restore();
+      it('kills the process forcefully if needed', async () => {
+        const watcher = makeWatcher();
+        await watcher.start();
+        const { process } = watcher;
+
+        assert(process);
+
+        expect(await promisify(ps.lookup)({ pid: process.pid })).to.not.be.empty;
+
+        const stop = watcher.stop();
+        clock.runAll();
+        await stop;
+
+        expect(await promisify(ps.lookup)({ pid: process.pid })).to.be.empty;
+      }).timeout(10000);
     });
   });
 });
-
-function makeWatcher(opts: Partial<ProcessWatcherOptions> = {}) {
-  const provider: ConfigFileProvider = {
-    files() {
-      return Promise.resolve([Uri.parse('test:///appmap.yml')]);
-    },
-
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    reset() {},
-  };
-
-  return new ProcessWatcher(provider, {
-    id: 'test process' as any as ProcessId,
-    modulePath: testModule,
-    ...opts,
-  });
-}

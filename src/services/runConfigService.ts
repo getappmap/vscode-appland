@@ -38,11 +38,11 @@ export class RunConfigServiceInstance implements WorkspaceServiceInstance {
     };
   }
 
-  private get hasPreviouslyUpdatedLaunchConfig(): boolean {
+  public get hasPreviouslyUpdatedLaunchConfig(): boolean {
     return this.extensionState.getUpdatedLaunchConfig(this.folder);
   }
 
-  private get hasPreviouslyUpdatedTestConfig(): boolean {
+  public get hasPreviouslyUpdatedTestConfig(): boolean {
     return this.extensionState.getUpdatedTestConfig(this.folder);
   }
 

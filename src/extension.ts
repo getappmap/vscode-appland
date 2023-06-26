@@ -62,11 +62,11 @@ import { findByName } from './commands/findByName';
 import initializeDefaultFilter from './lib/initializeSavedFilters';
 import { RunConfigService } from './services/runConfigService';
 import updateAppMapConfigs from './commands/updateConfigs';
-import AssetManager from './services/assetManager';
 import downloadLatestJavaJar from './commands/downloadLatestJavaJar';
 import IndexJanitor from './lib/indexJanitor';
 import { unregister as unregisterTerminal } from './commands/installer/terminals';
 import getAppmapDir from './commands/getAppmapDir';
+import installLatestJavaJar from './services/assetManager';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   Telemetry.register(context);
@@ -249,7 +249,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
     const processService = new NodeProcessService(context);
     const runConfigService = new RunConfigService(projectState, workspaceServices, extensionState);
-    AssetManager.register();
+    installLatestJavaJar(false);
     await workspaceServices.enroll(runConfigService);
 
     (async function () {

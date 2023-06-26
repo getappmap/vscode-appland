@@ -78,8 +78,10 @@ describe('test configs in a Java Project', () => {
       extensionState
     );
 
-    // Pretend that the Test Runner for Java extension is installed
+    // Test Runner for Java extension is installed
     sinon.stub(runConfigServiceInstance, 'hasJavaTestExtension').returns(true);
+    // Test config hasn't already been created
+    sinon.stub(runConfigServiceInstance, 'hasPreviouslyUpdatedTestConfig').returns(false);
 
     // This is tested in runConfigsJava.test.ts so we can ignore it here
     sinon.stub(runConfigServiceInstance, 'updateLaunchConfig');

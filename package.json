@@ -206,7 +206,7 @@
       },
       {
         "command": "appmap.downloadLatestJavaJar",
-        "title": "AppMap: Download Latest Java Jar"
+        "title": "AppMap: Update Java Jar"
       }
     ],
     "configuration": {
@@ -442,6 +442,7 @@
     "test:web-client": "mocha web/test/*.test.mjs",
     "test:system": "ts-node test/systemTest.ts",
     "test:unit": "mocha test/unit/**/*.test.[tj]s",
+    "test:unit:some": "mocha",
     "test": "yarn test:unit && yarn test:web-client && yarn test:integration && yarn test:system",
     "compile": "NODE_ENV=production tsup --config tsup.config.ts",
     "watch": "tsup --config tsup.config.ts --watch",
