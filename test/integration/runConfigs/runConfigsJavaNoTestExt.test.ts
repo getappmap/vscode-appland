@@ -26,7 +26,6 @@ describe('run config service in a Java Project without the Test Runner for Java 
     await initializeWorkspace();
 
     sinon = createSandbox();
-    sinon.stub(os, 'homedir').returns(ProjectJava);
 
     fakeConfigGetSpy = sinon.spy(FakeConfig, 'get');
     fakeConfigUpdateSpy = sinon.spy(FakeConfig, 'update');

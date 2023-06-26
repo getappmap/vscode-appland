@@ -60,7 +60,6 @@ describe('test configs in a Java Project', () => {
 
   beforeEach(async () => {
     sinon = createSandbox();
-    sinon.stub(os, 'homedir').returns(ProjectJava);
 
     fakeConfigGetSpy = sinon.spy(fakeConfig, 'get');
     fakeConfigUpdateSpy = sinon.spy(fakeConfig, 'update');

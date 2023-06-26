@@ -24,7 +24,6 @@ describe('run config service in a Java Project', () => {
     await initializeWorkspace();
 
     sinon = createSandbox();
-    sinon.stub(os, 'homedir').returns(ProjectJava);
 
     // This needs to be faked because the Test Runner for Java extension is not installed during testing
     // and VS Code will throw an error when attempting to update an unregistered config ("java.test.config")
