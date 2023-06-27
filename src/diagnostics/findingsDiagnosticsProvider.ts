@@ -1,6 +1,9 @@
 import * as vscode from 'vscode';
 import { ResolvedFinding } from '../services/resolvedFinding';
 import generateTitle from '../lib/generateDisplayTitle';
+import { debuglog } from 'node:util';
+
+const debug = debuglog('appmap-vscode:FindingsDiagnosticsProvider');
 
 type DiagnosticWithProblemLocation = {
   diagnostic: vscode.Diagnostic;
@@ -13,6 +16,7 @@ export default class FindingsDiagnosticsProvider implements vscode.Disposable {
   diagnosticsBySourceUri: Record<string, DiagnosticWithProblemLocation[]> = {};
 
   constructor() {
+    debug('new FindingsDiagnosticsProvider()');
     this.diagnosticsCollection = vscode.languages.createDiagnosticCollection('appmap-findings');
   }
 
@@ -22,6 +26,8 @@ export default class FindingsDiagnosticsProvider implements vscode.Disposable {
   // need to be re-generated. That is, any findings that were in a previous version of the file should be removed
   // from the list of diagnostics fro their problem location, and new findings added.
   updateFindings(sourceUri: vscode.Uri, findings: ResolvedFinding[]): void {
+    debug('updateFindings(%s, %s)', sourceUri, findings);
+
     // updatedLocations is all the problem locations whose dignostics need to be replaced.
     const updatedProblemUriStrings = new Set<string>();
     (this.findingsBySourceUri[sourceUri.toString()] || []).forEach((finding) => {

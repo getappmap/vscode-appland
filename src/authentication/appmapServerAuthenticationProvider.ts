@@ -14,6 +14,9 @@ import {
 } from '../telemetry';
 import ErrorCode from '../telemetry/definitions/errorCodes';
 import { AUTHN_PROVIDER_NAME } from './index';
+import { debuglog } from 'node:util';
+
+const debug = debuglog('appmap-vscode:AppMapServerAuthenticationProvider');
 
 const APPMAP_SERVER_SESSION_KEY = 'appmap.server.session';
 
@@ -65,6 +68,7 @@ export default class AppMapServerAuthenticationProvider implements vscode.Authen
 
   async createSession(): Promise<vscode.AuthenticationSession> {
     this.session = await this.performSignIn();
+    debug('createSession(); session %savailable', this.session ? '' : 'not ');
 
     if (!this.session) {
       Telemetry.sendEvent(AUTHENTICATION_FAILED);
@@ -84,6 +88,8 @@ export default class AppMapServerAuthenticationProvider implements vscode.Authen
 
   async removeSession(): Promise<void> {
     const [session] = await this.getSessions();
+    debug('removeSession(); session %savailable', this.session ? '' : 'not ');
+
     if (session) {
       this.session = undefined;
       this.context.secrets

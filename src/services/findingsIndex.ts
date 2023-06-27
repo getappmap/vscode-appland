@@ -1,12 +1,14 @@
 import * as vscode from 'vscode';
 import { Finding } from '@appland/scanner/built/cli';
 import { ResolvedFinding } from './resolvedFinding';
-import { promisify } from 'util';
+import { debuglog, promisify } from 'util';
 import { readFile } from 'fs';
 import EventEmitter from 'events';
 import { fileExists } from '../util';
 import uniq from '../lib/uniq';
 import { Check } from '@appland/scanner';
+
+const debug = debuglog('appmap-vscode:FindingsIndex');
 
 export default class FindingsIndex extends EventEmitter implements vscode.Disposable {
   private _onChanged = new vscode.EventEmitter<vscode.WorkspaceFolder>();
@@ -49,6 +51,8 @@ export default class FindingsIndex extends EventEmitter implements vscode.Dispos
     sourceUri: vscode.Uri,
     workspaceFolder: vscode.WorkspaceFolder
   ): Promise<void> {
+    debug('addFindingsFile(%s, %s)', sourceUri, workspaceFolder);
+
     let findingsData: Buffer;
     let findings: Finding[];
     let checks: Check[];
