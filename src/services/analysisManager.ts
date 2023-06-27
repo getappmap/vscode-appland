@@ -10,6 +10,9 @@ import { ResolvedFinding } from './resolvedFinding';
 import { WorkspaceServices } from './workspaceServices';
 import Environment from '../configuration/environment';
 import { ANALYSIS_DISABLE, ANALYSIS_ENABLE, Telemetry } from '../telemetry';
+import { debuglog } from 'util';
+
+const debug = debuglog('appmap-vscode:AnalysisManager');
 
 export interface AnalysisToggleEvent {
   enabled: boolean;
@@ -75,6 +78,8 @@ export default class AnalysisManager {
       userAuthenticated
     );
 
+    debug('updateAnalysisState(); userAuthenticated=%o', userAuthenticated);
+
     const initializing = this._isAnalysisEnabled === undefined;
     if (this._isAnalysisEnabled !== enabled) {
       this._isAnalysisEnabled = enabled;
@@ -98,6 +103,7 @@ export default class AnalysisManager {
   }
 
   private static onAnalysisEnabled(): void {
+    debug('onAnalysisEnabled()');
     this.disposables.forEach((d) => d.dispose());
     this.disposables = [openFinding(this.extensionState)];
 
@@ -133,6 +139,7 @@ export default class AnalysisManager {
   }
 
   private static onAnalysisDisabled(): void {
+    debug('onAnalysisDisabled()');
     if (this._findingsIndex) {
       this._findingsIndex.removeAllListeners('added');
       this._findingsIndex.removeAllListeners('removed');
