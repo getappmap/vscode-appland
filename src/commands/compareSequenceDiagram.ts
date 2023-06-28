@@ -16,7 +16,6 @@ import {
 import { promptForAppMap } from '../lib/promptForAppMap';
 import { tmpName } from 'tmp';
 import { promisify } from 'util';
-import { ProjectStateServiceInstance } from '../services/projectStateService';
 import {
   buildDiagram,
   buildDiffDiagram,
@@ -36,7 +35,6 @@ const SEQUENCE_DIAGRAM_DIFF_EVENT = new Event({
 
 export default async function compareSequenceDiagrams(
   context: vscode.ExtensionContext,
-  projectStates: ReadonlyArray<ProjectStateServiceInstance>,
   appmaps: AppMapCollection
 ): Promise<void> {
   const command = vscode.commands.registerCommand(
@@ -53,7 +51,7 @@ export default async function compareSequenceDiagrams(
         for (let index = 0; index < uris.length; index++) {
           let appmapUri: vscode.Uri | undefined = uris[index];
           if (!appmapUri) {
-            appmapUri = await promptForAppMap(projectStates, appmaps.appMaps(), excludeAppMaps);
+            appmapUri = await promptForAppMap(appmaps.appMaps(), excludeAppMaps);
             if (!appmapUri) return;
 
             excludeAppMaps.push(appmapUri);

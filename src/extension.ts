@@ -210,7 +210,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       projectState
     )) as ProjectStateServiceInstance[];
 
-    openCodeObjectInAppMap(context, projectStates, appmapCollectionFile, classMapIndex);
+    openCodeObjectInAppMap(context, appmapCollectionFile, classMapIndex);
+
     await SignInManager.register(extensionState);
     const signInWebview = new SignInViewProvider(context);
     context.subscriptions.push(
@@ -219,8 +220,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
     registerInspectCodeObject(context);
 
-    registerSequenceDiagram(context, projectStates, appmapCollectionFile);
-    registerCompareSequenceDiagrams(context, projectStates, appmapCollectionFile);
+    registerSequenceDiagram(context, appmapCollectionFile);
+    registerCompareSequenceDiagrams(context, appmapCollectionFile);
 
     const badge = new InstallationStatusBadge('appmap.views.instructions');
     badge.initialize(projectStates);
@@ -258,10 +259,10 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     appmapLinkProvider();
     const editorProvider = AppMapEditorProvider.register(context, extensionState);
     RemoteRecording.register(context, workspaceServices);
-    ContextMenu.register(context, projectStates, appmapCollectionFile);
+    ContextMenu.register(context, appmapCollectionFile);
 
     generateOpenApi(context, extensionState);
-    findByName(context, projectStates, appmapCollectionFile);
+    findByName(context, appmapCollectionFile);
     resetUsageState(context, extensionState);
     updateAppMapConfigs(context, runConfigService, workspaceServices);
     downloadLatestJavaJar(context);

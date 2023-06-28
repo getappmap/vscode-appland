@@ -14,7 +14,6 @@ import {
   promptForSpecification,
 } from '../lib/sequenceDiagram';
 import { promptForAppMap } from '../lib/promptForAppMap';
-import { ProjectStateServiceInstance } from '../services/projectStateService';
 import assert from 'assert';
 import { Telemetry } from '../telemetry';
 import Event from '../telemetry/event';
@@ -26,7 +25,6 @@ const SEQUENCE_DIAGRAM_EVENT = new Event({
 
 export default async function sequenceDiagram(
   context: vscode.ExtensionContext,
-  projectStates: ReadonlyArray<ProjectStateServiceInstance>,
   appmaps: AppMapCollection
 ): Promise<void> {
   const command = vscode.commands.registerCommand(
@@ -36,7 +34,7 @@ export default async function sequenceDiagram(
       if (!umlJar) return;
 
       if (!appmapUri) {
-        appmapUri = await promptForAppMap(projectStates, appmaps.appMaps());
+        appmapUri = await promptForAppMap(appmaps.appMaps());
       }
       if (!appmapUri) return;
 

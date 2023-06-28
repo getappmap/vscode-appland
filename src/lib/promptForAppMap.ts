@@ -2,14 +2,12 @@ import assert from 'assert';
 import { basename } from 'path';
 import * as vscode from 'vscode';
 import AppMapLoader from '../services/appmapLoader';
-import { ProjectStateServiceInstance } from '../services/projectStateService';
 import { getWorkspaceFolderFromPath, timeAgo } from '../util';
 import { AppmapConfigManager, AppmapConfigManagerInstance } from '../services/appmapConfigManager';
 import { workspaceServices } from '../services/workspaceServices';
 import { AppMapQuickPickItem } from './AppMapQuickPickItem';
 
 export async function promptForAppMap(
-  projectStates: ReadonlyArray<ProjectStateServiceInstance>,
   appmaps: AppMapLoader[],
   exclude: vscode.Uri[] = []
 ): Promise<vscode.Uri | undefined> {
@@ -22,7 +20,7 @@ export async function promptForAppMap(
         .map(async (appmap) => {
           assert(appmap.descriptor.metadata?.name);
           let path = appmap.descriptor.resourceUri.fsPath;
-          const projectFolder = getWorkspaceFolderFromPath(projectStates, path);
+          const projectFolder = getWorkspaceFolderFromPath(path);
           const label = [appmap.descriptor.metadata?.name];
           if (projectFolder) {
             path = path.slice(projectFolder.uri.fsPath.length + 1);

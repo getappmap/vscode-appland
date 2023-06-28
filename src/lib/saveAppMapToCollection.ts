@@ -3,7 +3,6 @@ import { glob } from 'glob';
 import { basename, join, relative } from 'path';
 import { promisify } from 'util';
 import * as vscode from 'vscode';
-import { ProjectStateServiceInstance } from '../services/projectStateService';
 import { fileExists, getWorkspaceFolderFromPath } from '../util';
 import { AppmapConfigManager, AppmapConfigManagerInstance } from '../services/appmapConfigManager';
 import { workspaceServices } from '../services/workspaceServices';
@@ -12,10 +11,9 @@ import assert from 'assert';
 const CREATE_NEW_PROMPT = '<create>';
 
 export default async function saveAppMapToCollection(
-  projectStates: ReadonlyArray<ProjectStateServiceInstance>,
   appmapUri: vscode.Uri
 ): Promise<string | undefined> {
-  const projectFolder = getWorkspaceFolderFromPath(projectStates, appmapUri.fsPath);
+  const projectFolder = getWorkspaceFolderFromPath(appmapUri.fsPath);
   if (!projectFolder) {
     vscode.window.showErrorMessage(`Cannot determine workspace folder for ${appmapUri.fsPath}`);
     return;

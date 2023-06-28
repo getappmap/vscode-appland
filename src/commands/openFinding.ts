@@ -1,15 +1,10 @@
 import * as vscode from 'vscode';
 import ExtensionState from '../configuration/extensionState';
-import { ProjectStateServiceInstance } from '../services/projectStateService';
 import { getWorkspaceFolderFromPath } from '../util';
 
-export default function registerCommand(
-  projectStates: ReadonlyArray<ProjectStateServiceInstance>,
-  extensionState: ExtensionState
-): vscode.Disposable {
+export default function registerCommand(extensionState: ExtensionState): vscode.Disposable {
   return vscode.commands.registerCommand('appmap.openFinding', async (uri: vscode.Uri) => {
-    const workspaceFolder = getWorkspaceFolderFromPath(projectStates, String(uri));
-
+    const workspaceFolder = getWorkspaceFolderFromPath(uri.fsPath);
     if (workspaceFolder) {
       extensionState.setFindingsInvestigated(workspaceFolder, true);
     }
