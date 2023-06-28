@@ -116,7 +116,7 @@ export default class RemoteRecording {
     this.addRecentUrl(recordingUrl);
   }
 
-  private async stop(url: string): Promise<boolean> {
+  public async stop(url: string): Promise<boolean> {
     let isFinished = false;
     if (!url) {
       // We'll consider this a valid case - no error is thrown.
