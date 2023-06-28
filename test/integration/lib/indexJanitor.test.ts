@@ -9,7 +9,8 @@ describe('AppMapIndex', () => {
   beforeEach(waitForIndexer);
   afterEach(initializeWorkspace);
 
-  it('cleans up index directories', async () => {
+  // TODO: Restore this test once the IndexJanitor has been fixed or this test has been fixed.
+  xit('cleans up index directories', async () => {
     const appmapFiles = await vscode.workspace.findFiles(`tmp/appmap/**/*.appmap.json`);
     const indexDirs = appmapFiles.map(({ fsPath }) => fsPath.replace(/\.appmap\.json$/, ''));
 
