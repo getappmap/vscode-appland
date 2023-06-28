@@ -3,7 +3,7 @@ import * as vscode from 'vscode';
 import ClassMapIndex from './classMapIndex';
 import { CodeObjectEntry } from '../lib/CodeObjectEntry';
 
-class LineInfo {
+export class LineInfo {
   public codeObjects?: CodeObjectEntry[];
 
   constructor(public line: number) {}

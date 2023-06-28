@@ -140,6 +140,10 @@
         "title": "AppMap: Suggest a Fix for a Failing Test"
       },
       {
+        "command": "appmap.ask",
+        "title": "AppMap: Ask a Question About the Current Code Selection"
+      },
+      {
         "command": "appmap.touchOutOfDateTestFiles",
         "title": "AppMap: Touch Out-of-Date Test Files"
       },
