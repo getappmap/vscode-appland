@@ -1,3 +1,18 @@
+# [0.91.0](https://github.com/getappmap/vscode-appland/compare/v0.90.1...v0.91.0) (2023-06-28)
+
+
+### Bug Fixes
+
+* Await appmaps deletion ([1b391e8](https://github.com/getappmap/vscode-appland/commit/1b391e8f15f635e6f44decac619e2d5f6493268e))
+* Enumerate files each time before deleting ([955439e](https://github.com/getappmap/vscode-appland/commit/955439e1e30cf716b4ede78234109da90668b677))
+
+
+### Features
+
+* Convert context menu commands to inline ([550cd48](https://github.com/getappmap/vscode-appland/commit/550cd4843194e97bf3b207b59796ca037812de88))
+* Organize findings by date ([39eeb85](https://github.com/getappmap/vscode-appland/commit/39eeb851b4b4283aba263e76e7bcff9a83a81568))
+* Show failed tests in the Analysis view ([9b6f0ac](https://github.com/getappmap/vscode-appland/commit/9b6f0acd60a6e92842982c3df44df133a3a12b4a))
+
 ## [0.90.1](https://github.com/getappmap/vscode-appland/compare/v0.90.0...v0.90.1) (2023-06-23)
 
 
