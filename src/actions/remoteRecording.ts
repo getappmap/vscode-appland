@@ -1,21 +1,28 @@
 import * as vscode from 'vscode';
+
+import assert from 'assert';
 import * as fs from 'fs';
 import * as path from 'path';
 
 import RemoteRecordingClient from './remoteRecordingClient';
 import { resolveFilePath } from '../util';
 import { promisify } from 'util';
+import { WorkspaceServices } from '../services/workspaceServices';
+import { AppmapConfigManager, AppmapConfigManagerInstance } from '../services/appmapConfigManager';
+import chooseWorkspace from '../lib/chooseWorkspace';
+import { existsSync } from 'fs';
 
 export default class RemoteRecording {
   private static readonly RECENT_REMOTE_URLS = 'APPMAP_RECENT_REMOTE_URLS';
   private readonly statusBar: vscode.StatusBarItem;
-  private readonly context: vscode.ExtensionContext;
   private activeRecordingUrl: string | null;
   private stopEmitter: vscode.EventEmitter<boolean> | null = null;
   onDidStop: vscode.Event<boolean> | undefined = this.stopEmitter?.event;
 
-  constructor(context: vscode.ExtensionContext) {
-    this.context = context;
+  constructor(
+    private readonly context: vscode.ExtensionContext,
+    private workspaceServices: WorkspaceServices
+  ) {
     this.activeRecordingUrl = null;
     this.statusBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
     context.subscriptions.push(this.statusBar);
@@ -138,7 +145,8 @@ export default class RemoteRecording {
       const appmap = stopResult.body;
       appmap['metadata']['name'] = appmapName;
 
-      const folder = this.getFolder();
+      const folder = await this.getFolder();
+      if (!existsSync(folder)) fs.mkdirSync(folder, { recursive: true });
 
       const fileName = appmapName.replace(/[^a-zA-Z0-9]/g, '_');
       const fileExt = '.appmap.json';
@@ -180,51 +188,41 @@ export default class RemoteRecording {
     }
   }
 
-  private getFolder(): string {
-    let basePath: string;
+  private async getFolder(): Promise<string> {
+    const workspaceFolder = await chooseWorkspace();
+    assert(workspaceFolder);
+    const basePath = workspaceFolder.uri.fsPath;
+
+    const configManager = this.workspaceServices.getServiceInstanceFromClass(
+      AppmapConfigManager,
+      workspaceFolder
+    ) as AppmapConfigManagerInstance | undefined;
+    if (!configManager) return this.findDefaultFolder(basePath);
+
+    const appmapConfig = await configManager.getAppmapConfig();
+
     let folder: string;
-
-    if (!vscode.workspace.workspaceFolders) {
-      basePath = vscode.workspace.rootPath as string;
+    if (appmapConfig && appmapConfig.appmapDir) {
+      folder = path.join(basePath, appmapConfig.appmapDir, 'recordings');
     } else {
-      basePath = vscode.workspace.workspaceFolders[0].uri.fsPath;
-    }
-    basePath += '/';
-
-    const userDefinedPath = vscode.workspace
-      .getConfiguration('appMap')
-      .get('recordingOutputDirectory') as string;
-
-    if (userDefinedPath && this.pathExists(basePath + userDefinedPath)) {
-      folder = basePath + userDefinedPath;
-    } else if (this.pathExists(basePath + 'build/appmap')) {
-      folder = basePath + 'build/appmap/recordings';
-      if (!this.pathExists(folder)) {
-        fs.mkdirSync(folder);
-      }
-    } else if (this.pathExists(basePath + 'target/appmap')) {
-      folder = basePath + 'target/appmap/recordings';
-      if (!this.pathExists(folder)) {
-        fs.mkdirSync(folder);
-      }
-    } else {
-      folder = basePath + 'tmp/appmap/recordings';
-      if (!this.pathExists(folder)) {
-        fs.mkdirSync(folder, { recursive: true });
-      }
+      folder = this.findDefaultFolder(basePath);
     }
 
     return folder;
   }
 
-  private pathExists(p: string): boolean {
-    try {
-      fs.accessSync(p, fs.constants.R_OK | fs.constants.W_OK);
-    } catch (err) {
-      return false;
+  private findDefaultFolder(basePath: string): string {
+    let folder: string;
+
+    if (existsSync(path.join(basePath, 'build', 'appmap'))) {
+      folder = path.join(basePath, 'build', 'appmap', 'recordings');
+    } else if (existsSync(path.join(basePath, 'target', 'appmap'))) {
+      folder = path.join(basePath, 'target', 'appmap', 'recordings');
+    } else {
+      folder = path.join(basePath, 'tmp', 'appmap', 'recordings');
     }
 
-    return true;
+    return folder;
   }
 
   public async commandStop(): Promise<void> {
@@ -301,8 +299,11 @@ export default class RemoteRecording {
     });
   }
 
-  static async register(context: vscode.ExtensionContext): Promise<void> {
-    const remoteRecording = new RemoteRecording(context);
+  static async register(
+    context: vscode.ExtensionContext,
+    workspaceServices: WorkspaceServices
+  ): Promise<void> {
+    const remoteRecording = new RemoteRecording(context, workspaceServices);
 
     context.subscriptions.push(
       vscode.commands.registerCommand('appmap.startRemoteRecording', async () => {
