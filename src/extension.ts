@@ -91,7 +91,13 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
     const appmapCollectionFile = new AppMapCollectionFile();
 
-    const appmapWatcher = new AppMapWatcher();
+    const configWatcher = new AppMapConfigWatcher();
+    await workspaceServices.enroll(configWatcher);
+
+    const configManager = new AppmapConfigManager();
+    await workspaceServices.enroll(configManager);
+
+    const appmapWatcher = new AppMapWatcher(workspaceServices);
     context.subscriptions.push(
       appmapWatcher.onCreate(({ uri, workspaceFolder, initializing }) => {
         appmapCollectionFile.onCreate(uri);
@@ -103,12 +109,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
     await workspaceServices.enroll(appmapWatcher);
     await appmapCollectionFile.initialize();
-
-    const configWatcher = new AppMapConfigWatcher();
-    await workspaceServices.enroll(configWatcher);
-
-    const configManager = new AppmapConfigManager();
-    await workspaceServices.enroll(configManager);
 
     const classMapIndex = new ClassMapIndex();
     const lineInfoIndex = new LineInfoIndex(classMapIndex);

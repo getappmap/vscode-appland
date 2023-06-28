@@ -4,10 +4,16 @@ import { WorkspaceService, WorkspaceServiceInstance } from './workspaceService';
 import FileChangeHandler from './fileChangeHandler';
 import Watcher from './watcher';
 import { dirname } from 'path';
+import { WorkspaceServices } from './workspaceServices';
+import { AppmapConfigManager, AppmapConfigManagerInstance } from './appmapConfigManager';
 
 class AppMapWatcherInstance extends Watcher implements WorkspaceServiceInstance {
-  constructor(public folder: vscode.WorkspaceFolder, public handler: FileChangeHandler) {
-    super('metadata.json', folder, handler);
+  constructor(
+    public folder: vscode.WorkspaceFolder,
+    public handler: FileChangeHandler,
+    public configManagerInstance: AppmapConfigManagerInstance | undefined
+  ) {
+    super('metadata.json', folder, handler, configManagerInstance);
   }
 }
 
@@ -19,6 +25,10 @@ export class AppMapWatcher
   extends FileChangeEmitter
   implements WorkspaceService<AppMapWatcherInstance>
 {
+  constructor(private readonly workspaceServices: WorkspaceServices) {
+    super();
+  }
+
   async create(folder: vscode.WorkspaceFolder): Promise<AppMapWatcherInstance> {
     validateConfiguration();
 
@@ -27,17 +37,26 @@ export class AppMapWatcher
     // in the workspace when the watcher starts will all fire `onCreated` events.
     let initializing = true;
 
-    const watcher = new AppMapWatcherInstance(folder, {
-      onChange: (uri, workspaceFolder) => {
-        this._onChange.fire({ uri: appmapUri(uri), workspaceFolder });
+    const configManagerInstance = this.workspaceServices.getServiceInstanceFromClass(
+      AppmapConfigManager,
+      folder
+    ) as AppmapConfigManagerInstance | undefined;
+
+    const watcher = new AppMapWatcherInstance(
+      folder,
+      {
+        onChange: (uri, workspaceFolder) => {
+          this._onChange.fire({ uri: appmapUri(uri), workspaceFolder });
+        },
+        onCreate: (uri, workspaceFolder) => {
+          this._onCreate.fire({ uri: appmapUri(uri), workspaceFolder, initializing });
+        },
+        onDelete: (uri, workspaceFolder) => {
+          this._onDelete.fire({ uri: appmapUri(uri), workspaceFolder });
+        },
       },
-      onCreate: (uri, workspaceFolder) => {
-        this._onCreate.fire({ uri: appmapUri(uri), workspaceFolder, initializing });
-      },
-      onDelete: (uri, workspaceFolder) => {
-        this._onDelete.fire({ uri: appmapUri(uri), workspaceFolder });
-      },
-    });
+      configManagerInstance
+    );
 
     await watcher.initialize();
     initializing = false;

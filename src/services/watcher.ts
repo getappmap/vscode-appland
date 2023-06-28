@@ -1,5 +1,8 @@
 import * as vscode from 'vscode';
+import path from 'path';
+
 import FileChangeHandler from './fileChangeHandler';
+import { AppmapConfigManagerInstance } from './appmapConfigManager';
 
 export default class Watcher {
   disposables: vscode.Disposable[] = [];
@@ -7,14 +10,21 @@ export default class Watcher {
   constructor(
     public filePattern: string,
     public folder: vscode.WorkspaceFolder,
-    public handler: FileChangeHandler
-  ) {}
+    public handler: FileChangeHandler,
+    public configManagerInstance: AppmapConfigManagerInstance | undefined
+  ) {
+    configManagerInstance?.onConfigChanged(async () => {
+      await this.dispose();
+      await this.initialize();
+    });
+  }
 
   async initialize() {
     for (const pattern of this.watchPatterns) {
-      let watcher: vscode.FileSystemWatcher;
+      const watcher = vscode.workspace.createFileSystemWatcher(pattern);
+
       this.disposables.push(
-        (watcher = vscode.workspace.createFileSystemWatcher(pattern)),
+        watcher,
         watcher.onDidChange((uri) => {
           this.handler.onChange(uri, this.folder);
         }),
@@ -43,8 +53,32 @@ export default class Watcher {
   }
 
   get watchPatterns(): vscode.RelativePattern[] {
-    return ['tmp/appmap', 'build/appmap', 'target/appmap'].map((dir) => {
-      return new vscode.RelativePattern(this.folder, `**/${dir}/**/${this.filePattern}`);
+    const workspaceConfigs =
+      this.configManagerInstance &&
+      this.configManagerInstance.workspaceConfig &&
+      this.configManagerInstance.workspaceConfig.configs;
+
+    const relativePatterns = ['tmp', 'build', 'target'].map((dir) => {
+      return new vscode.RelativePattern(
+        this.folder,
+        path.join('**', dir, 'appmap', '**', this.filePattern)
+      );
     });
+
+    if (workspaceConfigs) {
+      workspaceConfigs.forEach(({ configFolder, appmapDir }) => {
+        const relativeAppmapDirPath = path.relative(
+          this.folder.uri.fsPath,
+          path.join(configFolder, appmapDir)
+        );
+        const pattern = path.join('**', relativeAppmapDirPath, '**', this.filePattern);
+
+        if (!relativePatterns.some((relativePattern) => relativePattern.pattern === pattern)) {
+          relativePatterns.push(new vscode.RelativePattern(this.folder, pattern));
+        }
+      });
+    }
+
+    return relativePatterns;
   }
 }
