@@ -214,11 +214,6 @@
     "configuration": {
       "title": "AppMap",
       "properties": {
-        "appMap.recordingOutputDirectory": {
-          "type": "string",
-          "default": "",
-          "description": "Path for remote recordings"
-        },
         "appMap.applandUrl": {
           "type": "string",
           "default": "https://app.land",
