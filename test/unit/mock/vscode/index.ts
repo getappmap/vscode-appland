@@ -12,7 +12,10 @@ const MockVSCode = {
   workspace,
 };
 
+class mockTelemetry {}
+
 mockery.registerMock('vscode', MockVSCode);
+mockery.registerMock('vscode-extension-telemetry', mockTelemetry);
 mockery.enable({ warnOnUnregistered: false });
 
 export default MockVSCode;
