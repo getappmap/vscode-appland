@@ -4,8 +4,7 @@ const unimplemented = () => {
   throw new Error('unimplemented');
 };
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
-export const fs: typeof workspace.fs = {
+const fs: typeof workspace.fs = {
   copy: unimplemented,
   createDirectory: unimplemented,
   delete: unimplemented,
@@ -15,4 +14,12 @@ export const fs: typeof workspace.fs = {
   rename: unimplemented,
   stat: unimplemented,
   writeFile: unimplemented,
+};
+
+export default {
+  fs,
+  getConfiguration() {
+    return;
+  },
+  workspaceFolders: [],
 };
