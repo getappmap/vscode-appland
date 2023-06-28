@@ -263,16 +263,8 @@ export function hasPreviouslyInstalledExtension(extensionPath: string): boolean 
   return false;
 }
 
-export function getWorkspaceFolderFromPath(
-  projectStates: ReadonlyArray<ProjectStateServiceInstance>,
-  path: string
-): vscode.WorkspaceFolder | undefined {
-  const projectPaths = projectStates.map((projectState) => projectState.metadata.path);
-  const projectIndex = projectPaths.findIndex((projectPath) => {
-    return path.includes(projectPath);
-  });
-
-  return projectStates[projectIndex]?.folder;
+export function getWorkspaceFolderFromPath(path: string): vscode.WorkspaceFolder | undefined {
+  return vscode.workspace.getWorkspaceFolder(vscode.Uri.file(path));
 }
 
 export function shellescape(...command: string[]): string {

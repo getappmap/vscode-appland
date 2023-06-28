@@ -108,7 +108,7 @@ export default class AnalysisManager {
 
   private static onAnalysisEnabled(): void {
     this.disposables.forEach((d) => d.dispose());
-    this.disposables = [openFinding(this.projectStates, this.extensionState)];
+    this.disposables = [openFinding(this.extensionState)];
 
     this._findingsIndex = new FindingsIndex();
 

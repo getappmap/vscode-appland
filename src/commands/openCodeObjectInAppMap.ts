@@ -4,11 +4,9 @@ import { CodeObjectEntry } from '../lib/CodeObjectEntry';
 import { CLICK_CODE_OBJECT, Telemetry } from '../telemetry';
 import { promptForAppMap } from '../lib/promptForAppMap';
 import AppMapCollection from '../services/appmapCollection';
-import { ProjectStateServiceInstance } from '../services/projectStateService';
 
 export default function openCodeObjectInAppMap(
   context: vscode.ExtensionContext,
-  projectStates: ReadonlyArray<ProjectStateServiceInstance>,
   appmapCollection: AppMapCollection,
   classMapIndex: ClassMapIndex
 ) {
@@ -50,7 +48,7 @@ export default function openCodeObjectInAppMap(
         .allAppMaps()
         .filter((appmap) => appmapFiles.has(appmap.descriptor.resourceUri.fsPath));
 
-      const selectedAppMap = await promptForAppMap(projectStates, appmaps);
+      const selectedAppMap = await promptForAppMap(appmaps);
       if (!selectedAppMap) return;
 
       appMapFileName = selectedAppMap.fsPath;

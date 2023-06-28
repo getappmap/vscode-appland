@@ -6,13 +6,11 @@ import deleteAppMap from '../lib/deleteAppMap';
 import deleteFolderAppMaps from '../lib/deleteFolderAppMaps';
 import AppMapCollection from '../services/appmapCollection';
 import saveAppMapToCollection from '../lib/saveAppMapToCollection';
-import { ProjectStateServiceInstance } from '../services/projectStateService';
 import AppMapLoader from '../services/appmapLoader';
 
 export default class ContextMenu {
   static async register(
     context: vscode.ExtensionContext,
-    projectStates: ReadonlyArray<ProjectStateServiceInstance>,
     appmaps: AppMapCollection
   ): Promise<void> {
     context.subscriptions.push(
@@ -60,7 +58,7 @@ export default class ContextMenu {
       vscode.commands.registerCommand(
         'appmap.context.saveToCollection',
         async (item: AppMapLoader) => {
-          saveAppMapToCollection(projectStates, item.descriptor.resourceUri);
+          saveAppMapToCollection(item.descriptor.resourceUri);
         }
       )
     );
