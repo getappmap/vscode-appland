@@ -292,7 +292,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
     await AnalysisManager.register(context, projectStates, extensionState, workspaceServices);
 
-    vscode.commands.executeCommand('appmap.views.signIn.focus');
+    if (extensionState.isNewInstall) vscode.commands.executeCommand('appmap.views.signIn.focus');
 
     return {
       editorProvider,
