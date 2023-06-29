@@ -3,7 +3,6 @@ import { GenerateOpenApi } from '../commands/generateOpenApi';
 import { InstallAgent } from '../commands/installAgent';
 import { ProjectStateServiceInstance } from '../services/projectStateService';
 import { COPY_COMMAND, OPEN_VIEW, Telemetry } from '../telemetry';
-import { getWorkspaceFolderFromPath } from '../util';
 import ProjectMetadata from '../workspace/projectMetadata';
 import ExtensionState from '../configuration/extensionState';
 import { DocPageId, ProjectPicker, RecordAppMaps } from '../tree/instructionsTreeDataProvider';

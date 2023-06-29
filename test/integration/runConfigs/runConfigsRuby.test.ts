@@ -2,7 +2,6 @@ import * as vscode from 'vscode';
 
 import assert from 'assert';
 import { existsSync } from 'fs';
-import os from 'os';
 import path from 'path';
 import { SinonSandbox, createSandbox, SinonStub, SinonSpy } from 'sinon';
 
