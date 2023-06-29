@@ -1,3 +1,10 @@
+## [0.91.1](https://github.com/getappmap/vscode-appland/compare/v0.91.0...v0.91.1) (2023-06-29)
+
+
+### Bug Fixes
+
+* remove sidebar panes when signed out ([9ffe1e2](https://github.com/getappmap/vscode-appland/commit/9ffe1e2cb099bfd8e35214a064da8829e8a8dc9f))
+
 # [0.91.0](https://github.com/getappmap/vscode-appland/compare/v0.90.1...v0.91.0) (2023-06-28)
 
 
