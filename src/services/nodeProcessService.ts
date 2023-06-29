@@ -1,7 +1,6 @@
 import { createWriteStream, promises as fs } from 'fs';
 import os from 'os';
 import * as path from 'path';
-import lockfile from 'proper-lockfile';
 import * as vscode from 'vscode';
 
 import Environment from '../configuration/environment';
@@ -17,7 +16,10 @@ import { WorkspaceService } from './workspaceService';
 import { AppmapConfigManager, AppmapConfigManagerInstance } from './appmapConfigManager';
 import { workspaceServices } from './workspaceServices';
 import assert from 'assert';
-import { isNativeError } from 'util/types';
+import LockfileSynchronizer, {
+  LockfileStatusError,
+  TimeoutError,
+} from '../lib/lockfileSynchronizer';
 
 const YARN_JS = 'yarn.js';
 const PACKAGE_JSON = 'package.json';
@@ -185,60 +187,6 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
       }
     }
 
-    async function tryLock(): Promise<(() => Promise<void>) | undefined> {
-      try {
-        log(`Trying to acquire lock on "${storagePath}"`);
-        return await lockfile.lock(storagePath);
-      } catch (e) {
-        assert(isNativeError(e));
-        if ('code' in e && e.code === 'ELOCKED') return;
-        throw e;
-      }
-    }
-
-    async function wait(maxMs = 5 * 60 * 1000) {
-      // We didn't aquire the lock, so we'll assume that another process is already installing.
-      // We'll just wait for it to finish.
-      log('Another process is currently installing dependencies. Waiting...');
-
-      let giveUp = false;
-      setTimeout(() => {
-        giveUp = true;
-      }, maxMs).unref();
-
-      let lastException: Error | undefined;
-      while (!giveUp) {
-        // Add a little randomness to avoid multiple processes checking all at once.
-        const nextCheckMs = 5000 + Math.random() * 500;
-        await new Promise((resolve) => setTimeout(resolve, nextCheckMs));
-
-        try {
-          if (!(await lockfile.check(storagePath))) return;
-        } catch (e) {
-          assert(isNativeError(e));
-          lastException = e;
-          // On error, will just try again. After the time limit has elapsed
-          // we can report the last error, if any.
-        }
-      }
-
-      if (lastException) {
-        // This is likely not resolvable as ENOENT is gracefully handled by the library.
-        // The best we can do is log the error and continue on as best we can. It's possible there's
-        // a viable installation already installed.
-        log('An error occurred while checking the installation status:');
-        log(String(lastException));
-
-        Telemetry.sendEvent(DEBUG_EXCEPTION, {
-          exception: lastException,
-          errorCode: ErrorCode.DependencyLockFailure,
-          log: logLines.join('\n'),
-        });
-      }
-
-      throw new Error(`Gave up waiting for installation in ${storagePath} to finish`);
-    }
-
     const perform = async () => {
       log(`Performing tools installation in ${storagePath}...`);
 
@@ -297,31 +245,44 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
       });
     };
 
-    let release: (() => Promise<void>) | undefined;
-    try {
-      await createStorageDir();
-      release = await tryLock();
-      if (release) {
-        await perform();
-      } else {
-        await wait();
-      }
+    await createStorageDir();
 
-      log(INSTALL_SUCCESS_MESSAGE);
-    } catch (e) {
-      const err =
-        e instanceof Error ? e : new Error(`failed to install node dependencies: ${String(e)}`);
-      log(`${err.stack}`);
-      Telemetry.sendEvent(DEBUG_EXCEPTION, {
-        exception: err,
-        errorCode: ErrorCode.DependencyInstallFailure,
-        log: logLines.join('\n'),
-      });
-    } finally {
-      if (release) release(); // intentionally no waiting
+    const sync = new LockfileSynchronizer(this.globalStorageDir);
+    await sync
+      .on('wait', () => {
+        log('Another process is currently installing dependencies. Waiting...');
+      })
+      .on('error', (err) => {
+        if (err instanceof LockfileStatusError) {
+          log('An unexpected error occurred while checking the installation status:');
+          log(String(err));
+          Telemetry.sendEvent(DEBUG_EXCEPTION, {
+            exception: err,
+            errorCode: ErrorCode.DependencyLockFailure,
+            log: logLines.join('\n'),
+          });
+        } else if (err instanceof TimeoutError) {
+          log('Giving up waiting for installation to finish.');
+          log(String(err));
+        } else {
+          const e =
+            err instanceof Error
+              ? err
+              : new Error(`failed to install node dependencies: ${String(err)}`);
+          log(`${err.stack}`);
+          Telemetry.sendEvent(DEBUG_EXCEPTION, {
+            exception: e,
+            errorCode: ErrorCode.DependencyInstallFailure,
+            log: logLines.join('\n'),
+          });
+        }
+      })
+      .on('success', () => {
+        log(INSTALL_SUCCESS_MESSAGE);
+      })
+      .execute(perform);
 
-      this._ready = true;
-      this._onReady.fire();
-    }
+    this._ready = true;
+    this._onReady.fire();
   }
 }
