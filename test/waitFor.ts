@@ -19,7 +19,6 @@ export async function waitFor(
 ): Promise<void> {
   const startTime = Date.now();
   let delay = 100;
-  console.log(`Waiting because: ${message}`);
 
   let exception: Error | undefined;
   let result: boolean | undefined;
