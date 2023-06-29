@@ -3,7 +3,6 @@ import { promisify } from 'util';
 import * as vscode from 'vscode';
 import { retry } from '../util';
 import { rm } from 'fs/promises';
-import { debug } from 'console';
 
 // Deletes an AppMap file along with the contents of its index directory.
 // The index directory itself will be later deleted by the IndexJanitor once the relevant FileSystemWatcher events have

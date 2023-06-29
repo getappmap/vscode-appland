@@ -1,5 +1,3 @@
-import assert from 'assert';
-
 export async function repeatUntil(
   fn: () => void | void[] | Promise<void> | Promise<void | void[]>,
   message: string,
