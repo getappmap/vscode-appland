@@ -1,4 +1,4 @@
-import { ProgressReporter } from '../../../../src/lib/assetManager';
+import { ProgressReporter } from '../../../src/lib/javaAssetDownloader';
 
 export type ProgressMessage = {
   name: string;
@@ -7,6 +7,34 @@ export type ProgressMessage = {
 
 export default class TestProgressReporter implements ProgressReporter {
   messages: ProgressMessage[] = [];
+
+  aquiredLock(): void {
+    this.messages.push({
+      name: 'aquiredLock',
+      payload: {},
+    });
+  }
+
+  waitingOnLock(): void {
+    this.messages.push({
+      name: 'waitingOnLock',
+      payload: {},
+    });
+  }
+
+  waitingSuccess(): void {
+    this.messages.push({
+      name: 'waitingSuccess',
+      payload: {},
+    });
+  }
+
+  upToDate(): void {
+    this.messages.push({
+      name: 'upToDate',
+      payload: {},
+    });
+  }
 
   identifiedAsset(assetName: string): void {
     this.messages.push({
