@@ -321,17 +321,20 @@
         {
           "id": "appmap.views.findings",
           "name": "Runtime Analysis",
-          "visibility": "collapsed"
+          "visibility": "collapsed",
+          "when": "!appMap.showSignIn"
         },
         {
           "id": "appmap.views.codeObjects",
           "name": "Code Objects",
-          "visibility": "collapsed"
+          "visibility": "collapsed",
+          "when": "!appMap.showSignIn"
         },
         {
           "id": "appmap.views.documentation",
           "name": "Documentation",
-          "visibility": "collapsed"
+          "visibility": "collapsed",
+          "when": "!appMap.showSignIn"
         }
       ]
     },
