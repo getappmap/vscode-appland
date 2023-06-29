@@ -6,6 +6,17 @@ import { URI, Utils } from 'vscode-uri';
 import workspace from './workspace';
 import window from './window';
 import commands from './commands';
+import * as env from './env';
+
+enum UIKind {
+  Desktop = 'Desktop',
+  Web = 'Web',
+}
+
+enum StatusBarAlignment {
+  Left = 1,
+  Right = 2,
+}
 
 const MockVSCode = {
   EventEmitter,
@@ -14,9 +25,9 @@ const MockVSCode = {
   workspace,
   window,
   commands,
-  StatusBarAlignment: {
-    Left: '',
-  },
+  StatusBarAlignment,
+  env,
+  UIKind,
 };
 
 class mockTelemetry {}

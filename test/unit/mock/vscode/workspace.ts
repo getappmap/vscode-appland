@@ -1,3 +1,4 @@
+/* eslint @typescript-eslint/naming-convention: 0 */
 import type { workspace } from 'vscode';
 
 const unimplemented = () => {
@@ -18,8 +19,7 @@ const fs: typeof workspace.fs = {
 
 export default {
   fs,
-  getConfiguration() {
-    return;
-  },
+  getConfiguration: () => new Map<string, unknown>(),
   workspaceFolders: [],
+  onDidChangeConfiguration: () => () => unimplemented,
 };
