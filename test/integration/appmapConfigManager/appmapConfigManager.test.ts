@@ -98,7 +98,7 @@ describe('appmapConfigWatcher', () => {
 
   it('allows the user to pick a sub-repo folder when providing an appmap config', async () => {
     const quickPickStub = sinon.stub(vscode.window, 'showQuickPick');
-    quickPickStub.resolves(join(projectMonorepo, 'sub-c') as any);
+    quickPickStub.resolves(join(projectMonorepo, 'sub-c') as unknown as vscode.QuickPickItem);
 
     const retrievedConfig = await configManagerInstance.getAppmapConfig();
     const expected = {

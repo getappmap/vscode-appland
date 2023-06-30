@@ -21,7 +21,7 @@ export async function waitFor(
   let delay = 100;
   console.log(`Waiting because: ${message}`);
 
-  let exception: any;
+  let exception: Error | undefined;
   let result: boolean | undefined;
 
   const check = async () => {
@@ -29,7 +29,7 @@ export async function waitFor(
       result = await test();
       return result;
     } catch (e) {
-      exception = e;
+      exception = e as Error;
       return false;
     }
   };
