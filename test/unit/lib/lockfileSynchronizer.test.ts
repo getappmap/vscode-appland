@@ -7,6 +7,14 @@ import path from 'path';
 import { promises as fs } from 'fs';
 import { tmpdir } from 'os';
 
+function createResolvablePromise() {
+  let resolve: () => void;
+  const promise = new Promise<void>((r) => {
+    resolve = r;
+  });
+  return { promise, resolve: resolve! }; // eslint-disable-line @typescript-eslint/no-non-null-assertion
+}
+
 describe('LockfileSynchronizer', () => {
   const lockfilePath = path.join(tmpdir(), 'lockfile-test');
   const options = {
@@ -66,6 +74,15 @@ describe('LockfileSynchronizer', () => {
         })
     );
 
+    afterEach(async () => {
+      try {
+        // Ensure the lockfile doesn't remain between tests
+        await fs.rm(`${lockfilePath}.lock`, { force: true, recursive: true });
+      } catch (e) {
+        console.error(e);
+      }
+    });
+
     it('throws a TimeoutError if the wait timeout is exceeded', () => {
       const sync = new LockfileSynchronizer(lockfilePath, options.immediate);
       return new Promise<void>((resolve) => {
@@ -90,8 +107,7 @@ describe('LockfileSynchronizer', () => {
       return new Promise<void>((resolve) => {
         sync
           .on('wait', () => {
-            expect(releaseLock).to.be.a('function');
-            if (releaseLock) releaseLock();
+            releaseLock!(); // eslint-disable-line @typescript-eslint/no-non-null-assertion
             releaseLock = undefined;
           })
           .on('success', resolve)
@@ -102,14 +118,15 @@ describe('LockfileSynchronizer', () => {
 
   it('throws a LockfileStatusError if the file to be locked is missing', () => {
     const sync = new LockfileSynchronizer(`${lockfilePath}.missing`, options.immediate);
-    return new Promise<void>((resolve) => {
+    return new Promise<void>((resolve, reject) => {
       sync
+        .on('wait', () => reject(new Error('should not have waited')))
         .on('error', (e) => {
           expect(e).to.be.instanceOf(Error);
           expect(e.code).to.eq('ENOENT');
           resolve();
         })
-        .execute(() => expect.fail('should not have executed'));
+        .execute(() => reject(new Error('should not have executed')));
     });
   });
 
@@ -132,6 +149,8 @@ describe('LockfileSynchronizer', () => {
     let numExecute = 0;
     let numSuccess = 0;
 
+    const { promise: allReady, resolve: resolveAllReady } = createResolvablePromise();
+
     await Promise.all(
       syncs.map(
         (sync) =>
@@ -139,13 +158,18 @@ describe('LockfileSynchronizer', () => {
             sync
               .on('wait', () => {
                 ++numWaiting;
+                if (numWaiting === syncs.length - 1) {
+                  // All but one are waiting, so we can resolve the promise to complete the lock holding `execute`.
+                  resolveAllReady();
+                }
               })
               .on('success', () => {
                 ++numSuccess;
                 resolve();
               })
-              .execute(() => {
+              .execute(async () => {
                 ++numExecute;
+                await allReady;
               })
           )
       )

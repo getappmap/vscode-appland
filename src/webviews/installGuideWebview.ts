@@ -11,6 +11,10 @@ import AnalysisManager from '../services/analysisManager';
 import ExtensionSettings from '../configuration/extensionSettings';
 import { AUTHN_PROVIDER_NAME } from '../authentication';
 import getWebviewContent from './getWebviewContent';
+import AssetManager, { AssetStatus } from '../services/javaAssets';
+import JavaAssets from '../services/javaAssets';
+import { workspaceServices } from '../services/workspaceServices';
+import { RunConfigService, RunConfigServiceInstance } from '../services/runConfigService';
 
 type PageMessage = {
   page: string;
@@ -104,6 +108,21 @@ export default class InstallGuideWebView {
           disposables.forEach((disposable) => disposable.dispose());
         });
 
+        let isJavaAgentDownloaded = await JavaAssets.assetsExist();
+        if (!isJavaAgentDownloaded) {
+          disposables.push(
+            AssetManager.onStatusChanged((newStatus) => {
+              if (newStatus === AssetStatus.UpToDate) {
+                isJavaAgentDownloaded = true;
+              }
+              panel.webview.postMessage({
+                type: 'java-agent-download-status',
+                status: newStatus,
+              });
+            })
+          );
+        }
+
         panel.webview.onDidReceiveMessage(async (message) => {
           switch (message.command) {
             case 'ready':
@@ -114,6 +133,8 @@ export default class InstallGuideWebView {
                 analysisEnabled: AnalysisManager.isAnalysisEnabled,
                 userAuthenticated: await AnalysisManager.isUserAuthenticated(),
                 findingsEnabled: ExtensionSettings.findingsEnabled,
+                debugConfigurationStatus: 1,
+                javaAgentStatus: isJavaAgentDownloaded ? AssetStatus.UpToDate : AssetManager.status,
               });
               break;
 
@@ -181,6 +202,28 @@ export default class InstallGuideWebView {
               Signup.forAnalysis();
               break;
             }
+
+            case 'add-java-configs':
+              {
+                const { projectPath } = message as { projectPath: string };
+                const workspaceFolder = vscode.workspace.getWorkspaceFolder(
+                  vscode.Uri.parse(projectPath)
+                );
+                if (!workspaceFolder) break;
+
+                const serviceInstance: RunConfigServiceInstance | undefined =
+                  workspaceServices().getServiceInstanceFromClass(
+                    RunConfigService,
+                    workspaceFolder
+                  );
+
+                serviceInstance?.addMissingConfigs();
+              }
+              break;
+
+            case 'view-output':
+              JavaAssets.showOutput();
+              break;
 
             default:
               break;

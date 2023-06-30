@@ -22,6 +22,7 @@ export default function mountInstallGuide() {
             analysisEnabled: this.analysisEnabled,
             findingsEnabled: this.findingsEnabled,
             userAuthenticated: this.userAuthenticated,
+            javaAgentStatus: this.javaAgentStatus,
             featureFlags: new Set(['ar-python']),
           },
         });
@@ -32,6 +33,7 @@ export default function mountInstallGuide() {
           analysisEnabled: initialData.analysisEnabled,
           findingsEnabled: initialData.findingsEnabled,
           userAuthenticated: initialData.userAuthenticated,
+          javaAgentStatus: initialData.javaAgentStatus,
         };
       },
       beforeCreate() {
@@ -97,6 +99,14 @@ export default function mountInstallGuide() {
       vscode.postMessage({ command: 'perform-auth' });
     });
 
+    app.$on('add-java-configs', (projectPath) => {
+      vscode.postMessage({ command: 'add-java-configs', projectPath });
+    });
+
+    app.$on('view-output', () => {
+      vscode.postMessage({ command: 'view-output' });
+    });
+
     messages.on('page', ({ page }) => {
       app.$refs.ui.jumpTo(page);
     });
@@ -110,6 +120,11 @@ export default function mountInstallGuide() {
       app.findingsEnabled = message.findingsEnabled;
       app.analysisEnabled = message.enabled;
       app.userAuthenticated = message.userAuthenticated;
+      app.$forceUpdate();
+    });
+
+    messages.on('java-agent-download-status', (message) => {
+      app.javaAgentStatus = message.status;
       app.$forceUpdate();
     });
   });

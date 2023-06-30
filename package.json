@@ -431,7 +431,7 @@
   "scripts": {
     "vscode:prepublish": "yarn run compile",
     "lint": "eslint . --ext .ts",
-    "pretest": "yarn run lint && tsc --strict",
+    "pretest": "yarn run lint && tsc --strict --skipLibCheck",
     "test:integration": "ts-node ./test/integrationTest.ts",
     "test:web-client": "mocha web/test/*.test.mjs",
     "test:system": "ts-node test/systemTest.ts",
@@ -463,6 +463,7 @@
     "@types/ps-node": "^0.1.1",
     "@types/semver": "^7.3.9",
     "@types/sinon": "^10.0.2",
+    "@types/sinon-chai": "^3.2.9",
     "@types/tmp": "^0.2.3",
     "@types/vscode": "^1.55.0",
     "@typescript-eslint/eslint-plugin": "^5.52.0",
@@ -496,6 +497,7 @@
     "sass": "^1.32.2",
     "semantic-release": "^17.3.8",
     "sinon": "^11.1.2",
+    "sinon-chai": "^3.7.0",
     "tape": "^5.1.1",
     "temp": "^0.9.4",
     "tmp": "^0.2.1",
@@ -509,7 +511,7 @@
   "dependencies": {
     "@appland/appmap": "^3.80.2",
     "@appland/client": "^1.7.0",
-    "@appland/components": "^2.52.0",
+    "@appland/components": "^2.52.1",
     "@appland/diagrams": "^1.7.0",
     "@appland/models": "^2.6.2",
     "@appland/scanner": "^1.79.0",

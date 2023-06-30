@@ -25,16 +25,15 @@ type VmArgs = {
   vmArgs?: string | Array<string>;
 };
 
-const vmArgContainsAppMap = (vmArg: string | Array<string>, javaJarPath: string): boolean =>
-  typeof vmArg === 'string'
-    ? vmArg.includes(javaJarPath)
-    : vmArg.some((arg) => arg.includes(javaJarPath));
+const vmArgContainsAppMap = (vmArg: string | Array<string>, regex: RegExp): boolean =>
+  typeof vmArg === 'string' ? regex.test(vmArg) : vmArg.some((arg) => regex.test(arg));
 
-const configsContainAppMap = (javaJarPath: string, configs?: Array<VmArgs>): boolean =>
-  Boolean(configs?.some(({ vmArgs }) => vmArgs && vmArgContainsAppMap(vmArgs, javaJarPath)));
+const configsContain = (regex: RegExp, configs?: Array<VmArgs>): boolean =>
+  Boolean(configs?.some(({ vmArgs }) => vmArgs && vmArgContainsAppMap(vmArgs, regex)));
 
 export class RunConfigServiceInstance implements WorkspaceServiceInstance {
   private static JAVA_TEST_RUNNER_EXTENSION_ID = 'vscjava.vscode-java-test';
+  private static APPMAP_JAR_REGEX = /appmap-?(.*?)?.jar$/;
   private outputDirVmarg = '-Dappmap.output.directory=${command:appmap.getAppmapDir}';
   private testConfigName = 'Test with AppMap';
   private _status: RunConfigStatus;
@@ -91,7 +90,7 @@ export class RunConfigServiceInstance implements WorkspaceServiceInstance {
     this.updateConfigs();
   }
 
-  public async updateStatus(): Promise<void> {
+  private async updateStatus(): Promise<void> {
     this.status = (await this.hasConfigs()) ? RunConfigStatus.Success : RunConfigStatus.Error;
   }
 
@@ -208,18 +207,34 @@ export class RunConfigServiceInstance implements WorkspaceServiceInstance {
     return this._status;
   }
 
-  public async hasConfigs(): Promise<boolean | undefined> {
-    if (!this.isJavaProject()) return;
-
+  public hasLaunchConfig(): boolean {
     const launchConfigs = vscode.workspace
       .getConfiguration('launch')
       .get<VmArgs[]>('configurations', []);
+    return (
+      Array.isArray(launchConfigs) &&
+      configsContain(RunConfigServiceInstance.APPMAP_JAR_REGEX, launchConfigs)
+    );
+  }
+
+  public hasTestConfig(): boolean {
     const testConfigs = vscode.workspace.getConfiguration('java.test').get<VmArgs[]>('config', []);
-    const hasLaunchConfig =
-      Array.isArray(launchConfigs) && configsContainAppMap(this.javaJarPath, launchConfigs);
-    const hasTestConfig =
-      Array.isArray(testConfigs) && configsContainAppMap(this.javaJarPath, testConfigs);
-    return hasLaunchConfig && hasTestConfig;
+    return (
+      Array.isArray(testConfigs) &&
+      configsContain(RunConfigServiceInstance.APPMAP_JAR_REGEX, testConfigs)
+    );
+  }
+
+  public async addMissingConfigs(): Promise<void> {
+    if (!this.isJavaProject()) return;
+    if (!this.hasLaunchConfig()) await this.updateLaunchConfig();
+    if (!this.hasTestConfig()) await this.updateTestConfig();
+
+    await this.updateStatus();
+  }
+
+  public hasConfigs(): boolean | undefined {
+    return this.hasLaunchConfig() && this.hasTestConfig();
   }
 
   public async dispose(): Promise<void> {
