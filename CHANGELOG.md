@@ -1,3 +1,16 @@
+# [0.93.0](https://github.com/getappmap/vscode-appland/compare/v0.92.0...v0.93.0) (2023-06-30)
+
+
+### Bug Fixes
+
+* remote recording uses appmap_dir for output ([7ad70ab](https://github.com/getappmap/vscode-appland/commit/7ad70ab84e6e95758329bdd8dc453ad830c656e2))
+
+
+### Features
+
+* open appmap sign-in on installation ([ac34526](https://github.com/getappmap/vscode-appland/commit/ac345266b0333eb5969f10fcd0500c09b95fc21b))
+* open appmap sign-in on installation ([6a106f6](https://github.com/getappmap/vscode-appland/commit/6a106f66ae7e756baf6dede7a68eaa549f1fb9ac))
+
 # [0.92.0](https://github.com/getappmap/vscode-appland/compare/v0.91.1...v0.92.0) (2023-06-30)
 
 
