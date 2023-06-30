@@ -58,7 +58,6 @@ import SignInManager from './services/signInManager';
 import tryOpenInstallGuide from './commands/tryOpenInstallGuide';
 import { AppmapConfigManager } from './services/appmapConfigManager';
 import { findByName } from './commands/findByName';
-import initializeDefaultFilter from './lib/initializeSavedFilters';
 import { RunConfigService } from './services/runConfigService';
 import updateAppMapConfigs from './commands/updateConfigs';
 import downloadLatestJavaJar from './commands/downloadLatestJavaJar';
@@ -77,7 +76,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
   const autoScanServiceImpl = new ProcessServiceImpl();
 
   try {
-    await initializeDefaultFilter(context);
     const extensionState = new ExtensionState(context);
     context.subscriptions.push(extensionState);
 
