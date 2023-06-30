@@ -137,9 +137,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/components@npm:^2.52.0":
-  version: 2.52.0
-  resolution: "@appland/components@npm:2.52.0"
+"@appland/components@npm:^2.52.1":
+  version: 2.52.1
+  resolution: "@appland/components@npm:2.52.1"
   dependencies:
     "@appland/diagrams": ^1.7.0
     "@appland/models": ^2.6.2
@@ -153,7 +153,7 @@ __metadata:
     sql-formatter: ^4.0.2
     vue: ^2.7.14
     vuex: ^3.6.0
-  checksum: 4052d95257651bf95a293d775f5e655dbb76c4793dd352f4f422cd3026e2909b953e2cbe0d151c8c73d8f98563dff024a84f2174cf021fa5ed6640c41c98e0f8
+  checksum: 9eae45f0dfb509704c9af4021de998993a640730f4bd9fae54a22b86099e128ebe010e327de8872ce9222fe22c6ce77064573b9c2061557d28014f6d03282dbb
   languageName: node
   linkType: hard
 
@@ -1894,12 +1894,38 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/sinon-chai@npm:^3.2.9":
+  version: 3.2.9
+  resolution: "@types/sinon-chai@npm:3.2.9"
+  dependencies:
+    "@types/chai": "*"
+    "@types/sinon": "*"
+  checksum: 3238ee2e3f64d0fc3e3d08a0d69f1edf062500e58814cbf9898ab6b28a8acfa01734069a431e7cff2b0890d8fa2782103b2c011b247520885a50f8928e395681
+  languageName: node
+  linkType: hard
+
+"@types/sinon@npm:*":
+  version: 10.0.15
+  resolution: "@types/sinon@npm:10.0.15"
+  dependencies:
+    "@types/sinonjs__fake-timers": "*"
+  checksum: cec6d7d9d5582ca3ac851b029d5d90451bfe6d376164253792a6eb6ddcd609a0411a7fac9ed92e1879e7d3ec091d2ea2e8dbb4f6140a1065439b81dc20cafa7c
+  languageName: node
+  linkType: hard
+
 "@types/sinon@npm:^10.0.2":
   version: 10.0.2
   resolution: "@types/sinon@npm:10.0.2"
   dependencies:
     "@sinonjs/fake-timers": ^7.1.0
   checksum: 442e62fe1962bfaa8d80314cfc4411f5a6afd98909c18bea570c8393829e4deb0f7478e3dbd02c52da9faa8229ea82be6b8c3876c6dc82a4e948506a38a2cb1d
+  languageName: node
+  linkType: hard
+
+"@types/sinonjs__fake-timers@npm:*":
+  version: 8.1.2
+  resolution: "@types/sinonjs__fake-timers@npm:8.1.2"
+  checksum: bbc73a5ab6c0ec974929392f3d6e1e8db4ebad97ec506d785301e1c3d8a4f98a35b1aa95b97035daef02886fd8efd7788a2fa3ced2ec7105988bfd8dce61eedd
   languageName: node
   linkType: hard
 
@@ -2599,7 +2625,7 @@ __metadata:
   dependencies:
     "@appland/appmap": ^3.80.2
     "@appland/client": ^1.7.0
-    "@appland/components": ^2.52.0
+    "@appland/components": ^2.52.1
     "@appland/diagrams": ^1.7.0
     "@appland/models": ^2.6.2
     "@appland/scanner": ^1.79.0
@@ -2621,6 +2647,7 @@ __metadata:
     "@types/ps-node": ^0.1.1
     "@types/semver": ^7.3.9
     "@types/sinon": ^10.0.2
+    "@types/sinon-chai": ^3.2.9
     "@types/tmp": ^0.2.3
     "@types/vscode": ^1.55.0
     "@typescript-eslint/eslint-plugin": ^5.52.0
@@ -2664,6 +2691,7 @@ __metadata:
     semantic-release: ^17.3.8
     semver: ^7.3.5
     sinon: ^11.1.2
+    sinon-chai: ^3.7.0
     tape: ^5.1.1
     temp: ^0.9.4
     tmp: ^0.2.1
@@ -11554,6 +11582,16 @@ resolve@^2.0.0-next.3:
   version: 1.0.1
   resolution: "simple-wcswidth@npm:1.0.1"
   checksum: dc5bf4cb131d9c386825d1355add2b1ecc408b37dc2c2334edd7a1a4c9f527e6b594dedcdbf6d949bce2740c3a332e39af1183072a2d068e40d9e9146067a37f
+  languageName: node
+  linkType: hard
+
+"sinon-chai@npm:^3.7.0":
+  version: 3.7.0
+  resolution: "sinon-chai@npm:3.7.0"
+  peerDependencies:
+    chai: ^4.0.0
+    sinon: ">=4.0.0"
+  checksum: 49a353d8eb66cc6db35ac452f6965c72778aa090d1f036dd1e54ba88594b1c3f314b1a403eaff22a4e314f94dc92d9c7d03cbb88c21d89e814293bf5b299964d
   languageName: node
   linkType: hard
 
