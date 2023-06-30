@@ -8,29 +8,38 @@ describe('AppMaps', () => {
   beforeEach(waitForExtension);
   afterEach(initializeWorkspace);
 
-  it('is a two-level tree', async () => {
+  it('is a three-level tree', async () => {
     const trees = (await waitForExtension()).trees;
 
     const appmapsTree = trees.appmaps;
 
     await waitFor(
-      `AppMaps tree first root should be 'minitest'`,
+      `AppMaps tree first root should be 'project-a'`,
       () =>
         appmapsTree
           .getChildren()
           .map((root) => root.name)
           .sort()
-          .shift() === 'minitest'
+          .shift() === 'project-a'
     );
-    const minitests = appmapsTree.getChildren()[0];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const projectA = appmapsTree.getChildren()[0] as any;
+
+    await waitFor(
+      `'project-a' should contain one child`,
+      () => appmapsTree.getChildren(projectA).length === 1
+    );
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const minitest = appmapsTree.getChildren(projectA)[0] as any;
 
     await waitFor(
       `'minitest' should contain two children`,
-      () => appmapsTree.getChildren(minitests)?.length === 2
+      () => appmapsTree.getChildren(minitest)?.length === 2
     );
 
-    const appmaps = appmapsTree.getChildren(minitests);
-    assert(appmaps, `No appmaps for ${minitests.name}`);
+    const appmaps = appmapsTree.getChildren(minitest);
+    assert(appmaps, `No appmaps for ${minitest.name}`);
     assert.deepStrictEqual(
       appmaps.map((appmap) => appmap.descriptor.metadata?.name),
       [

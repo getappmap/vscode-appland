@@ -11,6 +11,21 @@ const LABEL_NO_NAME = 'Untitled AppMap';
 const lightChangedIcon = join(__dirname, '../images/modified-file-icon-dark.svg');
 const darkChangedIcon = join(__dirname, '../images/modified-file-icon-light.svg');
 
+class WorkspaceFolderAppMapTreeItem extends vscode.TreeItem {
+  name: string;
+
+  constructor(public folder: vscode.WorkspaceFolder) {
+    super(folder.name, vscode.TreeItemCollapsibleState.Expanded);
+    this.name = folder.name;
+  }
+
+  filterAppMaps(appmaps: AppMapLoader[]): AppMapLoader[] {
+    return appmaps.filter((appmap) =>
+      appmap.descriptor.resourceUri.fsPath.startsWith(this.folder.uri.fsPath)
+    );
+  }
+}
+
 export interface FolderProperties {
   recorderName: string;
   recorderType?: string;
@@ -20,7 +35,7 @@ export interface FolderProperties {
 
 export type FolderItem = FolderProperties & { name: string };
 
-export type AppMapTreeItem = AppMapLoader | FolderItem;
+export type AppMapTreeItem = AppMapLoader | FolderItem | WorkspaceFolderAppMapTreeItem;
 
 function isAppMapLoader(item: AppMapTreeItem): item is AppMapLoader {
   return 'descriptor' in item;
@@ -95,15 +110,35 @@ export class AppMapTreeDataProvider implements vscode.TreeDataProvider<AppMapTre
   public getChildren(element: AppMapLoader): [];
   public getChildren(element?: AppMapTreeItem): AppMapTreeItem[] {
     if (!element) {
-      return this.getRoots();
+      return this.getTopLevelTreeItems();
+    } else if (element instanceof WorkspaceFolderAppMapTreeItem) {
+      return this.getRoots(element);
     } else {
       if (isAppMapLoader(element)) return [];
       return this.getAppMapsForRecordingMethod(element);
     }
   }
 
-  protected getRoots(): FolderItem[] {
-    const items = this.appmaps.appMaps().map(AppMapTreeDataProvider.appMapFolderItems);
+  private getTopLevelTreeItems() {
+    const projects = vscode.workspace.workspaceFolders;
+    if (!projects || this.appmaps.appMaps().length === 0) return [];
+    const projectsWithAppMaps = this.appmaps.allAppMaps().reduce((projectsWithAppMaps, appmap) => {
+      const project = projects.find((project) =>
+        appmap.descriptor.resourceUri.fsPath.startsWith(project.uri.fsPath)
+      );
+      if (project) projectsWithAppMaps.add(project);
+      return projectsWithAppMaps;
+    }, new Set<vscode.WorkspaceFolder>());
+
+    return [...projectsWithAppMaps.values()].map(
+      (project) => new WorkspaceFolderAppMapTreeItem(project)
+    );
+  }
+
+  protected getRoots(element: WorkspaceFolderAppMapTreeItem): FolderItem[] {
+    const items = element
+      .filterAppMaps(this.appmaps.allAppMaps())
+      .map(AppMapTreeDataProvider.appMapFolderItems);
     return uniq(items, ({ name }) => name, true);
   }
 
