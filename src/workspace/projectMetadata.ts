@@ -2,6 +2,7 @@ import { AppMapSummary } from '../analyzers';
 import { SUPPORTED_LANGUAGES } from '../services/languageResolver';
 import { SampleCodeObjects } from '../services/projectStateService';
 import { FindingsDomainCounts } from '../services/projectStateService';
+import { RunConfigStatus } from '../services/runConfigService';
 import Feature from './feature';
 
 export default interface ProjectMetadata {
@@ -29,6 +30,7 @@ export default interface ProjectMetadata {
   appMaps?: Readonly<Array<AppMapSummary>>;
   sampleCodeObjects?: SampleCodeObjects;
   findingsDomainCounts?: FindingsDomainCounts;
+  debugConfigurationStatus?: RunConfigStatus;
 }
 
 export function isLanguageSupported(project?: ProjectMetadata): boolean {

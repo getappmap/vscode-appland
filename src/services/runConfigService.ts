@@ -15,10 +15,29 @@ type JavaTestConfig = {
   vmArgs?: Array<string>;
 };
 
+export enum RunConfigStatus {
+  Pending,
+  Success,
+  Error,
+}
+
+type VmArgs = {
+  vmArgs?: string | Array<string>;
+};
+
+const vmArgContainsAppMap = (vmArg: string | Array<string>, javaJarPath: string): boolean =>
+  typeof vmArg === 'string'
+    ? vmArg.includes(javaJarPath)
+    : vmArg.some((arg) => arg.includes(javaJarPath));
+
+const configsContainAppMap = (javaJarPath: string, configs?: Array<VmArgs>): boolean =>
+  Boolean(configs?.some(({ vmArgs }) => vmArgs && vmArgContainsAppMap(vmArgs, javaJarPath)));
+
 export class RunConfigServiceInstance implements WorkspaceServiceInstance {
   private static JAVA_TEST_RUNNER_EXTENSION_ID = 'vscjava.vscode-java-test';
   private outputDirVmarg = '-Dappmap.output.directory=${command:appmap.getAppmapDir}';
   private testConfigName = 'Test with AppMap';
+  private _status: RunConfigStatus;
   protected disposables: vscode.Disposable[] = [];
 
   public get appmapLaunchConfig(): vscode.DebugConfiguration {
@@ -53,12 +72,27 @@ export class RunConfigServiceInstance implements WorkspaceServiceInstance {
   constructor(
     public folder: vscode.WorkspaceFolder,
     public projectStateServiceInstance: ProjectStateServiceInstance,
-    private extensionState: ExtensionState
+    private extensionState: ExtensionState,
+    private readonly _onStatusChange: vscode.EventEmitter<RunConfigServiceInstance>
   ) {
-    projectStateServiceInstance.onStateChange(this.updateConfigs.bind(this));
-    vscode.extensions.onDidChange(this.updateConfigs.bind(this));
+    this.disposables.push(
+      vscode.extensions.onDidChange(this.updateConfigs.bind(this)),
+      vscode.workspace.onDidChangeConfiguration((e) => {
+        if (
+          e.affectsConfiguration('java.test.config') ||
+          e.affectsConfiguration('launch.configurations')
+        ) {
+          this.updateStatus();
+        }
+      })
+    );
 
+    this._status = RunConfigStatus.Pending;
     this.updateConfigs();
+  }
+
+  public async updateStatus(): Promise<void> {
+    this.status = (await this.hasConfigs()) ? RunConfigStatus.Success : RunConfigStatus.Error;
   }
 
   public async updateConfigs(): Promise<void> {
@@ -69,6 +103,8 @@ export class RunConfigServiceInstance implements WorkspaceServiceInstance {
     } else {
       await this.updateTestConfig();
     }
+
+    this.updateStatus();
   }
 
   public async updateLaunchConfig(): Promise<void> {
@@ -147,6 +183,7 @@ export class RunConfigServiceInstance implements WorkspaceServiceInstance {
   }
 
   private sendConfigUpdateError(e: unknown): void {
+    this.status = RunConfigStatus.Error;
     const err = e as Error;
     Telemetry.sendEvent(DEBUG_EXCEPTION, {
       exception: err,
@@ -160,12 +197,40 @@ export class RunConfigServiceInstance implements WorkspaceServiceInstance {
     });
   }
 
+  private set status(status: RunConfigStatus) {
+    if (this.status === status) return;
+
+    this._status = status;
+    this._onStatusChange.fire(this);
+  }
+
+  public get status(): RunConfigStatus {
+    return this._status;
+  }
+
+  public async hasConfigs(): Promise<boolean | undefined> {
+    if (!this.isJavaProject()) return;
+
+    const launchConfigs = vscode.workspace
+      .getConfiguration('launch')
+      .get<VmArgs[]>('configurations', []);
+    const testConfigs = vscode.workspace.getConfiguration('java.test').get<VmArgs[]>('config', []);
+    const hasLaunchConfig =
+      Array.isArray(launchConfigs) && configsContainAppMap(this.javaJarPath, launchConfigs);
+    const hasTestConfig =
+      Array.isArray(testConfigs) && configsContainAppMap(this.javaJarPath, testConfigs);
+    return hasLaunchConfig && hasTestConfig;
+  }
+
   public async dispose(): Promise<void> {
-    return;
+    this.disposables.forEach((disposable) => disposable.dispose());
   }
 }
 
 export class RunConfigService implements WorkspaceService<RunConfigServiceInstance> {
+  private static _onStatusChange = new vscode.EventEmitter<RunConfigServiceInstance>();
+  public static readonly onStatusChange = RunConfigService._onStatusChange.event;
+
   constructor(
     private projectStateService: ProjectStateService,
     private workspaceServices: WorkspaceServices,
@@ -179,6 +244,15 @@ export class RunConfigService implements WorkspaceService<RunConfigServiceInstan
     ) as ProjectStateServiceInstance | undefined;
     assert(projectStateServiceInstance);
 
-    return new RunConfigServiceInstance(folder, projectStateServiceInstance, this.extensionState);
+    return new RunConfigServiceInstance(
+      folder,
+      projectStateServiceInstance,
+      this.extensionState,
+      RunConfigService._onStatusChange
+    );
+  }
+
+  static dispose(): void {
+    this._onStatusChange.dispose();
   }
 }

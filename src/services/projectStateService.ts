@@ -17,6 +17,7 @@ import AppMapLoader from './appmapLoader';
 import { PROJECT_OPEN, Telemetry } from '../telemetry';
 import { workspaceServices } from './workspaceServices';
 import { AppmapConfigManager, AppmapConfigManagerInstance } from './appmapConfigManager';
+import { RunConfigService, RunConfigStatus } from './runConfigService';
 
 type SimpleCodeObject = {
   name: string;
@@ -90,7 +91,10 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
           this.updateMetadata();
         }
       }),
-      AnalysisManager.onAnalysisToggled(() => this.setFindingsIndex(AnalysisManager.findingsIndex))
+      AnalysisManager.onAnalysisToggled(() => this.setFindingsIndex(AnalysisManager.findingsIndex)),
+      RunConfigService.onStatusChange((service) => {
+        if (service.folder === this.folder) this.setRunConfigStatus(service.status);
+      })
     );
 
     this.syncConfigurationState();
@@ -335,6 +339,11 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
       nodeVersion.major !== 0 &&
       this.SUPPORTED_NODE_VERSIONS.includes(nodeVersion.major)
     );
+  }
+
+  private setRunConfigStatus(status: RunConfigStatus): void {
+    this._metadata.debugConfigurationStatus = status;
+    this._onStateChange.fire(this._metadata);
   }
 }
 
