@@ -2,7 +2,6 @@ import assert from 'assert';
 import sinon from 'sinon';
 import * as vscode from 'vscode';
 import MockExtensionContext from '../mocks/mockExtensionContext';
-import initializeDefaultFilter from '../../src/lib/initializeSavedFilters';
 import AppMapEditorProvider from '../../src/editor/appmapEditorProvider';
 import ExtensionState from '../../src/configuration/extensionState';
 
@@ -31,15 +30,9 @@ describe('Saved filters', () => {
     extensionState = new ExtensionState(context);
     editorProvider = new AppMapEditorProvider(context, extensionState);
     updateFiltersSpy = sinon.spy(editorProvider, 'updateFilters');
-    await initializeDefaultFilter(context);
+    await context.workspaceState.update(AppMapEditorProvider.SAVED_FILTERS, [defaultFilter]);
   });
   afterEach(() => sandbox.restore());
-
-  it('initializes filters to AppMap default', () => {
-    assert.deepEqual(context.workspaceState.get(AppMapEditorProvider.SAVED_FILTERS), [
-      defaultFilter,
-    ]);
-  });
 
   it('saves and deletes a new filter', async () => {
     await editorProvider.saveFilter(testFilter);

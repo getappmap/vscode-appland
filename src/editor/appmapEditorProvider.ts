@@ -261,7 +261,7 @@ export default class AppMapEditorProvider
     AppMapEditorProvider.openWebviewPanels.forEach((webviewPanel) =>
       webviewPanel.webview.postMessage({
         type: 'updateSavedFilters',
-        savedFilters: this.context.workspaceState.get(AppMapEditorProvider.SAVED_FILTERS),
+        savedFilters: this.context.workspaceState.get(AppMapEditorProvider.SAVED_FILTERS) || [],
       })
     );
   }
@@ -351,7 +351,7 @@ export default class AppMapEditorProvider
             type: 'init-appmap',
             shareEnabled: extensionSettings.shareEnabled,
             defaultView: extensionSettings.defaultDiagramView || 'viewSequence',
-            savedFilters: this.context.workspaceState.get(AppMapEditorProvider.SAVED_FILTERS),
+            savedFilters: this.context.workspaceState.get(AppMapEditorProvider.SAVED_FILTERS) || [],
             flamegraphEnabled: extensionSettings.flamegraphEnabled,
           });
           break;
