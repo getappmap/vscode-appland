@@ -1,3 +1,10 @@
+# [0.92.0](https://github.com/getappmap/vscode-appland/compare/v0.91.1...v0.92.0) (2023-06-30)
+
+
+### Features
+
+* update flame graph ([e5f87eb](https://github.com/getappmap/vscode-appland/commit/e5f87eb089102bb22b847b150c4fd4f26cf1ad85))
+
 ## [0.91.1](https://github.com/getappmap/vscode-appland/compare/v0.91.0...v0.91.1) (2023-06-29)
 
 
