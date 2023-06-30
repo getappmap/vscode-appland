@@ -22,6 +22,8 @@ export default class AppMapServerAuthenticationProvider implements vscode.Authen
     new vscode.EventEmitter<vscode.AuthenticationProviderAuthenticationSessionsChangeEvent>();
   readonly onDidChangeSessions = this._onDidChangeSessions.event;
 
+  private session?: vscode.AuthenticationSession;
+
   static enroll(
     context: vscode.ExtensionContext,
     uriHandler: UriHandler
@@ -50,42 +52,47 @@ export default class AppMapServerAuthenticationProvider implements vscode.Authen
   constructor(public context: vscode.ExtensionContext, public uriHandler: UriHandler) {}
 
   async getSessions(): Promise<vscode.AuthenticationSession[]> {
-    try {
-      const session = await this.context.secrets.get(APPMAP_SERVER_SESSION_KEY);
-      if (!session) return [];
+    if (!this.session)
+      try {
+        const sessionJson = await this.context.secrets.get(APPMAP_SERVER_SESSION_KEY);
+        if (sessionJson) this.session = JSON.parse(sessionJson);
+      } catch (err) {
+        console.warn('error retrieving session key: %s', err);
+      }
 
-      return [JSON.parse(session)];
-    } catch {
-      // Error: Cannot get password
-      // Possibly because nothing is stored at this key? Platform specific issue?
-      return [];
-    }
+    return this.session ? [this.session] : [];
   }
 
   async createSession(): Promise<vscode.AuthenticationSession> {
-    const session = await this.performSignIn();
-    if (!session) {
+    this.session = await this.performSignIn();
+
+    if (!this.session) {
       Telemetry.sendEvent(AUTHENTICATION_FAILED);
       throw new Error('AppMap Server authentication was not completed');
     }
 
-    this.context.secrets.store(APPMAP_SERVER_SESSION_KEY, JSON.stringify(session));
+    this.context.secrets
+      .store(APPMAP_SERVER_SESSION_KEY, JSON.stringify(this.session))
+      .then(undefined, (err) => console.warn('error storing session key: %s', err));
 
-    this._onDidChangeSessions.fire({ added: [session] });
+    this._onDidChangeSessions.fire({ added: [this.session] });
 
     Telemetry.sendEvent(AUTHENTICATION_SUCCESS);
 
-    return session;
+    return this.session;
   }
 
   async removeSession(): Promise<void> {
-    const session = await this.context.secrets.get(APPMAP_SERVER_SESSION_KEY);
+    const [session] = await this.getSessions();
     if (session) {
-      this.context.secrets.delete(APPMAP_SERVER_SESSION_KEY);
+      this.session = undefined;
+      this.context.secrets
+        .delete(APPMAP_SERVER_SESSION_KEY)
+        .then(undefined, (err) => console.warn('error removing session key: %s', err));
+
+      this._onDidChangeSessions.fire({ removed: [session] });
 
       Telemetry.sendEvent(AUTHENTICATION_SIGN_OUT);
-
-      this._onDidChangeSessions.fire({ removed: [JSON.parse(session)] });
     }
     return;
   }
