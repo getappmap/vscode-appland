@@ -16,7 +16,6 @@ describe('run config service in a Java Project without the Test Runner for Java 
   let sinon: SinonSandbox;
   let runConfigServiceInstance: RunConfigServiceInstance;
   let state: ExtensionState;
-  let fakeConfigGetSpy: SinonSpy;
   let fakeConfigUpdateSpy: SinonSpy;
   let getConfigStub: SinonStub;
 
@@ -26,7 +25,6 @@ describe('run config service in a Java Project without the Test Runner for Java 
 
     sinon = createSandbox();
 
-    fakeConfigGetSpy = sinon.spy(FakeConfig, 'get');
     fakeConfigUpdateSpy = sinon.spy(FakeConfig, 'update');
     getConfigStub = sinon.stub(vscode.workspace, 'getConfiguration');
     getConfigStub.withArgs('java.test').returns(FakeConfig);
@@ -70,7 +68,6 @@ describe('run config service in a Java Project without the Test Runner for Java 
   });
 
   it('does not create a new test configuration', () => {
-    assert.deepStrictEqual(fakeConfigGetSpy.callCount, 0);
     assert.deepStrictEqual(fakeConfigUpdateSpy.callCount, 0);
   });
 

@@ -73,7 +73,8 @@ describe('test configs in a Java Project', () => {
     runConfigServiceInstance = new RunConfigServiceInstance(
       workspaceFolder,
       fakeProjectState as ProjectStateServiceInstance,
-      extensionState
+      extensionState,
+      new vscode.EventEmitter()
     );
 
     // Test Runner for Java extension is installed
@@ -100,7 +101,6 @@ describe('test configs in a Java Project', () => {
   it('correctly generates a test config', async () => {
     await runConfigServiceInstance.updateConfigs();
 
-    assert.deepStrictEqual(fakeConfigGetSpy.callCount, 1);
     assert.deepStrictEqual(fakeConfigUpdateSpy.callCount, 1);
     assert.deepStrictEqual(fakeConfigGetSpy.getCall(0).args[0], 'config');
     assert.deepStrictEqual(fakeConfigUpdateSpy.getCall(0).args, [
@@ -116,7 +116,6 @@ describe('test configs in a Java Project', () => {
 
     await runConfigServiceInstance.updateConfigs();
 
-    assert.deepStrictEqual(fakeConfigGetSpy.callCount, 1);
     assert.deepStrictEqual(fakeConfigUpdateSpy.callCount, 1);
     assert.deepStrictEqual(fakeConfigGetSpy.getCall(0).args[0], 'config');
     assert.deepStrictEqual(fakeConfigUpdateSpy.getCall(0).args, [
@@ -135,7 +134,6 @@ describe('test configs in a Java Project', () => {
 
     await runConfigServiceInstance.updateConfigs();
 
-    assert.deepStrictEqual(fakeConfigGetSpy.callCount, 1);
     assert.deepStrictEqual(fakeConfigUpdateSpy.callCount, 1);
     assert.deepStrictEqual(fakeConfigGetSpy.getCall(0).args[0], 'config');
     assert.deepStrictEqual(fakeConfigUpdateSpy.getCall(0).args, [
@@ -155,7 +153,6 @@ describe('test configs in a Java Project', () => {
 
     await runConfigServiceInstance.updateConfigs();
 
-    assert.deepStrictEqual(fakeConfigGetSpy.callCount, 1);
     assert.deepStrictEqual(fakeConfigUpdateSpy.callCount, 1);
     assert.deepStrictEqual(fakeConfigGetSpy.getCall(0).args[0], 'config');
     assert.deepStrictEqual(fakeConfigUpdateSpy.getCall(0).args, [
