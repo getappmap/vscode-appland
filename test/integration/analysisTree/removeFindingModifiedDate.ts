@@ -5,7 +5,7 @@ import { Finding } from '@appland/scanner';
 import { debug } from 'console';
 
 export async function removeFindingModifiedDate(findingsPath: string) {
-  let findingsData: any;
+  let findingsData: { findings: Finding[] };
   try {
     const findingsStr = await readFile(join(ProjectSeveralFindings, findingsPath), 'utf8');
     findingsData = JSON.parse(findingsStr);
@@ -13,7 +13,7 @@ export async function removeFindingModifiedDate(findingsPath: string) {
     debug(e);
     return;
   }
-  const findings = findingsData.findings as Finding[];
+  const findings = findingsData.findings;
   let modified = false;
   for (const finding of findings) {
     for (const field of ['scopeModifiedDate', 'eventsModifiedDate']) {

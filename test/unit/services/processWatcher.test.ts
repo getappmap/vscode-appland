@@ -25,7 +25,7 @@ function makeWatcher(opts: Partial<ProcessWatcherOptions> = {}) {
   };
 
   return new ProcessWatcher(provider, {
-    id: 'test process' as any as ProcessId,
+    id: 'test process' as unknown as ProcessId,
     modulePath: testModule,
     ...opts,
   });

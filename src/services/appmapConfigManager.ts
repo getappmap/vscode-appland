@@ -160,7 +160,7 @@ export class AppmapConfigManagerInstance implements WorkspaceServiceInstance {
       usingDefault: true,
     } as AppmapConfig;
 
-    let appmapConfig: any | undefined;
+    let appmapConfig: unknown;
     try {
       appmapConfig = load(await readFile(configFilePath, 'utf-8'));
     } catch (e) {
@@ -179,7 +179,7 @@ export class AppmapConfigManagerInstance implements WorkspaceServiceInstance {
       result.usingDefault = false;
     }
 
-    return result as AppmapConfig;
+    return result;
   }
 
   private async makeAppmapDirs(): Promise<void> {

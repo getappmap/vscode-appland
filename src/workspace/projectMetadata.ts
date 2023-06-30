@@ -35,7 +35,11 @@ export function isLanguageSupported(project?: ProjectMetadata): boolean {
   if (!project) return false;
 
   return !!project.languages?.some(
-    (language) => language.name && SUPPORTED_LANGUAGES.includes(language.name?.toLowerCase() as any)
+    (language) =>
+      language.name &&
+      SUPPORTED_LANGUAGES.includes(
+        language.name.toLowerCase() as (typeof SUPPORTED_LANGUAGES)[number]
+      )
   );
 }
 

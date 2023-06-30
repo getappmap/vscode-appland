@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-type CompactTreeItem = {
+export type CompactTreeItem = {
   label: string;
   children: CompactTreeItem[];
 };

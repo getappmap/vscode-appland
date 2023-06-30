@@ -10,7 +10,7 @@ import {
 } from '../util';
 import { FindingsTreeDataProvider } from '../../../src/tree/findingsTreeDataProvider';
 
-import enumerateTree from './enumerateTree';
+import enumerateTree, { CompactTreeItem } from './enumerateTree';
 import { glob } from 'glob';
 import { promisify } from 'util';
 import { removeFindingModifiedDate } from './removeFindingModifiedDate';
@@ -24,7 +24,7 @@ import findingsTreeItems_noDateIndicated from './findingsTreeItems_noDateIndicat
 (
   treeItems
     .find((item) => item.label === 'project-several-findings')!
-    .children.find((item) => item.label === 'Findings') as any
+    .children.find((item) => item.label === 'Findings') as CompactTreeItem
 ).children = findingsTreeItems_noDateIndicated;
 
 const appmapFileName = join(
@@ -37,7 +37,7 @@ describe('Runtime analysis failed test tree item', () => {
 
   let analysisTree: FindingsTreeDataProvider;
   let prepareFindingsTask: NodeJS.Timer;
-  let appmapStr: any;
+  let appmapStr: string;
 
   const prepareFindings = async () => {
     await Promise.all(

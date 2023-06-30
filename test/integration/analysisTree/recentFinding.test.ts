@@ -45,14 +45,15 @@ describe("Runtime analysis findings tree items, when a finding's modified date i
       try {
         findingsFileContents = await readFile(findingsFileName, 'utf8');
       } catch (e) {
+        const err = e as Error;
         debug(`${findingsFileName} cannot be read. This is anticipated and will be retried.`);
-        debug((e as any).toString());
+        debug(err.toString());
         return;
       }
     }
-    const findingsFile = JSON.parse(findingsFileContents) as any;
+    const findingsFile = JSON.parse(findingsFileContents) as { findings: Finding[] };
     const nPlusOneQuery = findingsFile.findings.find(
-      (finding: any) => finding.ruleId === 'n-plus-one-query'
+      (finding: { ruleId: string }) => finding.ruleId === 'n-plus-one-query'
     ) as Finding;
     if (nPlusOneQuery.scopeModifiedDate === undefined) {
       nPlusOneQuery.scopeModifiedDate = new Date();
