@@ -1,8 +1,14 @@
 /* eslint @typescript-eslint/naming-convention: 0 */
+import { cwd } from 'process';
+import EventEmitter from './EventEmitter';
+import Terminal from './Terminal';
+import type * as vscode from 'vscode';
 
 const doNothing = () => {
   // nop
 };
+
+export const EmitOnDidChangeTerminalState = new EventEmitter<vscode.Terminal>();
 
 export default {
   createStatusBarItem() {
@@ -27,4 +33,8 @@ export default {
     show: doNothing,
     dispose: doNothing,
   }),
+  createTerminal(options: vscode.TerminalOptions = { cwd: cwd() }) {
+    return new Terminal(options);
+  },
+  onDidChangeTerminalState: EmitOnDidChangeTerminalState.event,
 };

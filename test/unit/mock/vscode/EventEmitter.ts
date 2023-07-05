@@ -17,6 +17,6 @@ export default class EventEmitter<T> implements vscode.EventEmitter<T> {
   }
 
   dispose(): void {
-    throw new Error('Method not implemented.');
+    this.listeners = [];
   }
 }

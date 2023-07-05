@@ -6,7 +6,6 @@ import { workspace } from 'vscode';
 import { Uri } from 'vscode';
 import { Terminal } from 'vscode';
 import * as Terminals from './terminals';
-import { setTimeout } from 'node:timers/promises';
 
 export default class PythonInstaller extends DefaultInstaller {
   // These are in order of precedence
@@ -146,7 +145,8 @@ export default class PythonInstaller extends DefaultInstaller {
   private async obtainTerminal(
     ext: PythonExtension,
     projectPath: string,
-    env?: { [key: string]: string | null | undefined }
+    env?: { [key: string]: string | null | undefined },
+    timeoutMs = 2000
   ): Promise<Terminal> {
     const targetEnv = getPythonEnvironment(ext, projectPath).path;
     const usedEnv = this.usedPythonEnvironments.get(projectPath);
@@ -156,14 +156,33 @@ export default class PythonInstaller extends DefaultInstaller {
 
     this.usedPythonEnvironments.set(projectPath, targetEnv);
 
-    return PythonInstaller.withActiveEnvironment(async () => {
+    return await PythonInstaller.withActiveEnvironment(async () => {
       const term = this.createTerminal(projectPath, env);
+      const environment = await ext.environments.resolveEnvironment(targetEnv);
+
+      // The `tools` array is expected to be empty if nothing has been determined to manage the environment.
+      // In this case it's safe to return the terminal immediately - we're not expecting any activation commands.
+      if (!environment || environment.tools.length === 0) return term;
+
+      // Verify the terminal hasn't already received input before we wait for it.
+      if (term.state.isInteractedWith) return term;
+
       // Wait for the terminal to be ready before sending the command.
-      // Sometimes the terminal is not ready immediately after being created.
-      // Sometimes the Python extension is sending commands to the terminal.
-      // 1s should be enough to avoid both of these issues.
-      await setTimeout(1000);
-      return term;
+      // To do this, we wait for a terminal interaction as we're expecting the
+      // Python environment to be activated via some command. Otherwise, if we
+      // timeout after `timeoutMs` milliseconds and continue on.
+      return new Promise((resolve) => {
+        const disposable = vscode.window.onDidChangeTerminalState((changedTerminal) => {
+          if (changedTerminal !== term) return;
+          if (changedTerminal.state.isInteractedWith) cleanupAndResolve();
+        });
+        const cleanupAndResolve = () => {
+          disposable.dispose();
+          clearTimeout(timeoutHandle);
+          resolve(term);
+        };
+        const timeoutHandle = setTimeout(cleanupAndResolve, timeoutMs);
+      });
     });
   }
 }

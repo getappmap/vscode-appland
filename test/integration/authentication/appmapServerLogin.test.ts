@@ -76,8 +76,8 @@ describe('Authenticate', () => {
 
         assert(sessionsChangeEvent, 'sessionsChangeEvent');
         assert.deepStrictEqual(sessionsChangeEvent.added, [session]);
-        assert(!sessionsChangeEvent.removed);
-        assert(!sessionsChangeEvent.changed);
+        assert.deepStrictEqual(sessionsChangeEvent.removed, []);
+        assert.deepStrictEqual(sessionsChangeEvent.changed, []);
       });
     });
   });
