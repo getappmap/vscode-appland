@@ -79,6 +79,10 @@ export default class MockExtensionContext implements ExtensionContext {
     clear(): void {
       throw new Error('Not implemented');
     }
+
+    [Symbol.iterator](): Iterator<[variable: string, mutator: EnvironmentVariableMutator]> {
+      throw new Error('Not implemented');
+    }
   })();
 
   constructor() {

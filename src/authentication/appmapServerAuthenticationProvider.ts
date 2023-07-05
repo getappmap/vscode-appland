@@ -79,7 +79,7 @@ export default class AppMapServerAuthenticationProvider implements vscode.Authen
       .store(APPMAP_SERVER_SESSION_KEY, JSON.stringify(this.session))
       .then(undefined, (err) => console.warn('error storing session key: %s', err));
 
-    this._onDidChangeSessions.fire({ added: [this.session] });
+    this._onDidChangeSessions.fire({ added: [this.session], removed: [], changed: [] });
 
     Telemetry.sendEvent(AUTHENTICATION_SUCCESS);
 
@@ -96,7 +96,7 @@ export default class AppMapServerAuthenticationProvider implements vscode.Authen
         .delete(APPMAP_SERVER_SESSION_KEY)
         .then(undefined, (err) => console.warn('error removing session key: %s', err));
 
-      this._onDidChangeSessions.fire({ removed: [session] });
+      this._onDidChangeSessions.fire({ removed: [session], added: [], changed: [] });
 
       Telemetry.sendEvent(AUTHENTICATION_SIGN_OUT);
     }

@@ -2,7 +2,7 @@
 /* eslint @typescript-eslint/no-unused-vars: 0 */
 
 import type { workspace, WorkspaceFolder } from 'vscode';
-import type { URI } from 'vscode-uri';
+import { URI } from 'vscode-uri';
 
 const unimplemented = () => {
   throw new Error('unimplemented');
@@ -25,5 +25,13 @@ export default {
   getConfiguration: () => new Map<string, unknown>(),
   workspaceFolders: [],
   onDidChangeConfiguration: () => () => unimplemented,
-  getWorkspaceFolder: (_uri: URI): WorkspaceFolder | undefined => undefined,
+  getWorkspaceFolder(uri: unknown): WorkspaceFolder | undefined {
+    return uri
+      ? {
+          uri: URI.file('test'),
+          index: 0,
+          name: 'test',
+        }
+      : undefined;
+  },
 };
