@@ -1,3 +1,12 @@
+# [0.94.0](https://github.com/getappmap/vscode-appland/compare/v0.93.0...v0.94.0) (2023-07-05)
+
+
+### Features
+
+* appmaps are organized by project folder in sidebar ([ff4505d](https://github.com/getappmap/vscode-appland/commit/ff4505d42baef32eaee988b16bb8b3f38efb8e14))
+* Integrate Java asset status in the instructions ([c553bcd](https://github.com/getappmap/vscode-appland/commit/c553bcd5d42f7f965f6c10bac5eff0d211102f12))
+* move initialization of default AppMap filter to frontend ([9520a3d](https://github.com/getappmap/vscode-appland/commit/9520a3d32cf4f2c1218a5bc1a65c4673d8ea157a))
+
 # [0.93.0](https://github.com/getappmap/vscode-appland/compare/v0.92.0...v0.93.0) (2023-06-30)
 
 
