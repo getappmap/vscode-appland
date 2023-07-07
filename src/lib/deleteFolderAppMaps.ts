@@ -10,6 +10,8 @@ export default async function deleteFolderAppMaps(
     const folderProperties = AppMapTreeDataProvider.appMapFolderItems(appmap);
     return AppMapTreeDataProvider.folderName(folderProperties) === folderName;
   });
-  await Promise.all(filteredAppMaps.map((appmap) => deleteAppMap(appmap.descriptor.resourceUri)));
+  await Promise.all(
+    filteredAppMaps.map((appmap) => deleteAppMap(appmap.descriptor.resourceUri, appmaps))
+  );
   return filteredAppMaps.length;
 }

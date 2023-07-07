@@ -1,5 +1,6 @@
 import { Event, WorkspaceFolder } from 'vscode';
 import AppMapLoader from './appmapLoader';
+import * as vscode from 'vscode';
 
 export default interface AppMapCollection {
   readonly onUpdated: Event<WorkspaceFolder | undefined>;
@@ -15,4 +16,6 @@ export default interface AppMapCollection {
   appMaps(): AppMapLoader[];
 
   allAppMapsForWorkspaceFolder(workspaceFolder: WorkspaceFolder): AppMapLoader[];
+
+  has(uri: vscode.Uri): boolean;
 }

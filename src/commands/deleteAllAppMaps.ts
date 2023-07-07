@@ -6,9 +6,11 @@ import { AppmapConfigManager } from '../services/appmapConfigManager';
 import { workspaceServices } from '../services/workspaceServices';
 import assert from 'assert';
 import { join } from 'path';
+import AppMapCollection from '../services/appmapCollection';
 
 export default function deleteAllAppMaps(
   context: vscode.ExtensionContext,
+  appMapCollection: AppMapCollection,
   classMapIndex?: ClassMapIndex
 ): void {
   async function deleteWorkspaceAppMaps(folder: vscode.WorkspaceFolder) {
@@ -24,7 +26,7 @@ export default function deleteAllAppMaps(
       return;
     }
 
-    await deleteAppMaps(join(folder.uri.fsPath, appmapDir));
+    await deleteAppMaps(join(folder.uri.fsPath, appmapDir), appMapCollection);
   }
 
   context.subscriptions.push(
