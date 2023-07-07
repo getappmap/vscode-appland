@@ -239,10 +239,6 @@
         "appMap.commandLineToolsPath": {
           "type": "string",
           "description": "Location of AppMap command line tools (used for extension development only)"
-        },
-        "appMap.flamegraphEnabled": {
-          "type": "boolean",
-          "description": "Enable flamegraph diagram"
         }
       }
     },
