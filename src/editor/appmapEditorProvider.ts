@@ -352,7 +352,6 @@ export default class AppMapEditorProvider
             shareEnabled: extensionSettings.shareEnabled,
             defaultView: extensionSettings.defaultDiagramView || 'viewSequence',
             savedFilters: this.context.workspaceState.get(AppMapEditorProvider.SAVED_FILTERS) || [],
-            flamegraphEnabled: extensionSettings.flamegraphEnabled,
           });
           break;
         case 'appmapStateResult':

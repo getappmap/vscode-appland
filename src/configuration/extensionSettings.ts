@@ -35,10 +35,4 @@ export default class ExtensionSettings {
   public static get appMapCommandLineToolsPath(): string | undefined {
     return vscode.workspace.getConfiguration('appMap').get('commandLineToolsPath');
   }
-
-  public static get flamegraphEnabled(): boolean {
-    return [true, 'true'].includes(
-      vscode.workspace.getConfiguration('appMap').get('flamegraphEnabled') || false
-    );
-  }
 }
