@@ -136,4 +136,8 @@ export default class AppMapCollectionFile implements AppMapCollection, AppMapsSe
       appmap.descriptor.resourceUri.fsPath.startsWith(workspaceFolder.uri.fsPath)
     );
   }
+
+  public has(uri: vscode.Uri): boolean {
+    return this.loaders.has(uri.fsPath);
+  }
 }

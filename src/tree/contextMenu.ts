@@ -72,7 +72,7 @@ export default class ContextMenu {
     );
     context.subscriptions.push(
       vscode.commands.registerCommand('appmap.context.deleteAppMap', async (item: AppMapLoader) => {
-        await deleteAppMap(item.descriptor.resourceUri);
+        await deleteAppMap(item.descriptor.resourceUri, appmaps);
       })
     );
     context.subscriptions.push(

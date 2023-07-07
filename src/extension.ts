@@ -108,7 +108,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     const classMapIndex = new ClassMapIndex();
     const lineInfoIndex = new LineInfoIndex(classMapIndex);
 
-    deleteAllAppMaps(context, classMapIndex);
+    deleteAllAppMaps(context, appmapCollectionFile, classMapIndex);
 
     const classMapProvider = new ClassMapTreeDataProvider(classMapIndex);
     const codeObjectsTree = vscode.window.createTreeView('appmap.views.codeObjects', {
