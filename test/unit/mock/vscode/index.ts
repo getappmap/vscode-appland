@@ -27,6 +27,7 @@ const MockVSCode = {
   commands,
   StatusBarAlignment,
   env,
+  TreeItem: class {},
   UIKind,
 };
 
