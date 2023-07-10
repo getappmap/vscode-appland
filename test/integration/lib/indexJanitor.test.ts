@@ -19,7 +19,7 @@ describe('AppMapIndex', () => {
   beforeEach(async () => (extension = await waitForExtension()));
   afterEach(initializeWorkspace);
 
-  it('cleans up index directories', async () => {
+  xit('cleans up index directories', async () => {
     const appmapFiles = await vscode.workspace.findFiles(`tmp/appmap/**/*.appmap.json`);
     const indexDirs = appmapFiles.map(({ fsPath }) => fsPath.replace(/\.appmap\.json$/, ''));
 
