@@ -1,3 +1,10 @@
+# [0.95.0](https://github.com/getappmap/vscode-appland/compare/v0.94.0...v0.95.0) (2023-07-10)
+
+
+### Features
+
+* remove flame graph feature flag ([d39a14b](https://github.com/getappmap/vscode-appland/commit/d39a14b839d732f269d878854751a9dcc86e0eff))
+
 # [0.94.0](https://github.com/getappmap/vscode-appland/compare/v0.93.0...v0.94.0) (2023-07-05)
 
 
