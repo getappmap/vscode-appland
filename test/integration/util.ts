@@ -308,12 +308,14 @@ export function unsafeCast<T>(val: unknown): T {
 
 export type CompactTreeItem = {
   label: string;
+  command?: vscode.Command;
   children: CompactTreeItem[];
 };
 
 export async function enumerateTree(
   tree: vscode.TreeDataProvider<vscode.TreeItem>,
-  parent?: vscode.TreeItem
+  parent?: vscode.TreeItem,
+  withCommands = false
 ): Promise<CompactTreeItem[]> {
   const treeItems = await tree.getChildren(parent);
   if (!treeItems) return [];
@@ -327,7 +329,13 @@ export async function enumerateTree(
     const tokens = label.split('/');
     if (tokens.length > 1) label = tokens[tokens.length - 1];
 
-    items.push({ label, children: await enumerateTree(tree, item) });
+    const itemToAdd = {
+      label,
+      children: await enumerateTree(tree, item, withCommands),
+    } as CompactTreeItem;
+    if (withCommands) itemToAdd.command = item.command;
+
+    items.push(itemToAdd);
   }
   return items;
 }
