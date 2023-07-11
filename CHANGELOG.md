@@ -1,3 +1,12 @@
+## [0.95.1](https://github.com/getappmap/vscode-appland/compare/v0.95.0...v0.95.1) (2023-07-11)
+
+
+### Bug Fixes
+
+* `Delete All AppMaps` will delete index directories if the AppMap has not yet been acknowledged ([8f19c8a](https://github.com/getappmap/vscode-appland/commit/8f19c8ac4815652832d7ae6cd20dfdfd385019df))
+* AppMaps removed by project will be deleted ([b9bcbaa](https://github.com/getappmap/vscode-appland/commit/b9bcbaa7ec1e187bd3bb2dec4e9f65798166923a))
+* Improve wait conditions for Python interpreter activation before running the installer ([3fdde29](https://github.com/getappmap/vscode-appland/commit/3fdde29c8092e2492c66e1009189567547517b07))
+
 # [0.95.0](https://github.com/getappmap/vscode-appland/compare/v0.94.0...v0.95.0) (2023-07-10)
 
 
