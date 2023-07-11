@@ -16,6 +16,7 @@ import SignInManager from './services/signInManager';
 import { SourceFileWatcher } from './services/sourceFileWatcher';
 import { WorkspaceServices } from './services/workspaceServices';
 import { AppMapTreeDataProvider } from './tree/appMapTreeDataProvider';
+import { ClassMapTreeDataProvider } from './tree/classMapTreeDataProvider';
 import { FindingsTreeDataProvider } from './tree/findingsTreeDataProvider';
 
 export type Invocation = {
@@ -31,6 +32,7 @@ export interface AppMapProcessService {
 export type AppMapTreeDataProviders = {
   appmaps: AppMapTreeDataProvider;
   analysis: FindingsTreeDataProvider;
+  codeObjects: ClassMapTreeDataProvider;
 };
 
 export default interface AppMapService {

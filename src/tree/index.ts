@@ -8,11 +8,14 @@ import { ProjectStateServiceInstance } from '../services/projectStateService';
 import { AppmapUptodateService } from '../services/appmapUptodateService';
 import { AppMapTreeDataProviders } from '../appMapService';
 import { FindingsTreeDataProvider } from './findingsTreeDataProvider';
+import { ClassMapTreeDataProvider } from './classMapTreeDataProvider';
+import ClassMapIndex from '../services/classMapIndex';
 
 export default function registerTrees(
   context: vscode.ExtensionContext,
   appmapCollection: AppMapCollectionFile,
   projectStates: ProjectStateServiceInstance[],
+  classMapIndex: ClassMapIndex,
   appmapsUptodate?: AppmapUptodateService
 ): AppMapTreeDataProviders {
   LinkTreeDataProvider.registerCommands(context);
@@ -39,6 +42,17 @@ export default function registerTrees(
     treeDataProvider: findingsTreeProvider,
   });
   context.subscriptions.push(findingsTreeProvider);
+
+  const classMapProvider = new ClassMapTreeDataProvider(classMapIndex);
+  const codeObjectsTree = vscode.window.createTreeView('appmap.views.codeObjects', {
+    treeDataProvider: classMapProvider,
+  });
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand('appmap.view.focusCodeObjects', () => {
+      codeObjectsTree.reveal(undefined, { expand: true, focus: true, select: true });
+    })
+  );
 
   context.subscriptions.push(
     vscode.commands.registerCommand('appmap.view.focusAppMap', () => {
@@ -68,5 +82,9 @@ export default function registerTrees(
     })
   );
 
-  return { appmaps: localAppMapsProvider, analysis: findingsTreeProvider };
+  return {
+    appmaps: localAppMapsProvider,
+    analysis: findingsTreeProvider,
+    codeObjects: classMapProvider,
+  };
 }

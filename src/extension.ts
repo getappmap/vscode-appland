@@ -31,7 +31,6 @@ import { initializeWorkspaceServices } from './services/workspaceServices';
 import { DEBUG_EXCEPTION, Telemetry, TELEMETRY_ENABLED, sendAppMapCreateEvent } from './telemetry';
 import appmapLinkProvider from './terminalLink/appmapLinkProvider';
 import registerTrees from './tree';
-import { ClassMapTreeDataProvider } from './tree/classMapTreeDataProvider';
 import ContextMenu from './tree/contextMenu';
 import InstallGuideWebView from './webviews/installGuideWebview';
 import InstallationStatusBadge from './workspace/installationStatus';
@@ -109,17 +108,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     const lineInfoIndex = new LineInfoIndex(classMapIndex);
 
     deleteAllAppMaps(context, appmapCollectionFile, classMapIndex);
-
-    const classMapProvider = new ClassMapTreeDataProvider(classMapIndex);
-    const codeObjectsTree = vscode.window.createTreeView('appmap.views.codeObjects', {
-      treeDataProvider: classMapProvider,
-    });
-
-    context.subscriptions.push(
-      vscode.commands.registerCommand('appmap.view.focusCodeObjects', () => {
-        codeObjectsTree.reveal(undefined, { expand: true, focus: true, select: true });
-      })
-    );
 
     const classMapWatcher = new ClassMapWatcher();
     context.subscriptions.push(
@@ -246,6 +234,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       context,
       appmapCollectionFile,
       projectStates,
+      classMapIndex,
       appmapUptodateService
     );
 
