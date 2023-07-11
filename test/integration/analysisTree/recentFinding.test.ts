@@ -8,11 +8,11 @@ import {
   ProjectSeveralFindings,
   waitFor,
   initializeWorkspace,
+  enumerateTree,
 } from '../util';
 import { FindingsTreeDataProvider } from '../../../src/tree/findingsTreeDataProvider';
 
 import treeItems from './recentFindingTreeItems.json';
-import enumerateTree from './enumerateTree';
 import { Finding } from '@appland/scanner';
 import { debug } from 'console';
 import { promisify } from 'util';

@@ -7,6 +7,8 @@ import {
   ProjectSeveralFindings,
   waitFor,
   initializeWorkspace,
+  CompactTreeItem,
+  enumerateTree,
 } from '../util';
 import { FindingsTreeDataProvider } from '../../../src/tree/findingsTreeDataProvider';
 
@@ -18,7 +20,6 @@ import findingsTreeItems_noDateIndicated from './findingsTreeItems_noDateIndicat
     .children.find((item) => item.label === 'Findings') as CompactTreeItem
 ).children = findingsTreeItems_noDateIndicated;
 
-import enumerateTree, { CompactTreeItem } from './enumerateTree';
 import { glob } from 'glob';
 import { promisify } from 'util';
 import { removeFindingModifiedDate } from './removeFindingModifiedDate';

@@ -7,10 +7,11 @@ import {
   ProjectSeveralFindings,
   waitFor,
   initializeWorkspace,
+  CompactTreeItem,
+  enumerateTree,
 } from '../util';
 import { FindingsTreeDataProvider } from '../../../src/tree/findingsTreeDataProvider';
 
-import enumerateTree, { CompactTreeItem } from './enumerateTree';
 import { glob } from 'glob';
 import { promisify } from 'util';
 import { removeFindingModifiedDate } from './removeFindingModifiedDate';
