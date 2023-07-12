@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { AllProcessIds, ProcessId } from '../../../src/services/processWatcher';
+import { AllProcessIds } from '../../../src/services/processWatcher';
 import { fileExists } from '../../../src/util';
 import {
   initializeWorkspace,
@@ -10,7 +10,6 @@ import {
 } from '../util';
 import { promises as fs } from 'fs';
 import * as path from 'path';
-import * as vscode from 'vscode';
 import { waitForDown, waitForUp, getBackgroundProcesses } from './util';
 
 describe('Background processes', () => {

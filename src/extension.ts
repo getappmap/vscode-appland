@@ -17,15 +17,13 @@ import ProcessServiceImpl from './processServiceImpl';
 import { resetUsageState } from './commands/resetUsageState';
 import AppMapCollectionFile from './services/appmapCollectionFile';
 import { AppMapConfigWatcher } from './services/appMapConfigWatcher';
-import AppmapUptodateServiceInstance, {
-  AppmapUptodateService,
-} from './services/appmapUptodateService';
+import { AppmapUptodateService } from './services/appmapUptodateService';
 import { AppMapWatcher } from './services/appmapWatcher';
 import ClassMapIndex from './services/classMapIndex';
 import { ClassMapWatcher } from './services/classMapWatcher';
 import LineInfoIndex from './services/lineInfoIndex';
 import { NodeProcessService } from './services/nodeProcessService';
-import ProjectStateService, { ProjectStateServiceInstance } from './services/projectStateService';
+import ProjectStateService from './services/projectStateService';
 import { SourceFileWatcher } from './services/sourceFileWatcher';
 import { initializeWorkspaceServices } from './services/workspaceServices';
 import { DEBUG_EXCEPTION, Telemetry, TELEMETRY_ENABLED, sendAppMapCreateEvent } from './telemetry';

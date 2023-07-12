@@ -9,7 +9,6 @@ import {
   ExecOptions as ProcessExecOptions,
 } from 'child_process';
 import * as vscode from 'vscode';
-import { ProjectStateServiceInstance } from './services/projectStateService';
 
 const REDIRECT_STATUS_CODES = [301, 302, 307, 308];
 
