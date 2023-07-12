@@ -1,0 +1,390 @@
+[
+  {
+    "label": "Code",
+    "children": [
+      {
+        "label": "actionpack",
+        "children": [
+          {
+            "label": "ActionController",
+            "children": [
+              {
+                "label": "Instrumentation",
+                "children": [
+                  {
+                    "label": "process_action",
+                    "children": []
+                  },
+                  {
+                    "label": "redirect_to",
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "label": "Renderers",
+                "children": [
+                  {
+                    "label": "render_to_body",
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "label": "ActionDispatch",
+            "children": [
+              {
+                "label": "Cookies",
+                "children": [
+                  {
+                    "label": "CookieJar",
+                    "children": [
+                      {
+                        "label": "[]",
+                        "children": []
+                      },
+                      {
+                        "label": "[]=",
+                        "children": []
+                      },
+                      {
+                        "label": "update",
+                        "children": []
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "label": "Integration",
+                "children": [
+                  {
+                    "label": "Runner",
+                    "children": [
+                      {
+                        "label": "before_setup",
+                        "children": []
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "label": "Request",
+                "children": [
+                  {
+                    "label": "Session",
+                    "children": [
+                      {
+                        "label": "[]",
+                        "children": []
+                      },
+                      {
+                        "label": "[]=",
+                        "children": []
+                      },
+                      {
+                        "label": "clear",
+                        "children": []
+                      },
+                      {
+                        "label": "destroy",
+                        "children": []
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "label": "activerecord",
+        "children": [
+          {
+            "label": "ActiveRecord",
+            "children": [
+              {
+                "label": "Relation",
+                "children": [
+                  {
+                    "label": "records",
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "label": "activesupport",
+        "children": [
+          {
+            "label": "ActiveSupport",
+            "children": [
+              {
+                "label": "Callbacks",
+                "children": [
+                  {
+                    "label": "CallbackSequence",
+                    "children": [
+                      {
+                        "label": "invoke_after",
+                        "children": []
+                      },
+                      {
+                        "label": "invoke_before",
+                        "children": []
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "label": "app",
+        "children": [
+          {
+            "label": "controllers",
+            "children": [
+              {
+                "label": "MicropostsController",
+                "children": [
+                  {
+                    "label": "index",
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "label": "SessionsController",
+                "children": [
+                  {
+                    "label": "create",
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "label": "helpers",
+            "children": [
+              {
+                "label": "LoggedInHelper",
+                "children": [
+                  {
+                    "label": "logged_in_api_user",
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "label": "SessionsHelper",
+                "children": [
+                  {
+                    "label": "current_user",
+                    "children": []
+                  },
+                  {
+                    "label": "log_in",
+                    "children": []
+                  },
+                  {
+                    "label": "logged_in?",
+                    "children": []
+                  },
+                  {
+                    "label": "remember",
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "label": "models",
+            "children": [
+              {
+                "label": "User",
+                "children": [
+                  {
+                    "label": "digest",
+                    "children": []
+                  },
+                  {
+                    "label": "new_remember_token",
+                    "children": []
+                  },
+                  {
+                    "label": "remember",
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "label": "json",
+        "children": [
+          {
+            "label": "JSON",
+            "children": [
+              {
+                "label": "Ext",
+                "children": [
+                  {
+                    "label": "Generator",
+                    "children": [
+                      {
+                        "label": "State",
+                        "children": [
+                          {
+                            "label": "generate",
+                            "children": []
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "label": "Parser",
+                    "children": [
+                      {
+                        "label": "parse",
+                        "children": []
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "label": "logger",
+        "children": [
+          {
+            "label": "Logger",
+            "children": [
+              {
+                "label": "LogDevice",
+                "children": [
+                  {
+                    "label": "write",
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "label": "openssl",
+        "children": [
+          {
+            "label": "OpenSSL",
+            "children": [
+              {
+                "label": "Cipher",
+                "children": [
+                  {
+                    "label": "decrypt",
+                    "children": []
+                  },
+                  {
+                    "label": "encrypt",
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "label": "ruby",
+        "children": [
+          {
+            "label": "String",
+            "children": [
+              {
+                "label": "unpack",
+                "children": []
+              },
+              {
+                "label": "unpack1",
+                "children": []
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "label": "HTTP server requests",
+    "children": [
+      {
+        "label": "login",
+        "children": []
+      },
+      {
+        "label": "microposts",
+        "children": []
+      }
+    ]
+  },
+  {
+    "label": "Queries",
+    "children": [
+      {
+        "label": "begin transaction",
+        "children": []
+      },
+      {
+        "label": "RELEASE SAVEPOINT active_record_1",
+        "children": []
+      },
+      {
+        "label": "rollback transaction",
+        "children": []
+      },
+      {
+        "label": "SAVEPOINT active_record_1",
+        "children": []
+      },
+      {
+        "label": "SELECT \"microposts\".* FROM \"microposts\" WHERE \"microposts\".\"id\" = ? LIMIT ?",
+        "children": []
+      },
+      {
+        "label": "SELECT \"microposts\".* FROM \"microposts\" WHERE \"microposts\".\"user_id\" = ? ORDER BY \"microposts\".\"created_at\" DESC",
+        "children": []
+      },
+      {
+        "label": "SELECT \"users\".* FROM \"users\" WHERE \"users\".\"email\" = ? LIMIT ?",
+        "children": []
+      },
+      {
+        "label": "SELECT \"users\".* FROM \"users\" WHERE \"users\".\"id\" = ? LIMIT ?",
+        "children": []
+      },
+      {
+        "label": "UPDATE \"users\" SET \"remember_digest\" = ?, \"updated_at\" = ? WHERE \"users\".\"id\" = ?",
+        "children": []
+      }
+    ]
+  }
+]

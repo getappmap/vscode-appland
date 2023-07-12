@@ -27,8 +27,16 @@ export const ProjectSeveralFindings = join(
   __dirname,
   '../../../test/fixtures/workspaces/project-several-findings'
 );
+export const ProjectBase = join(__dirname, '../../../test/fixtures/workspaces/project-base');
 
-const PROJECTS = [ProjectA, ProjectRuby, ProjectUptodate, ProjectJava, ProjectSeveralFindings];
+const PROJECTS = [
+  ProjectA,
+  ProjectRuby,
+  ProjectUptodate,
+  ProjectJava,
+  ProjectSeveralFindings,
+  ProjectBase,
+];
 
 export async function withTmpDir(fn: (tmpDir: string) => void | Promise<void>): Promise<void> {
   const tmpDir = await promisify(tmp.dir)();
