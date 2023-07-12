@@ -1,3 +1,10 @@
+# [0.96.0](https://github.com/getappmap/vscode-appland/compare/v0.95.1...v0.96.0) (2023-07-12)
+
+
+### Features
+
+* update dependencies to release improved findings hightlighting ([15b29e6](https://github.com/getappmap/vscode-appland/commit/15b29e6817ca071850749d70a677743d52ff864d))
+
 ## [0.95.1](https://github.com/getappmap/vscode-appland/compare/v0.95.0...v0.95.1) (2023-07-11)
 
 
