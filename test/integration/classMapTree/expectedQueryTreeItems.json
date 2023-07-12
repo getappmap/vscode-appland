@@ -1,0 +1,94 @@
+{
+  "label": "Queries",
+  "children": [
+    {
+      "label": "begin transaction",
+      "children": [],
+      "command": {
+        "command": "appmap.openCodeObjectInAppMap",
+        "title": "Open in AppMap",
+        "arguments": ["query:begin transaction"]
+      }
+    },
+    {
+      "label": "RELEASE SAVEPOINT active_record_1",
+      "children": [],
+      "command": {
+        "command": "appmap.openCodeObjectInAppMap",
+        "title": "Open in AppMap",
+        "arguments": ["query:RELEASE SAVEPOINT active_record_1"]
+      }
+    },
+    {
+      "label": "rollback transaction",
+      "children": [],
+      "command": {
+        "command": "appmap.openCodeObjectInAppMap",
+        "title": "Open in AppMap",
+        "arguments": ["query:rollback transaction"]
+      }
+    },
+    {
+      "label": "SAVEPOINT active_record_1",
+      "children": [],
+      "command": {
+        "command": "appmap.openCodeObjectInAppMap",
+        "title": "Open in AppMap",
+        "arguments": ["query:SAVEPOINT active_record_1"]
+      }
+    },
+    {
+      "label": "SELECT \"microposts\".* FROM \"microposts\" WHERE \"microposts\".\"id\" = ? LIMIT ?",
+      "children": [],
+      "command": {
+        "command": "appmap.openCodeObjectInAppMap",
+        "title": "Open in AppMap",
+        "arguments": [
+          "query:SELECT \"microposts\".* FROM \"microposts\" WHERE \"microposts\".\"id\" = ? LIMIT ?"
+        ]
+      }
+    },
+    {
+      "label": "SELECT \"microposts\".* FROM \"microposts\" WHERE \"microposts\".\"user_id\" = ? ORDER BY \"microposts\".\"created_at\" DESC",
+      "children": [],
+      "command": {
+        "command": "appmap.openCodeObjectInAppMap",
+        "title": "Open in AppMap",
+        "arguments": [
+          "query:SELECT \"microposts\".* FROM \"microposts\" WHERE \"microposts\".\"user_id\" = ? ORDER BY \"microposts\".\"created_at\" DESC"
+        ]
+      }
+    },
+    {
+      "label": "SELECT \"users\".* FROM \"users\" WHERE \"users\".\"email\" = ? LIMIT ?",
+      "children": [],
+      "command": {
+        "command": "appmap.openCodeObjectInAppMap",
+        "title": "Open in AppMap",
+        "arguments": [
+          "query:SELECT \"users\".* FROM \"users\" WHERE \"users\".\"email\" = ? LIMIT ?"
+        ]
+      }
+    },
+    {
+      "label": "SELECT \"users\".* FROM \"users\" WHERE \"users\".\"id\" = ? LIMIT ?",
+      "children": [],
+      "command": {
+        "command": "appmap.openCodeObjectInAppMap",
+        "title": "Open in AppMap",
+        "arguments": ["query:SELECT \"users\".* FROM \"users\" WHERE \"users\".\"id\" = ? LIMIT ?"]
+      }
+    },
+    {
+      "label": "UPDATE \"users\" SET \"remember_digest\" = ?, \"updated_at\" = ? WHERE \"users\".\"id\" = ?",
+      "children": [],
+      "command": {
+        "command": "appmap.openCodeObjectInAppMap",
+        "title": "Open in AppMap",
+        "arguments": [
+          "query:UPDATE \"users\" SET \"remember_digest\" = ?, \"updated_at\" = ? WHERE \"users\".\"id\" = ?"
+        ]
+      }
+    }
+  ]
+}

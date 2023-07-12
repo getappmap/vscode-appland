@@ -1,0 +1,23 @@
+{
+  "label": "HTTP server requests",
+  "children": [
+    {
+      "label": "login",
+      "children": [],
+      "command": {
+        "command": "appmap.openCodeObjectInAppMap",
+        "title": "Open in AppMap",
+        "arguments": ["route:POST /login"]
+      }
+    },
+    {
+      "label": "microposts",
+      "children": [],
+      "command": {
+        "command": "appmap.openCodeObjectInAppMap",
+        "title": "Open in AppMap",
+        "arguments": ["route:GET /microposts"]
+      }
+    }
+  ]
+}
