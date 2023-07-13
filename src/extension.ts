@@ -62,6 +62,7 @@ import IndexJanitor from './lib/indexJanitor';
 import { unregister as unregisterTerminal } from './commands/installer/terminals';
 import getAppmapDir from './commands/getAppmapDir';
 import JavaAssets from './services/javaAssets';
+import createJavaConfigurationCommand from './commands/createJavaConfiguration';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   Telemetry.register(context);
@@ -136,6 +137,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     );
 
     context.subscriptions.push(new IndexJanitor(appmapWatcher, classMapWatcher));
+    context.subscriptions.push(createJavaConfigurationCommand());
 
     const appmapUptodateService = new AppmapUptodateService(context);
     const sourceFileWatcher = new SourceFileWatcher(classMapIndex);
