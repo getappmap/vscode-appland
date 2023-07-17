@@ -1,3 +1,15 @@
+# [0.97.0](https://github.com/getappmap/vscode-appland/compare/v0.96.0...v0.97.0) (2023-07-17)
+
+
+### Bug Fixes
+
+* Java installation status reflects run configs and agent download ([6ed0ede](https://github.com/getappmap/vscode-appland/commit/6ed0edee289bb79bdebf5159940096511e88bf52))
+
+
+### Features
+
+* Update installation instructions for Python and Ruby ([26d18ea](https://github.com/getappmap/vscode-appland/commit/26d18ea2faca07eabb116a462ed7f9fc18f59fbc))
+
 # [0.96.0](https://github.com/getappmap/vscode-appland/compare/v0.95.1...v0.96.0) (2023-07-12)
 
 
