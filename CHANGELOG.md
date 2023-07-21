@@ -1,3 +1,10 @@
+## [0.97.1](https://github.com/getappmap/vscode-appland/compare/v0.97.0...v0.97.1) (2023-07-21)
+
+
+### Bug Fixes
+
+* update @appland/components to 2.57.0 ([3c45d82](https://github.com/getappmap/vscode-appland/commit/3c45d822a6db5c4b56e1ae383ab83a2c5fa3f626))
+
 # [0.97.0](https://github.com/getappmap/vscode-appland/compare/v0.96.0...v0.97.0) (2023-07-17)
 
 
