@@ -144,6 +144,10 @@
         "title": "AppMap: Ask a Question About the Current Code Selection"
       },
       {
+        "command": "appmap.generate",
+        "title": "AppMap: Generate Code Based on the Current Code Selection"
+      },
+      {
         "command": "appmap.touchOutOfDateTestFiles",
         "title": "AppMap: Touch Out-of-Date Test Files"
       },

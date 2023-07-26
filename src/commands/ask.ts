@@ -2,7 +2,6 @@ import * as vscode from 'vscode';
 import LineInfoIndex, { LineInfo } from '../services/lineInfoIndex';
 import assert from 'assert';
 import AppMapCollection from '../services/appmapCollection';
-import ClassMapIndex from '../services/classMapIndex';
 import { promptForAppMap } from '../lib/promptForAppMap';
 import { debug } from 'console';
 import { readFile, writeFile } from 'fs/promises';
@@ -15,10 +14,12 @@ import {
   buildAppMap,
 } from '@appland/models';
 import buildOpenAIApi from '../lib/buildOpenAIApi';
-import ask from '../lib/ask';
-import { isAbsolute, join } from 'path';
-import { fileExists } from '../util';
+import { join } from 'path';
 import { FormatType, Specification, buildDiagram, format } from '@appland/sequence-diagram';
+import { randomUUID } from 'crypto';
+import { Completion, Question } from '../lib/Ask';
+import selectedCode from '../lib/ask/selectedCode';
+import contextAppMap from '../lib/ask/contextAppMap';
 
 class LineInfoQuickPickItem implements vscode.QuickPickItem {
   constructor(public lineInfo: LineInfo) {}
@@ -34,7 +35,6 @@ class LineInfoQuickPickItem implements vscode.QuickPickItem {
 export default function register(
   context: vscode.ExtensionContext,
   lineInfoIndex: LineInfoIndex,
-  classMapIndex: ClassMapIndex,
   appmapCollection: AppMapCollection
 ): void {
   context.subscriptions.push(
@@ -42,26 +42,27 @@ export default function register(
       const { activeTextEditor } = vscode.window;
       if (!activeTextEditor) return;
 
-      const { selection } = activeTextEditor;
+      const selection = selectedCode(activeTextEditor);
       if (!selection) return;
 
-      const startLine = selection.anchor.line;
-      const endLine = selection.active.line;
-      let selectedCode = activeTextEditor.document.getText(selection).trim();
-      if (selectedCode === '')
-        selectedCode = activeTextEditor.document.lineAt(startLine).text.trim();
-
       const documentUri = activeTextEditor.document.uri;
-      const lineInfo = (await lineInfoIndex.lineInfo(documentUri)).filter(
-        (line) => line.codeObjects
-      );
       const workspaceFolder = vscode.workspace.getWorkspaceFolder(documentUri);
       if (!workspaceFolder) return;
 
+      const lineInfo = (await lineInfoIndex.lineInfo(documentUri)).filter(
+        (line) => line.codeObjects
+      );
+      if (lineInfo.length === 0) {
+        vscode.window.showErrorMessage(
+          `I couldn't find any AppMaps related to ${documentUri.path}`
+        );
+        return;
+      }
+
       const lineCodePrompt =
-        selectedCode.split('\n').length === 0
-          ? selectedCode
-          : [selectedCode.split('\n')[0], '...'].join('');
+        selection.text.split('\n').length === 0
+          ? selection.text
+          : [selection.text.split('\n')[0], '...'].join('');
       const question = await vscode.window.showInputBox({
         placeHolder: `Ask a question about: ${lineCodePrompt}`,
         value: 'How does this code work?',
@@ -69,7 +70,10 @@ export default function register(
       if (!question) return;
 
       const distanceFromSelection = (item: LineInfoQuickPickItem): number =>
-        Math.min(Math.abs(item.lineInfo.line - startLine), Math.abs(item.lineInfo.line - endLine));
+        Math.min(
+          Math.abs(item.lineInfo.line - selection.startLine),
+          Math.abs(item.lineInfo.line - selection.endLine)
+        );
 
       const lineInfoItems = lineInfo.map((info) => new LineInfoQuickPickItem(info));
       const lineDistance = lineInfoItems.map(distanceFromSelection);
@@ -114,16 +118,14 @@ export default function register(
         appMapFileName = selectedAppMap.fsPath;
       }
 
+      const q = new Question(selection.text, question);
+
       const appmapUri = vscode.Uri.file(appMapFileName);
-      let codeObject: CodeObject | undefined;
-      let scopeCodeObjects: CodeObject[];
-      let returnValues: string[];
-      let functions: string[];
-      let sequenceDiagram: string;
       {
         const data = await readFile(appmapUri.fsPath, 'utf-8');
         const appmap = buildAppMap().source(data).build();
 
+        let codeObject: CodeObject | undefined;
         appmap.classMap.visit((co) => {
           if (co.fqid === codeObjectEntry.fqid) codeObject = co;
         });
@@ -133,6 +135,7 @@ export default function register(
           );
           return;
         }
+        q.codeObject = codeObject;
 
         const { events } = appmap;
         let filterAppMap: AppMap;
@@ -140,7 +143,7 @@ export default function register(
           const codeObjectEvents = events.filter(
             (event) => event.codeObject.fqid === codeObjectEntry.fqid
           );
-          returnValues = [
+          q.returnValues = [
             ...new Set(
               codeObjectEvents
                 .map((e) => {
@@ -151,83 +154,14 @@ export default function register(
                 .filter(Boolean)
             ),
           ] as string[];
-          const roots: Event[] = [];
-          const filterEvents: Event[] = [...codeObjectEvents];
-          for (const event of codeObjectEvents) {
-            for (const ancestor of new EventNavigator(event).ancestors()) {
-              filterEvents.push(ancestor.event);
-              if (ancestor.event.httpServerRequest) {
-                roots.push(ancestor.event);
-                break;
-              }
-              if (!ancestor.event.parent) roots.push(ancestor.event);
-            }
-            for (const child of event.children) {
-              filterEvents.push(child);
-              for (const child2 of child.children) {
-                filterEvents.push(child2);
-                for (const child3 of child2.children) {
-                  filterEvents.push(child3);
-                  for (const child4 of child3.children) filterEvents.push(child4);
-                }
-              }
-            }
-          }
-          for (const root of roots) {
-            for (const child of root.children) {
-              filterEvents.push(child);
-              for (const child2 of child.children) {
-                filterEvents.push(child2);
-                for (const child3 of child2.children) {
-                  filterEvents.push(child3);
-                  for (const child4 of child3.children) filterEvents.push(child4);
-                }
-              }
-            }
-          }
+          filterAppMap = contextAppMap(appmap, codeObjectEvents);
 
-          scopeCodeObjects = [...new Set(roots.map((e) => e.codeObject))];
-          // const relatedCodeObjects = [...new Set(filterEvents.map((e) => e.codeObject))];
-          // KEG: I want to avoid sending too much source code to the AI, as it places undue priority
-          // on the source code rather than the code flow.
-          functions = [];
-          for (const co of [codeObject] /* relatedCodeObjects */) {
-            const codeObjectEntry = await classMapIndex.lookupCodeObject(co.fqid);
-            if (!codeObjectEntry) continue;
-            if (!codeObjectEntry.path || !codeObjectEntry?.lineNo) continue;
+          q.scopeCodeObjects = [...new Set(appmap.rootEvents().map((e) => e.codeObject))];
+        }
 
-            let { path } = codeObjectEntry;
-            const { lineNo } = codeObjectEntry;
-            if (!isAbsolute(path)) path = join(codeObjectEntry.folder.uri.fsPath, path);
-            if (!(await fileExists(path))) continue;
-            if (!path.startsWith(codeObjectEntry.folder.uri.fsPath)) continue;
-            if (
-              path.slice(codeObjectEntry.folder.uri.fsPath.length).startsWith('/node_modules/') ||
-              path.slice(codeObjectEntry.folder.uri.fsPath.length).startsWith('/vendor/')
-            )
-              continue;
-
-            const code = (await readFile(path, 'utf-8')).split('\n');
-            // Sort lineInfo by distance from codeObject
-            const distanceFromCodeObject = (lineInfo: LineInfo) => lineInfo.line - lineNo;
-            const nextLineInfo = lineInfo
-              .sort((a, b) => distanceFromCodeObject(a) - distanceFromCodeObject(b))
-              .filter((li) => distanceFromCodeObject(li) > 0)
-              .sort()[0];
-            const lastLine = nextLineInfo ? nextLineInfo.line : codeObjectEntry.lineNo + 10;
-            const codeLines = code.slice(codeObjectEntry.lineNo - 1, lastLine - 1);
-            functions.push([codeObjectEntry.fqid, ...codeLines].join('\n'));
-          }
-
-          const eventIds = new Set(filterEvents.map((e) => e.id));
-          filterAppMap = buildAppMap({
-            events: events.filter((e) => eventIds.has(e.callEvent.id)),
-            classMap: appmap.classMap.roots.map((c) => ({ ...c.data })),
-            metadata: appmap.metadata,
-          }).build();
-
+        {
           const filterAppMapData = JSON.stringify(filterAppMap, null, 2);
-          let appmapName = question.replace(/[^a-zA-Z0-9]/g, '-');
+          let appmapName = ['ask_appmap', randomUUID()].join('-'); // question.replace(/[^a-zA-Z0-9]/g, '-'); KEG: Can result in a too-long file name.
           if (appmapName.endsWith('-')) appmapName = appmapName.slice(0, -1);
           const filePath = join(workspaceFolder?.uri.fsPath, `${appmapName}.appmap.json`);
           await writeFile(filePath, filterAppMapData);
@@ -236,7 +170,6 @@ export default function register(
         }
 
         const specification = Specification.build(filterAppMap, { loops: true });
-
         assert(appmapUri);
         let sequenceDiagramAppMap: AppMap;
         {
@@ -246,37 +179,49 @@ export default function register(
           sequenceDiagramAppMap = sequenceDiagramFilter.filter(filterAppMap, []);
         }
         const diagram = buildDiagram(appmapUri.fsPath, sequenceDiagramAppMap, specification);
-        sequenceDiagram = format(FormatType.PlantUML, diagram, appmapUri.fsPath).diagram;
+        q.sequenceDiagram = format(FormatType.PlantUML, diagram, appmapUri.fsPath).diagram;
       }
 
       const openAI = await buildOpenAIApi(context);
       if (!openAI) return;
 
+      let completion: Completion | undefined;
       await vscode.window.withProgress(
         {
           title: `Thinking about your question...`,
           location: vscode.ProgressLocation.Notification,
         },
         async () => {
-          assert(codeObject);
-
           try {
-            await ask(
-              question,
-              selectedCode,
-              codeObject,
-              returnValues,
-              scopeCodeObjects,
-              functions,
-              sequenceDiagram,
-              openAI
-            );
+            completion = await q.complete(openAI);
           } catch (e) {
             debug((e as any).toString());
             vscode.window.showErrorMessage(`Unable to process your question: ${e}`);
           }
         }
       );
+      if (!completion) return;
+
+      const fence = '```';
+      const responseText = [
+        `## ${lineCodePrompt}`,
+        `### You asked`,
+        `${fence}${question}${fence}`,
+        `### AI response:`,
+        completion.response,
+        `## Prompt
+<details>
+<summary>Click to expand</summary>
+
+${fence}
+${completion.prompt}
+${fence}
+</details>`,
+      ].join('\n\n');
+      const newDocument = await vscode.workspace.openTextDocument({
+        content: responseText,
+      });
+      await vscode.window.showTextDocument(newDocument);
     })
   );
 }

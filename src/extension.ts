@@ -61,6 +61,7 @@ import Watcher from './services/watcher';
 import { default as fixFinding } from './commands/fixFinding';
 import { default as fixTest } from './commands/fixTest';
 import { default as ask } from './commands/ask';
+import { default as generate } from './commands/generate';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   Telemetry.register(context);
@@ -197,7 +198,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
     fixFinding(context);
     fixTest(context, appmapCollectionFile);
-    ask(context, lineInfoIndex, classMapIndex, appmapCollectionFile);
+    ask(context, lineInfoIndex, appmapCollectionFile);
+    generate(context, appmapCollectionFile);
 
     await SignInManager.register(extensionState);
     const signInWebview = new SignInViewProvider(context, appmapServerAuthenticationProvider);
