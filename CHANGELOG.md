@@ -1,3 +1,10 @@
+# [0.98.0](https://github.com/getappmap/vscode-appland/compare/v0.97.1...v0.98.0) (2023-08-14)
+
+
+### Features
+
+* update @appland/components to 2.58.0 ([c31dae5](https://github.com/getappmap/vscode-appland/commit/c31dae5c6faf6713e2876bf52ee252ca89d14f8c))
+
 ## [0.97.1](https://github.com/getappmap/vscode-appland/compare/v0.97.0...v0.97.1) (2023-07-21)
 
 
