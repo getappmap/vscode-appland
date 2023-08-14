@@ -13,7 +13,7 @@ it based on frameworks and techniques including web services, view
 templates, HTTP client requests, caching, authentication, and SQL.
 
 Bugs, loops, calls, dependencies, security issues, and more are found
-with ease in trace views and sequence diagrams.
+with ease in trace views, sequence diagrams, and flame graphs.
 
 [![AppMap video](https://img.youtube.com/vi/8l4-hNih_GQ/0.jpg)](https://www.youtube.com/watch?v=UYcJVfF7v_c)
 
@@ -26,7 +26,7 @@ supported web application or API framework, including Ruby on Rails,
 Django, Flask, Express, and Spring. 
 
 AppMap supports the following
-programming languages: Java, Python, Ruby, Typescript, and JavaScript.
+programming languages: Java, Python, Ruby, and TypeScript/JavaScript (for Node.js applications).
 
 AppMap can also be used to map a database-backed web application or API
 service, and instantly generate OpenAPI documentation based on the API
@@ -40,7 +40,7 @@ license](https://github.com/getappmap/vscode-appland/blob/master/LICENSE)
 [Terms and
 conditions](https://appmap.io/community/terms-and-conditions.html)
 
-Data usage: AppMap runtime recordings and diagrams are created and stored locally on your machine. AppMap does not require any permissions to your web hosted code repo in order to run. 
+Data usage: AppMap runtime recordings and diagrams are created and stored locally on your machine. AppMap does not require any permissions to your web hosted code repo in order to run. For more information, see the AppMap [security disclosure](https://appmap.io/security).
 
 Sign-in via GitHub or GitLab is required to obtain a license key to start using AppMap in your code editor.
 
