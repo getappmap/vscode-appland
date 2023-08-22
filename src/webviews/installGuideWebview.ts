@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-import { GenerateOpenApi } from '../commands/generateOpenApi';
 import { InstallAgent } from '../commands/installAgent';
 import { ProjectStateServiceInstance } from '../services/projectStateService';
 import ProjectMetadata from '../workspace/projectMetadata';
@@ -160,14 +159,6 @@ export default class InstallGuideWebView {
               {
                 vscode.commands.executeCommand('workbench.panel.markers.view.focus');
               }
-              break;
-
-            case 'generate-openapi':
-              vscode.commands.executeCommand(
-                GenerateOpenApi,
-                vscode.ViewColumn.Beside,
-                message.projectPath
-              );
               break;
 
             case 'perform-install':

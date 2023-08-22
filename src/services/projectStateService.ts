@@ -83,11 +83,7 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
       extensionState.onWorkspaceFlag((e) => {
         if (
           e.workspaceFolder === folder &&
-          [
-            Keys.Workspace.OPENED_APPMAP,
-            Keys.Workspace.FINDINGS_INVESTIGATED,
-            Keys.Workspace.GENERATED_OPENAPI,
-          ].includes(e.key)
+          [Keys.Workspace.OPENED_APPMAP, Keys.Workspace.FINDINGS_INVESTIGATED].includes(e.key)
         ) {
           this.updateMetadata();
         }
@@ -141,10 +137,6 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
     return this.extensionState.getFindingsInvestigated(this.folder);
   }
 
-  private get hasGeneratedOpenApi(): boolean {
-    return this.extensionState.getWorkspaceGeneratedOpenApi(this.folder);
-  }
-
   get metadata(): Readonly<ProjectMetadata> {
     return this._metadata as Readonly<ProjectMetadata>;
   }
@@ -158,8 +150,7 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
     return (
       this.isAgentConfigured &&
       this.hasRecordedAppMaps &&
-      this._metadata?.analysisPerformed === true &&
-      this.hasGeneratedOpenApi
+      this._metadata?.analysisPerformed === true
     );
   }
 
@@ -343,7 +334,6 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
     this._metadata.appMapsRecorded = this.hasRecordedAppMaps || false;
     this._metadata.investigatedFindings = this.hasInvestigatedFindings || false;
     this._metadata.appMapOpened = this.hasOpenedAppMap || false;
-    this._metadata.generatedOpenApi = this.hasGeneratedOpenApi || false;
 
     this._onStateChange.fire(this._metadata);
   }

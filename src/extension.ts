@@ -235,7 +235,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     RemoteRecording.register(context, workspaceServices);
     ContextMenu.register(context, appmapCollectionFile);
 
-    generateOpenApi(context, extensionState);
+    generateOpenApi(context);
     findByName(context, appmapCollectionFile);
     resetUsageState(context, extensionState);
     updateAppMapConfigs(context, runConfigService, workspaceServices);

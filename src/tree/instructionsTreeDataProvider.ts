@@ -25,11 +25,6 @@ export const DocsPages = [
     completion: 'appMapOpened',
   },
   {
-    id: 'openapi',
-    title: 'Generate OpenAPI',
-    completion: 'generatedOpenApi',
-  },
-  {
     id: 'investigate-findings',
     title: 'Runtime Analysis',
     completion: 'investigatedFindings',
