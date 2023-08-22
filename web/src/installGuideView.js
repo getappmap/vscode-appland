@@ -89,10 +89,6 @@ export default function mountInstallGuide() {
       vscode.postMessage({ command: 'perform-install', path, language });
     });
 
-    app.$on('generate-openapi', (projectPath) => {
-      messages.rpc('generate-openapi', { projectPath });
-    });
-
     app.$on('perform-auth', () => {
       vscode.postMessage({ command: 'perform-auth' });
     });

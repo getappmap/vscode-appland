@@ -1,7 +1,6 @@
 import assert from 'assert';
 import * as vscode from 'vscode';
 
-import ExtensionState from '../configuration/extensionState';
 import chooseWorkspace from '../lib/chooseWorkspace';
 import {
   getModulePath,
@@ -17,10 +16,7 @@ import { workspaceServices } from '../services/workspaceServices';
 
 export const GenerateOpenApi = 'appmap.generateOpenApi';
 
-export default function generateOpenApi(
-  context: vscode.ExtensionContext,
-  extensionState: ExtensionState
-) {
+export default function generateOpenApi(context: vscode.ExtensionContext) {
   const command = vscode.commands.registerCommand(
     GenerateOpenApi,
     async (
@@ -76,8 +72,6 @@ export default function generateOpenApi(
             );
             return;
           }
-
-          extensionState.setWorkspaceGeneratedOpenApi(workspaceFolder, true);
 
           const document = await vscode.workspace.openTextDocument({
             language: 'yaml',

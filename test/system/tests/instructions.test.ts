@@ -35,10 +35,6 @@ describe('Instructions tree view', function () {
       InstructionStepStatus.Pending
     );
     await driver.appMap.assertInstructionStepStatus(
-      InstructionStep.GenerateOpenApi,
-      InstructionStepStatus.Pending
-    );
-    await driver.appMap.assertInstructionStepStatus(
       InstructionStep.InvestigateFindings,
       InstructionStepStatus.Pending
     );
@@ -72,12 +68,6 @@ describe('Instructions tree view', function () {
       InstructionStepStatus.Complete
     );
 
-    await driver.runCommand('AppMap: Generate OpenAPI');
-    await driver.appMap.assertInstructionStepStatus(
-      InstructionStep.GenerateOpenApi,
-      InstructionStepStatus.Complete
-    );
-
     // "Delete All AppMaps" is working, but this assertion fails for other reasons.
     // FIXME: https://github.com/getappmap/vscode-appland/issues/716
     //
@@ -102,10 +92,6 @@ describe('Instructions tree view', function () {
       {
         step: InstructionStep.OpenAppMaps,
         title: 'Explore AppMaps',
-      },
-      {
-        step: InstructionStep.GenerateOpenApi,
-        title: 'Generate OpenAPI',
       },
       {
         step: InstructionStep.InvestigateFindings,
@@ -151,7 +137,6 @@ describe('Instructions tree view', function () {
     await project.restoreFiles('**/appmap-findings.json');
     await driver.appMap.openInstruction(InstructionStep.InvestigateFindings);
     await driver.instructionsWebview.clickButton('Open the PROBLEMS tab');
-    await driver.runCommand('AppMap: Generate OpenAPI');
     await driver.appMap.pendingBadge.waitFor({ state: 'hidden' });
   });
 
@@ -189,9 +174,6 @@ describe('Instructions tree view', function () {
     await project.restoreFiles('**/*.appmap.json');
     await driver.instructionsWebview.clickButton('Next');
     await driver.instructionsWebview.getPageByTitle('Explore AppMaps').waitFor();
-
-    await driver.instructionsWebview.clickButton('Next');
-    await driver.instructionsWebview.getPageByTitle('Generate OpenAPI').waitFor();
 
     await driver.instructionsWebview.clickButton('Next');
     await driver.instructionsWebview.getPageByTitle('AppMap Runtime Analysis').waitFor();
