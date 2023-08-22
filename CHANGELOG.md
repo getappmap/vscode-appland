@@ -1,3 +1,10 @@
+## [0.98.1](https://github.com/getappmap/vscode-appland/compare/v0.98.0...v0.98.1) (2023-08-22)
+
+
+### Bug Fixes
+
+* update java jar instructions ([4348f5b](https://github.com/getappmap/vscode-appland/commit/4348f5b88e642acaa140d34f2adb07400aaee036))
+
 # [0.98.0](https://github.com/getappmap/vscode-appland/compare/v0.97.1...v0.98.0) (2023-08-14)
 
 
