@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import assert from 'assert';
-import { existsSync } from 'fs';
+import { existsSync, rmSync } from 'fs';
 import { join, relative } from 'path';
 import {
   initializeWorkspace,
@@ -23,10 +23,10 @@ import AppMapService from '../../../src/appMapService';
 //   console.log('Watches: ', watches);
 // }
 
-async function logIndexDir(): Promise<void> {
-  const indexDir = await executeWorkspaceOSCommand(`ls -al ${ExampleAppMapIndexDir}`, ProjectA);
-  console.log('Index Dir: ', indexDir);
-}
+// async function logIndexDir(): Promise<void> {
+//   const indexDir = await executeWorkspaceOSCommand(`ls -al ${ExampleAppMapIndexDir}`, ProjectA);
+//   console.log(`\nIndex Dir: ${indexDir}`);
+// }
 
 describe('Scanner', () => {
   let services: AppMapService;
@@ -45,21 +45,19 @@ describe('Scanner', () => {
   it('is performed as AppMaps are modified', async () => {
     async function removeAndReindex() {
       await vscode.commands.executeCommand('appmap.deleteAllAppMaps');
+      rmSync(ExampleAppMapIndexDir, { force: true, recursive: true });
 
       await waitFor('AppMaps to be deleted', () => services.localAppMaps.appMaps.length === 0);
       await waitFor('Diagnostics to be cleared', hasNoDiagnostics);
 
-      await logIndexDir();
       const appMapPath = relative(ProjectA, ExampleAppMap);
       await restoreFile(appMapPath);
 
       assert(existsSync(ExampleAppMap));
-      await logIndexDir();
 
       await waitFor('AppMap to be re-indexed', () =>
         existsSync(join(ExampleAppMapIndexDir, 'mtime'))
       );
-      await logIndexDir();
     }
 
     await removeAndReindex();
@@ -67,13 +65,11 @@ describe('Scanner', () => {
     await repeatUntil(removeAndReindex, 'Findings to be generated', () =>
       existsSync(join(ExampleAppMapIndexDir, 'appmap-findings.json'))
     );
-    await logIndexDir();
 
     await waitFor(
       'diagnostics to be created',
       () => getDiagnosticsForAppMap(ExampleAppMap).length > 0
     );
-    await logIndexDir();
 
     const diagnostic = getDiagnosticsForAppMap(ExampleAppMap)[0];
     assert.strictEqual(
