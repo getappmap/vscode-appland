@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import assert from 'assert';
-import { existsSync, rmSync } from 'fs';
+import { existsSync, mkdirSync, rmSync } from 'fs';
 import { join, relative } from 'path';
 import {
   initializeWorkspace,
@@ -23,10 +23,10 @@ import AppMapService from '../../../src/appMapService';
 //   console.log('Watches: ', watches);
 // }
 
-// async function logIndexDir(): Promise<void> {
-//   const indexDir = await executeWorkspaceOSCommand(`ls -al ${ExampleAppMapIndexDir}`, ProjectA);
-//   console.log(`\nIndex Dir: ${indexDir}`);
-// }
+async function logIndexDir(): Promise<void> {
+  const indexDir = await executeWorkspaceOSCommand(`ls -al ${ExampleAppMapIndexDir}`, ProjectA);
+  console.log(`\nIndex Dir: ${indexDir}`);
+}
 
 describe('Scanner', () => {
   let services: AppMapService;
@@ -44,8 +44,11 @@ describe('Scanner', () => {
 
   it('is performed as AppMaps are modified', async () => {
     async function removeAndReindex() {
+      await logIndexDir();
       await vscode.commands.executeCommand('appmap.deleteAllAppMaps');
       rmSync(ExampleAppMapIndexDir, { force: true, recursive: true });
+      mkdirSync(ExampleAppMapIndexDir);
+      await logIndexDir();
 
       await waitFor('AppMaps to be deleted', () => services.localAppMaps.appMaps.length === 0);
       await waitFor('Diagnostics to be cleared', hasNoDiagnostics);
@@ -58,13 +61,16 @@ describe('Scanner', () => {
       await waitFor('AppMap to be re-indexed', () =>
         existsSync(join(ExampleAppMapIndexDir, 'mtime'))
       );
+      await logIndexDir();
     }
 
     await removeAndReindex();
 
+    await logIndexDir();
     await repeatUntil(removeAndReindex, 'Findings to be generated', () =>
       existsSync(join(ExampleAppMapIndexDir, 'appmap-findings.json'))
     );
+    await logIndexDir();
 
     await waitFor(
       'diagnostics to be created',
@@ -76,5 +82,6 @@ describe('Scanner', () => {
       diagnostic.uri.fsPath,
       join(ProjectA, 'app/controllers/microposts_controller.rb')
     );
+    assert(false);
   });
 });

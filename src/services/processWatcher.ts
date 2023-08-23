@@ -130,6 +130,7 @@ export class ProcessWatcher implements vscode.Disposable {
 
     this.shouldRun = true;
     this.process = spawn(options);
+    this.process = spawn({ ...options, args: ['--version'] });
     this.process.log.append(
       `spawned ${this.process.spawnargs.join(' ')} with options ${JSON.stringify(options)}`
     );
