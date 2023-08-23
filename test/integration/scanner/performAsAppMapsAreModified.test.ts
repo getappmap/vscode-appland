@@ -1,8 +1,7 @@
 import * as vscode from 'vscode';
 import assert from 'assert';
-import { exists, stat } from 'fs';
+import { existsSync } from 'fs';
 import { join, relative } from 'path';
-import { promisify } from 'util';
 import {
   initializeWorkspace,
   waitFor,
@@ -15,7 +14,18 @@ import {
   waitForAppMapServices,
   restoreFile,
   withAuthenticatedUser,
+  executeWorkspaceOSCommand,
 } from '../util';
+
+// async function logWatches(): Promise<void> {
+//   const watches = await executeWorkspaceOSCommand('ps -ef | grep -e --watch', ProjectA);
+//   console.log('Watches: ', watches);
+// }
+
+async function logIndexDir(): Promise<void> {
+  const indexDir = await executeWorkspaceOSCommand(`ls -al ${ExampleAppMapIndexDir}`, ProjectA);
+  console.log('Index Dir: ', indexDir);
+}
 
 describe('Scanner', () => {
   withAuthenticatedUser();
@@ -25,9 +35,7 @@ describe('Scanner', () => {
     await waitForAppMapServices(
       'tmp/appmap/minitest/Microposts_controller_can_get_microposts_as_JSON.appmap.json'
     );
-    await waitFor('Index directory exists', async () => {
-      return Boolean(await promisify(stat)(ExampleAppMapIndexDir));
-    });
+    await waitFor('Index directory exists', () => existsSync(ExampleAppMapIndexDir));
   });
 
   afterEach(initializeWorkspace);
@@ -40,23 +48,31 @@ describe('Scanner', () => {
     // KEG: Remove this, as it's failing due to an issue either with IndexJanitor or with the test itself.
     // await waitFor(
     //   `AppMap index dir should be removed`,
-    //   async () => !(await promisify(exists)(ExampleAppMapIndexDir))
+    //   async () => !existsSync(ExampleAppMapIndexDir)
     // );
 
+    await logIndexDir();
     const appMapPath = relative(ProjectA, ExampleAppMap);
-    await repeatUntil(
-      async () => await restoreFile(appMapPath),
-      `AppMap should be reindexed`,
-      async () => promisify(exists)(join(ExampleAppMapIndexDir, 'mtime'))
-    );
+    await restoreFile(appMapPath);
 
-    await repeatUntil(
-      async () => await restoreFile(appMapPath),
-      'No Diagnostics were created for Microposts_controller_can_get_microposts_as_JSON',
-      async () => {
-        return getDiagnosticsForAppMap(ExampleAppMap).length > 0;
-      }
+    assert(existsSync(ExampleAppMap));
+    await logIndexDir();
+
+    await waitFor('AppMap to be re-indexed', () =>
+      existsSync(join(ExampleAppMapIndexDir, 'mtime'))
     );
+    await logIndexDir();
+
+    await waitFor('Findings to be generated', () =>
+      existsSync(join(ExampleAppMapIndexDir, 'appmap-findings.json'))
+    );
+    await logIndexDir();
+
+    await waitFor(
+      'diagnostics to be created',
+      () => getDiagnosticsForAppMap(ExampleAppMap).length > 0
+    );
+    await logIndexDir();
 
     const diagnostic = getDiagnosticsForAppMap(ExampleAppMap)[0];
     assert.strictEqual(
