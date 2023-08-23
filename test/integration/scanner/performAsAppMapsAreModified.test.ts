@@ -82,6 +82,5 @@ describe('Scanner', () => {
       diagnostic.uri.fsPath,
       join(ProjectA, 'app/controllers/microposts_controller.rb')
     );
-    assert(false);
   });
 });
