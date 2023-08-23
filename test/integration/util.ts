@@ -237,15 +237,18 @@ async function closeAllEditors(): Promise<void> {
   await vscode.commands.executeCommand('workbench.action.closeAllEditors');
 }
 
-export async function executeWorkspaceOSCommand(cmd: string, workspaceName: string): Promise<void> {
-  return new Promise<void>((resolve, reject) => {
+export async function executeWorkspaceOSCommand(
+  cmd: string,
+  workspaceName: string
+): Promise<string> {
+  return new Promise<string>((resolve, reject) => {
     exec(cmd, { cwd: workspaceName }, (err, stdout, stderr) => {
       if (err) {
         console.log(stdout);
         console.warn(stderr);
         return reject(err);
       }
-      resolve();
+      resolve(stdout);
     });
   });
 }
