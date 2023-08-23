@@ -142,6 +142,8 @@ async function integrationTest() {
         userDataDir,
         // '--disable-extensions',
         '--disable-gpu',
+        '--disable-keytar',
+        '--password-store=basic',
         workspaceDir,
       ],
     });
