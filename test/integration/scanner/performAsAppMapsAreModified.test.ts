@@ -16,6 +16,7 @@ import {
   withAuthenticatedUser,
   executeWorkspaceOSCommand,
 } from '../util';
+import AppMapService from '../../../src/appMapService';
 
 // async function logWatches(): Promise<void> {
 //   const watches = await executeWorkspaceOSCommand('ps -ef | grep -e --watch', ProjectA);
@@ -28,11 +29,12 @@ async function logIndexDir(): Promise<void> {
 }
 
 describe('Scanner', () => {
+  let services: AppMapService;
   withAuthenticatedUser();
 
   beforeEach(async () => {
     await initializeWorkspace();
-    await waitForAppMapServices(
+    services = await waitForAppMapServices(
       'tmp/appmap/minitest/Microposts_controller_can_get_microposts_as_JSON.appmap.json'
     );
     await waitFor('Index directory exists', () => existsSync(ExampleAppMapIndexDir));
@@ -41,29 +43,28 @@ describe('Scanner', () => {
   afterEach(initializeWorkspace);
 
   it('is performed as AppMaps are modified', async () => {
-    await vscode.commands.executeCommand('appmap.deleteAllAppMaps');
+    async function removeAndReindex() {
+      await vscode.commands.executeCommand('appmap.deleteAllAppMaps');
 
-    await waitFor('Diagnostics were not cleared', hasNoDiagnostics);
+      await waitFor('AppMaps to be deleted', () => services.localAppMaps.appMaps.length === 0);
+      await waitFor('Diagnostics to be cleared', hasNoDiagnostics);
 
-    // KEG: Remove this, as it's failing due to an issue either with IndexJanitor or with the test itself.
-    // await waitFor(
-    //   `AppMap index dir should be removed`,
-    //   async () => !existsSync(ExampleAppMapIndexDir)
-    // );
+      await logIndexDir();
+      const appMapPath = relative(ProjectA, ExampleAppMap);
+      await restoreFile(appMapPath);
 
-    await logIndexDir();
-    const appMapPath = relative(ProjectA, ExampleAppMap);
-    await restoreFile(appMapPath);
+      assert(existsSync(ExampleAppMap));
+      await logIndexDir();
 
-    assert(existsSync(ExampleAppMap));
-    await logIndexDir();
+      await waitFor('AppMap to be re-indexed', () =>
+        existsSync(join(ExampleAppMapIndexDir, 'mtime'))
+      );
+      await logIndexDir();
+    }
 
-    await waitFor('AppMap to be re-indexed', () =>
-      existsSync(join(ExampleAppMapIndexDir, 'mtime'))
-    );
-    await logIndexDir();
+    await removeAndReindex();
 
-    await waitFor('Findings to be generated', () =>
+    await repeatUntil(removeAndReindex, 'Findings to be generated', () =>
       existsSync(join(ExampleAppMapIndexDir, 'appmap-findings.json'))
     );
     await logIndexDir();
