@@ -1,0 +1,3 @@
+[submodule "appmap-js"]
+	path = appmap-js
+	url = git@github.com:getappmap/appmap-js.git
