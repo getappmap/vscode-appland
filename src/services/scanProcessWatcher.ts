@@ -14,7 +14,7 @@ export default class ScanProcessWatcher extends ProcessWatcher {
       id: ProcessId.Analysis,
       modulePath: modulePath,
       log: NodeProcessService.outputChannel,
-      args: ['scan', '--watch', '--appmap-dir', appmapDir, '--verbose'],
+      args: ['scan', '--watch', '--appmap-dir', appmapDir],
       cwd,
       env,
     });
