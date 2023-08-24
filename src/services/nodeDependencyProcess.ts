@@ -111,6 +111,15 @@ export class ProcessLog extends Array<ProcessLogItem> {
 }
 
 export async function getModulePath(options: ProgramOptions): Promise<string> {
+  const workspaceFolders = vscode.workspace.workspaceFolders;
+  if (
+    options.dependency === ProgramName.Scanner &&
+    workspaceFolders &&
+    workspaceFolders.length > 0
+  ) {
+    const root = path.resolve(workspaceFolders[0].uri.fsPath, '..', '..', '..', '..');
+    return path.join(root, 'appmap-js', 'packages', 'scanner', 'built', 'cli.js');
+  }
   const localToolsPath = ExtensionSettings.appMapCommandLineToolsPath;
   if (localToolsPath) {
     let packageName: string;
