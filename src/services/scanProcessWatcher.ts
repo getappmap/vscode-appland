@@ -36,10 +36,12 @@ export default class ScanProcessWatcher extends ProcessWatcher {
 
   protected async loadEnvironment(): Promise<NodeJS.ProcessEnv> {
     const env = await super.loadEnvironment();
-    const accessToken = await this.accessToken();
-    if (accessToken) {
-      env.APPMAP_API_KEY = accessToken;
-    }
+    // KEG: Disable for now, seems to be breaking the scanner, possibly because the
+    // remote domain is renamed from app.land to getappmap.com.
+    // const accessToken = await this.accessToken();
+    // if (accessToken) {
+    //   env.APPMAP_API_KEY = accessToken;
+    // }
     return env;
   }
 }
