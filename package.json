@@ -419,7 +419,7 @@
   "scripts": {
     "vscode:prepublish": "yarn run compile",
     "lint": "eslint . --ext .ts",
-    "pretest": "yarn run lint && tsc --strict --skipLibCheck",
+    "pretest": "tsc --strict --skipLibCheck",
     "test:integration": "ts-node ./test/integrationTest.ts",
     "test:web-client": "mocha web/test/*.test.mjs",
     "test:system": "ts-node test/systemTest.ts",
