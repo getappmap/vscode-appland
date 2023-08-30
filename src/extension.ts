@@ -192,7 +192,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
     openCodeObjectInAppMap(context, appmapCollectionFile, classMapIndex);
 
-    await SignInManager.register(extensionState);
+    await SignInManager.register();
     const signInWebview = new SignInViewProvider(context);
     context.subscriptions.push(
       vscode.window.registerWebviewViewProvider(SignInViewProvider.viewType, signInWebview)
@@ -248,7 +248,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     downloadLatestJavaJar(context);
     getAppmapDir(context, workspaceServices);
 
-    if (!openedInstallGuide && !SignInManager.shouldShowSignIn())
+    if (!openedInstallGuide && SignInManager.signedIn)
       promptInstall(workspaceServices, extensionState);
 
     vscode.env.onDidChangeTelemetryEnabled((enabled: boolean) => {

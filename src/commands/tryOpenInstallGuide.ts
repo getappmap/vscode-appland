@@ -11,7 +11,7 @@ export default function tryOpenInstallGuide(extensionState: ExtensionState): vsc
       // time of installation. We will use this to determine whether or not our UX improvements are effective, without
       // before rolling them out to our existing user base.
 
-      if (!extensionState.hasViewedInstallGuide && !SignInManager.shouldShowSignIn()) {
+      if (!extensionState.hasViewedInstallGuide && SignInManager.signedIn) {
         extensionState.hasViewedInstallGuide = true;
         await vscode.commands.executeCommand('appmap.openInstallGuide', 'project-picker');
         return true;

@@ -1,18 +1,13 @@
 import * as vscode from 'vscode';
-import * as semver from 'semver';
 import { AUTHN_PROVIDER_NAME, getApiKey } from '../authentication';
-import ExtensionState from '../configuration/extensionState';
 import { DEBUG_EXCEPTION, SIDEBAR_SIGN_IN, Telemetry } from '../telemetry';
 import ErrorCode from '../telemetry/definitions/errorCodes';
 
 export default class SignInManager {
   private static contextKeyShowSignInWebview = 'appMap.showSignIn';
-  private static signedIn: boolean;
-  private static firstInstalledVersion: semver.SemVer | null;
-  private static versionCutOff = '0.66.2';
+  public static signedIn: boolean;
 
-  public static async register(extensionState: ExtensionState): Promise<void> {
-    this.firstInstalledVersion = semver.coerce(extensionState.firstVersionInstalled);
+  public static async register(): Promise<void> {
     await this.updateSignInState();
 
     vscode.authentication.onDidChangeSessions((e) => {
@@ -44,20 +39,13 @@ export default class SignInManager {
     return !!(await getApiKey(false));
   }
 
-  public static shouldShowSignIn(): boolean {
-    if (!this.firstInstalledVersion) return false;
-
-    const meetsVersionRequirement = semver.gt(this.firstInstalledVersion, this.versionCutOff);
-    return !!(meetsVersionRequirement && !this.signedIn);
-  }
-
   public static async updateSignInState(): Promise<void> {
     this.signedIn = await this.isUserAuthenticated();
 
     await vscode.commands.executeCommand(
       'setContext',
       this.contextKeyShowSignInWebview,
-      this.shouldShowSignIn()
+      !this.signedIn
     );
   }
 }
