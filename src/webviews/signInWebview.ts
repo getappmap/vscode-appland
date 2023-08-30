@@ -1,7 +1,6 @@
 import * as vscode from 'vscode';
 import SignInManager from '../services/signInManager';
 import getWebviewContent from './getWebviewContent';
-import { CLICKED_SIGN_IN_LINK, Telemetry } from '../telemetry';
 
 export default class SignInViewProvider implements vscode.WebviewViewProvider {
   public static readonly viewType = 'appmap.views.signIn';
@@ -32,8 +31,6 @@ export default class SignInViewProvider implements vscode.WebviewViewProvider {
         }
 
         case 'click-sign-in-link': {
-          const linkType = message.data as string;
-          Telemetry.sendEvent(CLICKED_SIGN_IN_LINK, { linkType });
           break;
         }
 

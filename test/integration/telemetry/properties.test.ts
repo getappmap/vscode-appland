@@ -1,14 +1,8 @@
 import { deepStrictEqual } from 'assert';
-import { unsafeCast, withTmpDir } from '../util';
+import { withTmpDir } from '../util';
 import { promises as fs } from 'fs';
 import * as path from 'path';
-import { Finding } from '@appland/scanner';
-import {
-  DEPENDENCIES,
-  FINDINGS_SUMMARY,
-  FINDING_SUMMARY,
-  HAS_DEVCONTAINER,
-} from '../../../src/telemetry/definitions/properties';
+import { DEPENDENCIES, HAS_DEVCONTAINER } from '../../../src/telemetry/definitions/properties';
 
 describe('JavaScript project analyzer', () => {
   describe('appmap.project.has_devcontainer', () => {
@@ -95,37 +89,6 @@ describe('JavaScript project analyzer', () => {
       await withTmpDir(async (tmpDir) => {
         const result = await DEPENDENCIES.getValue({ project: { name: 'test', path: tmpDir } });
         deepStrictEqual(result, undefined);
-      });
-    });
-  });
-
-  describe('appmap.analysis', () => {
-    const findings = unsafeCast<ReadonlyArray<Finding>>([
-      {
-        impactDomain: 'Maintainability',
-        hash_v2: '1',
-        ruleId: 'rule-id-1',
-        hash: '2',
-      },
-      { impactDomain: 'Maintainability', hash_v2: '1', ruleId: 'rule-id-1' },
-      { impactDomain: 'Security', hash_v2: '2', ruleId: 'rule-id-2' },
-    ]);
-
-    it('summarizes a finding', async () => {
-      const result = await FINDING_SUMMARY.getValue({ finding: findings[0] });
-      deepStrictEqual(result, {
-        impact_domain: 'maintainability',
-        hash_v2: '1',
-        rule: 'rule-id-1',
-        hash: '2',
-      });
-    });
-
-    it('summarizes all findings', async () => {
-      const result = await FINDINGS_SUMMARY.getValue({ findings });
-      deepStrictEqual(result, {
-        rules: 'rule-id-1,rule-id-2',
-        impact_domains: 'maintainability,security',
       });
     });
   });

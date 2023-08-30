@@ -5,9 +5,7 @@ import { buildAppMap } from '@appland/models';
 import { getAppMapMetrics } from '../src/telemetry.mjs';
 import appmapData from './data/appmap.json.mjs';
 
-const appmap = buildAppMap(appmapData)
-  .normalize()
-  .build();
+const appmap = buildAppMap(appmapData).normalize().build();
 
 suite('Telemetry', () => {
   describe('getAppMapMetrics', () => {

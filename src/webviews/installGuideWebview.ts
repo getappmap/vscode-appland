@@ -2,7 +2,6 @@ import * as vscode from 'vscode';
 import { GenerateOpenApi } from '../commands/generateOpenApi';
 import { InstallAgent } from '../commands/installAgent';
 import { ProjectStateServiceInstance } from '../services/projectStateService';
-import { COPY_COMMAND, OPEN_VIEW, Telemetry } from '../telemetry';
 import ProjectMetadata from '../workspace/projectMetadata';
 import ExtensionState from '../configuration/extensionState';
 import { DocPageId, ProjectPicker, RecordAppMaps } from '../tree/instructionsTreeDataProvider';
@@ -19,10 +18,6 @@ type PageMessage = {
   project?: ProjectMetadata;
   projects?: ProjectMetadata[];
 };
-
-type ClipboardMessage = {
-  text: string;
-} & PageMessage;
 
 function defaultPageId(projectStates: ProjectStateServiceInstance[]): DocPageId {
   const anyInstalled = projectStates.some((project) => project.metadata.agentInstalled);
@@ -143,13 +138,7 @@ export default class InstallGuideWebView {
 
             case 'open-page':
               {
-                const { page, project, projects } = message as PageMessage;
-                Telemetry.sendEvent(OPEN_VIEW, {
-                  viewId: page,
-                  rootDirectory: project?.path,
-                  projects: projects || [],
-                  project: project || ({} as ProjectMetadata),
-                });
+                const { page, project } = message as PageMessage;
                 if (page === 'open-appmaps') {
                   vscode.commands.executeCommand('appmap.view.focusCodeObjects');
                 } else if (page === 'investigate-findings') {
@@ -166,16 +155,7 @@ export default class InstallGuideWebView {
               break;
 
             case 'clipboard':
-              {
-                const { page, project, text } = message as ClipboardMessage;
-                Telemetry.sendEvent(COPY_COMMAND, {
-                  viewId: page,
-                  text: text,
-                  rootDirectory: project?.path,
-                });
-              }
               break;
-
             case 'view-problems':
               {
                 vscode.commands.executeCommand('workbench.panel.markers.view.focus');

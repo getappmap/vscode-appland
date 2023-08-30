@@ -1,7 +1,6 @@
 import * as vscode from 'vscode';
 import ClassMapIndex from '../services/classMapIndex';
 import { CodeObjectEntry } from '../lib/CodeObjectEntry';
-import { CLICK_CODE_OBJECT, Telemetry } from '../telemetry';
 import { promptForAppMap } from '../lib/promptForAppMap';
 import AppMapCollection from '../services/appmapCollection';
 
@@ -59,7 +58,6 @@ export default function openCodeObjectInAppMap(
       selectedObject: codeObject.fqid,
     };
     const uri = vscode.Uri.file(appMapFileName);
-    Telemetry.sendEvent(CLICK_CODE_OBJECT);
     return vscode.commands.executeCommand(
       'vscode.open',
       uri.with({ fragment: JSON.stringify(state) })

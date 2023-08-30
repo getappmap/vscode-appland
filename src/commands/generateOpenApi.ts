@@ -10,7 +10,7 @@ import {
   spawn,
   verifyCommandOutput,
 } from '../services/nodeDependencyProcess';
-import { DEBUG_EXCEPTION, GENERATE_OPENAPI, Telemetry } from '../telemetry';
+import { DEBUG_EXCEPTION, Telemetry } from '../telemetry';
 import ErrorCode from '../telemetry/definitions/errorCodes';
 import { AppmapConfigManager } from '../services/appmapConfigManager';
 import { workspaceServices } from '../services/workspaceServices';
@@ -78,7 +78,6 @@ export default function generateOpenApi(
           }
 
           extensionState.setWorkspaceGeneratedOpenApi(workspaceFolder, true);
-          Telemetry.sendEvent(GENERATE_OPENAPI, { rootDirectory: workspaceFolder.uri.fsPath });
 
           const document = await vscode.workspace.openTextDocument({
             language: 'yaml',
