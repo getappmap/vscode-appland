@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { ChildProcess, OutputStream, spawn, SpawnOptions } from './nodeDependencyProcess';
+import { getApiKey } from '../authentication';
 
 export type RetryOptions = {
   // The number of retries made before declaring the process as failed.
@@ -178,8 +179,17 @@ export class ProcessWatcher implements vscode.Disposable {
     }
   }
 
+  async accessToken(): Promise<string | undefined> {
+    return getApiKey(false);
+  }
+
   protected async loadEnvironment(): Promise<NodeJS.ProcessEnv> {
-    return {};
+    const env = {} as NodeJS.ProcessEnv;
+    const accessToken = await this.accessToken();
+    if (accessToken) {
+      env.APPMAP_API_KEY = accessToken;
+    }
+    return env;
   }
 
   dispose(): void {

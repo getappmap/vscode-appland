@@ -12,6 +12,8 @@ import {
   ProcessWatcher,
   ProcessWatcherOptions,
 } from '../../../src/services/processWatcher';
+import * as auth from '../../../src/authentication/index';
+
 const testModule = join(__dirname, 'support', 'simpleProcess.mjs');
 
 function makeWatcher(opts: Partial<ProcessWatcherOptions> = {}) {
@@ -32,6 +34,10 @@ function makeWatcher(opts: Partial<ProcessWatcherOptions> = {}) {
 }
 
 describe('ProcessWatcher', () => {
+  before(() => {
+    sinon.stub(auth, 'getApiKey').resolves('fakeApiKey');
+  });
+
   describe('stop', () => {
     it('does not send error event', async () => {
       const watcher = makeWatcher();

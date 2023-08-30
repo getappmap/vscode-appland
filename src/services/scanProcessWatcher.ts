@@ -1,4 +1,3 @@
-import { getApiKey } from '../authentication';
 import { NodeProcessService } from './nodeProcessService';
 import { ConfigFileProvider, ProcessId, ProcessWatcher } from './processWatcher';
 
@@ -28,18 +27,5 @@ export default class ScanProcessWatcher extends ProcessWatcher {
       return { enabled: false, reason: 'User is not logged in to AppMap' };
 
     return { enabled: true };
-  }
-
-  async accessToken(): Promise<string | undefined> {
-    return getApiKey(false);
-  }
-
-  protected async loadEnvironment(): Promise<NodeJS.ProcessEnv> {
-    const env = await super.loadEnvironment();
-    const accessToken = await this.accessToken();
-    if (accessToken) {
-      env.APPMAP_API_KEY = accessToken;
-    }
-    return env;
   }
 }
