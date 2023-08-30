@@ -1,19 +1,12 @@
 import ProjectStateService, { ProjectStateServiceInstance } from '../services/projectStateService';
 import { WorkspaceServices } from '../services/workspaceServices';
 import * as vscode from 'vscode';
-import { INSTALL_PROMPT, Telemetry } from '../telemetry';
 import ExtensionState from '../configuration/extensionState';
 
 export enum ButtonText {
   Confirm = 'Open instructions',
   Deny = 'Later',
   DontShowAgain = "Don't show again",
-}
-
-function getKey(val: string): keyof typeof ButtonText {
-  const entry = Object.entries(ButtonText).find(([, v]) => v === val);
-  if (!entry) return 'Deny';
-  return entry[0] as keyof typeof ButtonText;
 }
 
 const promptResponses: ReadonlyArray<vscode.MessageItem> = [
@@ -60,7 +53,6 @@ export default async function promptInstall(
   msg.push('Open the setup instructions?');
 
   const response = await vscode.window.showInformationMessage(msg.join(' '), ...promptResponses);
-  Telemetry.sendEvent(INSTALL_PROMPT, { result: getKey(response?.title || ButtonText.Deny) });
 
   if (response?.title === ButtonText.Confirm) {
     /*

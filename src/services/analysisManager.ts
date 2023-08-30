@@ -9,7 +9,6 @@ import ExtensionState from '../configuration/extensionState';
 import { ResolvedFinding } from './resolvedFinding';
 import { WorkspaceServices } from './workspaceServices';
 import Environment from '../configuration/environment';
-import { ANALYSIS_DISABLE, ANALYSIS_ENABLE, Telemetry } from '../telemetry';
 import { debuglog } from 'util';
 
 const debug = debuglog('appmap-vscode:AnalysisManager');
@@ -80,16 +79,13 @@ export default class AnalysisManager {
 
     debug('updateAnalysisState(); userAuthenticated=%o', userAuthenticated);
 
-    const initializing = this._isAnalysisEnabled === undefined;
     if (this._isAnalysisEnabled !== enabled) {
       this._isAnalysisEnabled = enabled;
 
       if (enabled) {
         this.onAnalysisEnabled();
-        if (!initializing) Telemetry.sendEvent(ANALYSIS_ENABLE);
       } else {
         this.onAnalysisDisabled();
-        if (!initializing) Telemetry.sendEvent(ANALYSIS_DISABLE);
       }
 
       this._onAnalysisToggled.fire({ enabled, userAuthenticated });

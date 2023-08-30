@@ -1,7 +1,6 @@
 import * as vscode from 'vscode';
 import type { EnvironmentPath, IExtensionApi as PythonExtension } from '../../../types/ms-python';
 import DefaultInstaller from './default';
-import { INSTALL_BUTTON_ABORT, Telemetry } from '../../telemetry';
 import { workspace } from 'vscode';
 import { Uri } from 'vscode';
 import { Terminal } from 'vscode';
@@ -114,11 +113,6 @@ export default class PythonInstaller extends DefaultInstaller {
           PythonInstaller.PythonExtensionId,
         ]);
       }
-
-      Telemetry.sendEvent(INSTALL_BUTTON_ABORT, {
-        reason: 'Python extension not installed',
-        result: result === 'Yes' ? 'install' : 'abort',
-      });
 
       return;
     }

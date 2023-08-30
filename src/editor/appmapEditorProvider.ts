@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
-import { Telemetry, APPMAP_OPEN, APPMAP_UPLOAD, EXPORT_SVG, DEBUG_EXCEPTION } from '../telemetry';
+import { Telemetry, DEBUG_EXCEPTION } from '../telemetry';
 import { getRecords } from '../util';
 import { version } from '../../package.json';
 import ExtensionState from '../configuration/extensionState';
@@ -363,18 +363,8 @@ export default class AppMapEditorProvider
         case 'onLoadComplete':
           AppMapEditorProvider.openWebviewPanels.set(document.uri.toString(), webviewPanel);
           this.documents.push(document);
-          Telemetry.sendEvent(APPMAP_OPEN, {
-            rootDirectory: document.workspaceFolder?.uri.fsPath,
-            uri: document.uri,
-            metadata: document.metadata,
-            metrics: message.metrics,
-          });
           break;
         case 'performAction':
-          Telemetry.reportAction(
-            message.action,
-            getRecords(message.data, `appmap.${message.action}`)
-          );
           break;
         case 'reportError':
           Telemetry.reportWebviewError(message.error);
@@ -384,7 +374,6 @@ export default class AppMapEditorProvider
           break;
         case 'appmapOpenUrl':
           vscode.env.openExternal(message.url);
-          Telemetry.reportOpenUri(message.url);
           break;
         case 'uploadAppmap':
           {
@@ -394,14 +383,6 @@ export default class AppMapEditorProvider
               this.context,
               viewState
             );
-            if (uploadResult) {
-              Telemetry.sendEvent(APPMAP_UPLOAD, {
-                rootDirectory: document.workspaceFolder?.uri.fsPath,
-                uri: document.uri,
-                metadata: document.metadata,
-                metrics: message.metrics,
-              });
-            }
             webviewPanel.webview.postMessage({
               type: 'setShareURL',
               url: uploadResult,
@@ -425,7 +406,6 @@ export default class AppMapEditorProvider
                 });
 
                 vscode.window.showTextDocument(document);
-                Telemetry.sendEvent(EXPORT_SVG);
               }
             } catch (e) {
               Telemetry.sendEvent(DEBUG_EXCEPTION, {

@@ -1,11 +1,12 @@
 import * as vscode from 'vscode';
 import os from 'os';
 import { join } from 'path';
-import { CLICK_INSTALL_BUTTON, INSTALL_BUTTON_ERROR, Telemetry } from '../telemetry';
+import { Telemetry } from '../telemetry';
 import { NodeProcessService } from '../services/nodeProcessService';
 import { Installer } from './installer';
 import DefaultInstaller from './installer/default';
 import PythonInstaller from './installer/python';
+import { INSTALL_BUTTON_ERROR } from '../../out/src/telemetry/definitions/events';
 
 export const InstallAgent = 'appmap.installAgent';
 const ELECTRON_COMMAND_PLATFORMS = ['linux', 'darwin'];
@@ -159,8 +160,6 @@ export default async function installAgent(
         );
         return;
       }
-
-      Telemetry.sendEvent(CLICK_INSTALL_BUTTON, { rootDirectory: path, defaultTerminals });
 
       await installer.execute(command, path, env);
     } catch (err) {

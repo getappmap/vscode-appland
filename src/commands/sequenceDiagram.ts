@@ -7,21 +7,9 @@ import { verifyCommandOutput } from '../services/nodeDependencyProcess';
 import { writeFile } from 'fs/promises';
 import { readFile } from 'fs/promises';
 import AppMapCollection from '../services/appmapCollection';
-import {
-  NUM_ACTIONS,
-  NUM_ACTORS,
-  plantUMLJarPath,
-  promptForSpecification,
-} from '../lib/sequenceDiagram';
+import { plantUMLJarPath, promptForSpecification } from '../lib/sequenceDiagram';
 import { promptForAppMap } from '../lib/promptForAppMap';
 import assert from 'assert';
-import { Telemetry } from '../telemetry';
-import Event from '../telemetry/event';
-
-const SEQUENCE_DIAGRAM_EVENT = new Event({
-  name: 'sequence_diagram:generate',
-  metrics: [NUM_ACTORS, NUM_ACTIONS],
-});
 
 export default async function sequenceDiagram(
   context: vscode.ExtensionContext,
@@ -61,8 +49,6 @@ export default async function sequenceDiagram(
             );
             return;
           }
-
-          Telemetry.sendEvent(SEQUENCE_DIAGRAM_EVENT, { diagram });
 
           const tokens = diagramFile.split('.');
           vscode.env.openExternal(

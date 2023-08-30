@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import * as semver from 'semver';
 import { AUTHN_PROVIDER_NAME, getApiKey } from '../authentication';
 import ExtensionState from '../configuration/extensionState';
-import { DEBUG_EXCEPTION, SIDEBAR_SIGN_IN, Telemetry } from '../telemetry';
+import { DEBUG_EXCEPTION, Telemetry } from '../telemetry';
 import ErrorCode from '../telemetry/definitions/errorCodes';
 
 export default class SignInManager {
@@ -36,8 +36,6 @@ export default class SignInManager {
       });
       throw e;
     }
-
-    Telemetry.sendEvent(SIDEBAR_SIGN_IN);
   }
 
   private static async isUserAuthenticated(): Promise<boolean> {
