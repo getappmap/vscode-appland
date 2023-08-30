@@ -14,7 +14,6 @@ import { CodeObjectEntry } from '../lib/CodeObjectEntry';
 
 import AnalysisManager from './analysisManager';
 import AppMapLoader from './appmapLoader';
-import { PROJECT_OPEN, Telemetry } from '../telemetry';
 import { workspaceServices } from './workspaceServices';
 import { AppmapConfigManager } from './appmapConfigManager';
 import { RunConfigService, RunConfigStatus } from './runConfigService';
@@ -108,11 +107,6 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
 
   public async initialize(): Promise<void> {
     await Promise.all([this.analyzeProject(), this.onUpdateAppMaps()]);
-    Telemetry.sendEvent(PROJECT_OPEN, {
-      rootDirectory: this.folder.uri.fsPath,
-      project: this.metadata,
-      uri: this.folder.uri,
-    });
   }
 
   public setFindingsIndex(findingsIndex?: FindingsIndex): void {

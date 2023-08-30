@@ -1,6 +1,5 @@
 import Event from '../event';
 import * as Properties from './properties';
-import * as Metrics from './metrics';
 
 /**
  * An event is a uniquely identified collection of telemetry data. Events of the same `eventName` will often contain the
@@ -9,22 +8,4 @@ import * as Metrics from './metrics';
 export const DEBUG_EXCEPTION = new Event({
   name: 'debug/exception',
   properties: [Properties.DEBUG_EXCEPTION, Properties.DEBUG_ERROR_CODE, Properties.DEBUG_LOG],
-});
-
-export const PROJECT_OPEN = new Event({
-  name: 'project:open',
-  properties: [
-    Properties.AGENT_CONFIG_PRESENT,
-    Properties.SCANNER_CONFIG_PRESENT,
-    Properties.PROJECT_LANGUAGE,
-    Properties.PROJECT_LANGUAGE_DISTRIBUTION,
-    Properties.WEB_FRAMEWORK,
-    Properties.TEST_FRAMEWORK,
-    Properties.IS_INSTALLABLE,
-    Properties.HAS_DEVCONTAINER,
-    Properties.DEPENDENCIES,
-    Properties.PROJECT_PATH,
-    Properties.VERSION_CONTROL_REPOSITORY,
-  ],
-  metrics: [Metrics.NUM_WORKSPACE_FOLDERS],
 });
