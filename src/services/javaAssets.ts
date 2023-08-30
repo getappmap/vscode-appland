@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import os from 'os';
 
-import { DEBUG_EXCEPTION, DOWNLOADED_JAVA_JAR, Telemetry } from '../telemetry';
+import { DEBUG_EXCEPTION, Telemetry } from '../telemetry';
 import ErrorCode from '../telemetry/definitions/errorCodes';
 import JavaAssetDownloader, { ProgressReporter } from '../lib/javaAssetDownloader';
 import LockfileSynchronizer from '../lib/lockfileSynchronizer';
@@ -50,9 +50,9 @@ class ProgressReporterImpl implements ProgressReporter {
     this.log(`Downloading AppMap agent for Java ${name}`);
   }
 
-  downloaded(assetPath: string, symlinkCreated: boolean, version: string) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  downloaded(assetPath: string, _symlinkCreated: boolean, _version: string) {
     this.log(`Finished downloading AppMap Java agent to ${assetPath}`);
-    Telemetry.sendEvent(DOWNLOADED_JAVA_JAR, { symlinkCreated, version });
   }
 
   symlinked(assetName: string, symlinkPath: string): void {

@@ -1,5 +1,4 @@
 import bent, { NodeResponse } from 'bent';
-import { Telemetry, RECORDING_START, RECORDING_STOP, RECORDING_STATUS } from '../telemetry';
 
 export default class RemoteRecordingClient {
   private static readonly RECORDING_URI = '/_appmap/record';
@@ -10,11 +9,6 @@ export default class RemoteRecordingClient {
       statusCode: number;
     };
 
-    Telemetry.sendEvent(RECORDING_START, {
-      url: baseURL + this.RECORDING_URI,
-      code: stream.statusCode,
-    });
-
     return stream.statusCode;
   }
 
@@ -22,11 +16,6 @@ export default class RemoteRecordingClient {
     const request = bent(baseURL, 'GET', 200);
     const response = (await request(this.RECORDING_URI)) as NodeResponse;
     const body = (await response.json()) as { enabled: boolean };
-
-    Telemetry.sendEvent(RECORDING_STATUS, {
-      url: baseURL + this.RECORDING_URI,
-      code: response.statusCode,
-    });
 
     return body.enabled;
   }
@@ -37,11 +26,6 @@ export default class RemoteRecordingClient {
       statusCode: number;
       json;
     };
-
-    Telemetry.sendEvent(RECORDING_STOP, {
-      url: baseURL + this.RECORDING_URI,
-      code: stream.statusCode,
-    });
 
     return {
       statusCode: stream.statusCode,

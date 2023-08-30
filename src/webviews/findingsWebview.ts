@@ -1,6 +1,5 @@
 import * as vscode from 'vscode';
 import AnalysisManager from '../services/analysisManager';
-import { ANALYSIS_VIEW_OVERVIEW, Telemetry } from '../telemetry';
 import getWebviewContent from './getWebviewContent';
 
 export default class FindingsOverviewWebview {
@@ -19,10 +18,6 @@ export default class FindingsOverviewWebview {
           this.existingPanel.reveal(vscode.ViewColumn.One);
           return;
         }
-
-        Telemetry.sendEvent(ANALYSIS_VIEW_OVERVIEW, {
-          findings: (this.findingsIndex?.findings() || []).map((f) => f.finding),
-        });
 
         const panel = vscode.window.createWebviewPanel(
           'findingsOverview',

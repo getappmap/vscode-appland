@@ -1,44 +1,10 @@
 import { AppMap } from '@appland/models';
-import { Action, Diagram, Specification } from '@appland/sequence-diagram';
+import { Specification } from '@appland/sequence-diagram';
 import { join } from 'path';
 import * as vscode from 'vscode';
 
 import ExtensionSettings from '../configuration/extensionSettings';
-import TelemetryDataProvider from '../telemetry/telemetryDataProvider';
 import { fileExists } from '../util';
-
-export const NUM_ACTORS = new TelemetryDataProvider({
-  id: 'sequence_diagram.num_actors',
-  async value({ diagram }: { diagram: Diagram }) {
-    return diagram.actors.length;
-  },
-});
-
-export const NUM_ACTIONS = new TelemetryDataProvider({
-  id: 'sequence_diagram.num_actions',
-  async value({ diagram }: { diagram: Diagram }) {
-    const countActions = (action: Action, sum = 0): number => {
-      sum += 1;
-      return action.children.reduce((c, action) => countActions(action, c), sum);
-    };
-    return diagram.rootActions
-      .map((action) => countActions(action))
-      .reduce((sum, count) => sum + count, 0);
-  },
-});
-
-export const NUM_CHANGES = new TelemetryDataProvider({
-  id: 'sequence_diagram.num_changes',
-  async value({ diagram }: { diagram: Diagram }) {
-    const countActions = (action: Action, sum = 0): number => {
-      if (action.diffMode !== undefined) sum += 1;
-      return action.children.reduce((c, action) => countActions(action, c), sum);
-    };
-    return diagram.rootActions
-      .map((action) => countActions(action))
-      .reduce((sum, count) => sum + count, 0);
-  },
-});
 
 export const PACKAGES_TITLE = 'Enter packages to exclude from the diagram';
 

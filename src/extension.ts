@@ -26,7 +26,7 @@ import { NodeProcessService } from './services/nodeProcessService';
 import ProjectStateService from './services/projectStateService';
 import { SourceFileWatcher } from './services/sourceFileWatcher';
 import { initializeWorkspaceServices } from './services/workspaceServices';
-import { DEBUG_EXCEPTION, Telemetry, TELEMETRY_ENABLED, sendAppMapCreateEvent } from './telemetry';
+import { DEBUG_EXCEPTION, Telemetry } from './telemetry';
 import appmapLinkProvider from './terminalLink/appmapLinkProvider';
 import registerTrees from './tree';
 import ContextMenu from './tree/contextMenu';
@@ -73,9 +73,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     const extensionState = new ExtensionState(context);
     context.subscriptions.push(extensionState);
 
-    if (extensionState.isNewInstall) {
-      Telemetry.reportAction('plugin:install');
-    }
     const recommender = new AppMapRecommenderService(extensionState);
     await workspaceServices.enroll(recommender);
 
@@ -85,10 +82,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
     const appmapWatcher = new AppMapWatcher();
     context.subscriptions.push(
-      appmapWatcher.onCreate(({ uri, workspaceFolder, initializing }) => {
-        appmapCollectionFile.onCreate(uri);
-        if (!initializing) sendAppMapCreateEvent(uri, workspaceFolder);
-      }),
+      appmapWatcher.onCreate(({ uri }) => appmapCollectionFile.onCreate(uri)),
       appmapWatcher.onDelete(({ uri }) => appmapCollectionFile.onDelete(uri)),
       appmapWatcher.onChange(({ uri }) => appmapCollectionFile.onChange(uri))
     );
@@ -250,12 +244,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
     if (!openedInstallGuide && !SignInManager.shouldShowSignIn())
       promptInstall(workspaceServices, extensionState);
-
-    vscode.env.onDidChangeTelemetryEnabled((enabled: boolean) => {
-      Telemetry.sendEvent(TELEMETRY_ENABLED, {
-        enabled,
-      });
-    });
 
     // Use this notification to track when the extension is activated.
     if (Environment.isSystemTest) {

@@ -7,7 +7,7 @@ import { WorkspaceService, WorkspaceServiceInstance } from './workspaceService';
 import ProjectStateService, { ProjectStateServiceInstance } from './projectStateService';
 import { WorkspaceServices } from './workspaceServices';
 import ExtensionState from '../configuration/extensionState';
-import { CONFIG_ADDED, DEBUG_EXCEPTION, Telemetry } from '../telemetry';
+import { DEBUG_EXCEPTION, Telemetry } from '../telemetry';
 import ErrorCode from '../telemetry/definitions/errorCodes';
 
 type JavaTestConfig = {
@@ -110,8 +110,6 @@ export class RunConfigServiceInstance implements WorkspaceServiceInstance {
     try {
       await this.updateConfig('launch', 'configurations', this.appmapLaunchConfig);
       this.extensionState.setUpdatedLaunchConfig(this.folder, true);
-
-      this.sendConfigUpdateSuccess('launch');
     } catch (e) {
       this.sendConfigUpdateError(e);
     }
@@ -122,8 +120,6 @@ export class RunConfigServiceInstance implements WorkspaceServiceInstance {
       try {
         await this.updateConfig('java.test', 'config', this.appmapTestConfig);
         this.extensionState.setUpdatedTestConfig(this.folder, true);
-
-        this.sendConfigUpdateSuccess('test');
         return true;
       } catch (e) {
         this.sendConfigUpdateError(e);
@@ -187,12 +183,6 @@ export class RunConfigServiceInstance implements WorkspaceServiceInstance {
     Telemetry.sendEvent(DEBUG_EXCEPTION, {
       exception: err,
       errorCode: ErrorCode.ConfigUpdateError,
-    });
-  }
-
-  private sendConfigUpdateSuccess(configType: string): void {
-    Telemetry.sendEvent(CONFIG_ADDED, {
-      configType,
     });
   }
 
