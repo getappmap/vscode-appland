@@ -64,6 +64,8 @@ export default class AppMapServerAuthenticationProvider implements vscode.Authen
     this.session = await this.performSignIn();
     debug('createSession(); session %savailable', this.session ? '' : 'not ');
 
+    if (!this.session) throw new Error('AppMap Server authentication was not completed');
+
     this.context.secrets
       .store(APPMAP_SERVER_SESSION_KEY, JSON.stringify(this.session))
       .then(undefined, (err) => console.warn('error storing session key: %s', err));
