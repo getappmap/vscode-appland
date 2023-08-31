@@ -42,14 +42,21 @@ export default class FindingsDiagnosticsProvider implements vscode.Disposable {
     findings.map((finding) => {
       if (!finding.problemLocation) return;
 
-      const relatedInformation = finding.appMapUri
-        ? [
-            new vscode.DiagnosticRelatedInformation(
-              new vscode.Location(finding.appMapUri, new vscode.Position(0, 0)),
-              'Open AppMap'
-            ),
-          ]
-        : [];
+      const relatedInformation = [] as vscode.DiagnosticRelatedInformation[];
+      if (finding.appMapUri) {
+        const uri = finding.appMapUri.with({
+          fragment: JSON.stringify({
+            selectedObject: `analysis-finding:${finding.finding.hash_v2}`,
+          }),
+        });
+
+        const diagnosticInfo = new vscode.DiagnosticRelatedInformation(
+          new vscode.Location(uri, new vscode.Position(0, 0)),
+          'Open AppMap'
+        );
+
+        relatedInformation.push(diagnosticInfo);
+      }
 
       const problemUri = finding.problemLocation.uri;
       updatedProblemUriStrings.add(problemUri.toString());
