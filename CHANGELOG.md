@@ -1,3 +1,10 @@
+# [0.99.0](https://github.com/getappmap/vscode-appland/compare/v0.98.1...v0.99.0) (2023-08-31)
+
+
+### Features
+
+* Clean up telemetry ([1c28a8a](https://github.com/getappmap/vscode-appland/commit/1c28a8ad825e398071a6e476ed248e9689ff7989))
+
 ## [0.98.1](https://github.com/getappmap/vscode-appland/compare/v0.98.0...v0.98.1) (2023-08-22)
 
 
