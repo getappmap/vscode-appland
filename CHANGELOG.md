@@ -1,3 +1,10 @@
+# [0.100.0](https://github.com/getappmap/vscode-appland/compare/v0.99.0...v0.100.0) (2023-08-31)
+
+
+### Features
+
+* Drop OpenAPI from the onboarding flow ([b9e7b58](https://github.com/getappmap/vscode-appland/commit/b9e7b587da971961595568994457f1283ef6d680))
+
 # [0.99.0](https://github.com/getappmap/vscode-appland/compare/v0.98.1...v0.99.0) (2023-08-31)
 
 
