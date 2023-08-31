@@ -197,14 +197,6 @@
       "repository": "git@github.com:chicagopython/chipy.org.git",
       "branch": "main",
       "commit": "6050c63028acc4e78c02b71140364c905ff3993f",
-      "status": [
-        "M Pipfile",
-        "M Pipfile.lock",
-        "?? .envrc",
-        "?? .tool-versions",
-        "?? appmap.yml",
-        "?? chipy.org-appmaps.zip"
-      ],
       "tag": "202102082215",
       "annotated_tag": "202102082215",
       "commits_since_tag": 111,
@@ -340,8 +332,7 @@
         {
           "type": "function",
           "name": "render",
-          "static": false,
-          "location": ""
+          "static": false
         }
       ]
     },
@@ -352,8 +343,7 @@
         {
           "type": "function",
           "name": "render",
-          "static": false,
-          "location": ""
+          "static": false
         }
       ]
     },
@@ -364,8 +354,7 @@
         {
           "type": "function",
           "name": "render",
-          "static": false,
-          "location": ""
+          "static": false
         }
       ]
     }
