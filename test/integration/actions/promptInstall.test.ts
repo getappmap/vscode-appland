@@ -7,8 +7,9 @@ import promptInstall, { ButtonText } from '../../../src/actions/promptInstall';
 import ExtensionState from '../../../src/configuration/extensionState';
 import { ProjectStateServiceInstance } from '../../../src/services/projectStateService';
 import { ProjectA, unsafeCast } from '../util';
+import Feature from '../../../src/workspace/feature';
 
-const stubWorkspaceServices = (installable = true, language = 'Ruby', webFramework = 'Rails') =>
+const stubWorkspaceServices = (language: Feature, webFramework?: Feature) =>
   unsafeCast<WorkspaceServices>({
     getService: () => sinon.stub(),
     getServiceInstances: () =>
@@ -17,20 +18,26 @@ const stubWorkspaceServices = (installable = true, language = 'Ruby', webFramewo
           folder: { name: path.basename(ProjectA), uri: vscode.Uri.parse(ProjectA), index: -1 },
           metadata: {
             agentInstalled: false,
-            language: { name: language },
-            webFramework: { name: webFramework },
+            language,
+            languages: [language],
+            webFramework,
           },
-          installable,
         },
       ]),
   });
 
 describe('promptInstall', () => {
-  const workspaceServices = stubWorkspaceServices();
+  const langAndFrameworkProject = stubWorkspaceServices(
+    { name: 'Ruby', score: 2, text: 'GA language' },
+    { name: 'Rails', score: 2, text: 'GA framework' }
+  );
+  const langOnlyProject = stubWorkspaceServices({ name: 'Ruby', score: 2, text: 'GA language' });
 
   afterEach(() => sinon.restore());
 
   context('in an installable project', () => {
+    const project = langAndFrameworkProject;
+
     let hideInstallPrompt = false;
     const extensionState = unsafeCast<ExtensionState>({
       getHideInstallPrompt: () => hideInstallPrompt,
@@ -47,7 +54,7 @@ describe('promptInstall', () => {
     it('prompts the user to install AppMap', async () => {
       const showInformationMessage = sinon.stub(vscode.window, 'showInformationMessage').resolves();
 
-      await promptInstall(workspaceServices, extensionState);
+      await promptInstall(project, extensionState);
 
       assert(
         showInformationMessage.calledWith(
@@ -61,7 +68,7 @@ describe('promptInstall', () => {
       sinon.stub(vscode.window, 'showInformationMessage').resolves({ title: ButtonText.Confirm });
       const executeCommand = sinon.stub(vscode.commands, 'executeCommand').resolves();
 
-      await promptInstall(workspaceServices, extensionState);
+      await promptInstall(project, extensionState);
 
       assert(executeCommand.calledWith('appmap.openInstallGuide', 'project-picker'));
     });
@@ -73,7 +80,7 @@ describe('promptInstall', () => {
       const executeCommand = sinon.stub(vscode.commands, 'executeCommand').resolves();
 
       for (let i = 0; i < 5; ++i) {
-        await promptInstall(workspaceServices, extensionState);
+        await promptInstall(project, extensionState);
         assert(!executeCommand.called);
         assert(showInformationMessage.calledOnce);
         assert((extensionState.setHideInstallPrompt as sinon.SinonStub).calledOnce);
@@ -82,34 +89,23 @@ describe('promptInstall', () => {
   });
 
   context('when the user requests to never prompt in this project', () => {
-    const workspaceServices = stubWorkspaceServices();
+    const project = langAndFrameworkProject;
     const extensionState = unsafeCast<ExtensionState>({ getHideInstallPrompt: () => true });
 
     it('does not prompt', async () => {
       const showInformationMessage = sinon.stub(vscode.window, 'showInformationMessage');
-      await promptInstall(workspaceServices, extensionState);
+      await promptInstall(project, extensionState);
       assert(!showInformationMessage.called);
     });
   });
 
   context('when in an uninstallable project', () => {
-    const workspaceServices = stubWorkspaceServices(false);
+    const project = langOnlyProject;
     const extensionState = unsafeCast<ExtensionState>({ getHideInstallPrompt: () => false });
 
     it('does not prompt', async () => {
       const showInformationMessage = sinon.stub(vscode.window, 'showInformationMessage');
-      await promptInstall(workspaceServices, extensionState);
-      assert(!showInformationMessage.called);
-    });
-  });
-
-  context('when in an installable java project', () => {
-    const workspaceServices = stubWorkspaceServices(true, 'Java', 'Spring');
-    const extensionState = unsafeCast<ExtensionState>({ getHideInstallPrompt: () => false });
-
-    it('does not prompt', async () => {
-      const showInformationMessage = sinon.stub(vscode.window, 'showInformationMessage');
-      await promptInstall(workspaceServices, extensionState);
+      await promptInstall(project, extensionState);
       assert(!showInformationMessage.called);
     });
   });

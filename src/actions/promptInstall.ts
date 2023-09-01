@@ -2,6 +2,7 @@ import ProjectStateService, { ProjectStateServiceInstance } from '../services/pr
 import { WorkspaceServices } from '../services/workspaceServices';
 import * as vscode from 'vscode';
 import ExtensionState from '../configuration/extensionState';
+import { hasSupportedFramework, isLanguageSupported } from '../workspace/projectMetadata';
 
 export enum ButtonText {
   Confirm = 'Open instructions',
@@ -16,10 +17,9 @@ const promptResponses: ReadonlyArray<vscode.MessageItem> = [
 ];
 
 const meetsPromptCriteria = (project: ProjectStateServiceInstance): boolean =>
-  project.installable &&
-  !project.metadata.agentInstalled &&
-  project.metadata.language?.name === 'Ruby' &&
-  project.metadata.webFramework?.name === 'Rails';
+  isLanguageSupported(project.metadata) &&
+  hasSupportedFramework(project.metadata) &&
+  !project.metadata.agentInstalled;
 
 export default async function promptInstall(
   services: WorkspaceServices,

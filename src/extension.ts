@@ -242,8 +242,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     downloadLatestJavaJar(context);
     getAppmapDir(context, workspaceServices);
 
-    if (!openedInstallGuide && !SignInManager.shouldShowSignIn())
-      promptInstall(workspaceServices, extensionState);
+    if (!openedInstallGuide) promptInstall(workspaceServices, extensionState);
 
     // Use this notification to track when the extension is activated.
     if (Environment.isSystemTest) {
