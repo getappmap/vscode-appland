@@ -163,10 +163,6 @@
         "title": "AppMap View: Compare Sequence Diagrams"
       },
       {
-        "command": "appmap.context.sequenceDiagram",
-        "title": "AppMap View: Generate Sequence Diagram"
-      },
-      {
         "command": "appmap.context.inspectCodeObject",
         "title": "AppMap View: Inspect Code Object"
       },
@@ -340,10 +336,6 @@
           "when": "false"
         },
         {
-          "command": "appmap.context.sequenceDiagram",
-          "when": "false"
-        },
-        {
           "command": "appmap.context.compareSequenceDiagrams",
           "when": "false"
         },
@@ -395,10 +387,6 @@
         },
         {
           "command": "appmap.context.saveToCollection",
-          "when": "view == appmap.views.appmaps && viewItem == appmap.views.appmaps.appMap"
-        },
-        {
-          "command": "appmap.context.sequenceDiagram",
           "when": "view == appmap.views.appmaps && viewItem == appmap.views.appmaps.appMap"
         },
         {
