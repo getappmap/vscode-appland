@@ -304,7 +304,7 @@
         {
           "id": "appmap.views.findings",
           "name": "Runtime Analysis",
-          "visibility": "collapsed",
+          "visibility": "visible",
           "when": "!appMap.showSignIn"
         },
         {
