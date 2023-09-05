@@ -18,6 +18,10 @@ export { repeatUntil, wait, waitFor };
 export const FixtureDir = join(__dirname, '../../../test/fixtures');
 export const ProjectRuby = join(__dirname, '../../../test/fixtures/workspaces/project-ruby');
 export const ProjectA = join(__dirname, '../../../test/fixtures/workspaces/project-a');
+export const ProjectDiagramDiff = join(
+  __dirname,
+  '../../../test/fixtures/workspaces/project-diagram-diff'
+);
 export const ProjectUptodate = join(
   __dirname,
   '../../../test/fixtures/workspaces/project-uptodate'

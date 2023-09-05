@@ -28,14 +28,13 @@
       "type": "extensionHost",
       "request": "launch",
       "env": {
-        "TEST_FILE": "analysisTree/recentFinding.test.js",
-        "PROJECT_DIR": "${workspaceFolder}/test/fixtures/workspaces/project-several-findings"
+        "TEST_FILE": "editor/openSequenceDiagramDiff.test.js"
       },
       "args": [
         "--user-data-dir=${workspaceFolder}/.vscode-test/user-data",
         "--extensionDevelopmentPath=${workspaceFolder}",
         "--extensionTestsPath=${workspaceFolder}/out/test/integration/index",
-        "${workspaceFolder}/test/fixtures/workspaces/project-several-findings"
+        "${workspaceFolder}/test/fixtures/workspaces/project-diagram-diff"
       ]
     }
   ]

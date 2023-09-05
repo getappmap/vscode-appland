@@ -6,20 +6,23 @@ type MapStats = {
 };
 
 export default class AppMapDocument implements vscode.CustomDocument {
-  public data: Record<string, unknown>;
+  public appMap: Record<string, unknown>;
+  public sequenceDiagram?: Record<string, unknown>;
   public metadata: Record<string, unknown> = {};
 
   constructor(
     public uri: vscode.Uri,
-    public raw: string,
-    stats: MapStats,
-    public findings?: FindingInfo[]
+    public appMapData: string,
+    public stats: MapStats,
+    public findings?: FindingInfo[],
+    public sequenceDiagramData?: string
   ) {
-    const appMap = JSON.parse(raw);
+    const appMap = JSON.parse(appMapData);
     if (findings && findings.length !== 0) appMap.findings = findings;
     appMap.stats = stats || {};
-    this.data = appMap;
-    if ('metadata' in this.data) this.metadata = this.data.metadata as Record<string, unknown>;
+    this.appMap = appMap;
+    if ('metadata' in this.appMap) this.metadata = this.appMap.metadata as Record<string, unknown>;
+    if (sequenceDiagramData) this.sequenceDiagram = JSON.parse(sequenceDiagramData);
   }
 
   get workspaceFolder(): vscode.WorkspaceFolder | undefined {
