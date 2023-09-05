@@ -34,10 +34,19 @@ describe('Findings', () => {
       diagnostics[0][0].toString(),
       `file://${workspaceFolder.uri.fsPath}/app/controllers/microposts_controller.rb`
     );
-    assert(diagnostics[0][1][0]);
+    const diagnostic = diagnostics[0][1][0];
+    assert(diagnostic);
+
     assert.strictEqual(
-      diagnostics[0][1][0].message,
+      diagnostic.message,
       `Unbatched materialized SQL query: SELECT "microposts".* FROM "microposts" WHERE "microposts"."user_id" = ? ORDER BY "microposts"."created_at" DESC, app/controllers/microposts_controller.rb:5`
+    );
+
+    const { relatedInformation } = diagnostic;
+    assert(relatedInformation);
+    assert.deepStrictEqual(
+      relatedInformation[0].location.uri.fragment,
+      '{"selectedObject":"analysis-finding:a3c2342df8feae6698da11cba070d8de9a97ef9450636e2d5824120867a2c0b0"}'
     );
   });
 });
