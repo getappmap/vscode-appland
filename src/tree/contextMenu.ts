@@ -63,14 +63,6 @@ export default class ContextMenu {
       )
     );
     context.subscriptions.push(
-      vscode.commands.registerCommand(
-        'appmap.context.sequenceDiagram',
-        async (item: AppMapLoader) => {
-          vscode.commands.executeCommand('appmap.sequenceDiagram', item.descriptor.resourceUri);
-        }
-      )
-    );
-    context.subscriptions.push(
       vscode.commands.registerCommand('appmap.context.deleteAppMap', async (item: AppMapLoader) => {
         await deleteAppMap(item.descriptor.resourceUri, appmaps);
       })
