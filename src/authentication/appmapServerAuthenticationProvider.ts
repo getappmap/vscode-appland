@@ -14,12 +14,19 @@ const debug = debuglog('appmap-vscode:AppMapServerAuthenticationProvider');
 
 const APPMAP_SERVER_SESSION_KEY = 'appmap.server.session';
 
+enum AuthFailure {
+  NotAuthorized = 'NotAuthorized',
+  UserCanceled = 'UserCanceled',
+  SignInAttempt = 'SignInAttempt',
+}
+
 export default class AppMapServerAuthenticationProvider implements vscode.AuthenticationProvider {
   private _onDidChangeSessions =
     new vscode.EventEmitter<vscode.AuthenticationProviderAuthenticationSessionsChangeEvent>();
   readonly onDidChangeSessions = this._onDidChangeSessions.event;
 
   private session?: vscode.AuthenticationSession;
+  public customCancellationToken = new vscode.CancellationTokenSource();
 
   static enroll(
     context: vscode.ExtensionContext,
@@ -105,7 +112,7 @@ export default class AppMapServerAuthenticationProvider implements vscode.Authen
         redirect_url: redirectUri.toString(),
       });
       vscode.env.openExternal(authnUrl);
-      const session = await vscode.window.withProgress<vscode.AuthenticationSession | undefined>(
+      const session = await vscode.window.withProgress<vscode.AuthenticationSession | AuthFailure>(
         {
           cancellable: true,
           location: vscode.ProgressLocation.Notification,
@@ -113,8 +120,11 @@ export default class AppMapServerAuthenticationProvider implements vscode.Authen
         },
         async (_progress, token) => {
           return new Promise((resolve) => {
+            this.customCancellationToken = new vscode.CancellationTokenSource();
+
             const dispose = (disposables: vscode.Disposable[]) =>
               disposables.forEach((d) => d.dispose());
+
             const disposables = [
               authnHandler.onCreateSession((session) => {
                 dispose(disposables);
@@ -128,19 +138,28 @@ export default class AppMapServerAuthenticationProvider implements vscode.Authen
                 console.warn('Failed to authenticate');
                 console.warn(exception);
                 dispose(disposables);
-                resolve(undefined);
+                resolve(AuthFailure.NotAuthorized);
               }),
             ];
-            token.onCancellationRequested(async () => {
+
+            token.onCancellationRequested(() => {
               dispose(disposables);
-              resolve(undefined);
+              resolve(AuthFailure.UserCanceled);
+            });
+
+            this.customCancellationToken.token.onCancellationRequested(() => {
+              dispose(disposables);
+              resolve(AuthFailure.SignInAttempt);
             });
           });
         }
       );
 
-      if (session) return session;
-      if (index === authnStrategies.length - 1) return undefined;
+      if (!Object.values(AuthFailure).includes(session as AuthFailure))
+        return session as vscode.AuthenticationSession;
+
+      if (index === authnStrategies.length - 1 || session === AuthFailure.SignInAttempt)
+        return undefined;
 
       const tryNewStrategy = await vscode.window.showWarningMessage(
         'Having trouble logging in? Would you like to try a different method?',

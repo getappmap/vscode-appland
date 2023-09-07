@@ -187,7 +187,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     openCodeObjectInAppMap(context, appmapCollectionFile, classMapIndex);
 
     await SignInManager.register(extensionState);
-    const signInWebview = new SignInViewProvider(context);
+    const signInWebview = new SignInViewProvider(context, appmapServerAuthenticationProvider);
     context.subscriptions.push(
       vscode.window.registerWebviewViewProvider(SignInViewProvider.viewType, signInWebview)
     );
