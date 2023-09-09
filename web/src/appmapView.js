@@ -92,6 +92,13 @@ export default function mountApp() {
       });
     });
 
+    app.$on('clickCompareButton', () => {
+      vscode.postMessage({
+        command: 'compare',
+        filterState: app.getState(),
+      });
+    });
+
     app.$on('clickTab', (tabId) => {
       vscode.postMessage({
         command: 'performAction',
@@ -133,13 +140,6 @@ export default function mountApp() {
         viewState: app.getState(),
       });
       vscode.postMessage({ command: 'performAction', action: 'upload_appmap' });
-    });
-
-    app.$on('copyToClipboard', (stringToCopy) => {
-      vscode.postMessage({
-        command: 'copyToClipboard',
-        stringToCopy,
-      });
     });
 
     app.$on('stateChanged', (stateKey) => {

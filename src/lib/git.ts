@@ -3,7 +3,7 @@ import { isNativeError } from 'node:util/types';
 import * as vscode from 'vscode';
 import { API as GitAPI, GitExtension } from '../../types/vscode.git';
 
-function getExtension(): GitAPI | undefined {
+export function gitExtension(): GitAPI | undefined {
   const extension = vscode.extensions.getExtension<GitExtension>('vscode.git');
   if (!extension?.isActive) return;
   if (!extension.exports.enabled) return;
@@ -38,7 +38,7 @@ function parseGitUri(uri: string): vscode.Uri {
 }
 
 function findAndSanitizeRepository(projectUri: vscode.Uri): SanitizedUri | undefined {
-  const repo = getExtension()?.getRepository(projectUri);
+  const repo = gitExtension()?.getRepository(projectUri);
   if (!repo) return;
   const remotes = repo.state.remotes;
   if (remotes.length === 0) return;

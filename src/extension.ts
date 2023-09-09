@@ -59,6 +59,8 @@ import IndexJanitor from './lib/indexJanitor';
 import { unregister as unregisterTerminal } from './commands/installer/terminals';
 import getAppmapDir from './commands/getAppmapDir';
 import JavaAssets from './services/javaAssets';
+import synchronizeAppMapsWithGitHubWorkflow from './commands/synchronizeAppMapsWithGitHubWorkflow';
+import compareAppMaps from './editor/compareAppMaps';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   Telemetry.register(context);
@@ -235,6 +237,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     RemoteRecording.register(context, workspaceServices);
     ContextMenu.register(context, appmapCollectionFile);
 
+    synchronizeAppMapsWithGitHubWorkflow(context);
+    compareAppMaps(context, appmapCollectionFile);
     generateOpenApi(context);
     findByName(context, appmapCollectionFile);
     resetUsageState(context, extensionState);

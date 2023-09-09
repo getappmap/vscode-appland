@@ -382,6 +382,9 @@ export default class AppMapEditorProvider
         case 'viewSource':
           viewSource(message.text);
           break;
+        case 'compare':
+          compare(message.filterState);
+          break;
         case 'ready':
           updateWebview(initialState);
           break;
@@ -514,6 +517,10 @@ export default class AppMapEditorProvider
 
       const fileUri = await bestFilePath(path, document.workspaceFolder);
       if (fileUri) openFile(fileUri, lineNumber);
+    }
+
+    async function compare(filterState: string): Promise<void> {
+      vscode.commands.executeCommand('appmap.compareAppMaps', document.uri, filterState);
     }
   }
 
