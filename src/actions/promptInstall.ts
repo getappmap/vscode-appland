@@ -30,7 +30,7 @@ export default async function promptInstall(
 
   const projectInstances = services.getServiceInstances(projectService);
   const silencePrompt =
-    projectInstances.find(({ folder }) => extensionState.getHideInstallPrompt(folder)) !==
+    projectInstances.find(({ folder: folder }) => extensionState.getHideInstallPrompt(folder)) !==
     undefined;
   if (silencePrompt) return;
 
@@ -62,6 +62,8 @@ export default async function promptInstall(
     */
     await vscode.commands.executeCommand('appmap.openInstallGuide', 'project-picker');
   } else if (response?.title === ButtonText.DontShowAgain) {
-    projectInstances.forEach(({ folder }) => extensionState.setHideInstallPrompt(folder, true));
+    projectInstances.forEach(({ folder: folder }) =>
+      extensionState.setHideInstallPrompt(folder, true)
+    );
   }
 }

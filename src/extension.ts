@@ -61,6 +61,8 @@ import getAppmapDir from './commands/getAppmapDir';
 import JavaAssets from './services/javaAssets';
 import synchronizeAppMapsWithGitHubWorkflow from './commands/synchronizeAppMapsWithGitHubWorkflow';
 import compareAppMaps from './editor/compareAppMaps';
+import fetchCompareReport from './commands/fetchCompareReport';
+import awaitCompareReport from './services/awaitCompareReport';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   Telemetry.register(context);
@@ -237,6 +239,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     RemoteRecording.register(context, workspaceServices);
     ContextMenu.register(context, appmapCollectionFile);
 
+    await workspaceServices.enroll(awaitCompareReport(context));
+    fetchCompareReport(context);
     synchronizeAppMapsWithGitHubWorkflow(context);
     compareAppMaps(context, appmapCollectionFile);
     generateOpenApi(context);

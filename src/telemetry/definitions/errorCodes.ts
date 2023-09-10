@@ -7,6 +7,7 @@ enum ErrorCode {
   AuthenticationFailure,
   InitializationFailure,
   GenerateOpenApiFailure,
+  CommandFailure,
   RestoreFailure,
   SequenceDiagramFailure,
   SidebarSignInFailure,

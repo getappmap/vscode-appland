@@ -132,6 +132,10 @@
         "title": "AppMap: Synchronize AppMaps with GitHub Workflow"
       },
       {
+        "command": "appmap.fetchCompareReport",
+        "title": "AppMap: Fetch PR Comparison Report"
+      },
+      {
         "command": "appmap.openCodeObjectInAppMap",
         "title": "AppMap: Open Code Object in AppMap"
       },

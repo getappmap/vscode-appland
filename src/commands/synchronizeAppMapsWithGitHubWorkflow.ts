@@ -2,20 +2,10 @@ import * as vscode from 'vscode';
 import chooseWorkspace from '../lib/chooseWorkspace';
 import { findRepository, gitExtension } from '../lib/git';
 import githubApi from '../lib/githubApi';
-import {
-  ProgramName,
-  getModulePath,
-  spawn,
-  verifyCommandOutput,
-} from '../services/nodeDependencyProcess';
-import { workspaceServices } from '../services/workspaceServices';
-import { AppmapConfigManager } from '../services/appmapConfigManager';
 import assert from 'assert';
-import { DEBUG_EXCEPTION, Telemetry } from '../telemetry';
-import ErrorCode from '../telemetry/definitions/errorCodes';
 import { existsSync } from 'fs';
 import { rm } from 'fs/promises';
-import { log } from 'console';
+import executeAppMapCommand from '../lib/executeAppMapCommand';
 
 export default function synchronizeAppMapsWithGitHubWorkflow(context: vscode.ExtensionContext) {
   const command = vscode.commands.registerCommand('appmap.synchronize.github', async () => {
@@ -62,11 +52,6 @@ export default function synchronizeAppMapsWithGitHubWorkflow(context: vscode.Ext
     let repo = repoTokens[repoTokens.length - 1];
     if (repo.includes('.')) repo = repo.split('.')[0];
 
-    const modulePath = await getModulePath({
-      dependency: ProgramName.Appmap,
-      globalStoragePath: context.globalStorageUri.fsPath,
-    });
-
     if (existsSync(`${workspaceFolder.uri.fsPath}/.appmap/work/${commit}`)) {
       vscode.window.withProgress({ location: vscode.ProgressLocation.Window }, async (progress) => {
         progress.report({ message: `Removing existing AppMaps for ${commit}...` });
@@ -77,30 +62,13 @@ export default function synchronizeAppMapsWithGitHubWorkflow(context: vscode.Ext
       });
     }
 
-    const cmdArgs = {
-      modulePath,
-      args: ['restore', '--github-repo', `${owner}/${repo}`, '--revision', commit],
-      cwd: workspaceFolder.uri.fsPath,
-      saveOutput: true,
-      env: { GITHUB_TOKEN: githubToken },
-    };
-    log(JSON.stringify(cmdArgs, null, 2));
-    const restoreCommand = spawn(cmdArgs);
-    restoreCommand.addListener('data', process.stderr.write.bind(process.stderr));
-
-    try {
-      await verifyCommandOutput(restoreCommand);
-    } catch (e) {
-      Telemetry.sendEvent(DEBUG_EXCEPTION, {
-        exception: e as Error,
-        errorCode: ErrorCode.RestoreFailure,
-        log: restoreCommand.log.toString(),
-      });
-      vscode.window.showWarningMessage(
-        'Unable to restore AppMaps from GitHub. Please verify that build artifacts are available for this repo, branch and commit.'
-      );
-      return;
-    }
+    await executeAppMapCommand(
+      context,
+      workspaceFolder,
+      ['restore', '--github-repo', `${owner}/${repo}`, '--revision', commit],
+      'Unable to restore AppMaps from GitHub. Please verify that build artifacts are available for this repo, branch and commit.',
+      { env: { GITHUB_TOKEN: githubToken } }
+    );
   });
   context.subscriptions.push(command);
 }

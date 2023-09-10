@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 
+import nodeFetch from 'node-fetch';
 import { Octokit } from '@octokit/rest';
 
 export type GitHubConnection = {
@@ -18,5 +19,8 @@ export default async function githubApi(
     await context.secrets.store('github.token', githubToken);
   }
 
-  return { octokit: new Octokit({ auth: githubToken }), token: githubToken };
+  return {
+    octokit: new Octokit({ auth: githubToken, request: { fetch: nodeFetch } }),
+    token: githubToken,
+  };
 }

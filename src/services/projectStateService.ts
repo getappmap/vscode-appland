@@ -62,17 +62,17 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
     this.disposables.push(
       this._onStateChange,
       this.appMapCollection.onUpdated((workspaceFolder) => {
-        if (workspaceFolder === folder) {
+        if (workspaceFolder === workspaceFolder) {
           this.onUpdateAppMaps();
         }
       }),
       configWatcher.onCreate(({ workspaceFolder }) => {
-        if (workspaceFolder === folder) {
+        if (workspaceFolder === workspaceFolder) {
           this.onConfigurationCreated();
         }
       }),
       configWatcher.onDelete(async ({ workspaceFolder }) => {
-        if (workspaceFolder === folder) {
+        if (workspaceFolder === workspaceFolder) {
           await this.syncConfigurationState();
         }
       }),
