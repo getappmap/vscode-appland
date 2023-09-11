@@ -106,9 +106,9 @@ $ yarn run test:system
 $ yarn run test:integration
 ```
 
-Note the integration tests (so, `test:system` and `test:integration`) require the extension to be
-compiled first. You can do that with `yarn run compile` or by keeping `yarn run watch` running in
-the background.
+Note the integration tests (so, `test:system` and `test:integration`) require that `yarn run pretest`
+be executed first. Then, compile the extension with `yarn run compile` or by keeping `yarn run watch`
+running in the background.
 
 ## Terms and conditions
 
