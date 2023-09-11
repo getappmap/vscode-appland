@@ -18,8 +18,13 @@ const promptResponses: ReadonlyArray<vscode.MessageItem> = [
 const meetsPromptCriteria = (project: ProjectStateServiceInstance): boolean =>
   project.installable &&
   !project.metadata.agentInstalled &&
-  project.metadata.language?.name === 'Ruby' &&
-  project.metadata.webFramework?.name === 'Rails';
+  ((project.metadata.language?.name === 'Ruby' &&
+    project.metadata.webFramework?.name === 'Rails') ||
+    (project.metadata.language?.name === 'Java' &&
+      project.metadata.webFramework?.name === 'Spring') ||
+    (project.metadata.language?.name === 'Python' &&
+      (project.metadata.webFramework?.name === 'flask' ||
+        project.metadata.webFramework?.name === 'Django')));
 
 export default async function promptInstall(
   services: WorkspaceServices,
