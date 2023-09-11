@@ -10,7 +10,6 @@ import registerCompareSequenceDiagrams from './commands/compareSequenceDiagram';
 import openCodeObjectInAppMap from './commands/openCodeObjectInAppMap';
 import outOfDateTests from './commands/outOfDateTests';
 import ExtensionState from './configuration/extensionState';
-import registerDecorationProvider from './decorations/decorationProvider';
 import AppMapEditorProvider from './editor/appmapEditorProvider';
 import appmapHoverProvider from './hover/appmapHoverProvider';
 import ProcessServiceImpl from './processServiceImpl';
@@ -120,7 +119,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     const appmapUptodateService = new AppmapUptodateService(context);
     const sourceFileWatcher = new SourceFileWatcher(classMapIndex);
 
-    registerDecorationProvider(context, lineInfoIndex);
     await outOfDateTests(context, appmapUptodateService);
     await openCodeObjectInSource(context);
     await learnMoreRuntimeAnalysis(context);
