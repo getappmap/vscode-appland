@@ -1,7 +1,12 @@
 import assert from 'assert';
 import * as vscode from 'vscode';
 import ClassMapIndex from '../services/classMapIndex';
-import { CodeObjectEntry, InspectableTypes } from '../lib/CodeObjectEntry';
+import {
+  CodeObjectEntry,
+  CodeObjectEntryChildType,
+  CodeObjectEntryRootType,
+  InspectableTypes,
+} from '../lib/CodeObjectEntry';
 
 export interface CodeObjectTreeItem extends vscode.TreeItem {
   codeObjectFqid: string;
@@ -94,7 +99,11 @@ export class ClassMapTreeDataProvider implements vscode.TreeDataProvider<vscode.
           : vscode.TreeItemCollapsibleState.None,
     } as CodeObjectTreeItem;
 
-    if (InspectableTypes.includes(codeObject.type) && codeObject.children.length === 0) {
+    if (
+      codeObject.type === CodeObjectEntryChildType.CLASS ||
+      codeObject.type === CodeObjectEntryRootType.PACKAGE ||
+      (InspectableTypes.includes(codeObject.type) && codeObject.children.length === 0)
+    ) {
       treeItem.command = {
         command: 'appmap.openCodeObjectInAppMap',
         title: `Open in AppMap`,
