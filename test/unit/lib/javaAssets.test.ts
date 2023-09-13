@@ -76,4 +76,21 @@ describe('JavaAssets', () => {
       });
     });
   });
+
+  describe('asset file watch', () => {
+    it('triggering file check event updates status', async () => {
+      const assetsExistStub = sandbox.stub(JavaAssets, 'assetsExist');
+
+      JavaAssets.status = AssetStatus.UpToDate;
+      assetsExistStub.resolves(false);
+      await JavaAssets.onAssetFileCheckTick();
+      expect(JavaAssets.status).eq(AssetStatus.Error);
+
+      assetsExistStub.resolves(true);
+      await JavaAssets.onAssetFileCheckTick();
+      expect(JavaAssets.status).eq(AssetStatus.UpToDate);
+
+      assetsExistStub.restore();
+    });
+  });
 });

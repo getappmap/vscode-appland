@@ -7,6 +7,7 @@ import JavaAssetDownloader, { ProgressReporter } from '../lib/javaAssetDownloade
 import LockfileSynchronizer from '../lib/lockfileSynchronizer';
 import { fileExists } from '../util';
 import { promises as fs } from 'fs';
+import { clearInterval } from 'timers';
 
 export enum AssetStatus {
   Pending,
@@ -85,6 +86,7 @@ export default class JavaAssets {
   private static _status = AssetStatus.Pending;
   private static _onStatusChanged = new vscode.EventEmitter<AssetStatus>();
   private static outputChannel = vscode.window.createOutputChannel('AppMap: Assets');
+  private static intervalHandle?: NodeJS.Timer;
   public static onStatusChanged: vscode.Event<AssetStatus> = this._onStatusChanged.event;
 
   static get status() {
@@ -135,11 +137,35 @@ export default class JavaAssets {
     });
   }
 
-  static showOutput() {
+  static async onAssetFileCheckTick() {
+    if (JavaAssets.status === AssetStatus.Pending || JavaAssets.status === AssetStatus.Updating)
+      return;
+
+    const startingStatus = JavaAssets.status;
+    const exists = await JavaAssets.assetsExist();
+    JavaAssets.status = exists ? AssetStatus.UpToDate : AssetStatus.Error;
+
+    if (startingStatus === AssetStatus.UpToDate && !exists) {
+      JavaAssets.outputChannel.appendLine('The AppMap agent for Java has been moved or deleted.');
+    } else if (startingStatus === AssetStatus.Error && exists) {
+      JavaAssets.outputChannel.appendLine('The AppMap agent for Java has been restored.');
+    }
+  }
+
+  static startAssetFilePeriodicCheck(): void {
+    if (JavaAssets.intervalHandle) return;
+    JavaAssets.intervalHandle = setInterval(JavaAssets.onAssetFileCheckTick, 2000);
+  }
+
+  static showOutput(): void {
     this.outputChannel.show();
   }
 
   static dispose() {
     this._onStatusChanged.dispose();
+    if (JavaAssets.intervalHandle) {
+      clearInterval(JavaAssets.intervalHandle);
+      JavaAssets.intervalHandle = undefined;
+    }
   }
 }
