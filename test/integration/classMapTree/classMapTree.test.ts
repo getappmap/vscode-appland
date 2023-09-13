@@ -11,6 +11,7 @@ import {
   waitFor,
   ProjectBase,
   withAuthenticatedUser,
+  CompactTreeItem,
 } from '../util';
 import { ClassMapTreeDataProvider } from '../../../src/tree/classMapTreeDataProvider';
 
@@ -81,6 +82,28 @@ describe('class map tree items', () => {
 
       assert.deepStrictEqual(JSON.stringify(actual), JSON.stringify(expectedQueryTreeItems));
       // Previous line will throw, which is considered 'false' by waitFor
+      return true;
+    });
+  });
+
+  it('Code leaf item has open AppMap command type', async () => {
+    let actualTreeItems: CompactTreeItem[] = [];
+    let actual: CompactTreeItem | undefined;
+
+    await waitFor('Expecting tree items to match expectation', async () => {
+      actualTreeItems = await enumerateTree(codeObjectsTree, undefined, true);
+      actual = actualTreeItems.find((rootTreeItem) => rootTreeItem.label === 'Code');
+
+      // currentNode will be the first leaf node of the Code subtree
+      let currentChildren = actual?.children;
+      let currentNode: CompactTreeItem | undefined;
+      while (currentChildren && currentChildren?.length > 0) {
+        currentNode = currentChildren[0];
+        currentChildren = currentNode.children;
+      }
+
+      assert.equal(currentNode?.command?.command, 'appmap.openCodeObjectInAppMap');
+
       return true;
     });
   });
