@@ -11,7 +11,6 @@ import {
   waitFor,
   ProjectBase,
   withAuthenticatedUser,
-  CompactTreeItem,
 } from '../util';
 import { ClassMapTreeDataProvider } from '../../../src/tree/classMapTreeDataProvider';
 
@@ -86,23 +85,26 @@ describe('class map tree items', () => {
     });
   });
 
-  it('Code leaf item has open AppMap command type', async () => {
-    let actualTreeItems: CompactTreeItem[] = [];
-    let actual: CompactTreeItem | undefined;
-
+  it('Code tree nodes have open AppMap command type', async () => {
     await waitFor('Expecting tree items to match expectation', async () => {
-      actualTreeItems = await enumerateTree(codeObjectsTree, undefined, true);
-      actual = actualTreeItems.find((rootTreeItem) => rootTreeItem.label === 'Code');
+      const actualTreeItems = await enumerateTree(codeObjectsTree, undefined, true);
+      const actual = actualTreeItems.find((rootTreeItem) => rootTreeItem.label === 'Code');
 
-      // currentNode will be the first leaf node of the Code subtree
-      let currentChildren = actual?.children;
-      let currentNode: CompactTreeItem | undefined;
-      while (currentChildren && currentChildren?.length > 0) {
-        currentNode = currentChildren[0];
-        currentChildren = currentNode.children;
-      }
-
-      assert.equal(currentNode?.command?.command, 'appmap.openCodeObjectInAppMap');
+      // All should have openCodeObjectInAppMap commands
+      // actionpack->ActionController->Instrumentation->process_action
+      assert.equal(actual?.children[0].command?.command, 'appmap.openCodeObjectInAppMap');
+      assert.equal(
+        actual?.children[0].children[0].command?.command,
+        'appmap.openCodeObjectInAppMap'
+      );
+      assert.equal(
+        actual?.children[0].children[0].children[0].command?.command,
+        'appmap.openCodeObjectInAppMap'
+      );
+      assert.equal(
+        actual?.children[0].children[0].children[0].children[0].command?.command,
+        'appmap.openCodeObjectInAppMap'
+      );
 
       return true;
     });
