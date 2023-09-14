@@ -119,7 +119,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/components@npm:^2, @appland/components@npm:^2.61.0":
+"@appland/components@npm:^2":
   version: 2.61.0
   resolution: "@appland/components@npm:2.61.0"
   dependencies:
@@ -136,6 +136,26 @@ __metadata:
     vue: ^2.7.14
     vuex: ^3.6.0
   checksum: d7b1981aad88d982c0b4e7d0566729ec512ad1c353fc0e8b68581ed49870a1842dfac5d39cd4e452d567df02a036bb4fd7849b034331c1961340ee8ee2aec708
+  languageName: node
+  linkType: hard
+
+"@appland/components@npm:^2.62.0":
+  version: 2.62.0
+  resolution: "@appland/components@npm:2.62.0"
+  dependencies:
+    "@appland/diagrams": ^1.7.0
+    "@appland/models": ^2.6.3
+    "@appland/sequence-diagram": ^1.6.1
+    buffer: ^6.0.3
+    d3: ^7.8.4
+    d3-flame-graph: ^4.1.3
+    diff: ^5.1.0
+    dom-to-svg: ^0.12.2
+    highlight.js: ^10.7.2
+    sql-formatter: ^4.0.2
+    vue: ^2.7.14
+    vuex: ^3.6.0
+  checksum: 0d0ecb4c58b7471eecb2de6ada6059cfed68308bc1b1d9a227ab015354389d14968069855e622ca598734d6e14cebb0c3281e4d8d41946b46c045c04dde0536d
   languageName: node
   linkType: hard
 
@@ -2717,7 +2737,7 @@ __metadata:
   dependencies:
     "@appland/appmap": ^3.80.2
     "@appland/client": ^1.7.0
-    "@appland/components": ^2.61.0
+    "@appland/components": ^2.62.0
     "@appland/diagrams": ^1.7.0
     "@appland/models": ^2.6.3
     "@appland/scanner": ^1.79.0
