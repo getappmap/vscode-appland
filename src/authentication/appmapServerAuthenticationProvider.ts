@@ -35,7 +35,7 @@ export default class AppMapServerAuthenticationProvider implements vscode.Authen
     const provider = new AppMapServerAuthenticationProvider(context, uriHandler);
     const registration = vscode.authentication.registerAuthenticationProvider(
       AUTHN_PROVIDER_NAME,
-      'AppMap Server',
+      'AppMap',
       provider,
       { supportsMultipleAccounts: false }
     );
@@ -71,7 +71,7 @@ export default class AppMapServerAuthenticationProvider implements vscode.Authen
     this.session = await this.performSignIn();
     debug('createSession(); session %savailable', this.session ? '' : 'not ');
 
-    if (!this.session) throw new Error('AppMap Server authentication was not completed');
+    if (!this.session) throw new Error('AppMap authentication was not completed');
 
     this.context.secrets
       .store(APPMAP_SERVER_SESSION_KEY, JSON.stringify(this.session))
