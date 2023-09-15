@@ -90,21 +90,15 @@ describe('class map tree items', () => {
       const actualTreeItems = await enumerateTree(codeObjectsTree, undefined, true);
       const actual = actualTreeItems.find((rootTreeItem) => rootTreeItem.label === 'Code');
 
-      // All should have openCodeObjectInAppMap commands
+      assert.equal(actual?.children.length, 8);
+      // All 4 tree items in the first depth first path should have
+      // openCodeObjectInAppMap commands.
       // actionpack->ActionController->Instrumentation->process_action
-      assert.equal(actual?.children[0].command?.command, 'appmap.openCodeObjectInAppMap');
-      assert.equal(
-        actual?.children[0].children[0].command?.command,
-        'appmap.openCodeObjectInAppMap'
-      );
-      assert.equal(
-        actual?.children[0].children[0].children[0].command?.command,
-        'appmap.openCodeObjectInAppMap'
-      );
-      assert.equal(
-        actual?.children[0].children[0].children[0].children[0].command?.command,
-        'appmap.openCodeObjectInAppMap'
-      );
+      let currentItem = actual?.children[0];
+      while (currentItem) {
+        assert.equal(currentItem.command?.command, 'appmap.openCodeObjectInAppMap');
+        currentItem = currentItem.children.length > 0 ? currentItem.children[0] : undefined;
+      }
 
       return true;
     });
