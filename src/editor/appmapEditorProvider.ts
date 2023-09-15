@@ -4,7 +4,6 @@ import { Telemetry, DEBUG_EXCEPTION } from '../telemetry';
 import { version } from '../../package.json';
 import ExtensionState from '../configuration/extensionState';
 import extensionSettings from '../configuration/extensionSettings';
-import { AppmapUploader } from '../actions/appmapUploader';
 import { bestFilePath } from '../lib/bestFilePath';
 import AppMapDocument from './AppMapDocument';
 import AnalysisManager from '../services/analysisManager';
@@ -388,7 +387,7 @@ export default class AppMapEditorProvider
         case 'appmap-ready':
           webviewPanel.webview.postMessage({
             type: 'init-appmap',
-            shareEnabled: extensionSettings.shareEnabled,
+            shareEnabled: false,
             defaultView: extensionSettings.defaultDiagramView || 'viewSequence',
             savedFilters: this.context.workspaceState.get(AppMapEditorProvider.SAVED_FILTERS) || [],
           });
@@ -413,20 +412,6 @@ export default class AppMapEditorProvider
           break;
         case 'appmapOpenUrl':
           vscode.env.openExternal(message.url);
-          break;
-        case 'uploadAppmap':
-          {
-            const { viewState } = message;
-            const uploadResult = await AppmapUploader.upload(
-              Buffer.from(document.appMapData),
-              this.context,
-              viewState
-            );
-            webviewPanel.webview.postMessage({
-              type: 'setShareURL',
-              url: uploadResult,
-            });
-          }
           break;
         case 'copyToClipboard':
           vscode.env.clipboard.writeText(message.stringToCopy);

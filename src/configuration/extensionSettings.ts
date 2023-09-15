@@ -14,12 +14,6 @@ export default class ExtensionSettings {
     );
   }
 
-  public static get shareEnabled(): boolean {
-    return [true, 'true'].includes(
-      vscode.workspace.getConfiguration('appMap').get('shareEnabled') || false
-    );
-  }
-
   public static get viewConfiguration(): string | undefined {
     return vscode.workspace.getConfiguration('appMap').get('viewConfiguration');
   }
