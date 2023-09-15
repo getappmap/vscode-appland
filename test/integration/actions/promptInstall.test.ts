@@ -103,6 +103,17 @@ describe('promptInstall', () => {
     });
   });
 
+  context('when in an installable JavaScript project', () => {
+    const workspaceServices = stubWorkspaceServices(true, 'JavaScript', 'express.js');
+    const extensionState = unsafeCast<ExtensionState>({ getHideInstallPrompt: () => false });
+
+    it('does not prompt', async () => {
+      const showInformationMessage = sinon.stub(vscode.window, 'showInformationMessage');
+      await promptInstall(workspaceServices, extensionState);
+      assert(!showInformationMessage.called);
+    });
+  });
+
   const languageFrameworksToPrompt = [
     { language: 'Ruby', framework: 'Rails' },
     { language: 'Java', framework: 'Spring' },
