@@ -103,14 +103,34 @@ describe('promptInstall', () => {
     });
   });
 
-  context('when in an installable java project', () => {
-    const workspaceServices = stubWorkspaceServices(true, 'Java', 'Spring');
+  context('when in an installable JavaScript project', () => {
+    const workspaceServices = stubWorkspaceServices(true, 'JavaScript', 'express.js');
     const extensionState = unsafeCast<ExtensionState>({ getHideInstallPrompt: () => false });
 
     it('does not prompt', async () => {
       const showInformationMessage = sinon.stub(vscode.window, 'showInformationMessage');
       await promptInstall(workspaceServices, extensionState);
       assert(!showInformationMessage.called);
+    });
+  });
+
+  const languageFrameworksToPrompt = [
+    { language: 'Ruby', framework: 'Rails' },
+    { language: 'Java', framework: 'Spring' },
+    { language: 'Python', framework: 'flask' },
+    { language: 'Python', framework: 'Django' },
+  ];
+
+  languageFrameworksToPrompt.forEach(function (run) {
+    context('when in an installable ' + run.language + ' ' + run.framework + ' project', () => {
+      const workspaceServices = stubWorkspaceServices(true, run.language, run.framework);
+      const extensionState = unsafeCast<ExtensionState>({ getHideInstallPrompt: () => false });
+
+      it('prompts the user to install AppMap', async () => {
+        const showInformationMessage = sinon.stub(vscode.window, 'showInformationMessage');
+        await promptInstall(workspaceServices, extensionState);
+        assert(showInformationMessage.called);
+      });
     });
   });
 });
