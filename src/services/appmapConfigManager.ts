@@ -79,7 +79,9 @@ export class AppmapConfigManagerInstance implements WorkspaceServiceInstance {
           return await this.appMapConfigFromFile(configFile.fsPath);
         })
       )
-    ).filter(Boolean) as Array<AppmapConfig>;
+    )
+      .filter(Boolean)
+      .filter((p) => !p?.configFolder.split('/').includes('node_modules')) as Array<AppmapConfig>;
 
     if (this._hasConfigFile && appmapConfigs.length === 0) {
       appmapConfigs = [

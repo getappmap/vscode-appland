@@ -48,7 +48,7 @@ import { AppMapRecommenderService } from './services/appmapRecommenderService';
 import openCodeObjectInSource from './commands/openCodeObjectInSource';
 import learnMoreRuntimeAnalysis from './commands/learnMoreRuntimeAnalysis';
 import SignInViewProvider from './webviews/signInWebview';
-import SignInManager from './services/signInManager';
+import SignInManager, { CONTEXT_KEY_SHOW_SIGN_IN } from './services/signInManager';
 import tryOpenInstallGuide from './commands/tryOpenInstallGuide';
 import { AppmapConfigManager } from './services/appmapConfigManager';
 import { findByName } from './commands/findByName';
@@ -125,7 +125,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     await openCodeObjectInSource(context);
     await learnMoreRuntimeAnalysis(context);
     appmapHoverProvider(context, lineInfoIndex);
-    tryOpenInstallGuide(extensionState);
+    // tryOpenInstallGuide(extensionState);
 
     await workspaceServices.enroll(sourceFileWatcher);
     await workspaceServices.enroll(classMapWatcher);
@@ -164,8 +164,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       uriHandler
     );
     appmapServerAuthenticationProvider.onDidChangeSessions((e) => {
-      if (e.added) vscode.window.showInformationMessage('Logged in to AppMap Server');
-      if (e.removed) vscode.window.showInformationMessage('Logged out of AppMap Server');
+      if (e.added) vscode.window.showInformationMessage('Logged in to AppMap');
+      if (e.removed) vscode.window.showInformationMessage('Logged out of AppMap');
       AppMapServerConfiguration.updateAppMapClientConfiguration();
     });
     vscode.commands.registerCommand('appmap.login', async () => {
@@ -202,7 +202,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     context.subscriptions.push(badge);
 
     InstallGuideWebView.register(context, projectStates, extensionState);
-    const openedInstallGuide = await vscode.commands.executeCommand('appmap.tryOpenInstallGuide');
+    // const openedInstallGuide = await vscode.commands.executeCommand('appmap.tryOpenInstallGuide');
 
     FindingsOverviewWebview.register(context);
     FindingInfoWebview.register(context);
@@ -242,8 +242,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     downloadLatestJavaJar(context);
     getAppmapDir(context, workspaceServices);
 
-    if (!openedInstallGuide && !SignInManager.shouldShowSignIn())
-      promptInstall(workspaceServices, extensionState);
+    // if (!openedInstallGuide && !SignInManager.shouldShowSignIn())
+    //   promptInstall(workspaceServices, extensionState);
 
     // Use this notification to track when the extension is activated.
     if (Environment.isSystemTest) {
@@ -259,7 +259,11 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
     await AnalysisManager.register(context, projectStates, extensionState, workspaceServices);
 
-    if (extensionState.isNewInstall) vscode.commands.executeCommand('appmap.views.signIn.focus');
+    // if (extensionState.isNewInstall) vscode.commands.executeCommand('appmap.views.signIn.focus');
+
+    const showSignIn = SignInManager.shouldShowSignIn();
+    if (showSignIn) vscode.commands.executeCommand('appmap.views.signIn.focus');
+    else vscode.commands.executeCommand('appmap.views.instructions.focus');
 
     return {
       analysisManager: AnalysisManager,
