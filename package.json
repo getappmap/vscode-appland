@@ -223,10 +223,6 @@
           "description": "Default view on which to open the AppMap: viewComponent, viewSequence, or viewFlow",
           "default": "viewSequence"
         },
-        "appMap.shareEnabled": {
-          "type": "boolean",
-          "description": "Enable AppMap sharing using the AppMap server"
-        },
         "appMap.inspectEnabled": {
           "type": "boolean",
           "description": "Enable detailed inspection of AppMap code objects (preview)"
