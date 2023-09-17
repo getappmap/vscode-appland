@@ -182,4 +182,32 @@ describe('Instructions tree view', function () {
     await driver.instructionsWebview.clickButton('Open the PROBLEMS tab');
     await driver.panel.problems.waitFor({ state: 'visible' });
   });
+
+  it('always opens the project picker in an empty/undefined workspace', async function () {
+    const { driver } = this;
+    await driver.closeFolder();
+    await driver.waitForReady();
+    await driver.appMap.openActionPanel();
+    await driver.appMap.ready();
+
+    const expectProjectPicker = () =>
+      waitFor(
+        'Expected project picker to be visible',
+        async (): Promise<boolean> =>
+          (await driver.instructionsWebview.pageTitle()) === 'Add AppMap to your project'
+      );
+
+    const steps = [
+      InstructionStep.InstallAppMapAgent,
+      InstructionStep.RecordAppMaps,
+      InstructionStep.OpenAppMaps,
+      InstructionStep.InvestigateFindings,
+    ];
+
+    for (let i = 0; i < steps.length; i++) {
+      const step = steps[i];
+      await driver.appMap.openInstruction(step);
+      await expectProjectPicker();
+    }
+  });
 });
