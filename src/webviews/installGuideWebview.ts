@@ -143,6 +143,21 @@ export default class InstallGuideWebView {
                 } else if (page === 'investigate-findings') {
                   if (!project) break;
 
+                  // Make sure all previous steps are completed
+                  // before flagging runtime analysis as complete.
+                  // Once runtime analysis is complete, the prompt
+                  // will say "setup is complete", so we want to make
+                  // sure this is completed last.
+                  const service = projectStates.find(
+                    ({ metadata }) => metadata.path === project?.path
+                  );
+                  const successConditions = [
+                    service?.metadata.agentInstalled,
+                    service?.metadata.numAppMaps,
+                    service?.metadata.appMapOpened,
+                  ];
+                  if (!successConditions.every(Boolean)) break;
+
                   const workspaceFolder = vscode.workspace.getWorkspaceFolder(
                     vscode.Uri.parse(project.path)
                   );

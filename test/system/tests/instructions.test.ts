@@ -54,17 +54,26 @@ describe('Instructions tree view', function () {
       InstructionStepStatus.Complete
     );
 
-    await project.restoreFiles('**/appmap-findings.json');
+    // Assert that viewing the runtime analysis step prior to completing the
+    // previous steps does not mark the runtime analysis step as complete.
     await driver.appMap.openInstruction(InstructionStep.InvestigateFindings);
-    await driver.instructionsWebview.clickButton('Open the PROBLEMS tab');
     await driver.appMap.assertInstructionStepStatus(
       InstructionStep.InvestigateFindings,
-      InstructionStepStatus.Complete
+      InstructionStepStatus.Pending
     );
 
+    await driver.appMap.openInstruction(InstructionStep.OpenAppMaps);
     await driver.appMap.openAppMap();
     await driver.appMap.assertInstructionStepStatus(
       InstructionStep.OpenAppMaps,
+      InstructionStepStatus.Complete
+    );
+
+    // All previous steps are now complete. Viewing the runtime analysis step
+    // should mark it as complete.
+    await driver.appMap.openInstruction(InstructionStep.InvestigateFindings);
+    await driver.appMap.assertInstructionStepStatus(
+      InstructionStep.InvestigateFindings,
       InstructionStepStatus.Complete
     );
 
