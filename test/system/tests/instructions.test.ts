@@ -56,7 +56,7 @@ describe('Instructions tree view', function () {
 
     await project.restoreFiles('**/appmap-findings.json');
     await driver.appMap.openInstruction(InstructionStep.InvestigateFindings);
-    await driver.instructionsWebview.clickButton('Open the PROBLEMS tab');
+    await driver.instructionsWebview.clickButton('View analysis report');
     await driver.appMap.assertInstructionStepStatus(
       InstructionStep.InvestigateFindings,
       InstructionStepStatus.Complete
@@ -136,7 +136,7 @@ describe('Instructions tree view', function () {
     await driver.appMap.openAppMap();
     await project.restoreFiles('**/appmap-findings.json');
     await driver.appMap.openInstruction(InstructionStep.InvestigateFindings);
-    await driver.instructionsWebview.clickButton('Open the PROBLEMS tab');
+    await driver.instructionsWebview.clickButton('View analysis report');
     await driver.appMap.pendingBadge.waitFor({ state: 'hidden' });
   });
 
@@ -178,9 +178,8 @@ describe('Instructions tree view', function () {
     await driver.instructionsWebview.clickButton('Next');
     await driver.instructionsWebview.getPageByTitle('AppMap Runtime Analysis').waitFor();
 
-    await driver.panel.problems.waitFor({ state: 'hidden' });
-    await driver.instructionsWebview.clickButton('Open the PROBLEMS tab');
-    await driver.panel.problems.waitFor({ state: 'visible' });
+    await driver.instructionsWebview.clickButton('View analysis report');
+    assert.strictEqual(await driver.tabCount(), 2, 'Wrong number of tabs');
   });
 
   it('always opens the project picker in an empty/undefined workspace', async function () {
