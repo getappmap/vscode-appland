@@ -39,6 +39,10 @@ export default class InstallGuideWebView {
       vscode.commands.registerCommand(this.command, async (page?: DocPageId) => {
         if (!page) page = defaultPageId(projectStates);
 
+        // Short circuit if no project is open. The project picker has the correct prompts
+        // to handle this case.
+        if (!vscode.workspace.workspaceFolders?.length) page = ProjectPicker;
+
         // Attempt to re-use an existing webview for this project if one exists
         if (this.existingPanel) {
           this.existingPanel.reveal(vscode.ViewColumn.One);
