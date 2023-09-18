@@ -58,6 +58,7 @@ import IndexJanitor from './lib/indexJanitor';
 import { unregister as unregisterTerminal } from './commands/installer/terminals';
 import getAppmapDir from './commands/getAppmapDir';
 import JavaAssets from './services/javaAssets';
+import checkAndTriggerFirstAppMapNotification from './lib/firstAppMapNotification';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   Telemetry.register(context);
@@ -81,7 +82,10 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
     const appmapWatcher = new AppMapWatcher();
     context.subscriptions.push(
-      appmapWatcher.onCreate(({ uri }) => appmapCollectionFile.onCreate(uri)),
+      appmapWatcher.onCreate(({ uri }) => {
+        appmapCollectionFile.onCreate(uri);
+        checkAndTriggerFirstAppMapNotification(extensionState);
+      }),
       appmapWatcher.onDelete(({ uri }) => appmapCollectionFile.onDelete(uri)),
       appmapWatcher.onChange(({ uri }) => appmapCollectionFile.onChange(uri))
     );

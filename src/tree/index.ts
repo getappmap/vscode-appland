@@ -55,6 +55,16 @@ export default function registerTrees(
   );
 
   context.subscriptions.push(
+    vscode.commands.registerCommand('appmap.view.focusAppMaps', () => {
+      localAppMapsTree.reveal(localAppMapsProvider.getChildren()[0], {
+        expand: true,
+        focus: true,
+        select: true,
+      });
+    })
+  );
+
+  context.subscriptions.push(
     vscode.commands.registerCommand('appmap.view.focusAppMap', () => {
       localAppMapsTree.reveal(appmapCollection.appMaps[0], { select: false });
     })
