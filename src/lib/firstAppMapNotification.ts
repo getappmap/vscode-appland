@@ -17,12 +17,10 @@ async function showFirstAppMapNotification() {
   );
 
   if (selection === 'Explore AppMaps') {
-    // This opens the Explore AppMaps page
-    vscode.commands.executeCommand('appmap.openInstallGuide', 'open-appmaps');
-    // We want to give focus to AppMaps tree.
-    // We need to wait a bit because previous command triggers the
-    // appmap.view.focusCodeObjects command and Code Objects get focus
-    // instead of AppMaps.
-    setTimeout(() => vscode.commands.executeCommand('appmap.view.focusAppMaps'), 1000);
+    vscode.commands.executeCommand(
+      'appmap.openInstallGuide',
+      'open-appmaps',
+      'appmap.view.focusAppMaps'
+    );
   }
 }

@@ -13,7 +13,6 @@ describe('First AppMap notification', () => {
   beforeEach(() => {
     sinon = createSandbox();
     context = new MockExtensionContext();
-    //appmapWatcher = new MockFileSystemWatcher();
   });
 
   afterEach(() => {
