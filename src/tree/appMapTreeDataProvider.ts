@@ -224,4 +224,12 @@ export class AppMapTreeDataProvider implements vscode.TreeDataProvider<AppMapTre
 
     return this.appmapsUpToDate.isUpToDate(appmap.descriptor.resourceUri);
   }
+
+  // This method has to be defined to use TreeView.reveal().
+  // Implementing this only for the root element, because we are
+  // "reveal"ing the root in the appmap.view.focusAppMaps command.
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/naming-convention
+  getParent(element: AppMapTreeItem): vscode.ProviderResult<AppMapTreeItem> {
+    return undefined;
+  }
 }
