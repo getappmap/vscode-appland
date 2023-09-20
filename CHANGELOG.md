@@ -1,3 +1,32 @@
+# [0.101.0](https://github.com/getappmap/vscode-appland/compare/v0.100.0...v0.101.0) (2023-09-20)
+
+
+### Bug Fixes
+
+* Always show 'no projects found' when viewing instructions if no ([1ec4dbc](https://github.com/getappmap/vscode-appland/commit/1ec4dbcd5cc726dd5755b4c0aebbeb97a7e635ee))
+* Clicking Code Object tree items should open AppMap ([f4572b2](https://github.com/getappmap/vscode-appland/commit/f4572b22d52c9dd09a1995b5964740031ceeb536))
+* Clicking Code Object tree leaf items should open AppMap ([a29143f](https://github.com/getappmap/vscode-appland/commit/a29143fc655c8fe8913325776a4ff72ef72259f7))
+* Clicking sign-in button cancels previous sign-in attempt ([9866fbc](https://github.com/getappmap/vscode-appland/commit/9866fbcd8e60b034c1fc369bac3d52654366a6ba))
+* Close open editors when using the "delete AppMap" command ([#807](https://github.com/getappmap/vscode-appland/issues/807)) ([8ffb69d](https://github.com/getappmap/vscode-appland/commit/8ffb69d2346fa4596f068ab7550c5da74080b4ed))
+* Drop the AppMap pin feature from VSCode ([84803ed](https://github.com/getappmap/vscode-appland/commit/84803ed95ea809ddf7878e0f399115a8bda68e82))
+* Drop the AppMap pin feature from VSCode ([41829f5](https://github.com/getappmap/vscode-appland/commit/41829f561a3a4fe9856f75cd8e5d8a1b1a34b257))
+* lock system tests to vs code version 1.81.1 ([39bb3f7](https://github.com/getappmap/vscode-appland/commit/39bb3f7f87b169269ae08764be954e4b07bc7cce))
+* lock vs code version in integration tests ([ab3c4b8](https://github.com/getappmap/vscode-appland/commit/ab3c4b89f1ba6744a575e6d4106fcb024685574a))
+* remove generate sequence diagram option for appmap ([93fae31](https://github.com/getappmap/vscode-appland/commit/93fae315ce17d4c8325fc8ac658c8d638d78aaa3))
+
+
+### Features
+
+* Display *.diff.sequence.json files ([b18b44a](https://github.com/getappmap/vscode-appland/commit/b18b44a7beff66012c5d355fa472bb4ad0116cee))
+* New users see a notification box when they create their first map ([d5d6f3f](https://github.com/getappmap/vscode-appland/commit/d5d6f3fe2f87e70d300d8120dd5fc6a21723c4a7))
+* Prompt java and python to install appmap ([1f6c57f](https://github.com/getappmap/vscode-appland/commit/1f6c57f79bd7d9c2027b9229a298900ca523ea43))
+* Remove AppMap upload feature ([8d82438](https://github.com/getappmap/vscode-appland/commit/8d82438c2e93f6a5d6d439ba98a605367b3499c1))
+* Rename AppMap auth provider to 'AppMap' ([1337301](https://github.com/getappmap/vscode-appland/commit/1337301164e1518e4106ffb58f45f3579f0b3546))
+* select finding when opening from finding webview ([7c0a156](https://github.com/getappmap/vscode-appland/commit/7c0a156e03b8b25bcf8acd29df7c4cf06db29d38))
+* select finding when opening from problems tab ([6e7eac3](https://github.com/getappmap/vscode-appland/commit/6e7eac37eff4cdf7cea3ab6254efc1984b4076e6))
+* top level of runtime analysis tree is expanded by default ([d75c093](https://github.com/getappmap/vscode-appland/commit/d75c09359451bf4a4ede982fed88914110603d4e))
+* Upgrade @appland/components to v2.62.0 ([ac0fbcc](https://github.com/getappmap/vscode-appland/commit/ac0fbcc050e1022f9395bf8d6dbf3355524a5636))
+
 # [0.100.0](https://github.com/getappmap/vscode-appland/compare/v0.99.0...v0.100.0) (2023-08-31)
 
 
