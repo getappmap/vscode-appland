@@ -84,4 +84,23 @@ describe('class map tree items', () => {
       return true;
     });
   });
+
+  it('Code tree nodes have open AppMap command type', async () => {
+    await waitFor('Expecting tree items to match expectation', async () => {
+      const actualTreeItems = await enumerateTree(codeObjectsTree, undefined, true);
+      const actual = actualTreeItems.find((rootTreeItem) => rootTreeItem.label === 'Code');
+
+      assert.equal(actual?.children.length, 8);
+      // All 4 tree items in the first depth first path should have
+      // openCodeObjectInAppMap commands.
+      // actionpack->ActionController->Instrumentation->process_action
+      let currentItem = actual?.children[0];
+      while (currentItem) {
+        assert.equal(currentItem.command?.command, 'appmap.openCodeObjectInAppMap');
+        currentItem = currentItem.children.length > 0 ? currentItem.children[0] : undefined;
+      }
+
+      return true;
+    });
+  });
 });

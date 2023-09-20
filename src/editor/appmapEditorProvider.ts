@@ -4,7 +4,6 @@ import { Telemetry, DEBUG_EXCEPTION } from '../telemetry';
 import { version } from '../../package.json';
 import ExtensionState from '../configuration/extensionState';
 import extensionSettings from '../configuration/extensionSettings';
-import { AppmapUploader } from '../actions/appmapUploader';
 import { bestFilePath } from '../lib/bestFilePath';
 import AppMapDocument from './AppMapDocument';
 import AnalysisManager from '../services/analysisManager';
@@ -20,6 +19,8 @@ import {
   spawn,
   verifyCommandOutput,
 } from '../services/nodeDependencyProcess';
+import { basename } from 'path';
+import { readFile } from 'fs/promises';
 
 export type FindingInfo = ResolvedFinding & {
   stackLocations?: StackLocation[];
@@ -103,31 +104,68 @@ export default class AppMapEditorProvider
     private readonly extensionState: ExtensionState
   ) {}
 
-  async openCustomDocument(uri: vscode.Uri): Promise<AppMapDocument> {
-    const appmapFileData = fs.statSync(uri.fsPath);
-    const appmapFileSize = appmapFileData.size;
-    const functions = await this.generateStats(uri);
+  async openCustomDocument(appMapOrSequenceDiagramDiffUri: vscode.Uri): Promise<AppMapDocument> {
+    let appMapUri: vscode.Uri;
+    let sequenceDiagramData: string | undefined;
+
+    function abortSequenceDiagramDiff(msg: string): AppMapDocument {
+      throw new Error(['Unable to open sequence diagram', msg].join(': '));
+    }
+
+    if (appMapOrSequenceDiagramDiffUri.fsPath.endsWith('.diff.sequence.json')) {
+      sequenceDiagramData = await readFile(appMapOrSequenceDiagramDiffUri.fsPath, 'utf-8');
+      const appMapTokens = appMapOrSequenceDiagramDiffUri.fsPath.split('/');
+      const diffIndex = appMapTokens.lastIndexOf('diff');
+      if (diffIndex === -1)
+        return abortSequenceDiagramDiff(
+          `Expected to find a 'diff' directory in the path ${appMapOrSequenceDiagramDiffUri.fsPath}`
+        );
+
+      appMapTokens[diffIndex] = 'head';
+      appMapTokens[appMapTokens.length - 1] = [
+        basename(appMapTokens[appMapTokens.length - 1], '.diff.sequence.json'),
+        '.appmap.json',
+      ].join('');
+      const appMapPath = appMapTokens.join('/');
+      if (!fs.existsSync(appMapPath))
+        return abortSequenceDiagramDiff(`Expected AppMap file ${appMapPath} to exist`);
+
+      // Resolve relative to the diff file
+      appMapUri = vscode.Uri.file(appMapPath);
+    } else {
+      appMapUri = appMapOrSequenceDiagramDiffUri;
+    }
+
+    const fileStats = fs.statSync(appMapUri.fsPath);
+    const appmapFileSize = fileStats.size;
+    const functions = await this.generateStats(appMapUri);
     const stats = { functions };
 
-    let data = AppMapEditorProvider.EMPTY_APPMAP_DATA;
+    let appMapData = AppMapEditorProvider.EMPTY_APPMAP_DATA;
 
     // If the map is Giant, don't read it into memory
     if (appmapFileSize > AppMapEditorProvider.GIANT_APPMAP_SIZE)
-      return new AppMapDocument(uri, data, stats, []);
+      return new AppMapDocument(appMapUri, appMapData, stats, []);
 
     // If the map is Large, automatically prune it to ~ 10 MB
     if (appmapFileSize > AppMapEditorProvider.LARGE_APPMAP_SIZE) {
-      const prunedData = await this.pruneMap(uri);
-      if (prunedData) data = prunedData;
+      const prunedData = await this.pruneMap(appMapUri);
+      if (prunedData) appMapData = prunedData;
     }
 
     // If map is not Giant or Large or if pruning failed, read the data from the file
-    if (data === AppMapEditorProvider.EMPTY_APPMAP_DATA)
-      data = (await vscode.workspace.fs.readFile(uri)).toString();
+    if (appMapData === AppMapEditorProvider.EMPTY_APPMAP_DATA)
+      appMapData = (await vscode.workspace.fs.readFile(appMapUri)).toString();
 
-    const findings = this.retrieveAndProcessFindings(uri);
+    const findings = this.retrieveAndProcessFindings(appMapUri);
 
-    return new AppMapDocument(uri, data, stats, findings);
+    return new AppMapDocument(
+      appMapOrSequenceDiagramDiffUri,
+      appMapData,
+      stats,
+      findings,
+      sequenceDiagramData
+    );
   }
 
   async cliPath(): Promise<string> {
@@ -298,7 +336,8 @@ export default class AppMapEditorProvider
     const updateWebview = (initialState: string | undefined) => {
       webviewPanel.webview.postMessage({
         type: 'update',
-        text: document.data,
+        appMap: document.appMap,
+        sequenceDiagram: document.sequenceDiagram,
       });
 
       const { workspaceFolder } = document;
@@ -348,7 +387,7 @@ export default class AppMapEditorProvider
         case 'appmap-ready':
           webviewPanel.webview.postMessage({
             type: 'init-appmap',
-            shareEnabled: extensionSettings.shareEnabled,
+            shareEnabled: false,
             defaultView: extensionSettings.defaultDiagramView || 'viewSequence',
             savedFilters: this.context.workspaceState.get(AppMapEditorProvider.SAVED_FILTERS) || [],
           });
@@ -373,20 +412,6 @@ export default class AppMapEditorProvider
           break;
         case 'appmapOpenUrl':
           vscode.env.openExternal(message.url);
-          break;
-        case 'uploadAppmap':
-          {
-            const { viewState } = message;
-            const uploadResult = await AppmapUploader.upload(
-              Buffer.from(document.raw),
-              this.context,
-              viewState
-            );
-            webviewPanel.webview.postMessage({
-              type: 'setShareURL',
-              url: uploadResult,
-            });
-          }
           break;
         case 'copyToClipboard':
           vscode.env.clipboard.writeText(message.stringToCopy);

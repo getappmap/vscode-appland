@@ -25,7 +25,7 @@ describe('Authenticate', () => {
     account: { id: 'the-account-id', label: 'the-account-label' },
   };
 
-  describe('with AppMap Server', async () => {
+  describe('with AppMap', async () => {
     describe('when not signed in', () => {
       it('is activated by vscode.authentication.getSession', async () => {
         sandbox.stub(appmapService.appmapServerAuthenticationProvider, 'getSessions').resolves([]);

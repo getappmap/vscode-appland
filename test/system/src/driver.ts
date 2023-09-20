@@ -110,4 +110,9 @@ export default class Driver {
   public async tabCount(): Promise<number> {
     return await this.page.locator('.tabs-and-actions-container >> [role="tab"]').count();
   }
+
+  public async closeFolder(): Promise<void> {
+    await this.page.press('body', getOsShortcut('Control+K'));
+    await this.page.press('body', getOsShortcut('F'));
+  }
 }

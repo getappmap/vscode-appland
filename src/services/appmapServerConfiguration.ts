@@ -28,7 +28,10 @@ export default class AppMapServerConfiguration implements vscode.Disposable {
 
   static async updateAppMapClientConfiguration(): Promise<void> {
     const serverURL = ExtensionSettings.appMapServerURL;
-    const configuration: Configuration = { baseURL: serverURL.toString() };
+    // Suppress error due to missing apiURL
+    const configuration: Configuration = {
+      baseURL: serverURL.toString(),
+    } as unknown as Configuration;
     const apiKey = await getApiKey(false);
     if (apiKey) configuration.apiKey = apiKey;
 

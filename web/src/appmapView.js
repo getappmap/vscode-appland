@@ -27,9 +27,9 @@ export default function mountApp() {
         });
       },
       methods: {
-        async loadData(text) {
+        async loadData(appMap, sequenceDiagram) {
           const { ui } = this.$refs;
-          ui.loadData(text);
+          ui.loadData(appMap, sequenceDiagram);
 
           vscode.postMessage({
             command: 'onLoadComplete',
@@ -220,13 +220,13 @@ export default function mountApp() {
       switch (message.type) {
         case 'update':
           {
-            const { text } = message;
-            app.loadData(text);
+            const { appMap, sequenceDiagram } = message;
+            app.loadData(appMap, sequenceDiagram);
 
             // Then persist state information.
             // This state is returned in the call to `vscode.getState`
             // below when a webview is reloaded.
-            vscode.setState({ text });
+            vscode.setState({ appMap, sequenceDiagram });
           }
           break;
         case 'showInstructions':
@@ -265,7 +265,7 @@ export default function mountApp() {
     // State lets us save information across these re-loads
     const state = vscode.getState();
     if (state) {
-      app.loadData(state.text);
+      app.loadData(state.appMap, state.sequenceDiagram);
     }
   });
 

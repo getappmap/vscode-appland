@@ -1,8 +1,12 @@
 import assert from 'assert';
-import { basename } from 'path';
 import * as vscode from 'vscode';
 import ClassMapIndex from '../services/classMapIndex';
-import { CodeObjectEntry, InspectableTypes } from '../lib/CodeObjectEntry';
+import {
+  CodeObjectEntry,
+  CodeObjectEntryChildType,
+  CodeObjectEntryRootType,
+  InspectableTypes,
+} from '../lib/CodeObjectEntry';
 
 export interface CodeObjectTreeItem extends vscode.TreeItem {
   codeObjectFqid: string;
@@ -94,23 +98,12 @@ export class ClassMapTreeDataProvider implements vscode.TreeDataProvider<vscode.
           ? vscode.TreeItemCollapsibleState.Collapsed
           : vscode.TreeItemCollapsibleState.None,
     } as CodeObjectTreeItem;
+
     if (
-      codeObject.path &&
-      codeObject.path.includes('.') // Filter out pseudo-filenames like 'OpenSSL'
+      codeObject.type === CodeObjectEntryChildType.CLASS ||
+      codeObject.type === CodeObjectEntryRootType.PACKAGE ||
+      (InspectableTypes.includes(codeObject.type) && codeObject.children.length === 0)
     ) {
-      const showOptions = {} as vscode.TextDocumentShowOptions;
-      if (codeObject.lineNo) {
-        showOptions.selection = new vscode.Range(
-          new vscode.Position(codeObject.lineNo - 1, 0),
-          new vscode.Position(codeObject.lineNo - 1, 0)
-        );
-      }
-      treeItem.command = {
-        command: 'appmap.openCodeObjectInSource',
-        title: `Open ${basename(codeObject.path)}`,
-        arguments: [codeObject.path, codeObject.folder, showOptions],
-      };
-    } else if (InspectableTypes.includes(codeObject.type) && codeObject.children.length === 0) {
       treeItem.command = {
         command: 'appmap.openCodeObjectInAppMap',
         title: `Open in AppMap`,

@@ -135,9 +135,7 @@ export default class FindingInfoWebview {
               break;
             case 'open-map':
               {
-                let state: string | undefined;
-
-                if (message.data.uri) state = message.data.uri.fragment;
+                const state = JSON.stringify({ selectedObject: `analysis-finding:${hash}` });
 
                 const uri = vscode.Uri.file(message.data.mapFile);
                 vscode.commands.executeCommand('vscode.open', uri.with({ fragment: state }));

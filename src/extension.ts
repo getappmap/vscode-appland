@@ -10,7 +10,6 @@ import registerCompareSequenceDiagrams from './commands/compareSequenceDiagram';
 import openCodeObjectInAppMap from './commands/openCodeObjectInAppMap';
 import outOfDateTests from './commands/outOfDateTests';
 import ExtensionState from './configuration/extensionState';
-import registerDecorationProvider from './decorations/decorationProvider';
 import AppMapEditorProvider from './editor/appmapEditorProvider';
 import appmapHoverProvider from './hover/appmapHoverProvider';
 import ProcessServiceImpl from './processServiceImpl';
@@ -59,6 +58,7 @@ import IndexJanitor from './lib/indexJanitor';
 import { unregister as unregisterTerminal } from './commands/installer/terminals';
 import getAppmapDir from './commands/getAppmapDir';
 import JavaAssets from './services/javaAssets';
+import checkAndTriggerFirstAppMapNotification from './lib/firstAppMapNotification';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   Telemetry.register(context);
@@ -82,7 +82,10 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
     const appmapWatcher = new AppMapWatcher();
     context.subscriptions.push(
-      appmapWatcher.onCreate(({ uri }) => appmapCollectionFile.onCreate(uri)),
+      appmapWatcher.onCreate(({ uri }) => {
+        appmapCollectionFile.onCreate(uri);
+        checkAndTriggerFirstAppMapNotification(extensionState);
+      }),
       appmapWatcher.onDelete(({ uri }) => appmapCollectionFile.onDelete(uri)),
       appmapWatcher.onChange(({ uri }) => appmapCollectionFile.onChange(uri))
     );
@@ -120,7 +123,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     const appmapUptodateService = new AppmapUptodateService(context);
     const sourceFileWatcher = new SourceFileWatcher(classMapIndex);
 
-    registerDecorationProvider(context, lineInfoIndex);
     await outOfDateTests(context, appmapUptodateService);
     await openCodeObjectInSource(context);
     await learnMoreRuntimeAnalysis(context);
@@ -164,8 +166,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       uriHandler
     );
     appmapServerAuthenticationProvider.onDidChangeSessions((e) => {
-      if (e.added) vscode.window.showInformationMessage('Logged in to AppMap Server');
-      if (e.removed) vscode.window.showInformationMessage('Logged out of AppMap Server');
+      if (e.added) vscode.window.showInformationMessage('Logged in to AppMap');
+      if (e.removed) vscode.window.showInformationMessage('Logged out of AppMap');
       AppMapServerConfiguration.updateAppMapClientConfiguration();
     });
     vscode.commands.registerCommand('appmap.login', async () => {
@@ -187,7 +189,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     openCodeObjectInAppMap(context, appmapCollectionFile, classMapIndex);
 
     await SignInManager.register(extensionState);
-    const signInWebview = new SignInViewProvider(context);
+    const signInWebview = new SignInViewProvider(context, appmapServerAuthenticationProvider);
     context.subscriptions.push(
       vscode.window.registerWebviewViewProvider(SignInViewProvider.viewType, signInWebview)
     );

@@ -3,7 +3,6 @@ import * as vscode from 'vscode';
 import { LinkTreeDataProvider } from '../tree/linkTreeDataProvider';
 import RemoteRecording from '../actions/remoteRecording';
 import ExtensionState from '../configuration/extensionState';
-import { AppmapUploader } from '../actions/appmapUploader';
 
 export function resetUsageState(
   context: vscode.ExtensionContext,
@@ -15,7 +14,6 @@ export function resetUsageState(
       AppMapEditorProvider.resetState(context);
       LinkTreeDataProvider.resetState(context);
       RemoteRecording.resetState(context);
-      AppmapUploader.resetState(context);
       vscode.window.showInformationMessage('AppMap usage state was reset.');
     })
   );

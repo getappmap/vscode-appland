@@ -4,6 +4,7 @@ import { CodeObjectTreeItem } from './classMapTreeDataProvider';
 import { FolderItem } from './appMapTreeDataProvider';
 import deleteAppMap from '../lib/deleteAppMap';
 import deleteFolderAppMaps from '../lib/deleteFolderAppMaps';
+import closeEditorByUri from '../lib/closeEditorByUri';
 import AppMapCollection from '../services/appmapCollection';
 import saveAppMapToCollection from '../lib/saveAppMapToCollection';
 import AppMapLoader from '../services/appmapLoader';
@@ -63,16 +64,9 @@ export default class ContextMenu {
       )
     );
     context.subscriptions.push(
-      vscode.commands.registerCommand(
-        'appmap.context.sequenceDiagram',
-        async (item: AppMapLoader) => {
-          vscode.commands.executeCommand('appmap.sequenceDiagram', item.descriptor.resourceUri);
-        }
-      )
-    );
-    context.subscriptions.push(
       vscode.commands.registerCommand('appmap.context.deleteAppMap', async (item: AppMapLoader) => {
         await deleteAppMap(item.descriptor.resourceUri, appmaps);
+        await closeEditorByUri(item.descriptor.resourceUri);
       })
     );
     context.subscriptions.push(
