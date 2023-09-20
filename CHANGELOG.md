@@ -1,3 +1,10 @@
+## [0.101.1](https://github.com/getappmap/vscode-appland/compare/v0.101.0...v0.101.1) (2023-09-20)
+
+
+### Bug Fixes
+
+* Don't notify of new AppMaps on initialization ([428151c](https://github.com/getappmap/vscode-appland/commit/428151c0fff14dde55a863cd393a542dc660fe26))
+
 # [0.101.0](https://github.com/getappmap/vscode-appland/compare/v0.100.0...v0.101.0) (2023-09-20)
 
 
