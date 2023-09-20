@@ -60,7 +60,7 @@ authentication logic.
 ### AppMap in CI
 
 The same features available in this plugin are
-[also available for CI systems](https://appmap.io/docs/analysis/in-ci.html). AppMap analyses your
+[also available for CI systems](https://appmap.io/docs/analysis/in-ci.html). AppMap analyzes your
 applications after your CI tests run, and produces a report in GitHub containing behavior changes,
 failed test analysis, runtime API differences, performance issues, and dynamic security flaws:
 
