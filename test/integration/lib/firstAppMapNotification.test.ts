@@ -25,7 +25,7 @@ describe('First AppMap notification', () => {
     extensionState = new ExtensionState(context);
     extensionState.firstAppMapNotificationShown = false;
     await checkAndTriggerFirstAppMapNotification(extensionState);
-    assert(showMessageStub.calledWith("You've created your first AppMap! Congratulations."));
+    assert(showMessageStub.calledWith("Congratulations! You've created your first AppMap."));
     assert.equal(extensionState.firstAppMapNotificationShown, true);
     assert.equal(showMessageStub.callCount, 1);
 

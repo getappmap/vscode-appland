@@ -12,7 +12,7 @@ export default async function checkAndTriggerFirstAppMapNotification(
 
 async function showFirstAppMapNotification() {
   const selection = await vscode.window.showInformationMessage(
-    "You've created your first AppMap! Congratulations.",
+    "Congratulations! You've created your first AppMap.",
     'Explore AppMaps'
   );
 

@@ -82,9 +82,9 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
     const appmapWatcher = new AppMapWatcher();
     context.subscriptions.push(
-      appmapWatcher.onCreate(({ uri }) => {
+      appmapWatcher.onCreate(({ uri, initializing }) => {
         appmapCollectionFile.onCreate(uri);
-        checkAndTriggerFirstAppMapNotification(extensionState);
+        if (!initializing) checkAndTriggerFirstAppMapNotification(extensionState);
       }),
       appmapWatcher.onDelete(({ uri }) => appmapCollectionFile.onDelete(uri)),
       appmapWatcher.onChange(({ uri }) => appmapCollectionFile.onChange(uri))
