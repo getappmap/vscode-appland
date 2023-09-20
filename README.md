@@ -32,7 +32,8 @@ project. Then, you’ll make AppMaps by running your app - either by
 
 ### Runtime behavior visualization
 
-AppMap for Visual Studio Code includes the following types of interactive diagrams:
+AppMap for Visual Studio Code includes a variety of interactive diagrams to help you understand your
+application's runtime behavior.
 
 **Sequence Diagrams** to follow the runtime flow of calls made by your application:
 
@@ -59,17 +60,22 @@ authentication logic.
 ### AppMap in CI
 
 The same features available in this plugin are
-[also available for CI systems](https://appmap.io/docs/analysis/in-ci.html).
+[also available for CI systems](https://appmap.io/docs/analysis/in-ci.html). AppMap analyses your
+applications after your CI tests run, and produces a report in GitHub containing behavior changes,
+failed test analysis, runtime API differences, performance issues, and dynamic security flaws:
 
-## Security
+[![Summary report](https://appmap.io/assets/img/summary-report-thumb.jpeg 'Summary Report')](https://appmap.io/assets/img/summary-report.png)
+
+## Licensing and Security
 
 [Open source MIT license](https://github.com/getappmap/vscode-appland/blob/master/LICENSE)
 
 [Terms and conditions](https://appmap.io/community/terms-and-conditions.html)
 
-Data usage: AppMap runtime recordings and diagrams are created and stored locally on your machine.
-AppMap for Visual Studio Code does not require any permissions to your web hosted code repo in order
-to run. For more information, see the AppMap [security disclosure](https://appmap.io/security).
+**Data usage:** AppMap runtime recordings and diagrams are created and stored locally on your
+machine. AppMap for Visual Studio Code does not require any permissions to your web hosted code repo
+in order to run. For more information, see the AppMap
+[security disclosure](https://appmap.io/security).
 
 Sign-in via GitHub or GitLab is required only to obtain a license key to start using AppMap in your
 code editor.
