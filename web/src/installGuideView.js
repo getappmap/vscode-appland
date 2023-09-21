@@ -73,8 +73,8 @@ export default function mountInstallGuide() {
       currentProject = project;
     });
 
-    app.$on('view-problems', (projectPath) => {
-      messages.rpc('view-problems', projectPath);
+    app.$on('open-findings-overview', () => {
+      messages.rpc('open-findings-overview');
     });
 
     app.$on('openAppmap', (file) => {
