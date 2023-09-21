@@ -1,3 +1,10 @@
+## [0.101.2](https://github.com/getappmap/vscode-appland/compare/v0.101.1...v0.101.2) (2023-09-21)
+
+
+### Bug Fixes
+
+* The runtime analysis now opens the findings overview ([#822](https://github.com/getappmap/vscode-appland/issues/822)) ([ebfba8b](https://github.com/getappmap/vscode-appland/commit/ebfba8b79de1f1fbe5eef3fccdb200317a1490a5))
+
 ## [0.101.1](https://github.com/getappmap/vscode-appland/compare/v0.101.0...v0.101.1) (2023-09-20)
 
 
