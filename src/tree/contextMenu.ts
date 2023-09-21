@@ -65,8 +65,21 @@ export default class ContextMenu {
     );
     context.subscriptions.push(
       vscode.commands.registerCommand('appmap.context.deleteAppMap', async (item: AppMapLoader) => {
-        await deleteAppMap(item.descriptor.resourceUri, appmaps);
-        await closeEditorByUri(item.descriptor.resourceUri);
+        let uri: vscode.Uri;
+        if (!item) {
+          const { activeTab } = vscode.window.tabGroups.activeTabGroup;
+          if (!activeTab) {
+            vscode.window.showErrorMessage('No active editor.');
+            return;
+          }
+
+          uri = (activeTab.input as vscode.TabInputCustom).uri;
+        } else {
+          uri = item.descriptor.resourceUri;
+        }
+
+        await deleteAppMap(uri, appmaps);
+        await closeEditorByUri(uri);
       })
     );
     context.subscriptions.push(

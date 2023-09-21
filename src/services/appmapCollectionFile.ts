@@ -140,4 +140,10 @@ export default class AppMapCollectionFile implements AppMapCollection, AppMapsSe
   public has(uri: vscode.Uri): boolean {
     return this.loaders.has(uri.fsPath);
   }
+
+  public clear(): void {
+    console.debug('Clearing AppMap collection from tree', this.loaders.size);
+    this.loaders.clear();
+    this.emitUpdated(undefined);
+  }
 }

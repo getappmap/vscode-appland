@@ -18,4 +18,6 @@ export default interface AppMapCollection {
   allAppMapsForWorkspaceFolder(workspaceFolder: WorkspaceFolder): AppMapLoader[];
 
   has(uri: vscode.Uri): boolean;
+
+  clear(): void;
 }

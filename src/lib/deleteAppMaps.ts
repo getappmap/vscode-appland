@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import deleteAppMap from './deleteAppMap';
+import closeEditorByUri from './closeEditorByUri';
 import { promisify } from 'util';
 import { glob } from 'glob';
 import AppMapCollection from '../services/appmapCollection';
@@ -14,7 +15,13 @@ export default async function deleteAppMaps(
     vscode.Uri.file(path)
   );
 
-  await Promise.all(appmapFiles.map((uri) => deleteAppMap(uri, appMapCollection)));
+  await Promise.all(
+    appmapFiles.map((uri) => {
+      deleteAppMap(uri, appMapCollection);
+      closeEditorByUri(uri);
+    })
+  );
+  appMapCollection.clear();
 
   return appmapFiles.length;
 }
