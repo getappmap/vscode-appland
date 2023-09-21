@@ -164,6 +164,7 @@ export default class InstallGuideWebView {
 
               case 'clipboard':
                 break;
+
               case 'view-problems':
                 {
                   vscode.commands.executeCommand('workbench.panel.markers.view.focus');
@@ -197,6 +198,10 @@ export default class InstallGuideWebView {
 
               case 'view-output':
                 JavaAssets.showOutput();
+                break;
+
+              case 'open-findings-overview':
+                vscode.commands.executeCommand('appmap.openFindingsOverview');
                 break;
 
               default:
