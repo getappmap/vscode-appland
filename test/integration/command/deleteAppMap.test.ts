@@ -2,16 +2,15 @@ import * as vscode from 'vscode';
 import { assert } from 'chai';
 import { join } from 'path';
 import * as sinon from 'sinon';
-import closeEditorByUri from '../../../src/lib/closeEditorByUri';
-import { initializeWorkspace, FixtureDir, waitForExtension } from '../util';
+import { initializeWorkspace, ProjectA, waitForExtension } from '../util';
 
-describe('closeEditorByUri Tests', function () {
+describe('deleteAppMap test', function () {
   let sandbox: sinon.SinonSandbox;
 
   const appmapFilePath = join(
-    FixtureDir,
-    'classMaps',
-    'ScannerJobsController_authenticated_user_admin_can_defer_a_finding.json'
+    ProjectA,
+    'tmp/appmap/minitest',
+    'Microposts_controller_can_get_microposts_as_JSON.appmap.json'
   );
 
   beforeEach(() => (sandbox = sinon.createSandbox()));
@@ -21,14 +20,12 @@ describe('closeEditorByUri Tests', function () {
   afterEach(initializeWorkspace);
   afterEach(() => sandbox.restore());
 
-  it('closes tab with matching URI', async () => {
+  it('deletes appmap with matching URI', async () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const mockUri: vscode.Uri = { path: appmapFilePath } as any;
     await vscode.workspace.openTextDocument(mockUri);
     await vscode.window.showTextDocument(vscode.Uri.file(mockUri.path));
-    console.debug('tabs', mockUri.path);
-
-    await closeEditorByUri(mockUri);
+    await vscode.commands.executeCommand('appmap.context.deleteAppMap');
 
     const tabs = vscode.window.tabGroups.all.map((tg) => tg.tabs).flat();
     const index = tabs.findIndex(
@@ -38,7 +35,6 @@ describe('closeEditorByUri Tests', function () {
           tab.input instanceof vscode.TabInputNotebook) &&
         tab.input.uri.path === mockUri.path
     );
-
     assert.isTrue(index === -1);
   });
 });
