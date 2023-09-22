@@ -107,24 +107,21 @@ export default class InstallGuideWebView {
             disposables.forEach((disposable) => disposable.dispose());
           });
 
-          let isJavaAgentDownloaded = await JavaAssets.assetsExist();
-          if (!isJavaAgentDownloaded) {
-            disposables.push(
-              AssetManager.onStatusChanged((newStatus) => {
-                if (newStatus === AssetStatus.UpToDate) {
-                  isJavaAgentDownloaded = true;
-                }
-                panel.webview.postMessage({
-                  type: 'java-agent-download-status',
-                  status: newStatus,
-                });
-              })
-            );
-          }
+          // We are notified with status change when the asset
+          // file is deleted, too.
+          disposables.push(
+            AssetManager.onStatusChanged((newStatus) => {
+              panel.webview.postMessage({
+                type: 'java-agent-download-status',
+                status: newStatus,
+              });
+            })
+          );
 
           panel.webview.onDidReceiveMessage(async (message) => {
             switch (message.command) {
               case 'ready': {
+                const assetExists = await JavaAssets.assetsExist();
                 const isUserAuthenticated = await AnalysisManager.isUserAuthenticated();
                 panel.webview.postMessage({
                   type: 'init',
@@ -133,10 +130,11 @@ export default class InstallGuideWebView {
                   analysisEnabled: AnalysisManager.isAnalysisEnabled,
                   userAuthenticated: isUserAuthenticated,
                   debugConfigurationStatus: 1,
-                  javaAgentStatus: isJavaAgentDownloaded
-                    ? AssetStatus.UpToDate
-                    : AssetManager.status,
+                  javaAgentStatus: assetExists ? AssetStatus.UpToDate : AssetManager.status,
                 });
+
+                AssetManager.startAssetFilePeriodicCheck();
+
                 break;
               }
 
