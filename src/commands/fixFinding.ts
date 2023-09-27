@@ -125,6 +125,7 @@ export default function register(context: vscode.ExtensionContext): void {
 
         findingHash = selection.finding.finding.hash_v2;
       }
+      if (!findingHash) return;
 
       const findings = findingsIndex.findingsByHash(findingHash);
       if (!findings || findings.length === 0) return;
@@ -152,7 +153,7 @@ export default function register(context: vscode.ExtensionContext): void {
           try {
             await fixFinding(finding, openAI);
           } catch (e) {
-            debug((e as any).toString());
+            debug(e);
             vscode.window.showErrorMessage(`Failed to analyze finding: ${e}`);
           }
         }

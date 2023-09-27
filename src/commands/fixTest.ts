@@ -187,7 +187,7 @@ export default function register(
           try {
             await fixFailedTest(appmap, openAI);
           } catch (e) {
-            debug((e as any).toString());
+            debug(e);
             vscode.window.showErrorMessage(`Failed to analyze failed test: ${e}`);
           }
         }

@@ -30,7 +30,8 @@ export async function suggestFix(
     });
     response = result.data;
   } catch (e) {
-    vscode.window.showErrorMessage((e as any).toString());
+    if (e instanceof Error) vscode.window.showErrorMessage(e.message);
+    else vscode.window.showErrorMessage(`Failed to analyze failed test: ${e}`);
     return;
   }
 

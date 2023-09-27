@@ -80,7 +80,7 @@ abstract class Ask {
         response,
       };
     } catch (e) {
-      warn((e as any).toString());
+      warn(e);
       return;
     }
   }

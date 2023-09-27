@@ -5,14 +5,7 @@ import AppMapCollection from '../services/appmapCollection';
 import { promptForAppMap } from '../lib/promptForAppMap';
 import { debug } from 'console';
 import { readFile, writeFile } from 'fs/promises';
-import {
-  AppMap,
-  AppMapFilter,
-  CodeObject,
-  Event,
-  EventNavigator,
-  buildAppMap,
-} from '@appland/models';
+import { AppMap, AppMapFilter, CodeObject, buildAppMap } from '@appland/models';
 import buildOpenAIApi from '../lib/buildOpenAIApi';
 import { join } from 'path';
 import { FormatType, Specification, buildDiagram, format } from '@appland/sequence-diagram';
@@ -195,7 +188,7 @@ export default function register(
           try {
             completion = await q.complete(openAI);
           } catch (e) {
-            debug((e as any).toString());
+            debug(e);
             vscode.window.showErrorMessage(`Unable to process your question: ${e}`);
           }
         }
