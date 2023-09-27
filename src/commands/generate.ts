@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import AppMapCollection from '../services/appmapCollection';
 import selectedCode from '../lib/ask/selectedCode';
 import { promptForAppMap } from '../lib/promptForAppMap';
-import { CodeGen, Completion } from '../lib/Ask';
+import { CodeGen, Completion } from '../lib/ask';
 import assert from 'assert';
 import buildOpenAIApi from '../lib/buildOpenAIApi';
 import { FormatType, Specification, buildDiagram, format } from '@appland/sequence-diagram';

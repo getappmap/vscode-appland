@@ -17,7 +17,7 @@ import buildOpenAIApi from '../lib/buildOpenAIApi';
 import { join } from 'path';
 import { FormatType, Specification, buildDiagram, format } from '@appland/sequence-diagram';
 import { randomUUID } from 'crypto';
-import { Completion, Question } from '../lib/Ask';
+import { Completion, Question } from '../lib/ask';
 import selectedCode from '../lib/ask/selectedCode';
 import contextAppMap from '../lib/ask/contextAppMap';
 
