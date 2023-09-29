@@ -1,0 +1,223 @@
+{
+  "events": [
+    {
+      "event": "call",
+      "http_server_request": {
+        "headers": {
+          "sec-fetch-mode": "navigate",
+          "referer": "http://localhost:8080/vets.html",
+          "sec-fetch-site": "same-origin",
+          "accept-language": "en-US,en;q=0.9",
+          "cookie": "_ga=GA1.1.221874771.1662141429; _ga_C61R44VEM4=GS1.1.1662387239.6.0.1662387239.0.0.0; supabase-auth-token=%5B%22eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNjg0MTY0ODE1LCJzdWIiOiJkYjg1ZGEyMy00NjA1LTQ1YWItODYxNS1lYTFlNjVkYmM1ZTEiLCJlbWFpbCI6ImZyYW5rZWwuemVybWVsb0BnbWFpbC5jb20iLCJwaG9uZSI6IiIsImFwcF9tZXRhZGF0YSI6eyJwcm92aWRlciI6ImVtYWlsIiwicHJvdmlkZXJzIjpbImVtYWlsIl19LCJ1c2VyX21ldGFkYXRhIjp7fSwicm9sZSI6ImF1dGhlbnRpY2F0ZWQiLCJhYWwiOiJhYWwxIiwiYW1yIjpbeyJtZXRob2QiOiJwYXNzd29yZCIsInRpbWVzdGFtcCI6MTY4NDE2MTIxNX1dLCJzZXNzaW9uX2lkIjoiMjUwZTMxODYtOWFiMy00NGQyLWE2YjQtOGY1ZGE4YWIxMmEzIn0.uHny-odEwbt62KcploKI8nBaXdeKtKlEPYarQws3T3Q%22%2C%225zZVggGD6GqYZYpLYr3BiA%22%2Cnull%2Cnull%2Cnull%5D",
+          "sec-fetch-user": "?1",
+          "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+          "sec-ch-ua": "\"Chromium\";v=\"116\", \"Not)A;Brand\";v=\"24\", \"Google Chrome\";v=\"116\"",
+          "sec-ch-ua-mobile": "?0",
+          "sec-ch-ua-platform": "\"macOS\"",
+          "host": "localhost:8080",
+          "upgrade-insecure-requests": "1",
+          "connection": "keep-alive",
+          "accept-encoding": "gzip, deflate, br",
+          "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36",
+          "sec-fetch-dest": "document"
+        },
+        "normalized_path_info": "/vets.html",
+        "path_info": "/vets.html",
+        "protocol": "HTTP/1.1",
+        "request_method": "GET"
+      },
+      "id": 1,
+      "message": [
+        {
+          "class": "java.lang.String",
+          "kind": "req",
+          "name": "page",
+          "object_id": 1059450198,
+          "value": "2"
+        }
+      ],
+      "thread_id": 31
+    },
+    {
+      "defined_class": "org.springframework.samples.petclinic.vet.VetController",
+      "event": "call",
+      "id": 2,
+      "lineno": 48,
+      "method_id": "showVetList",
+      "parameters": [
+        {
+          "class": "java.lang.Integer",
+          "kind": "req",
+          "name": "page",
+          "object_id": 54697908,
+          "value": "2"
+        },
+        {
+          "class": "org.springframework.validation.support.BindingAwareModelMap",
+          "kind": "req",
+          "name": "model",
+          "object_id": 98763257,
+          "value": "{}"
+        }
+      ],
+      "path": "org/springframework/samples/petclinic/vet/VetController.java",
+      "receiver": {
+        "class": "org.springframework.samples.petclinic.vet.VetController",
+        "object_id": 1231645761,
+        "value": "org.springframework.samples.petclinic.vet.VetController@49696c41"
+      },
+      "static": false,
+      "thread_id": 31
+    },
+    {
+      "event": "call",
+      "id": 3,
+      "sql_query": {
+        "database_type": "H2",
+        "sql": "select v1_0.id,v1_0.first_name,v1_0.last_name from vets v1_0 offset ? rows fetch first ? rows only"
+      },
+      "thread_id": 31
+    },
+    {
+      "elapsed": 0.0000246,
+      "event": "return",
+      "id": 4,
+      "parent_id": 3,
+      "thread_id": 31
+    },
+    {
+      "event": "call",
+      "id": 5,
+      "sql_query": {
+        "database_type": "H2",
+        "sql": "select s1_0.vet_id,s1_1.id,s1_1.name from vet_specialties s1_0 join specialties s1_1 on s1_1.id=s1_0.specialty_id where s1_0.vet_id=?"
+      },
+      "thread_id": 31
+    },
+    {
+      "elapsed": 0.0000096,
+      "event": "return",
+      "id": 6,
+      "parent_id": 5,
+      "thread_id": 31
+    },
+    {
+      "elapsed": 0.000423,
+      "event": "return",
+      "id": 7,
+      "parent_id": 2,
+      "return_value": {
+        "class": "java.lang.String",
+        "object_id": 1935278224,
+        "value": "vets/vetList"
+      },
+      "thread_id": 31
+    },
+    {
+      "elapsed": 0.001003,
+      "event": "return",
+      "http_server_response": {
+        "headers": {
+          "Transfer-Encoding": "chunked",
+          "Keep-Alive": "timeout=60",
+          "Connection": "keep-alive",
+          "Content-Language": "en-US",
+          "Date": "Thu, 14 Sep 2023 12:27:11 GMT",
+          "Content-Type": "text/html;charset=UTF-8"
+        },
+        "status": 200
+      },
+      "id": 8,
+      "parent_id": 1,
+      "thread_id": 31
+    }
+  ],
+  "version": "1.2",
+  "metadata": {
+    "name": "GET /vets.html (200) - 15:27:11.736",
+    "app": "spring-petclinic",
+    "language": {
+      "name": "java",
+      "version": "17.0.8.1+1",
+      "engine": "OpenJDK 64-Bit Server VM"
+    },
+    "client": {
+      "name": "appmap-java",
+      "url": "https://github.com/appland/appmap-java"
+    },
+    "recorder": {
+      "name": "request_recording",
+      "type": "request"
+    },
+    "recording": {},
+    "framework": {}
+  },
+  "classMap": [
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "children": [
+                        {
+                          "children": [
+                            {
+                              "name": "showVetList",
+                              "type": "function",
+                              "static": false,
+                              "location": "org/springframework/samples/petclinic/vet/VetController.java:48"
+                            }
+                          ],
+                          "name": "VetController",
+                          "type": "class"
+                        }
+                      ],
+                      "name": "vet",
+                      "type": "package"
+                    }
+                  ],
+                  "name": "petclinic",
+                  "type": "package"
+                }
+              ],
+              "name": "samples",
+              "type": "package"
+            }
+          ],
+          "name": "springframework",
+          "type": "package"
+        }
+      ],
+      "name": "org",
+      "type": "package"
+    },
+    {
+      "type": "http",
+      "name": "HTTP server requests",
+      "children": [
+        {
+          "type": "route",
+          "name": "GET /vets.html"
+        }
+      ]
+    },
+    {
+      "type": "database",
+      "name": "Database",
+      "children": [
+        {
+          "type": "query",
+          "name": "select v1_0.id,v1_0.first_name,v1_0.last_name from vets v1_0 offset ? rows fetch first ? rows only"
+        },
+        {
+          "type": "query",
+          "name": "select s1_0.vet_id,s1_1.id,s1_1.name from vet_specialties s1_0 join specialties s1_1 on s1_1.id=s1_0.specialty_id where s1_0.vet_id=?"
+        }
+      ]
+    }
+  ]
+}
