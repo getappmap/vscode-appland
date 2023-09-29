@@ -1,0 +1,186 @@
+{
+  "events": [
+    {
+      "event": "call",
+      "http_server_request": {
+        "headers": {
+          "host": "localhost:61165",
+          "connection": "keep-alive",
+          "accept": "text/html",
+          "user-agent": "Java/17.0.8.1"
+        },
+        "path_info": "/oups",
+        "protocol": "HTTP/1.1",
+        "request_method": "GET"
+      },
+      "id": 1,
+      "thread_id": 25
+    },
+    {
+      "defined_class": "org.springframework.samples.petclinic.system.CrashController",
+      "event": "call",
+      "id": 2,
+      "lineno": 33,
+      "method_id": "triggerException",
+      "path": "org/springframework/samples/petclinic/system/CrashController.java",
+      "receiver": {
+        "class": "org.springframework.samples.petclinic.system.CrashController",
+        "object_id": 1388002765,
+        "value": "org.springframework.samples.petclinic.system.CrashController@52bb3dcd"
+      },
+      "static": false,
+      "thread_id": 25
+    },
+    {
+      "elapsed": 0.0003832,
+      "event": "return",
+      "exceptions": [
+        {
+          "class": "java.lang.RuntimeException",
+          "lineno": 33,
+          "message": "Expected: controller used to showcase what happens when an exception is thrown",
+          "object_id": 1475231303,
+          "path": "CrashController.java"
+        }
+      ],
+      "id": 3,
+      "parent_id": 2,
+      "thread_id": 25
+    },
+    {
+      "elapsed": 0.0015614,
+      "event": "return",
+      "exceptions": [
+        {
+          "class": "jakarta.servlet.ServletException",
+          "lineno": 1019,
+          "message": "Request processing failed: java.lang.RuntimeException: Expected: controller used to showcase what happens when an exception is thrown",
+          "object_id": 533732023,
+          "path": "FrameworkServlet.java"
+        },
+        {
+          "class": "java.lang.RuntimeException",
+          "lineno": 33,
+          "message": "Expected: controller used to showcase what happens when an exception is thrown",
+          "object_id": 1475231303,
+          "path": "CrashController.java"
+        }
+      ],
+      "id": 4,
+      "parent_id": 1,
+      "thread_id": 25
+    },
+    {
+      "event": "call",
+      "http_server_request": {
+        "headers": {
+          "host": "localhost:61165",
+          "connection": "keep-alive",
+          "accept": "text/html",
+          "user-agent": "Java/17.0.8.1"
+        },
+        "normalized_path_info": "/error",
+        "path_info": "/error",
+        "protocol": "HTTP/1.1",
+        "request_method": "GET"
+      },
+      "id": 5,
+      "thread_id": 25
+    },
+    {
+      "elapsed": 0.0238035,
+      "event": "return",
+      "http_server_response": {
+        "headers": {
+          "Transfer-Encoding": "chunked",
+          "Connection": "close",
+          "Content-Language": "en-TR",
+          "Date": "Thu, 14 Sep 2023 15:30:48 GMT",
+          "Content-Type": "text/html;charset=UTF-8"
+        },
+        "status": 500
+      },
+      "id": 6,
+      "parent_id": 5,
+      "thread_id": 25
+    }
+  ],
+  "version": "1.2",
+  "metadata": {
+    "name": "GET /bups (500) - 15:30:47.872",
+    "app": "spring-petclinic",
+    "language": {
+      "name": "java",
+      "version": "17.0.8.1+1",
+      "engine": "OpenJDK 64-Bit Server VM"
+    },
+    "client": {
+      "name": "appmap-java",
+      "url": "https://github.com/appland/appmap-java"
+    },
+    "recorder": {
+      "name": "request_recording",
+      "type": "request"
+    },
+    "recording": {},
+    "framework": {}
+  },
+  "classMap": [
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "children": [
+                        {
+                          "children": [
+                            {
+                              "name": "triggerException",
+                              "type": "function",
+                              "static": false,
+                              "location": "org/springframework/samples/petclinic/system/CrashController.java:33"
+                            }
+                          ],
+                          "name": "CrashController",
+                          "type": "class"
+                        }
+                      ],
+                      "name": "system",
+                      "type": "package"
+                    }
+                  ],
+                  "name": "petclinic",
+                  "type": "package"
+                }
+              ],
+              "name": "samples",
+              "type": "package"
+            }
+          ],
+          "name": "springframework",
+          "type": "package"
+        }
+      ],
+      "name": "org",
+      "type": "package"
+    },
+    {
+      "type": "http",
+      "name": "HTTP server requests",
+      "children": [
+        {
+          "type": "route",
+          "name": "GET /oups"
+        },
+        {
+          "type": "route",
+          "name": "GET /error"
+        }
+      ]
+    }
+  ]
+}

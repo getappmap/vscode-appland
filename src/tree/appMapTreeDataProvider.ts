@@ -55,6 +55,7 @@ export class AppMapTreeDataProvider implements vscode.TreeDataProvider<AppMapTre
   // Typical choices are alphabetical and chronological.
   static SortMethod: Record<string, SortFunction> = {
     requests: AppMapTreeDataProvider.sortByTimestamp,
+    request: AppMapTreeDataProvider.sortByTimestamp,
     remote: AppMapTreeDataProvider.sortByName,
     tests: AppMapTreeDataProvider.sortByName,
   };
@@ -62,6 +63,7 @@ export class AppMapTreeDataProvider implements vscode.TreeDataProvider<AppMapTre
   // Here you can specify the name normalize function used for different recording types.
   static NormalizeName: Record<string, NameFunction> = {
     requests: AppMapTreeDataProvider.goodUrlName,
+    request: AppMapTreeDataProvider.goodUrlName,
     remote: AppMapTreeDataProvider.identityName,
     tests: AppMapTreeDataProvider.identityName,
   };
