@@ -139,9 +139,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/components@npm:^3.2.0":
-  version: 3.2.0
-  resolution: "@appland/components@npm:3.2.0"
+"@appland/components@npm:^3.5.0":
+  version: 3.5.0
+  resolution: "@appland/components@npm:3.5.0"
   dependencies:
     "@appland/diagrams": ^1.7.0
     "@appland/models": ^2.6.3
@@ -155,7 +155,7 @@ __metadata:
     sql-formatter: ^4.0.2
     vue: ^2.7.14
     vuex: ^3.6.0
-  checksum: 487bf9efdbe42903c181129c96c7cca560ec744fd5d7a3919cc9590e87f821943ee5fa43e36ad7a95408b944a27a19144a2f12e89dbb22180e752961311eb5fb
+  checksum: 251030350127217bc5751cc3aa5f57b821412519d611f29a02f5ca330fd34eaafe68aeefc31240d9086cafaad886dcdeb39ba394bd1d6f694b4e71501a2e6214
   languageName: node
   linkType: hard
 
@@ -194,7 +194,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/scanner@npm:^1.79.0":
+"@appland/scanner@npm:^1.83.0":
   version: 1.83.0
   resolution: "@appland/scanner@npm:1.83.0"
   dependencies:
@@ -241,6 +241,19 @@ __metadata:
     crypto-js: ^4.1.1
     diff: ^5.1.0
   checksum: 033d425f1a29de1dd531ae67968e7b495f6d7f2f477f63ef6631de9e278bdb41393394def03624d23b9d247184d5f746489a1c7dbeee379d3848acfeeb4ec0ba
+  languageName: node
+  linkType: hard
+
+"@appland/sequence-diagram@npm:^1.8.0":
+  version: 1.8.0
+  resolution: "@appland/sequence-diagram@npm:1.8.0"
+  dependencies:
+    "@appland/models": ^2.6.3
+    "@appland/openapi": ^1.4.3
+    "@datastructures-js/priority-queue": ^6.1.3
+    crypto-js: ^4.1.1
+    diff: ^5.1.0
+  checksum: 143e78ec50f26d0dd4ddb7b57b8fdb89043209949290a2262766c39a1489129adb55de352874f975c7d332e6e32a294da4367ca134a210bd799231f23262463a
   languageName: node
   linkType: hard
 
@@ -2737,11 +2750,11 @@ __metadata:
   dependencies:
     "@appland/appmap": ^3.80.2
     "@appland/client": ^1.7.0
-    "@appland/components": ^3.2.0
+    "@appland/components": ^3.5.0
     "@appland/diagrams": ^1.7.0
     "@appland/models": ^2.6.3
-    "@appland/scanner": ^1.79.0
-    "@appland/sequence-diagram": ^1.6.1
+    "@appland/scanner": ^1.83.0
+    "@appland/sequence-diagram": ^1.8.0
     "@playwright/test": ^1.22.2
     "@semantic-release/changelog": ^5.0.1
     "@semantic-release/exec": ^5.0.0
