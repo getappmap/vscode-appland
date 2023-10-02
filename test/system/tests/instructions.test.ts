@@ -54,17 +54,17 @@ describe('Instructions tree view', function () {
       InstructionStepStatus.Complete
     );
 
+    await driver.appMap.openAppMap();
+    await driver.appMap.assertInstructionStepStatus(
+      InstructionStep.OpenAppMaps,
+      InstructionStepStatus.Complete
+    );
+
     await project.restoreFiles('**/appmap-findings.json');
     await driver.appMap.openInstruction(InstructionStep.InvestigateFindings);
     await driver.instructionsWebview.clickButton('View analysis report');
     await driver.appMap.assertInstructionStepStatus(
       InstructionStep.InvestigateFindings,
-      InstructionStepStatus.Complete
-    );
-
-    await driver.appMap.openAppMap();
-    await driver.appMap.assertInstructionStepStatus(
-      InstructionStep.OpenAppMaps,
       InstructionStepStatus.Complete
     );
 

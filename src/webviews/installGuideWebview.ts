@@ -155,7 +155,9 @@ export default class InstallGuideWebView {
                     );
                     if (!workspaceFolder) break;
 
-                    extensionState.setFindingsInvestigated(workspaceFolder, true);
+                    if (extensionState.getWorkspaceOpenedAppMap(workspaceFolder)) {
+                      extensionState.setWorkspaceOpenedAnalysis(workspaceFolder, true);
+                    }
                   }
                 }
                 break;

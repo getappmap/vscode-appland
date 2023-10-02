@@ -83,7 +83,11 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
       extensionState.onWorkspaceFlag((e) => {
         if (
           e.workspaceFolder === folder &&
-          [Keys.Workspace.OPENED_APPMAP, Keys.Workspace.FINDINGS_INVESTIGATED].includes(e.key)
+          [
+            Keys.Workspace.OPENED_APPMAP,
+            Keys.Workspace.FINDINGS_INVESTIGATED,
+            Keys.Workspace.OPENED_ANALYSIS,
+          ].includes(e.key)
         ) {
           this.updateMetadata();
         }
@@ -134,7 +138,12 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
   }
 
   private get hasInvestigatedFindings(): boolean {
-    return this.extensionState.getFindingsInvestigated(this.folder);
+    return (
+      this.extensionState.getWorkspaceOpenedAnalysis(this.folder) &&
+      this.hasRecordedAppMaps &&
+      this.extensionState.getFindingsInvestigated(this.folder) &&
+      this.extensionState.getWorkspaceOpenedAppMap(this.folder)
+    );
   }
 
   get metadata(): Readonly<ProjectMetadata> {
@@ -158,6 +167,7 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
     vscode.commands.executeCommand('setContext', 'appmap.analysisPerformed', true);
 
     this._metadata.analysisPerformed = true;
+    this.extensionState.setFindingsInvestigated(this.folder, true);
     this._metadata.numFindings = findings.length;
     this._metadata.findingsDomainCounts = this.countDomainsFromFindings(findings);
 
