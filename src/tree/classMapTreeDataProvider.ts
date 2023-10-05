@@ -99,15 +99,18 @@ export class ClassMapTreeDataProvider implements vscode.TreeDataProvider<vscode.
           : vscode.TreeItemCollapsibleState.None,
     } as CodeObjectTreeItem;
 
+    const isExternalRoute = codeObject.type.toString() === 'external-route';
     if (
       codeObject.type === CodeObjectEntryChildType.CLASS ||
       codeObject.type === CodeObjectEntryRootType.PACKAGE ||
+      codeObject.type === CodeObjectEntryChildType.EXTERNAL_SERVICE ||
+      isExternalRoute ||
       (InspectableTypes.includes(codeObject.type) && codeObject.children.length === 0)
     ) {
       treeItem.command = {
         command: 'appmap.openCodeObjectInAppMap',
         title: `Open in AppMap`,
-        arguments: [codeObject.fqid],
+        arguments: [isExternalRoute ? codeObject.parent?.fqid : codeObject.fqid],
       };
     }
     return treeItem;

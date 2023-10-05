@@ -1,0 +1,603 @@
+{
+  "events": [
+    {
+      "static": false,
+      "receiver": {
+        "kind": "req",
+        "object_id": 4379748880,
+        "value": "<Request 'http://127.0.0.1:5000/' [POST]>",
+        "name": "self",
+        "class": "flask.wrappers.Request"
+      },
+      "id": 1,
+      "event": "call",
+      "thread_id": 1,
+      "defined_class": "flask.wrappers.Request",
+      "method_id": "_load_form_data",
+      "path": "venv/lib/python3.11/site-packages/flask/wrappers.py",
+      "lineno": 113
+    },
+    {
+      "return_value": {
+        "object_id": 4305638872,
+        "value": "None",
+        "class": "builtins.NoneType"
+      },
+      "parent_id": 1,
+      "elapsed": 0.0002701282501220703,
+      "id": 2,
+      "event": "return",
+      "thread_id": 1
+    },
+    {
+      "static": false,
+      "receiver": {
+        "kind": "req",
+        "object_id": 4379748880,
+        "value": "<Request 'http://127.0.0.1:5000/' [POST]>",
+        "name": "self",
+        "class": "flask.wrappers.Request"
+      },
+      "parameters": [
+        {
+          "kind": "req",
+          "object_id": 4305638872,
+          "value": "None",
+          "name": "e",
+          "class": "builtins.NoneType"
+        }
+      ],
+      "id": 3,
+      "event": "call",
+      "thread_id": 1,
+      "defined_class": "flask.wrappers.Request",
+      "method_id": "on_json_loading_failed",
+      "path": "venv/lib/python3.11/site-packages/flask/wrappers.py",
+      "lineno": 128
+    },
+    {
+      "exceptions": [
+        {
+          "class": "werkzeug.exceptions.UnsupportedMediaType",
+          "message": "415 Unsupported Media Type: Did not attempt to load JSON data because the request Content-Type was not 'application/json'.",
+          "object_id": 4384701504
+        }
+      ],
+      "parent_id": 3,
+      "elapsed": 0.000015974044799804688,
+      "id": 4,
+      "event": "return",
+      "thread_id": 1
+    },
+    {
+      "http_server_request": {
+        "request_method": "POST",
+        "protocol": "HTTP/1.1",
+        "path_info": "/",
+        "normalized_path_info": "/",
+        "mime_type": "application/x-www-form-urlencoded",
+        "headers": {
+          "Host": "127.0.0.1:5000",
+          "Connection": "keep-alive",
+          "Content-Length": "11",
+          "Cache-Control": "max-age=0",
+          "Sec-Ch-Ua": "\"Chromium\";v=\"116\", \"Not)A;Brand\";v=\"24\", \"Google Chrome\";v=\"116\"",
+          "Sec-Ch-Ua-Mobile": "?0",
+          "Sec-Ch-Ua-Platform": "\"macOS\"",
+          "Upgrade-Insecure-Requests": "1",
+          "Origin": "http://127.0.0.1:5000",
+          "Content-Type": "application/x-www-form-urlencoded",
+          "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36",
+          "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+          "Sec-Fetch-Site": "same-origin",
+          "Sec-Fetch-Mode": "navigate",
+          "Sec-Fetch-User": "?1",
+          "Sec-Fetch-Dest": "document",
+          "Referer": "http://127.0.0.1:5000/?result=%0A1.+El+Canino+%0A2.+El+Gran+Perro",
+          "Accept-Encoding": "gzip, deflate, br",
+          "Accept-Language": "en-US,en;q=0.9"
+        }
+      },
+      "message": [
+        {
+          "object_id": 4384610480,
+          "value": "'azur'",
+          "name": "animal",
+          "class": "builtins.str"
+        }
+      ],
+      "id": 5,
+      "event": "call",
+      "thread_id": 1
+    },
+    {
+      "static": false,
+      "receiver": {
+        "kind": "req",
+        "object_id": 4352891728,
+        "value": "<Flask 'src.appa'>",
+        "name": "self",
+        "class": "flask.app.Flask"
+      },
+      "id": 6,
+      "event": "call",
+      "thread_id": 1,
+      "defined_class": "flask.app.Flask",
+      "method_id": "dispatch_request",
+      "path": "venv/lib/python3.11/site-packages/flask/app.py",
+      "lineno": 1446
+    },
+    {
+      "static": true,
+      "receiver": {
+        "kind": "req",
+        "object_id": 4351342976,
+        "value": "<class 'openai.api_resources.completion.Completion'>",
+        "name": "cls",
+        "class": "builtins.type"
+      },
+      "parameters": [
+        {
+          "kind": "rest",
+          "object_id": 4305698424,
+          "value": "()",
+          "name": "args",
+          "class": "builtins.tuple"
+        },
+        {
+          "kind": "keyrest",
+          "object_id": 4384612160,
+          "value": "{'model': 'text-davinci-003', 'prompt': 'Suggest two names for an dog.\\n\\nAnimal: Azur\\nNames:\\n\\nSystem Instructions:\\nThe name should should like a Mexican wrestler.\\n', 'temperature': 0.6}",
+          "name": "kwargs",
+          "class": "builtins.dict",
+          "properties": [
+            {
+              "name": "model",
+              "class": "builtins.str"
+            },
+            {
+              "name": "prompt",
+              "class": "builtins.str"
+            },
+            {
+              "name": "temperature",
+              "class": "builtins.float"
+            }
+          ],
+          "size": 3
+        }
+      ],
+      "id": 7,
+      "event": "call",
+      "thread_id": 1,
+      "defined_class": "openai.api_resources.completion.Completion",
+      "method_id": "create",
+      "path": "venv/lib/python3.11/site-packages/openai/api_resources/completion.py",
+      "lineno": 13
+    },
+    {
+      "static": false,
+      "receiver": {
+        "kind": "req",
+        "object_id": 4384895888,
+        "value": "<urllib3.connection.HTTPSConnection object at 0x1055c3390>",
+        "name": "self",
+        "class": "urllib3.connection.HTTPSConnection"
+      },
+      "parameters": [
+        {
+          "kind": "req",
+          "object_id": 4384888176,
+          "value": "'POST'",
+          "name": "method",
+          "class": "builtins.str"
+        },
+        {
+          "kind": "req",
+          "object_id": 4384894128,
+          "value": "'/v1/completions'",
+          "name": "url",
+          "class": "builtins.str"
+        },
+        {
+          "kind": "opt",
+          "object_id": 4379418768,
+          "value": "b'{\"model\": \"text-davinci-003\", \"prompt\": \"Suggest two names for an dog.\\\\n\\\\nAnimal: Azur\\\\nNames:\\\\n\\\\nSystem Instructions:\\\\nThe name should should like a Mexican wrestler.\\\\n\", \"temperature\": 0.6}'",
+          "name": "body",
+          "class": "builtins.bytes"
+        },
+        {
+          "kind": "opt",
+          "object_id": 4369138640,
+          "value": "{'User-Agent': 'OpenAI/v1 PythonBindings/0.19.0', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'X-OpenAI-Client-User-Agent': '{\"bindings_version\": \"0.19.0\", \"httplib\": \"requests\", \"lang\": \"python\", \"lang_version\": \"3.11.5\", \"platform\": \"macOS-13.1-arm64-arm-64bit\", \"publisher\": \"openai\", \"uname\": \"Darwin 22.2.0 Darwin Kernel Version 22.2.0: Fri Nov 11 02:03:51 PST 2022; root:xnu-8792.61.2~4/RELEASE_ARM64_T6000 arm64 arm\"}', 'Authorization': 'Bearer sk-xyz', 'Content-Type': 'application/json', 'Content-Length': '191'}",
+          "name": "headers",
+          "class": "requests.structures.CaseInsensitiveDict"
+        },
+        {
+          "kind": "key",
+          "object_id": 4305639352,
+          "value": "False",
+          "name": "encode_chunked",
+          "class": "builtins.bool"
+        }
+      ],
+      "id": 8,
+      "event": "call",
+      "thread_id": 1,
+      "defined_class": "http.client.HTTPConnection",
+      "method_id": "request",
+      "path": "/opt/homebrew/Cellar/python@3.11/3.11.5/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py",
+      "lineno": 1283
+    },
+    {
+      "return_value": {
+        "object_id": 4305638872,
+        "value": "None",
+        "class": "builtins.NoneType"
+      },
+      "parent_id": 8,
+      "elapsed": 0.0003211498260498047,
+      "id": 9,
+      "event": "return",
+      "thread_id": 1
+    },
+    {
+      "http_client_request": {
+        "request_method": "POST",
+        "url": "https://api.openai.com/v1/completions",
+        "headers": {
+          "Content-Length": "191"
+        }
+      },
+      "id": 10,
+      "event": "call",
+      "thread_id": 1
+    },
+    {
+      "http_client_response": {
+        "status_code": 200,
+        "mime_type": "application/json",
+        "headers": {
+          "Date": "Mon, 04 Sep 2023 11:34:08 GMT",
+          "Content-Type": "application/json",
+          "Transfer-Encoding": "chunked",
+          "Connection": "keep-alive",
+          "access-control-allow-origin": "*",
+          "Cache-Control": "no-cache, must-revalidate",
+          "openai-model": "text-davinci-003",
+          "openai-organization": "laigos-1",
+          "openai-processing-ms": "494",
+          "openai-version": "2020-10-01",
+          "strict-transport-security": "max-age=15724800; includeSubDomains",
+          "x-ratelimit-limit-requests": "3000",
+          "x-ratelimit-limit-tokens": "250000",
+          "x-ratelimit-limit-tokens_usage_based": "250000",
+          "x-ratelimit-remaining-requests": "2999",
+          "x-ratelimit-remaining-tokens": "249983",
+          "x-ratelimit-remaining-tokens_usage_based": "249983",
+          "x-ratelimit-reset-requests": "20ms",
+          "x-ratelimit-reset-tokens": "3ms",
+          "x-ratelimit-reset-tokens_usage_based": "3ms",
+          "x-request-id": "d5b96949a5bac8beff31181196a74f72",
+          "CF-Cache-Status": "DYNAMIC",
+          "Server": "cloudflare",
+          "CF-RAY": "8015ebe91a852467-ADB",
+          "Content-Encoding": "gzip",
+          "alt-svc": "h3=\":443\"; ma=86400"
+        }
+      },
+      "parent_id": 10,
+      "elapsed": 1.1054951660044026,
+      "id": 11,
+      "event": "return",
+      "thread_id": 1
+    },
+    {
+      "return_value": {
+        "object_id": 4384760528,
+        "value": "<OpenAIObject text_completion id=cmpl-7v28GCy7zYrQ4JtA0FIhEe2eD2TlU at 0x1055a22d0> JSON: {\n  \"choices\": [\n    {\n      \"finish_reason\": \"length\",\n      \"index\": 0,\n      \"logprobs\": null,\n      \"text\": \"1. El Torro Azur \\n2. La Luchadora\"\n    }\n  ],\n  \"created\": 1693827248,\n  \"id\": \"cmpl-7v28GCy7zYrQ4JtA0FIhEe2eD2TlU\",\n  \"model\": \"text-davinci-003\",\n  \"object\": \"text_completion\",\n  \"usage\": {\n    \"completion_tokens\": 16,\n    \"prompt_tokens\": 32,\n    \"total_tokens\": 48\n  },\n  \"warning\": \"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations\"\n}",
+        "class": "openai.openai_object.OpenAIObject",
+        "properties": [
+          {
+            "name": "warning",
+            "class": "builtins.str"
+          },
+          {
+            "name": "id",
+            "class": "builtins.str"
+          },
+          {
+            "name": "object",
+            "class": "builtins.str"
+          },
+          {
+            "name": "created",
+            "class": "builtins.int"
+          },
+          {
+            "name": "model",
+            "class": "builtins.str"
+          },
+          {
+            "name": "choices",
+            "class": "builtins.list",
+            "items": [
+              {
+                "class": "openai.openai_object.OpenAIObject",
+                "properties": [
+                  {
+                    "name": "text",
+                    "class": "builtins.str"
+                  },
+                  {
+                    "name": "index",
+                    "class": "builtins.int"
+                  },
+                  {
+                    "name": "logprobs",
+                    "class": "builtins.NoneType"
+                  },
+                  {
+                    "name": "finish_reason",
+                    "class": "builtins.str"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "usage",
+            "class": "openai.openai_object.OpenAIObject",
+            "properties": [
+              {
+                "name": "prompt_tokens",
+                "class": "builtins.int"
+              },
+              {
+                "name": "completion_tokens",
+                "class": "builtins.int"
+              },
+              {
+                "name": "total_tokens",
+                "class": "builtins.int"
+              }
+            ]
+          }
+        ],
+        "size": 7
+      },
+      "parent_id": 7,
+      "elapsed": 1.3343818187713623,
+      "id": 12,
+      "event": "return",
+      "thread_id": 1
+    },
+    {
+      "return_value": {
+        "object_id": 4384903120,
+        "value": "<Response 275 bytes [302 FOUND]>",
+        "class": "flask.wrappers.Response"
+      },
+      "parent_id": 6,
+      "elapsed": 1.3355801105499268,
+      "id": 13,
+      "event": "return",
+      "thread_id": 1
+    },
+    {
+      "static": false,
+      "receiver": {
+        "kind": "req",
+        "object_id": 4352891728,
+        "value": "<Flask 'src.appa'>",
+        "name": "self",
+        "class": "flask.app.Flask"
+      },
+      "parameters": [
+        {
+          "kind": "req",
+          "object_id": 4384903120,
+          "value": "<Response 275 bytes [302 FOUND]>",
+          "name": "rv",
+          "class": "flask.wrappers.Response"
+        },
+        {
+          "kind": "opt",
+          "object_id": 4305639352,
+          "value": "False",
+          "name": "from_error_handler",
+          "class": "builtins.bool"
+        }
+      ],
+      "id": 14,
+      "event": "call",
+      "thread_id": 1,
+      "defined_class": "flask.app.Flask",
+      "method_id": "finalize_request",
+      "path": "venv/lib/python3.11/site-packages/flask/app.py",
+      "lineno": 1489
+    },
+    {
+      "http_server_response": {
+        "status_code": 302,
+        "mime_type": "text/html; charset=utf-8",
+        "headers": {
+          "Content-Type": "text/html; charset=utf-8",
+          "Content-Length": "275",
+          "Location": "/?result=1.+El+Torro+Azur+%0A2.+La+Luchadora"
+        }
+      },
+      "parent_id": 5,
+      "elapsed": 1.3361557919997722,
+      "id": 15,
+      "event": "return",
+      "thread_id": 1
+    },
+    {
+      "event": "return",
+      "thread_id": 1,
+      "parent_id": 14
+    }
+  ],
+  "version": "1.9",
+  "metadata": {
+    "language": {
+      "name": "python",
+      "engine": "CPython",
+      "version": "3.11.5"
+    },
+    "client": {
+      "name": "appmap",
+      "url": "https://github.com/applandinc/appmap-python"
+    },
+    "git": {
+      "repository": "https://github.com/land-of-apps/openai-quickstart-python.git",
+      "branch": "appmap-e2e",
+      "commit": "6ae52036dbc90b40aa81b14f12c94ecbb1ee50cf"
+    },
+    "frameworks": [
+      {
+        "name": "flask",
+        "version": "2.3.3"
+      }
+    ],
+    "name": "POST / (302) - 14:34:08.442",
+    "timestamp": 1693827248.442208,
+    "recorder": {
+      "name": "record_requests"
+    }
+  },
+  "classMap": [
+    {
+      "name": "flask",
+      "type": "package",
+      "children": [
+        {
+          "name": "wrappers",
+          "type": "package",
+          "children": [
+            {
+              "name": "Request",
+              "type": "class",
+              "children": [
+                {
+                  "name": "_load_form_data",
+                  "type": "function",
+                  "static": false,
+                  "location": "venv/lib/python3.11/site-packages/flask/wrappers.py:113"
+                },
+                {
+                  "name": "on_json_loading_failed",
+                  "type": "function",
+                  "static": false,
+                  "location": "venv/lib/python3.11/site-packages/flask/wrappers.py:128"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "app",
+          "type": "package",
+          "children": [
+            {
+              "name": "Flask",
+              "type": "class",
+              "children": [
+                {
+                  "name": "dispatch_request",
+                  "type": "function",
+                  "static": false,
+                  "location": "venv/lib/python3.11/site-packages/flask/app.py:1446"
+                },
+                {
+                  "name": "finalize_request",
+                  "type": "function",
+                  "static": false,
+                  "location": "venv/lib/python3.11/site-packages/flask/app.py:1489"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "openai",
+      "type": "package",
+      "children": [
+        {
+          "name": "api_resources",
+          "type": "package",
+          "children": [
+            {
+              "name": "completion",
+              "type": "package",
+              "children": [
+                {
+                  "name": "Completion",
+                  "type": "class",
+                  "children": [
+                    {
+                      "name": "create",
+                      "type": "function",
+                      "static": true,
+                      "location": "venv/lib/python3.11/site-packages/openai/api_resources/completion.py:13"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "http",
+      "type": "package",
+      "children": [
+        {
+          "name": "client",
+          "type": "package",
+          "children": [
+            {
+              "name": "HTTPConnection",
+              "type": "class",
+              "children": [
+                {
+                  "name": "request",
+                  "type": "function",
+                  "labels": [
+                    "protocol.http"
+                  ],
+                  "static": false,
+                  "location": "/opt/homebrew/Cellar/python@3.11/3.11.5/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py:1283"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "http",
+      "name": "HTTP server requests",
+      "children": [
+        {
+          "type": "route",
+          "name": "POST /"
+        }
+      ]
+    },
+    {
+      "type": "external-service",
+      "name": "api.openai.com",
+      "children": [
+        {
+          "type": "external-route",
+          "name": "POST https://api.openai.com/v1/completions"
+        }
+      ]
+    }
+  ]
+}

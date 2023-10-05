@@ -2,7 +2,12 @@ import { readFile } from 'fs';
 import { promisify } from 'util';
 import * as vscode from 'vscode';
 import * as path from 'path';
-import { ClassMapEntry, CodeObjectEntry, CodeObjectEntryRootType } from './CodeObjectEntry';
+import {
+  ClassMapEntry,
+  CodeObjectEntry,
+  CodeObjectEntryChildType,
+  CodeObjectEntryRootType,
+} from './CodeObjectEntry';
 
 const ROOT_ID = '<root>';
 
@@ -79,6 +84,16 @@ export async function buildClassMap(
         children: [normalizeClassMapEntry(cme)],
         labels: [],
       } as ClassMapEntry;
+    } else if (cme.type == CodeObjectEntryChildType.EXTERNAL_SERVICE) {
+      result = {
+        folder: cme.folder,
+        type: CodeObjectEntryRootType.FOLDER,
+        name: 'External Services',
+        static: false,
+        location: cme.location,
+        children: [normalizeClassMapEntry(cme)],
+        labels: [],
+      } as ClassMapEntry;
     }
     return result;
   }
@@ -134,8 +149,12 @@ export async function buildClassMap(
   // proper code object is missing from the classMap. They will appear as new root elements,
   // which is confusing in the UI. We just drop them here.
   const classMap = root.children
-    /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-    .filter((child) => Object.values(CodeObjectEntryRootType).includes(child.type as any))
+    .filter(
+      (child) =>
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        Object.values(CodeObjectEntryRootType).includes(child.type as any) ||
+        child.type === CodeObjectEntryChildType.EXTERNAL_SERVICE
+    )
     .map((child) => {
       child.finalize();
       return child;
