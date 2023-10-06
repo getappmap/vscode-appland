@@ -486,7 +486,7 @@
   "dependencies": {
     "@appland/appmap": "^3.80.2",
     "@appland/client": "^1.7.0",
-    "@appland/components": "^3.5.0",
+    "@appland/components": "^3.8.0",
     "@appland/diagrams": "^1.7.0",
     "@appland/models": "^2.6.3",
     "@appland/scanner": "^1.83.0",
