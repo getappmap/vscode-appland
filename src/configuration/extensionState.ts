@@ -13,6 +13,7 @@ export const Keys = {
     CONFIGURED_AGENT: 'appmap.applandinc.agentConfigured',
     RECORDED_APPMAP: 'appmap.applandinc.recordedAppMap',
     OPENED_APPMAP: 'appmap.applandinc.workspaces_opened_appmap',
+    OPENED_ANALYSIS: 'appmap.applandinc.workspaces_opened_analysis',
     FINDINGS_INVESTIGATED: 'appmap.applandinc.findingsInvestigated',
     HIDE_INSTALL_PROMPT: 'appmap.applandinc.hideInstallPrompt',
     CLOSED_APPMAP: 'appmap.applandinc.closedAppMap',
@@ -136,6 +137,15 @@ export default class ExtensionState {
 
   setWorkspaceOpenedAppMap(workspaceFolder: vscode.WorkspaceFolder, value: boolean): void {
     return this.setWorkspaceFlag(Keys.Workspace.OPENED_APPMAP, value, workspaceFolder);
+  }
+
+  /** Returns whether or not the user has opened Analysis page from within the given workspace folder. */
+  getWorkspaceOpenedAnalysis(workspaceFolder: vscode.WorkspaceFolder): boolean {
+    return this.getWorkspaceFlag(Keys.Workspace.OPENED_ANALYSIS, workspaceFolder.uri.fsPath);
+  }
+
+  setWorkspaceOpenedAnalysis(workspaceFolder: vscode.WorkspaceFolder, value: boolean): void {
+    return this.setWorkspaceFlag(Keys.Workspace.OPENED_ANALYSIS, value, workspaceFolder);
   }
 
   /** Returns whether or not the user has created an AppMap agent config (appmap.yml) */
