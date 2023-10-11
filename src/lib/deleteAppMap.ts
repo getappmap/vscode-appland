@@ -20,6 +20,9 @@ export default async function deleteAppMap(
 
   const indexDir = uri.fsPath.substring(0, uri.fsPath.lastIndexOf('.appmap.json'));
 
+  // This triggers the FileSystemWatcher to emit a delete event for the AppMap file reliably.
+  await retry(async () => rm(`${indexDir}/metadata.json`, { force: true }));
+
   await retry(async () => rm(uri.fsPath, { force: true }));
   await retry(async () => {
     for (const file of await promisify(glob)(`${indexDir}/*`)) {
