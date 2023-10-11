@@ -1,3 +1,20 @@
+# [0.102.0](https://github.com/getappmap/vscode-appland/compare/v0.101.2...v0.102.0) (2023-10-11)
+
+
+### Bug Fixes
+
+* AppMaps displayed chronologically for Java requests ([#813](https://github.com/getappmap/vscode-appland/issues/813)) ([4f8e730](https://github.com/getappmap/vscode-appland/commit/4f8e730be089000d8c2eb3e28b1226f39efaf0e4))
+* Instructions page should be reactive to the Java agent file ([3bfbcb6](https://github.com/getappmap/vscode-appland/commit/3bfbcb602e53e19285e902a56e427c7f07fe2459))
+
+
+### Features
+
+* Accurately determine if Runtime Analysis step is complete ([#829](https://github.com/getappmap/vscode-appland/issues/829)) ([0dd1fa2](https://github.com/getappmap/vscode-appland/commit/0dd1fa2d61e5b7923c67bf0d1e051b2074df3120))
+* The Code Objects view also lists External Service Calls ([d9b9c32](https://github.com/getappmap/vscode-appland/commit/d9b9c325edb40791d94353ccd3541baab1d241fa))
+* Update [@appland](https://github.com/appland) dependencies ([d696a53](https://github.com/getappmap/vscode-appland/commit/d696a5388d158f827c97caf5db4242340d8b44eb))
+* update @appland/components to 3.8.0 ([8b66898](https://github.com/getappmap/vscode-appland/commit/8b668983fe30602f5960836fe1d1120d6b28b31f))
+* **deleteAppMaps.ts:** add closeEditorByUri function after deleting appmaps ([2a54b8c](https://github.com/getappmap/vscode-appland/commit/2a54b8cde5c5b0b5894185cfe63f78c0cd539e4e))
+
 ## [0.101.2](https://github.com/getappmap/vscode-appland/compare/v0.101.1...v0.101.2) (2023-09-21)
 
 
