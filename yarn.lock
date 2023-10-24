@@ -139,13 +139,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/components@npm:^3.8.0":
-  version: 3.8.0
-  resolution: "@appland/components@npm:3.8.0"
+"@appland/components@npm:^3.9.0":
+  version: 3.9.0
+  resolution: "@appland/components@npm:3.9.0"
   dependencies:
     "@appland/diagrams": ^1.7.0
-    "@appland/models": ^2.6.3
-    "@appland/sequence-diagram": ^1.8.1
+    "@appland/models": ^2.7.0
+    "@appland/sequence-diagram": ^1.9.0
     buffer: ^6.0.3
     d3: ^7.8.4
     d3-flame-graph: ^4.1.3
@@ -155,7 +155,7 @@ __metadata:
     sql-formatter: ^4.0.2
     vue: ^2.7.14
     vuex: ^3.6.0
-  checksum: 44f8a0ebd5e260765ed39ede4f7529399b056fd2ff532dce5333d43d7f6c4df3342705d0d51c13df289172b0b70778c3efb1a43e6809c8cfedcb63800cbed046
+  checksum: e8a715bf7a543a4bc31fb54474746c4914bd210625e7b3f27a229f93951fd4f728d7d8ca1d656144a0ccd6776cae980f72a4d8c65d29598f45d31f31c50a0eed
   languageName: node
   linkType: hard
 
@@ -181,6 +181,16 @@ __metadata:
     "@appland/sql-parser": ^1.5.0
     crypto-js: ^4.0.0
   checksum: 97460ac76801b7e89381082b89dd5479e758450e8624241baad51b3417e77dd085620ac572557db34bad24d0a6c9a1f73c58442ec29db2b3d5cba9fde5436faa
+  languageName: node
+  linkType: hard
+
+"@appland/models@npm:^2.7.0":
+  version: 2.7.0
+  resolution: "@appland/models@npm:2.7.0"
+  dependencies:
+    "@appland/sql-parser": ^1.5.0
+    crypto-js: ^4.0.0
+  checksum: fe29d5f5e88c68f5bf238128c056ef8698775512f9e158c80189609de8e0b9aef4d7ee7f451217cfe7b19a048671b04d099603e6e17f3657200a6d810fac9292
   languageName: node
   linkType: hard
 
@@ -257,16 +267,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/sequence-diagram@npm:^1.8.1":
-  version: 1.8.1
-  resolution: "@appland/sequence-diagram@npm:1.8.1"
+"@appland/sequence-diagram@npm:^1.9.0":
+  version: 1.9.0
+  resolution: "@appland/sequence-diagram@npm:1.9.0"
   dependencies:
-    "@appland/models": ^2.6.3
+    "@appland/models": ^2.7.0
     "@appland/openapi": ^1.4.3
     "@datastructures-js/priority-queue": ^6.1.3
     crypto-js: ^4.1.1
     diff: ^5.1.0
-  checksum: 4d28d539f6a9c69f8baacd1915b78b7b2d25204f4c4359eabb53202448be6c0bd2273a4d20b2bb10b9ff7fe022f125d74ea96003bb4d944740f7a701c1affd93
+    lru-cache: 6.0.0
+  checksum: 30a13450878a8ca3fd727edb049d822f2eefb65676099c62217f9b53a15896567c9832191fff0addc74d2a76b9f3d63a462d1e4ef1dbecdb3dfd8c8284a839bc
   languageName: node
   linkType: hard
 
@@ -2763,7 +2774,7 @@ __metadata:
   dependencies:
     "@appland/appmap": ^3.80.2
     "@appland/client": ^1.7.0
-    "@appland/components": ^3.8.0
+    "@appland/components": ^3.9.0
     "@appland/diagrams": ^1.7.0
     "@appland/models": ^2.6.3
     "@appland/scanner": ^1.83.0
@@ -8593,7 +8604,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lru-cache@npm:^6.0.0":
+"lru-cache@npm:6.0.0, lru-cache@npm:^6.0.0":
   version: 6.0.0
   resolution: "lru-cache@npm:6.0.0"
   dependencies:
