@@ -1,3 +1,10 @@
+# [0.103.0](https://github.com/getappmap/vscode-appland/compare/v0.102.0...v0.103.0) (2023-10-31)
+
+
+### Features
+
+* Update @appland/components to 3.9.0 ([fa2cc6e](https://github.com/getappmap/vscode-appland/commit/fa2cc6e56f96b13225d1a865a3972a4495eecf28))
+
 # [0.102.0](https://github.com/getappmap/vscode-appland/compare/v0.101.2...v0.102.0) (2023-10-11)
 
 
