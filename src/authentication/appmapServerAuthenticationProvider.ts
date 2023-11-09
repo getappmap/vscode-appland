@@ -108,8 +108,11 @@ export default class AppMapServerAuthenticationProvider implements vscode.Authen
     for (const [index, authnStrategy] of authnStrategies.entries()) {
       authnStrategy.prepareSignIn();
       const redirectUri = await authnStrategy.redirectUrl([['nonce', nonce]]);
+      const externalRedirect = await vscode.env.asExternalUri(
+        vscode.Uri.parse(redirectUri.toString())
+      );
       const authnUrl = AppMapServerAuthenticationProvider.authURL(authnStrategy.authnPath, {
-        redirect_url: redirectUri.toString(),
+        redirect_url: externalRedirect.toString(),
       });
       vscode.env.openExternal(authnUrl);
       const session = await vscode.window.withProgress<vscode.AuthenticationSession | AuthFailure>(
