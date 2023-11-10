@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import { extname } from 'path';
 import backgroundJob from '../lib/backgroundJob';
 import GitProperties from '../telemetry/properties/versionControlGit';
+import { findFiles } from '../lib/findFiles';
 
 export const SUPPORTED_LANGUAGES = ['ruby', 'python', 'java', 'javascript'] as const;
 
@@ -218,7 +219,7 @@ export default class LanguageResolver {
     const searchPattern = new vscode.RelativePattern(folderPath(folder), '**');
 
     // VSCode will already respect the user's ignore list. We can supplement that with the .gitignore files.
-    await vscode.workspace.findFiles(searchPattern).then((files) => {
+    await findFiles(searchPattern).then((files) => {
       files
         .filter((file) => !gitProperties.isIgnored(file.fsPath))
         .forEach((file) => {

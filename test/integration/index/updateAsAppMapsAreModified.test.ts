@@ -1,6 +1,5 @@
 import { unlink } from 'fs';
 import { promisify } from 'util';
-import * as vscode from 'vscode';
 import { touch } from '../../../src/lib/touch';
 import {
   initializeWorkspace,
@@ -9,6 +8,7 @@ import {
   waitForAppMapServices,
   withAuthenticatedUser,
 } from '../util';
+import { findFiles } from '../../../src/lib/findFiles';
 
 describe('AppMapIndex', () => {
   withAuthenticatedUser();
@@ -23,11 +23,9 @@ describe('AppMapIndex', () => {
   afterEach(initializeWorkspace);
 
   it('updates as AppMaps are modified', async () => {
-    const appmapFiles = (await vscode.workspace.findFiles(`tmp/appmap/**/*.appmap.json`)).map(
-      (uri) => uri.fsPath
-    );
+    const appmapFiles = (await findFiles(`tmp/appmap/**/*.appmap.json`)).map((uri) => uri.fsPath);
 
-    const mtimeFiles = async () => await vscode.workspace.findFiles(`tmp/appmap/**/mtime`);
+    const mtimeFiles = async () => await findFiles(`tmp/appmap/**/mtime`);
 
     await waitFor(
       `AppMaps have not all been indexed`,
@@ -40,7 +38,7 @@ describe('AppMapIndex', () => {
       async () => (await mtimeFiles()).length === 0
     );
 
-    const appmapFileCount = (await vscode.workspace.findFiles(`**/*.appmap.json`)).length;
+    const appmapFileCount = (await findFiles(`**/*.appmap.json`)).length;
 
     const touchAppMaps = async () => Promise.all(appmapFiles.map((filePath) => touch(filePath)));
     await repeatUntil(

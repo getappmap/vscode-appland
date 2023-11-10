@@ -8,6 +8,7 @@ import {
 } from '../util';
 import { pathExists } from 'fs-extra';
 import type AppMapService from '../../../src/appMapService';
+import { findFiles } from '../../../src/lib/findFiles';
 
 describe('AppMapIndex', () => {
   withAuthenticatedUser();
@@ -20,11 +21,11 @@ describe('AppMapIndex', () => {
   afterEach(initializeWorkspace);
 
   xit('cleans up index directories', async () => {
-    const appmapFiles = await vscode.workspace.findFiles(`tmp/appmap/**/*.appmap.json`);
+    const appmapFiles = await findFiles(`tmp/appmap/**/*.appmap.json`);
     const indexDirs = appmapFiles.map(({ fsPath }) => fsPath.replace(/\.appmap\.json$/, ''));
 
     await waitFor(`AppMaps have not all been indexed`, async () => {
-      const mtimeFiles = await vscode.workspace.findFiles(`tmp/appmap/**/mtime`);
+      const mtimeFiles = await findFiles(`tmp/appmap/**/mtime`);
       return mtimeFiles.length === appmapFiles.length;
     });
 

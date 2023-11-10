@@ -7,9 +7,9 @@ import * as vscode from 'vscode';
 import { fileExists } from '../util';
 import { DEBUG_EXCEPTION, Telemetry } from '../telemetry';
 import { ConfigFileProvider } from './processWatcher';
-import { AppMapConfigWatcher, AppMapConfigWatcherInstance } from './appMapConfigWatcher';
 import { WorkspaceService, WorkspaceServiceInstance } from './workspaceService';
-import { workspaceServices } from './workspaceServices';
+import Watcher from './watcher';
+import { findFiles } from '../lib/findFiles';
 
 export type AppmapConfig = {
   appmapDir: string;
@@ -32,7 +32,7 @@ class ConfigFileProviderImpl implements ConfigFileProvider {
       return this._files;
     }
 
-    this._files = await vscode.workspace.findFiles(this.pattern);
+    this._files = await findFiles(this.pattern);
     return this._files;
   }
 
@@ -46,7 +46,6 @@ export class AppmapConfigManagerInstance implements WorkspaceServiceInstance {
 
   private _configs: AppmapConfig[] = [];
   private _configFileProvider: ConfigFileProviderImpl;
-  private _configWatcher: AppMapConfigWatcherInstance;
   private _hasConfigFile = false;
   private _usingDefault = false;
   private _watcherConfigured = false;
@@ -56,12 +55,6 @@ export class AppmapConfigManagerInstance implements WorkspaceServiceInstance {
   constructor(public folder: vscode.WorkspaceFolder) {
     const configPattern = new vscode.RelativePattern(folder, this.CONFIG_PATTERN);
     this._configFileProvider = new ConfigFileProviderImpl(configPattern);
-    const configWatcher = workspaceServices().getServiceInstanceFromClass(
-      AppMapConfigWatcher,
-      folder
-    );
-    assert(configWatcher);
-    this._configWatcher = configWatcher;
   }
 
   public async initialize(): Promise<AppmapConfigManagerInstance> {
@@ -96,7 +89,6 @@ export class AppmapConfigManagerInstance implements WorkspaceServiceInstance {
 
     this._configs = appmapConfigs;
     await this.makeAppmapDirs();
-    this.setupWatcher();
   }
 
   public get workspaceConfig(): WorkspaceConfig {
@@ -198,36 +190,49 @@ export class AppmapConfigManagerInstance implements WorkspaceServiceInstance {
     );
   }
 
-  private setupWatcher(): void {
-    if (this._watcherConfigured) return;
-
-    const handleConfigChange = async () => {
-      this._configFileProvider.reset();
-      await this.update();
-      this._onConfigChanged.fire();
-    };
-
-    this._configWatcher.onCreate(handleConfigChange);
-    this._configWatcher.onDelete(handleConfigChange);
-    this._configWatcher.onChange(handleConfigChange);
-
-    this._watcherConfigured = true;
+  public async handleConfigChange() {
+    this._configFileProvider.reset();
+    await this.update();
+    this._onConfigChanged.fire();
   }
 
   public dispose(): void {
     this._onConfigChanged.dispose();
-    this._configWatcher.dispose();
     this._configFileProvider.reset();
     this._configs = [];
   }
 }
 
-export class AppmapConfigManager implements WorkspaceService<AppmapConfigManagerInstance> {
+export class AppmapConfigManager
+  implements vscode.Disposable, WorkspaceService<AppmapConfigManagerInstance>
+{
   public static readonly serviceId = 'AppmapConfigManager';
   public static readonly DEFAULT_APPMAP_DIR = 'tmp/appmap';
+  private events: vscode.Disposable[];
+
+  constructor(configWatcher: Watcher) {
+    this.events = (['onChange', 'onCreate', 'onDelete'] as const).map((event) =>
+      configWatcher[event]((uri) => this.handleConfigChange(uri))
+    );
+  }
+
+  dispose() {
+    this.events.forEach((event) => event.dispose());
+  }
+
+  private handleConfigChange(uri: vscode.Uri) {
+    const folder = vscode.workspace.getWorkspaceFolder(uri);
+    if (!folder) return;
+    const instance = this.instances.get(folder);
+    if (!instance) return;
+    instance.handleConfigChange();
+  }
+
+  private instances = new WeakMap<vscode.WorkspaceFolder, AppmapConfigManagerInstance>();
 
   public async create(folder: vscode.WorkspaceFolder): Promise<AppmapConfigManagerInstance> {
     const instance = new AppmapConfigManagerInstance(folder);
+    this.instances.set(folder, instance);
     return instance.initialize();
   }
 }

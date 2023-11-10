@@ -2,7 +2,6 @@ import * as vscode from 'vscode';
 import { AUTHN_PROVIDER_NAME, getApiKey } from '../authentication';
 import FindingsDiagnosticsProvider from '../diagnostics/findingsDiagnosticsProvider';
 import FindingsIndex from './findingsIndex';
-import { FindingWatcher } from './findingWatcher';
 import openFinding from '../commands/openFinding';
 import { ProjectStateServiceInstance } from './projectStateService';
 import ExtensionState from '../configuration/extensionState';
@@ -10,6 +9,7 @@ import { ResolvedFinding } from './resolvedFinding';
 import { WorkspaceServices } from './workspaceServices';
 import Environment from '../configuration/environment';
 import { debuglog } from 'util';
+import Watcher from './watcher';
 
 const debug = debuglog('appmap-vscode:AnalysisManager');
 
@@ -21,7 +21,7 @@ export interface AnalysisToggleEvent {
 export default class AnalysisManager {
   private static disposables: Array<vscode.Disposable> = [];
   private static _findingsIndex?: FindingsIndex;
-  private static findingsWatcher?: FindingWatcher;
+  private static findingsWatcher?: Watcher;
   private static findingsDiagnosticsProvider?: FindingsDiagnosticsProvider;
   private static projectStates: ReadonlyArray<ProjectStateServiceInstance>;
   private static extensionState: ExtensionState;
@@ -117,20 +117,19 @@ export default class AnalysisManager {
       vscode.commands.executeCommand('setContext', 'appmap.numFindings', numFindings);
     });
 
-    const findingWatcher = new FindingWatcher();
+    const findingWatcher = new Watcher('**/appmap-findings.json');
     this.disposables.push(
-      findingWatcher.onCreate(({ uri, workspaceFolder }) => {
-        this._findingsIndex?.addFindingsFile(uri, workspaceFolder);
+      findingWatcher.onCreate((uri) => {
+        this._findingsIndex?.addFindingsFile(uri);
       }),
-      findingWatcher.onChange(({ uri, workspaceFolder }) => {
-        this._findingsIndex?.addFindingsFile(uri, workspaceFolder);
+      findingWatcher.onChange((uri) => {
+        this._findingsIndex?.addFindingsFile(uri);
       }),
-      findingWatcher.onDelete(({ uri, workspaceFolder }) => {
-        this._findingsIndex?.removeFindingsFile(uri, workspaceFolder);
+      findingWatcher.onDelete((uri) => {
+        this._findingsIndex?.removeFindingsFile(uri);
       })
     );
 
-    this.workspaceServices.enroll(findingWatcher);
     this.findingsWatcher = findingWatcher;
   }
 
@@ -144,7 +143,6 @@ export default class AnalysisManager {
     }
 
     if (this.findingsWatcher) {
-      this.workspaceServices.unenroll(this.findingsWatcher);
       this.findingsWatcher.dispose();
       this.findingsWatcher = undefined;
     }

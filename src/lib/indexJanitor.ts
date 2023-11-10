@@ -1,9 +1,11 @@
-import { Disposable, Uri } from 'vscode';
-import { AppMapWatcher } from '../services/appmapWatcher';
-import { ClassMapWatcher } from '../services/classMapWatcher';
-import { dirname } from 'path';
-import { retry } from '../util';
 import { rm } from 'fs/promises';
+import { dirname } from 'path';
+
+import { Disposable, Uri } from 'vscode';
+
+import { AppMapWatcher } from '../services/appmapWatcher';
+import Watcher from '../services/watcher';
+import { retry } from '../util';
 
 enum IndexFile {
   Metadata = 0,
@@ -24,13 +26,13 @@ export default class IndexJanitor implements Disposable {
     () => new Set<string>()
   );
 
-  constructor(appMapWatcher: AppMapWatcher, classMapWatcher: ClassMapWatcher) {
+  constructor(appMapWatcher: AppMapWatcher, classMapWatcher: Watcher) {
     this.disposables = [
       // AppMapWatcher is actually watching for changes to metadata.json, despite the URI being *.appmap.json.
-      appMapWatcher.onDelete(({ uri }) => this.update(IndexFile.Metadata, uri, 'delete')),
-      appMapWatcher.onCreate(({ uri }) => this.update(IndexFile.Metadata, uri, 'create')),
-      classMapWatcher.onDelete(({ uri }) => this.update(IndexFile.ClassMap, uri, 'delete')),
-      classMapWatcher.onCreate(({ uri }) => this.update(IndexFile.ClassMap, uri, 'create')),
+      appMapWatcher.onDelete((uri) => this.update(IndexFile.Metadata, uri, 'delete')),
+      appMapWatcher.onCreate((uri) => this.update(IndexFile.Metadata, uri, 'create')),
+      classMapWatcher.onDelete((uri) => this.update(IndexFile.ClassMap, uri, 'delete')),
+      classMapWatcher.onCreate((uri) => this.update(IndexFile.ClassMap, uri, 'create')),
     ];
   }
 
