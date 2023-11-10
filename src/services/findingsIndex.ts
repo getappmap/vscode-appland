@@ -47,11 +47,10 @@ export default class FindingsIndex extends EventEmitter implements vscode.Dispos
     affectedWorkspaces.forEach((workspaceFolder) => this._onChanged.fire(workspaceFolder));
   }
 
-  async addFindingsFile(
-    sourceUri: vscode.Uri,
-    workspaceFolder: vscode.WorkspaceFolder
-  ): Promise<void> {
-    debug('addFindingsFile(%s, %s)', sourceUri, workspaceFolder);
+  async addFindingsFile(sourceUri: vscode.Uri): Promise<void> {
+    debug('addFindingsFile(%s)', sourceUri);
+    const workspaceFolder = vscode.workspace.getWorkspaceFolder(sourceUri);
+    if (!workspaceFolder) return;
 
     let findingsData: Buffer;
     let findings: Finding[];
@@ -97,15 +96,15 @@ export default class FindingsIndex extends EventEmitter implements vscode.Dispos
     this._onChanged.fire(workspaceFolder);
   }
 
-  async removeFindingsFile(
-    sourceUri: vscode.Uri,
-    workspaceFolder: vscode.WorkspaceFolder
-  ): Promise<void> {
+  async removeFindingsFile(sourceUri: vscode.Uri): Promise<void> {
     if (await fileExists(sourceUri.fsPath)) return;
 
     this.findingsBySourceUri.delete(sourceUri.toString());
 
     this.emit('removed', sourceUri);
+
+    const workspaceFolder = vscode.workspace.getWorkspaceFolder(sourceUri);
+    if (!workspaceFolder) return;
     this._onChanged.fire(workspaceFolder);
   }
 

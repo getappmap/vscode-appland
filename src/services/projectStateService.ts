@@ -66,12 +66,14 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
           this.onUpdateAppMaps();
         }
       }),
-      configWatcher.onCreate(({ workspaceFolder }) => {
+      configWatcher.onCreate((uri) => {
+        const workspaceFolder = vscode.workspace.getWorkspaceFolder(uri);
         if (workspaceFolder === folder) {
           this.onConfigurationCreated();
         }
       }),
-      configWatcher.onDelete(async ({ workspaceFolder }) => {
+      configWatcher.onDelete(async (uri) => {
+        const workspaceFolder = vscode.workspace.getWorkspaceFolder(uri);
         if (workspaceFolder === folder) {
           await this.syncConfigurationState();
         }

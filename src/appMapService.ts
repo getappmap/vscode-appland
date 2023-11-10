@@ -4,7 +4,6 @@ import { ClassMapService } from './classMapService';
 import ExtensionState from './configuration/extensionState';
 import AppMapEditorProvider from './editor/appmapEditorProvider';
 import AnalysisManager from './services/analysisManager';
-import { AppMapConfigWatcher } from './services/appMapConfigWatcher';
 import { AppmapConfigManager } from './services/appmapConfigManager';
 import { AppMapRecommenderService } from './services/appmapRecommenderService';
 import { AppmapUptodateService } from './services/appmapUptodateService';
@@ -41,7 +40,6 @@ export default interface AppMapService {
   localAppMaps: AppMapsService;
   autoIndexService: AppMapProcessService;
   autoScanService: AppMapProcessService;
-  configWatcher: AppMapConfigWatcher;
   signInManager: typeof SignInManager;
   sourceFileWatcher?: SourceFileWatcher;
   uptodate?: AppmapUptodateService;
