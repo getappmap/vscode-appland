@@ -116,6 +116,7 @@ async function integrationTest() {
       '--install-extension',
       'appland.appmap',
       '--force',
+      '--password-store=basic',
     ],
     {
       encoding: 'utf-8',
@@ -142,6 +143,7 @@ async function integrationTest() {
         userDataDir,
         // '--disable-extensions',
         '--disable-gpu',
+        '--password-store=basic',
         workspaceDir,
       ],
     });
