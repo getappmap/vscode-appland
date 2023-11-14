@@ -96,7 +96,8 @@ export default function register(
           try {
             completion = await g.complete(openAI);
           } catch (e) {
-            debug(e.toString());
+            if (e instanceof Error) debug(e.toString());
+            else debug(`${e}`);
             vscode.window.showErrorMessage(`Unable to process your question: ${e}`);
           }
         }

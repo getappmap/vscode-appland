@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { Finding } from '@appland/scanner/built/cli';
+import { Finding } from '@appland/scanner';
 
 export type FindingLocation = {
   finding: Finding;

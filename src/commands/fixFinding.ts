@@ -41,7 +41,7 @@ export async function fixFinding(finding: ResolvedFinding, openAI: OpenAIApi) {
     }
   }
 
-  let participatingEvents = Object.values(finding.finding.participatingEvents || {});
+  let participatingEvents: Event[] = Object.values(finding.finding.participatingEvents || {});
   if (participatingEvents.length === 0) participatingEvents = [finding.finding.event];
 
   const locations = [
