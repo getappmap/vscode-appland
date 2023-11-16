@@ -66,6 +66,10 @@
     ],
     "commands": [
       {
+        "command": "appmap.openAiHelp",
+        "title": "AppMap: Ask AppMap AI"
+      },
+      {
         "command": "appmap.getAppmapState",
         "title": "AppMap: Copy Current AppMap State to Clipboard"
       },
