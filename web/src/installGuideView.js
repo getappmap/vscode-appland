@@ -23,6 +23,7 @@ export default function mountInstallGuide() {
             userAuthenticated: this.userAuthenticated,
             javaAgentStatus: this.javaAgentStatus,
             featureFlags: new Set(['ar-python']),
+            displayAiHelp: true,
           },
         });
       },
@@ -99,6 +100,10 @@ export default function mountInstallGuide() {
 
     app.$on('view-output', () => {
       vscode.postMessage({ command: 'view-output' });
+    });
+
+    app.$on('ai-help', () => {
+      vscode.postMessage({ command: 'ai-help' });
     });
 
     messages.on('page', ({ page }) => {
