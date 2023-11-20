@@ -27,6 +27,9 @@ export type SpawnOptions = {
 
   // Indicates whether or not log messages should be retained in a buffer
   saveOutput?: boolean;
+
+  // If specified, this function will be called with each line of stdout
+  stdoutListener?: (data: string) => void;
 } & Exclude<childProcess.SpawnOptionsWithoutStdio, 'argv0'>;
 
 export type ProgramOptions = {
@@ -59,7 +62,8 @@ export class ProcessLog extends Array<ProcessLogItem> {
   static appendLogger(
     process: childProcess.ChildProcessWithoutNullStreams,
     outputChannel?: vscode.OutputChannel,
-    save?: boolean
+    save?: boolean,
+    dataListener?: (data: string) => void
   ): ChildProcess {
     if ((process as ChildProcess).log) {
       throw new Error(`process ${process.pid} already has a logger appended`);
@@ -69,7 +73,10 @@ export class ProcessLog extends Array<ProcessLogItem> {
 
     process.stdout.setEncoding('utf8');
     process.stderr.setEncoding('utf8');
-    process.stdout.on('data', (data) => log.append(data, OutputStream.Stdout, true));
+    process.stdout.on('data', (data) => {
+      if (dataListener) dataListener(data);
+      log.append(data, OutputStream.Stdout, true);
+    });
     process.stderr.on('data', (data) => log.append(data, OutputStream.Stderr, true));
     process.once('error', (err) =>
       log.append(`an error occurred: ${String(err)}`, OutputStream.Stderr)
@@ -147,7 +154,8 @@ export function spawn(options: SpawnOptions): ChildProcess {
   const loggedProcess = ProcessLog.appendLogger(
     newProcess as childProcess.ChildProcessWithoutNullStreams,
     options.log,
-    options.saveOutput
+    options.saveOutput,
+    options.stdoutListener
   );
 
   return loggedProcess;
