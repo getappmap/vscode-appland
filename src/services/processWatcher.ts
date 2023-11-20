@@ -68,11 +68,16 @@ export class ProcessWatcher implements vscode.Disposable {
     this.options = {
       ...DEFAULT_RETRY_OPTIONS,
       ...options,
+      stdoutListener: this.onStdout.bind(this),
     };
   }
 
   get running(): boolean {
     return this.process !== undefined;
+  }
+
+  protected onStdout(_data: string): void {
+    // Available in subclasses.
   }
 
   protected async retry(): Promise<void> {
