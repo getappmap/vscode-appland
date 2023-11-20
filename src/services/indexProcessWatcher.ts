@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+
 import { NodeProcessService } from './nodeProcessService';
 import {
   ConfigFileProvider,
@@ -6,6 +7,7 @@ import {
   ProcessWatcher,
   ProcessWatcherOptions,
 } from './processWatcher';
+import { RPCClient } from '../lib/rpcClient';
 
 export default class IndexProcessWatcher extends ProcessWatcher {
   rpcPort?: number;
@@ -29,7 +31,15 @@ export default class IndexProcessWatcher extends ProcessWatcher {
     super(configFileProvider, options);
   }
 
-  
+  public isRpcAvailable(): boolean {
+    return !!this.rpcPort;
+  }
+
+  public rpcClient(): RPCClient {
+    if (!this.rpcPort) throw new Error('Index process is not running');
+
+    return new RPCClient(this.rpcPort);
+  }
 
   protected onStdout(data: string): void {
     super.onStdout(data);
