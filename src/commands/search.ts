@@ -5,13 +5,17 @@ import { NodeProcessService } from '../services/nodeProcessService';
 import { ProcessId } from '../services/processWatcher';
 import { warn } from 'console';
 import renderSearchResults from '../lib/renderSearchResults';
-import { AppMapFilter, buildAppMap, serializeFilter } from '@appland/models';
+import { AppMapFilter, serializeFilter } from '@appland/models';
 import { FormatType, format, unparseDiagram } from '@appland/sequence-diagram';
-import { mkdtemp, writeFile } from 'fs/promises';
-import { tmpdir } from 'os';
-import { join } from 'path';
+import buildOpenAIApi from '../lib/buildOpenAIApi';
+import { explain } from '../lib/explain';
+import lookupSourceCode from './lookupSourceCode';
 
-async function performSearch(query: string, workspaceUri: vscode.Uri) {
+async function performSearch(
+  context: vscode.ExtensionContext,
+  query: string,
+  workspaceUri: vscode.Uri
+) {
   const workspace = vscode.workspace.getWorkspaceFolder(workspaceUri);
   if (!workspace) {
     warn('No workspace folder found for URI', workspaceUri);
@@ -91,6 +95,7 @@ async function performSearch(query: string, workspaceUri: vscode.Uri) {
   // It's probably best to show the user the full AppMap, and use the filtered
   // AppMap to provide context to an LLM.
 
+  let explanation: string | undefined;
   {
     const firstResult = searchResults.results[0];
     const codeObjects = firstResult.events.map((event) => event.fqid);
@@ -114,11 +119,28 @@ async function performSearch(query: string, workspaceUri: vscode.Uri) {
       content: plantUML.diagram,
     });
     await vscode.window.showTextDocument(doc, { preview: false });
-  }
 
-  // const tempDir = await mkdtemp(join(tmpdir(), 'appmap-filter-'));
-  // const tempFile = join(tempDir, 'filtered.appmap.json');
-  // await writeFile(tempFile, appmapStr, 'utf8');
+    const codeSnippets = new Map<string, string>();
+    for (const event of firstResult.events) {
+      if (!event.location) continue;
+
+      const snippet = await lookupSourceCode(workspaceUri.fsPath, event.location);
+      if (snippet) codeSnippets.set(event.location, snippet);
+    }
+
+    const openAI = await buildOpenAIApi(context);
+    if (openAI) {
+      explanation = await explain(openAI, plantUML.diagram, codeSnippets);
+
+      const doc = await vscode.workspace.openTextDocument({
+        language: 'markdown',
+        content: explanation,
+      });
+      await vscode.window.showTextDocument(doc, { preview: false });
+
+      (firstResult as any).explanation = explanation;
+    }
+  }
 
   const resultsPage = await renderSearchResults(
     rpcClient,
@@ -191,6 +213,9 @@ export function quickSearch(context: vscode.ExtensionContext) {
   );
   context.subscriptions.push(provider);
 
-  const command = vscode.commands.registerCommand('appmap.quickSearch', performSearch);
+  const command = vscode.commands.registerCommand(
+    'appmap.quickSearch',
+    performSearch.bind(null, context)
+  );
   context.subscriptions.push(command);
 }

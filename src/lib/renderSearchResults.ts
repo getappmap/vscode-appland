@@ -27,9 +27,13 @@ Tokenized query
 
 ---
 
-{{#with (appmap_metadata appmap)}}
+  {{#with (appmap_metadata appmap)}}
 ### [{{ name }}]({{ appmap_path ../appmap }})
-{{/with}}
+  {{/with}}
+
+  {{#if explanation}}
+{{{explanation}}}
+  {{/if}}
 
 Most relevant code objects:
 
