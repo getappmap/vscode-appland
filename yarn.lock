@@ -2258,11 +2258,11 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:^18.11.18":
-  version: 18.19.3
-  resolution: "@types/node@npm:18.19.3"
+  version: 18.18.11
+  resolution: "@types/node@npm:18.18.11"
   dependencies:
     undici-types: ~5.26.4
-  checksum: 58c4fa45a78fcec75c78182a4b266395905957633654eb0311c5f9c30ac15c179ea2287ab1af034e46c2db7bb0589ef0000ee64c1de8f568a0aad29eaadb100c
+  checksum: e4c2c5b792023c86248013589820d157ced46a35dcd60b15a3133a8f67f6b54c8870f245ecccbe7a12c49f1991ea84401946ddbb3f44894ec042642233e616d5
   languageName: node
   linkType: hard
 
@@ -3151,6 +3151,7 @@ __metadata:
     mocha-suppress-logs: ^0.3.1
     mockery: ^2.1.0
     node-libs-browser: ^2.2.1
+    openai: ^4.19.1
     openapi-types: ^12.1.3
     popper.js: ^1.16.1
     prettier: ^2.8.4
@@ -10824,6 +10825,25 @@ __metadata:
   bin:
     openai: bin/cli
   checksum: 5a65897daadbac30b452c16b8d7342db14e701feafa6f2294dde05ec95e404dd5b93b8ade0c4a39667819e6ec00215c248889bb69767730e656442b0d6c68ce3
+  languageName: node
+  linkType: hard
+
+"openai@npm:^4.19.1":
+  version: 4.19.1
+  resolution: "openai@npm:4.19.1"
+  dependencies:
+    "@types/node": ^18.11.18
+    "@types/node-fetch": ^2.6.4
+    abort-controller: ^3.0.0
+    agentkeepalive: ^4.2.1
+    digest-fetch: ^1.3.0
+    form-data-encoder: 1.7.2
+    formdata-node: ^4.3.2
+    node-fetch: ^2.6.7
+    web-streams-polyfill: ^3.2.1
+  bin:
+    openai: bin/cli
+  checksum: 118ed7f32779908ae969a3f0977d36dc3a7854eafc803ff68ddbad7266d4c150106cd338ec8c5f842de294f727aebcb17861b51a97cd66ade69399a537f09f6a
   languageName: node
   linkType: hard
 

@@ -502,6 +502,7 @@
     "jayson": "^4.1.0",
     "jquery": "^3.5.1",
     "js-yaml": "^4.1.0",
+    "openai": "^4.19.1",
     "popper.js": "^1.16.1",
     "proper-lockfile": "^4.1.2",
     "semver": "^7.3.5",
