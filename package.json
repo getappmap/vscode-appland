@@ -186,6 +186,10 @@
         "title": "AppMap: Compare Sequence Diagrams"
       },
       {
+        "command": "appmap.search",
+        "title": "AppMap: Search"
+      },
+      {
         "command": "appmap.login",
         "title": "AppMap: Login"
       },
@@ -492,6 +496,7 @@
     "@appland/components": "^3.13.2",
     "@appland/diagrams": "^1.7.0",
     "@appland/models": "^2.9.0",
+    "@appland/rpc": "^1.0.0",
     "@appland/scanner": "^1.83.0",
     "@appland/sequence-diagram": "^1.11.0",
     "@yarnpkg/parsers": "^3.0.0-rc.45",
