@@ -1,20 +1,15 @@
+import * as vscode from 'vscode';
+
 import { readFile } from 'fs/promises';
 import { fileExists } from '../util';
 import { join } from 'path';
 
-// TODO: This is not working
-// const LANGUAGE_REGEXP_MAP: Record<string, RegExp> = {
-//   '.rb': new RegExp(`def\\s+\\w+.*?\\n(.*?\\n)*?^end\\b`, 'gm'),
-//   '.java': new RegExp(
-//     `(?:public|private|protected)?\\s+(?:static\\s+)?(?:final\\s+)?(?:synchronized\\s+)?(?:abstract\\s+)?(?:native\\s+)?(?:strictfp\\s+)?(?:transient\\s+)?(?:volatile\\s+)?(?:\\w+\\s+)*\\w+\\s+\\w+\\s*\\([^)]*\\)\\s*(?:throws\\s+\\w+(?:,\\s*\\w+)*)?\\s*\\{(?:[^{}]*\\{[^{}]*\\})*[^{}]*\\}`,
-//     'gm'
-//   ),
-//   '.py': new RegExp(`def\\s+\\w+.*?:\\n(.*?\\n)*?`, 'gm'),
-//   '.js': new RegExp(
-//     `(?:async\\s+)?function\\s+\\w+\\s*\\([^)]*\\)\\s*\\{(?:[^{}]*\\{[^{}]*\\})*[^{}]*\\}`,
-//     'gm'
-//   ),
-// };
+const SYMBOL_KINDS = [
+  vscode.SymbolKind.Class,
+  vscode.SymbolKind.Function,
+  vscode.SymbolKind.Method,
+  vscode.SymbolKind.Struct,
+];
 
 export default async function lookupSourceCode(
   directory: string,
@@ -26,29 +21,51 @@ export default async function lookupSourceCode(
   if (!(await fileExists(fileName))) return;
 
   const fileContent = await readFile(fileName, 'utf-8');
-  let functionContent: string | undefined;
-  if (lineNoStr) {
-    const lineno = parseInt(lineNoStr, 10);
+  if (!lineNoStr) return fileContent;
+
+  const lineNo = parseInt(lineNoStr, 10);
+
+  const symbols: vscode.DocumentSymbol[] =
+    (await vscode.commands.executeCommand(
+      'vscode.executeDocumentSymbolProvider',
+      vscode.Uri.file(fileName)
+    )) || [];
+
+  const symbolRanges = new Array<vscode.Range>();
+
+  // Collect all symbol ranges that contain the line number. Limit the results to
+  // classes, functions, methods, and structs. Smaller symbols such as Enum, Variable,
+  // Constant, etc are too fine grained to be useful.
+  // Subsequently, the smallest symbol range will be selected from among the candidates.
+  const collectSymbolRange = (symbol: vscode.DocumentSymbol): void => {
+    const { kind } = symbol;
+    if (SYMBOL_KINDS.includes(kind)) {
+      const { range } = symbol;
+
+      if (range.start.line <= lineNo && range.end.line >= lineNo) symbolRanges.push(range);
+    }
+
+    symbol.children.forEach(collectSymbolRange);
+  };
+  symbols.forEach(collectSymbolRange);
+
+  const smallestSymbolRange = (): string | undefined => {
+    if (symbolRanges.length === 0) return;
+
+    symbolRanges.sort((a, b) => a.start.line - b.start.line);
+    const smallestSymbolRange = symbolRanges[0];
+    return fileContent
+      .split('\n')
+      .slice(smallestSymbolRange.start.line - 1, smallestSymbolRange.end.line)
+      .join('\n');
+  };
+
+  const fileContentSnippet = (): string | undefined => {
     const lines = fileContent.split('\n');
-    functionContent = lines.slice(lineno - 1, lineno + 10).join('\n');
+    const start = Math.max(0, lineNo - 1);
+    const end = Math.min(lines.length, lineNo + 10);
+    return lines.slice(start, end).join('\n');
+  };
 
-    // const extension = path.substring(path.lastIndexOf('.'));
-    // const regex = LANGUAGE_REGEXP_MAP[extension];
-
-    // if (regex) {
-    //   const match = regex.exec(fileContent);
-    //   if (match) {
-    //     const lines = match[0].split('\n');
-    //     const startLine = parseInt(lineno, 10);
-    //     const endLine = startLine + lines.length - 1;
-    //     if (startLine <= endLine) {
-    //       functionContent = lines.slice(startLine - 1, endLine).join('\n');
-    //     }
-    //   }
-    // }
-  } else {
-    functionContent = fileContent;
-  }
-
-  return functionContent;
+  return smallestSymbolRange() || fileContentSnippet();
 }
