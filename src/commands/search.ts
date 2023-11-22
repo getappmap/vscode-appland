@@ -88,13 +88,6 @@ async function performSearch(
 
   const searchResults = await rpcClient.search(tokenizedQuery, 5);
 
-  // Alternative implementation: Create an AppMap that is filtered to
-  // show only the context objects. The downside of doing this is that the rest
-  // of the AppMap is not available to view. The upside is that it's more compact.
-
-  // It's probably best to show the user the full AppMap, and use the filtered
-  // AppMap to provide context to an LLM.
-
   let explanation: string | undefined;
   {
     const firstResult = searchResults.results[0];
@@ -132,12 +125,6 @@ async function performSearch(
     if (openAI) {
       explanation = await explain(openAI, plantUML.diagram, codeSnippets);
 
-      const doc = await vscode.workspace.openTextDocument({
-        language: 'markdown',
-        content: explanation,
-      });
-      await vscode.window.showTextDocument(doc, { preview: false });
-
       (firstResult as any).explanation = explanation;
     }
   }
@@ -157,18 +144,6 @@ async function performSearch(
   await vscode.window.showTextDocument(doc, { preview: false });
   await new Promise((resolve) => setTimeout(resolve, 500));
   await vscode.commands.executeCommand('markdown.showPreview', doc.uri);
-
-  // let { appmap } = firstResult;
-  // if (!appmap.endsWith('.appmap.json')) appmap = [appmap, '.appmap.json'].join('');
-  // if (!isAbsolute(appmap)) appmap = join(workspace.uri.fsPath, appmap);
-
-  // const firstEvent = firstResult.events[0];
-  // assert(firstEvent);
-  // const diagramState = { selectedObject: firstEvent.fqid }; // select code object
-  // // const diagramState = { selectedObject: ['event', firstEvent.eventIds[0]].join(':') }; // select specific event
-  // const diagramStateStr = JSON.stringify(diagramState);
-  // const uri = vscode.Uri.parse(`file:/${[appmap, diagramStateStr].join('#')}`);
-  // await vscode.commands.executeCommand('vscode.openWith', uri, 'appmap.views.appMapFile');
 }
 
 class QuickSearchProvider implements vscode.CodeActionProvider {
