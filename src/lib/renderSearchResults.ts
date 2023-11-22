@@ -21,6 +21,12 @@ Tokenized query
 \`\`\`
 </details>
 
+{{#if explanation}}
+## AI Summary
+
+{{{explanation}}}
+{{/if}}
+
 ## Search results
 
 {{#each searchResponse.results}}
@@ -30,10 +36,6 @@ Tokenized query
   {{#with (appmap_metadata appmap)}}
 ### [{{ name }}]({{ appmap_path ../appmap }})
   {{/with}}
-
-  {{#if explanation}}
-{{{explanation}}}
-  {{/if}}
 
 Most relevant code objects:
 
@@ -101,6 +103,7 @@ export default async function renderSearchResults(
   folder: vscode.WorkspaceFolder,
   query: string,
   tokenizedQuery: string,
+  explanation,
   searchResponse: SearchRpc.SearchResponse
 ): Promise<string> {
   const metadata = new Map<string, Metadata>();
@@ -144,5 +147,5 @@ export default async function renderSearchResults(
     language_name,
   };
 
-  return VIEW({ folder, query, tokenizedQuery, searchResponse }, { helpers });
+  return VIEW({ folder, explanation, query, tokenizedQuery, searchResponse }, { helpers });
 }
