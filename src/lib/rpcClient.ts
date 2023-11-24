@@ -50,18 +50,23 @@ export class RPCClient {
   async sequenceDiagram(
     appmapId: string,
     options?: SequenceDiagramOptions,
-    filter?: string | Record<string, any>
-  ): Promise<Diagram> {
+    filter?: string | Record<string, any>,
+    format?: string,
+    formatOptions?: Record<string, boolean>
+  ): Promise<Diagram | string> {
     const response: { error: RpcError | null; result?: AppMapRpc.SequenceDiagramResponse } =
       await this.client.request(AppMapRpc.SequenceDiagramFunctionName, {
         appmap: appmapId,
         options,
         filter,
+        format,
+        formatOptions,
       });
     if (response.error) {
       throw new Error(`${response.error.message || 'unknown error'} (code ${response.error.code})`);
     }
     assert(response.result);
-    return unparseDiagram(response.result as Diagram);
+    if (typeof response.result === 'string') return response.result;
+    else return unparseDiagram(response.result as Diagram);
   }
 }
