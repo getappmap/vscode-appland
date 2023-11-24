@@ -12,6 +12,44 @@ import renderSearchResults from '../lib/renderSearchResults';
 import buildOpenAIApi from '../lib/buildOpenAIApi';
 import { explain } from '../lib/explain';
 import lookupSourceCode from './lookupSourceCode';
+import assert from 'assert';
+
+const ERASE_PATTERNS = [
+  // Characters that have special search meaning in lunr
+  '*',
+  ':',
+  '^',
+  '~',
+  '+',
+  '-',
+  // Other characters and reserved words that we want to ignore
+  '_',
+  '\n',
+  '.',
+  '=',
+  ',',
+  '(',
+  ')',
+  '[',
+  ']',
+  '#',
+  '/',
+  '@',
+  '>',
+  "'",
+  '"',
+  /\bdef\b/g,
+  /\bend\b/g,
+  /\bfunction\b/g,
+  /\bmodule\b/g,
+  /\bclass\b/g,
+  /\binterface\b/g,
+  /\bprivate\b/g,
+  /\bpublic\b/g,
+  /\bprotected\b/g,
+];
+
+const NUM_DIAGRAMS_TO_ANALYZE = 3;
 
 async function promptForSearch(context: vscode.ExtensionContext) {
   const query = await vscode.window.showInputBox({
@@ -40,11 +78,18 @@ async function performSearch(
   context: vscode.ExtensionContext,
   query: string,
   workspaceUri: vscode.Uri
-) {
+): Promise<string | undefined> {
+  const showError = async (message: string): Promise<string | undefined> => {
+    return vscode.window.showErrorMessage(message);
+  };
+
+  const showAppMapSearchNotReadyError = async (): Promise<string | undefined> => {
+    return showError('AppMap search is not ready yet. Please try again in a few seconds.');
+  };
+
   const workspace = vscode.workspace.getWorkspaceFolder(workspaceUri);
   if (!workspace) {
-    warn('No workspace folder found for URI', workspaceUri);
-    return;
+    return showError(`No workspace folder found for URI: ${workspaceUri}`);
   }
 
   const processServiceInstance = workspaceServices().getServiceInstanceFromClass(
@@ -52,69 +97,38 @@ async function performSearch(
     workspace
   );
   if (!processServiceInstance) {
-    warn('No NodeProcessService instance found for workspace', workspace);
-    return;
+    warn(`No NodeProcessService instance found for workspace: ${workspace}`);
+    return showAppMapSearchNotReadyError();
   }
 
   const indexProcess = processServiceInstance.processes.find(
     (proc) => proc.id === ProcessId.Index
   ) as IndexProcessWatcher;
   if (!indexProcess) {
-    warn(`No ${ProcessId.Index} helper process found for workspace`, workspace);
-    return;
+    warn(`No ${ProcessId.Index} helper process found for workspace: ${workspace}`);
+    return showAppMapSearchNotReadyError();
   }
 
   if (!indexProcess.isRpcAvailable()) {
-    warn('AppMap RPC is not available');
-    return;
+    return showAppMapSearchNotReadyError();
   }
-
   const rpcClient = indexProcess.rpcClient();
 
-  const erasePatterns = [
-    // Characters that have special search meaning in lunr
-    '*',
-    ':',
-    '^',
-    '~',
-    '+',
-    '-',
-    // Other characters and reserved words that we want to ignore
-    '_',
-    '\n',
-    '.',
-    '=',
-    ',',
-    '(',
-    ')',
-    '[',
-    ']',
-    '#',
-    '/',
-    '@',
-    '>',
-    "'",
-    '"',
-    /\bdef\b/g,
-    /\bend\b/g,
-    /\bfunction\b/g,
-    /\bmodule\b/g,
-    /\bclass\b/g,
-    /\binterface\b/g,
-    /\bprivate\b/g,
-    /\bpublic\b/g,
-    /\bprotected\b/g,
-  ];
-
-  let tokenizedQuery = query;
-  for (const pattern of erasePatterns) {
-    tokenizedQuery = tokenizedQuery.replaceAll(pattern, ' ');
-  }
-
-  const searchResults = await rpcClient.search(tokenizedQuery, 5);
-
+  let searchResponse: SearchRpc.SearchResponse | undefined;
   let explanation: string | undefined;
-  {
+  let tokenizedQuery = query;
+
+  const searchStep = async (): Promise<void> => {
+    for (const pattern of ERASE_PATTERNS) {
+      tokenizedQuery = tokenizedQuery.replaceAll(pattern, ' ');
+    }
+
+    searchResponse = await rpcClient.search(tokenizedQuery, 5);
+  };
+
+  const explainStep = async () => {
+    if (!searchResponse) return;
+
     const sequenceDiagrams = new Array<string>();
     const codeSnippets = new Map<string, string>();
 
@@ -136,7 +150,7 @@ async function performSearch(
       sequenceDiagrams.push(plantUML.diagram);
     };
 
-    for (const result of searchResults.results.slice(0, 3)) {
+    for (const result of searchResponse.results.slice(0, NUM_DIAGRAMS_TO_ANALYZE)) {
       await buildSequenceDiagram(result);
       for (const event of result.events) {
         if (!event.location) continue;
@@ -152,24 +166,39 @@ async function performSearch(
     if (openAI) {
       explanation = await explain(openAI, query, sequenceDiagrams, codeSnippets);
     }
-  }
+  };
 
-  const resultsPage = await renderSearchResults(
-    rpcClient,
-    workspace,
-    query,
-    tokenizedQuery,
-    explanation,
-    searchResults
+  const displaySearchResults = async () => {
+    if (!searchResponse) return;
+
+    const resultsPage = await renderSearchResults(
+      rpcClient,
+      workspace,
+      query,
+      tokenizedQuery,
+      explanation,
+      searchResponse
+    );
+    const doc = await vscode.workspace.openTextDocument({
+      language: 'markdown',
+      content: resultsPage,
+    });
+    await vscode.window.showTextDocument(doc, { preview: false });
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    await vscode.commands.executeCommand('markdown.showPreview', doc.uri);
+  };
+
+  vscode.window.withProgress(
+    { title: 'Searching AppMaps', location: vscode.ProgressLocation.Notification },
+    async (progress) => {
+      progress.report({ message: 'Searching AppMaps' });
+      await searchStep();
+      progress.report({ message: 'Analyzing results' });
+      await explainStep();
+      progress.report({ message: 'Rendering results' });
+      await displaySearchResults();
+    }
   );
-  // Open as Markdown document
-  const doc = await vscode.workspace.openTextDocument({
-    language: 'markdown',
-    content: resultsPage,
-  });
-  await vscode.window.showTextDocument(doc, { preview: false });
-  await new Promise((resolve) => setTimeout(resolve, 500));
-  await vscode.commands.executeCommand('markdown.showPreview', doc.uri);
 }
 
 class QuickSearchProvider implements vscode.CodeActionProvider {
