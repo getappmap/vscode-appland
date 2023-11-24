@@ -140,14 +140,15 @@ async function performSearch(
       appmapFilter.declutter.context.names = codeObjects;
       const filterState = serializeFilter(appmapFilter);
 
-      const sequenceDiagramData = await rpcClient.sequenceDiagram(
+      const plantUML = await rpcClient.sequenceDiagram(
         result.appmap,
         undefined,
-        filterState
+        filterState,
+        'plantuml',
+        { disableMarkup: true }
       );
-      const sequenceDiagram = unparseDiagram(sequenceDiagramData);
-      const plantUML = format(FormatType.PlantUML, sequenceDiagram, result.appmap);
-      sequenceDiagrams.push(plantUML.diagram);
+      assert(typeof plantUML === 'string');
+      sequenceDiagrams.push(plantUML);
     };
 
     for (const result of searchResponse.results.slice(0, NUM_DIAGRAMS_TO_ANALYZE)) {
