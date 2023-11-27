@@ -44,7 +44,7 @@ export class RPCClient {
       throw new Error(`${response.error.message || 'unknown error'} (code ${response.error.code})`);
     }
     assert(response.result);
-    return response.result as Metadata;
+    return response.result as unknown as Metadata;
   }
 
   async sequenceDiagram(
@@ -67,6 +67,6 @@ export class RPCClient {
     }
     assert(response.result);
     if (typeof response.result === 'string') return response.result;
-    else return unparseDiagram(response.result as Diagram);
+    else return unparseDiagram(response.result as unknown as Diagram);
   }
 }
