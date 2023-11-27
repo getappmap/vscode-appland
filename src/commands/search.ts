@@ -2,7 +2,6 @@ import * as vscode from 'vscode';
 import { SearchRpc } from '@appland/rpc';
 import { warn } from 'console';
 import { AppMapFilter, serializeFilter } from '@appland/models';
-import { FormatType, format, unparseDiagram } from '@appland/sequence-diagram';
 
 import IndexProcessWatcher from '../services/indexProcessWatcher';
 import { workspaceServices } from '../services/workspaceServices';
@@ -13,41 +12,8 @@ import buildOpenAIApi from '../lib/buildOpenAIApi';
 import { explain } from '../lib/explain';
 import lookupSourceCode from './lookupSourceCode';
 import assert from 'assert';
-
-const ERASE_PATTERNS = [
-  // Characters that have special search meaning in lunr
-  '*',
-  ':',
-  '^',
-  '~',
-  '+',
-  '-',
-  // Other characters and reserved words that we want to ignore
-  '_',
-  '\n',
-  '.',
-  '=',
-  ',',
-  '(',
-  ')',
-  '[',
-  ']',
-  '#',
-  '/',
-  '@',
-  '>',
-  "'",
-  '"',
-  /\bdef\b/g,
-  /\bend\b/g,
-  /\bfunction\b/g,
-  /\bmodule\b/g,
-  /\bclass\b/g,
-  /\binterface\b/g,
-  /\bprivate\b/g,
-  /\bpublic\b/g,
-  /\bprotected\b/g,
-];
+import suggestVectorTerms from '../lib/suggestVectorTerms';
+import { relative } from 'path';
 
 const NUM_DIAGRAMS_TO_ANALYZE = 3;
 
@@ -116,14 +82,14 @@ async function performSearch(
 
   let searchResponse: SearchRpc.SearchResponse | undefined;
   let explanation: string | undefined;
-  let tokenizedQuery = query;
+  let vectorTerms: string[];
 
   const searchStep = async (): Promise<void> => {
-    for (const pattern of ERASE_PATTERNS) {
-      tokenizedQuery = tokenizedQuery.replaceAll(pattern, ' ');
-    }
+    const openAI = await buildOpenAIApi(context);
+    if (!openAI) return;
 
-    searchResponse = await rpcClient.search(tokenizedQuery, 5);
+    vectorTerms = await suggestVectorTerms(openAI, query);
+    searchResponse = await rpcClient.search(vectorTerms.join(' '), 5);
   };
 
   const explainStep = async () => {
@@ -165,7 +131,24 @@ async function performSearch(
 
     const openAI = await buildOpenAIApi(context);
     if (openAI) {
-      explanation = await explain(openAI, query, sequenceDiagrams, codeSnippets);
+      let answer = await explain(openAI, query, sequenceDiagrams, codeSnippets);
+
+      const codeReferences = answer.match(/`[^`]+`/g);
+      // Replace each codeReference that matches an actual file with [file](file)
+      if (codeReferences) {
+        for (const codeReference of codeReferences) {
+          const file = codeReference.slice(1, -1);
+          const fileMatches = await vscode.workspace.findFiles(
+            new vscode.RelativePattern(workspace, file)
+          );
+          if (fileMatches.length === 1) {
+            const fileMatch = relative(workspace.uri.fsPath, fileMatches[0].fsPath);
+            answer = answer.replaceAll(codeReference, `[${file}](${fileMatch})`);
+          }
+        }
+      }
+
+      explanation = answer;
     }
   };
 
@@ -176,7 +159,7 @@ async function performSearch(
       rpcClient,
       workspace,
       query,
-      tokenizedQuery,
+      vectorTerms.join(' '),
       explanation,
       searchResponse
     );

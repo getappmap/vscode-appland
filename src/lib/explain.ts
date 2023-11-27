@@ -8,11 +8,11 @@ export async function explain(
   query: string,
   sequenceDiagrams: string[],
   codeSnippets: Map<string, string>
-): Promise<string | undefined> {
+): Promise<string> {
   const systemMessages = [
     'You are a code explainer.',
     'Respond in about 200 words, using Markdown.',
-    'Include code snippets, code references, and links.',
+    'Include code snippets and code file paths.',
     `If the user has asked a question, answer the question.`,
     'If the user has provided keywords or a code snippet, but is not asking a question, summarize what the code does.',
   ].map((message) => ({
@@ -72,7 +72,7 @@ export async function explain(
     });
   } catch (err) {
     console.error(err);
-    return;
+    throw new Error('AI explanation failed');
   }
 
   return response.choices.map((choice) => choice.message.content).join('\n');
