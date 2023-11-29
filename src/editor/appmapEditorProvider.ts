@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
+import { parse } from 'path';
 import { Telemetry, DEBUG_EXCEPTION } from '../telemetry';
 import { version } from '../../package.json';
 import ExtensionState from '../configuration/extensionState';
@@ -489,7 +490,18 @@ export default class AppMapEditorProvider
     }
 
     async function viewSource(location: string): Promise<void> {
-      const tokens = location.split(':', 2);
+      const tokens = location.split(':');
+
+      const parsedLocation = parse(location);
+      const { root } = parsedLocation;
+
+      // Handle the situation where the location is a Windows file path with a drive letter
+      // For example, C:/Users/user/some/directory/file.rb:4
+      if (root.includes(':')) {
+        const driveLetter = tokens.shift();
+        tokens[0] = `${driveLetter}:${tokens[0]}`;
+      }
+
       const path = tokens[0];
       const lineNumberStr = tokens[1];
       let lineNumber = 1;
