@@ -12,6 +12,7 @@ import AppMapService from '../../src/appMapService';
 import { CodeObjectEntry } from '../../src/lib/CodeObjectEntry';
 import { touch } from '../../src/lib/touch';
 import { repeatUntil, wait, waitFor } from '../waitFor';
+import { findFiles } from '../../src/lib/findFiles';
 
 export { repeatUntil, wait, waitFor };
 
@@ -146,9 +147,7 @@ export async function initializeWorkspace(): Promise<void> {
 }
 
 export async function waitForIndexer(): Promise<void> {
-  const appmapFiles = (await vscode.workspace.findFiles(`**/*.appmap.json`)).map(
-    (uri) => uri.fsPath
-  );
+  const appmapFiles = (await findFiles(`**/*.appmap.json`)).map((uri) => uri.fsPath);
   const touchAppMaps = async () => Promise.all(appmapFiles.map((filePath) => touch(filePath)));
   await repeatUntil(
     touchAppMaps,
@@ -286,11 +285,11 @@ export async function waitForExtension(): Promise<AppMapService> {
 }
 
 export async function mtimeFiles(): Promise<vscode.Uri[]> {
-  return vscode.workspace.findFiles(`**/mtime`);
+  return findFiles(`**/mtime`);
 }
 
 export async function appmapFiles(): Promise<vscode.Uri[]> {
-  return vscode.workspace.findFiles(`**/*.appmap.json`);
+  return findFiles(`**/*.appmap.json`);
 }
 
 // Tests which have anything to do with findings require analysis to

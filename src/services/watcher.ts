@@ -1,61 +1,34 @@
 import * as vscode from 'vscode';
-import FileChangeHandler from './fileChangeHandler';
+import { FileChangeEmitter } from './fileChangeEmitter';
 import { debuglog } from 'node:util';
+import { findFiles } from '../lib/findFiles';
 
 const debug = debuglog('appmap-vscode:Watcher');
 
-export default class Watcher {
-  disposables: vscode.Disposable[] = [];
+export default class Watcher extends FileChangeEmitter {
+  protected watcher: vscode.FileSystemWatcher;
 
-  constructor(
-    public filePattern: string,
-    public folder: vscode.WorkspaceFolder,
-    public handler: FileChangeHandler
-  ) {}
+  constructor(public filePattern: string) {
+    super();
+    this.watcher = vscode.workspace.createFileSystemWatcher(this.filePattern);
+    setImmediate(async () => {
+      await this.initialize();
+      this.pipeFrom(this.watcher);
+    });
+  }
 
   async initialize() {
-    for (const pattern of this.watchPatterns) {
-      const description = [pattern.base, pattern.pattern].join('/');
-
-      let watcher: vscode.FileSystemWatcher;
-      this.disposables.push(
-        (watcher = vscode.workspace.createFileSystemWatcher(pattern)),
-        watcher.onDidChange((uri) => {
-          debug('%s: onChange(%s)', description, uri);
-          this.handler.onChange(uri, this.folder);
-        }),
-        watcher.onDidCreate((uri) => {
-          debug('%s: onCreate(%s)', description, uri);
-          this.handler.onCreate(uri, this.folder);
-        }),
-        watcher.onDidDelete((uri) => {
-          debug('%s: onDelete(%s)', description, uri);
-          this.handler.onDelete(uri, this.folder);
-        })
-      );
-
-      debug('%s: starting initital scan', description);
-      (await vscode.workspace.findFiles(pattern)).map((uri) => {
-        debug('%s: onCreate(%s)', description, uri);
-        this.handler.onCreate(uri, this.folder);
-      });
-      debug('%s: finished initital scan', description);
-    }
+    debug('%s: starting initital scan', this.filePattern);
+    (await findFiles(this.filePattern)).map((uri) => {
+      debug('%s: onCreate(%s)', this.filePattern, uri);
+      this._onCreate.fire(uri);
+    });
+    debug('%s: finished initital scan', this.filePattern);
   }
 
   async dispose() {
-    for (const pattern of this.watchPatterns) {
-      (await vscode.workspace.findFiles(pattern)).map((uri) =>
-        this.handler.onDelete(uri, this.folder)
-      );
-    }
-
-    this.disposables.forEach((disposable) => disposable.dispose());
-  }
-
-  get watchPatterns(): vscode.RelativePattern[] {
-    return ['tmp/appmap', 'build/appmap', 'target/appmap'].map((dir) => {
-      return new vscode.RelativePattern(this.folder, `**/${dir}/**/${this.filePattern}`);
-    });
+    super.dispose();
+    this.watcher.dispose();
+    (await findFiles(this.filePattern)).map((uri) => this._onDelete.fire(uri));
   }
 }

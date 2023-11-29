@@ -1,42 +1,22 @@
 import * as vscode from 'vscode';
 
-export interface FileChangeEvent {
-  uri: vscode.Uri;
-  workspaceFolder: vscode.WorkspaceFolder;
-}
-
-export interface FileInitEvent {
-  initializing?: boolean;
-}
-
-export class FileChangeEmitter {
-  protected _onCreate = new vscode.EventEmitter<FileChangeEvent & FileInitEvent>();
-  protected _onChange = new vscode.EventEmitter<FileChangeEvent>();
-  protected _onDelete = new vscode.EventEmitter<FileChangeEvent>();
+export class FileChangeEmitter implements vscode.Disposable {
+  protected _onCreate = new vscode.EventEmitter<vscode.Uri>();
+  protected _onChange = new vscode.EventEmitter<vscode.Uri>();
+  protected _onDelete = new vscode.EventEmitter<vscode.Uri>();
   public onCreate = this._onCreate.event;
   public onChange = this._onChange.event;
   public onDelete = this._onDelete.event;
 
-  protected pipeFrom(
-    watcher: vscode.FileSystemWatcher,
-    workspaceFolder: vscode.WorkspaceFolder
-  ): void {
-    watcher.onDidCreate((uri) => {
-      this._onCreate.fire({ uri, workspaceFolder });
-    });
+  protected disposables = [this._onChange, this._onCreate, this._onDelete];
 
-    watcher.onDidChange((uri) => {
-      this._onChange.fire({ uri, workspaceFolder });
-    });
-
-    watcher.onDidDelete((uri) => {
-      this._onDelete.fire({ uri, workspaceFolder });
-    });
+  protected pipeFrom(watcher: vscode.FileSystemWatcher): void {
+    watcher.onDidCreate(this._onCreate.fire, this._onCreate, this.disposables);
+    watcher.onDidChange(this._onChange.fire, this._onChange, this.disposables);
+    watcher.onDidDelete(this._onDelete.fire, this._onDelete, this.disposables);
   }
 
-  dispose(): void {
-    this._onCreate.dispose();
-    this._onChange.dispose();
-    this._onDelete.dispose();
+  dispose() {
+    this.disposables.forEach((d) => d.dispose());
   }
 }

@@ -15,11 +15,9 @@ import appmapHoverProvider from './hover/appmapHoverProvider';
 import ProcessServiceImpl from './processServiceImpl';
 import { resetUsageState } from './commands/resetUsageState';
 import AppMapCollectionFile from './services/appmapCollectionFile';
-import { AppMapConfigWatcher } from './services/appMapConfigWatcher';
 import { AppmapUptodateService } from './services/appmapUptodateService';
 import { AppMapWatcher } from './services/appmapWatcher';
 import ClassMapIndex from './services/classMapIndex';
-import { ClassMapWatcher } from './services/classMapWatcher';
 import LineInfoIndex from './services/lineInfoIndex';
 import { NodeProcessService } from './services/nodeProcessService';
 import ProjectStateService from './services/projectStateService';
@@ -59,6 +57,7 @@ import { unregister as unregisterTerminal } from './commands/installer/terminals
 import getAppmapDir from './commands/getAppmapDir';
 import JavaAssets from './services/javaAssets';
 import checkAndTriggerFirstAppMapNotification from './lib/firstAppMapNotification';
+import Watcher from './services/watcher';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   Telemetry.register(context);
@@ -81,22 +80,27 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     const appmapCollectionFile = new AppMapCollectionFile();
 
     const appmapWatcher = new AppMapWatcher();
+
+    let initializing = true;
     context.subscriptions.push(
-      appmapWatcher.onCreate(({ uri, initializing }) => {
+      appmapWatcher,
+      appmapWatcher.onCreate((uri) => {
         appmapCollectionFile.onCreate(uri);
         if (!initializing) checkAndTriggerFirstAppMapNotification(extensionState);
       }),
-      appmapWatcher.onDelete(({ uri }) => appmapCollectionFile.onDelete(uri)),
-      appmapWatcher.onChange(({ uri }) => appmapCollectionFile.onChange(uri))
+      appmapWatcher.onDelete((uri) => appmapCollectionFile.onDelete(uri)),
+      appmapWatcher.onChange((uri) => appmapCollectionFile.onChange(uri))
     );
+    await appmapWatcher.initialize();
+    initializing = false;
 
-    await workspaceServices.enroll(appmapWatcher);
     await appmapCollectionFile.initialize();
 
-    const configWatcher = new AppMapConfigWatcher();
-    await workspaceServices.enroll(configWatcher);
+    const configWatcher = new Watcher('**/appmap.yml');
+    context.subscriptions.push(configWatcher);
 
-    const configManager = new AppmapConfigManager();
+    const configManager = new AppmapConfigManager(configWatcher);
+    context.subscriptions.push(configManager);
     await workspaceServices.enroll(configManager);
 
     const classMapIndex = new ClassMapIndex();
@@ -104,16 +108,16 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
     deleteAllAppMaps(context, appmapCollectionFile, classMapIndex);
 
-    const classMapWatcher = new ClassMapWatcher();
+    const classMapWatcher = new Watcher('**/classMap.json');
     context.subscriptions.push(
-      // TODO: workspaceFolder is available for these three events as well, if you want to use it.
-      classMapWatcher.onCreate(({ uri }) => {
+      classMapWatcher,
+      classMapWatcher.onCreate((uri) => {
         classMapIndex.addClassMapFile(uri);
       }),
-      classMapWatcher.onChange(({ uri }) => {
+      classMapWatcher.onChange((uri) => {
         classMapIndex.addClassMapFile(uri);
       }),
-      classMapWatcher.onDelete(({ uri }) => {
+      classMapWatcher.onDelete((uri) => {
         classMapIndex.removeClassMapFile(uri);
       })
     );
@@ -122,6 +126,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
     const appmapUptodateService = new AppmapUptodateService(context);
     const sourceFileWatcher = new SourceFileWatcher(classMapIndex);
+    context.subscriptions.push(sourceFileWatcher);
 
     await outOfDateTests(context, appmapUptodateService);
     await openCodeObjectInSource(context);
@@ -129,15 +134,14 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     appmapHoverProvider(context, lineInfoIndex);
     tryOpenInstallGuide(extensionState);
 
-    await workspaceServices.enroll(sourceFileWatcher);
-    await workspaceServices.enroll(classMapWatcher);
-
     const activateUptodateService = async () => {
       if (!(appmapUptodateService && sourceFileWatcher)) return;
 
       // Update the uptodate status whenever a source file or AppMap changes.
       // AppMap deletion does not trigger this.
-      const updateUptodate = ({ uri, workspaceFolder }) => {
+      const updateUptodate = (uri) => {
+        const workspaceFolder = vscode.workspace.getWorkspaceFolder(uri);
+        if (!workspaceFolder) return;
         console.log(`[source-file-watcher] ${uri.fsPath} updated in ${workspaceFolder.name}`);
         assert(appmapUptodateService);
         const uptodateService = workspaceServices.getServiceInstance(
@@ -271,7 +275,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       autoScanService: autoScanServiceImpl,
       signInManager: SignInManager,
       sourceFileWatcher,
-      configWatcher,
       workspaceServices,
       uptodate: appmapUptodateService,
       classMap: classMapIndex,

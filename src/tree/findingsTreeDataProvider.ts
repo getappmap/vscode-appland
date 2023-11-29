@@ -128,11 +128,13 @@ class FindingTreeItem extends vscode.TreeItem {
   static label(finding: ResolvedFinding): string {
     const { event } = finding.finding;
     const req = event['http_server_request'];
+    const query = event['sql_query'];
     return (
       finding.locationLabel ||
       event.path ||
       finding.finding.stack[0] ||
-      (req && `${req?.request_method} ${req?.path_info}`)
+      (req && `${req?.request_method} ${req?.path_info}`) ||
+      (query && query?.sql)
     );
   }
 }

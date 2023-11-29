@@ -3,6 +3,7 @@ import { promises as fs } from 'fs';
 import { dirname } from 'path';
 import { default as ignore, Ignore } from 'ignore';
 import VersionControlProperties from './versionControl';
+import { findFiles } from '../../lib/findFiles';
 
 type DirIgnore = {
   ignore: Ignore;
@@ -36,7 +37,7 @@ export default class GitProperties implements VersionControlProperties {
   public async initialize(dir: string): Promise<void> {
     this.ignores = await Promise.all(
       (
-        await vscode.workspace.findFiles(new vscode.RelativePattern(dir, '**/.gitignore'))
+        await findFiles(new vscode.RelativePattern(dir, '**/.gitignore'))
       ).map(async (uri) => ({ dir: dirname(uri.fsPath), ignore: await buildIgnore(uri.fsPath) }))
     );
   }
