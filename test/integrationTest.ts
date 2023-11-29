@@ -106,21 +106,10 @@ async function integrationTest() {
     );
   }
 
-  cp.spawnSync(
-    cliPath,
-    [
-      '--extensions-dir',
-      extensionDevelopmentPath,
-      '--user-data-dir',
-      userDataDir,
-      '--force',
-      '--password-store=basic',
-    ],
-    {
-      encoding: 'utf-8',
-      stdio: 'inherit',
-    }
-  );
+  cp.spawnSync(cliPath, ['--user-data-dir', userDataDir, '--force', '--password-store=basic'], {
+    encoding: 'utf-8',
+    stdio: 'inherit',
+  });
 
   const runTests = async (testFile: string, workspaceDir: string) => {
     startTime = new Date();
