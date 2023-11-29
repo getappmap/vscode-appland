@@ -113,8 +113,6 @@ async function integrationTest() {
       extensionDevelopmentPath,
       '--user-data-dir',
       userDataDir,
-      '--install-extension',
-      'appland.appmap',
       '--force',
       '--password-store=basic',
     ],
