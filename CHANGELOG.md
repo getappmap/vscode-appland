@@ -1,3 +1,17 @@
+# [0.104.0](https://github.com/getappmap/vscode-appland/compare/v0.103.0...v0.104.0) (2023-11-29)
+
+
+### Bug Fixes
+
+* Delete appmap reliably ([#834](https://github.com/getappmap/vscode-appland/issues/834)) ([d2c85d8](https://github.com/getappmap/vscode-appland/commit/d2c85d8bd94af799c1377b1a5fd24b92dee59ec1))
+* Improve resource usage in file watchers and finders ([091f3db](https://github.com/getappmap/vscode-appland/commit/091f3db6403bed0bff16ded4f3542579499c8ce4)), closes [#839](https://github.com/getappmap/vscode-appland/issues/839)
+* Use sql query as fallback for finding title ([9560546](https://github.com/getappmap/vscode-appland/commit/95605466b4f60c6b3102be06a2084c27cb0c1cc7))
+
+
+### Features
+
+* Update @appland/components to 3.13.2 ([b65153c](https://github.com/getappmap/vscode-appland/commit/b65153c134a6dd39da99bb983395142411bcaf3f))
+
 # [0.103.0](https://github.com/getappmap/vscode-appland/compare/v0.102.0...v0.103.0) (2023-10-31)
 
 
