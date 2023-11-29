@@ -155,6 +155,23 @@ export class FindingsTreeDataProvider
     );
 
     appmaps.onUpdated(() => this._onDidChangeTreeData.fire(undefined));
+
+    context.subscriptions.push(
+      vscode.commands.registerCommand(
+        'appmap.context.fixTest',
+        async (item: FailedTestTreeItem) => {
+          vscode.commands.executeCommand('appmap.fixTest', item.appmap.descriptor.resourceUri);
+        }
+      )
+    );
+    context.subscriptions.push(
+      vscode.commands.registerCommand(
+        'appmap.context.fixFinding',
+        async (item: FindingTreeItem) => {
+          vscode.commands.executeCommand('appmap.fixFinding', item.finding.finding.hash_v2);
+        }
+      )
+    );
   }
 
   public setFindingsIndex(findingsIndex?: FindingsIndex): void {

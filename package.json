@@ -3,7 +3,7 @@
   "name": "appmap",
   "displayName": "AppMap",
   "description": "Interactive maps of runtime code behavior",
-  "version": "0.101.2",
+  "version": "0.103.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/getappmap/vscode-appland"
@@ -132,6 +132,22 @@
         "title": "AppMap: Open Code Object in AppMap"
       },
       {
+        "command": "appmap.fixFinding",
+        "title": "AppMap: Suggest a Fix for an Analysis Finding"
+      },
+      {
+        "command": "appmap.fixTest",
+        "title": "AppMap: Suggest a Fix for a Failing Test"
+      },
+      {
+        "command": "appmap.ask",
+        "title": "AppMap: Ask a Question About the Current Code Selection"
+      },
+      {
+        "command": "appmap.generate",
+        "title": "AppMap: Generate Code Based on the Current Code Selection"
+      },
+      {
         "command": "appmap.touchOutOfDateTestFiles",
         "title": "AppMap: Touch Out-of-Date Test Files"
       },
@@ -145,13 +161,23 @@
       },
       {
         "command": "appmap.context.openAsJson",
-        "title": "AppMap View: Open as JSON",
+        "title": "Open as JSON",
         "icon": "$(bracket)"
       },
       {
         "command": "appmap.context.deleteAppMap",
-        "title": "AppMap View: Delete AppMap",
+        "title": "Delete",
         "icon": "$(trash)"
+      },
+      {
+        "command": "appmap.context.fixTest",
+        "title": "Fix",
+        "icon": "$(wrench)"
+      },
+      {
+        "command": "appmap.context.fixFinding",
+        "title": "Fix",
+        "icon": "$(wrench)"
       },
       {
         "command": "appmap.context.rename",
@@ -377,6 +403,16 @@
           "group": "inline"
         },
         {
+          "command": "appmap.context.fixTest",
+          "when": "view == appmap.views.findings && viewItem == appmap.views.analysis.failedTest",
+          "group": "inline"
+        },
+        {
+          "command": "appmap.context.fixFinding",
+          "when": "view == appmap.views.findings && viewItem == appmap.views.analysis.finding",
+          "group": "inline"
+        },
+        {
           "command": "appmap.context.openInFileExplorer",
           "when": "view == appmap.views.appmaps && viewItem == appmap.views.appmaps.appMap"
         },
@@ -498,6 +534,7 @@
     "diff": "^5.1.0",
     "jquery": "^3.5.1",
     "js-yaml": "^4.1.0",
+    "openai": "^3.3.0",
     "popper.js": "^1.16.1",
     "proper-lockfile": "^4.1.2",
     "semver": "^7.3.5",

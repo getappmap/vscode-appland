@@ -58,6 +58,10 @@ import getAppmapDir from './commands/getAppmapDir';
 import JavaAssets from './services/javaAssets';
 import checkAndTriggerFirstAppMapNotification from './lib/firstAppMapNotification';
 import Watcher from './services/watcher';
+import { default as fixFinding } from './commands/fixFinding';
+import { default as fixTest } from './commands/fixTest';
+import { default as ask } from './commands/ask';
+import { default as generate } from './commands/generate';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   Telemetry.register(context);
@@ -191,6 +195,11 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     const projectStates = await workspaceServices.enroll(projectState);
 
     openCodeObjectInAppMap(context, appmapCollectionFile, classMapIndex);
+
+    fixFinding(context);
+    fixTest(context, appmapCollectionFile);
+    ask(context, lineInfoIndex, appmapCollectionFile);
+    generate(context, appmapCollectionFile);
 
     await SignInManager.register(extensionState);
     const signInWebview = new SignInViewProvider(context, appmapServerAuthenticationProvider);
