@@ -23,24 +23,30 @@ export default class AppMapServerAuthenticationHandler implements RequestHandler
       return;
     }
 
-    const apiKeyParam = queryParams.get('api_key');
-    if (!apiKeyParam) {
+    const licenseKeyParam = queryParams.get('api_key');
+    if (!licenseKeyParam) {
       this._onError.fire(new Error('missing parameter "api_key"'));
       return;
     }
 
-    const buffer = Buffer.from(apiKeyParam, 'base64');
+    const buffer = Buffer.from(licenseKeyParam, 'base64');
     const [email] = buffer.toString('utf-8').split(':');
 
-    this._onCreateSession.fire({
-      id: email,
-      account: { id: email, label: email },
-      scopes: ['default'],
-      accessToken: apiKeyParam,
-    });
+    this._onCreateSession.fire(
+      AppMapServerAuthenticationHandler.buildSession(email, licenseKeyParam)
+    );
   }
 
   dispose(): void {
     // do nothing, we have nothing to dispose
+  }
+
+  static buildSession(email: string, licenseKey: string): vscode.AuthenticationSession {
+    return {
+      id: email,
+      account: { id: email, label: email },
+      scopes: ['default'],
+      accessToken: licenseKey,
+    };
   }
 }
