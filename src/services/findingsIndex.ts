@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { Finding } from '@appland/scanner/built/cli';
+import { Finding } from '@appland/scanner';
 import { ResolvedFinding } from './resolvedFinding';
 import { debuglog, promisify } from 'util';
 import { readFile } from 'fs';
