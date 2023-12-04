@@ -2,9 +2,7 @@ import * as vscode from 'vscode';
 
 export default class ExtensionSettings {
   public static get appMapServerURL(): vscode.Uri {
-    const configUrl: string = vscode.workspace
-      .getConfiguration('appMap')
-      .get('applandUrl') as string;
+    const configUrl = vscode.workspace.getConfiguration('appMap').get('applandUrl') as string;
     return vscode.Uri.parse(configUrl);
   }
 

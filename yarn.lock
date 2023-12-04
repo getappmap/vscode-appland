@@ -107,7 +107,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/client@npm:^1.5.0, @appland/client@npm:^1.7.0, @appland/client@npm:^1.8.0":
+"@appland/client@npm:^1.5.0, @appland/client@npm:^1.8.0":
   version: 1.8.0
   resolution: "@appland/client@npm:1.8.0"
   dependencies:
@@ -116,6 +116,18 @@ __metadata:
     form-data: ^4.0.0
     js-yaml: ^4.1.0
   checksum: 59199217ab42e8f85583d600e875b951cb18db11e32ae046fd0cb45b578e8bfcc4f25768941eb3d083a4ef664c7517e4d6a3c7d33bf7d03fc28c75f82b1ac356
+  languageName: node
+  linkType: hard
+
+"@appland/client@npm:^1.9.0":
+  version: 1.9.0
+  resolution: "@appland/client@npm:1.9.0"
+  dependencies:
+    "@appland/models": 2.9.0
+    "@types/form-data": ^2.5.0
+    form-data: ^4.0.0
+    js-yaml: ^4.1.0
+  checksum: 86402259f2fb4a2c4f83776b8dd1db643af2f102583bd3d616f86c2868328562f67bf47047eaa38f5c8671ca48890531c59ed30c97322ef04a4b3d4604123f60
   languageName: node
   linkType: hard
 
@@ -184,6 +196,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@appland/models@npm:2.9.0, @appland/models@npm:^2.9.0":
+  version: 2.9.0
+  resolution: "@appland/models@npm:2.9.0"
+  dependencies:
+    "@appland/sql-parser": ^1.5.0
+    crypto-js: ^4.0.0
+  checksum: d5faf24f8f4b26481494b3fc942ac6bba4c78d2211581b5eab9e21c60c2ef083bbdc43b7acd43dc9ff864e6b6b735914648885d5e00fee0c727836d3ef3cca06
+  languageName: node
+  linkType: hard
+
 "@appland/models@npm:^2.7.0":
   version: 2.7.0
   resolution: "@appland/models@npm:2.7.0"
@@ -201,6 +223,16 @@ __metadata:
     "@appland/models": ^2.6.3
     js-yaml: ^4.1.0
   checksum: 88abb52d3a9a897ca694ab32f3363d1f1622b2dd0c6f7de2fb652c28df3f6aa2b075c45fe99dfffa51af18ccab4fad60cf991121f942c16d5b8ff2a08090242d
+  languageName: node
+  linkType: hard
+
+"@appland/openapi@npm:^1.7.0":
+  version: 1.7.0
+  resolution: "@appland/openapi@npm:1.7.0"
+  dependencies:
+    "@appland/models": ^2.6.3
+    js-yaml: ^4.1.0
+  checksum: 50a1283c7108d8772c9497d5b77c5bbbfba2b22c6d465d7e878f6e5b47ee31d86018858c86612001573edbcfab038bd0cf21a2313ad0962417a1db12ee0cbb35
   languageName: node
   linkType: hard
 
@@ -241,6 +273,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@appland/sequence-diagram@npm:^1.11.0":
+  version: 1.11.0
+  resolution: "@appland/sequence-diagram@npm:1.11.0"
+  dependencies:
+    "@appland/models": ^2.7.0
+    "@appland/openapi": ^1.7.0
+    "@datastructures-js/priority-queue": ^6.1.3
+    crypto-js: ^4.1.1
+    diff: ^5.1.0
+    lru-cache: 6.0.0
+  checksum: 1bcc27f311e0024ecb4bb816b9886c4954ba87ba66f913050587844ab1aca048e2b13313e8d277ed4af99f900c93b40b76c4cdcdd40e4fe3b67d75603c0ba5b3
+  languageName: node
+  linkType: hard
+
 "@appland/sequence-diagram@npm:^1.6.1, @appland/sequence-diagram@npm:^1.7.0":
   version: 1.7.0
   resolution: "@appland/sequence-diagram@npm:1.7.0"
@@ -251,19 +297,6 @@ __metadata:
     crypto-js: ^4.1.1
     diff: ^5.1.0
   checksum: 033d425f1a29de1dd531ae67968e7b495f6d7f2f477f63ef6631de9e278bdb41393394def03624d23b9d247184d5f746489a1c7dbeee379d3848acfeeb4ec0ba
-  languageName: node
-  linkType: hard
-
-"@appland/sequence-diagram@npm:^1.8.0":
-  version: 1.8.0
-  resolution: "@appland/sequence-diagram@npm:1.8.0"
-  dependencies:
-    "@appland/models": ^2.6.3
-    "@appland/openapi": ^1.4.3
-    "@datastructures-js/priority-queue": ^6.1.3
-    crypto-js: ^4.1.1
-    diff: ^5.1.0
-  checksum: 143e78ec50f26d0dd4ddb7b57b8fdb89043209949290a2262766c39a1489129adb55de352874f975c7d332e6e32a294da4367ca134a210bd799231f23262463a
   languageName: node
   linkType: hard
 
@@ -2773,12 +2806,12 @@ __metadata:
   resolution: "appmap@workspace:."
   dependencies:
     "@appland/appmap": ^3.80.2
-    "@appland/client": ^1.7.0
+    "@appland/client": ^1.9.0
     "@appland/components": ^3.13.2
     "@appland/diagrams": ^1.7.0
-    "@appland/models": ^2.6.3
+    "@appland/models": ^2.9.0
     "@appland/scanner": ^1.83.0
-    "@appland/sequence-diagram": ^1.8.0
+    "@appland/sequence-diagram": ^1.11.0
     "@playwright/test": ^1.22.2
     "@semantic-release/changelog": ^5.0.1
     "@semantic-release/exec": ^5.0.0
@@ -2829,7 +2862,7 @@ __metadata:
     mocha-suppress-logs: ^0.3.1
     mockery: ^2.1.0
     node-libs-browser: ^2.2.1
-    openapi-types: ^11.0.1
+    openapi-types: ^12.1.3
     popper.js: ^1.16.1
     prettier: ^2.8.4
     prettier-eslint: ^12.0.0
@@ -9872,10 +9905,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"openapi-types@npm:^11.0.1":
-  version: 11.0.1
-  resolution: "openapi-types@npm:11.0.1"
-  checksum: 182c5b28199a0d030bf5f64b9c23f65dc800cdc845ae09c40aa5e03b862634a02526d5092af53bf853514af778ee2f36dead741e0521e01f944cf7f50927e14e
+"openapi-types@npm:^12.1.3":
+  version: 12.1.3
+  resolution: "openapi-types@npm:12.1.3"
+  checksum: 7fa5547f87a58d2aa0eba6e91d396f42d7d31bc3ae140e61b5d60b47d2fd068b48776f42407d5a8da7280cf31195aa128c2fc285e8bb871d1105edee5647a0bb
   languageName: node
   linkType: hard
 

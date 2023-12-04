@@ -170,8 +170,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       uriHandler
     );
     appmapServerAuthenticationProvider.onDidChangeSessions((e) => {
-      if (e.added) vscode.window.showInformationMessage('Logged in to AppMap');
-      if (e.removed) vscode.window.showInformationMessage('Logged out of AppMap');
+      if (e.added?.length) vscode.window.showInformationMessage('Logged in to AppMap');
+      if (e.removed?.length) vscode.window.showInformationMessage('Logged out of AppMap');
       AppMapServerConfiguration.updateAppMapClientConfiguration();
     });
     vscode.commands.registerCommand('appmap.login', async () => {
