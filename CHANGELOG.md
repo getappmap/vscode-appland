@@ -1,3 +1,11 @@
+# [0.105.0](https://github.com/getappmap/vscode-appland/compare/v0.104.0...v0.105.0) (2023-12-04)
+
+
+### Features
+
+* AppMap: Enter License Key ([ebb166d](https://github.com/getappmap/vscode-appland/commit/ebb166ddcba75a88538aecb5e41534cbe5649637))
+* Update default AppMap server URL ([cb583ec](https://github.com/getappmap/vscode-appland/commit/cb583ec34380d78bfc0a0ab6e045d389ed8535b4))
+
 # [0.104.0](https://github.com/getappmap/vscode-appland/compare/v0.103.0...v0.104.0) (2023-11-29)
 
 
