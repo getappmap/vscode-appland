@@ -489,9 +489,10 @@ export default class AppMapEditorProvider
     }
 
     async function viewSource(location: string): Promise<void> {
-      const tokens = location.split(':', 2);
-      const path = tokens[0];
-      const lineNumberStr = tokens[1];
+      const match = location.match(/^(.*?)(?::(\d+))?$/);
+      if (!match) return;
+      const [, path, lineNumberStr] = match;
+
       let lineNumber = 1;
       if (lineNumberStr) {
         lineNumber = Number.parseInt(lineNumberStr, 10);
