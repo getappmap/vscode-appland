@@ -109,7 +109,10 @@ export default class RemoteRecording {
       );
       this.onBeginRecording(recordingUrl);
     } catch (e) {
-      vscode.window.showErrorMessage(`The endpoint does not support AppMap recording`);
+      const err = e as Error;
+      vscode.window.showErrorMessage(
+        `Failed to start recording on ${recordingUrl}: ${err.message}`
+      );
       return;
     }
 

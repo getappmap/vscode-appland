@@ -1843,15 +1843,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/bent@npm:^7.3.2":
-  version: 7.3.2
-  resolution: "@types/bent@npm:7.3.2"
-  dependencies:
-    "@types/node": "*"
-  checksum: af28b4e77fce3de928ac4b90568971b73970351d3167bf89418c363ab207164516745b477ed803c90b2aaf81d46487e298e4fa8febd45b2d109e80872670c75f
-  languageName: node
-  linkType: hard
-
 "@types/btoa-lite@npm:^1.0.0":
   version: 1.0.0
   resolution: "@types/btoa-lite@npm:1.0.0"
@@ -2816,7 +2807,6 @@ __metadata:
     "@semantic-release/changelog": ^5.0.1
     "@semantic-release/exec": ^5.0.0
     "@semantic-release/git": ^9.0.0
-    "@types/bent": ^7.3.2
     "@types/chai-as-promised": ^7.1.5
     "@types/chai-fs": ^2.0.2
     "@types/fs-extra": ^9.0.13
@@ -2838,7 +2828,6 @@ __metadata:
     "@vscode/vsce": ^2.19.0
     "@vue/compiler-sfc": ^3.2.37
     "@yarnpkg/parsers": ^3.0.0-rc.45
-    bent: ^7.3.12
     bootstrap: ^4.5.3
     bootstrap-autocomplete: ^2.3.7
     browserify-fs: ^1.0.0
@@ -3205,17 +3194,6 @@ __metadata:
   version: 2.2.2
   resolution: "before-after-hook@npm:2.2.2"
   checksum: dc2e1ffe389e5afbef2a46790b1b5a50247ed57aba67649cfa9ec2552d248cc9278f222e72fb5a8ff59bbb39d78fbaa97e7234ead0c6b5e8418b67a8644ce207
-  languageName: node
-  linkType: hard
-
-"bent@npm:^7.3.12":
-  version: 7.3.12
-  resolution: "bent@npm:7.3.12"
-  dependencies:
-    bytesish: ^0.4.1
-    caseless: ~0.12.0
-    is-stream: ^2.0.0
-  checksum: b0c08f6fa204baec0841021f5cff49aba929bbff28089bbac0d446122aa5f8e10b1b6837310b0800717cbf431c984bead2ed130bec35045d4ea688d896458d54
   languageName: node
   linkType: hard
 
@@ -3596,13 +3574,6 @@ __metadata:
   version: 7.0.1
   resolution: "byte-size@npm:7.0.1"
   checksum: 6791663a6d53bf950e896f119d3648fe8d7e8ae677e2ccdae84d0e5b78f21126e25f9d73aa19be2a297cb27abd36b6f5c361c0de36ebb2f3eb8a853f2ac99a4a
-  languageName: node
-  linkType: hard
-
-"bytesish@npm:^0.4.1":
-  version: 0.4.4
-  resolution: "bytesish@npm:0.4.4"
-  checksum: 50a6c9423f66fff984676ee1d3c5f12d2a23830cb5de81abc597415aa2f51cc617b251d660eede10b8e45bf3a3a5c31d4be467ec69888f31ccc66e90cb586ad5
   languageName: node
   linkType: hard
 
