@@ -50,7 +50,7 @@ describe('remote recording', () => {
   });
 
   it('returns false on command stop with a 404 response', async () => {
-    sinon.stub(RemoteRecordingClient, 'stop').resolves({ statusCode: 404 });
+    sinon.stub(RemoteRecordingClient, 'stop').resolves({ statusCode: 404, body: undefined });
     const response = await remoteRecording.stop('http://localhost:8080/');
     assert(!response);
   });
