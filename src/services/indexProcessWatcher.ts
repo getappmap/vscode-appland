@@ -10,7 +10,7 @@ import {
 import { RPCClient } from '../lib/rpcClient';
 
 export default class IndexProcessWatcher extends ProcessWatcher {
-  rpcPort?: number;
+  public rpcPort?: number;
   stdoutBuffer = '';
 
   constructor(

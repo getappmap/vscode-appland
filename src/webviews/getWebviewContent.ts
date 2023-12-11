@@ -4,6 +4,7 @@ import * as vscode from 'vscode';
 type AppmapModule =
   | 'app'
   | 'install-guide'
+  | 'chat-search'
   | 'findings-view'
   | 'finding-info-view'
   | 'sign-in-view';
