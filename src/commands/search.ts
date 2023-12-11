@@ -63,7 +63,7 @@ async function performSearch(
     workspace
   );
   if (!processServiceInstance) {
-    warn(`No NodeProcessService instance found for workspace: ${workspace}`);
+    warn(`No NodeProcessService instance found for workspace: ${workspace.name}`);
     return showAppMapSearchNotReadyError();
   }
 
@@ -71,7 +71,7 @@ async function performSearch(
     (proc) => proc.id === ProcessId.Index
   ) as IndexProcessWatcher;
   if (!indexProcess) {
-    warn(`No ${ProcessId.Index} helper process found for workspace: ${workspace}`);
+    warn(`No ${ProcessId.Index} helper process found for workspace: ${workspace.name}`);
     return showAppMapSearchNotReadyError();
   }
 
