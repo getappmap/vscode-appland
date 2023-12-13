@@ -507,7 +507,7 @@ export default class AppMapEditorProvider
    * Get the static html used for the editor webviews.
    */
   private getHtmlForWebview(webview: vscode.Webview): string {
-    return getWebviewContent(webview, this.context, 'AppLand Scenario', 'app');
+    return getWebviewContent(webview, this.context, 'AppMap Diagram', 'app');
   }
 
   //forget usage state set by this class
