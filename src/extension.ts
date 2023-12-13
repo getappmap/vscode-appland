@@ -59,6 +59,7 @@ import JavaAssets from './services/javaAssets';
 import checkAndTriggerFirstAppMapNotification from './lib/firstAppMapNotification';
 import Watcher from './services/watcher';
 import ChatSearchWebview from './webviews/chatSearchWebview';
+import quickSearch from './commands/quickSearch';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   Telemetry.register(context);
@@ -245,6 +246,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     generateOpenApi(context);
     findByName(context, appmapCollectionFile);
     ChatSearchWebview.register(context);
+    quickSearch(context);
     resetUsageState(context, extensionState);
     updateAppMapConfigs(context, runConfigService, workspaceServices);
     downloadLatestJavaJar(context);

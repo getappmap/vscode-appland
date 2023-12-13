@@ -15,6 +15,7 @@ export default function mountChatSearchView() {
           props: {
             indexPort: initialData.indexPort,
             aiPort: initialData.aiPort,
+            question: initialData.question,
           },
         });
       },
