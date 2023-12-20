@@ -8,8 +8,6 @@ import { ProcessId } from '../services/processWatcher';
 
 export default class ChatSearchWebview {
   public static register(context: vscode.ExtensionContext): void {
-    let aiPort: number | undefined;
-
     context.subscriptions.push(
       vscode.commands.registerCommand(
         'appmap.search',
@@ -57,14 +55,7 @@ export default class ChatSearchWebview {
             return showAppMapSearchNotReadyError();
           }
 
-          const { rpcPort: indexPort } = indexProcess;
-
-          if (!aiPort) {
-            const aiPortStr = await vscode.window.showInputBox({
-              title: 'AI RPC port (default: 30102)',
-            });
-            if (aiPortStr) aiPort = parseInt(aiPortStr, 10);
-          }
+          const { rpcPort: appmapRpcPort } = indexProcess;
 
           const panel = vscode.window.createWebviewPanel(
             'chatSearch',
@@ -88,8 +79,7 @@ export default class ChatSearchWebview {
               case 'chat-search-ready':
                 panel.webview.postMessage({
                   type: 'initChatSearch',
-                  indexPort: indexPort,
-                  aiPort: aiPort,
+                  appmapRpcPort,
                   question,
                 });
 
