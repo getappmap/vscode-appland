@@ -13,8 +13,7 @@ export default function mountChatSearchView() {
         return h(VChatSearch, {
           ref: 'ui',
           props: {
-            indexPort: initialData.indexPort,
-            aiPort: initialData.aiPort,
+            appmapRpcPort: initialData.appmapRpcPort,
             question: initialData.question,
           },
         });
