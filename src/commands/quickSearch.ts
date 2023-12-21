@@ -11,10 +11,13 @@ class QuickSearchProvider implements vscode.CodeActionProvider {
     const workspaceFolder = vscode.workspace.getWorkspaceFolder(document.uri);
     if (!workspaceFolder) return [];
 
-    const codeAction = new vscode.CodeAction('Search AppMaps', vscode.CodeActionKind.Refactor);
+    const codeAction = new vscode.CodeAction(
+      'Explain with AppMap AI',
+      vscode.CodeActionKind.Refactor
+    );
     codeAction.command = {
       command: 'appmap.quickSearch',
-      title: 'Search AppMaps',
+      title: 'Explain with AppMap AI',
       arguments: [workspaceFolder.uri, selectedCode],
     };
     return [codeAction];
@@ -43,7 +46,7 @@ export default function quickSearch(context: vscode.ExtensionContext) {
       'appmap.quickSearch',
       (workspaceUri: vscode.Uri, selectedCode: string) => {
         const workspace = vscode.workspace.getWorkspaceFolder(workspaceUri);
-        vscode.commands.executeCommand('appmap.search', workspace, selectedCode);
+        vscode.commands.executeCommand('appmap.explain', workspace, selectedCode);
       }
     )
   );

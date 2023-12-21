@@ -186,8 +186,8 @@
         "title": "AppMap: Compare Sequence Diagrams"
       },
       {
-        "command": "appmap.search",
-        "title": "AppMap: Search"
+        "command": "appmap.explain",
+        "title": "AppMap AI: Explain"
       },
       {
         "command": "appmap.login",

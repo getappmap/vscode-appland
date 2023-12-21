@@ -10,7 +10,7 @@ export default class ChatSearchWebview {
   public static register(context: vscode.ExtensionContext): void {
     context.subscriptions.push(
       vscode.commands.registerCommand(
-        'appmap.search',
+        'appmap.explain',
         async (workspace?: vscode.WorkspaceFolder, question?: string) => {
           if (!workspace) {
             const workspaces = vscode.workspace.workspaceFolders;
@@ -31,7 +31,7 @@ export default class ChatSearchWebview {
           };
 
           const showAppMapSearchNotReadyError = async (): Promise<string | undefined> => {
-            return showError('AppMap search is not ready yet. Please try again in a few seconds.');
+            return showError('AppMap Explain is not ready yet. Please try again in a few seconds.');
           };
 
           const processServiceInstance = workspaceServices().getServiceInstanceFromClass(
@@ -59,7 +59,7 @@ export default class ChatSearchWebview {
 
           const panel = vscode.window.createWebviewPanel(
             'chatSearch',
-            'Chat Search',
+            'AppMap AI: Explain',
             vscode.ViewColumn.One,
             {
               enableScripts: true,
@@ -70,7 +70,7 @@ export default class ChatSearchWebview {
           panel.webview.html = getWebviewContent(
             panel.webview,
             context,
-            'Chat Search',
+            'AppMap AI: Explain',
             'chat-search'
           );
 
