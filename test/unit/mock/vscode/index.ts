@@ -1,7 +1,12 @@
 import mockery from 'mockery';
 
+import TextDocument from './TextDocument';
+import Range from './Range';
+import Position from './Position';
 import EventEmitter from './EventEmitter';
 import Terminal from './Terminal';
+import CodeAction from './CodeAction';
+import CodeActionKind from './CodeActionKind';
 import * as extensions from './extensions';
 import { URI, Utils } from 'vscode-uri';
 import workspace from './workspace';
@@ -22,6 +27,11 @@ enum StatusBarAlignment {
 const MockVSCode = {
   EventEmitter,
   Terminal,
+  TextDocument,
+  Range,
+  Position,
+  CodeAction,
+  CodeActionKind,
   extensions,
   Uri: { ...URI, ...Utils },
   workspace,

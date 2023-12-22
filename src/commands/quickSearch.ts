@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-class QuickSearchProvider implements vscode.CodeActionProvider {
+export class QuickSearchProvider implements vscode.CodeActionProvider {
   provideCodeActions(
     document: vscode.TextDocument,
     range: vscode.Selection | vscode.Range
@@ -16,7 +16,7 @@ class QuickSearchProvider implements vscode.CodeActionProvider {
       vscode.CodeActionKind.Refactor
     );
     codeAction.command = {
-      command: 'appmap.quickSearch',
+      command: 'appmap.quickExplain',
       title: 'Explain with AppMap AI',
       arguments: [workspaceFolder.uri, selectedCode],
     };
@@ -43,7 +43,7 @@ export default function quickSearch(context: vscode.ExtensionContext) {
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      'appmap.quickSearch',
+      'appmap.quickExplain',
       (workspaceUri: vscode.Uri, selectedCode: string) => {
         const workspace = vscode.workspace.getWorkspaceFolder(workspaceUri);
         vscode.commands.executeCommand('appmap.explain', workspace, selectedCode);
