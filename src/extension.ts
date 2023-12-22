@@ -245,7 +245,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
     generateOpenApi(context);
     findByName(context, appmapCollectionFile);
-    ChatSearchWebview.register(context);
+    const chatSearchWebview = ChatSearchWebview.register(context);
     quickSearch(context);
     resetUsageState(context, extensionState);
     updateAppMapConfigs(context, runConfigService, workspaceServices);
@@ -274,6 +274,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     return {
       analysisManager: AnalysisManager,
       editorProvider,
+      chatSearchWebview,
       localAppMaps: appmapCollectionFile,
       autoIndexService: autoIndexServiceImpl,
       autoScanService: autoScanServiceImpl,
