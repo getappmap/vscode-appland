@@ -5,6 +5,8 @@ import { NodeProcessService } from '../services/nodeProcessService';
 import { warn } from 'console';
 import IndexProcessWatcher from '../services/indexProcessWatcher';
 import { ProcessId } from '../services/processWatcher';
+import viewSource from './viewSource';
+import { Telemetry } from '../telemetry';
 
 export default class ChatSearchWebview {
   public static register(context: vscode.ExtensionContext): void {
@@ -83,6 +85,18 @@ export default class ChatSearchWebview {
                   question,
                 });
 
+                break;
+              case 'viewSource':
+                viewSource(message.text, workspace);
+                break;
+              case 'reportError':
+                Telemetry.reportWebviewError(message.error);
+                break;
+              case 'appmapOpenUrl':
+                vscode.env.openExternal(message.url);
+                break;
+              case 'copyToClipboard':
+                vscode.env.clipboard.writeText(message.stringToCopy);
                 break;
             }
           });
