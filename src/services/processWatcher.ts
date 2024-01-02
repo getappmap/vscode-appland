@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { ChildProcess, OutputStream, spawn, SpawnOptions } from './nodeDependencyProcess';
 import { getApiKey } from '../authentication';
+import ExtensionSettings from '../configuration/extensionSettings';
 
 export type RetryOptions = {
   // The number of retries made before declaring the process as failed.
@@ -197,6 +198,7 @@ export class ProcessWatcher implements vscode.Disposable {
     if (accessToken) {
       env.APPMAP_API_KEY = accessToken;
     }
+    env.APPMAP_API_URL = ExtensionSettings.apiUrl;
     return env;
   }
 
