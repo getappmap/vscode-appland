@@ -7,6 +7,8 @@ import IndexProcessWatcher from '../services/indexProcessWatcher';
 import { ProcessId } from '../services/processWatcher';
 import viewSource from './viewSource';
 import { Telemetry } from '../telemetry';
+import { getApiKey } from '../authentication';
+import ExtensionSettings from '../configuration/extensionSettings';
 
 export default class ChatSearchWebview {
   public readonly panels = new Set<vscode.WebviewPanel>();
@@ -93,6 +95,8 @@ export default class ChatSearchWebview {
             type: 'initChatSearch',
             appmapRpcPort,
             question,
+            apiUrl: ExtensionSettings.apiUrl,
+            apiKey: await getApiKey(false),
           });
 
           break;
