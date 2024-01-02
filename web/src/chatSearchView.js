@@ -18,6 +18,8 @@ export default function mountChatSearchView() {
             appmapRpcPort: initialData.appmapRpcPort,
             question: initialData.question,
             savedFilters: initialData.savedFilters,
+            apiUrl: initialData.apiUrl,
+            apiKey: initialData.apiKey,
           },
         });
       },
