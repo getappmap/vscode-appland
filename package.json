@@ -224,7 +224,12 @@
         "appMap.applandUrl": {
           "type": "string",
           "default": "https://getappmap.com",
-          "description": "URL of an AppLand cloud instance for AppMap storage"
+          "description": "URL of AppMap"
+        },
+        "appMap.apiUrl": {
+          "type": "string",
+          "default": "https://api.getappmap.com",
+          "description": "URL of the AppMap API"
         },
         "appMap.viewConfiguration": {
           "type": "string",
