@@ -4,6 +4,7 @@ import { getApiKey } from '../authentication';
 import assert from 'assert';
 import { fileExists } from '../util';
 import { join } from 'path';
+import ExtensionSettings from '../configuration/extensionSettings';
 
 export type RetryOptions = {
   // The number of retries made before declaring the process as failed.
@@ -216,6 +217,7 @@ export class ProcessWatcher implements vscode.Disposable {
     if (accessToken) {
       env.APPMAP_API_KEY = accessToken;
     }
+    env.APPMAP_API_URL = ExtensionSettings.apiUrl;
     return env;
   }
 
