@@ -1,3 +1,4 @@
+import { DefaultApiURL } from '@appland/client';
 import * as vscode from 'vscode';
 
 export default class ExtensionSettings {
@@ -36,5 +37,9 @@ export default class ExtensionSettings {
 
   public static get appMapIndexOptions(): string | undefined {
     return vscode.workspace.getConfiguration('appMap').get('indexOptions');
+  }
+
+  public static get apiUrl(): string {
+    return vscode.workspace.getConfiguration('appMap').get('apiUrl') || DefaultApiURL;
   }
 }
