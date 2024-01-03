@@ -16,6 +16,8 @@ export default async function deleteAppMap(
   // contents, and fs.delete doesn't remove files.
   console.debug(`Deleting AppMap ${uri.fsPath}`);
 
+  appMapCollection.remove(uri);
+
   const indexDir = uri.fsPath.substring(0, uri.fsPath.lastIndexOf('.appmap.json'));
 
   await retry(async () => await rm(`${indexDir}/metadata.json`, { force: true }));
