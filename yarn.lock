@@ -68,13 +68,13 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@appland/appmap@portal:/Users/kgilpin/source/appland/appmap-js/packages/cli::locator=appmap%40workspace%3A."
   dependencies:
-    "@appland/client": "workspace:^1.8.0"
-    "@appland/components": "workspace:^3"
+    "@appland/client": "workspace:^1.12.0"
+    "@appland/components": "workspace:^3.18.0"
     "@appland/diagrams": "workspace:^1.7.0"
-    "@appland/models": "workspace:^2.6.3"
+    "@appland/models": "workspace:^2.10.0"
     "@appland/openapi": "workspace:^1.7.0"
-    "@appland/rpc": "workspace:*"
-    "@appland/sequence-diagram": "workspace:^1.7.0"
+    "@appland/rpc": "workspace:^1.1.0"
+    "@appland/sequence-diagram": "workspace:^1.11.0"
     "@octokit/rest": ^20.0.1
     "@sidvind/better-ajv-errors": ^0.9.1
     JSONStream: ^1.3.5
@@ -136,7 +136,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@appland/client@portal:/Users/kgilpin/source/appland/appmap-js/packages/client::locator=appmap%40workspace%3A."
   dependencies:
-    "@appland/models": "workspace:*"
+    "@appland/models": "workspace:^2.10.0"
     "@types/form-data": ^2.5.0
     form-data: ^4.0.0
     js-yaml: ^4.1.0
@@ -149,11 +149,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@appland/components@portal:/Users/kgilpin/source/appland/appmap-js/packages/components::locator=appmap%40workspace%3A."
   dependencies:
-    "@appland/client": "workspace:^1.8.1"
+    "@appland/client": "workspace:^1.12.0"
     "@appland/diagrams": "workspace:^1.7.0"
-    "@appland/models": "workspace:^2.7.0"
-    "@appland/rpc": "workspace:^1.0.0"
-    "@appland/sequence-diagram": "workspace:^1.9.0"
+    "@appland/models": "workspace:^2.10.0"
+    "@appland/rpc": "workspace:^1.1.0"
+    "@appland/sequence-diagram": "workspace:^1.11.0"
     buffer: ^6.0.3
     d3: ^7.8.4
     d3-flame-graph: ^4.1.3
@@ -175,7 +175,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@appland/diagrams@portal:/Users/kgilpin/source/appland/appmap-js/packages/diagrams::locator=appmap%40workspace%3A."
   dependencies:
-    "@appland/models": "workspace:^2.2.0"
+    "@appland/models": "workspace:^2.10.0"
     d3-interpolate: ^3.0.1
     d3-selection: ^3.0.0
     d3-shape: ^3.2.0
@@ -198,7 +198,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@appland/openapi@portal:/Users/kgilpin/source/appland/appmap-js/packages/openapi::locator=appmap%40workspace%3A."
   dependencies:
-    "@appland/models": "workspace:^2.6.3"
+    "@appland/models": "workspace:^2.10.0"
     js-yaml: ^4.1.0
   languageName: node
   linkType: soft
@@ -213,8 +213,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@appland/scanner@portal:/Users/kgilpin/source/appland/appmap-js/packages/scanner::locator=appmap%40workspace%3A."
   dependencies:
-    "@appland/client": ^1.5.0
-    "@appland/models": "workspace:^2.6.3"
+    "@appland/client": ^1.12.0
+    "@appland/models": "workspace:^2.10.0"
     "@appland/openapi": "workspace:^1.7.0"
     "@appland/sql-parser": ^1.5.0
     "@types/cli-progress": ^3.9.2
@@ -249,7 +249,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@appland/sequence-diagram@portal:/Users/kgilpin/source/appland/appmap-js/packages/sequence-diagram::locator=appmap%40workspace%3A."
   dependencies:
-    "@appland/models": "workspace:^2.7.0"
+    "@appland/models": "workspace:^2.10.0"
     "@appland/openapi": "workspace:^1.7.0"
     "@datastructures-js/priority-queue": ^6.1.3
     crypto-js: ^4.1.1
@@ -3094,14 +3094,14 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "appmap@workspace:."
   dependencies:
-    "@appland/appmap": ^3.80.2
-    "@appland/client": ^1.9.0
-    "@appland/components": ^3.13.2
-    "@appland/diagrams": ^1.7.0
-    "@appland/models": ^2.9.0
+    "@appland/appmap": ^3.116.0
+    "@appland/client": ^1.14.0
+    "@appland/components": ^3.21.0
+    "@appland/diagrams": ^1.8.0
+    "@appland/models": ^2.10.0
     "@appland/rpc": ^1.0.0
-    "@appland/scanner": ^1.83.0
-    "@appland/sequence-diagram": ^1.11.0
+    "@appland/scanner": ^1.86.0
+    "@appland/sequence-diagram": ^1.12.0
     "@playwright/test": ^1.22.2
     "@semantic-release/changelog": ^5.0.1
     "@semantic-release/exec": ^5.0.0
