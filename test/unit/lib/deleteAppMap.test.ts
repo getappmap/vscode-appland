@@ -30,6 +30,7 @@ describe('deleteAppMap', () => {
   it('retains the index directory if the AppMap is already known to the collection', async () => {
     const mockCollection = {
       has: () => true,
+      remove: () => true,
     } as unknown as AppMapCollection;
 
     await deleteAppMap(appMapUri, mockCollection);
@@ -41,6 +42,7 @@ describe('deleteAppMap', () => {
   it('deletes the index directory if the AppMap has not yet been acknowledged by the collection', async () => {
     const mockCollection = {
       has: () => false,
+      remove: () => true,
     } as unknown as AppMapCollection;
 
     await deleteAppMap(appMapUri, mockCollection);
