@@ -19,5 +19,7 @@ export default interface AppMapCollection {
 
   has(uri: vscode.Uri): boolean;
 
+  remove(uri: vscode.Uri): void;
+
   clear(): void;
 }

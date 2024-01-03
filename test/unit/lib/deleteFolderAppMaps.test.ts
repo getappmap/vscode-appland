@@ -32,6 +32,7 @@ describe('deleteFolderAppMaps', () => {
     mockCollection = {
       appMaps: () => [{ descriptor: { resourceUri: appMapUri } }],
       has: () => true,
+      remove: () => true,
     } as unknown as AppMapCollection;
 
     await fs.mkdir(indexDir, { recursive: true });

@@ -20,10 +20,7 @@ export default class AppMapCollectionFile implements AppMapCollection, AppMapsSe
   private currentFilter = '';
 
   async onDelete(uri: vscode.Uri): Promise<void> {
-    if (await fileExists(uri.fsPath)) return;
-
-    this.loaders.delete(uri.fsPath);
-    this.emitUpdated(uri);
+    if (this.loaders.delete(uri.fsPath)) this.emitUpdated(uri);
   }
 
   async onChange(uri: vscode.Uri): Promise<void> {
@@ -139,6 +136,11 @@ export default class AppMapCollectionFile implements AppMapCollection, AppMapsSe
 
   public has(uri: vscode.Uri): boolean {
     return this.loaders.has(uri.fsPath);
+  }
+
+  // This is basically an alias for onChange.
+  public remove(uri: vscode.Uri): void {
+    this.onDelete(uri);
   }
 
   public clear(): void {
