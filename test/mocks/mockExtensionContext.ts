@@ -51,6 +51,11 @@ export default class MockExtensionContext implements ExtensionContext {
 
   readonly environmentVariableCollection = new (class implements EnvironmentVariableCollection {
     readonly persistent: boolean = false;
+    readonly description = undefined;
+
+    getScoped(): EnvironmentVariableCollection {
+      throw new Error('Not implemented');
+    }
 
     replace(): void {
       throw new Error('Not implemented');
