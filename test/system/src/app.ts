@@ -30,7 +30,6 @@ interface LaunchOptions {
 
 export async function downloadCode(): Promise<string> {
   return await downloadAndUnzipVSCode({
-    version: '1.81.1',
     reporter: new ConsoleReporter(false),
   });
 }

@@ -88,16 +88,17 @@ export default class AppMap {
     await this.finding(nth).click();
   }
 
-  public async openActionPanel(): Promise<void> {
+  public async openActionPanel(waitForAppMaps = false): Promise<void> {
     await this.actionPanelButton.click();
-    await this.ready();
+    await this.ready(waitForAppMaps);
   }
 
-  public async ready(): Promise<void> {
+  public async ready(waitForAppMaps = false): Promise<void> {
     const welcomeView = await this.page.locator(
       '.split-view-view:has(.title:text("AppMaps")) >> .welcome-view'
     );
-    await welcomeView.first().waitFor({ state: 'hidden' });
+
+    await welcomeView.first().waitFor({ state: waitForAppMaps ? 'hidden' : 'visible' });
   }
 
   public async openInstruction(step: InstructionStep): Promise<void> {
