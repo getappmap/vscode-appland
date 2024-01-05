@@ -1,6 +1,6 @@
 language: node_js
 os: linux
-dist: xenial
+dist: focal
 node_js: [18]
 
 install:
