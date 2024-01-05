@@ -1,7 +1,7 @@
 language: node_js
 os: linux
 dist: xenial
-node_js: [14]
+node_js: [18]
 
 install:
   - |
@@ -17,7 +17,6 @@ install:
        libsecret-1-0 \
        libasound2
   - nvm install v16.15.0
-
   - |
     if [ $TRAVIS_OS_NAME == "linux" ]; then
       export DISPLAY=':99.0'
