@@ -54,15 +54,21 @@ describe('Instructions tree view', function () {
       InstructionStepStatus.Complete
     );
 
+    // Without completing previous steps, this should remain pending.
+    await driver.appMap.openInstruction(InstructionStep.InvestigateFindings);
+    await driver.appMap.assertInstructionStepStatus(
+      InstructionStep.InvestigateFindings,
+      InstructionStepStatus.Pending
+    );
+
+    await driver.appMap.openInstruction(InstructionStep.OpenAppMaps);
     await driver.appMap.openAppMap();
     await driver.appMap.assertInstructionStepStatus(
       InstructionStep.OpenAppMaps,
       InstructionStepStatus.Complete
     );
 
-    await project.restoreFiles('**/appmap-findings.json');
     await driver.appMap.openInstruction(InstructionStep.InvestigateFindings);
-    await driver.instructionsWebview.clickButton('View analysis report');
     await driver.appMap.assertInstructionStepStatus(
       InstructionStep.InvestigateFindings,
       InstructionStepStatus.Complete
