@@ -5,7 +5,6 @@ import AppMapDescriptorFile from './appmapLoaderFile';
 import AppMapCollection from './appmapCollection';
 import AppMapLoaderFile from './appmapLoaderFile';
 import ChangeEventDebouncer from './changeEventDebouncer';
-import { fileExists } from '../util';
 import { AppMapsService } from '../appMapsService';
 import { basename, dirname, join } from 'path';
 import { CodeObject } from '@appland/models';
