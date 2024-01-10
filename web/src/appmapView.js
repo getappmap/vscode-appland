@@ -77,10 +77,6 @@ export default function mountApp() {
       });
     });
 
-    app.$on('notificationClose', () => {
-      vscode.postMessage({ command: 'closeUpdateNotification' });
-    });
-
     app.$on('exportSVG', (svgString) => {
       vscode.postMessage({ command: 'exportSVG', svgString });
     });

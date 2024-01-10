@@ -89,8 +89,6 @@ export default class AppMapEditorProvider
   }
 
   private static readonly viewType = 'appmap.views.appMapFile';
-  private static readonly INSTRUCTIONS_VIEWED = 'APPMAP_INSTRUCTIONS_VIEWED';
-  private static readonly RELEASE_KEY = 'APPMAP_RELEASE_KEY';
   public static readonly APPMAP_OPENED = 'APPMAP_OPENED';
   private static readonly LARGE_APPMAP_SIZE = 10 * 1000 * 1000; // 10 MB
   private static readonly GIANT_APPMAP_SIZE = 200 * 1000 * 1000; // 200 MB
@@ -304,11 +302,6 @@ export default class AppMapEditorProvider
         this.extensionState.setWorkspaceOpenedAppMap(workspaceFolder, true);
       }
 
-      const lastVersion = this.context.globalState.get(AppMapEditorProvider.RELEASE_KEY);
-      if (!lastVersion) {
-        this.context.globalState.update(AppMapEditorProvider.RELEASE_KEY, version);
-      }
-
       if (initialState)
         webviewPanel.webview.postMessage({
           type: 'setAppmapState',
@@ -350,9 +343,6 @@ export default class AppMapEditorProvider
           AppMapEditorProvider.openWebviewPanels.set(document.uri.toString(), webviewPanel);
           this.documents.push(document);
           break;
-        case 'closeUpdateNotification':
-          this.context.globalState.update(AppMapEditorProvider.RELEASE_KEY, version);
-          break;
       }
     });
 
@@ -380,8 +370,6 @@ export default class AppMapEditorProvider
 
   //forget usage state set by this class
   public static resetState(context: vscode.ExtensionContext): void {
-    context.globalState.update(AppMapEditorProvider.INSTRUCTIONS_VIEWED, null);
-    context.globalState.update(AppMapEditorProvider.RELEASE_KEY, null);
     context.globalState.update(AppMapEditorProvider.APPMAP_OPENED, null);
   }
 }
