@@ -17,6 +17,7 @@ import { WorkspaceServices } from './services/workspaceServices';
 import { AppMapTreeDataProvider } from './tree/appMapTreeDataProvider';
 import { ClassMapTreeDataProvider } from './tree/classMapTreeDataProvider';
 import { FindingsTreeDataProvider } from './tree/findingsTreeDataProvider';
+import ChatSearchWebview from './webviews/chatSearchWebview';
 
 export type Invocation = {
   command: Command;
@@ -37,6 +38,7 @@ export type AppMapTreeDataProviders = {
 export default interface AppMapService {
   analysisManager: typeof AnalysisManager;
   editorProvider: AppMapEditorProvider;
+  chatSearchWebview: ChatSearchWebview;
   localAppMaps: AppMapsService;
   autoIndexService: AppMapProcessService;
   autoScanService: AppMapProcessService;

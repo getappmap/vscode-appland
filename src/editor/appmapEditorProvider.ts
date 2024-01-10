@@ -4,7 +4,6 @@ import { Telemetry, DEBUG_EXCEPTION } from '../telemetry';
 import { version } from '../../package.json';
 import ExtensionState from '../configuration/extensionState';
 import extensionSettings from '../configuration/extensionSettings';
-import { bestFilePath } from '../lib/bestFilePath';
 import AppMapDocument from './AppMapDocument';
 import AnalysisManager from '../services/analysisManager';
 import { getStackLocations, StackLocation } from '../lib/getStackLocations';
@@ -21,6 +20,7 @@ import {
 } from '../services/nodeDependencyProcess';
 import { basename } from 'path';
 import { readFile } from 'fs/promises';
+import viewSource from '../webviews/viewSource';
 
 export type FindingInfo = ResolvedFinding & {
   stackLocations?: StackLocation[];
@@ -379,7 +379,7 @@ export default class AppMapEditorProvider
     webviewPanel.webview.onDidReceiveMessage(async (message) => {
       switch (message.command) {
         case 'viewSource':
-          viewSource(message.text);
+          viewSource(message.text, document.workspaceFolder);
           break;
         case 'ready':
           updateWebview(initialState);
@@ -476,38 +476,13 @@ export default class AppMapEditorProvider
       if (document.workspaceFolder)
         this.extensionState.setClosedAppMap(document.workspaceFolder, true);
     });
-
-    function openFile(uri: vscode.Uri, lineNumber: number) {
-      const showOptions = {
-        viewColumn: vscode.ViewColumn.Beside,
-        selection: new vscode.Range(
-          new vscode.Position(lineNumber - 1, 0),
-          new vscode.Position(lineNumber - 1, 0)
-        ),
-      };
-      vscode.commands.executeCommand('vscode.open', uri, showOptions);
-    }
-
-    async function viewSource(location: string): Promise<void> {
-      const match = location.match(/^(.*?)(?::(\d+))?$/);
-      if (!match) return;
-      const [, path, lineNumberStr] = match;
-
-      let lineNumber = 1;
-      if (lineNumberStr) {
-        lineNumber = Number.parseInt(lineNumberStr, 10);
-      }
-
-      const fileUri = await bestFilePath(path, document.workspaceFolder);
-      if (fileUri) openFile(fileUri, lineNumber);
-    }
   }
 
   /**
    * Get the static html used for the editor webviews.
    */
   private getHtmlForWebview(webview: vscode.Webview): string {
-    return getWebviewContent(webview, this.context, 'AppLand Scenario', 'app');
+    return getWebviewContent(webview, this.context, 'AppMap Diagram', 'app');
   }
 
   //forget usage state set by this class

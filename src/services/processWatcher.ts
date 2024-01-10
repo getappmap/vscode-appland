@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { ChildProcess, OutputStream, spawn, SpawnOptions } from './nodeDependencyProcess';
+import { getApiKey } from '../authentication';
 
 export type RetryOptions = {
   // The number of retries made before declaring the process as failed.
@@ -68,11 +69,16 @@ export class ProcessWatcher implements vscode.Disposable {
     this.options = {
       ...DEFAULT_RETRY_OPTIONS,
       ...options,
+      stdoutListener: this.onStdout.bind(this),
     };
   }
 
   get running(): boolean {
     return this.process !== undefined;
+  }
+
+  protected onStdout(_data: string): void {
+    // Available in subclasses.
   }
 
   protected async retry(): Promise<void> {
@@ -107,6 +113,9 @@ export class ProcessWatcher implements vscode.Disposable {
 
     const configFiles = await this.configFileProvider.files();
     if (configFiles.length === 0) return { enabled: false, reason: 'appmap.yml does not exist' };
+
+    if (!(await this.accessToken()))
+      return { enabled: false, reason: 'User is not logged in to AppMap' };
 
     return { enabled: true };
   }
@@ -178,8 +187,17 @@ export class ProcessWatcher implements vscode.Disposable {
     }
   }
 
+  async accessToken(): Promise<string | undefined> {
+    return getApiKey(false);
+  }
+
   protected async loadEnvironment(): Promise<NodeJS.ProcessEnv> {
-    return {};
+    const env: Record<string, string> = {};
+    const accessToken = await this.accessToken();
+    if (accessToken) {
+      env.APPMAP_API_KEY = accessToken;
+    }
+    return env;
   }
 
   dispose(): void {

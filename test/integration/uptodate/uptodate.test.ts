@@ -8,10 +8,13 @@ import {
   waitFor,
   waitForExtension,
   waitForIndexer,
+  withAuthenticatedUser,
 } from '../util';
 import { UserFile, UserPageAppMapFile, waitForDependsUpdate } from './util';
 
 describe('Uptodate', () => {
+  withAuthenticatedUser();
+
   beforeEach(initializeWorkspace);
   beforeEach(waitForExtension);
   beforeEach(waitForIndexer);
