@@ -20,7 +20,8 @@ import {
 } from '../services/nodeDependencyProcess';
 import { basename } from 'path';
 import { readFile } from 'fs/promises';
-import viewSource from '../webviews/viewSource';
+import appmapMessageHandler from '../webviews/appmapMessageHandler';
+import FilterStore from '../webviews/filterStore';
 
 export type FindingInfo = ResolvedFinding & {
   stackLocations?: StackLocation[];
@@ -91,18 +92,24 @@ export default class AppMapEditorProvider
   private static readonly INSTRUCTIONS_VIEWED = 'APPMAP_INSTRUCTIONS_VIEWED';
   private static readonly RELEASE_KEY = 'APPMAP_RELEASE_KEY';
   public static readonly APPMAP_OPENED = 'APPMAP_OPENED';
-  public static readonly SAVED_FILTERS = 'SAVED_FILTERS';
   private static readonly LARGE_APPMAP_SIZE = 10 * 1000 * 1000; // 10 MB
   private static readonly GIANT_APPMAP_SIZE = 200 * 1000 * 1000; // 200 MB
   private static readonly EMPTY_APPMAP_DATA = '{}';
   private static readonly analysisManager = AnalysisManager;
   private static readonly openWebviewPanels = new Map<string, vscode.WebviewPanel>();
+
+  private filterStore: FilterStore;
   public currentWebView?: vscode.WebviewPanel;
 
   constructor(
     private readonly context: vscode.ExtensionContext,
     private readonly extensionState: ExtensionState
-  ) {}
+  ) {
+    this.filterStore = new FilterStore(context);
+    this.filterStore.onDidChangeFilters((event) => {
+      this.updateFilters(event.savedFilters);
+    });
+  }
 
   async openCustomDocument(appMapOrSequenceDiagramDiffUri: vscode.Uri): Promise<AppMapDocument> {
     let appMapUri: vscode.Uri;
@@ -246,59 +253,11 @@ export default class AppMapEditorProvider
     });
   }
 
-  getSavedFilters(): SavedFilter[] | undefined {
-    return this.context.workspaceState.get(AppMapEditorProvider.SAVED_FILTERS) as
-      | SavedFilter[]
-      | undefined;
-  }
-
-  async saveFilter(filter: SavedFilter): Promise<void> {
-    let savedFilters = this.getSavedFilters() || [];
-
-    let filterOverwritten = false;
-    savedFilters = savedFilters.map((savedFilter) => {
-      if (savedFilter.filterName === filter.filterName) {
-        filterOverwritten = true;
-        return filter;
-      }
-      return savedFilter;
-    });
-
-    if (!filterOverwritten) savedFilters.push(filter);
-
-    await this.context.workspaceState.update(AppMapEditorProvider.SAVED_FILTERS, savedFilters);
-    this.updateFilters();
-  }
-
-  async deleteFilter(filter: SavedFilter): Promise<void> {
-    const savedFilters = this.getSavedFilters();
-    if (!savedFilters) return;
-
-    const newSavedFilters = savedFilters.filter(
-      (savedFilter) => savedFilter.filterName !== filter.filterName
-    );
-
-    await this.context.workspaceState.update(AppMapEditorProvider.SAVED_FILTERS, newSavedFilters);
-    this.updateFilters();
-  }
-
-  async defaultFilter(filter: SavedFilter): Promise<void> {
-    const savedFilters = this.getSavedFilters();
-    if (!savedFilters) return;
-
-    savedFilters.forEach(
-      (savedFilter) => (savedFilter.default = savedFilter.filterName === filter.filterName)
-    );
-
-    await this.context.workspaceState.update(AppMapEditorProvider.SAVED_FILTERS, savedFilters);
-    this.updateFilters();
-  }
-
-  updateFilters(): void {
+  updateFilters(savedFilters: SavedFilter[]): void {
     AppMapEditorProvider.openWebviewPanels.forEach((webviewPanel) =>
       webviewPanel.webview.postMessage({
         type: 'updateSavedFilters',
-        savedFilters: this.context.workspaceState.get(AppMapEditorProvider.SAVED_FILTERS) || [],
+        savedFilters,
       })
     );
   }
@@ -376,11 +335,11 @@ export default class AppMapEditorProvider
 
     // Handle messages from the webview.
     // Note: this has to be set before setting the HTML to avoid a race.
+    webviewPanel.webview.onDidReceiveMessage(
+      appmapMessageHandler(this.filterStore, document.workspaceFolder)
+    );
     webviewPanel.webview.onDidReceiveMessage(async (message) => {
       switch (message.command) {
-        case 'viewSource':
-          viewSource(message.text, document.workspaceFolder);
-          break;
         case 'ready':
           updateWebview(initialState);
           break;
@@ -389,77 +348,16 @@ export default class AppMapEditorProvider
             type: 'init-appmap',
             shareEnabled: false,
             defaultView: extensionSettings.defaultDiagramView || 'viewSequence',
-            savedFilters: this.context.workspaceState.get(AppMapEditorProvider.SAVED_FILTERS) || [],
+            savedFilters: this.filterStore.getSavedFilters(),
           });
-          break;
-        case 'appmapStateResult':
-          // Putting this directly on the clipboard is not what we always want;
-          // although it is what appmap.getAppmapState wants.
-          vscode.env.clipboard.writeText(message.state);
-          vscode.window.setStatusBarMessage('AppMap state was copied to clipboard', 5000);
           break;
         case 'onLoadComplete':
           AppMapEditorProvider.openWebviewPanels.set(document.uri.toString(), webviewPanel);
           this.documents.push(document);
           break;
-        case 'performAction':
-          break;
-        case 'reportError':
-          Telemetry.reportWebviewError(message.error);
-          break;
         case 'closeUpdateNotification':
           this.context.globalState.update(AppMapEditorProvider.RELEASE_KEY, version);
           break;
-        case 'appmapOpenUrl':
-          vscode.env.openExternal(message.url);
-          break;
-        case 'copyToClipboard':
-          vscode.env.clipboard.writeText(message.stringToCopy);
-          break;
-        case 'exportSVG':
-          {
-            try {
-              const { svgString } = message;
-              if (svgString) {
-                const comment =
-                  '\n<!-- Save this SVG file with a .svg file extension ' +
-                  'and then open it in a web browswer to view your appmap! -->\n\n';
-                const document = await vscode.workspace.openTextDocument({
-                  language: 'svg',
-                  content: comment + svgString,
-                });
-
-                vscode.window.showTextDocument(document);
-              }
-            } catch (e) {
-              Telemetry.sendEvent(DEBUG_EXCEPTION, {
-                exception: e as Error,
-                errorCode: ErrorCode.ExportSvgError,
-              });
-            }
-          }
-          break;
-        case 'saveFilter': {
-          const { filter } = message;
-          if (!filter) break;
-
-          this.saveFilter(filter);
-          break;
-        }
-        case 'deleteFilter': {
-          const { filter } = message;
-          if (!filter) break;
-
-          this.deleteFilter(filter);
-          break;
-        }
-        case 'defaultFilter': {
-          const { filter } = message;
-          if (!filter) break;
-
-          this.defaultFilter(filter);
-          break;
-        }
       }
     });
 

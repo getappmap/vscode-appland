@@ -5,13 +5,15 @@ import { NodeProcessService } from '../services/nodeProcessService';
 import { warn } from 'console';
 import IndexProcessWatcher from '../services/indexProcessWatcher';
 import { ProcessId } from '../services/processWatcher';
-import viewSource from './viewSource';
-import { Telemetry } from '../telemetry';
+import appmapMessageHandler from './appmapMessageHandler';
+import FilterStore from './filterStore';
 
 export default class ChatSearchWebview {
   public readonly panels = new Set<vscode.WebviewPanel>();
+  private filterStore: FilterStore;
 
   private constructor(private readonly context: vscode.ExtensionContext) {
+    this.filterStore = new FilterStore(context);
     context.subscriptions.push(
       vscode.commands.registerCommand('appmap.explain', this.explain.bind(this))
     );
@@ -86,6 +88,7 @@ export default class ChatSearchWebview {
       'chat-search'
     );
 
+    panel.webview.onDidReceiveMessage(appmapMessageHandler(this.filterStore, workspace));
     panel.webview.onDidReceiveMessage(async (message) => {
       switch (message.command) {
         case 'chat-search-ready':
