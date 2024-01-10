@@ -307,11 +307,6 @@ export default class AppMapEditorProvider
       const lastVersion = this.context.globalState.get(AppMapEditorProvider.RELEASE_KEY);
       if (!lastVersion) {
         this.context.globalState.update(AppMapEditorProvider.RELEASE_KEY, version);
-      } else if (lastVersion !== version) {
-        webviewPanel.webview.postMessage({
-          type: 'displayUpdateNotification',
-          version,
-        });
       }
 
       if (initialState)

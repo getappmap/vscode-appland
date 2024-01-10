@@ -45,9 +45,6 @@ export default function mountApp() {
         setState(state) {
           this.$refs.ui.setState(state);
         },
-        displayUpdateNotification(version) {
-          this.$refs.ui.showVersionNotification(`v${version}`, patchNotesHtml);
-        },
         setShareURL(url) {
           this.$refs.ui.setShareURL(url);
         },
