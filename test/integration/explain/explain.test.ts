@@ -20,7 +20,7 @@ describe('appmap.explain', () => {
     await waitFor('Invoking appmap.explain opens a new text document', async () => {
       await vscode.commands.executeCommand('appmap.explain');
 
-      return chatSearchWebview.panels.size > 0;
+      return chatSearchWebview.currentWebview !== undefined;
     });
   });
 });

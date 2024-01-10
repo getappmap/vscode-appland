@@ -60,6 +60,7 @@ import checkAndTriggerFirstAppMapNotification from './lib/firstAppMapNotificatio
 import Watcher from './services/watcher';
 import ChatSearchWebview from './webviews/chatSearchWebview';
 import quickSearch from './commands/quickSearch';
+import appmapState from './commands/appmapState';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   Telemetry.register(context);
@@ -246,6 +247,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     generateOpenApi(context);
     findByName(context, appmapCollectionFile);
     const chatSearchWebview = ChatSearchWebview.register(context);
+    appmapState(context, editorProvider, chatSearchWebview);
     quickSearch(context);
     resetUsageState(context, extensionState);
     updateAppMapConfigs(context, runConfigService, workspaceServices);

@@ -58,10 +58,9 @@ export default function handleAppMapMessages(app, vscode) {
       case 'setAppmapState':
         app.setAppMapState(message.state);
         break;
-      case 'setActive':
-        app.setActive(message.active);
+      case 'updateSavedFilters':
+        app.updateFilters(message.savedFilters);
         break;
-      // TODO: case 'updateSavedFilters':
       default:
         break;
     }

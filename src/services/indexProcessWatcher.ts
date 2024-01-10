@@ -1,5 +1,3 @@
-import * as vscode from 'vscode';
-
 import { NodeProcessService } from './nodeProcessService';
 import {
   ConfigFileProvider,

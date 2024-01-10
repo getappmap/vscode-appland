@@ -18,15 +18,18 @@ export default function mountChatSearchView() {
             question: initialData.question,
             savedFilters: initialData.savedFilters,
           },
-          methods: {
-            getAppMapState() {
-              return this.$refs.ui.getAppMapState();
-            },
-            setAppMapState(state) {
-              this.$refs.ui.setAppMapState(state);
-            },
-          },
         });
+      },
+      methods: {
+        getAppMapState() {
+          return this.$refs.ui.getAppMapState();
+        },
+        setAppMapState(state) {
+          this.$refs.ui.setAppMapState(state);
+        },
+        updateFilters(updatedSavedFilters) {
+          this.$refs.ui.updateFilters(updatedSavedFilters);
+        },
       },
     });
 

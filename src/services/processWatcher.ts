@@ -77,6 +77,7 @@ export class ProcessWatcher implements vscode.Disposable {
     return this.process !== undefined;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected onStdout(_data: string): void {
     // Available in subclasses.
   }

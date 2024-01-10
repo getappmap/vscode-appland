@@ -1,7 +1,6 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import { Telemetry, DEBUG_EXCEPTION } from '../telemetry';
-import { version } from '../../package.json';
 import ExtensionState from '../configuration/extensionState';
 import extensionSettings from '../configuration/extensionSettings';
 import AppMapDocument from './AppMapDocument';
@@ -22,6 +21,7 @@ import { basename } from 'path';
 import { readFile } from 'fs/promises';
 import appmapMessageHandler from '../webviews/appmapMessageHandler';
 import FilterStore from '../webviews/filterStore';
+import WebviewList from '../webviews/WebviewList';
 
 export type FindingInfo = ResolvedFinding & {
   stackLocations?: StackLocation[];
@@ -57,47 +57,20 @@ export default class AppMapEditorProvider
       { webviewOptions: { retainContextWhenHidden: true } }
     );
     context.subscriptions.push(providerRegistration);
-
-    context.subscriptions.push(
-      vscode.commands.registerCommand('appmap.getAppmapState', () => {
-        if (provider.currentWebView) {
-          provider.currentWebView.webview.postMessage({
-            type: 'requestAppmapState',
-          });
-          // TODO: Wait for the state to be provided and then put it on the clipboard.
-        }
-      })
-    );
-
-    context.subscriptions.push(
-      vscode.commands.registerCommand('appmap.setAppmapState', async () => {
-        if (provider.currentWebView) {
-          const state = await vscode.window.showInputBox({
-            placeHolder: 'AppMap state serialized string',
-          });
-          if (state) {
-            provider.currentWebView.webview.postMessage({
-              type: 'setAppmapState',
-              state: state,
-            });
-          }
-        }
-      })
-    );
-
     return provider;
   }
 
-  private static readonly viewType = 'appmap.views.appMapFile';
   public static readonly APPMAP_OPENED = 'APPMAP_OPENED';
+
+  private static readonly viewType = 'appmap.views.appMapFile';
   private static readonly LARGE_APPMAP_SIZE = 10 * 1000 * 1000; // 10 MB
   private static readonly GIANT_APPMAP_SIZE = 200 * 1000 * 1000; // 200 MB
   private static readonly EMPTY_APPMAP_DATA = '{}';
   private static readonly analysisManager = AnalysisManager;
-  private static readonly openWebviewPanels = new Map<string, vscode.WebviewPanel>();
 
   private filterStore: FilterStore;
-  public currentWebView?: vscode.WebviewPanel;
+  private webviewList = new WebviewList();
+  private documents = new Array<AppMapDocument>();
 
   constructor(
     private readonly context: vscode.ExtensionContext,
@@ -107,6 +80,10 @@ export default class AppMapEditorProvider
     this.filterStore.onDidChangeFilters((event) => {
       this.updateFilters(event.savedFilters);
     });
+  }
+
+  get currentWebview(): vscode.Webview | undefined {
+    return this.webviewList.currentWebview;
   }
 
   async openCustomDocument(appMapOrSequenceDiagramDiffUri: vscode.Uri): Promise<AppMapDocument> {
@@ -252,15 +229,13 @@ export default class AppMapEditorProvider
   }
 
   updateFilters(savedFilters: SavedFilter[]): void {
-    AppMapEditorProvider.openWebviewPanels.forEach((webviewPanel) =>
-      webviewPanel.webview.postMessage({
+    this.webviewList.webviews.forEach((webview) =>
+      webview.postMessage({
         type: 'updateSavedFilters',
         savedFilters,
       })
     );
   }
-
-  private documents = new Array<AppMapDocument>();
 
   /**
    * The currently open documents or an empty array.
@@ -277,17 +252,13 @@ export default class AppMapEditorProvider
     webviewPanel: vscode.WebviewPanel
     /* _token: vscode.CancellationToken */
   ): Promise<void> {
-    this.currentWebView = webviewPanel;
+    this.webviewList.enroll(webviewPanel);
 
-    webviewPanel.onDidChangeViewState((e) => {
+    webviewPanel.onDidChangeViewState(() => {
       webviewPanel.webview.postMessage({
         type: 'setActive',
         active: webviewPanel.active,
       });
-
-      if (e.webviewPanel.active) {
-        this.currentWebView = e.webviewPanel;
-      }
     });
 
     const updateWebview = (initialState: string | undefined) => {
@@ -340,7 +311,6 @@ export default class AppMapEditorProvider
           });
           break;
         case 'onLoadComplete':
-          AppMapEditorProvider.openWebviewPanels.set(document.uri.toString(), webviewPanel);
           this.documents.push(document);
           break;
       }
@@ -353,8 +323,6 @@ export default class AppMapEditorProvider
     webviewPanel.webview.html = this.getHtmlForWebview(webviewPanel.webview);
 
     webviewPanel.onDidDispose(() => {
-      this.currentWebView = undefined;
-      AppMapEditorProvider.openWebviewPanels.delete(document.uri.toString());
       removeOne(this.documents, document);
       if (document.workspaceFolder)
         this.extensionState.setClosedAppMap(document.workspaceFolder, true);

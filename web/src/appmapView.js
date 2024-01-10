@@ -74,9 +74,8 @@ export default function mountApp() {
             vscode.setState({ appMap, sequenceDiagram });
           }
           break;
-        case 'updateSavedFilters':
-          // TODO: Update ChatSearch to handle updated filters.
-          app.updateFilters(message.savedFilters);
+        case 'setActive':
+          app.setActive(message.active);
           break;
         default:
           break;

@@ -6,17 +6,25 @@ import { warn } from 'console';
 import IndexProcessWatcher from '../services/indexProcessWatcher';
 import { ProcessId } from '../services/processWatcher';
 import appmapMessageHandler from './appmapMessageHandler';
-import FilterStore from './filterStore';
+import FilterStore, { SavedFilter } from './filterStore';
+import WebviewList from './WebviewList';
 
 export default class ChatSearchWebview {
-  public readonly panels = new Set<vscode.WebviewPanel>();
+  private webviewList = new WebviewList();
   private filterStore: FilterStore;
 
   private constructor(private readonly context: vscode.ExtensionContext) {
     this.filterStore = new FilterStore(context);
+    this.filterStore.onDidChangeFilters((event) => {
+      this.updateFilters(event.savedFilters);
+    });
     context.subscriptions.push(
       vscode.commands.registerCommand('appmap.explain', this.explain.bind(this))
     );
+  }
+
+  get currentWebview(): vscode.Webview | undefined {
+    return this.webviewList.currentWebview;
   }
 
   readyIndexProcess(workspace: vscode.WorkspaceFolder): IndexProcessWatcher | undefined {
@@ -77,9 +85,7 @@ export default class ChatSearchWebview {
         retainContextWhenHidden: true,
       }
     );
-
-    this.panels.add(panel);
-    panel.onDidDispose(() => this.panels.delete(panel));
+    this.webviewList.enroll(panel);
 
     panel.webview.html = getWebviewContent(
       panel.webview,
@@ -100,6 +106,15 @@ export default class ChatSearchWebview {
           });
           break;
       }
+    });
+  }
+
+  updateFilters(savedFilters: SavedFilter[]) {
+    this.webviewList.webviews.forEach((webview) => {
+      webview.postMessage({
+        type: 'updateSavedFilters',
+        savedFilters,
+      });
     });
   }
 
