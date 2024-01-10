@@ -2,7 +2,6 @@ import assert from 'assert';
 import sinon from 'sinon';
 import * as vscode from 'vscode';
 import MockExtensionContext from '../mocks/mockExtensionContext';
-import ExtensionState from '../../src/configuration/extensionState';
 import FilterStore, { SavedFilter } from '../../src/webviews/filterStore';
 
 const defaultFilter = {
@@ -27,7 +26,7 @@ describe('Saved filters', () => {
     sandbox = sinon.createSandbox();
     context = new MockExtensionContext();
     filterStore = new FilterStore(context);
-    filterStore.setFilters([defaultFilter]);
+    await filterStore.setFilters([defaultFilter]);
     savedFilterUpdates = new Array<SavedFilter[]>();
     filterStore.onDidChangeFilters(({ savedFilters }) => {
       savedFilterUpdates.push(savedFilters);

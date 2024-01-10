@@ -96,20 +96,8 @@ export default class ChatSearchWebview {
             type: 'initChatSearch',
             appmapRpcPort,
             question,
+            savedFilters: this.filterStore.getSavedFilters(),
           });
-
-          break;
-        case 'viewSource':
-          viewSource(message.text, workspace);
-          break;
-        case 'reportError':
-          Telemetry.reportWebviewError(message.error);
-          break;
-        case 'appmapOpenUrl':
-          vscode.env.openExternal(message.url);
-          break;
-        case 'copyToClipboard':
-          vscode.env.clipboard.writeText(message.stringToCopy);
           break;
       }
     });

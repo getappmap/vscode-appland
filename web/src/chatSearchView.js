@@ -15,6 +15,7 @@ export default function mountChatSearchView() {
           props: {
             appmapRpcPort: initialData.appmapRpcPort,
             question: initialData.question,
+            savedFilters: initialData.savedFilters,
           },
         });
       },
