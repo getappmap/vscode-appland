@@ -81,10 +81,6 @@ export default function mountApp() {
       vscode.postMessage({ command: 'exportSVG', svgString });
     });
 
-    app.$on('seq-diagram-feedback', () => {
-      vscode.postMessage({ command: 'seq-diagram-feedback' });
-    });
-
     app.$on('saveFilter', (filter) => {
       vscode.postMessage({ command: 'saveFilter', filter });
     });
