@@ -48,7 +48,7 @@ export default class IndexProcessWatcher extends ProcessWatcher {
       })
       .find(Boolean);
     if (portStr) {
-      vscode.window.showInformationMessage(`AppMap index process listening on port ${portStr}`);
+      this.options.log?.appendLine(`AppMap index process listening on port ${portStr}`);
       this.rpcPort = parseInt(portStr);
     }
   }
