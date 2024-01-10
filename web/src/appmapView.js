@@ -68,6 +68,8 @@ export default function mountApp() {
       vscode.postMessage({ command: 'viewSource', text: location });
     });
 
+    // KEG: I'm not sure where this is used, but I'm not 100% sure that it doesn't do anything. So, leaving
+    // it here for now.
     app.$on('copyToClipboard', (stringToCopy) => {
       vscode.postMessage({
         command: 'copyToClipboard',
