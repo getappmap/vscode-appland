@@ -1,9 +1,9 @@
 import Vue from 'vue';
 import { VVsCodeExtension } from '@appland/components'; // eslint-disable-line import/no-named-default
-import patchNotesHtml from '../static/html/patch_notes.html';
 import { getAppMapMetrics } from './telemetry';
 import '@appland/diagrams/dist/style.css';
 import MessagePublisher from './messagePublisher';
+import handleAppMapMessages from './handleAppMapMessages';
 
 export default function mountApp() {
   const startTime = new Date();
@@ -39,10 +39,10 @@ export default function mountApp() {
             },
           });
         },
-        getState() {
+        getAppMapState() {
           return this.$refs.ui.getState();
         },
-        setState(state) {
+        setAppMapState(state) {
           this.$refs.ui.setState(state);
         },
         setActive(isActive) {
@@ -57,51 +57,7 @@ export default function mountApp() {
       },
     });
 
-    app.$on('request-resolve-location', (location) => {
-      app.$emit('response-resolve-location', {
-        location,
-        externalUrl: location,
-      });
-    });
-
-    app.$on('viewSource', ({ location }) => {
-      vscode.postMessage({ command: 'viewSource', text: location });
-    });
-
-    // KEG: I'm not sure where this is used, but I'm not 100% sure that it doesn't do anything. So, leaving
-    // it here for now.
-    app.$on('copyToClipboard', (stringToCopy) => {
-      vscode.postMessage({
-        command: 'copyToClipboard',
-        stringToCopy,
-      });
-    });
-
-    app.$on('exportSVG', (svgString) => {
-      vscode.postMessage({ command: 'exportSVG', svgString });
-    });
-
-    app.$on('saveFilter', (filter) => {
-      vscode.postMessage({ command: 'saveFilter', filter });
-    });
-
-    app.$on('deleteFilter', (filter) => {
-      vscode.postMessage({ command: 'deleteFilter', filter });
-    });
-
-    app.$on('defaultFilter', (filter) => {
-      vscode.postMessage({ command: 'defaultFilter', filter });
-    });
-
-    window.addEventListener('error', (event) => {
-      vscode.postMessage({
-        command: 'reportError',
-        error: {
-          message: event.error.message,
-          stack: event.error.stack,
-        },
-      });
-    });
+    handleAppMapMessages(app, vscode);
 
     window.addEventListener('message', (event) => {
       const message = event.data;
@@ -118,19 +74,8 @@ export default function mountApp() {
             vscode.setState({ appMap, sequenceDiagram });
           }
           break;
-        case 'requestAppmapState':
-          vscode.postMessage({
-            command: 'appmapStateResult',
-            state: app.getState(),
-          });
-          break;
-        case 'setAppmapState':
-          app.setState(message.state);
-          break;
-        case 'setActive':
-          app.setActive(message.active);
-          break;
         case 'updateSavedFilters':
+          // TODO: Update ChatSearch to handle updated filters.
           app.updateFilters(message.savedFilters);
           break;
         default:
@@ -148,3 +93,4 @@ export default function mountApp() {
 
   vscode.postMessage({ command: 'appmap-ready' });
 }
+``;

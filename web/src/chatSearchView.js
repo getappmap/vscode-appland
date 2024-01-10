@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import { VChatSearch } from '@appland/components';
 import MessagePublisher from './messagePublisher';
+import handleAppMapMessages from './handleAppMapMessages';
 
 export default function mountChatSearchView() {
   const vscode = window.acquireVsCodeApi();
@@ -17,30 +18,19 @@ export default function mountChatSearchView() {
             question: initialData.question,
             savedFilters: initialData.savedFilters,
           },
+          methods: {
+            getAppMapState() {
+              return this.$refs.ui.getAppMapState();
+            },
+            setAppMapState(state) {
+              this.$refs.ui.setAppMapState(state);
+            },
+          },
         });
       },
     });
 
-    window.addEventListener('error', (event) => {
-      vscode.postMessage({
-        command: 'reportError',
-        error: {
-          message: event.error.message,
-          stack: event.error.stack,
-        },
-      });
-    });
-
-    app.$on('request-resolve-location', (location) => {
-      app.$emit('response-resolve-location', {
-        location,
-        externalUrl: location,
-      });
-    });
-
-    app.$on('viewSource', ({ location }) => {
-      vscode.postMessage({ command: 'viewSource', text: location });
-    });
+    handleAppMapMessages(app, vscode);
   });
 
   vscode.postMessage({ command: 'chat-search-ready' });
