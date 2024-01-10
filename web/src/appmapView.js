@@ -45,9 +45,6 @@ export default function mountApp() {
         setState(state) {
           this.$refs.ui.setState(state);
         },
-        setShareURL(url) {
-          this.$refs.ui.setShareURL(url);
-        },
         setActive(isActive) {
           this.$refs.ui.isActive = isActive;
         },
@@ -154,9 +151,6 @@ export default function mountApp() {
             command: 'appmapOpenUrl',
             url: message.url,
           });
-          break;
-        case 'setShareURL':
-          app.setShareURL(message.url);
           break;
         case 'setActive':
           app.setActive(message.active);
