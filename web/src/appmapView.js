@@ -127,12 +127,6 @@ export default function mountApp() {
         case 'setAppmapState':
           app.setState(message.state);
           break;
-        case 'openUrl':
-          vscode.postMessage({
-            command: 'appmapOpenUrl',
-            url: message.url,
-          });
-          break;
         case 'setActive':
           app.setActive(message.active);
           break;
