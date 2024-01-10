@@ -39,7 +39,6 @@ export default function mountChatSearchView() {
 
     app.$on('viewSource', ({ location }) => {
       vscode.postMessage({ command: 'viewSource', text: location });
-      vscode.postMessage({ command: 'performAction', action: 'view_source' });
     });
   });
 

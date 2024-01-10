@@ -75,44 +75,6 @@ export default function mountApp() {
 
     app.$on('viewSource', ({ location }) => {
       vscode.postMessage({ command: 'viewSource', text: location });
-      vscode.postMessage({ command: 'performAction', action: 'view_source' });
-    });
-
-    app.$on('sidebarSearchFocused', () => {
-      vscode.postMessage({
-        command: 'performAction',
-        action: 'sidebar_search_focused',
-      });
-    });
-
-    app.$on('clickFilterButton', () => {
-      vscode.postMessage({
-        command: 'performAction',
-        action: 'click_filter_button',
-      });
-    });
-
-    app.$on('clickTab', (tabId) => {
-      vscode.postMessage({
-        command: 'performAction',
-        action: 'click_tab',
-        data: { tabId },
-      });
-    });
-
-    app.$on('selectObjectInSidebar', (type) => {
-      vscode.postMessage({
-        command: 'performAction',
-        action: 'select_object_in_sidebar',
-        data: { type },
-      });
-    });
-
-    app.$on('resetDiagram', () => {
-      vscode.postMessage({
-        command: 'performAction',
-        action: 'reset_diagram',
-      });
     });
 
     app.$on('copyToClipboard', (stringToCopy) => {
@@ -120,10 +82,6 @@ export default function mountApp() {
         command: 'copyToClipboard',
         stringToCopy,
       });
-    });
-
-    app.$on('clearSelection', () => {
-      vscode.postMessage({ command: 'performAction', action: 'clear_selection' });
     });
 
     app.$on('uploadAppmap', () => {
@@ -132,55 +90,14 @@ export default function mountApp() {
         metrics: getAppMapMetrics(app.$refs.ui.$store.state.appMap),
         viewState: app.getState(),
       });
-      vscode.postMessage({ command: 'performAction', action: 'upload_appmap' });
     });
-
     app.$on('copyToClipboard', (stringToCopy) => {
       vscode.postMessage({
         command: 'copyToClipboard',
         stringToCopy,
       });
     });
-
-    app.$on('stateChanged', (stateKey) => {
-      const { ui } = app.$refs;
-      const state = ui.getState();
-
-      if (stateKey === 'selectedObject') {
-        const { selectedObject } = state;
-        if (!selectedObject || selectedObject === '') {
-          return;
-        }
-
-        vscode.postMessage({
-          command: 'performAction',
-          action: 'selected_object',
-          data: {
-            // remove the identifier and only send the object type
-            // object_type: id.replace(/:.*/, ''),
-          },
-        });
-      }
-    });
-
-    app.$on('changeTab', (tabId) => {
-      vscode.postMessage({
-        command: 'performAction',
-        action: 'change_tab',
-        data: { tabId },
-      });
-    });
-
-    app.$on('showInstructions', () => {
-      vscode.postMessage({ command: 'performAction', action: 'show_instructions' });
-    });
-
-    app.$on('notificationOpen', () => {
-      vscode.postMessage({ command: 'performAction', action: 'view_patch_notes' });
-    });
-
     app.$on('notificationClose', () => {
-      vscode.postMessage({ command: 'performAction', action: 'dismiss_patch_notes' });
       vscode.postMessage({ command: 'closeUpdateNotification' });
     });
 
