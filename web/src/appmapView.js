@@ -39,9 +39,6 @@ export default function mountApp() {
             },
           });
         },
-        showInstructions() {
-          this.$refs.ui.showInstructions();
-        },
         getState() {
           return this.$refs.ui.getState();
         },
@@ -145,9 +142,6 @@ export default function mountApp() {
             // below when a webview is reloaded.
             vscode.setState({ appMap, sequenceDiagram });
           }
-          break;
-        case 'showInstructions':
-          app.showInstructions();
           break;
         case 'requestAppmapState':
           vscode.postMessage({
