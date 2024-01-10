@@ -77,19 +77,6 @@ export default function mountApp() {
       });
     });
 
-    app.$on('uploadAppmap', () => {
-      vscode.postMessage({
-        command: 'uploadAppmap',
-        metrics: getAppMapMetrics(app.$refs.ui.$store.state.appMap),
-        viewState: app.getState(),
-      });
-    });
-    app.$on('copyToClipboard', (stringToCopy) => {
-      vscode.postMessage({
-        command: 'copyToClipboard',
-        stringToCopy,
-      });
-    });
     app.$on('notificationClose', () => {
       vscode.postMessage({ command: 'closeUpdateNotification' });
     });
