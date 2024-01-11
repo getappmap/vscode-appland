@@ -191,6 +191,19 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
     const perform = async () => {
       log(`Performing tools installation in ${storagePath}...`);
 
+      const httpProxy = vscode.workspace.getConfiguration('http').get<string>('proxy');
+      if (httpProxy) {
+        try {
+          const { protocol, hostname, port } = new URL(httpProxy);
+          const sanitizedProxy = `${protocol}//${hostname}:${port}`;
+          log(
+            `Using HTTP(s) proxy from Visual Studio Code http.proxy setting -> ${sanitizedProxy} (this URL has been sanitized)`
+          );
+        } catch (e) {
+          log('Using HTTP(s) proxy from Visual Studio Code http.proxy setting');
+        }
+      }
+
       for (const fileName of NodeProcessService.COPY_FILES) {
         await fs.copyFile(
           path.join(this.externDir, fileName),
@@ -220,6 +233,8 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
           YARN_LOCKFILE_NAME: undefined,
           YARN_RC_FILENAME: undefined,
           YARN_YARN_PATH: this.yarnPath,
+          YARN_HTTP_PROXY: httpProxy,
+          YARN_HTTPS_PROXY: httpProxy,
         },
       });
 
