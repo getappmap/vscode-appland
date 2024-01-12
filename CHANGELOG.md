@@ -1,3 +1,15 @@
+# [0.106.0](https://github.com/getappmap/vscode-appland/compare/v0.105.0...v0.106.0) (2024-01-12)
+
+
+### Bug Fixes
+
+* Propagate `http.proxy` setting to Yarn ([c2cce86](https://github.com/getappmap/vscode-appland/commit/c2cce86e0f19adce1feff166e80651635a6318d3))
+
+
+### Features
+
+* Update VSCode engine to v1.82.0 ([#858](https://github.com/getappmap/vscode-appland/issues/858)) ([001e765](https://github.com/getappmap/vscode-appland/commit/001e76570f84166886ca7cb884d77ca92f2d0b96))
+
 # [0.105.0](https://github.com/getappmap/vscode-appland/compare/v0.104.0...v0.105.0) (2023-12-04)
 
 
