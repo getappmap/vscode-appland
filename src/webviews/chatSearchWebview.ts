@@ -91,7 +91,8 @@ export default class ChatSearchWebview {
       panel.webview,
       this.context,
       'AppMap AI: Explain',
-      'chat-search'
+      'chat-search',
+      { rpcPort: appmapRpcPort }
     );
 
     panel.webview.onDidReceiveMessage(appmapMessageHandler(this.filterStore, workspace));
