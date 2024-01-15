@@ -1,10 +1,8 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import { Telemetry, DEBUG_EXCEPTION } from '../telemetry';
-import { version } from '../../package.json';
 import ExtensionState from '../configuration/extensionState';
 import extensionSettings from '../configuration/extensionSettings';
-import { bestFilePath } from '../lib/bestFilePath';
 import AppMapDocument from './AppMapDocument';
 import AnalysisManager from '../services/analysisManager';
 import { getStackLocations, StackLocation } from '../lib/getStackLocations';
@@ -21,6 +19,9 @@ import {
 } from '../services/nodeDependencyProcess';
 import { basename } from 'path';
 import { readFile } from 'fs/promises';
+import appmapMessageHandler from '../webviews/appmapMessageHandler';
+import FilterStore from '../webviews/filterStore';
+import WebviewList from '../webviews/WebviewList';
 
 export type FindingInfo = ResolvedFinding & {
   stackLocations?: StackLocation[];
@@ -56,53 +57,34 @@ export default class AppMapEditorProvider
       { webviewOptions: { retainContextWhenHidden: true } }
     );
     context.subscriptions.push(providerRegistration);
-
-    context.subscriptions.push(
-      vscode.commands.registerCommand('appmap.getAppmapState', () => {
-        if (provider.currentWebView) {
-          provider.currentWebView.webview.postMessage({
-            type: 'requestAppmapState',
-          });
-          // TODO: Wait for the state to be provided and then put it on the clipboard.
-        }
-      })
-    );
-
-    context.subscriptions.push(
-      vscode.commands.registerCommand('appmap.setAppmapState', async () => {
-        if (provider.currentWebView) {
-          const state = await vscode.window.showInputBox({
-            placeHolder: 'AppMap state serialized string',
-          });
-          if (state) {
-            provider.currentWebView.webview.postMessage({
-              type: 'setAppmapState',
-              state: state,
-            });
-          }
-        }
-      })
-    );
-
     return provider;
   }
 
-  private static readonly viewType = 'appmap.views.appMapFile';
-  private static readonly INSTRUCTIONS_VIEWED = 'APPMAP_INSTRUCTIONS_VIEWED';
-  private static readonly RELEASE_KEY = 'APPMAP_RELEASE_KEY';
   public static readonly APPMAP_OPENED = 'APPMAP_OPENED';
-  public static readonly SAVED_FILTERS = 'SAVED_FILTERS';
+
+  private static readonly viewType = 'appmap.views.appMapFile';
   private static readonly LARGE_APPMAP_SIZE = 10 * 1000 * 1000; // 10 MB
   private static readonly GIANT_APPMAP_SIZE = 200 * 1000 * 1000; // 200 MB
   private static readonly EMPTY_APPMAP_DATA = '{}';
   private static readonly analysisManager = AnalysisManager;
-  private static readonly openWebviewPanels = new Map<string, vscode.WebviewPanel>();
-  public currentWebView?: vscode.WebviewPanel;
+
+  private filterStore: FilterStore;
+  private webviewList = new WebviewList();
+  private documents = new Array<AppMapDocument>();
 
   constructor(
     private readonly context: vscode.ExtensionContext,
     private readonly extensionState: ExtensionState
-  ) {}
+  ) {
+    this.filterStore = new FilterStore(context);
+    this.filterStore.onDidChangeFilters((event) => {
+      this.updateFilters(event.savedFilters);
+    });
+  }
+
+  get currentWebview(): vscode.Webview | undefined {
+    return this.webviewList.currentWebview;
+  }
 
   async openCustomDocument(appMapOrSequenceDiagramDiffUri: vscode.Uri): Promise<AppMapDocument> {
     let appMapUri: vscode.Uri;
@@ -246,64 +228,14 @@ export default class AppMapEditorProvider
     });
   }
 
-  getSavedFilters(): SavedFilter[] | undefined {
-    return this.context.workspaceState.get(AppMapEditorProvider.SAVED_FILTERS) as
-      | SavedFilter[]
-      | undefined;
-  }
-
-  async saveFilter(filter: SavedFilter): Promise<void> {
-    let savedFilters = this.getSavedFilters() || [];
-
-    let filterOverwritten = false;
-    savedFilters = savedFilters.map((savedFilter) => {
-      if (savedFilter.filterName === filter.filterName) {
-        filterOverwritten = true;
-        return filter;
-      }
-      return savedFilter;
-    });
-
-    if (!filterOverwritten) savedFilters.push(filter);
-
-    await this.context.workspaceState.update(AppMapEditorProvider.SAVED_FILTERS, savedFilters);
-    this.updateFilters();
-  }
-
-  async deleteFilter(filter: SavedFilter): Promise<void> {
-    const savedFilters = this.getSavedFilters();
-    if (!savedFilters) return;
-
-    const newSavedFilters = savedFilters.filter(
-      (savedFilter) => savedFilter.filterName !== filter.filterName
-    );
-
-    await this.context.workspaceState.update(AppMapEditorProvider.SAVED_FILTERS, newSavedFilters);
-    this.updateFilters();
-  }
-
-  async defaultFilter(filter: SavedFilter): Promise<void> {
-    const savedFilters = this.getSavedFilters();
-    if (!savedFilters) return;
-
-    savedFilters.forEach(
-      (savedFilter) => (savedFilter.default = savedFilter.filterName === filter.filterName)
-    );
-
-    await this.context.workspaceState.update(AppMapEditorProvider.SAVED_FILTERS, savedFilters);
-    this.updateFilters();
-  }
-
-  updateFilters(): void {
-    AppMapEditorProvider.openWebviewPanels.forEach((webviewPanel) =>
-      webviewPanel.webview.postMessage({
+  updateFilters(savedFilters: SavedFilter[]): void {
+    this.webviewList.webviews.forEach((webview) =>
+      webview.postMessage({
         type: 'updateSavedFilters',
-        savedFilters: this.context.workspaceState.get(AppMapEditorProvider.SAVED_FILTERS) || [],
+        savedFilters,
       })
     );
   }
-
-  private documents = new Array<AppMapDocument>();
 
   /**
    * The currently open documents or an empty array.
@@ -320,17 +252,13 @@ export default class AppMapEditorProvider
     webviewPanel: vscode.WebviewPanel
     /* _token: vscode.CancellationToken */
   ): Promise<void> {
-    this.currentWebView = webviewPanel;
+    this.webviewList.enroll(webviewPanel);
 
-    webviewPanel.onDidChangeViewState((e) => {
+    webviewPanel.onDidChangeViewState(() => {
       webviewPanel.webview.postMessage({
         type: 'setActive',
         active: webviewPanel.active,
       });
-
-      if (e.webviewPanel.active) {
-        this.currentWebView = e.webviewPanel;
-      }
     });
 
     const updateWebview = (initialState: string | undefined) => {
@@ -343,16 +271,6 @@ export default class AppMapEditorProvider
       const { workspaceFolder } = document;
       if (workspaceFolder) {
         this.extensionState.setWorkspaceOpenedAppMap(workspaceFolder, true);
-      }
-
-      const lastVersion = this.context.globalState.get(AppMapEditorProvider.RELEASE_KEY);
-      if (!lastVersion) {
-        this.context.globalState.update(AppMapEditorProvider.RELEASE_KEY, version);
-      } else if (lastVersion !== version) {
-        webviewPanel.webview.postMessage({
-          type: 'displayUpdateNotification',
-          version,
-        });
       }
 
       if (initialState)
@@ -376,11 +294,11 @@ export default class AppMapEditorProvider
 
     // Handle messages from the webview.
     // Note: this has to be set before setting the HTML to avoid a race.
+    webviewPanel.webview.onDidReceiveMessage(
+      appmapMessageHandler(this.filterStore, document.workspaceFolder)
+    );
     webviewPanel.webview.onDidReceiveMessage(async (message) => {
       switch (message.command) {
-        case 'viewSource':
-          viewSource(message.text);
-          break;
         case 'ready':
           updateWebview(initialState);
           break;
@@ -389,77 +307,12 @@ export default class AppMapEditorProvider
             type: 'init-appmap',
             shareEnabled: false,
             defaultView: extensionSettings.defaultDiagramView || 'viewSequence',
-            savedFilters: this.context.workspaceState.get(AppMapEditorProvider.SAVED_FILTERS) || [],
+            savedFilters: this.filterStore.getSavedFilters(),
           });
           break;
-        case 'appmapStateResult':
-          // Putting this directly on the clipboard is not what we always want;
-          // although it is what appmap.getAppmapState wants.
-          vscode.env.clipboard.writeText(message.state);
-          vscode.window.setStatusBarMessage('AppMap state was copied to clipboard', 5000);
-          break;
         case 'onLoadComplete':
-          AppMapEditorProvider.openWebviewPanels.set(document.uri.toString(), webviewPanel);
           this.documents.push(document);
           break;
-        case 'performAction':
-          break;
-        case 'reportError':
-          Telemetry.reportWebviewError(message.error);
-          break;
-        case 'closeUpdateNotification':
-          this.context.globalState.update(AppMapEditorProvider.RELEASE_KEY, version);
-          break;
-        case 'appmapOpenUrl':
-          vscode.env.openExternal(message.url);
-          break;
-        case 'copyToClipboard':
-          vscode.env.clipboard.writeText(message.stringToCopy);
-          break;
-        case 'exportSVG':
-          {
-            try {
-              const { svgString } = message;
-              if (svgString) {
-                const comment =
-                  '\n<!-- Save this SVG file with a .svg file extension ' +
-                  'and then open it in a web browswer to view your appmap! -->\n\n';
-                const document = await vscode.workspace.openTextDocument({
-                  language: 'svg',
-                  content: comment + svgString,
-                });
-
-                vscode.window.showTextDocument(document);
-              }
-            } catch (e) {
-              Telemetry.sendEvent(DEBUG_EXCEPTION, {
-                exception: e as Error,
-                errorCode: ErrorCode.ExportSvgError,
-              });
-            }
-          }
-          break;
-        case 'saveFilter': {
-          const { filter } = message;
-          if (!filter) break;
-
-          this.saveFilter(filter);
-          break;
-        }
-        case 'deleteFilter': {
-          const { filter } = message;
-          if (!filter) break;
-
-          this.deleteFilter(filter);
-          break;
-        }
-        case 'defaultFilter': {
-          const { filter } = message;
-          if (!filter) break;
-
-          this.defaultFilter(filter);
-          break;
-        }
       }
     });
 
@@ -470,50 +323,21 @@ export default class AppMapEditorProvider
     webviewPanel.webview.html = this.getHtmlForWebview(webviewPanel.webview);
 
     webviewPanel.onDidDispose(() => {
-      this.currentWebView = undefined;
-      AppMapEditorProvider.openWebviewPanels.delete(document.uri.toString());
       removeOne(this.documents, document);
       if (document.workspaceFolder)
         this.extensionState.setClosedAppMap(document.workspaceFolder, true);
     });
-
-    function openFile(uri: vscode.Uri, lineNumber: number) {
-      const showOptions = {
-        viewColumn: vscode.ViewColumn.Beside,
-        selection: new vscode.Range(
-          new vscode.Position(lineNumber - 1, 0),
-          new vscode.Position(lineNumber - 1, 0)
-        ),
-      };
-      vscode.commands.executeCommand('vscode.open', uri, showOptions);
-    }
-
-    async function viewSource(location: string): Promise<void> {
-      const match = location.match(/^(.*?)(?::(\d+))?$/);
-      if (!match) return;
-      const [, path, lineNumberStr] = match;
-
-      let lineNumber = 1;
-      if (lineNumberStr) {
-        lineNumber = Number.parseInt(lineNumberStr, 10);
-      }
-
-      const fileUri = await bestFilePath(path, document.workspaceFolder);
-      if (fileUri) openFile(fileUri, lineNumber);
-    }
   }
 
   /**
    * Get the static html used for the editor webviews.
    */
   private getHtmlForWebview(webview: vscode.Webview): string {
-    return getWebviewContent(webview, this.context, 'AppLand Scenario', 'app');
+    return getWebviewContent(webview, this.context, 'AppMap Diagram', 'app');
   }
 
   //forget usage state set by this class
   public static resetState(context: vscode.ExtensionContext): void {
-    context.globalState.update(AppMapEditorProvider.INSTRUCTIONS_VIEWED, null);
-    context.globalState.update(AppMapEditorProvider.RELEASE_KEY, null);
     context.globalState.update(AppMapEditorProvider.APPMAP_OPENED, null);
   }
 }

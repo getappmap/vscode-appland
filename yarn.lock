@@ -64,17 +64,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/appmap@npm:^3.116.0":
-  version: 3.116.0
-  resolution: "@appland/appmap@npm:3.116.0"
+"@appland/appmap@npm:^3.117.0":
+  version: 3.117.0
+  resolution: "@appland/appmap@npm:3.117.0"
   dependencies:
-    "@appland/client": ^1.12.0
-    "@appland/components": ^3.18.0
-    "@appland/diagrams": ^1.7.0
+    "@appland/client": ^1.14.0
+    "@appland/components": ^3.21.2
+    "@appland/diagrams": ^1.8.0
     "@appland/models": ^2.10.0
-    "@appland/openapi": ^1.7.0
+    "@appland/openapi": ^1.8.0
     "@appland/rpc": ^1.1.0
-    "@appland/sequence-diagram": ^1.11.0
+    "@appland/sequence-diagram": ^1.12.0
     "@octokit/rest": ^20.0.1
     "@sidvind/better-ajv-errors": ^0.9.1
     JSONStream: ^1.3.5
@@ -129,13 +129,13 @@ __metadata:
       optional: true
   bin:
     appmap: built/cli.js
-  checksum: 20910c558bee08e6e98a47b8fcf3115f0bdee1ce57e900a33fea57570424caae66ff1761020c5c3512d6ca057089bab5c304d172f5bccbf02f670c4166d06048
+  checksum: 04fe5069a767ae0f1b004eabf0bae0cb15ad0833671115b0857d2e2347e816585306ffbf71138905db8e336378988cee4445583ab6a20b8ba2e29f7e837e9ab3
   languageName: node
   linkType: hard
 
-"@appland/client@npm:^1.12.0, @appland/client@npm:^1.14.0":
-  version: 1.14.0
-  resolution: "@appland/client@npm:1.14.0"
+"@appland/client@npm:^1.12.0, @appland/client@npm:^1.14.0, @appland/client@npm:^1.14.1":
+  version: 1.14.1
+  resolution: "@appland/client@npm:1.14.1"
   dependencies:
     "@appland/models": ^2.10.0
     "@types/form-data": ^2.5.0
@@ -143,13 +143,13 @@ __metadata:
     js-yaml: ^4.1.0
     rxjs: ^7.8.1
     socket.io-client: ^4.7.2
-  checksum: 01bff70fbc321e3b108a43c3f702a6b90225c5764fcc5e56341a1137a1beec65285c928f8f141b378e541745702cecb955d78cfa2dbf0e4eae319c6294348652
+  checksum: ffecbdda5e1204c0563e6b94e7ed4c8cda7f3c12fde3bf9c8fe79eeb0a7fd4c3cba34aac87c2c44c0ab962d83ca14828b902d936538ccfd6524f21afb17b0324
   languageName: node
   linkType: hard
 
-"@appland/components@npm:^3.18.0, @appland/components@npm:^3.21.0":
-  version: 3.21.0
-  resolution: "@appland/components@npm:3.21.0"
+"@appland/components@npm:^3.21.2, @appland/components@npm:^3.25.0":
+  version: 3.25.0
+  resolution: "@appland/components@npm:3.25.0"
   dependencies:
     "@appland/client": ^1.12.0
     "@appland/diagrams": ^1.7.0
@@ -170,26 +170,11 @@ __metadata:
     sql-formatter: ^4.0.2
     vue: ^2.7.14
     vuex: ^3.6.0
-  checksum: ea55af031cc45b625dbf442a168352976429616fd574da29f924fbece58520f53563a99751c7ba389e46b5bc514ec892cbf58b3160740c0766a64dab142bea6a
+  checksum: f2cfc1d3ddb9b8a1a0daa6973f9d4db00fd5e1a640b6ff14e00cd340de64dc0734822fb79b97a2829c0c03762987e01f8caba1f3d516984178495d6dc1355589
   languageName: node
   linkType: hard
 
-"@appland/diagrams@npm:^1.7.0":
-  version: 1.7.0
-  resolution: "@appland/diagrams@npm:1.7.0"
-  dependencies:
-    "@appland/models": ^2.2.0
-    d3-interpolate: ^3.0.1
-    d3-selection: ^3.0.0
-    d3-shape: ^3.2.0
-    d3-zoom: ^3.0.0
-    dagre: ^0.8.5
-    deepmerge: ^4.2.2
-  checksum: 532ce3155ddbe4ea566310ab8d26549ae5b39706ba95952b56811e03f3e5cbcd73676536bb25062ed05ba560407562f7ea388a4444be4edbf99f7edc0e362893
-  languageName: node
-  linkType: hard
-
-"@appland/diagrams@npm:^1.8.0":
+"@appland/diagrams@npm:^1.7.0, @appland/diagrams@npm:^1.8.0":
   version: 1.8.0
   resolution: "@appland/diagrams@npm:1.8.0"
   dependencies:
@@ -214,40 +199,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/models@npm:^2.2.0, @appland/models@npm:^2.6.3":
-  version: 2.6.4
-  resolution: "@appland/models@npm:2.6.4"
+"@appland/openapi@npm:^1.7.0, @appland/openapi@npm:^1.8.0":
+  version: 1.8.0
+  resolution: "@appland/openapi@npm:1.8.0"
   dependencies:
-    "@appland/sql-parser": ^1.5.0
-    crypto-js: ^4.0.0
-  checksum: 97460ac76801b7e89381082b89dd5479e758450e8624241baad51b3417e77dd085620ac572557db34bad24d0a6c9a1f73c58442ec29db2b3d5cba9fde5436faa
-  languageName: node
-  linkType: hard
-
-"@appland/models@npm:^2.7.0":
-  version: 2.7.0
-  resolution: "@appland/models@npm:2.7.0"
-  dependencies:
-    "@appland/sql-parser": ^1.5.0
-    crypto-js: ^4.0.0
-  checksum: fe29d5f5e88c68f5bf238128c056ef8698775512f9e158c80189609de8e0b9aef4d7ee7f451217cfe7b19a048671b04d099603e6e17f3657200a6d810fac9292
-  languageName: node
-  linkType: hard
-
-"@appland/openapi@npm:^1.7.0":
-  version: 1.7.0
-  resolution: "@appland/openapi@npm:1.7.0"
-  dependencies:
-    "@appland/models": ^2.6.3
+    "@appland/models": ^2.10.0
     js-yaml: ^4.1.0
-  checksum: 50a1283c7108d8772c9497d5b77c5bbbfba2b22c6d465d7e878f6e5b47ee31d86018858c86612001573edbcfab038bd0cf21a2313ad0962417a1db12ee0cbb35
+  checksum: 74caad0e582b350e02de1ec6002307f7bc030e9aa0c198ba73e97ed8fa95fa104d997bb216afbaa6d08bba6a0c6388c1ecbfe6291d953ac448822ed2e16ef1ca
   languageName: node
   linkType: hard
 
 "@appland/rpc@npm:^1.1.0":
-  version: 1.1.0
-  resolution: "@appland/rpc@npm:1.1.0"
-  checksum: fd02ab2f29babdd3882492ee5e280a8ade14575ec94603eb2f28427d49f06677a8470780ad0a4c360139ec8f68dba79b3208e82d6ea704275fc40c51e404966a
+  version: 1.1.1
+  resolution: "@appland/rpc@npm:1.1.1"
+  checksum: 1f1b67e969f0ea7c3cf239b295d782b4a9bc19c3b56722b8a9743ef495daf7e37896b09deb7b357e535e5d065acd4d0256e31be853a3f2003e1d57bed92ca804
   languageName: node
   linkType: hard
 
@@ -288,21 +253,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/sequence-diagram@npm:^1.11.0":
-  version: 1.11.0
-  resolution: "@appland/sequence-diagram@npm:1.11.0"
-  dependencies:
-    "@appland/models": ^2.7.0
-    "@appland/openapi": ^1.7.0
-    "@datastructures-js/priority-queue": ^6.1.3
-    crypto-js: ^4.1.1
-    diff: ^5.1.0
-    lru-cache: 6.0.0
-  checksum: 1bcc27f311e0024ecb4bb816b9886c4954ba87ba66f913050587844ab1aca048e2b13313e8d277ed4af99f900c93b40b76c4cdcdd40e4fe3b67d75603c0ba5b3
-  languageName: node
-  linkType: hard
-
-"@appland/sequence-diagram@npm:^1.12.0":
+"@appland/sequence-diagram@npm:^1.11.0, @appland/sequence-diagram@npm:^1.12.0":
   version: 1.12.0
   resolution: "@appland/sequence-diagram@npm:1.12.0"
   dependencies:
@@ -778,11 +729,11 @@ __metadata:
   linkType: hard
 
 "@langchain/community@npm:~0.0.3":
-  version: 0.0.13
-  resolution: "@langchain/community@npm:0.0.13"
+  version: 0.0.9
+  resolution: "@langchain/community@npm:0.0.9"
   dependencies:
-    "@langchain/core": ~0.1.5
-    "@langchain/openai": ~0.0.9
+    "@langchain/core": ~0.1.3
+    "@langchain/openai": ~0.0.7
     flat: ^5.0.2
     langsmith: ~0.0.48
     uuid: ^9.0.0
@@ -798,7 +749,6 @@ __metadata:
     "@aws-sdk/credential-provider-node": ^3.388.0
     "@clickhouse/client": ^0.2.5
     "@cloudflare/ai": ^1.0.12
-    "@datastax/astra-db-ts": 0.1.2
     "@elastic/elasticsearch": ^8.4.0
     "@getmetal/metal-sdk": "*"
     "@getzep/zep-js": ^0.9.0
@@ -886,8 +836,6 @@ __metadata:
     "@clickhouse/client":
       optional: true
     "@cloudflare/ai":
-      optional: true
-    "@datastax/astra-db-ts":
       optional: true
     "@elastic/elasticsearch":
       optional: true
@@ -1023,7 +971,7 @@ __metadata:
       optional: true
     ws:
       optional: true
-  checksum: d039b6965660c2fb5e592d3af3c27d4d4fae63f80f8c5b0d16df435664ea29641104962bc1052be0ccfa0349fbc260f3e0128ea0b52712acfd8474d7040e6b56
+  checksum: 0b3cb1ab6589e80fcb5588fd0d27fe4fdf7f6b8c016135b6bf3642f4579985dad787bbd964ee10ba198d2fc44f20b19a0523491e8427dd9b599d0777a971129b
   languageName: node
   linkType: hard
 
@@ -1045,7 +993,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@langchain/openai@npm:~0.0.5, @langchain/openai@npm:~0.0.9":
+"@langchain/core@npm:~0.1.3":
+  version: 0.1.4
+  resolution: "@langchain/core@npm:0.1.4"
+  dependencies:
+    ansi-styles: ^5.0.0
+    camelcase: 6
+    decamelize: 1.2.0
+    js-tiktoken: ^1.0.8
+    langsmith: ~0.0.48
+    ml-distance: ^4.0.0
+    p-queue: ^6.6.2
+    p-retry: 4
+    uuid: ^9.0.0
+    zod: ^3.22.3
+  checksum: 85f5a23a3e96cac6a8345c083df925339a6a3f9aa620f9faad295a62b992b0345f61fe7d649c27ff5058c86cdec84b3a503462ccdd759c6f46c4fa418255d16d
+  languageName: node
+  linkType: hard
+
+"@langchain/openai@npm:~0.0.5":
   version: 0.0.9
   resolution: "@langchain/openai@npm:0.0.9"
   dependencies:
@@ -1055,6 +1021,19 @@ __metadata:
     zod: ^3.22.3
     zod-to-json-schema: 3.20.3
   checksum: 89f9d6f30d724e7e007bee95a21afd1a9a6a2c0b4aa2f22d420c8f33a478ec429447e357e9a822cbc181770665e1eb85f2c611b23e25434c6a45af761986cdcd
+  languageName: node
+  linkType: hard
+
+"@langchain/openai@npm:~0.0.7":
+  version: 0.0.7
+  resolution: "@langchain/openai@npm:0.0.7"
+  dependencies:
+    "@langchain/core": ~0.1.3
+    js-tiktoken: ^1.0.7
+    openai: ^4.19.0
+    zod: ^3.22.3
+    zod-to-json-schema: 3.20.3
+  checksum: e2cd0aa59229fcb7217110a95b61035b9e889ea74461c96f141eb2313738bc00f7ff102f85df5144552c103df2c9932a796d219cde1f7f22a637ea432b608cc6
   languageName: node
   linkType: hard
 
@@ -2288,12 +2267,12 @@ __metadata:
   linkType: hard
 
 "@types/node-fetch@npm:^2.6.4":
-  version: 2.6.10
-  resolution: "@types/node-fetch@npm:2.6.10"
+  version: 2.6.9
+  resolution: "@types/node-fetch@npm:2.6.9"
   dependencies:
     "@types/node": "*"
     form-data: ^4.0.0
-  checksum: e0c9a6023752ff6c744a33a3045b9adb11fd1882997ef891bf7ce91f937ddab91c0acee4c8e806a8a5aec0e8d8c132709141e8512fec28030d7cc9ef92c7ff1e
+  checksum: 212269aff4b251477c13c33cee6cea23e4fd630be6c0bfa3714968cce7efd7055b52f2f82aab3394596d8c758335cc802e7c5fa3f775e7f2a472fa914c90dc15
   languageName: node
   linkType: hard
 
@@ -2319,11 +2298,11 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:^18.11.18":
-  version: 18.19.4
-  resolution: "@types/node@npm:18.19.4"
+  version: 18.18.11
+  resolution: "@types/node@npm:18.18.11"
   dependencies:
     undici-types: ~5.26.4
-  checksum: 3a32a31b2df85d4bebb5e3c91ec1a0908d587a2a2fd31ab4eeebd609d1c04bbcc9ba97e290e3230f843c9f43f17efb9f5cde56412b4b0f5acbfe5577179b23c8
+  checksum: e4c2c5b792023c86248013589820d157ced46a35dcd60b15a3133a8f67f6b54c8870f245ecccbe7a12c49f1991ea84401946ddbb3f44894ec042642233e616d5
   languageName: node
   linkType: hard
 
@@ -3155,9 +3134,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "appmap@workspace:."
   dependencies:
-    "@appland/appmap": ^3.116.0
-    "@appland/client": ^1.14.0
-    "@appland/components": ^3.21.0
+    "@appland/appmap": ^3.117.0
+    "@appland/client": ^1.14.1
+    "@appland/components": ^3.25.0
     "@appland/diagrams": ^1.8.0
     "@appland/models": ^2.10.0
     "@appland/scanner": ^1.86.0
@@ -8935,8 +8914,8 @@ __metadata:
   linkType: hard
 
 "langsmith@npm:~0.0.48":
-  version: 0.0.53
-  resolution: "langsmith@npm:0.0.53"
+  version: 0.0.52
+  resolution: "langsmith@npm:0.0.52"
   dependencies:
     "@types/uuid": ^9.0.1
     commander: ^10.0.1
@@ -8945,7 +8924,7 @@ __metadata:
     uuid: ^9.0.0
   bin:
     langsmith: dist/cli/main.cjs
-  checksum: c11e18c31e10c5d92400eaeb27af1d7a2d85d22c8efe3daf600a104b30c141a448a8e341974e003b1cbda27d2ff10884e019540d48ad150151d7ef925e19bd1d
+  checksum: b782836e07568f833ef56cab4a1404911b1395ec1619e8d2378839324328c5fb5e50ba6fc5839e93c40e99c6198942cae48bd890f95d6433ae3897b60a15f62c
   languageName: node
   linkType: hard
 
@@ -9566,11 +9545,11 @@ __metadata:
   linkType: hard
 
 "marked-highlight@npm:^2.0.7":
-  version: 2.1.0
-  resolution: "marked-highlight@npm:2.1.0"
+  version: 2.0.9
+  resolution: "marked-highlight@npm:2.0.9"
   peerDependencies:
     marked: ">=4 <12"
-  checksum: 96e7e3d494b10b990a9cc36b87c0539495f2c612d1067fe648a6840af9296f1435ddc683c0f9472299f3339c75e69fe4a528a6d4fc7f99ecfa7e12119238d48e
+  checksum: e28324d4854d31af4ebb1a136a965f13573f261debcb891442cc7c316e68ced53e07c191f8824561f21669dec341f89b52b9adcb5ce113a7f0c5672b26a84ed0
   languageName: node
   linkType: hard
 
@@ -10830,8 +10809,8 @@ __metadata:
   linkType: hard
 
 "openai@npm:^4.19.0":
-  version: 4.24.1
-  resolution: "openai@npm:4.24.1"
+  version: 4.24.0
+  resolution: "openai@npm:4.24.0"
   dependencies:
     "@types/node": ^18.11.18
     "@types/node-fetch": ^2.6.4
@@ -10844,7 +10823,7 @@ __metadata:
     web-streams-polyfill: ^3.2.1
   bin:
     openai: bin/cli
-  checksum: 2d2021ed1e2795f9949120974e99b03de3e5fadf021fbd55dd9026b36a5f4eb9ee3fee66fe770c4c1de6cecda2e4033e09063d8814232f902b8e1d70fa56201b
+  checksum: 5a65897daadbac30b452c16b8d7342db14e701feafa6f2294dde05ec95e404dd5b93b8ade0c4a39667819e6ec00215c248889bb69767730e656442b0d6c68ce3
   languageName: node
   linkType: hard
 
@@ -12886,14 +12865,14 @@ resolve@^2.0.0-next.3:
   linkType: hard
 
 "socket.io-client@npm:^4.7.2":
-  version: 4.7.3
-  resolution: "socket.io-client@npm:4.7.3"
+  version: 4.7.2
+  resolution: "socket.io-client@npm:4.7.2"
   dependencies:
     "@socket.io/component-emitter": ~3.1.0
     debug: ~4.3.2
     engine.io-client: ~6.5.2
     socket.io-parser: ~4.2.4
-  checksum: fd27f2e64db7a137eb2cf256ea1bde8625f127f208be69c28c5d6f2d8c8c4a6af736fb0f8b23317353b00ccf4637dbb72a59d4066d9e5bb171b7ffd0f18c5b93
+  checksum: 8f0ab6b623e014d889bae0cd847ef7826658e8f131bd9367ee5ae4404bb52a6d7b1755b8fbe8e68799b60e92149370a732b381f913b155e40094facb135cd088
   languageName: node
   linkType: hard
 

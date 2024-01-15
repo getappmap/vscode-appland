@@ -24,7 +24,7 @@ export default class SignInViewProvider implements vscode.WebviewViewProvider {
       this.context,
       'Sign in',
       'sign-in-view',
-      'height: 100%; margin: 0; overflow-y: hidden;'
+      { htmlStyle: 'height: 100%; margin: 0; overflow-y: hidden;' }
     );
 
     webviewView.webview.onDidReceiveMessage(async (message) => {

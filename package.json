@@ -186,6 +186,10 @@
         "title": "AppMap: Compare Sequence Diagrams"
       },
       {
+        "command": "appmap.explain",
+        "title": "AppMap AI: Explain"
+      },
+      {
         "command": "appmap.login",
         "title": "AppMap: Login"
       },
@@ -487,9 +491,9 @@
     "yaml": "^2.1.1"
   },
   "dependencies": {
-    "@appland/appmap": "^3.116.0",
-    "@appland/client": "^1.14.0",
-    "@appland/components": "^3.21.0",
+    "@appland/appmap": "^3.117.0",
+    "@appland/client": "^1.14.1",
+    "@appland/components": "^3.25.0",
     "@appland/diagrams": "^1.8.0",
     "@appland/models": "^2.10.0",
     "@appland/scanner": "^1.86.0",

@@ -2,8 +2,7 @@ import assert from 'assert';
 import sinon from 'sinon';
 import * as vscode from 'vscode';
 import MockExtensionContext from '../mocks/mockExtensionContext';
-import AppMapEditorProvider from '../../src/editor/appmapEditorProvider';
-import ExtensionState from '../../src/configuration/extensionState';
+import FilterStore, { SavedFilter } from '../../src/webviews/filterStore';
 
 const defaultFilter = {
   default: true,
@@ -20,35 +19,36 @@ const testFilter = {
 describe('Saved filters', () => {
   let sandbox: sinon.SinonSandbox;
   let context: vscode.ExtensionContext;
-  let extensionState: ExtensionState;
-  let editorProvider: AppMapEditorProvider;
-  let updateFiltersSpy: sinon.SinonSpy;
+  let filterStore: FilterStore;
+  let savedFilterUpdates: SavedFilter[][];
 
   beforeEach(async () => {
     sandbox = sinon.createSandbox();
     context = new MockExtensionContext();
-    extensionState = new ExtensionState(context);
-    editorProvider = new AppMapEditorProvider(context, extensionState);
-    updateFiltersSpy = sinon.spy(editorProvider, 'updateFilters');
-    await context.workspaceState.update(AppMapEditorProvider.SAVED_FILTERS, [defaultFilter]);
+    filterStore = new FilterStore(context);
+    await filterStore.setFilters([defaultFilter]);
+    savedFilterUpdates = new Array<SavedFilter[]>();
+    filterStore.onDidChangeFilters(({ savedFilters }) => {
+      savedFilterUpdates.push(savedFilters);
+    });
   });
   afterEach(() => sandbox.restore());
 
   it('saves and deletes a new filter', async () => {
-    await editorProvider.saveFilter(testFilter);
-    let savedFilters = editorProvider.getSavedFilters();
+    await filterStore.saveFilter(testFilter);
+    let savedFilters = filterStore.getSavedFilters();
     assert.deepEqual(savedFilters, [defaultFilter, testFilter]);
-    assert.deepEqual(updateFiltersSpy.callCount, 1);
+    assert.deepEqual(savedFilterUpdates.length, 1);
 
-    await editorProvider.deleteFilter(testFilter);
-    savedFilters = editorProvider.getSavedFilters();
+    await filterStore.deleteFilter(testFilter);
+    savedFilters = filterStore.getSavedFilters();
     assert.deepEqual(savedFilters, [defaultFilter]);
-    assert.deepEqual(updateFiltersSpy.callCount, 2);
+    assert.deepEqual(savedFilterUpdates.length, 2);
   });
 
   it('updates an already extant saved filter', async () => {
-    await editorProvider.saveFilter(testFilter);
-    let savedFilters = editorProvider.getSavedFilters();
+    await filterStore.saveFilter(testFilter);
+    let savedFilters = filterStore.getSavedFilters();
     assert.deepEqual(savedFilters, [defaultFilter, testFilter]);
 
     const updatedFilter = {
@@ -57,21 +57,21 @@ describe('Saved filters', () => {
       default: false,
     };
 
-    await editorProvider.saveFilter(updatedFilter);
-    savedFilters = editorProvider.getSavedFilters();
+    await filterStore.saveFilter(updatedFilter);
+    savedFilters = filterStore.getSavedFilters();
 
     assert.deepEqual(savedFilters, [defaultFilter, updatedFilter]);
-    assert.deepEqual(updateFiltersSpy.callCount, 2);
+    assert.deepEqual(savedFilterUpdates.length, 2);
   });
 
   it('saves a new filter and makes it default', async () => {
-    await editorProvider.saveFilter(testFilter);
-    let savedFilters = editorProvider.getSavedFilters();
+    await filterStore.saveFilter(testFilter);
+    let savedFilters = filterStore.getSavedFilters();
     assert.deepEqual(savedFilters, [defaultFilter, testFilter]);
-    assert.deepEqual(updateFiltersSpy.callCount, 1);
+    assert.deepEqual(savedFilterUpdates.length, 1);
 
-    await editorProvider.defaultFilter(testFilter);
-    savedFilters = editorProvider.getSavedFilters();
+    await filterStore.defaultFilter(testFilter);
+    savedFilters = filterStore.getSavedFilters();
 
     const expected = [
       {
@@ -87,6 +87,6 @@ describe('Saved filters', () => {
     ];
 
     assert.deepEqual(savedFilters, expected);
-    assert.deepEqual(updateFiltersSpy.callCount, 2);
+    assert.deepEqual(savedFilterUpdates.length, 2);
   });
 });

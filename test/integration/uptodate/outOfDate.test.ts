@@ -2,10 +2,18 @@
 import assert from 'assert';
 import * as vscode from 'vscode';
 import { touch } from '../../../src/lib/touch';
-import { initializeWorkspace, repeatUntil, waitForExtension, waitForIndexer } from '../util';
+import {
+  initializeWorkspace,
+  repeatUntil,
+  waitForExtension,
+  waitForIndexer,
+  withAuthenticatedUser,
+} from '../util';
 import { UserFile, UserPageAppMapFile, waitForDependsUpdate } from './util';
 
 describe('Uptodate', () => {
+  withAuthenticatedUser();
+
   beforeEach(initializeWorkspace);
   beforeEach(waitForExtension);
   beforeEach(waitForIndexer);
