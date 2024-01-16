@@ -64,9 +64,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/appmap@npm:^3.119.0":
-  version: 3.119.0
-  resolution: "@appland/appmap@npm:3.119.0"
+"@appland/appmap@npm:^3.121.0":
+  version: 3.121.0
+  resolution: "@appland/appmap@npm:3.121.0"
   dependencies:
     "@appland/client": ^1.14.0
     "@appland/components": ^3.21.2
@@ -130,7 +130,7 @@ __metadata:
       optional: true
   bin:
     appmap: built/cli.js
-  checksum: 764229cafcb5d8d7ec913a4f6749437da149e385fe04032b639491bf91b1ee9bbd611dab82453462311ffcc762a52e1b5b813a130ee7668b10772de33d4fe6ff
+  checksum: d4a25fc7527f5410856b7309cb7eb7669166d05e9bd6e63db09af09f832969cc5ef4f359f7355ac78c685f3e0139abf2d6e070e6b479615741e04530aee612b6
   languageName: node
   linkType: hard
 
@@ -148,7 +148,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/components@npm:^3.21.2, @appland/components@npm:^3.27.1":
+"@appland/components@npm:^3.21.2":
   version: 3.27.1
   resolution: "@appland/components@npm:3.27.1"
   dependencies:
@@ -172,6 +172,33 @@ __metadata:
     vue: ^2.7.14
     vuex: ^3.6.0
   checksum: 7c43d779f947e4a0ecaddd3f4a7b7d0a5038e6ecb811952409379ed830c4b83111e3d66c352b9f20ea87ff86322514e4a9ad16610d66685150daeac3ac29d16e
+  languageName: node
+  linkType: hard
+
+"@appland/components@npm:^3.30.0":
+  version: 3.30.0
+  resolution: "@appland/components@npm:3.30.0"
+  dependencies:
+    "@appland/client": ^1.12.0
+    "@appland/diagrams": ^1.7.0
+    "@appland/models": ^2.10.0
+    "@appland/rpc": ^1.1.0
+    "@appland/sequence-diagram": ^1.11.0
+    buffer: ^6.0.3
+    d3: ^7.8.4
+    d3-flame-graph: ^4.1.3
+    diff: ^5.1.0
+    dom-to-svg: ^0.12.2
+    dompurify: ^3.0.6
+    events: ^3.3.0
+    highlight.js: ^11.9.0
+    jayson: ^4.1.0
+    marked: ^10.0.0
+    marked-highlight: ^2.0.7
+    sql-formatter: ^4.0.2
+    vue: ^2.7.14
+    vuex: ^3.6.0
+  checksum: 9b733273fc8c6783b4ecfa1ad9fd2db03c5fcbd238480f5c680d0c6fcf4aa36f09411cc98c64a7453b7885007ccbe87da2536260cdae95fbd68103ad36d78cd5
   languageName: node
   linkType: hard
 
@@ -3135,9 +3162,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "appmap@workspace:."
   dependencies:
-    "@appland/appmap": ^3.119.0
+    "@appland/appmap": ^3.121.0
     "@appland/client": ^1.14.1
-    "@appland/components": ^3.27.1
+    "@appland/components": ^3.30.0
     "@appland/diagrams": ^1.8.0
     "@appland/models": ^2.10.0
     "@appland/scanner": ^1.86.0

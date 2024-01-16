@@ -23,6 +23,10 @@ export default function handleAppMapMessages(app, vscode) {
     vscode.postMessage({ command: 'exportSVG', svgString });
   });
 
+  app.$on('exportJSON', (appmapData) => {
+    vscode.postMessage({ command: 'exportJSON', appmapData });
+  });
+
   app.$on('saveFilter', (filter) => {
     vscode.postMessage({ command: 'saveFilter', filter });
   });

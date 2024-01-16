@@ -1,14 +1,54 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as vscode from 'vscode';
 import viewSource from './viewSource';
-import { Telemetry, DEBUG_EXCEPTION } from '../telemetry';
+import { Telemetry } from '../telemetry';
 import FilterStore from './filterStore';
-import ErrorCode from '../telemetry/definitions/errorCodes';
+import { tmpdir } from 'node:os';
+import { randomBytes } from 'node:crypto';
+import { join } from 'node:path';
+import { writeFile } from 'node:fs/promises';
+
+type AppMapExport = {
+  metadata?: {
+    name: string;
+  };
+};
 
 export default function appmapMessageHandler(
   filterStore: FilterStore,
   workspace?: vscode.WorkspaceFolder
 ): (message: any) => Promise<void> {
+  const exportSVG = async (svgString?: string) => {
+    if (!svgString) return;
+
+    const comment =
+      '\n<!-- Save this SVG file with a .svg file extension ' +
+      'and then open it in a web browswer to view your appmap! -->\n\n';
+    const document = await vscode.workspace.openTextDocument({
+      language: 'svg',
+      content: comment + svgString,
+    });
+
+    vscode.window.showTextDocument(document);
+  };
+
+  const exportJSON = async (appmapData?: AppMapExport) => {
+    if (!appmapData) return;
+
+    const appmapName = appmapData.metadata?.name || randomBytes(16).toString('hex');
+    const appmapFileName = [
+      appmapName.replaceAll(/[^a-zA-Z0-9\-_ ]/g, '_').replaceAll(/_+/g, '_'),
+      '.appmap.json',
+    ].join('');
+
+    const tempDir = tmpdir();
+    const tempFilePath = join(tempDir, appmapFileName);
+    await writeFile(tempFilePath, JSON.stringify(appmapData, null, 2));
+    const { remoteName } = vscode.env;
+    const command = remoteName === 'wsl' ? 'remote-wsl.revealInExplorer' : 'revealFileInOS';
+    vscode.commands.executeCommand(command, vscode.Uri.file(tempFilePath));
+  };
+
   return async (message: any) => {
     switch (message.command) {
       case 'viewSource':
@@ -28,25 +68,14 @@ export default function appmapMessageHandler(
         break;
       case 'exportSVG':
         {
-          try {
-            const { svgString } = message;
-            if (svgString) {
-              const comment =
-                '\n<!-- Save this SVG file with a .svg file extension ' +
-                'and then open it in a web browswer to view your appmap! -->\n\n';
-              const document = await vscode.workspace.openTextDocument({
-                language: 'svg',
-                content: comment + svgString,
-              });
-
-              vscode.window.showTextDocument(document);
-            }
-          } catch (e) {
-            Telemetry.sendEvent(DEBUG_EXCEPTION, {
-              exception: e as Error,
-              errorCode: ErrorCode.ExportSvgError,
-            });
-          }
+          const { svgString } = message;
+          exportSVG(svgString);
+        }
+        break;
+      case 'exportJSON':
+        {
+          const { appmapData } = message;
+          exportJSON(appmapData);
         }
         break;
       case 'saveFilter': {
