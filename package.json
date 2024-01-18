@@ -66,6 +66,10 @@
     ],
     "commands": [
       {
+        "command": "appmap.openAiHelp",
+        "title": "AppMap AI: Help"
+      },
+      {
         "command": "appmap.getAppmapState",
         "title": "AppMap: Copy Current AppMap State to Clipboard"
       },
@@ -220,7 +224,12 @@
         "appMap.applandUrl": {
           "type": "string",
           "default": "https://getappmap.com",
-          "description": "URL of an AppLand cloud instance for AppMap storage"
+          "description": "URL of AppMap"
+        },
+        "appMap.apiUrl": {
+          "type": "string",
+          "default": "https://api.getappmap.com",
+          "description": "URL of the AppMap API"
         },
         "appMap.viewConfiguration": {
           "type": "string",
@@ -493,7 +502,7 @@
   "dependencies": {
     "@appland/appmap": "^3.117.0",
     "@appland/client": "^1.14.1",
-    "@appland/components": "^3.25.0",
+    "@appland/components": "^3.27.0",
     "@appland/diagrams": "^1.8.0",
     "@appland/models": "^2.10.0",
     "@appland/scanner": "^1.86.0",

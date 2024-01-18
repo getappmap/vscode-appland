@@ -204,6 +204,10 @@ export default class InstallGuideWebView {
                 vscode.commands.executeCommand('appmap.openFindingsOverview');
                 break;
 
+              case 'ai-help':
+                vscode.commands.executeCommand('appmap.openAiHelp');
+                break;
+
               default:
                 break;
             }

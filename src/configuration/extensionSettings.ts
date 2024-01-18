@@ -1,3 +1,4 @@
+import { DefaultApiURL } from '@appland/client';
 import * as vscode from 'vscode';
 
 export default class ExtensionSettings {
@@ -26,5 +27,9 @@ export default class ExtensionSettings {
 
   public static get appMapCommandLineToolsPath(): string | undefined {
     return vscode.workspace.getConfiguration('appMap').get('commandLineToolsPath');
+  }
+
+  public static get apiUrl(): string {
+    return vscode.workspace.getConfiguration('appMap').get('apiUrl') || DefaultApiURL;
   }
 }

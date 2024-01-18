@@ -8,6 +8,8 @@ import { ProcessId } from '../services/processWatcher';
 import appmapMessageHandler from './appmapMessageHandler';
 import FilterStore, { SavedFilter } from './filterStore';
 import WebviewList from './WebviewList';
+import { getApiKey } from '../authentication';
+import ExtensionSettings from '../configuration/extensionSettings';
 
 export default class ChatSearchWebview {
   private webviewList = new WebviewList();
@@ -104,6 +106,8 @@ export default class ChatSearchWebview {
             appmapRpcPort,
             question,
             savedFilters: this.filterStore.getSavedFilters(),
+            apiUrl: ExtensionSettings.apiUrl,
+            apiKey: await getApiKey(false),
           });
           break;
       }
