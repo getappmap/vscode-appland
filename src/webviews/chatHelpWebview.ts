@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import getWebviewContent from './getWebviewContent';
 import { getApiKey } from '../authentication';
+import ExtensionSettings from '../configuration/extensionSettings';
 
 export default class AiHelpWebview {
   public static viewType = 'appmap.openAiHelp';
@@ -44,6 +45,7 @@ export default class AiHelpWebview {
               console.log('got ready message');
               panel.webview.postMessage({
                 type: 'init',
+                apiUrl: ExtensionSettings.apiUrl,
                 apiKey: await getApiKey(false),
               });
               break;

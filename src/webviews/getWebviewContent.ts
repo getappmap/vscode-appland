@@ -1,5 +1,6 @@
 import path from 'path';
 import * as vscode from 'vscode';
+import ExtensionSettings from '../configuration/extensionSettings';
 
 type AppmapModule =
   | 'app'
@@ -25,6 +26,9 @@ export default function getWebviewContent(
     vscode.Uri.file(path.join(context.extensionPath, 'out', 'app.css'))
   );
 
+  const { apiUrl } = ExtensionSettings;
+  const wsUrl = apiUrl.replace(/^http/, 'ws');
+
   return ` <!DOCTYPE html>
   <html style="${htmlStyle ?? ''}" lang="en">
   <head>
@@ -32,9 +36,7 @@ export default function getWebviewContent(
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Security-Policy" content="
       default-src 'none';
-      connect-src ${
-        rpcPort ? `http://localhost:${rpcPort}` : ''
-      }  https://api.getappmap.com wss://api.getappmap.com;
+      connect-src ${rpcPort ? `http://localhost:${rpcPort}` : ''}  ${apiUrl} ${wsUrl};
       img-src ${webview.cspSource} data:;
       script-src ${webview.cspSource} 'unsafe-eval';
       style-src ${webview.cspSource} 'unsafe-inline';
