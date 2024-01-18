@@ -2,6 +2,7 @@ import Vue from 'vue';
 import { VChatSearch } from '@appland/components';
 import MessagePublisher from './messagePublisher';
 import handleAppMapMessages from './handleAppMapMessages';
+import 'highlight.js/styles/base16/snazzy.css';
 
 export default function mountChatSearchView() {
   const vscode = window.acquireVsCodeApi();
