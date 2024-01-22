@@ -242,6 +242,14 @@
         "appMap.commandLineToolsPath": {
           "type": "string",
           "description": "Location of AppMap command line tools (used for extension development only)"
+        },
+        "appMap.commandLineVerbose": {
+          "type": "boolean",
+          "description": "Enable verbose output from AppMap command line tools"
+        },
+        "appMap.indexOptions": {
+          "type": "string",
+          "description": "Options to pass to the appmap index command"
         }
       }
     },
@@ -491,9 +499,9 @@
     "yaml": "^2.1.1"
   },
   "dependencies": {
-    "@appland/appmap": "^3.117.0",
+    "@appland/appmap": "^3.119.0",
     "@appland/client": "^1.14.1",
-    "@appland/components": "^3.25.0",
+    "@appland/components": "^3.27.1",
     "@appland/diagrams": "^1.8.0",
     "@appland/models": "^2.10.0",
     "@appland/scanner": "^1.86.0",

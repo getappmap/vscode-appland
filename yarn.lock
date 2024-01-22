@@ -64,9 +64,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/appmap@npm:^3.117.0":
-  version: 3.117.0
-  resolution: "@appland/appmap@npm:3.117.0"
+"@appland/appmap@npm:^3.119.0":
+  version: 3.119.0
+  resolution: "@appland/appmap@npm:3.119.0"
   dependencies:
     "@appland/client": ^1.14.0
     "@appland/components": ^3.21.2
@@ -74,6 +74,7 @@ __metadata:
     "@appland/models": ^2.10.0
     "@appland/openapi": ^1.8.0
     "@appland/rpc": ^1.1.0
+    "@appland/scanner": ^1.86.0
     "@appland/sequence-diagram": ^1.12.0
     "@octokit/rest": ^20.0.1
     "@sidvind/better-ajv-errors": ^0.9.1
@@ -129,7 +130,7 @@ __metadata:
       optional: true
   bin:
     appmap: built/cli.js
-  checksum: 04fe5069a767ae0f1b004eabf0bae0cb15ad0833671115b0857d2e2347e816585306ffbf71138905db8e336378988cee4445583ab6a20b8ba2e29f7e837e9ab3
+  checksum: 764229cafcb5d8d7ec913a4f6749437da149e385fe04032b639491bf91b1ee9bbd611dab82453462311ffcc762a52e1b5b813a130ee7668b10772de33d4fe6ff
   languageName: node
   linkType: hard
 
@@ -147,9 +148,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/components@npm:^3.21.2, @appland/components@npm:^3.25.0":
-  version: 3.25.0
-  resolution: "@appland/components@npm:3.25.0"
+"@appland/components@npm:^3.21.2, @appland/components@npm:^3.27.1":
+  version: 3.27.1
+  resolution: "@appland/components@npm:3.27.1"
   dependencies:
     "@appland/client": ^1.12.0
     "@appland/diagrams": ^1.7.0
@@ -170,7 +171,7 @@ __metadata:
     sql-formatter: ^4.0.2
     vue: ^2.7.14
     vuex: ^3.6.0
-  checksum: f2cfc1d3ddb9b8a1a0daa6973f9d4db00fd5e1a640b6ff14e00cd340de64dc0734822fb79b97a2829c0c03762987e01f8caba1f3d516984178495d6dc1355589
+  checksum: 7c43d779f947e4a0ecaddd3f4a7b7d0a5038e6ecb811952409379ed830c4b83111e3d66c352b9f20ea87ff86322514e4a9ad16610d66685150daeac3ac29d16e
   languageName: node
   linkType: hard
 
@@ -210,9 +211,9 @@ __metadata:
   linkType: hard
 
 "@appland/rpc@npm:^1.1.0":
-  version: 1.1.1
-  resolution: "@appland/rpc@npm:1.1.1"
-  checksum: 1f1b67e969f0ea7c3cf239b295d782b4a9bc19c3b56722b8a9743ef495daf7e37896b09deb7b357e535e5d065acd4d0256e31be853a3f2003e1d57bed92ca804
+  version: 1.2.0
+  resolution: "@appland/rpc@npm:1.2.0"
+  checksum: c223947dd3db2fdbb8d64c8da1d99c6f2b6639bd2679f07544051f016cd24865dacaaef8e43353f6f558321a7a409d81f90db23bbf448a65fdaf1ee4ff9c4680
   languageName: node
   linkType: hard
 
@@ -3134,9 +3135,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "appmap@workspace:."
   dependencies:
-    "@appland/appmap": ^3.117.0
+    "@appland/appmap": ^3.119.0
     "@appland/client": ^1.14.1
-    "@appland/components": ^3.25.0
+    "@appland/components": ^3.27.1
     "@appland/diagrams": ^1.8.0
     "@appland/models": ^2.10.0
     "@appland/scanner": ^1.86.0

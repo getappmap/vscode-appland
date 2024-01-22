@@ -1,3 +1,4 @@
+import ExtensionSettings from '../configuration/extensionSettings';
 import { NodeProcessService } from './nodeProcessService';
 import {
   ConfigFileProvider,
@@ -17,11 +18,15 @@ export default class IndexProcessWatcher extends ProcessWatcher {
     cwd: string,
     env?: NodeJS.ProcessEnv
   ) {
+    const args = ['index', '--watch', '--port', '0', '--appmap-dir', appmapDir];
+    const extraOptions = ExtensionSettings.appMapIndexOptions;
+    if (extraOptions) args.push(...extraOptions.split(' '));
+    if (ExtensionSettings.appMapCommandLineVerbose) args.push('--verbose');
     const options: ProcessWatcherOptions = {
       id: ProcessId.Index,
       modulePath: modulePath,
       log: NodeProcessService.outputChannel,
-      args: ['index', '--watch', '--port', '0', '--appmap-dir', appmapDir],
+      args,
       cwd,
       env,
     };
