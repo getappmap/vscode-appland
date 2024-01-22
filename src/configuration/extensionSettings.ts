@@ -27,4 +27,14 @@ export default class ExtensionSettings {
   public static get appMapCommandLineToolsPath(): string | undefined {
     return vscode.workspace.getConfiguration('appMap').get('commandLineToolsPath');
   }
+
+  public static get appMapCommandLineVerbose(): boolean {
+    return [true, 'true'].includes(
+      vscode.workspace.getConfiguration('appMap').get('commandLineVerbose') || false
+    );
+  }
+
+  public static get appMapIndexOptions(): string | undefined {
+    return vscode.workspace.getConfiguration('appMap').get('indexOptions');
+  }
 }
