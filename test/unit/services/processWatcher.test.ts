@@ -5,9 +5,7 @@ import { join } from 'path';
 import ps from 'ps-node';
 import sinon from 'sinon';
 import { promisify } from 'util';
-import { Uri } from 'vscode';
 import {
-  ConfigFileProvider,
   ProcessId,
   ProcessWatcher,
   ProcessWatcherOptions,
@@ -18,18 +16,10 @@ import Sinon from 'sinon';
 const testModule = join(__dirname, 'support', 'simpleProcess.mjs');
 
 function makeWatcher(opts: Partial<ProcessWatcherOptions> = {}) {
-  const provider: ConfigFileProvider = {
-    files() {
-      return Promise.resolve([Uri.parse('test:///appmap.yml')]);
-    },
-
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    reset() {},
-  };
-
-  return new ProcessWatcher(provider, {
+  return new ProcessWatcher({
     id: 'test process' as unknown as ProcessId,
     modulePath: testModule,
+    cwd: '.',
     ...opts,
   });
 }

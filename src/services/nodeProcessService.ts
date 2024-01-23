@@ -95,8 +95,7 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
     );
     assert(appmapConfigManagerInstance);
 
-    const { configs: appmapConfigs, fileProvider: configFileProvider } =
-      appmapConfigManagerInstance.workspaceConfig;
+    const appmapConfigs = appmapConfigManagerInstance.workspaceConfigs;
 
     const env =
       Environment.isSystemTest || Environment.isIntegrationTest
@@ -122,7 +121,6 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
       appmapConfigs.forEach((appmapConfig) => {
         services.push(
           new IndexProcessWatcher(
-            configFileProvider,
             appmapModulePath,
             appmapConfig.appmapDir,
             appmapConfig.configFolder,
@@ -137,7 +135,6 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
       appmapConfigs.forEach((appmapConfig) => {
         services.push(
           new ScanProcessWatcher(
-            configFileProvider,
             scannerModulePath,
             appmapConfig.appmapDir,
             appmapConfig.configFolder,
