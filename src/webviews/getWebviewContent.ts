@@ -1,11 +1,11 @@
 import path from 'path';
 import * as vscode from 'vscode';
+import ExtensionSettings from '../configuration/extensionSettings';
 
 type AppmapModule =
   | 'app'
   | 'install-guide'
   | 'chat-search'
-  | 'chat-help'
   | 'findings-view'
   | 'finding-info-view'
   | 'sign-in-view';
@@ -25,6 +25,14 @@ export default function getWebviewContent(
     vscode.Uri.file(path.join(context.extensionPath, 'out', 'app.css'))
   );
 
+  const connectSrc = [
+    rpcPort && `http://localhost:${rpcPort}`,
+    ExtensionSettings.apiUrl,
+    ExtensionSettings.apiUrl.replace(/^http/, 'ws'),
+  ]
+    .filter(Boolean)
+    .join(' ');
+
   return ` <!DOCTYPE html>
   <html style="${htmlStyle ?? ''}" lang="en">
   <head>
@@ -32,9 +40,7 @@ export default function getWebviewContent(
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Security-Policy" content="
       default-src 'none';
-      connect-src ${
-        rpcPort ? `http://localhost:${rpcPort}` : ''
-      }  https://api.getappmap.com wss://api.getappmap.com;
+      connect-src ${connectSrc};
       img-src ${webview.cspSource} data:;
       script-src ${webview.cspSource} 'unsafe-eval';
       style-src ${webview.cspSource} 'unsafe-inline';

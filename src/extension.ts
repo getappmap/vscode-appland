@@ -61,12 +61,9 @@ import Watcher from './services/watcher';
 import ChatSearchWebview from './webviews/chatSearchWebview';
 import quickSearch from './commands/quickSearch';
 import appmapState from './commands/appmapState';
-import ChatHelpWebview from './webviews/chatHelpWebview';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   Telemetry.register(context);
-
-  ChatHelpWebview.register(context);
 
   const workspaceServices = initializeWorkspaceServices();
   context.subscriptions.push(workspaceServices);

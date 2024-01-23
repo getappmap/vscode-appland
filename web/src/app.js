@@ -6,7 +6,6 @@ import mountFindingsView from './findingsView';
 import mountFindingInfoView from './findingsInfo';
 import mountSignInView from './signInView';
 import mountChatSearch from './chatSearchView';
-import mountChatHelp from './chatHelp';
 
 Vue.use(plugin);
 
@@ -17,7 +16,6 @@ const modules = {
   'finding-info-view': mountFindingInfoView,
   'sign-in-view': mountSignInView,
   'chat-search': mountChatSearch,
-  'chat-help': mountChatHelp,
 };
 
 const { body } = document;
