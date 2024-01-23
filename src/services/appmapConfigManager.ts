@@ -44,17 +44,22 @@ class ConfigFileProviderImpl implements ConfigFileProvider {
 export class AppmapConfigManagerInstance implements WorkspaceServiceInstance {
   private readonly CONFIG_PATTERN = '**/appmap.yml';
 
+  private _events: vscode.Disposable[];
   private _configs: AppmapConfig[] = [];
   private _configFileProvider: ConfigFileProviderImpl;
   private _hasConfigFile = false;
   private _usingDefault = false;
-  private _watcherConfigured = false;
   private _onConfigChanged = new vscode.EventEmitter<void>();
+
   public readonly onConfigChanged = this._onConfigChanged.event;
 
-  constructor(public folder: vscode.WorkspaceFolder) {
+  constructor(private configWatcher: Watcher, public folder: vscode.WorkspaceFolder) {
     const configPattern = new vscode.RelativePattern(folder, this.CONFIG_PATTERN);
     this._configFileProvider = new ConfigFileProviderImpl(configPattern);
+
+    this._events = (['onChange', 'onCreate', 'onDelete'] as const).map((event) =>
+      this.configWatcher[event]((uri) => this.handleConfigChange(uri))
+    );
   }
 
   public async initialize(): Promise<AppmapConfigManagerInstance> {
@@ -190,49 +195,31 @@ export class AppmapConfigManagerInstance implements WorkspaceServiceInstance {
     );
   }
 
-  public async handleConfigChange() {
+  protected async handleConfigChange(uri: vscode.Uri) {
+    const folder = vscode.workspace.getWorkspaceFolder(uri);
+    if (folder !== this.folder) return;
+
     this._configFileProvider.reset();
     await this.update();
     this._onConfigChanged.fire();
   }
 
   public dispose(): void {
+    this._events.forEach((event) => event.dispose());
     this._onConfigChanged.dispose();
     this._configFileProvider.reset();
     this._configs = [];
   }
 }
 
-export class AppmapConfigManager
-  implements vscode.Disposable, WorkspaceService<AppmapConfigManagerInstance>
-{
+export class AppmapConfigManager implements WorkspaceService<AppmapConfigManagerInstance> {
   public static readonly serviceId = 'AppmapConfigManager';
   public static readonly DEFAULT_APPMAP_DIR = 'tmp/appmap';
-  private events: vscode.Disposable[];
 
-  constructor(configWatcher: Watcher) {
-    this.events = (['onChange', 'onCreate', 'onDelete'] as const).map((event) =>
-      configWatcher[event]((uri) => this.handleConfigChange(uri))
-    );
-  }
-
-  dispose() {
-    this.events.forEach((event) => event.dispose());
-  }
-
-  private handleConfigChange(uri: vscode.Uri) {
-    const folder = vscode.workspace.getWorkspaceFolder(uri);
-    if (!folder) return;
-    const instance = this.instances.get(folder);
-    if (!instance) return;
-    instance.handleConfigChange();
-  }
-
-  private instances = new WeakMap<vscode.WorkspaceFolder, AppmapConfigManagerInstance>();
+  constructor(private configWatcher: Watcher) {}
 
   public async create(folder: vscode.WorkspaceFolder): Promise<AppmapConfigManagerInstance> {
-    const instance = new AppmapConfigManagerInstance(folder);
-    this.instances.set(folder, instance);
+    const instance = new AppmapConfigManagerInstance(this.configWatcher, folder);
     return instance.initialize();
   }
 }
