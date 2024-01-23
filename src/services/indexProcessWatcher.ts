@@ -1,4 +1,3 @@
-import * as vscode from 'vscode';
 import ExtensionSettings from '../configuration/extensionSettings';
 import { NodeProcessService } from './nodeProcessService';
 import { ProcessId, ProcessWatcher, ProcessWatcherOptions } from './processWatcher';
