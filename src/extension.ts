@@ -103,7 +103,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     context.subscriptions.push(configWatcher);
 
     const configManager = new AppmapConfigManager(configWatcher);
-    context.subscriptions.push(configManager);
     await workspaceServices.enroll(configManager);
 
     const classMapIndex = new ClassMapIndex();
