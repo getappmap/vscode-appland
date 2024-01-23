@@ -16,6 +16,10 @@ export default class RemoteRecording {
   private static readonly RECENT_REMOTE_URLS = 'APPMAP_RECENT_REMOTE_URLS';
   private readonly statusBar: vscode.StatusBarItem;
   private activeRecordingUrl: string | null;
+  // TODO: This does get disposed. However, when the recording is stopped it doesn't
+  // get cleared back to null or undefined. An active recording should be an instance
+  // variable that is only used once. This RemoteRecording class is used many times,
+  // so having instance variables that are utilized during a recording is not appropriate.
   private stopEmitter: vscode.EventEmitter<boolean> | null = null;
   onDidStop: vscode.Event<boolean> | undefined = this.stopEmitter?.event;
 

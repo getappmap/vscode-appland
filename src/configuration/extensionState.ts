@@ -28,7 +28,7 @@ interface WorkspaceFlagEvent {
   value: boolean;
 }
 
-export default class ExtensionState {
+export default class ExtensionState implements vscode.Disposable {
   private readonly _onWorkspaceFlag = new vscode.EventEmitter<WorkspaceFlagEvent>();
   public readonly onWorkspaceFlag = this._onWorkspaceFlag.event;
 
@@ -58,6 +58,7 @@ export default class ExtensionState {
 
       this.context.globalState.update(Keys.Global.INSTALL_TIMESTAMP, this._installTime.valueOf());
     }
+    context.subscriptions.push(this);
   }
 
   /** Adds a workspace to a set under a specific key. If value is truthy, the path is added. Otherwise, it is removed

@@ -13,6 +13,7 @@ export type FilterUpdateEvent = {
 };
 
 export default class FilterStore {
+  // TODO: This class should be Disposable and dispose of this event emitter.
   private _onDidChangeFilters = new vscode.EventEmitter<FilterUpdateEvent>();
   readonly onDidChangeFilters = this._onDidChangeFilters.event;
 

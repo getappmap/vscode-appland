@@ -31,6 +31,7 @@ export const DEFAULT_RETRY_OPTIONS: Required<RetryOptions> = {
   retryBackoff: (retryNumber: number) => Math.pow(2, retryNumber) * 1000,
 };
 
+// List appamp.yml files across all workspaces.
 export interface ConfigFileProvider {
   files(): Promise<vscode.Uri[]>;
   reset(): void;
@@ -202,6 +203,7 @@ export class ProcessWatcher implements vscode.Disposable {
   }
 
   dispose(): void {
+    // TODO: There's no await here, so onAbort and onError will not be fired.
     this.stop();
     this._onAbort.dispose();
     this._onError.dispose();
