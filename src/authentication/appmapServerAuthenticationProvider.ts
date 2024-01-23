@@ -48,6 +48,8 @@ function enterLicenseKeyCommand(authProvider: AppMapServerAuthenticationProvider
 }
 
 export default class AppMapServerAuthenticationProvider implements vscode.AuthenticationProvider {
+  // vscode.AuthenticationProvider is not Disposable, therefore listeners on this event
+  // will not and apparently do not need to be disposed.
   private _onDidChangeSessions =
     new vscode.EventEmitter<vscode.AuthenticationProviderAuthenticationSessionsChangeEvent>();
   readonly onDidChangeSessions = this._onDidChangeSessions.event;

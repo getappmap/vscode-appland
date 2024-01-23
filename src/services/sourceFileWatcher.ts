@@ -14,6 +14,7 @@ export class SourceFileWatcher implements vscode.Disposable {
   }
 
   dispose() {
+    this._onChange.dispose();
     this.onChangedListener.dispose();
     this.watcher?.dispose();
   }

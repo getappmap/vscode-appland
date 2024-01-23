@@ -43,6 +43,7 @@ const icons = {
 
 export class InstructionsTreeDataProvider implements vscode.TreeDataProvider<DocPage> {
   public onDidChangeTreeData?: vscode.Event<void>;
+
   private projectState?: ProjectStateServiceInstance;
   private completion = new Map<DocPageId, boolean | undefined>();
 
@@ -52,9 +53,11 @@ export class InstructionsTreeDataProvider implements vscode.TreeDataProvider<Doc
   ) {
     if (projectStates.length === 1) {
       [this.projectState] = projectStates;
+      // TreeDataProvider is not Disposable, so we can't dispose of this event emitter.
       const emitter = new vscode.EventEmitter<void>();
       context.subscriptions.push(emitter);
       this.onDidChangeTreeData = emitter.event;
+      // TODO: Is this the same as adding the return value of this function to context.subscriptions?
       this.projectState.onStateChange(() => emitter.fire(), null, context.subscriptions);
       AnalysisManager.onAnalysisToggled(() => emitter.fire(), null, context.subscriptions);
     }

@@ -10,6 +10,7 @@ import { basename, dirname, join } from 'path';
 import { CodeObject } from '@appland/models';
 
 export default class AppMapCollectionFile implements AppMapCollection, AppMapsService {
+  // TODO: Dispose of this event emitter.
   private _onUpdated: vscode.EventEmitter<vscode.WorkspaceFolder | undefined> =
     new ChangeEventDebouncer<vscode.WorkspaceFolder | undefined>();
   public readonly onUpdated: vscode.Event<vscode.WorkspaceFolder | undefined> =
