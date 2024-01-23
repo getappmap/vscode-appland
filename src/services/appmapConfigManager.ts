@@ -19,7 +19,6 @@ export type AppmapConfig = {
 
 type WorkspaceConfig = {
   configs: AppmapConfig[];
-  fileProvider: ConfigFileProviderImpl;
 };
 
 class ConfigFileProviderImpl implements ConfigFileProvider {
@@ -96,11 +95,8 @@ export class AppmapConfigManagerInstance implements WorkspaceServiceInstance {
     await this.makeAppmapDirs();
   }
 
-  public get workspaceConfig(): WorkspaceConfig {
-    return {
-      configs: this._configs,
-      fileProvider: this._configFileProvider,
-    };
+  public get workspaceConfigs(): AppmapConfig[] {
+    return this._configs;
   }
 
   public get isUsingDefaultConfig(): boolean {
@@ -112,7 +108,7 @@ export class AppmapConfigManagerInstance implements WorkspaceServiceInstance {
   }
 
   public async getAppmapConfig(): Promise<AppmapConfig | undefined> {
-    const { configs } = this.workspaceConfig;
+    const configs = this.workspaceConfigs;
     let configToUse: AppmapConfig | undefined;
 
     if (configs.length === 1) {

@@ -27,7 +27,7 @@ const removeAppmapDirs = async (
   configManagerInstance: AppmapConfigManagerInstance
 ): Promise<void> => {
   await Promise.all(
-    configManagerInstance.workspaceConfig.configs.map(async (config) => {
+    configManagerInstance.workspaceConfigs.map(async (config) => {
       // NOTE: this assumes a two-level appmapDir like tmp/appmap or fake/dir
       try {
         await rm(dirname(join(config.configFolder, config.appmapDir)), { recursive: true });
@@ -92,7 +92,7 @@ describe('appmapConfigWatcher', () => {
 
   it('generates the correct config files', () => {
     const expected = expectedProjectConfigs.sort(sortByConfigFolder);
-    const actual = configManagerInstance.workspaceConfig.configs.sort(sortByConfigFolder);
+    const actual = configManagerInstance.workspaceConfigs.sort(sortByConfigFolder);
     assert.deepEqual(actual, expected);
   });
 
@@ -116,7 +116,7 @@ describe('appmapConfigWatcher', () => {
     await writeFile(filePath, '');
     await waitFor(
       'configManager to create a new config',
-      async () => configManagerInstance.workspaceConfig.configs.length === 4
+      async () => configManagerInstance.workspaceConfigs.length === 4
     );
 
     const expected = expectedProjectConfigs.slice();
@@ -127,7 +127,7 @@ describe('appmapConfigWatcher', () => {
     });
 
     assert.deepEqual(
-      configManagerInstance.workspaceConfig.configs.sort(sortByConfigFolder),
+      configManagerInstance.workspaceConfigs.sort(sortByConfigFolder),
       expected.sort(sortByConfigFolder)
     );
 
@@ -137,7 +137,7 @@ describe('appmapConfigWatcher', () => {
   it('detects a modified config file', async () => {
     await appendFile(join(projectMonorepo, 'sub-b', 'appmap.yml'), 'appmap_dir: new/one');
     await waitFor('update to configs', () =>
-      configManagerInstance.workspaceConfig.configs.some((config) => config.appmapDir === 'new/one')
+      configManagerInstance.workspaceConfigs.some((config) => config.appmapDir === 'new/one')
     );
 
     const expected = expectedProjectConfigs.slice();
@@ -150,7 +150,7 @@ describe('appmapConfigWatcher', () => {
     });
 
     assert.deepEqual(
-      configManagerInstance.workspaceConfig.configs.sort(sortByConfigFolder),
+      configManagerInstance.workspaceConfigs.sort(sortByConfigFolder),
       expected.sort(sortByConfigFolder)
     );
 

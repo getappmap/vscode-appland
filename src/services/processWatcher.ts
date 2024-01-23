@@ -2,6 +2,9 @@ import * as vscode from 'vscode';
 import { ChildProcess, OutputStream, spawn, SpawnOptions } from './nodeDependencyProcess';
 import { getApiKey } from '../authentication';
 import ExtensionSettings from '../configuration/extensionSettings';
+import assert from 'assert';
+import { fileExists } from '../util';
+import { join } from 'path';
 
 export type RetryOptions = {
   // The number of retries made before declaring the process as failed.
@@ -52,6 +55,13 @@ export class ProcessWatcher implements vscode.Disposable {
   // A timeout period in which the crash count is to be reset if the timer is fulfilled.
   protected crashTimeout?: NodeJS.Timeout;
 
+  public get configFolder(): string {
+    const { cwd } = this.options;
+    assert(cwd, 'cwd is not defined');
+    const dir = cwd instanceof URL ? cwd.pathname : cwd.toString();
+    return dir;
+  }
+
   // Process errors are reported via this event emitter
   public get onError(): vscode.Event<Error> {
     return this._onError.event;
@@ -67,7 +77,7 @@ export class ProcessWatcher implements vscode.Disposable {
     return this.options.id;
   }
 
-  constructor(protected configFileProvider: ConfigFileProvider, options: ProcessWatcherOptions) {
+  constructor(options: ProcessWatcherOptions) {
     this.options = {
       ...DEFAULT_RETRY_OPTIONS,
       ...options,
@@ -111,11 +121,18 @@ export class ProcessWatcher implements vscode.Disposable {
     if (this.shouldRun) this.start();
   }
 
+  async isDirectoryConfigured(): Promise<boolean> {
+    return await fileExists(join(this.configFolder, 'appmap.yml'));
+  }
+
   async canStart(): Promise<{ enabled: boolean; reason?: string }> {
     if (this.hasAborted) return { enabled: false, reason: 'process has crashed too many times' };
 
-    const configFiles = await this.configFileProvider.files();
-    if (configFiles.length === 0) return { enabled: false, reason: 'appmap.yml does not exist' };
+    if (!(await this.isDirectoryConfigured()))
+      return {
+        enabled: false,
+        reason: `Project directory '${this.configFolder}' is not configured (does not have appmap.yml)`,
+      };
 
     if (!(await this.accessToken()))
       return { enabled: false, reason: 'User is not logged in to AppMap' };
