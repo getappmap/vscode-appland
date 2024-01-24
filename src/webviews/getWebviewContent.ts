@@ -40,7 +40,7 @@ export default function getWebviewContent(
 
     <title>${title}</title>
   </head>
-  <body data-appmap-module="${appmapModule}">
+  <body data-appmap-module="${appmapModule}" style="padding:0;">
     <script src="${scriptUri}"></script>
   </body>
   </html>`;
