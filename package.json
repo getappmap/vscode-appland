@@ -187,7 +187,7 @@
       },
       {
         "command": "appmap.explain",
-        "title": "AppMap AI: Explain"
+        "title": "AppMap: Ask Navie AI"
       },
       {
         "command": "appmap.login",
