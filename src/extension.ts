@@ -59,7 +59,6 @@ import JavaAssets from './services/javaAssets';
 import checkAndTriggerFirstAppMapNotification from './lib/firstAppMapNotification';
 import Watcher from './services/watcher';
 import ChatSearchWebview from './webviews/chatSearchWebview';
-import quickSearch from './commands/quickSearch';
 import appmapState from './commands/appmapState';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
@@ -248,7 +247,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     findByName(context, appmapCollectionFile);
     const chatSearchWebview = ChatSearchWebview.register(context);
     appmapState(context, editorProvider, chatSearchWebview);
-    quickSearch(context);
     resetUsageState(context, extensionState);
     updateAppMapConfigs(context, runConfigService, workspaceServices);
     downloadLatestJavaJar(context);
