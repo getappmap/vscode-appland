@@ -1,0 +1,5 @@
+# This file instructs the AppMap extension & tool to ignore certain directores
+
+# Ignore all directories including 'test'
+
+test

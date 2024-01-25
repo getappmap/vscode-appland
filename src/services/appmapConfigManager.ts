@@ -1,4 +1,5 @@
 import { readFile, mkdir, writeFile } from 'fs/promises';
+import { readFileSync } from 'fs';
 import { dump, load } from 'js-yaml';
 import { dirname, join } from 'path';
 import assert from 'node:assert';
@@ -22,22 +23,75 @@ type WorkspaceConfig = {
   fileProvider: ConfigFileProviderImpl;
 };
 
+export class AppmapignoreManager {
+  private _exclusions: vscode.GlobPattern[] = [];
+
+  constructor(private folder: vscode.WorkspaceFolder) {}
+
+  public getExclusions(): vscode.GlobPattern[] {
+    if (this._exclusions.length === 0) {
+      this._exclusions = this.readExclusions() || [];
+    }
+    return this._exclusions;
+  }
+
+  private readExclusions(): vscode.GlobPattern[] | undefined {
+    const filePath = join(this.folder.uri.fsPath, '.appmapignore');
+    let fileContent: string;
+    try {
+      fileContent = readFileSync(filePath, 'utf-8');
+    } catch (e) {
+      return;
+    }
+
+    if (!fileContent) return;
+
+    return fileContent
+      .split('\n')
+      .map((line: string) => this.convertToGlob(line.trim()))
+      .filter((pattern: string) => pattern.length > 0);
+  }
+
+  private convertToGlob(pattern: string): string {
+    let result = pattern;
+
+    if (pattern.length === 0 || pattern.startsWith('#')) {
+      return '';
+    } else if (pattern.startsWith('/')) {
+      result = pattern.slice(1);
+    } else {
+      result = '**/' + pattern;
+    }
+
+    if (pattern.endsWith('/')) {
+      result = result.slice(0, -1);
+    }
+
+    return result;
+  }
+}
+
 class ConfigFileProviderImpl implements ConfigFileProvider {
   private _files?: vscode.Uri[] = undefined;
 
-  public constructor(private pattern: vscode.RelativePattern) {}
+  public constructor(
+    private pattern: vscode.RelativePattern,
+    private exclusions: vscode.GlobPattern[] = []
+  ) {}
 
   public async files(): Promise<vscode.Uri[]> {
-    if (this._files) {
-      return this._files;
-    }
-
-    this._files = await findFiles(this.pattern);
+    if (this._files) return this._files;
+    this._files = await findFiles(this.pattern, this.exclusions);
     return this._files;
   }
 
   public reset() {
     this._files = undefined;
+  }
+
+  public dispose() {
+    this.reset();
+    this.exclusions = [];
   }
 }
 
@@ -48,13 +102,14 @@ export class AppmapConfigManagerInstance implements WorkspaceServiceInstance {
   private _configFileProvider: ConfigFileProviderImpl;
   private _hasConfigFile = false;
   private _usingDefault = false;
-  private _watcherConfigured = false;
   private _onConfigChanged = new vscode.EventEmitter<void>();
   public readonly onConfigChanged = this._onConfigChanged.event;
 
   constructor(public folder: vscode.WorkspaceFolder) {
+    const appmapignoreManager = new AppmapignoreManager(folder);
+    const exclusions = appmapignoreManager.getExclusions();
     const configPattern = new vscode.RelativePattern(folder, this.CONFIG_PATTERN);
-    this._configFileProvider = new ConfigFileProviderImpl(configPattern);
+    this._configFileProvider = new ConfigFileProviderImpl(configPattern, exclusions);
   }
 
   public async initialize(): Promise<AppmapConfigManagerInstance> {
@@ -198,7 +253,7 @@ export class AppmapConfigManagerInstance implements WorkspaceServiceInstance {
 
   public dispose(): void {
     this._onConfigChanged.dispose();
-    this._configFileProvider.reset();
+    this._configFileProvider.dispose();
     this._configs = [];
   }
 }
