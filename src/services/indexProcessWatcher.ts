@@ -1,23 +1,12 @@
 import ExtensionSettings from '../configuration/extensionSettings';
 import { NodeProcessService } from './nodeProcessService';
-import {
-  ConfigFileProvider,
-  ProcessId,
-  ProcessWatcher,
-  ProcessWatcherOptions,
-} from './processWatcher';
+import { ProcessId, ProcessWatcher, ProcessWatcherOptions } from './processWatcher';
 
 export default class IndexProcessWatcher extends ProcessWatcher {
   public rpcPort?: number;
   stdoutBuffer = '';
 
-  constructor(
-    configFileProvider: ConfigFileProvider,
-    modulePath: string,
-    appmapDir: string,
-    cwd: string,
-    env?: NodeJS.ProcessEnv
-  ) {
+  constructor(modulePath: string, appmapDir: string, cwd: string, env?: NodeJS.ProcessEnv) {
     const args = ['index', '--watch', '--port', '0', '--appmap-dir', appmapDir];
     const extraOptions = ExtensionSettings.appMapIndexOptions;
     if (extraOptions) args.push(...extraOptions.split(' '));
@@ -30,7 +19,7 @@ export default class IndexProcessWatcher extends ProcessWatcher {
       cwd,
       env,
     };
-    super(configFileProvider, options);
+    super(options);
   }
 
   public isRpcAvailable(): boolean {

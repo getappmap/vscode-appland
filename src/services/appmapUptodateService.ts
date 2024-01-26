@@ -176,6 +176,10 @@ export class AppmapUptodateService implements WorkspaceService<AppmapUptodateSer
     return uptodate;
   }
 
+  dispose(): void {
+    this._onUpdated.dispose();
+  }
+
   /**
    * Gets the list of test files, with line numbers if available, that are out of date.
    *

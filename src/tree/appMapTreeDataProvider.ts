@@ -48,6 +48,7 @@ export class AppMapTreeDataProvider implements vscode.TreeDataProvider<AppMapTre
   private appmaps: AppMapCollection;
   private appmapsUpToDate?: AppmapUptodateService;
 
+  // TreeDataProvider is not Disposable, so we can't dispose of this event emitter.
   private _onDidChangeTreeData = new vscode.EventEmitter<undefined>();
   public readonly onDidChangeTreeData = this._onDidChangeTreeData.event;
 
