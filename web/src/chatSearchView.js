@@ -16,7 +16,6 @@ export default function mountChatSearchView() {
           ref: 'ui',
           props: {
             appmapRpcPort: initialData.appmapRpcPort,
-            question: initialData.question,
             savedFilters: initialData.savedFilters,
             apiUrl: initialData.apiUrl,
             apiKey: initialData.apiKey,
@@ -33,6 +32,11 @@ export default function mountChatSearchView() {
         updateFilters(updatedSavedFilters) {
           this.$refs.ui.updateFilters(updatedSavedFilters);
         },
+      },
+      mounted() {
+        if (initialData.codeSelection) {
+          this.$refs.ui.includeCodeSelection(initialData.codeSelection);
+        }
       },
     });
 

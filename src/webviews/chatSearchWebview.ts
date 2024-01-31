@@ -7,6 +7,7 @@ import selectIndexProcess, { IndexProcess, ReasonCode } from '../lib/selectIndex
 import { RecordAppMaps } from '../tree/instructionsTreeDataProvider';
 import { getApiKey } from '../authentication';
 import ExtensionSettings from '../configuration/extensionSettings';
+import { CodeSelection } from '../commands/quickSearch';
 
 export default class ChatSearchWebview {
   private webviewList = new WebviewList();
@@ -26,7 +27,7 @@ export default class ChatSearchWebview {
     return this.webviewList.currentWebview;
   }
 
-  async explain(workspace?: vscode.WorkspaceFolder, question?: string) {
+  async explain(workspace?: vscode.WorkspaceFolder, codeSelection?: CodeSelection) {
     const selectIndexProcessResult = await selectIndexProcess(workspace);
     if (!selectIndexProcessResult) return;
 
@@ -78,7 +79,7 @@ export default class ChatSearchWebview {
           panel.webview.postMessage({
             type: 'initChatSearch',
             appmapRpcPort,
-            question,
+            codeSelection,
             savedFilters: this.filterStore.getSavedFilters(),
             apiUrl: ExtensionSettings.apiUrl,
             apiKey: await getApiKey(false),

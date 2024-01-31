@@ -1,12 +1,18 @@
 import { URI } from 'vscode-uri';
 import Range from './Range';
+import { join } from 'path';
+import { TEST_WORKSPACE } from './workspace';
 
 export default class TextDocument {
   uri: URI;
   lines: string[];
 
-  constructor(public readonly filename: string, public readonly text: string) {
-    this.uri = URI.file(filename);
+  constructor(
+    public readonly filename: string,
+    public readonly text: string,
+    public readonly languageId: string = 'plaintext'
+  ) {
+    this.uri = URI.file(join(TEST_WORKSPACE.uri.fsPath, filename));
     this.lines = text.split('\n');
   }
 
@@ -30,5 +36,9 @@ export default class TextDocument {
     } else {
       return this.text;
     }
+  }
+
+  public get fileName() {
+    return this.uri.fsPath;
   }
 }
