@@ -4,6 +4,7 @@ import appmapMessageHandler from './appmapMessageHandler';
 import FilterStore, { SavedFilter } from './filterStore';
 import WebviewList from './WebviewList';
 import selectIndexProcess, { IndexProcess, ReasonCode } from '../lib/selectIndexProcess';
+import { RecordAppMaps } from '../tree/instructionsTreeDataProvider';
 
 export default class ChatSearchWebview {
   private webviewList = new WebviewList();
@@ -78,6 +79,9 @@ export default class ChatSearchWebview {
             question,
             savedFilters: this.filterStore.getSavedFilters(),
           });
+          break;
+        case 'open-record-instructions':
+          await vscode.commands.executeCommand('appmap.openInstallGuide', RecordAppMaps);
           break;
       }
     });
