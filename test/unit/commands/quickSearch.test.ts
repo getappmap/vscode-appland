@@ -18,7 +18,8 @@ describe('Quick search', () => {
       const range = new Range(new Position(0, 0), new Position(2, 3));
       const document = new TextDocument(
         'foo.rb',
-        ['def foo', '  puts "hello world"', 'end'].join('\n')
+        ['def foo', '  puts "hello world"', 'end'].join('\n'),
+        'ruby'
       );
 
       const actions: CodeAction[] = quickSearchProvider.provideCodeActions(
@@ -35,7 +36,16 @@ describe('Quick search', () => {
           {
             command: 'appmap.quickExplain',
             title: 'Explain with AppMap AI',
-            arguments: [TEST_WORKSPACE.uri, 'def foo\n  puts "hello world"\nend'],
+            arguments: [
+              TEST_WORKSPACE.uri,
+              {
+                path: 'foo.rb',
+                lineStart: range.start.line,
+                lineEnd: range.end.line,
+                code: 'def foo\n  puts "hello world"\nend',
+                language: 'ruby',
+              },
+            ],
           },
           null,
           2

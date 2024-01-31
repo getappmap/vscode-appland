@@ -1,4 +1,13 @@
+import { relative } from 'path';
 import * as vscode from 'vscode';
+
+export type CodeSelection = {
+  path: string;
+  lineStart: number;
+  lineEnd: number;
+  code: string;
+  language: string;
+};
 
 export class QuickSearchProvider implements vscode.CodeActionProvider {
   provideCodeActions(
@@ -11,6 +20,14 @@ export class QuickSearchProvider implements vscode.CodeActionProvider {
     const workspaceFolder = vscode.workspace.getWorkspaceFolder(document.uri);
     if (!workspaceFolder) return [];
 
+    const codeSelection: CodeSelection = {
+      path: relative(workspaceFolder.uri.fsPath, document.fileName),
+      lineStart: range.start.line,
+      lineEnd: range.end.line,
+      code: selectedCode,
+      language: document.languageId,
+    };
+
     const codeAction = new vscode.CodeAction(
       'Explain with AppMap AI',
       vscode.CodeActionKind.Refactor
@@ -18,7 +35,7 @@ export class QuickSearchProvider implements vscode.CodeActionProvider {
     codeAction.command = {
       command: 'appmap.quickExplain',
       title: 'Explain with AppMap AI',
-      arguments: [workspaceFolder.uri, selectedCode],
+      arguments: [workspaceFolder.uri, codeSelection],
     };
     return [codeAction];
   }
