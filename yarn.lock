@@ -175,9 +175,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/components@npm:^3.30.0":
-  version: 3.30.0
-  resolution: "@appland/components@npm:3.30.0"
+"@appland/components@npm:^3.32.0":
+  version: 3.32.0
+  resolution: "@appland/components@npm:3.32.0"
   dependencies:
     "@appland/client": ^1.12.0
     "@appland/diagrams": ^1.7.0
@@ -198,7 +198,7 @@ __metadata:
     sql-formatter: ^4.0.2
     vue: ^2.7.14
     vuex: ^3.6.0
-  checksum: 9b733273fc8c6783b4ecfa1ad9fd2db03c5fcbd238480f5c680d0c6fcf4aa36f09411cc98c64a7453b7885007ccbe87da2536260cdae95fbd68103ad36d78cd5
+  checksum: de6841ac4234d7087eecfb2556045915c9c6f93bedb266eb4c3d2f48b281265bd2a507981b0a1136e8ff2358cd42b600098fb741265195584198df7793b543fb
   languageName: node
   linkType: hard
 
@@ -3164,7 +3164,7 @@ __metadata:
   dependencies:
     "@appland/appmap": ^3.121.0
     "@appland/client": ^1.14.1
-    "@appland/components": ^3.30.0
+    "@appland/components": ^3.32.0
     "@appland/diagrams": ^1.8.0
     "@appland/models": ^2.10.0
     "@appland/scanner": ^1.86.0
