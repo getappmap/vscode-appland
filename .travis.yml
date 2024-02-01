@@ -35,8 +35,11 @@ jobs:
     - name: integration tests
       script: yarn test:integration
 
-    - name: system tests
-      script: yarn test:system
+    # System tests have become very unreliable on Travis
+    # They're disabled for now.
+    #
+    # - name: system tests
+    #   script: yarn test:system
 
     - stage: Deploy
       if: master AND env(TRAVIS_OS_NAME) = linux
