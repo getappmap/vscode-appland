@@ -213,7 +213,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     badge.initialize(projectStates);
     context.subscriptions.push(badge);
 
-    InstallGuideWebView.register(context, projectStates, extensionState);
+    InstallGuideWebView.register(context, projectStates);
     const openedInstallGuide = await vscode.commands.executeCommand('appmap.tryOpenInstallGuide');
 
     FindingsOverviewWebview.register(context);
@@ -250,7 +250,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
     generateOpenApi(context);
     findByName(context, appmapCollectionFile);
-    const chatSearchWebview = ChatSearchWebview.register(context);
+    const chatSearchWebview = ChatSearchWebview.register(context, extensionState);
     appmapState(context, editorProvider, chatSearchWebview);
     quickSearch(context);
     resetUsageState(context, extensionState);
@@ -273,7 +273,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
     vscode.window.onDidCloseTerminal(unregisterTerminal, null, context.subscriptions);
 
-    await AnalysisManager.register(context, extensionState);
+    await AnalysisManager.register(context);
 
     if (extensionState.isNewInstall) vscode.commands.executeCommand('appmap.views.signIn.focus');
 

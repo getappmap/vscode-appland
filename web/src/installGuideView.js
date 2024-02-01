@@ -73,12 +73,8 @@ export default function mountInstallGuide() {
       currentProject = project;
     });
 
-    app.$on('open-findings-overview', () => {
-      messages.rpc('open-findings-overview');
-    });
-
-    app.$on('openAppmap', (file) => {
-      vscode.postMessage({ command: 'open-file', file });
+    app.$on('open-navie', () => {
+      messages.rpc('open-navie');
     });
 
     app.$on('open-instruction', (pageId) => {
@@ -87,10 +83,6 @@ export default function mountInstallGuide() {
 
     app.$on('perform-install', (path, language) => {
       vscode.postMessage({ command: 'perform-install', path, language });
-    });
-
-    app.$on('perform-auth', () => {
-      vscode.postMessage({ command: 'perform-auth' });
     });
 
     app.$on('add-java-configs', (projectPath) => {

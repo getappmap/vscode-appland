@@ -3,7 +3,6 @@ import { AUTHN_PROVIDER_NAME, getApiKey } from '../authentication';
 import FindingsDiagnosticsProvider from '../diagnostics/findingsDiagnosticsProvider';
 import FindingsIndex from './findingsIndex';
 import openFinding from '../commands/openFinding';
-import ExtensionState from '../configuration/extensionState';
 import { ResolvedFinding } from './resolvedFinding';
 import Environment from '../configuration/environment';
 import { debuglog } from 'util';
@@ -21,7 +20,6 @@ export default class AnalysisManager {
   private static _findingsIndex?: FindingsIndex;
   private static findingsWatcher?: Watcher;
   private static findingsDiagnosticsProvider?: FindingsDiagnosticsProvider;
-  private static extensionState: ExtensionState;
   // TODO: It's unclear when and how to dispose of this, since everything in this class is static.
   private static readonly _onAnalysisToggled = new vscode.EventEmitter<AnalysisToggleEvent>();
   private static readonly contextKeyAnalysisEnabled = 'appmap.analysisEnabled';
@@ -41,12 +39,7 @@ export default class AnalysisManager {
     return this._findingsIndex;
   }
 
-  public static async register(
-    context: vscode.ExtensionContext,
-    extensionState: ExtensionState
-  ): Promise<void> {
-    this.extensionState = extensionState;
-
+  public static async register(context: vscode.ExtensionContext): Promise<void> {
     await this.updateAnalysisState();
 
     context.subscriptions.push(
@@ -94,7 +87,7 @@ export default class AnalysisManager {
   private static onAnalysisEnabled(): void {
     debug('onAnalysisEnabled()');
     this.disposables.forEach((d) => d.dispose());
-    this.disposables = [openFinding(this.extensionState)];
+    this.disposables = [openFinding()];
 
     this._findingsIndex = new FindingsIndex();
 

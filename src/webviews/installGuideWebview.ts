@@ -2,7 +2,6 @@ import * as vscode from 'vscode';
 import { InstallAgent } from '../commands/installAgent';
 import { ProjectStateServiceInstance } from '../services/projectStateService';
 import ProjectMetadata from '../workspace/projectMetadata';
-import ExtensionState from '../configuration/extensionState';
 import { DocPageId, ProjectPicker, RecordAppMaps } from '../tree/instructionsTreeDataProvider';
 import AnalysisManager from '../services/analysisManager';
 import { AUTHN_PROVIDER_NAME } from '../authentication';
@@ -32,8 +31,7 @@ export default class InstallGuideWebView {
 
   public static register(
     context: vscode.ExtensionContext,
-    projectStates: ProjectStateServiceInstance[],
-    extensionState: ExtensionState
+    projectStates: ProjectStateServiceInstance[]
   ): void {
     context.subscriptions.push(
       vscode.commands.registerCommand(
@@ -127,7 +125,6 @@ export default class InstallGuideWebView {
                   type: 'init',
                   projects: collectProjects(),
                   page,
-                  analysisEnabled: AnalysisManager.isAnalysisEnabled,
                   userAuthenticated: isUserAuthenticated,
                   debugConfigurationStatus: 1,
                   javaAgentStatus: assetExists ? AssetStatus.UpToDate : AssetManager.status,
@@ -137,10 +134,6 @@ export default class InstallGuideWebView {
 
                 break;
               }
-
-              case 'open-file':
-                vscode.commands.executeCommand('vscode.open', vscode.Uri.file(message.file));
-                break;
 
               case 'open-page':
                 {
@@ -154,10 +147,6 @@ export default class InstallGuideWebView {
                       vscode.Uri.parse(project.path)
                     );
                     if (!workspaceFolder) break;
-
-                    if (extensionState.getWorkspaceOpenedAppMap(workspaceFolder)) {
-                      extensionState.setWorkspaceOpenedAnalysis(workspaceFolder, true);
-                    }
                   }
                 }
                 break;
@@ -200,8 +189,8 @@ export default class InstallGuideWebView {
                 JavaAssets.showOutput();
                 break;
 
-              case 'open-findings-overview':
-                vscode.commands.executeCommand('appmap.openFindingsOverview');
+              case 'open-navie':
+                vscode.commands.executeCommand('appmap.explain');
                 break;
 
               default:

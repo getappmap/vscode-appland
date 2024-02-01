@@ -2,6 +2,7 @@ import assert from 'assert';
 import * as path from 'path';
 import { waitFor } from '../../waitFor';
 import { InstructionStep, InstructionStepStatus } from '../src/appMap';
+
 describe('Instructions tree view', function () {
   beforeEach(async function () {
     const { driver, project } = this;
@@ -31,11 +32,7 @@ describe('Instructions tree view', function () {
       InstructionStepStatus.Pending
     );
     await driver.appMap.assertInstructionStepStatus(
-      InstructionStep.OpenAppMaps,
-      InstructionStepStatus.Pending
-    );
-    await driver.appMap.assertInstructionStepStatus(
-      InstructionStep.InvestigateFindings,
+      InstructionStep.NavieIntroduction,
       InstructionStepStatus.Pending
     );
 
@@ -54,23 +51,10 @@ describe('Instructions tree view', function () {
       InstructionStepStatus.Complete
     );
 
-    // Without completing previous steps, this should remain pending.
-    await driver.appMap.openInstruction(InstructionStep.InvestigateFindings);
-    await driver.appMap.assertInstructionStepStatus(
-      InstructionStep.InvestigateFindings,
-      InstructionStepStatus.Pending
-    );
+    await driver.appMap.openInstruction(InstructionStep.NavieIntroduction);
 
-    await driver.appMap.openInstruction(InstructionStep.OpenAppMaps);
-    await driver.appMap.openAppMap();
     await driver.appMap.assertInstructionStepStatus(
-      InstructionStep.OpenAppMaps,
-      InstructionStepStatus.Complete
-    );
-
-    await driver.appMap.openInstruction(InstructionStep.InvestigateFindings);
-    await driver.appMap.assertInstructionStepStatus(
-      InstructionStep.InvestigateFindings,
+      InstructionStep.NavieIntroduction,
       InstructionStepStatus.Complete
     );
 
@@ -94,14 +78,6 @@ describe('Instructions tree view', function () {
       {
         step: InstructionStep.RecordAppMaps,
         title: 'Record AppMaps',
-      },
-      {
-        step: InstructionStep.OpenAppMaps,
-        title: 'Explore AppMaps',
-      },
-      {
-        step: InstructionStep.InvestigateFindings,
-        title: 'AppMap Runtime Analysis',
       },
     ];
     for (let i = 0; i < pages.length; i++) {
@@ -139,10 +115,7 @@ describe('Instructions tree view', function () {
     await driver.waitForFile(pidfile);
     await driver.appMap.openActionPanel();
     await project.restoreFiles('**/*.appmap.json');
-    await driver.appMap.openAppMap();
-    await project.restoreFiles('**/appmap-findings.json');
-    await driver.appMap.openInstruction(InstructionStep.InvestigateFindings);
-    await driver.instructionsWebview.clickButton('View analysis report');
+    await driver.appMap.openInstruction(InstructionStep.NavieIntroduction);
     await driver.appMap.pendingBadge.waitFor({ state: 'hidden' });
   });
 
@@ -162,7 +135,7 @@ describe('Instructions tree view', function () {
       InstructionStepStatus.Pending
     );
     await driver.appMap.assertInstructionStepStatus(
-      InstructionStep.InvestigateFindings,
+      InstructionStep.NavieIntroduction,
       InstructionStepStatus.Pending
     );
 
@@ -178,13 +151,10 @@ describe('Instructions tree view', function () {
     await driver.instructionsWebview.getPageByTitle('Record AppMaps').waitFor();
 
     await project.restoreFiles('**/*.appmap.json');
-    await driver.instructionsWebview.clickButton('Next');
-    await driver.instructionsWebview.getPageByTitle('Explore AppMaps').waitFor();
 
     await driver.instructionsWebview.clickButton('Next');
-    await driver.instructionsWebview.getPageByTitle('AppMap Runtime Analysis').waitFor();
 
-    await driver.instructionsWebview.clickButton('View analysis report');
+    // The second tab is the Navie chat interface
     assert.strictEqual(await driver.tabCount(), 2, 'Wrong number of tabs');
   });
 
@@ -205,8 +175,7 @@ describe('Instructions tree view', function () {
     const steps = [
       InstructionStep.InstallAppMapAgent,
       InstructionStep.RecordAppMaps,
-      InstructionStep.OpenAppMaps,
-      InstructionStep.InvestigateFindings,
+      InstructionStep.NavieIntroduction,
     ];
 
     for (let i = 0; i < steps.length; i++) {

@@ -13,14 +13,10 @@ export default async function checkAndTriggerFirstAppMapNotification(
 async function showFirstAppMapNotification() {
   const selection = await vscode.window.showInformationMessage(
     "Congratulations! You've created your first AppMap.",
-    'Explore AppMaps'
+    'Try Navie'
   );
 
-  if (selection === 'Explore AppMaps') {
-    vscode.commands.executeCommand(
-      'appmap.openInstallGuide',
-      'open-appmaps',
-      'appmap.view.focusAppMaps'
-    );
+  if (selection === 'Try Navie') {
+    vscode.commands.executeCommand('appmap.explain');
   }
 }
