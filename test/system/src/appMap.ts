@@ -6,8 +6,7 @@ import InstructionsWebview from './instructionsWebview';
 export enum InstructionStep {
   InstallAppMapAgent,
   RecordAppMaps,
-  OpenAppMaps,
-  InvestigateFindings,
+  NavieIntroduction,
 }
 
 export enum InstructionStepStatus {
@@ -40,10 +39,6 @@ export default class AppMap {
     return this.page.locator('.pane:has(.title:text("Runtime Analysis"))');
   }
 
-  get codeObjectsTree(): Locator {
-    return this.page.locator('.pane:has(.title:text("Code Objects"))');
-  }
-
   get appMapTree(): Locator {
     return this.page.locator('.pane:has(.title:text("AppMaps"))');
   }
@@ -54,10 +49,6 @@ export default class AppMap {
 
   public findingsTreeItem(nth?: number): Locator {
     return this.findingsTree.locator('.pane-body >> [role="treeitem"]').nth(nth || 0);
-  }
-
-  public codeObjectTreeItem(nth?: number): Locator {
-    return this.codeObjectsTree.locator('.pane-body >> [role="treeitem"]').nth(nth || 0);
   }
 
   public finding(nth?: number): Locator {
@@ -72,20 +63,6 @@ export default class AppMap {
     if (await this.findingsTree.locator('.pane-body').isHidden()) {
       await this.findingsTree.click();
     }
-  }
-
-  public async expandCodeObjects(): Promise<void> {
-    if (await this.codeObjectsTree.locator('.pane-body').isHidden()) {
-      await this.codeObjectsTree.click();
-    }
-  }
-
-  public async openFindingsOverview(): Promise<void> {
-    this.findingsTreeItem(0).click();
-  }
-
-  public async openNthFinding(nth: number): Promise<void> {
-    await this.finding(nth).click();
   }
 
   public async openActionPanel(waitForAppMaps = false): Promise<void> {
@@ -104,10 +81,6 @@ export default class AppMap {
   public async openInstruction(step: InstructionStep): Promise<void> {
     await this.instructionsTreeItem(step).click();
     await this.instructionsWebview.ready();
-  }
-
-  public async openAppMap(): Promise<void> {
-    await this.appMapTreeItem().click();
   }
 
   public async assertInstructionStepStatus(

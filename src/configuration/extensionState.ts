@@ -14,7 +14,7 @@ export const Keys = {
     RECORDED_APPMAP: 'appmap.applandinc.recordedAppMap',
     OPENED_APPMAP: 'appmap.applandinc.workspaces_opened_appmap',
     OPENED_ANALYSIS: 'appmap.applandinc.workspaces_opened_analysis',
-    FINDINGS_INVESTIGATED: 'appmap.applandinc.findingsInvestigated',
+    OPENED_NAVIE: 'appmap.applandinc.workspaces_opened_navie',
     HIDE_INSTALL_PROMPT: 'appmap.applandinc.hideInstallPrompt',
     CLOSED_APPMAP: 'appmap.applandinc.closedAppMap',
     UPDATED_RUN_CONFIG: 'appmap.applandinc.UpdatedLaunchConfig',
@@ -141,12 +141,12 @@ export default class ExtensionState implements vscode.Disposable {
   }
 
   /** Returns whether or not the user has opened Analysis page from within the given workspace folder. */
-  getWorkspaceOpenedAnalysis(workspaceFolder: vscode.WorkspaceFolder): boolean {
-    return this.getWorkspaceFlag(Keys.Workspace.OPENED_ANALYSIS, workspaceFolder.uri.fsPath);
+  getWorkspaceOpenedNavie(workspaceFolder: vscode.WorkspaceFolder): boolean {
+    return this.getWorkspaceFlag(Keys.Workspace.OPENED_NAVIE, workspaceFolder.uri.fsPath);
   }
 
-  setWorkspaceOpenedAnalysis(workspaceFolder: vscode.WorkspaceFolder, value: boolean): void {
-    return this.setWorkspaceFlag(Keys.Workspace.OPENED_ANALYSIS, value, workspaceFolder);
+  setWorkspaceOpenedNavie(workspaceFolder: vscode.WorkspaceFolder, value: boolean): void {
+    return this.setWorkspaceFlag(Keys.Workspace.OPENED_NAVIE, value, workspaceFolder);
   }
 
   /** Returns whether or not the user has created an AppMap agent config (appmap.yml) */
@@ -156,15 +156,6 @@ export default class ExtensionState implements vscode.Disposable {
 
   setWorkspaceConfiguredAgent(workspaceFolder: vscode.WorkspaceFolder, value: boolean): void {
     this.setWorkspaceFlag(Keys.Workspace.CONFIGURED_AGENT, value, workspaceFolder);
-  }
-
-  /** Returns whether or not the user has looked at findings */
-  getFindingsInvestigated(workspaceFolder: vscode.WorkspaceFolder): boolean {
-    return this.getWorkspaceFlag(Keys.Workspace.FINDINGS_INVESTIGATED, workspaceFolder.uri.fsPath);
-  }
-
-  setFindingsInvestigated(workspaceFolder: vscode.WorkspaceFolder, value: boolean): void {
-    this.setWorkspaceFlag(Keys.Workspace.FINDINGS_INVESTIGATED, value, workspaceFolder);
   }
 
   setHideInstallPrompt(workspaceFolder: vscode.WorkspaceFolder, value: boolean): void {

@@ -20,14 +20,9 @@ export const DocsPages = [
     completion: 'appMapsRecorded',
   },
   {
-    id: 'open-appmaps',
-    title: 'Explore AppMaps',
-    completion: 'appMapOpened',
-  },
-  {
-    id: 'investigate-findings',
-    title: 'Runtime Analysis',
-    completion: 'investigatedFindings',
+    id: 'navie',
+    title: 'Ask AppMap Navie AI',
+    completion: 'openedNavie',
   },
 ] as const;
 
@@ -67,8 +62,8 @@ export class InstructionsTreeDataProvider implements vscode.TreeDataProvider<Doc
     const item = new vscode.TreeItem(title);
     item.command = {
       title,
-      command: InstallGuideWebView.command,
-      arguments: [id],
+      command: id === 'navie' ? 'appmap.explain' : InstallGuideWebView.command,
+      arguments: id === 'navie' ? [] : [id],
     };
     item.iconPath = this.getIcon(id);
 

@@ -8,12 +8,16 @@ import { RecordAppMaps } from '../tree/instructionsTreeDataProvider';
 import { getApiKey } from '../authentication';
 import ExtensionSettings from '../configuration/extensionSettings';
 import { CodeSelection } from '../commands/quickSearch';
+import ExtensionState from '../configuration/extensionState';
 
 export default class ChatSearchWebview {
   private webviewList = new WebviewList();
   private filterStore: FilterStore;
 
-  private constructor(private readonly context: vscode.ExtensionContext) {
+  private constructor(
+    private readonly context: vscode.ExtensionContext,
+    private readonly extensionState: ExtensionState
+  ) {
     this.filterStore = new FilterStore(context);
     this.filterStore.onDidChangeFilters((event) => {
       this.updateFilters(event.savedFilters);
@@ -51,7 +55,7 @@ export default class ChatSearchWebview {
     }
     if (!selectedWatcher) return;
 
-    const { rpcPort: appmapRpcPort } = selectedWatcher;
+    const { rpcPort: appmapRpcPort, configFolder } = selectedWatcher;
 
     const panel = vscode.window.createWebviewPanel(
       'chatSearch',
@@ -71,6 +75,14 @@ export default class ChatSearchWebview {
       'chat-search',
       { rpcPort: appmapRpcPort }
     );
+
+    let workspaceFolder = workspace;
+    if (!workspaceFolder) {
+      const uri = vscode.Uri.from({ scheme: 'file', path: configFolder });
+      workspaceFolder = vscode.workspace.getWorkspaceFolder(uri);
+    }
+
+    if (workspaceFolder) this.extensionState.setWorkspaceOpenedNavie(workspaceFolder, true);
 
     panel.webview.onDidReceiveMessage(appmapMessageHandler(this.filterStore, workspace));
     panel.webview.onDidReceiveMessage(async (message) => {
@@ -101,7 +113,10 @@ export default class ChatSearchWebview {
     });
   }
 
-  public static register(context: vscode.ExtensionContext): ChatSearchWebview {
-    return new ChatSearchWebview(context);
+  public static register(
+    context: vscode.ExtensionContext,
+    extensionState: ExtensionState
+  ): ChatSearchWebview {
+    return new ChatSearchWebview(context, extensionState);
   }
 }
