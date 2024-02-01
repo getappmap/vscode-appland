@@ -20,18 +20,18 @@ const fs: typeof workspace.fs = {
   writeFile: unimplemented,
 };
 
+export const TEST_WORKSPACE = {
+  uri: URI.file('test'),
+  index: 0,
+  name: 'test',
+};
+
 export default {
   fs,
   getConfiguration: () => new Map<string, unknown>(),
   workspaceFolders: [],
   onDidChangeConfiguration: () => () => unimplemented,
   getWorkspaceFolder(uri: unknown): WorkspaceFolder | undefined {
-    return uri
-      ? {
-          uri: URI.file('test'),
-          index: 0,
-          name: 'test',
-        }
-      : undefined;
+    return uri ? TEST_WORKSPACE : undefined;
   },
 };

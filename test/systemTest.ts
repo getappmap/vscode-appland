@@ -87,7 +87,7 @@ async function main(): Promise<void> {
       this.project = project;
     };
     const afterEach: Mocha.Func = async function () {
-      await Promise.all([this.app.waitForEvent('close'), this.app.close()]);
+      await Promise.all([this.app.waitForEvent('close'), this.app.process().kill()]);
     };
 
     const mocha = new Mocha({

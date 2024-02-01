@@ -142,6 +142,7 @@ class FindingTreeItem extends vscode.TreeItem {
 export class FindingsTreeDataProvider
   implements vscode.TreeDataProvider<vscode.TreeItem>, vscode.Disposable
 {
+  // TreeDataProvider is not Disposable, so we can't dispose of this event emitter.
   private _onDidChangeTreeData = new vscode.EventEmitter<undefined>();
   public readonly onDidChangeTreeData = this._onDidChangeTreeData.event;
   private findingsIndex?: FindingsIndex;

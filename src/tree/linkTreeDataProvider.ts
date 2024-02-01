@@ -15,6 +15,7 @@ export class LinkTreeDataProvider implements vscode.TreeDataProvider<vscode.Tree
   private readonly context: vscode.ExtensionContext;
   private readonly linkDefinitions: LinkDefinitions;
 
+  // TreeDataProvider is not Disposable, so we can't dispose of this event emitter.
   private _onDidChangeTreeData = new vscode.EventEmitter<undefined>();
   public readonly onDidChangeTreeData = this._onDidChangeTreeData.event;
 

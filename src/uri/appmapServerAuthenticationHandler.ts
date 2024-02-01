@@ -38,7 +38,8 @@ export default class AppMapServerAuthenticationHandler implements RequestHandler
   }
 
   dispose(): void {
-    // do nothing, we have nothing to dispose
+    this._onCreateSession.dispose();
+    this._onError.dispose();
   }
 
   static buildSession(email: string, licenseKey: string): vscode.AuthenticationSession {

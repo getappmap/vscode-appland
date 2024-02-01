@@ -3,10 +3,8 @@ import { AUTHN_PROVIDER_NAME, getApiKey } from '../authentication';
 import FindingsDiagnosticsProvider from '../diagnostics/findingsDiagnosticsProvider';
 import FindingsIndex from './findingsIndex';
 import openFinding from '../commands/openFinding';
-import { ProjectStateServiceInstance } from './projectStateService';
 import ExtensionState from '../configuration/extensionState';
 import { ResolvedFinding } from './resolvedFinding';
-import { WorkspaceServices } from './workspaceServices';
 import Environment from '../configuration/environment';
 import { debuglog } from 'util';
 import Watcher from './watcher';
@@ -23,9 +21,8 @@ export default class AnalysisManager {
   private static _findingsIndex?: FindingsIndex;
   private static findingsWatcher?: Watcher;
   private static findingsDiagnosticsProvider?: FindingsDiagnosticsProvider;
-  private static projectStates: ReadonlyArray<ProjectStateServiceInstance>;
   private static extensionState: ExtensionState;
-  private static workspaceServices: WorkspaceServices;
+  // TODO: It's unclear when and how to dispose of this, since everything in this class is static.
   private static readonly _onAnalysisToggled = new vscode.EventEmitter<AnalysisToggleEvent>();
   private static readonly contextKeyAnalysisEnabled = 'appmap.analysisEnabled';
   private static readonly contextKeyUserAuthenticated = 'appmap.userAuthenticated';
@@ -46,13 +43,9 @@ export default class AnalysisManager {
 
   public static async register(
     context: vscode.ExtensionContext,
-    projectStates: ReadonlyArray<ProjectStateServiceInstance>,
-    extensionState: ExtensionState,
-    workspaceServices: WorkspaceServices
+    extensionState: ExtensionState
   ): Promise<void> {
-    this.projectStates = projectStates;
     this.extensionState = extensionState;
-    this.workspaceServices = workspaceServices;
 
     await this.updateAnalysisState();
 

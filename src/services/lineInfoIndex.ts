@@ -15,6 +15,7 @@ class LineInfo {
 }
 
 export default class LineInfoIndex {
+  // TODO: Dispose of this event emitter.
   private _onChanged = new vscode.EventEmitter<LineInfoIndex>();
   public readonly onChanged = this._onChanged.event;
 

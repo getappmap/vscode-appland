@@ -4,6 +4,7 @@ import * as vscode from 'vscode';
 type AppmapModule =
   | 'app'
   | 'install-guide'
+  | 'chat-search'
   | 'findings-view'
   | 'finding-info-view'
   | 'sign-in-view';
@@ -13,7 +14,7 @@ export default function getWebviewContent(
   context: vscode.ExtensionContext,
   title: string,
   appmapModule: AppmapModule,
-  htmlStyle = ''
+  { htmlStyle, rpcPort }: { htmlStyle?: string; rpcPort?: number } = {}
 ): string {
   const scriptUri = webview.asWebviewUri(
     vscode.Uri.file(path.join(context.extensionPath, 'out', 'app.js'))
@@ -24,12 +25,13 @@ export default function getWebviewContent(
   );
 
   return ` <!DOCTYPE html>
-  <html style="${htmlStyle}" lang="en">
+  <html style="${htmlStyle ?? ''}" lang="en">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Security-Policy" content="
       default-src 'none';
+      connect-src ${rpcPort ? `http://localhost:${rpcPort}` : "'none'"};
       img-src ${webview.cspSource} data:;
       script-src ${webview.cspSource} 'unsafe-eval';
       style-src ${webview.cspSource} 'unsafe-inline';
@@ -38,7 +40,7 @@ export default function getWebviewContent(
 
     <title>${title}</title>
   </head>
-  <body data-appmap-module="${appmapModule}">
+  <body data-appmap-module="${appmapModule}" style="padding:0;">
     <script src="${scriptUri}"></script>
   </body>
   </html>`;

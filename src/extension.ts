@@ -58,6 +58,9 @@ import getAppmapDir from './commands/getAppmapDir';
 import JavaAssets from './services/javaAssets';
 import checkAndTriggerFirstAppMapNotification from './lib/firstAppMapNotification';
 import Watcher from './services/watcher';
+import ChatSearchWebview from './webviews/chatSearchWebview';
+import quickSearch from './commands/quickSearch';
+import appmapState from './commands/appmapState';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   Telemetry.register(context);
@@ -100,7 +103,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     context.subscriptions.push(configWatcher);
 
     const configManager = new AppmapConfigManager(configWatcher);
-    context.subscriptions.push(configManager);
     await workspaceServices.enroll(configManager);
 
     const classMapIndex = new ClassMapIndex();
@@ -125,6 +127,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     context.subscriptions.push(new IndexJanitor(appmapWatcher, classMapWatcher));
 
     const appmapUptodateService = new AppmapUptodateService(context);
+    context.subscriptions.push(appmapUptodateService);
     const sourceFileWatcher = new SourceFileWatcher(classMapIndex);
     context.subscriptions.push(sourceFileWatcher);
 
@@ -169,11 +172,14 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       context,
       uriHandler
     );
-    appmapServerAuthenticationProvider.onDidChangeSessions((e) => {
-      if (e.added?.length) vscode.window.showInformationMessage('Logged in to AppMap');
-      if (e.removed?.length) vscode.window.showInformationMessage('Logged out of AppMap');
-      AppMapServerConfiguration.updateAppMapClientConfiguration();
-    });
+    context.subscriptions.push(
+      appmapServerAuthenticationProvider.onDidChangeSessions((e) => {
+        if (e.added?.length) vscode.window.showInformationMessage('Logged in to AppMap');
+        if (e.removed?.length) vscode.window.showInformationMessage('Logged out of AppMap');
+        AppMapServerConfiguration.updateAppMapClientConfiguration();
+      })
+    );
+
     vscode.commands.registerCommand('appmap.login', async () => {
       appmapServerAuthenticationProvider.createSession();
     });
@@ -215,6 +221,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
     const processService = new NodeProcessService(context);
     const runConfigService = new RunConfigService(projectState, workspaceServices, extensionState);
+    context.subscriptions.push(RunConfigService);
 
     context.subscriptions.push(JavaAssets);
     JavaAssets.installLatestJavaJar(false);
@@ -243,6 +250,9 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
     generateOpenApi(context);
     findByName(context, appmapCollectionFile);
+    const chatSearchWebview = ChatSearchWebview.register(context);
+    appmapState(context, editorProvider, chatSearchWebview);
+    quickSearch(context);
     resetUsageState(context, extensionState);
     updateAppMapConfigs(context, runConfigService, workspaceServices);
     downloadLatestJavaJar(context);
@@ -263,13 +273,14 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
     vscode.window.onDidCloseTerminal(unregisterTerminal, null, context.subscriptions);
 
-    await AnalysisManager.register(context, projectStates, extensionState, workspaceServices);
+    await AnalysisManager.register(context, extensionState);
 
     if (extensionState.isNewInstall) vscode.commands.executeCommand('appmap.views.signIn.focus');
 
     return {
       analysisManager: AnalysisManager,
       editorProvider,
+      chatSearchWebview,
       localAppMaps: appmapCollectionFile,
       autoIndexService: autoIndexServiceImpl,
       autoScanService: autoScanServiceImpl,

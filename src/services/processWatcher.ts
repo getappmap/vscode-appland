@@ -1,5 +1,10 @@
 import * as vscode from 'vscode';
 import { ChildProcess, OutputStream, spawn, SpawnOptions } from './nodeDependencyProcess';
+import { getApiKey } from '../authentication';
+import assert from 'assert';
+import { fileExists } from '../util';
+import { join } from 'path';
+import ExtensionSettings from '../configuration/extensionSettings';
 
 export type RetryOptions = {
   // The number of retries made before declaring the process as failed.
@@ -30,6 +35,7 @@ export const DEFAULT_RETRY_OPTIONS: Required<RetryOptions> = {
   retryBackoff: (retryNumber: number) => Math.pow(2, retryNumber) * 1000,
 };
 
+// List appamp.yml files across all workspaces.
 export interface ConfigFileProvider {
   files(): Promise<vscode.Uri[]>;
   reset(): void;
@@ -49,6 +55,13 @@ export class ProcessWatcher implements vscode.Disposable {
   // A timeout period in which the crash count is to be reset if the timer is fulfilled.
   protected crashTimeout?: NodeJS.Timeout;
 
+  public get configFolder(): string {
+    const { cwd } = this.options;
+    assert(cwd, 'cwd is not defined');
+    const dir = cwd instanceof URL ? cwd.pathname : cwd.toString();
+    return dir;
+  }
+
   // Process errors are reported via this event emitter
   public get onError(): vscode.Event<Error> {
     return this._onError.event;
@@ -64,15 +77,21 @@ export class ProcessWatcher implements vscode.Disposable {
     return this.options.id;
   }
 
-  constructor(protected configFileProvider: ConfigFileProvider, options: ProcessWatcherOptions) {
+  constructor(options: ProcessWatcherOptions) {
     this.options = {
       ...DEFAULT_RETRY_OPTIONS,
       ...options,
+      stdoutListener: this.onStdout.bind(this),
     };
   }
 
   get running(): boolean {
     return this.process !== undefined;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  protected onStdout(_data: string): void {
+    // Available in subclasses.
   }
 
   protected async retry(): Promise<void> {
@@ -102,11 +121,21 @@ export class ProcessWatcher implements vscode.Disposable {
     if (this.shouldRun) this.start();
   }
 
+  async isDirectoryConfigured(): Promise<boolean> {
+    return await fileExists(join(this.configFolder, 'appmap.yml'));
+  }
+
   async canStart(): Promise<{ enabled: boolean; reason?: string }> {
     if (this.hasAborted) return { enabled: false, reason: 'process has crashed too many times' };
 
-    const configFiles = await this.configFileProvider.files();
-    if (configFiles.length === 0) return { enabled: false, reason: 'appmap.yml does not exist' };
+    if (!(await this.isDirectoryConfigured()))
+      return {
+        enabled: false,
+        reason: `Project directory '${this.configFolder}' is not configured (does not have appmap.yml)`,
+      };
+
+    if (!(await this.accessToken()))
+      return { enabled: false, reason: 'User is not logged in to AppMap' };
 
     return { enabled: true };
   }
@@ -178,11 +207,22 @@ export class ProcessWatcher implements vscode.Disposable {
     }
   }
 
+  async accessToken(): Promise<string | undefined> {
+    return getApiKey(false);
+  }
+
   protected async loadEnvironment(): Promise<NodeJS.ProcessEnv> {
-    return {};
+    const env: Record<string, string> = {};
+    const accessToken = await this.accessToken();
+    if (accessToken) {
+      env.APPMAP_API_KEY = accessToken;
+    }
+    env.APPMAP_API_URL = ExtensionSettings.apiUrl;
+    return env;
   }
 
   dispose(): void {
+    // TODO: There's no await here, so onAbort and onError will not be fired.
     this.stop();
     this._onAbort.dispose();
     this._onError.dispose();

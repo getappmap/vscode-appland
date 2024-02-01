@@ -21,6 +21,7 @@ export default {
   showInputBox() {
     return '';
   },
+  showQuickPick: doNothing,
   showErrorMessage: doNothing,
   showInformationMessage: doNothing,
   workspaceFolders: [],
