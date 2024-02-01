@@ -23,21 +23,21 @@ install:
       /usr/bin/Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
     fi
   - yarn
-
-script:
   - yarn compile
   - yarn pretest
-  # Setting these two variables get rid of warnings from vscode about
-  # being unable to connect to the bus
-  - export DBUS_SYSTEM_BUS_ADDRESS='unix:path=/var/run/dbus/system_bus_socket'
-  - export DBUS_SESSION_BUS_ADDRESS='unix:path=/var/run/dbus/system_bus_socket'
-  - yarn test
 
-deploy:
-  - provider: script
-    skip_cleanup: true
-    script:
-      - yarn run semantic-release
-    on:
-      branch: master
-      condition: $TRAVIS_OS_NAME = linux
+jobs:
+  include:
+    - stage: Test
+      name: unit tests
+      script: yarn test:unit
+
+    - name: integration tests
+      script: yarn test:integration
+
+    - name: system tests
+      script: yarn test:system
+
+    - stage: Deploy
+      if: master AND env(TRAVIS_OS_NAME) = linux
+      script: yarn run semantic-release
