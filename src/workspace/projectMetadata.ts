@@ -1,7 +1,4 @@
-import { AppMapSummary } from '../analyzers';
 import { SUPPORTED_LANGUAGES } from '../services/languageResolver';
-import { SampleCodeObjects } from '../services/projectStateService';
-import { FindingsDomainCounts } from '../services/projectStateService';
 import { RunConfigStatus } from '../services/runConfigService';
 import Feature from './feature';
 
@@ -12,8 +9,8 @@ export default interface ProjectMetadata {
   hasNode?: boolean;
   agentInstalled?: boolean;
   appMapsRecorded?: boolean;
+  openedNavie?: boolean;
   analysisPerformed?: boolean;
-  investigatedFindings?: boolean;
   appMapOpened?: boolean;
   numFindings?: number;
   numHttpRequests?: number;
@@ -26,9 +23,6 @@ export default interface ProjectMetadata {
   testFramework?: Feature;
   // Web framework recognized in the preferred language, if any.
   webFramework?: Feature;
-  appMaps?: Readonly<Array<AppMapSummary>>;
-  sampleCodeObjects?: SampleCodeObjects;
-  findingsDomainCounts?: FindingsDomainCounts;
   debugConfigurationStatus?: RunConfigStatus;
 }
 

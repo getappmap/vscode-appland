@@ -5,12 +5,11 @@ import ExtensionState, { Keys } from '../configuration/extensionState';
 import { FileChangeEmitter } from './fileChangeEmitter';
 import FindingsIndex from './findingsIndex';
 import { ResolvedFinding } from './resolvedFinding';
-import { analyze, NodeVersion, AppMapSummary, scoreValue } from '../analyzers';
+import { analyze, NodeVersion, scoreValue } from '../analyzers';
 import ProjectMetadata from '../workspace/projectMetadata';
 import AppMapCollection from './appmapCollection';
 import ChangeEventDebouncer from './changeEventDebouncer';
 import ClassMapIndex from './classMapIndex';
-import { CodeObjectEntry } from '../lib/CodeObjectEntry';
 
 import AnalysisManager from './analysisManager';
 import AppMapLoader from './appmapLoader';
@@ -19,23 +18,6 @@ import { workspaceServices } from './workspaceServices';
 import { AppmapConfigManager } from './appmapConfigManager';
 import { RunConfigService, RunConfigStatus } from './runConfigService';
 import JavaAssets, { AssetStatus } from './javaAssets';
-
-type SimpleCodeObject = {
-  name: string;
-  path: string;
-};
-
-export type SampleCodeObjects = {
-  httpRequests: SimpleCodeObject[];
-  queries: SimpleCodeObject[];
-};
-
-export type FindingsDomainCounts = {
-  maintainability: number;
-  performance: number;
-  stability: number;
-  security: number;
-};
 
 export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
   protected disposables: vscode.Disposable[] = [];
@@ -50,7 +32,6 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
   public onStateChange = this._onStateChange.event;
 
   private SUPPORTED_NODE_VERSIONS = [14, 16, 18];
-  private NUMBER_OF_SAMPLE_CODE_OBJECTS = 5;
 
   constructor(
     public readonly folder: vscode.WorkspaceFolder,
@@ -79,17 +60,12 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
         }
       }),
       this.classMapIndex.onChanged(async () => {
-        this._metadata.sampleCodeObjects = await this.classMapSelection();
         this._onStateChange.fire(this._metadata);
       }),
       extensionState.onWorkspaceFlag((e) => {
         if (
           e.workspaceFolder === folder &&
-          [
-            Keys.Workspace.OPENED_APPMAP,
-            Keys.Workspace.FINDINGS_INVESTIGATED,
-            Keys.Workspace.OPENED_ANALYSIS,
-          ].includes(e.key)
+          [Keys.Workspace.OPENED_APPMAP, Keys.Workspace.OPENED_NAVIE].includes(e.key)
         ) {
           this.updateMetadata();
         }
@@ -139,13 +115,8 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
     return this.extensionState.getWorkspaceOpenedAppMap(this.folder);
   }
 
-  private get hasInvestigatedFindings(): boolean {
-    return (
-      this.extensionState.getWorkspaceOpenedAnalysis(this.folder) &&
-      this.hasRecordedAppMaps &&
-      this.extensionState.getFindingsInvestigated(this.folder) &&
-      this.extensionState.getWorkspaceOpenedAppMap(this.folder)
-    );
+  private get hasOpenedNavie(): boolean {
+    return this.extensionState.getWorkspaceOpenedNavie(this.folder);
   }
 
   get metadata(): Readonly<ProjectMetadata> {
@@ -158,10 +129,8 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
   }
 
   get complete(): boolean {
-    return (
-      this.isAgentConfigured &&
-      this.hasRecordedAppMaps &&
-      this._metadata?.analysisPerformed === true
+    return Boolean(
+      this.isAgentConfigured && this.hasRecordedAppMaps && this._metadata?.openedNavie
     );
   }
 
@@ -169,32 +138,13 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
     vscode.commands.executeCommand('setContext', 'appmap.analysisPerformed', true);
 
     this._metadata.analysisPerformed = true;
-    this.extensionState.setFindingsInvestigated(this.folder, true);
     this._metadata.numFindings = findings.length;
-    this._metadata.findingsDomainCounts = this.countDomainsFromFindings(findings);
 
     this._onStateChange.fire(this._metadata);
   }
 
-  countDomainsFromFindings(findings: ResolvedFinding[]): FindingsDomainCounts {
-    const findingsDomainCounts = {
-      maintainability: 0,
-      performance: 0,
-      stability: 0,
-      security: 0,
-    } as FindingsDomainCounts;
-
-    findings.forEach((resolvedFinding) => {
-      const domain = resolvedFinding.finding.impactDomain?.toLowerCase();
-      if (domain) findingsDomainCounts[domain]++;
-    });
-
-    return findingsDomainCounts;
-  }
-
   async onUpdateAppMaps(): Promise<void> {
     const appMaps = this.appMapCollection.allAppMapsForWorkspaceFolder(this.folder);
-    this._metadata.appMaps = this.getBestAppMaps(appMaps);
     this._metadata.numHttpRequests = this.countRoutes(appMaps);
     this._metadata.numAppMaps = appMaps.length;
 
@@ -225,42 +175,6 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
       this.extensionState.setWorkspaceConfiguredAgent(this.folder, hasConfigFiles);
       this.updateMetadata();
     }
-  }
-
-  private async classMapSelection(): Promise<SampleCodeObjects> {
-    const classMap = await this.classMapIndex.classMap();
-    const httpRequests = classMap.find((entry) => entry.fqid.includes('HTTP'))?.children || [];
-    const queries = classMap.find((entry) => entry.fqid.includes('Queries'))?.children || [];
-    const sampleHTTPRequests = this.getSampleCodeObjects(httpRequests);
-    const sampleQueries = this.getSampleCodeObjects(queries);
-
-    return {
-      httpRequests: sampleHTTPRequests,
-      queries: sampleQueries,
-    } as SampleCodeObjects;
-  }
-
-  private getSampleCodeObjects(classMap: CodeObjectEntry[]): SimpleCodeObject[] {
-    const requestsWithOneAssociatedAppMap = classMap.filter((request) => {
-      return request.appMapFiles.length === 1;
-    });
-
-    if (requestsWithOneAssociatedAppMap.length >= this.NUMBER_OF_SAMPLE_CODE_OBJECTS) {
-      return this.simplifyCodeObjectEntries(
-        requestsWithOneAssociatedAppMap.slice(0, this.NUMBER_OF_SAMPLE_CODE_OBJECTS)
-      );
-    }
-
-    return this.simplifyCodeObjectEntries(classMap.slice(0, this.NUMBER_OF_SAMPLE_CODE_OBJECTS));
-  }
-
-  private simplifyCodeObjectEntries(classMap: CodeObjectEntry[]): Array<SimpleCodeObject> {
-    return classMap.map((entry) => {
-      return {
-        name: entry.name.split(';')[0],
-        path: entry.appMapFiles[0],
-      } as SimpleCodeObject;
-    });
   }
 
   private async analyzeProject(): Promise<void> {
@@ -306,23 +220,6 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
     this._onStateChange.fire(this._metadata);
   }
 
-  private getBestAppMaps(appMaps: AppMapLoader[], maxCount = 10): AppMapSummary[] {
-    return appMaps
-      .map(({ descriptor }) => ({
-        path: descriptor.resourceUri.fsPath,
-        name: descriptor.metadata?.name as string,
-        requests: descriptor.numRequests as number,
-        sqlQueries: descriptor.numQueries as number,
-        functions: descriptor.numFunctions as number,
-      }))
-      .sort((a, b) => {
-        const scoreA = a.requests * 100 + a.sqlQueries * 100 + a.functions * 100;
-        const scoreB = b.requests * 100 + b.sqlQueries * 100 + b.functions * 100;
-        return scoreB - scoreA;
-      })
-      .slice(0, maxCount);
-  }
-
   private countRoutes(appMaps: AppMapLoader[]): number {
     return appMaps.reduce((sum, { descriptor }) => sum + (descriptor.numRequests || 0), 0);
   }
@@ -344,7 +241,7 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
     this.updateAgentInstalled();
 
     this._metadata.appMapsRecorded = this.hasRecordedAppMaps || false;
-    this._metadata.investigatedFindings = this.hasInvestigatedFindings || false;
+    this._metadata.openedNavie = this.hasOpenedNavie || false;
     this._metadata.appMapOpened = this.hasOpenedAppMap || false;
 
     this._onStateChange.fire(this._metadata);
