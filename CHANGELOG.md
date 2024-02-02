@@ -1,3 +1,33 @@
+# [0.107.0](https://github.com/getappmap/vscode-appland/compare/v0.106.0...v0.107.0) (2024-02-02)
+
+
+### Bug Fixes
+
+* Add cleanup of Disposable ([4d92c78](https://github.com/getappmap/vscode-appland/commit/4d92c7848c75751d242d56b69c5b9acb793a52e2))
+* Add code block syntax highlighting ([019feb1](https://github.com/getappmap/vscode-appland/commit/019feb1325da9cc0136a0847cce3d4ea5c688b83))
+* Drop extra padding in web view ([ae9c261](https://github.com/getappmap/vscode-appland/commit/ae9c2612b629178eb0fe4817e3cf6109dec99501))
+* Ensure a deleted AppMap is removed from the tree ([b38847c](https://github.com/getappmap/vscode-appland/commit/b38847c8e221ec8e2c209a70628f719274f4900d))
+* Source links with drive letters on Windows ([#849](https://github.com/getappmap/vscode-appland/issues/849)) ([b2a38ad](https://github.com/getappmap/vscode-appland/commit/b2a38add4dcd2339b6a785b6c04771195dfae34c))
+* Support IPv6 when remote recording ([ddf8cd5](https://github.com/getappmap/vscode-appland/commit/ddf8cd5405492cb2be9cd9dcf8752ffb3ae48406))
+
+
+### Features
+
+* Allow configuration of AppMap API URL ([53de8c0](https://github.com/getappmap/vscode-appland/commit/53de8c0764bcda164ebceb3b95feae628f976d8a))
+* AppMap AI: Explain ([c212a2c](https://github.com/getappmap/vscode-appland/commit/c212a2c04f5ef12ce0587eba0cac2d07aa9c499f))
+* Configurable CLI flags ([e75bd92](https://github.com/getappmap/vscode-appland/commit/e75bd9217c622cc3f0d98025245cebbf08a13dde))
+* Handle AppMap view state across views ([8747b75](https://github.com/getappmap/vscode-appland/commit/8747b75cb0c65c6a3cc02d4a67ccfbf50cde2b31))
+* Handle exportJSON message from AppMap ([ba10c68](https://github.com/getappmap/vscode-appland/commit/ba10c685cb678d4efacf7fb02b149cbbecc16f4b))
+* Integrate the code snippet frontend ([5092027](https://github.com/getappmap/vscode-appland/commit/5092027d022e1c850d58534b9793524853dd9fbe))
+* Propagate savedFilters to the chatSearch view ([d3222df](https://github.com/getappmap/vscode-appland/commit/d3222df39fdba8c9f33895855b24e34c1f81603d))
+* Remove 'performAction' events ([3ad2a68](https://github.com/getappmap/vscode-appland/commit/3ad2a6898eb13a0cbc0ddff555f6618a8568d54b))
+* Update [@appland](https://github.com/appland) dependencies ([cbec983](https://github.com/getappmap/vscode-appland/commit/cbec983187d951f64fd55ea3bd3415d435540e77))
+* Update @appland/components to 3.32.0 ([a86acad](https://github.com/getappmap/vscode-appland/commit/a86acad1b4bacf33c785f9dfc7aff03264328759))
+* Update @appland/components to v3.33.0 ([909c185](https://github.com/getappmap/vscode-appland/commit/909c1854b9ef834a55597ccce04809672041681e))
+* Update VSCode engine to v1.82.0 ([#858](https://github.com/getappmap/vscode-appland/issues/858)) ([5456750](https://github.com/getappmap/vscode-appland/commit/5456750817f7f4d2608404d8ea018e2a56fa74b2))
+* Use .appmapignore to ignore certain directories ([9a31784](https://github.com/getappmap/vscode-appland/commit/9a31784e63cae68a223b70f1bb3016d0525549bc))
+* User is prompted to choose a directory for Explain command ([0f371fe](https://github.com/getappmap/vscode-appland/commit/0f371fe3d6756d55725c57fa94547a548c64c337))
+
 # [0.106.0](https://github.com/getappmap/vscode-appland/compare/v0.105.0...v0.106.0) (2024-01-12)
 
 
