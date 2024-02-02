@@ -42,5 +42,5 @@ jobs:
     #   script: yarn test:system
 
     - stage: Deploy
-      if: master AND env(TRAVIS_OS_NAME) = linux
+      if: branch = master
       script: yarn run semantic-release
