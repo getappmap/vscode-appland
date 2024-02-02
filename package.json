@@ -428,6 +428,7 @@
     "vscode:prepublish": "yarn run compile",
     "lint": "eslint . --ext .ts",
     "pretest": "yarn run lint && tsc --strict --skipLibCheck",
+    "test:precache": "node -e 'require(\"@vscode/test-electron\").downloadAndUnzipVSCode()'",
     "test:integration": "ts-node ./test/integrationTest.ts",
     "test:web-client": "mocha web/test/*.test.mjs",
     "test:system": "ts-node test/systemTest.ts",
