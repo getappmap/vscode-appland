@@ -29,12 +29,12 @@ export class QuickSearchProvider implements vscode.CodeActionProvider {
     };
 
     const codeAction = new vscode.CodeAction(
-      'Explain with AppMap AI',
+      'Explain with AppMap Navie AI',
       vscode.CodeActionKind.Refactor
     );
     codeAction.command = {
       command: 'appmap.quickExplain',
-      title: 'Explain with AppMap AI',
+      title: 'Explain with AppMap Navie AI',
       arguments: [workspaceFolder.uri, codeSelection],
     };
     return [codeAction];
