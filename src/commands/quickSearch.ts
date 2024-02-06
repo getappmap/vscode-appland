@@ -50,9 +50,12 @@ export default function quickSearch(context: vscode.ExtensionContext) {
     vscode.languages.registerCodeActionsProvider(
       [
         { language: 'ruby' },
+        { language: 'haml' },
+        { language: 'erb' },
         { language: 'java' },
         { language: 'python' },
         { language: 'javascript' },
+        { language: 'typescript' },
       ],
       new QuickSearchProvider()
     )
