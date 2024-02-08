@@ -30,12 +30,12 @@ describe('Quick search', () => {
       expect(actions).to.be.an('array');
       expect(actions).to.have.lengthOf(1);
       const action = actions[0];
-      expect(action.title).to.equal('Explain with AppMap AI');
+      expect(action.title).to.equal('Explain with AppMap Navie AI');
       expect(JSON.stringify(action.command, null, 2)).to.equal(
         JSON.stringify(
           {
             command: 'appmap.quickExplain',
-            title: 'Explain with AppMap AI',
+            title: 'Explain with AppMap Navie AI',
             arguments: [
               TEST_WORKSPACE.uri,
               {

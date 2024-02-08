@@ -1,6 +1,6 @@
 [![Version](https://img.shields.io/visual-studio-marketplace/v/appland.appmap)](https://marketplace.visualstudio.com/items?itemName=appland.appmap)
 [![Avg Stars](https://img.shields.io/visual-studio-marketplace/stars/appland.appmap)](https://marketplace.visualstudio.com/items?itemName=appland.appmap)
-[![GitHub Stars](https://img.shields.io/github/stars/getappmap/vscode-appland?style=social)](https://marketplace.visualstudio.com/items?itemName=appland.appmap)
+[![GitHub Stars](https://img.shields.io/github/stars/getappmap/vscode-appland?style=social)](https://github.com/getappmap/vscode-appland)
 [![Slack](https://img.shields.io/badge/Slack-Join%20the%20community-green)](https://appmap.io/slack)
 
 # AppMap for Visual Studio Code
