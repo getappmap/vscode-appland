@@ -1,3 +1,16 @@
+# [0.108.0](https://github.com/getappmap/vscode-appland/compare/v0.107.0...v0.108.0) (2024-02-08)
+
+
+### Bug Fixes
+
+* Update @appland/components to v3.33.1 ([44fa3fc](https://github.com/getappmap/vscode-appland/commit/44fa3fcd72e98abc476347c5ec5ecf695b631b6e))
+
+
+### Features
+
+* Add more light bulb languages ([d2c0db3](https://github.com/getappmap/vscode-appland/commit/d2c0db36f6055e289c787186590e1e790ae40763))
+* Rename Navie code action ([2b8908b](https://github.com/getappmap/vscode-appland/commit/2b8908b5cfa04dd76fe1644d693b6b5b79d85908))
+
 # [0.107.0](https://github.com/getappmap/vscode-appland/compare/v0.106.0...v0.107.0) (2024-02-02)
 
 
