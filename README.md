@@ -7,10 +7,10 @@
 
 AppMap is a free and open-source runtime code analysis tool.
 
-AppMap records code execution traces, collecting information about how your code works and what it
-does. Then it presents this information as interactive diagrams that you can search and navigate. In
-the diagrams, you can see exactly how functions, web services, data stores, security, I/O, and
-dependent services all work together when application code runs.
+AppMap records your running code, collecting information about how your code works and what it does.
+Then it uses this information to create AppMaps—interactive diagrams that you can navigate and
+search. Once you've created AppMaps, you can chat with AppMap Navie AI. Navie uses your AppMaps to
+understand your code and provide you with relevant and specific insights about your project.
 
 [![AppMap video](https://appmap.io/assets/img/yt-play.png)](https://www.youtube.com/watch?v=fHiTHZhtFZM)
 
@@ -29,6 +29,18 @@ project. Then, you’ll make AppMaps by running your app - either by
 [recording a short interaction with your app](https://appmap.io/docs/recording-methods.html#remote-recording).
 
 ## AppMap Features
+
+### AppMap Navie AI
+
+AppMap Navie AI is a powerful chat interface that will help you gain insight about your project.
+Navie uses your AppMaps and your code to provide you with helpful and specific suggestions that are
+relevant to your codebase.
+
+When you ask Navie a question, it will find and display relevant AppMaps of your code. The AppMaps
+are visualizations of the code that you're discussing with Navie, helping you understand how your
+code works and how you can improve it.
+
+[![AppMap Navie AI](https://appmap.io/assets/img/navie_answer_example.png 'Appmap Navie AI')](https://appmap.io/assets/img/navie_answer_example.png)
 
 ### Runtime behavior visualization
 
@@ -51,12 +63,6 @@ application's runtime behavior.
 
 [![Trace Views](https://appmap.io/assets/img/ide-trace-view-thumb.jpeg 'Trace Views')](https://appmap.io/assets/img/ide-trace-view.png)
 
-### Runtime analysis
-
-After making recordings of how your application behaved at runtime, AppMap analyzes those recordings
-to automatically detect performance issues like N+1 queries, and security flaws such as faulty
-authentication logic.
-
 ### AppMap in CI
 
 The same features available in this plugin are
@@ -65,6 +71,12 @@ applications after your CI tests run, and produces a report in GitHub containing
 failed test analysis, runtime API differences, performance issues, and dynamic security flaws:
 
 [![Summary report](https://appmap.io/assets/img/summary-report-thumb.jpeg 'Summary Report')](https://appmap.io/assets/img/summary-report.png)
+
+### Runtime analysis
+
+After making recordings of how your application behaved at runtime, AppMap analyzes those recordings
+to automatically detect performance issues like N+1 queries, and security flaws such as faulty
+authentication logic.
 
 ## Licensing and Security
 
