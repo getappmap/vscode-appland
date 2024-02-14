@@ -1,3 +1,10 @@
+# [0.109.0](https://github.com/getappmap/vscode-appland/compare/v0.108.0...v0.109.0) (2024-02-14)
+
+
+### Features
+
+* Add navie and remove explore appmaps and runtime analysis ([436f921](https://github.com/getappmap/vscode-appland/commit/436f9215bc2e02586bdfbe65fc50166cedebbec8))
+
 # [0.108.0](https://github.com/getappmap/vscode-appland/compare/v0.107.0...v0.108.0) (2024-02-08)
 
 
