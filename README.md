@@ -7,10 +7,19 @@
 
 AppMap is a free and open-source runtime code analysis tool.
 
-AppMap records your running code, collecting information about how your code works and what it does.
-Then it uses this information to create AppMaps—interactive diagrams that you can navigate and
-search. Once you've created AppMaps, you can chat with AppMap Navie AI. Navie uses your AppMaps to
-understand your code and provide you with relevant and specific insights about your project.
+AppMap records your running code in your development environment, collecting information about how
+your code works and what it does.
+
+Then it uses this information to create AppMaps—interactive diagrams that describe your code’s
+behavior in sequence diagrams, dependency maps, trace views and flame graphs.
+
+Once you've created AppMaps, you can chat with AppMap new AI assistant, Navie to understand your
+code. Navie uses your local AppMaps files to provide you with explanations and better code
+suggestions.
+
+Navie is the AI Coding Assistant for Senior Developers. Navie’s suggestions are better for complex
+code changes compared to other AI code assistants because Navie includes runtime context. Navie’s
+code recommendations span files, functions, APIs, databases and more.
 
 [![AppMap video](https://appmap.io/assets/img/yt-play.png)](https://www.youtube.com/watch?v=fHiTHZhtFZM)
 
@@ -18,10 +27,10 @@ understand your code and provide you with relevant and specific insights about y
 
 ## Requirements
 
-Supported web applications and API frameworks: Ruby on Rails, Django, Flask, Express, and Spring.
+Supported web applications and API frameworks: Ruby on Rails, Django, Flask, Express, Nest.js,
+Next.js, and Spring, Kotlin, and Scala
 
-Supported programming languages: Java, Python, Ruby, TypeScript/JavaScript (for Node.js applications
-only).
+Supported programming languages: Java, Python, Ruby, TypeScript/JavaScript (for Node.js).
 
 To start making AppMaps, you’ll need to install and configure the AppMap client agent for your
 project. Then, you’ll make AppMaps by running your app - either by
@@ -33,12 +42,16 @@ project. Then, you’ll make AppMaps by running your app - either by
 ### AppMap Navie AI
 
 AppMap Navie AI is a powerful chat interface that will help you gain insight about your project.
-Navie uses your AppMaps and your code to provide you with helpful and specific suggestions that are
-relevant to your codebase.
+Navie uses your AppMaps and code snippets to provide you with helpful explanations about your
+software and specific code suggestions that are more relevant to your codebase than typical
+generative AI coding assistants.
 
-When you ask Navie a question, it will find and display relevant AppMaps of your code. The AppMaps
-are visualizations of the code that you're discussing with Navie, helping you understand how your
-code works and how you can improve it.
+When you ask Navie a question, it will retrieve and display relevant AppMaps of your code so you can
+see how the AI arrived at the code suggestions. The AppMaps are visualizations of the code that
+you're discussing with Navie, helping you understand how your code works and how you can improve it.
+Navie can also help you improve the runtime security and performance of your code by using AppMap
+findings and AppMap data in the response. It is like Pair Programming with a Principal Engineer who
+knows your code inside and out.
 
 [![AppMap Navie AI](https://appmap.io/assets/img/navie_answer_example.png 'Appmap Navie AI')](https://appmap.io/assets/img/navie_answer_example.png)
 
@@ -84,15 +97,22 @@ authentication logic.
 
 [Terms and conditions](https://appmap.io/community/terms-and-conditions.html)
 
-**Data usage:** AppMap runtime recordings and diagrams are created and stored locally on your
-machine. AppMap for Visual Studio Code does not require any permissions to your web hosted code repo
-in order to run. For more information, see the AppMap
-[security disclosure](https://appmap.io/security).
+AppMap graphs, runtime recordings, and diagrams and data are created and stored locally on your
+computer in a directory you choose.
+
+AppMap for Visual Studio Code does not require any permissions to your web hosted code repository in
+order to run.
+
+Using AppMap’s integrations with Confluence, GitHub Actions, and Chat AI integration features
+requires access to code snippets and AppMap data either within your own accounts or via AppMap’s
+accounts; see the AppMap [security disclosure](https://appmap.io/security) for detailed information
+about each integration
 
 Sign-in via GitHub or GitLab is required only to obtain a license key to start using AppMap in your
-code editor.
+code editor, or you can request a trial license on getappmap.com.
 
-There is [no fee](https://appmap.io/pricing) for personal use of AppMap.
+There is [no fee](https://appmap.io/pricing) for personal use of AppMap, pricing for premium
+features and integrations are listed on [AppMap’s Pricing Page](https://appmap.io/pricing).
 
 ## Getting started with AppMap
 
