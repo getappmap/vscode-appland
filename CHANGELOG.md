@@ -1,3 +1,10 @@
+## [0.109.1](https://github.com/getappmap/vscode-appland/compare/v0.109.0...v0.109.1) (2024-02-17)
+
+
+### Bug Fixes
+
+* Update README.md ([0305da6](https://github.com/getappmap/vscode-appland/commit/0305da6a5a1e1f165b8b4639bf231f0fc64e7ee6))
+
 # [0.109.0](https://github.com/getappmap/vscode-appland/compare/v0.108.0...v0.109.0) (2024-02-14)
 
 
