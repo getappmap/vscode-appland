@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import AppMapCollectionFile from '../services/appmapCollectionFile';
 import Links from './links';
 import { DocsPages, InstructionsTreeDataProvider } from './instructionsTreeDataProvider';
-import { AppMapTreeDataProvider } from './appMapTreeDataProvider';
+import { AppMapTreeDataProvider, AppMapTreeItem } from './appMapTreeDataProvider';
 import { LinkTreeDataProvider } from './linkTreeDataProvider';
 import { ProjectStateServiceInstance } from '../services/projectStateService';
 import { AppmapUptodateService } from '../services/appmapUptodateService';
@@ -67,6 +67,16 @@ export default function registerTrees(
   context.subscriptions.push(
     vscode.commands.registerCommand('appmap.view.focusAppMap', () => {
       localAppMapsTree.reveal(appmapCollection.appMaps[0], { select: false });
+    })
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand('appmap.view.focusAppMapTree', () => {
+      localAppMapsTree.reveal(undefined as unknown as AppMapTreeItem, {
+        select: true,
+        focus: true,
+        expand: true,
+      });
     })
   );
 
