@@ -101,7 +101,7 @@ export default class ChatSearchWebview {
           await vscode.commands.executeCommand('appmap.openInstallGuide', RecordAppMaps);
           break;
         case 'show-appmap-tree':
-          await vscode.commands.executeCommand('appmap.view.focusAppMapTree');
+          await vscode.commands.executeCommand('appmap.views.appmaps.focus');
           break;
       }
     });
