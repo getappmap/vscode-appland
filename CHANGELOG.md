@@ -1,3 +1,16 @@
+# [0.110.0](https://github.com/getappmap/vscode-appland/compare/v0.109.1...v0.110.0) (2024-02-21)
+
+
+### Bug Fixes
+
+* Update Navie AI command ([9cb0e04](https://github.com/getappmap/vscode-appland/commit/9cb0e04b7a22cd5ecd1aba77980753faac07cd74))
+
+
+### Features
+
+* Update Navie chat interface ([#889](https://github.com/getappmap/vscode-appland/issues/889)) ([154598e](https://github.com/getappmap/vscode-appland/commit/154598e3ab9ea12b54cb856f0bdfaca4f034c1f0))
+* Update readme ([37162c8](https://github.com/getappmap/vscode-appland/commit/37162c84b48593a5447c0c6b4d3c0a3760eed80d))
+
 ## [0.109.1](https://github.com/getappmap/vscode-appland/compare/v0.109.0...v0.109.1) (2024-02-17)
 
 
