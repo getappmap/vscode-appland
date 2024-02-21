@@ -45,6 +45,10 @@ export default function mountChatSearchView() {
     app.$on('open-record-instructions', () => {
       vscode.postMessage({ command: 'open-record-instructions' });
     });
+
+    app.$on('show-appmap-tree', () => {
+      vscode.postMessage({ command: 'show-appmap-tree' });
+    });
   });
 
   vscode.postMessage({ command: 'chat-search-ready' });
