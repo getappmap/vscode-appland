@@ -28,6 +28,8 @@ AppMap and Navie will help you:
 - Detect and fix insecure code such as missing or faulty permissions, data leakage, mishandling of
   secrets, etc.
 
+[![AppMap video](https://appmap.io/assets/img/navie-play-button.webp)](https://vimeo.com/915670906/6e2a852866)
+
 #### How it works:
 
 You’ll start by configuring the AppMap language library for your project. Then you’ll make a
@@ -57,7 +59,7 @@ diagrams include:
 - Trace views of detailed code flows.
 - Analysis of runtime code defects (Findings).
 
-[![AppMap video](https://appmap.io/assets/img/yt-play.png)](https://vimeo.com/915670906/6e2a852866)
+[![AppMap video](https://appmap.io/assets/img/sequence-diagram-play-video.webp)](https://vimeo.com/915717360/5b5813c116)
 
 ---
 
