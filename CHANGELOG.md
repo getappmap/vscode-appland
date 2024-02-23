@@ -1,3 +1,10 @@
+## [0.110.1](https://github.com/getappmap/vscode-appland/compare/v0.110.0...v0.110.1) (2024-02-23)
+
+
+### Bug Fixes
+
+* Add video embeds to README ([#892](https://github.com/getappmap/vscode-appland/issues/892)) ([551c88a](https://github.com/getappmap/vscode-appland/commit/551c88af13c6e9469f557128ccd5efa11bb8a058))
+
 # [0.110.0](https://github.com/getappmap/vscode-appland/compare/v0.109.1...v0.110.0) (2024-02-21)
 
 
