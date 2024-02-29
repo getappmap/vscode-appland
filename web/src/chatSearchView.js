@@ -19,8 +19,14 @@ export default function mountChatSearchView() {
             savedFilters: initialData.savedFilters,
             apiUrl: initialData.apiUrl,
             apiKey: initialData.apiKey,
+            appmaps: this.appmaps,
+            appmapYmlPresent: this.appmapYmlPresent,
           },
         });
+      },
+      data: {
+        appmaps: initialData.appmaps || [],
+        appmapYmlPresent: initialData.appmapYmlPresent,
       },
       methods: {
         getAppMapState() {
@@ -42,8 +48,26 @@ export default function mountChatSearchView() {
 
     handleAppMapMessages(app, vscode);
 
+    messages.on('update', (props) => {
+      Object.entries(props)
+        .filter(([key]) => key !== 'type')
+        .forEach(([key, value]) => {
+          if (key in app.$data && app[key] !== value) {
+            app[key] = value;
+          }
+        });
+    });
+
+    app.$on('open-install-instructions', () => {
+      vscode.postMessage({ command: 'open-install-instructions' });
+    });
+
     app.$on('open-record-instructions', () => {
       vscode.postMessage({ command: 'open-record-instructions' });
+    });
+
+    app.$on('open-appmap', (path) => {
+      vscode.postMessage({ command: 'open-appmap', path });
     });
 
     app.$on('show-appmap-tree', () => {
