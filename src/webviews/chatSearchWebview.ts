@@ -4,11 +4,12 @@ import appmapMessageHandler from './appmapMessageHandler';
 import FilterStore, { SavedFilter } from './filterStore';
 import WebviewList from './WebviewList';
 import selectIndexProcess, { IndexProcess, ReasonCode } from '../lib/selectIndexProcess';
-import { RecordAppMaps } from '../tree/instructionsTreeDataProvider';
+import { ProjectPicker, RecordAppMaps } from '../tree/instructionsTreeDataProvider';
 import { getApiKey } from '../authentication';
 import ExtensionSettings from '../configuration/extensionSettings';
 import { CodeSelection } from '../commands/quickSearch';
 import ExtensionState from '../configuration/extensionState';
+import AppMapCollection from '../services/appmapCollection';
 
 export default class ChatSearchWebview {
   private webviewList = new WebviewList();
@@ -16,7 +17,8 @@ export default class ChatSearchWebview {
 
   private constructor(
     private readonly context: vscode.ExtensionContext,
-    private readonly extensionState: ExtensionState
+    private readonly extensionState: ExtensionState,
+    private readonly appmaps: AppMapCollection
   ) {
     this.filterStore = new FilterStore(context);
     this.filterStore.onDidChangeFilters((event) => {
@@ -82,7 +84,39 @@ export default class ChatSearchWebview {
       workspaceFolder = vscode.workspace.getWorkspaceFolder(uri);
     }
 
-    if (workspaceFolder) this.extensionState.setWorkspaceOpenedNavie(workspaceFolder, true);
+    const getLatestAppMaps = (
+      workspaceFolder: vscode.WorkspaceFolder,
+      count = 10
+    ): Array<{ [key: string]: unknown }> => {
+      return this.appmaps
+        .allAppMapsForWorkspaceFolder(workspaceFolder)
+        .sort((a, b) => b.descriptor.timestamp - a.descriptor.timestamp)
+        .slice(0, count)
+        .map((appmap) => ({
+          name: appmap.descriptor.metadata?.name,
+          recordingMethod: appmap.descriptor.metadata?.recorder?.type,
+          createdAt: new Date(appmap.descriptor.timestamp).toISOString(),
+          path: appmap.descriptor.resourceUri.fsPath,
+        }));
+    };
+    let appmaps: Array<{ [key: string]: unknown }> = [];
+    if (workspaceFolder) {
+      this.extensionState.setWorkspaceOpenedNavie(workspaceFolder, true);
+      appmaps = getLatestAppMaps(workspaceFolder);
+    }
+
+    this.context.subscriptions.push(
+      this.appmaps.onUpdated((updatedWorkspaceFolder) => {
+        console.log(updatedWorkspaceFolder?.name);
+        if (workspaceFolder && updatedWorkspaceFolder === workspaceFolder) {
+          appmaps = getLatestAppMaps(workspaceFolder);
+          panel.webview.postMessage({
+            type: 'update',
+            appmaps,
+          });
+        }
+      })
+    );
 
     panel.webview.onDidReceiveMessage(appmapMessageHandler(this.filterStore, workspace));
     panel.webview.onDidReceiveMessage(async (message) => {
@@ -93,6 +127,8 @@ export default class ChatSearchWebview {
             appmapRpcPort,
             codeSelection,
             savedFilters: this.filterStore.getSavedFilters(),
+            appmapYmlPresent: !!selectedWatcher, // Note that at the moment this is always true
+            appmaps,
             apiUrl: ExtensionSettings.apiUrl,
             apiKey: await getApiKey(false),
           });
@@ -100,6 +136,15 @@ export default class ChatSearchWebview {
         case 'open-record-instructions':
           await vscode.commands.executeCommand('appmap.openInstallGuide', RecordAppMaps);
           break;
+        case 'open-install-instructions':
+          await vscode.commands.executeCommand('appmap.openInstallGuide', ProjectPicker);
+          break;
+        case 'open-appmap': {
+          const uri = vscode.Uri.file(message.path);
+          await vscode.commands.executeCommand('vscode.openWith', uri, 'appmap.views.appMapFile');
+          break;
+        }
+
         case 'show-appmap-tree':
           await vscode.commands.executeCommand('appmap.views.appmaps.focus');
           break;
@@ -118,8 +163,9 @@ export default class ChatSearchWebview {
 
   public static register(
     context: vscode.ExtensionContext,
-    extensionState: ExtensionState
+    extensionState: ExtensionState,
+    appmaps: AppMapCollection
   ): ChatSearchWebview {
-    return new ChatSearchWebview(context, extensionState);
+    return new ChatSearchWebview(context, extensionState, appmaps);
   }
 }
