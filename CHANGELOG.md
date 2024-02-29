@@ -1,3 +1,10 @@
+# [0.111.0](https://github.com/getappmap/vscode-appland/compare/v0.110.1...v0.111.0) (2024-02-29)
+
+
+### Features
+
+* The Navie view now explains AppMap concepts ([6e02d99](https://github.com/getappmap/vscode-appland/commit/6e02d9901d0700c0800d2a8847fa64655f510091))
+
 ## [0.110.1](https://github.com/getappmap/vscode-appland/compare/v0.110.0...v0.110.1) (2024-02-23)
 
 
