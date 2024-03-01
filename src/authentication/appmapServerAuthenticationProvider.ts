@@ -7,10 +7,11 @@ import VscodeProtocolRedirect from './authenticationStrategy/vscodeProtocolRedir
 import LocalWebserver from './authenticationStrategy/localWebServer';
 import { DEBUG_EXCEPTION, Telemetry } from '../telemetry';
 import ErrorCode from '../telemetry/definitions/errorCodes';
-import { AUTHN_PROVIDER_NAME } from './index';
+import { AUTHN_PROVIDER_NAME, getApiKey } from './index';
 import { debuglog } from 'node:util';
 import { LicenseKey } from '@appland/client';
 import { base64UrlDecode } from '@appland/models';
+import SignInManager from '../services/signInManager';
 
 const debug = debuglog('appmap-vscode:AppMapServerAuthenticationProvider');
 
@@ -43,6 +44,17 @@ function enterLicenseKeyCommand(authProvider: AppMapServerAuthenticationProvider
 
     const session = AppMapServerAuthenticationHandler.buildSession(email, licenseKey);
     authProvider.setSession(session);
+    await authProvider.createSession();
+
+    // There is a race condition in VS Code where the session is not immediately available after it is created.
+    const intervalId = setInterval(async () => {
+      const apiKey = await getApiKey(true);
+      if (apiKey) {
+        clearInterval(intervalId);
+        SignInManager.updateSignInState();
+      }
+    }, 200);
+    setTimeout(() => clearInterval(intervalId), 5000);
   });
   return command;
 }
@@ -99,20 +111,32 @@ export default class AppMapServerAuthenticationProvider implements vscode.Authen
 
   setSession(session: vscode.AuthenticationSession): void {
     this.session = session;
-    this.context.secrets
-      .store(APPMAP_SERVER_SESSION_KEY, JSON.stringify(this.session))
-      .then(undefined, (err) => console.warn('error storing session key: %s', err));
+  }
 
-    this._onDidChangeSessions.fire({ added: [this.session], removed: [], changed: [] });
+  async storeSession(): Promise<void> {
+    try {
+      await this.context.secrets.store(APPMAP_SERVER_SESSION_KEY, JSON.stringify(this.session));
+    } catch (err) {
+      console.warn('error storing session key: %s', err);
+    }
   }
 
   async createSession(): Promise<vscode.AuthenticationSession> {
-    const session = await this.performSignIn();
-    debug('createSession(); session %savailable', session ? '' : 'not ');
+    let session = this.session;
+    if (!session) {
+      session = await this.performSignIn();
+      debug('createSession(); session %savailable', session ? '' : 'not ');
+      if (!session) throw new Error('AppMap authentication was not completed');
+      this.setSession(session);
+    }
 
-    if (!session) throw new Error('AppMap authentication was not completed');
+    await this.storeSession();
+    this._onDidChangeSessions.fire({
+      added: [session],
+      removed: [],
+      changed: [],
+    });
 
-    this.setSession(session);
     return session;
   }
 
@@ -122,12 +146,14 @@ export default class AppMapServerAuthenticationProvider implements vscode.Authen
 
     if (session) {
       this.session = undefined;
-      this.context.secrets
-        .delete(APPMAP_SERVER_SESSION_KEY)
-        .then(undefined, (err) => console.warn('error removing session key: %s', err));
-
-      this._onDidChangeSessions.fire({ removed: [session], added: [], changed: [] });
+      try {
+        await this.context.secrets.delete(APPMAP_SERVER_SESSION_KEY);
+        this._onDidChangeSessions.fire({ removed: [session], added: [], changed: [] });
+      } catch (err) {
+        console.warn('error removing session key: %s', err);
+      }
     }
+
     return;
   }
 
