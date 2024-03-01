@@ -7,11 +7,10 @@ import VscodeProtocolRedirect from './authenticationStrategy/vscodeProtocolRedir
 import LocalWebserver from './authenticationStrategy/localWebServer';
 import { DEBUG_EXCEPTION, Telemetry } from '../telemetry';
 import ErrorCode from '../telemetry/definitions/errorCodes';
-import { AUTHN_PROVIDER_NAME, getApiKey } from './index';
+import { AUTHN_PROVIDER_NAME } from './index';
 import { debuglog } from 'node:util';
 import { LicenseKey } from '@appland/client';
 import { base64UrlDecode } from '@appland/models';
-import SignInManager from '../services/signInManager';
 
 const debug = debuglog('appmap-vscode:AppMapServerAuthenticationProvider');
 
