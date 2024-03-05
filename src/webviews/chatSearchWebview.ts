@@ -99,20 +99,20 @@ export default class ChatSearchWebview {
           path: appmap.descriptor.resourceUri.fsPath,
         }));
     };
-    let appmaps: Array<{ [key: string]: unknown }> = [];
+    let mostRecentAppMaps: Array<{ [key: string]: unknown }> = [];
     if (workspaceFolder) {
       this.extensionState.setWorkspaceOpenedNavie(workspaceFolder, true);
-      appmaps = getLatestAppMaps(workspaceFolder);
+      mostRecentAppMaps = getLatestAppMaps(workspaceFolder);
     }
 
     this.context.subscriptions.push(
       this.appmaps.onUpdated((updatedWorkspaceFolder) => {
         console.log(updatedWorkspaceFolder?.name);
         if (workspaceFolder && updatedWorkspaceFolder === workspaceFolder) {
-          appmaps = getLatestAppMaps(workspaceFolder);
+          mostRecentAppMaps = getLatestAppMaps(workspaceFolder);
           panel.webview.postMessage({
             type: 'update',
-            appmaps,
+            mostRecentAppMaps,
           });
         }
       })
@@ -128,7 +128,7 @@ export default class ChatSearchWebview {
             codeSelection,
             savedFilters: this.filterStore.getSavedFilters(),
             appmapYmlPresent: !!selectedWatcher, // Note that at the moment this is always true
-            appmaps,
+            mostRecentAppMaps,
             apiUrl: ExtensionSettings.apiUrl,
             apiKey: await getApiKey(false),
           });
