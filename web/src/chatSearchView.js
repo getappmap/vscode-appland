@@ -19,13 +19,13 @@ export default function mountChatSearchView() {
             savedFilters: initialData.savedFilters,
             apiUrl: initialData.apiUrl,
             apiKey: initialData.apiKey,
-            appmaps: this.appmaps,
+            mostRecentAppMaps: this.mostRecentAppMaps,
             appmapYmlPresent: this.appmapYmlPresent,
           },
         });
       },
       data: {
-        appmaps: initialData.appmaps || [],
+        mostRecentAppMaps: initialData.mostRecentAppMaps || [],
         appmapYmlPresent: initialData.appmapYmlPresent,
       },
       methods: {
