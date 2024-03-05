@@ -9,6 +9,7 @@ import {
   ExecOptions as ProcessExecOptions,
 } from 'child_process';
 import * as vscode from 'vscode';
+import Environment from './configuration/environment';
 
 const REDIRECT_STATUS_CODES = [301, 302, 307, 308];
 
@@ -231,6 +232,8 @@ export async function chainPromises(
  * indicate that this is not a new user.
  */
 export function hasPreviouslyInstalledExtension(extensionPath: string): boolean {
+  if (Environment.isDevelopmentExtension) return false;
+
   const extensionDirectories = [
     ...new Set(
       vscode.extensions.all.map((extension) => path.dirname(extension.extensionUri.fsPath))

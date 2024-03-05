@@ -8,4 +8,7 @@ export default class Environment {
   static get isSystemTest(): boolean {
     return process.env.APPMAP_SYSTEM_TEST !== undefined;
   }
+  static get isDevelopmentExtension(): boolean {
+    return process.env.APPMAP_DEV_EXTENSION !== undefined;
+  }
 }

@@ -11,7 +11,8 @@
       "request": "launch",
       "args": ["--extensionDevelopmentPath=${workspaceFolder}"],
       "env": {
-        "APPMAP_TELEMETRY_DEBUG": "1"
+        "APPMAP_TELEMETRY_DEBUG": "1",
+        "APPMAP_DEV_EXTENSION": "1"
       }
     },
     {
