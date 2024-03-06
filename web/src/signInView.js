@@ -8,20 +8,31 @@ export default function mountSignInView() {
   const vscode = window.acquireVsCodeApi();
   const messages = new MessagePublisher(vscode);
 
-  const app = new Vue({
-    el: '#app',
-    render(h) {
-      return h(VSidebarSignIn, {
-        ref: 'ui',
-      });
-    },
+  messages.on('init-sign-in', (initialData) => {
+    const app = new Vue({
+      el: '#app',
+      render(h) {
+        return h(VSidebarSignIn, {
+          ref: 'ui',
+          props: {
+            appmapServerUrl: initialData.appmapServerUrl,
+          },
+        });
+      },
+    });
+
+    app.$on('sign-in', () => {
+      messages.rpc('sign-in');
+    });
+
+    app.$on('activate', (apiKey) => {
+      messages.rpc('activate', apiKey);
+    });
+
+    app.$on('click-sign-in-link', (linkType) => {
+      messages.rpc('click-sign-in-link', linkType);
+    });
   });
 
-  app.$on('sign-in', () => {
-    messages.rpc('sign-in');
-  });
-
-  app.$on('click-sign-in-link', (linkType) => {
-    messages.rpc('click-sign-in-link', linkType);
-  });
+  vscode.postMessage({ command: 'sign-in-ready' });
 }
