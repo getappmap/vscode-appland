@@ -12,7 +12,13 @@ module.exports = {
     [
       '@semantic-release/exec',
       {
-        publishCmd: 'yarn run publish -p $VSCE_TOKEN',
+        publishCmd: 'yarn package',
+      },
+    ],
+    [
+      '@semantic-release/exec',
+      {
+        publishCmd: 'yarn publish -p $VSCE_TOKEN',
       },
     ],
     '@semantic-release/git',
