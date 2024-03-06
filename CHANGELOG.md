@@ -1,3 +1,10 @@
+## [0.111.2](https://github.com/getappmap/vscode-appland/compare/v0.111.1...v0.111.2) (2024-03-06)
+
+
+### Bug Fixes
+
+* Skip minor version ([7785072](https://github.com/getappmap/vscode-appland/commit/77850722e20262c59425e7bda10b65651f5c547a))
+
 ## [0.111.1](https://github.com/getappmap/vscode-appland/compare/v0.111.0...v0.111.1) (2024-03-06)
 
 
