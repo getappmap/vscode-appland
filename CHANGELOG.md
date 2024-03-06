@@ -1,3 +1,11 @@
+## [0.111.1](https://github.com/getappmap/vscode-appland/compare/v0.111.0...v0.111.1) (2024-03-06)
+
+
+### Bug Fixes
+
+* Entering license manually closes sign in panel ([#895](https://github.com/getappmap/vscode-appland/issues/895)) ([a6ec5d3](https://github.com/getappmap/vscode-appland/commit/a6ec5d3f9bad94133ddd3e56d40eba4d5122bc1b))
+* Update @appland/components to v4.5.0 ([3a5fcad](https://github.com/getappmap/vscode-appland/commit/3a5fcad33ec7c66114a65a864a31e8292d6d8b5d))
+
 # [0.111.0](https://github.com/getappmap/vscode-appland/compare/v0.110.1...v0.111.0) (2024-02-29)
 
 
