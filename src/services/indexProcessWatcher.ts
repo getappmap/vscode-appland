@@ -1,3 +1,4 @@
+import * as vscode from 'vscode';
 import ExtensionSettings from '../configuration/extensionSettings';
 import { NodeProcessService } from './nodeProcessService';
 import { ProcessId, ProcessWatcher, ProcessWatcherOptions } from './processWatcher';
@@ -6,7 +7,13 @@ export default class IndexProcessWatcher extends ProcessWatcher {
   public rpcPort?: number;
   stdoutBuffer = '';
 
-  constructor(modulePath: string, appmapDir: string, cwd: string, env?: NodeJS.ProcessEnv) {
+  constructor(
+    context: vscode.ExtensionContext,
+    modulePath: string,
+    appmapDir: string,
+    cwd: string,
+    env?: NodeJS.ProcessEnv
+  ) {
     const args = ['index', '--watch', '--port', '0', '--appmap-dir', appmapDir];
     const extraOptions = ExtensionSettings.appMapIndexOptions;
     if (extraOptions) args.push(...extraOptions.split(' '));
@@ -19,7 +26,7 @@ export default class IndexProcessWatcher extends ProcessWatcher {
       cwd,
       env,
     };
-    super(options);
+    super(context, options);
   }
 
   public isRpcAvailable(): boolean {

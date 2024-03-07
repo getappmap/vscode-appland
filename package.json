@@ -212,6 +212,14 @@
       {
         "command": "appmap.downloadLatestJavaJar",
         "title": "AppMap: Update Java Jar"
+      },
+      {
+        "command": "appmap.openAIApiKey.set",
+        "title": "AppMap: Set OpenAI API Key"
+      },
+      {
+        "command": "appmap.openAIApiKey.status",
+        "title": "AppMap: Check OpenAI API Key Status"
       }
     ],
     "configuration": {
@@ -505,7 +513,7 @@
     "yaml": "^2.1.1"
   },
   "dependencies": {
-    "@appland/appmap": "^3.121.0",
+    "@appland/appmap": "^3.129.0",
     "@appland/client": "^1.14.1",
     "@appland/components": "^4.6.0",
     "@appland/diagrams": "^1.8.0",

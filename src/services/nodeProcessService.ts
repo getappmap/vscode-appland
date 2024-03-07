@@ -121,6 +121,7 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
       appmapConfigs.forEach((appmapConfig) => {
         services.push(
           new IndexProcessWatcher(
+            this.context,
             appmapModulePath,
             appmapConfig.appmapDir,
             appmapConfig.configFolder,
@@ -135,6 +136,7 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
       appmapConfigs.forEach((appmapConfig) => {
         services.push(
           new ScanProcessWatcher(
+            this.context,
             scannerModulePath,
             appmapConfig.appmapDir,
             appmapConfig.configFolder,
