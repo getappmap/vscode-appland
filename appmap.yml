@@ -1,3 +1,8 @@
 name: vscode-appland
 language: javascript
 appmap_dir: tmp/appmap
+packages:
+  - path: .
+    exclude:
+      - node_modules
+      - .yarn
