@@ -377,3 +377,13 @@ export function timeAgo(compareFrom: number, compareTo: number): string {
   const suffix = interval === 1 ? '' : 's';
   return `${interval} ${epoch}${suffix} ago`;
 }
+
+export function sanitizeEnvironment(env: NodeJS.ProcessEnv): Record<string, string> {
+  const sanitizedEnv: Record<string, string> = {};
+  for (const [k, v] of Object.entries(env || {})) {
+    if (!v) continue;
+
+    sanitizedEnv[k] = k.match(/_KEY$/) ? '***' : v;
+  }
+  return sanitizedEnv;
+}
