@@ -1,3 +1,15 @@
+# [0.112.0](https://github.com/getappmap/vscode-appland/compare/v0.111.2...v0.112.0) (2024-03-07)
+
+
+### Bug Fixes
+
+* Remove log out message and update login message ([b939045](https://github.com/getappmap/vscode-appland/commit/b93904554c0632738eb9d80035c49dd6b55ae343))
+
+
+### Features
+
+* Users can activate with email ([b4f0eaa](https://github.com/getappmap/vscode-appland/commit/b4f0eaa9da6400357b35844dd43f28629c46dc79))
+
 ## [0.111.2](https://github.com/getappmap/vscode-appland/compare/v0.111.1...v0.111.2) (2024-03-06)
 
 
