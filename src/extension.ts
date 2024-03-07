@@ -174,8 +174,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     );
     context.subscriptions.push(
       appmapServerAuthenticationProvider.onDidChangeSessions((e) => {
-        if (e.added?.length) vscode.window.showInformationMessage('Logged in to AppMap');
-        if (e.removed?.length) vscode.window.showInformationMessage('Logged out of AppMap');
+        if (e.added?.length) vscode.window.showInformationMessage('AppMap activated');
         AppMapServerConfiguration.updateAppMapClientConfiguration();
       })
     );
