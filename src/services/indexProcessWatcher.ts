@@ -27,6 +27,13 @@ export default class IndexProcessWatcher extends ProcessWatcher {
       env,
     };
     super(context, options);
+
+    this.rpcPort = ExtensionSettings.navieRpcPort;
+    if (this.rpcPort) {
+      this.options.log?.appendLine(
+        `Using RPC port assigned by extension setting appMap.navie.rpcPort: ${this.rpcPort}`
+      );
+    }
   }
 
   public isRpcAvailable(): boolean {
@@ -35,6 +42,13 @@ export default class IndexProcessWatcher extends ProcessWatcher {
 
   protected onStdout(data: string): void {
     super.onStdout(data);
+
+    if (this.rpcPort) {
+      this.options.log?.appendLine(
+        `Ignoring stdout from index process for purposes of obtaining the RPC port, because it's already configured as ${this.rpcPort}`
+      );
+      return;
+    }
 
     this.stdoutBuffer += data;
     const lines = this.stdoutBuffer.split('\n');
