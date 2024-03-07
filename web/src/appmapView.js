@@ -92,4 +92,3 @@ export default function mountApp() {
 
   vscode.postMessage({ command: 'appmap-ready' });
 }
-``;

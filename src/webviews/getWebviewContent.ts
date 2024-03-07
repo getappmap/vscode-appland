@@ -9,13 +9,21 @@ type AppmapModule =
   | 'finding-info-view'
   | 'sign-in-view';
 
+type getWebviewContentOptions = {
+  htmlStyle?: string;
+  rpcPort?: number;
+  connectSrc?: string[];
+};
+
 export default function getWebviewContent(
   webview: vscode.Webview,
   context: vscode.ExtensionContext,
   title: string,
   appmapModule: AppmapModule,
-  { htmlStyle, rpcPort }: { htmlStyle?: string; rpcPort?: number } = {}
+  options: getWebviewContentOptions = {}
 ): string {
+  const { htmlStyle, rpcPort } = options;
+
   const scriptUri = webview.asWebviewUri(
     vscode.Uri.file(path.join(context.extensionPath, 'out', 'app.js'))
   );
@@ -24,6 +32,9 @@ export default function getWebviewContent(
     vscode.Uri.file(path.join(context.extensionPath, 'out', 'app.css'))
   );
 
+  const connectSrc = options.connectSrc ?? [];
+  if (rpcPort) connectSrc.push(`http://localhost:${rpcPort}`);
+
   return ` <!DOCTYPE html>
   <html style="${htmlStyle ?? ''}" lang="en">
   <head>
@@ -31,7 +42,7 @@ export default function getWebviewContent(
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Security-Policy" content="
       default-src 'none';
-      connect-src ${rpcPort ? `http://localhost:${rpcPort}` : "'none'"};
+      connect-src ${connectSrc.join(' ').trim()};
       img-src ${webview.cspSource} data:;
       script-src ${webview.cspSource} 'unsafe-eval';
       style-src ${webview.cspSource} 'unsafe-inline';
