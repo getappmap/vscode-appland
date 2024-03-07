@@ -61,6 +61,7 @@ import Watcher from './services/watcher';
 import ChatSearchWebview from './webviews/chatSearchWebview';
 import quickSearch from './commands/quickSearch';
 import appmapState from './commands/appmapState';
+import navieConfigurationService from './services/navieConfigurationService';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   Telemetry.register(context);
@@ -74,6 +75,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
   try {
     const extensionState = new ExtensionState(context);
     context.subscriptions.push(extensionState);
+
+    navieConfigurationService(context);
 
     const recommender = new AppMapRecommenderService(extensionState);
     await workspaceServices.enroll(recommender);
