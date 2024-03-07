@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import { ChildProcess, OutputStream, spawn, SpawnOptions } from './nodeDependencyProcess';
 import { getApiKey } from '../authentication';
 import assert from 'assert';
-import { fileExists } from '../util';
+import { fileExists, sanitizeEnvironment } from '../util';
 import { join } from 'path';
 import ExtensionSettings from '../configuration/extensionSettings';
 import { getOpenAIApiKey } from './navieConfigurationService';
@@ -193,8 +193,11 @@ export class ProcessWatcher implements vscode.Disposable {
 
     this.shouldRun = true;
     this.process = spawn(options);
+
+    const sanitizedOptions = { ...options };
+    if (sanitizedOptions.env) sanitizedOptions.env = sanitizeEnvironment(sanitizedOptions.env);
     this.process.log.append(
-      `spawned ${this.process.spawnargs.join(' ')} with options ${JSON.stringify(options)}`
+      `spawned ${this.process.spawnargs.join(' ')} with options ${JSON.stringify(sanitizedOptions)}`
     );
 
     this.process.once('error', (err) => {
