@@ -10,6 +10,7 @@ import ExtensionSettings from '../configuration/extensionSettings';
 import { CodeSelection } from '../commands/quickSearch';
 import ExtensionState from '../configuration/extensionState';
 import AppMapCollection from '../services/appmapCollection';
+import IndexProcessWatcherGlobal from '../services/indexProcessWatcherGlobal';
 
 export default class ChatSearchWebview {
   private webviewList = new WebviewList();
@@ -35,14 +36,12 @@ export default class ChatSearchWebview {
 
   async explain(workspace?: vscode.WorkspaceFolder, codeSelection?: CodeSelection) {
     const selectIndexProcessResult = await selectIndexProcess(workspace);
-    if (!selectIndexProcessResult) return;
-
+    let appmapRpcPort: number | undefined;
     let selectedWatcher: IndexProcess | undefined;
     switch (selectIndexProcessResult) {
+      case undefined:
       case ReasonCode.NoIndexProcessWatchers:
-        vscode.window.showInformationMessage(
-          `${workspace?.name || 'Your workspace'} does not have AppMaps`
-        );
+        appmapRpcPort = await IndexProcessWatcherGlobal.getRpcPort(this.context);
         break;
       case ReasonCode.NoReadyIndexProcessWatchers:
         vscode.window.showInformationMessage(
@@ -55,9 +54,10 @@ export default class ChatSearchWebview {
         selectedWatcher = selectIndexProcessResult;
         break;
     }
-    if (!selectedWatcher) return;
+    if (!selectedWatcher && !appmapRpcPort) return;
 
-    const { rpcPort: appmapRpcPort, configFolder } = selectedWatcher;
+    appmapRpcPort = appmapRpcPort || selectedWatcher?.rpcPort;
+    const configFolder = selectedWatcher?.configFolder;
 
     const panel = vscode.window.createWebviewPanel(
       'chatSearch',

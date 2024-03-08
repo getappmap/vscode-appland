@@ -111,7 +111,7 @@ export class ProcessWatcher implements vscode.Disposable {
     return this.options.id;
   }
 
-  constructor(private context: vscode.ExtensionContext, options: ProcessWatcherOptions) {
+  constructor(protected context: vscode.ExtensionContext, options: ProcessWatcherOptions) {
     this.options = {
       ...DEFAULT_RETRY_OPTIONS,
       ...options,
