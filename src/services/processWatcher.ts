@@ -2,9 +2,10 @@ import * as vscode from 'vscode';
 import { ChildProcess, OutputStream, spawn, SpawnOptions } from './nodeDependencyProcess';
 import { getApiKey } from '../authentication';
 import assert from 'assert';
-import { fileExists } from '../util';
+import { fileExists, sanitizeEnvironment } from '../util';
 import { join } from 'path';
 import ExtensionSettings from '../configuration/extensionSettings';
+import { getOpenAIApiKey } from './navieConfigurationService';
 
 export type RetryOptions = {
   // The number of retries made before declaring the process as failed.
@@ -40,6 +41,39 @@ export interface ConfigFileProvider {
   files(): Promise<vscode.Uri[]>;
   reset(): void;
 }
+
+async function accessToken(): Promise<string | undefined> {
+  return getApiKey(false);
+}
+
+export async function loadEnvironment(
+  context: vscode.ExtensionContext
+): Promise<NodeJS.ProcessEnv> {
+  const env: Record<string, string> = {};
+  const environmentVariables: { env: string; provider: LookupFunction }[] = [
+    {
+      env: 'APPMAP_API_URL',
+      provider: () => Promise.resolve(ExtensionSettings.apiUrl),
+    },
+    {
+      env: 'APPMAP_API_KEY',
+      provider: accessToken.bind(null),
+    },
+    {
+      env: 'OPENAI_API_KEY',
+      provider: getOpenAIApiKey.bind(null, context),
+    },
+  ];
+
+  for (const { env: key, provider } of environmentVariables) {
+    const value = await provider();
+    if (value) env[key] = value;
+  }
+
+  return env;
+}
+
+type LookupFunction = () => Promise<string | undefined>;
 
 export class ProcessWatcher implements vscode.Disposable {
   public process?: ChildProcess;
@@ -77,7 +111,7 @@ export class ProcessWatcher implements vscode.Disposable {
     return this.options.id;
   }
 
-  constructor(options: ProcessWatcherOptions) {
+  constructor(private context: vscode.ExtensionContext, options: ProcessWatcherOptions) {
     this.options = {
       ...DEFAULT_RETRY_OPTIONS,
       ...options,
@@ -134,7 +168,7 @@ export class ProcessWatcher implements vscode.Disposable {
         reason: `Project directory '${this.configFolder}' is not configured (does not have appmap.yml)`,
       };
 
-    if (!(await this.accessToken()))
+    if (!(await accessToken()))
       return { enabled: false, reason: 'User is not logged in to AppMap' };
 
     return { enabled: true };
@@ -147,7 +181,7 @@ export class ProcessWatcher implements vscode.Disposable {
 
   async start(): Promise<void> {
     const options = { ...this.options };
-    options.env = { ...options.env, ...(await this.loadEnvironment()) };
+    options.env = { ...options.env, ...(await loadEnvironment(this.context)) };
 
     // If this.process is undefined, don't await until after this.process is set, or the process may be started twice.
     if (this.process) {
@@ -159,8 +193,11 @@ export class ProcessWatcher implements vscode.Disposable {
 
     this.shouldRun = true;
     this.process = spawn(options);
+
+    const sanitizedOptions = { ...options };
+    if (sanitizedOptions.env) sanitizedOptions.env = sanitizeEnvironment(sanitizedOptions.env);
     this.process.log.append(
-      `spawned ${this.process.spawnargs.join(' ')} with options ${JSON.stringify(options)}`
+      `spawned ${this.process.spawnargs.join(' ')} with options ${JSON.stringify(sanitizedOptions)}`
     );
 
     this.process.once('error', (err) => {
@@ -205,20 +242,6 @@ export class ProcessWatcher implements vscode.Disposable {
       if (!proc.kill()) result = undefined;
       return result;
     }
-  }
-
-  async accessToken(): Promise<string | undefined> {
-    return getApiKey(false);
-  }
-
-  protected async loadEnvironment(): Promise<NodeJS.ProcessEnv> {
-    const env: Record<string, string> = {};
-    const accessToken = await this.accessToken();
-    if (accessToken) {
-      env.APPMAP_API_KEY = accessToken;
-    }
-    env.APPMAP_API_URL = ExtensionSettings.apiUrl;
-    return env;
   }
 
   dispose(): void {
