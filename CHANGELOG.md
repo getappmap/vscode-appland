@@ -1,3 +1,11 @@
+# [0.113.0](https://github.com/getappmap/vscode-appland/compare/v0.112.0...v0.113.0) (2024-03-09)
+
+
+### Features
+
+* Enable "bring your own OpenAI key" ([300689e](https://github.com/getappmap/vscode-appland/commit/300689e97fd7af78a51e1dff48f193f30e3470c6))
+* Obfuscate secrets in the spawn log env ([0b2bdab](https://github.com/getappmap/vscode-appland/commit/0b2bdab10feabd25a2acf59ac19763868b8006fb))
+
 # [0.112.0](https://github.com/getappmap/vscode-appland/compare/v0.111.2...v0.112.0) (2024-03-07)
 
 
