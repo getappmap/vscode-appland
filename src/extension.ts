@@ -62,6 +62,7 @@ import ChatSearchWebview from './webviews/chatSearchWebview';
 import quickSearch from './commands/quickSearch';
 import appmapState from './commands/appmapState';
 import navieConfigurationService from './services/navieConfigurationService';
+import RpcProcessService from './services/rpcProcessService';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   Telemetry.register(context);
@@ -252,10 +253,15 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
     generateOpenApi(context);
     findByName(context, appmapCollectionFile);
+    const rpcService = await RpcProcessService.create(
+      context,
+      workspaceServices.getServiceInstances(configManager)
+    );
     const chatSearchWebview = ChatSearchWebview.register(
       context,
       extensionState,
-      appmapCollectionFile
+      appmapCollectionFile,
+      rpcService
     );
     appmapState(context, editorProvider, chatSearchWebview);
     quickSearch(context);

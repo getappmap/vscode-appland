@@ -21,6 +21,7 @@ export type RetryOptions = {
 export enum ProcessId {
   Index = 'index',
   Analysis = 'analysis',
+  RPC = 'rpc',
 }
 
 export const AllProcessIds = [ProcessId.Index, ProcessId.Analysis];
