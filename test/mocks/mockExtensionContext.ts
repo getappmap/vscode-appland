@@ -6,11 +6,17 @@ import {
   SecretStorageChangeEvent,
   EnvironmentVariableCollection,
   EnvironmentVariableMutator,
-  ExtensionMode,
 } from 'vscode';
 import * as temp from 'temp';
 import * as path from 'path';
 import InMemoryMemento from './inMemoryMemento';
+import EventEmitter from '../unit/mock/vscode/EventEmitter';
+
+enum ExtensionMode {
+  Production = 1,
+  Development = 2,
+  Test = 3,
+}
 
 export default class MockExtensionContext implements ExtensionContext {
   readonly subscriptions: { dispose(): unknown }[] = [];
@@ -34,19 +40,25 @@ export default class MockExtensionContext implements ExtensionContext {
   };
 
   readonly secrets = new (class implements SecretStorage {
-    get(): Thenable<string | undefined> {
-      throw new Error('Not implemented');
+    private readonly secrets = new Map<string, string>();
+    private readonly _onDidChange = new EventEmitter<SecretStorageChangeEvent>();
+    public readonly onDidChange = this._onDidChange.event;
+
+    get(key: string): Thenable<string | undefined> {
+      return Promise.resolve(this.secrets.get(key));
     }
 
-    store(): Thenable<void> {
-      throw new Error('Not implemented');
+    store(key: string, value: string): Thenable<void> {
+      this.secrets.set(key, value);
+      this._onDidChange.fire({ key });
+      return Promise.resolve();
     }
 
-    delete(): Thenable<void> {
-      throw new Error('Not implemented');
+    delete(key: string): Thenable<void> {
+      this.secrets.delete(key);
+      this._onDidChange.fire({ key });
+      return Promise.resolve();
     }
-
-    onDidChange!: Event<SecretStorageChangeEvent>;
   })();
 
   readonly environmentVariableCollection = new (class implements EnvironmentVariableCollection {
