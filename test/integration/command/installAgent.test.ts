@@ -161,7 +161,7 @@ describe('generateInstallInfo function', () => {
         const expectedStart = 'ELECTRON_RUN_AS_NODE=true';
         const expectedEnd =
           '/home/user/.config/Code/user\\ folder/globalStorage/node_modules/@appland/appmap/built/cli.js install ' +
-          '--ms-enable-electron-run-as-node -d /home/user/projects/directory\\ with\\ spaces';
+          '-d /home/user/projects/directory\\ with\\ spaces';
         assert.deepStrictEqual(env, { ELECTRON_RUN_AS_NODE: 'true' });
         assert(command.startsWith(expectedStart));
         assert(command.includes(expectedEnd));
@@ -197,7 +197,7 @@ describe('generateInstallInfo function', () => {
         const expectedStart = 'ELECTRON_RUN_AS_NODE=true';
         const expectedEnd =
           '/home/user/.config/Code/folder/globalStorage/node_modules/@appland/appmap/built/cli.js install ' +
-          '--ms-enable-electron-run-as-node -d /home/user/projects/directory-without-spaces';
+          '-d /home/user/projects/directory-without-spaces';
         assert.deepStrictEqual(env, { ELECTRON_RUN_AS_NODE: 'true' });
         assert(command.startsWith(expectedStart));
         assert(command.includes(expectedEnd));
