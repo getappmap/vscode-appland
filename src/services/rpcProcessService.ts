@@ -63,9 +63,14 @@ export default class RpcProcessService implements Disposable {
       ].join('\n')
     );
 
-    this.rpcClient?.request(ConfigurationRpc.SetFunctionName, {
-      appmapConfigFiles,
-    });
+    try {
+      this.rpcClient?.request(ConfigurationRpc.V1.Set.Method, {
+        appmapConfigFiles,
+      });
+    } catch (e) {
+      NodeProcessService.outputChannel.appendLine('Failed to sync AppMap configurations');
+      NodeProcessService.outputChannel.appendLine(String(e));
+    }
   }
 
   // The process has just started or restarted

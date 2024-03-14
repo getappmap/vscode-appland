@@ -231,10 +231,23 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
     await workspaceServices.enroll(runConfigService);
 
+    let chatSearchWebview;
     (async function () {
       processService.onReady(activateUptodateService);
       await processService.install();
       await workspaceServices.enroll(processService);
+
+      const rpcService = await RpcProcessService.create(
+        context,
+        workspaceServices.getServiceInstances(configManager)
+      );
+      chatSearchWebview = ChatSearchWebview.register(
+        context,
+        extensionState,
+        appmapCollectionFile,
+        rpcService
+      );
+
       installAgent(context, processService.hasCLIBin);
     })();
 
@@ -253,16 +266,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
     generateOpenApi(context);
     findByName(context, appmapCollectionFile);
-    const rpcService = await RpcProcessService.create(
-      context,
-      workspaceServices.getServiceInstances(configManager)
-    );
-    const chatSearchWebview = ChatSearchWebview.register(
-      context,
-      extensionState,
-      appmapCollectionFile,
-      rpcService
-    );
+
     appmapState(context, editorProvider, chatSearchWebview);
     quickSearch(context);
     resetUsageState(context, extensionState);
