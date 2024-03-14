@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import os from 'os';
 import { join } from 'path';
+import semver from 'semver';
 import { INSTALL_BUTTON_ERROR, Telemetry } from '../telemetry';
 import { NodeProcessService } from '../services/nodeProcessService';
 import { Installer } from './installer';
@@ -48,7 +49,13 @@ function electronCommand(globalStorageDir: string, installLocation: string): str
   // This is the exact behavior we want to emulate in the terminal, so we'll use it here as well.
   const nodePath = escapePath(process.execPath);
   const cliPath = join(globalStorageDir, 'node_modules', '@appland', 'appmap', 'built', 'cli.js');
-  const flags = ['--ms-enable-electron-run-as-node', '-d', installLocation];
+  const flags = ['-d', installLocation];
+
+  // This flag was required in VS Code versions prior to 1.86.0
+  const vsCodeVersion = semver.coerce(vscode.version);
+  if (vsCodeVersion && semver.lt(vsCodeVersion, '1.86.0'))
+    flags.push('--ms-enable-electron-run-as-node');
+
   return `ELECTRON_RUN_AS_NODE=true ${nodePath} ${cliPath} install ${flags.join(' ')}`;
 }
 
