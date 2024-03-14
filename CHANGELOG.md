@@ -1,3 +1,10 @@
+## [0.113.1](https://github.com/getappmap/vscode-appland/compare/v0.113.0...v0.113.1) (2024-03-14)
+
+
+### Bug Fixes
+
+* Apply appropriate flags to CLI installer ([bacc41b](https://github.com/getappmap/vscode-appland/commit/bacc41b234defae9676c89ab35b9efa0142f533c))
+
 # [0.113.0](https://github.com/getappmap/vscode-appland/compare/v0.112.0...v0.113.0) (2024-03-09)
 
 
