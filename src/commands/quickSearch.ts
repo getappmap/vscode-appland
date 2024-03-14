@@ -49,13 +49,15 @@ export default function quickSearch(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.languages.registerCodeActionsProvider(
       [
-        { language: 'ruby' },
-        { language: 'haml' },
-        { language: 'erb' },
-        { language: 'java' },
-        { language: 'python' },
-        { language: 'javascript' },
-        { language: 'typescript' },
+        'ruby',
+        'haml',
+        'erb',
+        'java',
+        'python',
+        'javascript',
+        'typescript',
+        'javascriptreact',
+        'typescriptreact',
       ],
       new QuickSearchProvider()
     )
