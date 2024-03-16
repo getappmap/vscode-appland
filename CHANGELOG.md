@@ -1,3 +1,11 @@
+# [0.114.0](https://github.com/getappmap/vscode-appland/compare/v0.113.1...v0.114.0) (2024-03-16)
+
+
+### Features
+
+* Add Navie explain code action provider to jsx and tsx ([c1790c2](https://github.com/getappmap/vscode-appland/commit/c1790c2bc2a9b771cd4090af9f687ca346b41687))
+* Revised and reactive Navie status bar ([b2ce7b2](https://github.com/getappmap/vscode-appland/commit/b2ce7b29e80c0dd8bc89adb64cf93c1715d6cc8d))
+
 ## [0.113.1](https://github.com/getappmap/vscode-appland/compare/v0.113.0...v0.113.1) (2024-03-14)
 
 
