@@ -2,7 +2,7 @@
   "publisher": "appland",
   "name": "appmap",
   "displayName": "AppMap",
-  "description": "Interactive maps of runtime code behavior",
+  "description": "Runtime diagrams + Navie AI Software Architect",
   "version": "0.112.0",
   "repository": {
     "type": "git",
