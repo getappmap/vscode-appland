@@ -23,7 +23,7 @@ export default class Watcher extends FileChangeEmitter {
       debug('%s: onCreate(%s)', this.filePattern, uri);
       this._onCreate.fire(uri);
     });
-    debug('%s: finished initital scan', this.filePattern);
+    debug('%s: finished initial scan', this.filePattern);
   }
 
   async dispose() {

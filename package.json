@@ -263,6 +263,10 @@
         "appMap.indexOptions": {
           "type": "string",
           "description": "Options to pass to the appmap index command"
+        },
+        "appMap.navie.rpcPort": {
+          "type": "number",
+          "description": "Port number to pass to the Navie UI (used for extension development and debugging only)"
         }
       }
     },
