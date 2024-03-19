@@ -42,4 +42,9 @@ export default class ExtensionSettings {
   public static get apiUrl(): string {
     return vscode.workspace.getConfiguration('appMap').get('apiUrl') || DefaultApiURL;
   }
+
+  public static get navieRpcPort(): number | undefined {
+    const port = vscode.workspace.getConfiguration('appMap').get('navie.rpcPort');
+    if (port && typeof port === 'number' && port > 0) return port;
+  }
 }

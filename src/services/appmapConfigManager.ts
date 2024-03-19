@@ -77,7 +77,8 @@ class ConfigFileProviderImpl implements ConfigFileProvider {
 
   public async files(): Promise<vscode.Uri[]> {
     if (this._files) return this._files;
-    this._files = await findFiles(this.pattern, this.exclusions);
+
+    this._files = this._files = await findFiles(this.pattern, this.exclusions);
     return this._files;
   }
 
