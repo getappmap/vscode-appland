@@ -7,11 +7,12 @@ import {
 import { exists, existsSync, readFile } from 'fs';
 import { promisify } from 'util';
 import { glob } from 'glob';
-import { resolve } from 'path';
+import { join, resolve } from 'path';
 import assert from 'assert';
 import { TestStatus } from './TestStatus';
 import { spawnSync } from 'child_process';
-import { stat } from 'fs/promises';
+import { mkdir, rm, stat } from 'fs/promises';
+import { tmpdir } from 'os';
 
 const PROJECT_A = 'test/fixtures/workspaces/project-a';
 const PROJECT_UPTODATE = 'test/fixtures/workspaces/project-uptodate';
@@ -175,10 +176,17 @@ async function integrationTest() {
       .find(Boolean);
 
     let projectName: string | undefined;
+    let isTmpDir = false;
     if (projectNameMatch) {
-      projectName = resolve(__dirname, 'fixtures/workspaces', projectNameMatch[1]);
-      assert(await promisify(exists)(projectName), `Project ${projectName} does not exist`);
-      console.log(`Using workspace ${projectName}`);
+      if (projectNameMatch[1] === 'tmpdir') {
+        projectName = join(tmpdir(), `appmap-vscode-test-${Math.random().toString(36).slice(2)}`);
+        await mkdir(projectName, { recursive: true });
+        isTmpDir = true;
+      } else {
+        projectName = resolve(__dirname, 'fixtures/workspaces', projectNameMatch[1]);
+        assert(await promisify(exists)(projectName), `Project ${projectName} does not exist`);
+        console.log(`Using workspace ${projectName}`);
+      }
     }
 
     try {
@@ -196,6 +204,10 @@ async function integrationTest() {
         console.log(spawnSync('cat', [f]).stdout.toString());
       });
       if (failFast) break;
+    } finally {
+      if (isTmpDir && projectName) {
+        await rm(projectName, { recursive: true });
+      }
     }
   }
   process.exitCode = succeeded ? TestStatus.Ok : TestStatus.Failed;
