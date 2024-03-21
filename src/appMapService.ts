@@ -1,6 +1,7 @@
 import { AppMapsService } from './appMapsService';
 import AppMapServerAuthenticationProvider from './authentication/appmapServerAuthenticationProvider';
 import { ClassMapService } from './classMapService';
+import CommandRegistry from './commands/commandRegistry';
 import ExtensionState from './configuration/extensionState';
 import AppMapEditorProvider from './editor/appmapEditorProvider';
 import AnalysisManager from './services/analysisManager';
@@ -55,4 +56,5 @@ export default interface AppMapService {
   recommender: AppMapRecommenderService;
   configManager: AppmapConfigManager;
   runConfigService: RunConfigService;
+  commandRegistry: typeof CommandRegistry;
 }
