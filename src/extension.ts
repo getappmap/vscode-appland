@@ -66,7 +66,12 @@ import RpcProcessService from './services/rpcProcessService';
 import CommandRegistry from './commands/commandRegistry';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
-  CommandRegistry.setContext(context);
+  CommandRegistry.setContext(context).addWaitAlias({
+    command: 'appmap.explain',
+    target: 'appmap.explain.impl',
+    message: 'AppMap Navie is launching',
+    cancellable: true,
+  });
 
   Telemetry.register(context);
 

@@ -11,6 +11,7 @@ import ExtensionState from '../configuration/extensionState';
 import AppMapCollection from '../services/appmapCollection';
 import RpcProcessService from '../services/rpcProcessService';
 import { NodeProcessService } from '../services/nodeProcessService';
+import CommandRegistry from '../commands/commandRegistry';
 
 export default class ChatSearchWebview {
   private webviewList = new WebviewList();
@@ -27,7 +28,7 @@ export default class ChatSearchWebview {
       this.updateFilters(event.savedFilters);
     });
     context.subscriptions.push(
-      vscode.commands.registerCommand('appmap.explain', this.explain.bind(this))
+      CommandRegistry.registerCommand('appmap.explain.impl', this.explain.bind(this))
     );
   }
 
