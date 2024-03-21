@@ -124,6 +124,8 @@ export default class RpcProcessService implements Disposable {
       NodeProcessService.outputChannel.appendLine(String(e));
     }
 
+    context.subscriptions.push(service);
+
     return service;
   }
 
