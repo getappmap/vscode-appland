@@ -1,6 +1,7 @@
 import { AppMapsService } from './appMapsService';
 import AppMapServerAuthenticationProvider from './authentication/appmapServerAuthenticationProvider';
 import { ClassMapService } from './classMapService';
+import CommandRegistry from './commands/commandRegistry';
 import ExtensionState from './configuration/extensionState';
 import AppMapEditorProvider from './editor/appmapEditorProvider';
 import AnalysisManager from './services/analysisManager';
@@ -38,7 +39,7 @@ export type AppMapTreeDataProviders = {
 export default interface AppMapService {
   analysisManager: typeof AnalysisManager;
   editorProvider: AppMapEditorProvider;
-  chatSearchWebview: ChatSearchWebview;
+  chatSearchWebview: Promise<ChatSearchWebview>;
   localAppMaps: AppMapsService;
   autoIndexService: AppMapProcessService;
   autoScanService: AppMapProcessService;
@@ -55,4 +56,5 @@ export default interface AppMapService {
   recommender: AppMapRecommenderService;
   configManager: AppmapConfigManager;
   runConfigService: RunConfigService;
+  commandRegistry: typeof CommandRegistry;
 }

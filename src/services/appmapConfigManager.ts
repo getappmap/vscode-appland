@@ -1,4 +1,4 @@
-import { readFile, mkdir, writeFile } from 'fs/promises';
+import { readFile, mkdir, writeFile, stat } from 'fs/promises';
 import { readFileSync } from 'fs';
 import { dump, load } from 'js-yaml';
 import { dirname, join } from 'path';
@@ -11,6 +11,7 @@ import { ConfigFileProvider } from './processWatcher';
 import { WorkspaceService, WorkspaceServiceInstance } from './workspaceService';
 import Watcher from './watcher';
 import { findFiles } from '../lib/findFiles';
+import { NodeProcessService } from './nodeProcessService';
 
 export type AppmapConfig = {
   appmapDir: string;
@@ -99,6 +100,8 @@ export class AppmapConfigManagerInstance implements WorkspaceServiceInstance {
   private _hasConfigFile = false;
   private _usingDefault = false;
   private _onConfigChanged = new vscode.EventEmitter<void>();
+  private _configMtimes: Map<string, number> = new Map();
+  private _pollInterval?: NodeJS.Timeout;
 
   public readonly onConfigChanged = this._onConfigChanged.event;
 
@@ -112,6 +115,7 @@ export class AppmapConfigManagerInstance implements WorkspaceServiceInstance {
     this._events = (['onChange', 'onCreate', 'onDelete'] as const).map((event) =>
       this.configWatcher[event]((uri) => this.handleConfigChange(uri))
     );
+    this._pollInterval = setInterval(() => this.poll(), 2_500);
   }
 
   public async initialize(): Promise<AppmapConfigManagerInstance> {
@@ -119,9 +123,75 @@ export class AppmapConfigManagerInstance implements WorkspaceServiceInstance {
     return this;
   }
 
+  private async poll(): Promise<void> {
+    const changes: Array<['change' | 'delete' | 'create', string]> = [];
+
+    for (const [file, lastMtime] of this._configMtimes.entries()) {
+      try {
+        const stats = await stat(file);
+        const mtime = stats.mtime.getTime();
+        if (mtime > lastMtime) {
+          this._configMtimes.set(file, mtime);
+          changes.push(['change', file]);
+        }
+      } catch (e: unknown) {
+        // File no longer exists.
+        if (e instanceof Error && 'code' in e && e.code === 'ENOENT') {
+          this._configMtimes.delete(file);
+          changes.push(['delete', file]);
+        } /* else {
+          Let the configuration remain. It may be a transient error, such as EACCES
+          due to Windows anti-virus.
+        } */
+      }
+    }
+
+    // Consider the case where an AppMap configuration file was moved via recursive directory rename.
+    if (changes.some(([type]) => type === 'delete')) {
+      const configFiles = await vscode.workspace.findFiles(
+        this.CONFIG_PATTERN,
+        vscode.workspace.getConfiguration('search').get('exclude')
+      );
+      NodeProcessService.outputChannel.appendLine(configFiles.map((uri) => uri.fsPath).join('\n'));
+      configFiles.forEach((uri) => {
+        if (!this._configMtimes.has(uri.fsPath)) {
+          this._configMtimes.set(uri.fsPath, 0);
+          changes.push(['create', uri.fsPath]);
+        }
+      });
+    }
+
+    if (changes.length) {
+      NodeProcessService.outputChannel.appendLine(
+        [
+          'AppMap configuration out of sync. The following changes will be resynchronized:',
+          changes.map(([type, file]) => `- ${file} (${type})`).join('\n'),
+        ].join('\n')
+      );
+
+      this._configFileProvider.reset();
+      await this.update();
+      this._onConfigChanged.fire();
+    }
+  }
+
   private async update(): Promise<void> {
     const configFiles = await this._configFileProvider.files();
     this._hasConfigFile = configFiles.length > 0;
+
+    // Make sure baseline stats are up to date
+    // If this was called from the file watcher, we want to make sure the poller
+    // doesn't immediately re-trigger a change event.
+    for (const configFile of configFiles) {
+      try {
+        const stats = await stat(configFile.fsPath);
+        this._configMtimes.set(configFile.fsPath, stats.mtime.getTime());
+      } catch (e) {
+        if (e instanceof Error && 'code' in e && e.code === 'EACCES') {
+          this._configMtimes.set(configFile.fsPath, 0);
+        }
+      }
+    }
 
     let appmapConfigs = (
       await Promise.all(
@@ -248,6 +318,31 @@ export class AppmapConfigManagerInstance implements WorkspaceServiceInstance {
     const folder = vscode.workspace.getWorkspaceFolder(uri);
     if (folder !== this.folder) return;
 
+    try {
+      const stats = await stat(uri.fsPath);
+      this._configMtimes.set(uri.fsPath, stats.mtime.getTime());
+    } catch (e) {
+      let handled = false;
+      if (e instanceof Error && 'code' in e) {
+        if (e.code === 'ENOENT') {
+          this._configMtimes.delete(uri.fsPath);
+          handled = true;
+        } else if (e.code === 'EACCES') {
+          // File is inaccessible, likely due to Windows anti-virus.
+          // Setting the mtime to 0 will cause the file to be rechecked on the next poll.
+          this._configMtimes.set(uri.fsPath, 0);
+          return;
+        }
+      }
+
+      if (!handled) {
+        NodeProcessService.outputChannel.appendLine(
+          `Failed to handle AppMap configuration change for ${uri.fsPath}: `
+        );
+        NodeProcessService.outputChannel.appendLine(String(e));
+      }
+    }
+
     this._configFileProvider.reset();
     await this.update();
     this._onConfigChanged.fire();
@@ -258,6 +353,7 @@ export class AppmapConfigManagerInstance implements WorkspaceServiceInstance {
     this._onConfigChanged.dispose();
     this._configFileProvider.dispose();
     this._configs = [];
+    clearInterval(this._pollInterval);
   }
 }
 

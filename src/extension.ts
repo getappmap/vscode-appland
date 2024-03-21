@@ -62,8 +62,17 @@ import ChatSearchWebview from './webviews/chatSearchWebview';
 import quickSearch from './commands/quickSearch';
 import appmapState from './commands/appmapState';
 import navieConfigurationService from './services/navieConfigurationService';
+import RpcProcessService from './services/rpcProcessService';
+import CommandRegistry from './commands/commandRegistry';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
+  CommandRegistry.setContext(context).addWaitAlias({
+    command: 'appmap.explain',
+    target: 'appmap.explain.impl',
+    message: 'AppMap Navie is launching',
+    cancellable: true,
+  });
+
   Telemetry.register(context);
 
   const workspaceServices = initializeWorkspaceServices();
@@ -230,11 +239,24 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
     await workspaceServices.enroll(runConfigService);
 
-    (async function () {
+    const chatSearchWebview: Promise<ChatSearchWebview> = (async () => {
       processService.onReady(activateUptodateService);
       await processService.install();
       await workspaceServices.enroll(processService);
       installAgent(context, processService.hasCLIBin);
+
+      const rpcService = await RpcProcessService.create(
+        context,
+        workspaceServices.getServiceInstances(configManager)
+      );
+      const webview = ChatSearchWebview.register(
+        context,
+        extensionState,
+        appmapCollectionFile,
+        rpcService
+      );
+
+      return webview;
     })();
 
     const trees = registerTrees(
@@ -252,11 +274,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
     generateOpenApi(context);
     findByName(context, appmapCollectionFile);
-    const chatSearchWebview = ChatSearchWebview.register(
-      context,
-      extensionState,
-      appmapCollectionFile
-    );
+
     appmapState(context, editorProvider, chatSearchWebview);
     quickSearch(context);
     resetUsageState(context, extensionState);
@@ -303,6 +321,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       recommender,
       configManager,
       runConfigService,
+      commandRegistry: CommandRegistry,
     };
   } catch (exception) {
     Telemetry.sendEvent(DEBUG_EXCEPTION, {

@@ -65,16 +65,16 @@ __metadata:
   linkType: hard
 
 "@appland/appmap@npm:^3.129.0":
-  version: 3.129.1
-  resolution: "@appland/appmap@npm:3.129.1"
+  version: 3.130.2
+  resolution: "@appland/appmap@npm:3.130.2"
   dependencies:
     "@appland/client": ^1.15.0
     "@appland/components": ^4.0.0
     "@appland/diagrams": ^1.8.0
     "@appland/models": ^2.10.0
-    "@appland/navie": 1.1.0
+    "@appland/navie": ^1.2.0
     "@appland/openapi": ^1.8.0
-    "@appland/rpc": ^1.3.0
+    "@appland/rpc": ^1.6.0
     "@appland/scanner": ^1.86.0
     "@appland/sequence-diagram": ^1.12.0
     "@octokit/rest": ^20.0.1
@@ -131,7 +131,7 @@ __metadata:
       optional: true
   bin:
     appmap: built/cli.js
-  checksum: 46d8775b8bd9e73a2fc84e1f85247d25757b7ca8fdbdb040869ed1273c23a7f7be349a66557400400755d2232a6b0a8b4653592027068b4dbc7d165846eee67b
+  checksum: d6bc8d8baf0717616adf22b72b25d45e68cef8ebbe6716e16855bc87256842ae349b7dc02a54b102fd07489ae421995f0c9b9c7ad33f459c7dd14b7428fb3c01
   languageName: node
   linkType: hard
 
@@ -149,9 +149,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/components@npm:^4.0.0":
-  version: 4.8.0
-  resolution: "@appland/components@npm:4.8.0"
+"@appland/components@npm:^4.0.0, @appland/components@npm:^4.11.0":
+  version: 4.11.0
+  resolution: "@appland/components@npm:4.11.0"
   dependencies:
     "@appland/client": ^1.12.0
     "@appland/diagrams": ^1.7.0
@@ -172,34 +172,7 @@ __metadata:
     sql-formatter: ^4.0.2
     vue: ^2.7.14
     vuex: ^3.6.0
-  checksum: 63aecbd9c922625c91bb754009f6bb5be3bdf5a45641ae29a9d5d2f23b22b7f3cbc041c0f6844c19ce456429aa9c47b243ccef1d88c04a896d2d5639c094df2d
-  languageName: node
-  linkType: hard
-
-"@appland/components@npm:^4.8.1":
-  version: 4.8.1
-  resolution: "@appland/components@npm:4.8.1"
-  dependencies:
-    "@appland/client": ^1.12.0
-    "@appland/diagrams": ^1.7.0
-    "@appland/models": ^2.10.0
-    "@appland/rpc": ^1.1.0
-    "@appland/sequence-diagram": ^1.11.0
-    buffer: ^6.0.3
-    d3: ^7.8.4
-    d3-flame-graph: ^4.1.3
-    diff: ^5.1.0
-    dom-to-svg: ^0.12.2
-    dompurify: ^3.0.6
-    events: ^3.3.0
-    highlight.js: ^11.9.0
-    jayson: ^4.1.0
-    marked: ^10.0.0
-    marked-highlight: ^2.0.7
-    sql-formatter: ^4.0.2
-    vue: ^2.7.14
-    vuex: ^3.6.0
-  checksum: 5cb849335c27366f1043ffb1e20acfe3d52f5016cb2b58c28345d35d94e614e2e88c33039776e83889fad11b9084f95e64c4e68940bb4086816ecf5f3f2f81d6
+  checksum: 2f8b2d24e541133f7928e60b13e0d1001bd6b90ddde2fd9b813badb800dc5b26a56d1b3bbcc5b5131c05bb417968a54180ae325ae1fd060911fc8d428fc83a0a
   languageName: node
   linkType: hard
 
@@ -228,15 +201,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/navie@npm:1.1.0":
-  version: 1.1.0
-  resolution: "@appland/navie@npm:1.1.0"
+"@appland/navie@npm:^1.2.0":
+  version: 1.2.1
+  resolution: "@appland/navie@npm:1.2.1"
   dependencies:
     "@langchain/core": ^0.1.32
     "@langchain/openai": ^0.0.15
     langchain: ^0.1.25
     openai: ^4.28.0
-  checksum: d6f09f05c0efdfda1481bb6f1faee865021572f712f71f4935a60467ff967ff12d5a8871ef44193f38b15d0181a4696ed10977daa1e5fb1f8b10ff0f28b3c977
+  checksum: 29b52a8994cf281f4296b3ca15b75d9300df879d91a140e861fb9e1bd70ef121a543598689d0baaefa07f76e4b925c0b44c12152fefdfb9d4ec8db0d73bd5ef2
   languageName: node
   linkType: hard
 
@@ -250,10 +223,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/rpc@npm:^1.1.0, @appland/rpc@npm:^1.3.0":
-  version: 1.5.0
-  resolution: "@appland/rpc@npm:1.5.0"
-  checksum: 0f6f60893231c409b95f570ad7c390f40ab5914f0d96bb0d686b1e3e1f2054e88efbf254d893d59bc7a585748dadedf2e57042f4847f61bee0e4b2736419e561
+"@appland/rpc@npm:^1.1.0, @appland/rpc@npm:^1.6.0, @appland/rpc@npm:latest":
+  version: 1.6.0
+  resolution: "@appland/rpc@npm:1.6.0"
+  checksum: 8c407df795ddbd0557e1589eef971ec018ca4ec4d76730b50acfd50c39674c9be7ec995ae43bbfb27e9ce626461a331e0b240944b92a82bde8f4648afef0994c
   languageName: node
   linkType: hard
 
@@ -3181,9 +3154,10 @@ __metadata:
   dependencies:
     "@appland/appmap": ^3.129.0
     "@appland/client": ^1.14.1
-    "@appland/components": ^4.8.1
+    "@appland/components": ^4.11.0
     "@appland/diagrams": ^1.8.0
     "@appland/models": ^2.10.0
+    "@appland/rpc": latest
     "@appland/scanner": ^1.86.0
     "@appland/sequence-diagram": ^1.12.0
     "@playwright/test": ^1.22.2
@@ -3229,6 +3203,7 @@ __metadata:
     glob: ^7.2.3
     highlight.js: ^11.9.0
     ignore: ^5.1.8
+    jayson: ^4.1.0
     jquery: ^3.5.1
     js-yaml: ^4.1.0
     mocha: ^8.1.3

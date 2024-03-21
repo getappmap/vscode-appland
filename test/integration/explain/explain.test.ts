@@ -1,33 +1,25 @@
 import * as vscode from 'vscode';
-import { initializeWorkspace, waitFor, waitForExtension, withAuthenticatedUser } from '../util';
-import assert from 'assert';
-import { readyProcessWatchers } from '../../../src/lib/selectIndexProcess';
+import { initializeWorkspace, waitForExtension, withAuthenticatedUser } from '../util';
 import { initializeWorkspaceServices } from '../../../src/services/workspaceServices';
+import { expect } from 'chai';
+import ChatSearchWebview from '../../../src/webviews/chatSearchWebview';
 
 describe('appmap.explain', () => {
   withAuthenticatedUser();
 
-  beforeEach(initializeWorkspace);
-  beforeEach(waitForExtension);
+  let chatSearchWebview: ChatSearchWebview;
+
+  beforeEach(async () => {
+    await initializeWorkspace();
+    const extension = await waitForExtension();
+    chatSearchWebview = await extension.chatSearchWebview;
+    await initializeWorkspaceServices();
+  });
+
   afterEach(initializeWorkspace);
 
   it('opens a Chat + Search view', async () => {
-    initializeWorkspaceServices();
-
-    const chatSearchWebview = (await waitForExtension()).chatSearchWebview;
-
-    const workspace = vscode.workspace.workspaceFolders?.[0];
-    assert(workspace);
-
-    await waitFor(
-      'Explain service is not ready',
-      () => readyProcessWatchers(workspace)?.length !== 0
-    );
-
-    await waitFor('Invoking appmap.explain opens a new text document', async () => {
-      await vscode.commands.executeCommand('appmap.explain');
-
-      return chatSearchWebview.currentWebview !== undefined;
-    });
+    await vscode.commands.executeCommand('appmap.explain');
+    expect(chatSearchWebview.currentWebview).to.not.be.undefined;
   });
 });

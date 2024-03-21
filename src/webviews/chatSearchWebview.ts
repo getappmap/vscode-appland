@@ -3,13 +3,15 @@ import getWebviewContent from './getWebviewContent';
 import appmapMessageHandler from './appmapMessageHandler';
 import FilterStore, { SavedFilter } from './filterStore';
 import WebviewList from './WebviewList';
-import selectIndexProcess, { IndexProcess, ReasonCode } from '../lib/selectIndexProcess';
 import { ProjectPicker, RecordAppMaps } from '../tree/instructionsTreeDataProvider';
 import { getApiKey } from '../authentication';
 import ExtensionSettings from '../configuration/extensionSettings';
 import { CodeSelection } from '../commands/quickSearch';
 import ExtensionState from '../configuration/extensionState';
 import AppMapCollection from '../services/appmapCollection';
+import RpcProcessService from '../services/rpcProcessService';
+import { NodeProcessService } from '../services/nodeProcessService';
+import CommandRegistry from '../commands/commandRegistry';
 
 export default class ChatSearchWebview {
   private webviewList = new WebviewList();
@@ -18,14 +20,15 @@ export default class ChatSearchWebview {
   private constructor(
     private readonly context: vscode.ExtensionContext,
     private readonly extensionState: ExtensionState,
-    private readonly appmaps: AppMapCollection
+    private readonly appmaps: AppMapCollection,
+    private readonly rpcService: RpcProcessService
   ) {
     this.filterStore = new FilterStore(context);
     this.filterStore.onDidChangeFilters((event) => {
       this.updateFilters(event.savedFilters);
     });
     context.subscriptions.push(
-      vscode.commands.registerCommand('appmap.explain', this.explain.bind(this))
+      CommandRegistry.registerCommand('appmap.explain.impl', this.explain.bind(this))
     );
   }
 
@@ -34,30 +37,19 @@ export default class ChatSearchWebview {
   }
 
   async explain(workspace?: vscode.WorkspaceFolder, codeSelection?: CodeSelection) {
-    const selectIndexProcessResult = await selectIndexProcess(workspace);
-    if (!selectIndexProcessResult) return;
-
-    let selectedWatcher: IndexProcess | undefined;
-    switch (selectIndexProcessResult) {
-      case ReasonCode.NoIndexProcessWatchers:
-        vscode.window.showInformationMessage(
-          `${workspace?.name || 'Your workspace'} does not have AppMaps`
-        );
-        break;
-      case ReasonCode.NoReadyIndexProcessWatchers:
-        vscode.window.showInformationMessage(
-          `AppMap AI is not ready yet. Please try again in a few seconds.`
-        );
-        break;
-      case ReasonCode.NoSelectionMade:
-        break;
-      default:
-        selectedWatcher = selectIndexProcessResult;
-        break;
+    const appmapRpcPort = await this.rpcService.port();
+    if (!appmapRpcPort) {
+      const optionViewLog = 'View output log';
+      const res = await vscode.window.showErrorMessage(
+        'The AppMap RPC server was unable to start. Please check the output log for more information.',
+        optionViewLog,
+        'Cancel'
+      );
+      if (res === optionViewLog) {
+        NodeProcessService.outputChannel.show();
+      }
+      return;
     }
-    if (!selectedWatcher) return;
-
-    const { rpcPort: appmapRpcPort, configFolder } = selectedWatcher;
 
     const panel = vscode.window.createWebviewPanel(
       'chatSearch',
@@ -78,18 +70,13 @@ export default class ChatSearchWebview {
       { rpcPort: appmapRpcPort }
     );
 
-    let workspaceFolder = workspace;
-    if (!workspaceFolder) {
-      const uri = vscode.Uri.from({ scheme: 'file', path: configFolder });
-      workspaceFolder = vscode.workspace.getWorkspaceFolder(uri);
-    }
+    vscode.workspace.workspaceFolders?.forEach((workspaceFolder) => {
+      this.extensionState.setWorkspaceOpenedNavie(workspaceFolder, true);
+    });
 
-    const getLatestAppMaps = (
-      workspaceFolder: vscode.WorkspaceFolder,
-      count = 10
-    ): Array<{ [key: string]: unknown }> => {
+    const getLatestAppMaps = (count = 10): Array<{ [key: string]: unknown }> => {
       return this.appmaps
-        .allAppMapsForWorkspaceFolder(workspaceFolder)
+        .allAppMaps()
         .sort((a, b) => b.descriptor.timestamp - a.descriptor.timestamp)
         .slice(0, count)
         .map((appmap) => ({
@@ -99,22 +86,15 @@ export default class ChatSearchWebview {
           path: appmap.descriptor.resourceUri.fsPath,
         }));
     };
-    let mostRecentAppMaps: Array<{ [key: string]: unknown }> = [];
-    if (workspaceFolder) {
-      this.extensionState.setWorkspaceOpenedNavie(workspaceFolder, true);
-      mostRecentAppMaps = getLatestAppMaps(workspaceFolder);
-    }
+    let mostRecentAppMaps = getLatestAppMaps();
 
     this.context.subscriptions.push(
-      this.appmaps.onUpdated((updatedWorkspaceFolder) => {
-        console.log(updatedWorkspaceFolder?.name);
-        if (workspaceFolder && updatedWorkspaceFolder === workspaceFolder) {
-          mostRecentAppMaps = getLatestAppMaps(workspaceFolder);
-          panel.webview.postMessage({
-            type: 'update',
-            mostRecentAppMaps,
-          });
-        }
+      this.appmaps.onUpdated(() => {
+        mostRecentAppMaps = getLatestAppMaps();
+        panel.webview.postMessage({
+          type: 'update',
+          mostRecentAppMaps,
+        });
       })
     );
 
@@ -127,7 +107,7 @@ export default class ChatSearchWebview {
             appmapRpcPort,
             codeSelection,
             savedFilters: this.filterStore.getSavedFilters(),
-            appmapYmlPresent: !!selectedWatcher, // Note that at the moment this is always true
+            appmapYmlPresent: true, // Note that at the moment this is always true
             mostRecentAppMaps,
             apiUrl: ExtensionSettings.apiUrl,
             apiKey: await getApiKey(false),
@@ -164,8 +144,9 @@ export default class ChatSearchWebview {
   public static register(
     context: vscode.ExtensionContext,
     extensionState: ExtensionState,
-    appmaps: AppMapCollection
+    appmaps: AppMapCollection,
+    rpcService: RpcProcessService
   ): ChatSearchWebview {
-    return new ChatSearchWebview(context, extensionState, appmaps);
+    return new ChatSearchWebview(context, extensionState, appmaps, rpcService);
   }
 }
