@@ -231,8 +231,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
     await workspaceServices.enroll(runConfigService);
 
-    let chatSearchWebview;
-    (async function () {
+    const chatSearchWebview: Promise<ChatSearchWebview> = (async () => {
       processService.onReady(activateUptodateService);
       await processService.install();
       await workspaceServices.enroll(processService);
@@ -241,7 +240,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
         context,
         workspaceServices.getServiceInstances(configManager)
       );
-      chatSearchWebview = ChatSearchWebview.register(
+      const webview = ChatSearchWebview.register(
         context,
         extensionState,
         appmapCollectionFile,
@@ -249,6 +248,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       );
 
       installAgent(context, processService.hasCLIBin);
+
+      return webview;
     })();
 
     const trees = registerTrees(
