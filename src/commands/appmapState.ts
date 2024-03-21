@@ -5,14 +5,14 @@ import ChatSearchWebview from '../webviews/chatSearchWebview';
 export default function appmapState(
   context: vscode.ExtensionContext,
   appmapEditorProvider: AppMapEditorProvider,
-  chatSearchWebview: ChatSearchWebview
+  chatSearchWebview: Promise<ChatSearchWebview>
 ) {
-  const currentWebview = (): vscode.Webview | undefined =>
-    appmapEditorProvider.currentWebview || chatSearchWebview.currentWebview;
+  const currentWebview = async (): Promise<vscode.Webview | undefined> =>
+    appmapEditorProvider.currentWebview || (await chatSearchWebview).currentWebview;
 
   context.subscriptions.push(
-    vscode.commands.registerCommand('appmap.getAppmapState', () => {
-      const webview = currentWebview();
+    vscode.commands.registerCommand('appmap.getAppmapState', async () => {
+      const webview = await currentWebview();
       if (!webview) return;
 
       webview.postMessage({
@@ -23,7 +23,7 @@ export default function appmapState(
 
   context.subscriptions.push(
     vscode.commands.registerCommand('appmap.setAppmapState', async () => {
-      const webview = currentWebview();
+      const webview = await currentWebview();
       if (!webview) return;
 
       const state = await vscode.window.showInputBox({

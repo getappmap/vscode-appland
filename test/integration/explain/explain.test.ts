@@ -13,7 +13,8 @@ describe('appmap.explain', () => {
   it('opens a Chat + Search view', async () => {
     initializeWorkspaceServices();
 
-    const chatSearchWebview = (await waitForExtension()).chatSearchWebview;
+    const extension = await waitForExtension();
+    const chatSearchWebview = await extension.chatSearchWebview;
 
     const workspace = vscode.workspace.workspaceFolders?.[0];
     assert(workspace);

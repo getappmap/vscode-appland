@@ -38,7 +38,7 @@ export type AppMapTreeDataProviders = {
 export default interface AppMapService {
   analysisManager: typeof AnalysisManager;
   editorProvider: AppMapEditorProvider;
-  chatSearchWebview: ChatSearchWebview;
+  chatSearchWebview: Promise<ChatSearchWebview>;
   localAppMaps: AppMapsService;
   autoIndexService: AppMapProcessService;
   autoScanService: AppMapProcessService;
