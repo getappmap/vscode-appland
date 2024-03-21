@@ -3,7 +3,7 @@
   "name": "appmap",
   "displayName": "AppMap",
   "description": "Runtime diagrams + Navie AI Software Architect",
-  "version": "0.114.0",
+  "version": "0.115.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/getappmap/vscode-appland"

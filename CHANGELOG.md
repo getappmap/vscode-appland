@@ -1,3 +1,12 @@
+# [0.115.0](https://github.com/getappmap/vscode-appland/compare/v0.114.0...v0.115.0) (2024-03-21)
+
+
+### Features
+
+* A progress notification will appear if Navie is not yet ready ([a3bf806](https://github.com/getappmap/vscode-appland/commit/a3bf8065f87dc081a1748ea24540ae0bc3fa014d))
+* Periodically poll for missed appmap.yml FS events ([ca46be1](https://github.com/getappmap/vscode-appland/commit/ca46be10113e39f27f8cd42ada2e998edac4d156))
+* Run a single RPC server per instance ([fb0357f](https://github.com/getappmap/vscode-appland/commit/fb0357fc0a8410a132c59410b3987584e550543c))
+
 # [0.114.0](https://github.com/getappmap/vscode-appland/compare/v0.113.1...v0.114.0) (2024-03-16)
 
 
