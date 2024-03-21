@@ -63,8 +63,11 @@ import quickSearch from './commands/quickSearch';
 import appmapState from './commands/appmapState';
 import navieConfigurationService from './services/navieConfigurationService';
 import RpcProcessService from './services/rpcProcessService';
+import CommandRegistry from './commands/commandRegistry';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
+  CommandRegistry.setContext(context);
+
   Telemetry.register(context);
 
   const workspaceServices = initializeWorkspaceServices();
@@ -314,6 +317,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       recommender,
       configManager,
       runConfigService,
+      commandRegistry: CommandRegistry,
     };
   } catch (exception) {
     Telemetry.sendEvent(DEBUG_EXCEPTION, {
