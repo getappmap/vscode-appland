@@ -7,6 +7,7 @@ import { NodeProcessService } from '../services/nodeProcessService';
 import { Installer } from './installer';
 import DefaultInstaller from './installer/default';
 import PythonInstaller from './installer/python';
+import CommandRegistry from './commandRegistry';
 
 export const InstallAgent = 'appmap.installAgent';
 const ELECTRON_COMMAND_PLATFORMS = ['linux', 'darwin'];
@@ -112,11 +113,8 @@ async function getAvailableInstaller(
   }
 }
 
-export default async function installAgent(
-  context: vscode.ExtensionContext,
-  hasCLIBin: boolean
-): Promise<void> {
-  vscode.commands.registerCommand(InstallAgent, async (path: string, language: string) => {
+export default function installAgent(context: vscode.ExtensionContext, hasCLIBin: boolean): void {
+  CommandRegistry.registerCommand(InstallAgent, async (path: string, language: string) => {
     const defaultTerminals = getDefaultTerminals();
 
     try {

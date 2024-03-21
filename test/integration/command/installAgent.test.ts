@@ -6,13 +6,13 @@ import os from 'os';
 import path from 'path';
 import * as vscode from 'vscode';
 import { generateInstallInfo, InstallAgent } from '../../../src/commands/installAgent';
-import { ProjectRuby, waitFor, waitForExtension } from '../util';
+import { ProjectRuby, waitForExtension } from '../util';
 
 describe('Install agent command', () => {
   before(async () => {
     const extension = await waitForExtension();
-    await waitFor('waiting for dependency installation', () => extension.processService.ready);
-    vscode.commands.executeCommand(InstallAgent, ProjectRuby, 'Ruby');
+    await extension.commandRegistry.commandReady(InstallAgent);
+    await vscode.commands.executeCommand(InstallAgent, ProjectRuby, 'Ruby');
   });
 
   it('opens a terminal', async () => {
