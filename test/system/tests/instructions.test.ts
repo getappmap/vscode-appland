@@ -154,8 +154,20 @@ describe('Instructions tree view', function () {
 
     await driver.instructionsWebview.clickButton('Next');
 
-    // The second tab is the Navie chat interface
-    assert.strictEqual(await driver.tabCount(), 2, 'Wrong number of tabs');
+    // Wait five seconds for the second tab to open.
+    // The second tab is the Navie chat interface.
+    await new Promise((resolve, reject) => {
+      const timeout = setTimeout(() => {
+        reject(new Error('Timeout waiting for chat interface'));
+      }, 5_000);
+      const interval = setInterval(async () => {
+        if ((await driver.tabCount()) === 2) {
+          clearTimeout(timeout);
+          clearInterval(interval);
+          resolve(undefined);
+        }
+      }, 100);
+    });
   });
 
   it('always opens the project picker in an empty/undefined workspace', async function () {
