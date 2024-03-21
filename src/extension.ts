@@ -243,6 +243,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       processService.onReady(activateUptodateService);
       await processService.install();
       await workspaceServices.enroll(processService);
+      installAgent(context, processService.hasCLIBin);
 
       const rpcService = await RpcProcessService.create(
         context,
@@ -254,8 +255,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
         appmapCollectionFile,
         rpcService
       );
-
-      installAgent(context, processService.hasCLIBin);
 
       return webview;
     })();

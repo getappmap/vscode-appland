@@ -43,6 +43,23 @@ export default class CommandRegistry {
     return disposable;
   }
 
+  // Waits for a command to become registered.
+  public static async commandReady(command: string): Promise<void> {
+    const commands = await vscode.commands.getCommands(true);
+    if (commands.includes(command)) {
+      return;
+    }
+
+    return new Promise((resolve) => {
+      const disposable = this.onCommandRegistered((registeredCommand) => {
+        if (registeredCommand === command) {
+          disposable.dispose();
+          resolve();
+        }
+      });
+    });
+  }
+
   // A wait alias is a command that waits for another command to be registered before executing.
   // This is useful both for testing and UX, as it allows for a command to be run before it is registered.
   // Users will receive a status message while the command is pending.
