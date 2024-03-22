@@ -21,6 +21,8 @@ export default function mountChatSearchView() {
             apiKey: initialData.apiKey,
             mostRecentAppMaps: this.mostRecentAppMaps,
             appmapYmlPresent: this.appmapYmlPresent,
+            targetAppmapData: initialData.targetAppmap,
+            targetAppmapFsPath: initialData.targetAppmapFsPath,
           },
         });
       },

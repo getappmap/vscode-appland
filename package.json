@@ -516,7 +516,7 @@
   "dependencies": {
     "@appland/appmap": "^3.129.0",
     "@appland/client": "^1.14.1",
-    "@appland/components": "^4.11.0",
+    "@appland/components": "^4.12.0",
     "@appland/diagrams": "^1.8.0",
     "@appland/models": "^2.10.0",
     "@appland/rpc": "latest",

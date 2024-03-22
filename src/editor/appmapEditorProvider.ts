@@ -308,11 +308,25 @@ export default class AppMapEditorProvider
             shareEnabled: false,
             defaultView: extensionSettings.defaultDiagramView || 'viewSequence',
             savedFilters: this.filterStore.getSavedFilters(),
+            appmapFsPath: document.uri.fsPath,
           });
           break;
         case 'onLoadComplete':
           this.documents.push(document);
           break;
+        case 'ask-navie-about-map': {
+          const mapFsPath = message.mapFsPath;
+          try {
+            const appmapString = fs.readFileSync(mapFsPath, 'utf-8');
+            const appmap = JSON.parse(appmapString);
+            vscode.commands.executeCommand('appmap.explain', {
+              targetAppmap: appmap,
+              targetAppmapFsPath: mapFsPath,
+            });
+          } catch (e) {
+            console.error('Error reading appmap file: ', e);
+          }
+        }
       }
     });
 

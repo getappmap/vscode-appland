@@ -66,9 +66,9 @@ export default function quickSearch(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.commands.registerCommand(
       'appmap.quickExplain',
-      (workspaceUri: vscode.Uri, selectedCode: string) => {
+      (workspaceUri: vscode.Uri, codeSelection: string) => {
         const workspace = vscode.workspace.getWorkspaceFolder(workspaceUri);
-        vscode.commands.executeCommand('appmap.explain', workspace, selectedCode);
+        vscode.commands.executeCommand('appmap.explain', { workspace, codeSelection });
       }
     )
   );
