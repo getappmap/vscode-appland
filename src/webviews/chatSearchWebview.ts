@@ -13,6 +13,14 @@ import RpcProcessService from '../services/rpcProcessService';
 import { NodeProcessService } from '../services/nodeProcessService';
 import CommandRegistry from '../commands/commandRegistry';
 
+type ExplainOpts = {
+  workspace?: vscode.WorkspaceFolder;
+  codeSelection?: CodeSelection;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  targetAppmap?: any;
+  targetAppmapFsPath?: string;
+};
+
 export default class ChatSearchWebview {
   private webviewList = new WebviewList();
   private filterStore: FilterStore;
@@ -36,7 +44,7 @@ export default class ChatSearchWebview {
     return this.webviewList.currentWebview;
   }
 
-  async explain(workspace?: vscode.WorkspaceFolder, codeSelection?: CodeSelection) {
+  async explain({ workspace, codeSelection, targetAppmap, targetAppmapFsPath }: ExplainOpts = {}) {
     const appmapRpcPort = await this.rpcService.port();
     if (!appmapRpcPort) {
       const optionViewLog = 'View output log';
@@ -111,6 +119,8 @@ export default class ChatSearchWebview {
             mostRecentAppMaps,
             apiUrl: ExtensionSettings.apiUrl,
             apiKey: await getApiKey(false),
+            targetAppmap,
+            targetAppmapFsPath,
           });
           break;
         case 'open-record-instructions':
