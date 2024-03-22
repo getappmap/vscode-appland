@@ -20,7 +20,7 @@ export default class FilterStore {
   constructor(private readonly context: vscode.ExtensionContext) {}
 
   getSavedFilters(): SavedFilter[] {
-    return this.context.workspaceState.get(SAVED_FILTERS) as SavedFilter[] | [];
+    return (this.context.workspaceState.get(SAVED_FILTERS) as SavedFilter[]) || [];
   }
 
   async setFilters(filters: SavedFilter[]): Promise<void> {
