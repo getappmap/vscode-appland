@@ -1,3 +1,10 @@
+# [0.116.0](https://github.com/getappmap/vscode-appland/compare/v0.115.0...v0.116.0) (2024-03-22)
+
+
+### Features
+
+* Open Navie from an appmap ([#920](https://github.com/getappmap/vscode-appland/issues/920)) ([f6eda7f](https://github.com/getappmap/vscode-appland/commit/f6eda7f3aa7622001061ea643b084ee23ebd7fde))
+
 # [0.115.0](https://github.com/getappmap/vscode-appland/compare/v0.114.0...v0.115.0) (2024-03-21)
 
 
