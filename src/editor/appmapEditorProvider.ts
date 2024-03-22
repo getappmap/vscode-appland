@@ -319,7 +319,7 @@ export default class AppMapEditorProvider
           try {
             const appmapString = fs.readFileSync(mapFsPath, 'utf-8');
             const appmap = JSON.parse(appmapString);
-            vscode.commands.executeCommand('appmap.explain.impl', {
+            vscode.commands.executeCommand('appmap.explain', {
               targetAppmap: appmap,
               targetAppmapFsPath: mapFsPath,
             });
