@@ -11,11 +11,12 @@ export default function mountApp() {
   const messages = new MessagePublisher(vscode);
 
   messages.on('init-appmap', (initialData) => {
-    const { shareEnabled, defaultView, savedFilters } = initialData;
+    const { shareEnabled, defaultView, savedFilters, appmapFsPath } = initialData;
     const props = {
       appMapUploadable: shareEnabled,
       defaultView,
       savedFilters,
+      appmapFsPath,
     };
 
     const app = new Vue({
@@ -80,6 +81,10 @@ export default function mountApp() {
         default:
           break;
       }
+    });
+
+    app.$on('ask-navie-about-map', (mapFsPath) => {
+      vscode.postMessage({ command: 'ask-navie-about-map', mapFsPath });
     });
 
     // Webviews are normally torn down when not visible and re-created when they become visible again.

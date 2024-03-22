@@ -71,7 +71,7 @@ export default class CommandRegistry {
     const disposable = vscode.commands.registerCommand(options.command, async (...args: any[]) => {
       const commands = await vscode.commands.getCommands(true);
       if (commands.includes(options.target)) {
-        return vscode.commands.executeCommand(options.target, args);
+        return vscode.commands.executeCommand(options.target, ...args);
       }
 
       return vscode.window.withProgress(
@@ -93,7 +93,7 @@ export default class CommandRegistry {
             disposable = this.onCommandRegistered((command) => {
               if (command === options.target) {
                 cleanup();
-                resolve(vscode.commands.executeCommand(options.target, args));
+                resolve(vscode.commands.executeCommand(options.target, ...args));
               }
             });
 
