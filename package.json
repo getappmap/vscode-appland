@@ -260,6 +260,13 @@
           "type": "boolean",
           "description": "Enable verbose output from AppMap command line tools"
         },
+        "appMap.commandLineEnvironment": {
+          "type": "object",
+          "description": "Environment variables to pass to AppMap command line tools. NOTE: Requires a restart to take effect.",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
         "appMap.indexOptions": {
           "type": "string",
           "description": "Options to pass to the appmap index command"
