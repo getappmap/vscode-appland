@@ -35,6 +35,10 @@ export default class ExtensionSettings {
     );
   }
 
+  public static get appMapCommandLineEnvironment(): Readonly<Record<string, string>> | undefined {
+    return vscode.workspace.getConfiguration('appMap').get('commandLineEnvironment');
+  }
+
   public static get appMapIndexOptions(): string | undefined {
     return vscode.workspace.getConfiguration('appMap').get('indexOptions');
   }
