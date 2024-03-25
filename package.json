@@ -444,7 +444,7 @@
     }
   },
   "scripts": {
-    "vscode:prepublish": "yarn run compile",
+    "vscode:prepublish": "node build/updateResources.js && yarn compile",
     "lint": "eslint . --ext .ts",
     "pretest": "yarn run lint && tsc --strict --skipLibCheck",
     "test:precache": "node -e 'require(\"@vscode/test-electron\").downloadAndUnzipVSCode()'",

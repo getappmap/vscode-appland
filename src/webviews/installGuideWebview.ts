@@ -6,8 +6,6 @@ import { DocPageId, ProjectPicker, RecordAppMaps } from '../tree/instructionsTre
 import AnalysisManager from '../services/analysisManager';
 import { AUTHN_PROVIDER_NAME } from '../authentication';
 import getWebviewContent from './getWebviewContent';
-import AssetManager, { AssetStatus } from '../services/javaAssets';
-import JavaAssets from '../services/javaAssets';
 import { workspaceServices } from '../services/workspaceServices';
 import { RunConfigService, RunConfigServiceInstance } from '../services/runConfigService';
 
@@ -105,21 +103,9 @@ export default class InstallGuideWebView {
             disposables.forEach((disposable) => disposable.dispose());
           });
 
-          // We are notified with status change when the asset
-          // file is deleted, too.
-          disposables.push(
-            AssetManager.onStatusChanged((newStatus) => {
-              panel.webview.postMessage({
-                type: 'java-agent-download-status',
-                status: newStatus,
-              });
-            })
-          );
-
           panel.webview.onDidReceiveMessage(async (message) => {
             switch (message.command) {
               case 'ready': {
-                const assetExists = await JavaAssets.assetsExist();
                 const isUserAuthenticated = await AnalysisManager.isUserAuthenticated();
                 panel.webview.postMessage({
                   type: 'init',
@@ -127,10 +113,7 @@ export default class InstallGuideWebView {
                   page,
                   userAuthenticated: isUserAuthenticated,
                   debugConfigurationStatus: 1,
-                  javaAgentStatus: assetExists ? AssetStatus.UpToDate : AssetManager.status,
                 });
-
-                AssetManager.startAssetFilePeriodicCheck();
 
                 break;
               }
@@ -183,10 +166,6 @@ export default class InstallGuideWebView {
 
                   serviceInstance?.addMissingConfigs();
                 }
-                break;
-
-              case 'view-output':
-                JavaAssets.showOutput();
                 break;
 
               case 'open-navie':

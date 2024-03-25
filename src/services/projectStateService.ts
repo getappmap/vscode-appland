@@ -17,7 +17,6 @@ import { PROJECT_OPEN, Telemetry } from '../telemetry';
 import { workspaceServices } from './workspaceServices';
 import { AppmapConfigManager } from './appmapConfigManager';
 import { RunConfigService, RunConfigStatus } from './runConfigService';
-import JavaAssets, { AssetStatus } from './javaAssets';
 
 export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
   protected disposables: vscode.Disposable[] = [];
@@ -73,10 +72,6 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
       AnalysisManager.onAnalysisToggled(() => this.setFindingsIndex(AnalysisManager.findingsIndex)),
       RunConfigService.onStatusChange((service) => {
         if (service.folder === this.folder) this.setRunConfigStatus(service.status);
-      }),
-      JavaAssets.onStatusChanged(() => {
-        this.updateAgentInstalled();
-        this._onStateChange.fire(this._metadata);
       })
     );
 
@@ -224,21 +219,13 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
     return appMaps.reduce((sum, { descriptor }) => sum + (descriptor.numRequests || 0), 0);
   }
 
-  private updateAgentInstalled(): void {
-    switch (this._metadata.language?.name) {
-      case 'Java':
-        this._metadata.agentInstalled =
-          this.metadata.debugConfigurationStatus === RunConfigStatus.Success &&
-          JavaAssets.status === AssetStatus.UpToDate;
-        break;
-
-      default:
-        this._metadata.agentInstalled = this.isAgentConfigured || false;
-    }
-  }
-
   private updateMetadata(): void {
-    this.updateAgentInstalled();
+    if (this._metadata.language?.name === 'Java') {
+      this._metadata.agentInstalled =
+        this.metadata.debugConfigurationStatus === RunConfigStatus.Success;
+    } else {
+      this._metadata.agentInstalled = this.isAgentConfigured;
+    }
 
     this._metadata.appMapsRecorded = this.hasRecordedAppMaps || false;
     this._metadata.openedNavie = this.hasOpenedNavie || false;
@@ -261,9 +248,7 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
 
   private setRunConfigStatus(status: RunConfigStatus): void {
     this._metadata.debugConfigurationStatus = status;
-    this.updateAgentInstalled();
-
-    this._onStateChange.fire(this._metadata);
+    this.updateMetadata();
   }
 }
 
