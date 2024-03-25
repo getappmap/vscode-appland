@@ -473,7 +473,7 @@
     "@types/js-yaml": "^4.0.5",
     "@types/mocha": "^8.2.0",
     "@types/mockery": "^1.4.30",
-    "@types/node": "^16",
+    "@types/node": "^18",
     "@types/proper-lockfile": "^4.1.2",
     "@types/ps-node": "^0.1.1",
     "@types/semver": "^7.3.9",
