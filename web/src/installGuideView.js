@@ -21,7 +21,7 @@ export default function mountInstallGuide() {
             editor: 'vscode',
             analysisEnabled: this.analysisEnabled,
             userAuthenticated: this.userAuthenticated,
-            javaAgentStatus: this.javaAgentStatus,
+            javaAgentStatus: 2, // hard coded as 'success' - the JAR is bundled, it can't fail.
             featureFlags: new Set(['ar-python']),
           },
         });

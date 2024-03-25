@@ -10,6 +10,9 @@ appland.appmap-*.*.*
 extern/.yarn
 extern/yarn.lock
 
+# Bundled resources
+resources/*.jar
+
 # Yarn files
 .yarn/*
 !.yarn/patches
