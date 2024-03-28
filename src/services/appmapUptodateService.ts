@@ -15,12 +15,12 @@ import * as vscode from 'vscode';
 import ChangeEventDebouncer from './changeEventDebouncer';
 import { WorkspaceService, WorkspaceServiceInstance } from './workspaceService';
 import { workspaceServices } from './workspaceServices';
+import AssetService, { AssetIdentifier } from '../assets/assetService';
 
 export default class AppmapUptodateServiceInstance
   extends EventEmitter
   implements WorkspaceServiceInstance
 {
-  modulePath: string | undefined;
   interval?: NodeJS.Timeout;
   process?: ChildProcess;
   updatedAt?: number;
@@ -54,13 +54,6 @@ export default class AppmapUptodateServiceInstance
   }
 
   async update(): Promise<void> {
-    if (!this.modulePath) {
-      this.modulePath = await getModulePath({
-        dependency: ProgramName.Appmap,
-        globalStoragePath: this.globalStoragePath,
-      });
-    }
-
     // Run only one uptodate job at a time.
     const updateRequestedAt = Date.now();
 
@@ -87,9 +80,10 @@ export default class AppmapUptodateServiceInstance
     // we began our update request.
     if (this.updatedAt && this.updatedAt > updateRequestedAt) return;
 
-    assert(this.modulePath, `modulePath is not initialized`);
+    const modulePath = getModulePath(ProgramName.Appmap);
     this.process = spawn({
-      modulePath: this.modulePath,
+      modulePath,
+      binPath: AssetService.getAssetPath(AssetIdentifier.AppMapCli),
       args: this.commandArgs,
       cwd: this.folder.uri.fsPath,
       saveOutput: true,

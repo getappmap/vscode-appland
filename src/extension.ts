@@ -75,9 +75,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
   Telemetry.register(context);
 
-  AssetService.register(context);
-  AssetService.updateAll();
-
   const workspaceServices = initializeWorkspaceServices();
   context.subscriptions.push(workspaceServices);
 
@@ -240,10 +237,12 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     await workspaceServices.enroll(runConfigService);
 
     const chatSearchWebview: Promise<ChatSearchWebview> = (async () => {
-      processService.onReady(activateUptodateService);
-      await processService.install();
+      AssetService.register(context);
+      await AssetService.updateAll();
+
+      activateUptodateService();
       await workspaceServices.enroll(processService);
-      installAgent(context, processService.hasCLIBin);
+      installAgent(context);
 
       const rpcService = await RpcProcessService.create(
         context,
