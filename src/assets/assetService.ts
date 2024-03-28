@@ -48,6 +48,20 @@ export default class AssetService {
     context.subscriptions.push(this.OutputChannel);
   }
 
+  public static getAssetPath(assetId: AssetIdentifier): string {
+    // This could be a property on each AssetDownloader
+    switch (assetId) {
+      case AssetIdentifier.AppMapCli:
+        return join(homedir(), '.appmap', 'bin', 'appmap');
+      case AssetIdentifier.ScannerCli:
+        return join(homedir(), '.appmap', 'bin', 'scanner');
+      case AssetIdentifier.JavaAgent:
+        return join(homedir(), '.appmap', 'lib', 'java', 'appmap.jar');
+      default:
+        throw new Error(`Invalid asset ID ${assetId}`);
+    }
+  }
+
   public static async updateAll() {
     const appmapDir = join(homedir(), '.appmap');
     const dirs = [join(appmapDir, 'bin'), join(appmapDir, 'lib')];
