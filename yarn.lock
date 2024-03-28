@@ -2335,10 +2335,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^16":
-  version: 16.18.12
-  resolution: "@types/node@npm:16.18.12"
-  checksum: fc3271182414f8593018ef8f00b4718116a92f463f619081bd399d9460e7861e1dd7eebc7cf94c23567e418ff397babed077011711aae8d47171b5a81c5bd71d
+"@types/node@npm:^18":
+  version: 18.19.26
+  resolution: "@types/node@npm:18.19.26"
+  dependencies:
+    undici-types: ~5.26.4
+  checksum: d72d4e7e520206a2a05cb3e03a73696fc3bdcdc6ba5330a75cfef4818cb137b260c32dfe85e8b4ea28e8fe92f1d1497e26336c607254c5eaf47032a1b1c8bb6e
   languageName: node
   linkType: hard
 
@@ -3198,7 +3200,7 @@ __metadata:
     "@types/js-yaml": ^4.0.5
     "@types/mocha": ^8.2.0
     "@types/mockery": ^1.4.30
-    "@types/node": ^16
+    "@types/node": ^18
     "@types/proper-lockfile": ^4.1.2
     "@types/ps-node": ^0.1.1
     "@types/semver": ^7.3.9

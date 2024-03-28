@@ -22,6 +22,7 @@ import { readFile } from 'fs/promises';
 import appmapMessageHandler from '../webviews/appmapMessageHandler';
 import FilterStore from '../webviews/filterStore';
 import WebviewList from '../webviews/WebviewList';
+import AssetService, { AssetIdentifier } from '../assets/assetService';
 
 export type FindingInfo = ResolvedFinding & {
   stackLocations?: StackLocation[];
@@ -150,13 +151,6 @@ export default class AppMapEditorProvider
     );
   }
 
-  async cliPath(): Promise<string> {
-    return await getModulePath({
-      dependency: ProgramName.Appmap,
-      globalStoragePath: this.context.globalStorageUri.fsPath,
-    });
-  }
-
   outputLogToString(log: ProcessLog): string {
     return log
       .filter((line) => line.stream === OutputStream.Stdout)
@@ -165,10 +159,11 @@ export default class AppMapEditorProvider
   }
 
   async pruneMap(uri: vscode.Uri): Promise<string | undefined> {
-    const modulePath = await this.cliPath();
-
+    const modulePath = getModulePath(ProgramName.Appmap);
+    const binPath = AssetService.getAssetPath(AssetIdentifier.AppMapCli);
     const pruneCommand = spawn({
       modulePath,
+      binPath,
       args: ['prune', uri.fsPath, '--size', '10mb', '--output-data', '--auto'],
       saveOutput: true,
     });
@@ -187,8 +182,11 @@ export default class AppMapEditorProvider
   }
 
   async generateStats(uri: vscode.Uri): Promise<FunctionStats[] | undefined> {
+    const modulePath = getModulePath(ProgramName.Appmap);
+    const binPath = AssetService.getAssetPath(AssetIdentifier.AppMapCli);
     const statsCommand = spawn({
-      modulePath: await this.cliPath(),
+      modulePath,
+      binPath,
       args: [
         'stats',
         '--appmap-file',

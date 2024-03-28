@@ -21,14 +21,9 @@ export default class RpcProcessService implements Disposable {
     private readonly configServices: ReadonlyArray<AppmapConfigManagerInstance>,
     private readonly modulePath?: string
   ) {
-    if (this.modulePath) {
-      this.processWatcher = new RpcProcessWatcher(this.context, this.modulePath);
-      this.diposables.push(
-        this.processWatcher.onRpcPortChange((port) => this.onProcessStart(port))
-      );
-    }
-
+    this.processWatcher = new RpcProcessWatcher(this.context, this.modulePath);
     this.diposables.push(
+      this.processWatcher.onRpcPortChange((port) => this.onProcessStart(port)),
       ...this.configServices.map((instance) =>
         instance.onConfigChanged(() => this.syncAppMapConfigurations())
       )
@@ -105,17 +100,7 @@ export default class RpcProcessService implements Disposable {
     context: ExtensionContext,
     configServices: ReadonlyArray<AppmapConfigManagerInstance>
   ): Promise<RpcProcessService> {
-    let modulePath: string | undefined;
-    try {
-      modulePath = await getModulePath({
-        dependency: ProgramName.Appmap,
-        globalStoragePath: context.globalStorageUri.fsPath,
-      });
-    } catch (e) {
-      NodeProcessService.outputChannel.appendLine('Failed obtain the module for the RPC server');
-      NodeProcessService.outputChannel.appendLine(String(e));
-    }
-
+    const modulePath = getModulePath(ProgramName.Appmap);
     const service = new RpcProcessService(context, configServices, modulePath);
     try {
       await service.waitForStartup();
