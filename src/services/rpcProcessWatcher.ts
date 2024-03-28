@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import ExtensionSettings from '../configuration/extensionSettings';
 import { NodeProcessService } from './nodeProcessService';
 import { ProcessId, ProcessWatcher, ProcessWatcherOptions } from './processWatcher';
+import AssetService, { AssetIdentifier } from '../assets/assetService';
 
 export default class RpcProcessWatcher extends ProcessWatcher {
   private readonly _onRpcPortChange: vscode.EventEmitter<number> =
@@ -10,14 +11,15 @@ export default class RpcProcessWatcher extends ProcessWatcher {
   public rpcPort?: number;
   private stdoutBuffer = '';
 
-  constructor(context: vscode.ExtensionContext, modulePath: string, env?: NodeJS.ProcessEnv) {
+  constructor(context: vscode.ExtensionContext, modulePath?: string, env?: NodeJS.ProcessEnv) {
     const args = ['rpc', '--port', '0'];
     const extraOptions = ExtensionSettings.appMapIndexOptions;
     if (extraOptions) args.push(...extraOptions.split(' '));
     if (ExtensionSettings.appMapCommandLineVerbose) args.push('--verbose');
     const options: ProcessWatcherOptions = {
       id: ProcessId.RPC,
-      modulePath: modulePath,
+      modulePath,
+      binPath: AssetService.getAssetPath(AssetIdentifier.AppMapCli),
       log: NodeProcessService.outputChannel,
       args,
       env,

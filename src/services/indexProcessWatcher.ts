@@ -6,7 +6,8 @@ import { ProcessId, ProcessWatcher, ProcessWatcherOptions } from './processWatch
 export default class IndexProcessWatcher extends ProcessWatcher {
   constructor(
     context: vscode.ExtensionContext,
-    modulePath: string,
+    modulePath: string | undefined,
+    binPath: string,
     appmapDir: string,
     cwd: string,
     env?: NodeJS.ProcessEnv
@@ -17,7 +18,8 @@ export default class IndexProcessWatcher extends ProcessWatcher {
     if (ExtensionSettings.appMapCommandLineVerbose) args.push('--verbose');
     const options: ProcessWatcherOptions = {
       id: ProcessId.Index,
-      modulePath: modulePath,
+      modulePath,
+      binPath,
       log: NodeProcessService.outputChannel,
       args,
       cwd,

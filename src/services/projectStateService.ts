@@ -241,8 +241,6 @@ export class ProjectStateServiceInstance implements WorkspaceServiceInstance {
 
   private setRunConfigStatus(status: RunConfigStatus): void {
     this._metadata.debugConfigurationStatus = status;
-    this.updateAgentInstalled();
-
     this._onStateChange.fire(this._metadata);
   }
 }

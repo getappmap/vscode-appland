@@ -13,6 +13,7 @@ import { DEBUG_EXCEPTION, Telemetry } from '../telemetry';
 import ErrorCode from '../telemetry/definitions/errorCodes';
 import { AppmapConfigManager } from '../services/appmapConfigManager';
 import { workspaceServices } from '../services/workspaceServices';
+import AssetService, { AssetIdentifier } from '../assets/assetService';
 
 export const GenerateOpenApi = 'appmap.generateOpenApi';
 
@@ -31,10 +32,7 @@ export default function generateOpenApi(context: vscode.ExtensionContext) {
         async () => {
           assert(workspaceFolder);
 
-          const modulePath = await getModulePath({
-            dependency: ProgramName.Appmap,
-            globalStoragePath: context.globalStorageUri.fsPath,
-          });
+          const modulePath = getModulePath(ProgramName.Appmap);
 
           let appmapDir = '.';
           let cwd = workspaceFolder.uri.fsPath;
@@ -54,6 +52,7 @@ export default function generateOpenApi(context: vscode.ExtensionContext) {
 
           const openApiCmd = spawn({
             modulePath,
+            binPath: AssetService.getAssetPath(AssetIdentifier.AppMapCli),
             args: ['openapi', '--appmap-dir', appmapDir],
             cwd,
             saveOutput: true,

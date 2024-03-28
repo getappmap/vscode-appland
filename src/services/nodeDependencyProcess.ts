@@ -18,7 +18,10 @@ export type ChildProcess = childProcess.ChildProcessWithoutNullStreams & WithLog
 
 export type SpawnOptions = {
   // Path to a node module script to be executed
-  modulePath: string;
+  modulePath?: string;
+
+  // Path to a binary file to be executed
+  binPath: string;
 
   // Command line args given to `node` or the `bin` script specified
   args?: string[];
@@ -32,14 +35,6 @@ export type SpawnOptions = {
   // If specified, this function will be called with each line of stdout
   stdoutListener?: (data: string) => void;
 } & Exclude<childProcess.SpawnOptionsWithoutStdio, 'argv0'>;
-
-export type ProgramOptions = {
-  // Name of the dependency to be resolved to a bin script path
-  dependency: ProgramName;
-
-  // This is neccesary for `yarn` to locate the bin script
-  globalStoragePath: string;
-};
 
 export enum OutputStream {
   Stdout,
@@ -118,11 +113,11 @@ export class ProcessLog extends Array<ProcessLogItem> {
   }
 }
 
-export async function getModulePath(options: ProgramOptions): Promise<string> {
+export function getModulePath(dependency: ProgramName): string | undefined {
   const localToolsPath = ExtensionSettings.appMapCommandLineToolsPath;
   if (localToolsPath) {
     let packageName: string;
-    switch (options.dependency) {
+    switch (dependency) {
       case ProgramName.Appmap:
         packageName = 'cli';
         break;
@@ -132,26 +127,30 @@ export async function getModulePath(options: ProgramOptions): Promise<string> {
     }
     const bin = 'built/cli.js';
     return path.join(localToolsPath, 'packages', packageName, bin);
-  } else {
-    const base = path.join(
-      options.globalStoragePath,
-      'node_modules',
-      '@appland',
-      options.dependency
-    );
-    const bin = JSON.parse(await readFile(path.join(base, 'package.json'), 'utf8')).bin;
-    return path.join(base, bin);
   }
 }
 
 export function spawn(options: SpawnOptions): ChildProcess {
   const env = { ...process.env, ...(options.env || {}) };
-  const newProcess = childProcess.fork(options.modulePath, options.args || [], {
-    ...options,
-    env,
-    execArgv: [],
-    stdio: 'pipe',
-  });
+  let newProcess: childProcess.ChildProcess;
+  if (options.modulePath) {
+    newProcess = childProcess.fork(options.modulePath, options.args || [], {
+      ...options,
+      env,
+      execArgv: [],
+      stdio: 'pipe',
+    });
+  } else if (options.binPath) {
+    newProcess = childProcess.spawn(options.binPath, options.args || [], {
+      ...options,
+      env,
+      stdio: 'pipe',
+    });
+  } else {
+    // The type checker should prevent this case
+    throw new Error('SpawnOptions not runnable');
+  }
+
   const loggedProcess = ProcessLog.appendLogger(
     newProcess as childProcess.ChildProcessWithoutNullStreams,
     options.log,
