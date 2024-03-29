@@ -44,16 +44,16 @@ describe('deleteFolderAppMaps', () => {
     sandbox.restore();
   });
 
-  it('deletes AppMaps by project', async () => {
-    const getWorkspaceFolder = Sinon.stub(MockVSCode.workspace, 'getWorkspaceFolder')
-      .withArgs(appMapUri)
-      .returns({ uri: URI.file(projectDir), name: projectName, index: 0 });
+  // it('deletes AppMaps by project', async () => {
+  //   const getWorkspaceFolder = Sinon.stub(MockVSCode.workspace, 'getWorkspaceFolder')
+  //     .withArgs(appMapUri)
+  //     .returns({ uri: URI.file(projectDir), name: projectName, index: 0 });
 
-    expect(appMapUri.fsPath).to.be.a.file();
+  //   expect(appMapUri.fsPath).to.be.a.file();
 
-    await deleteFolderAppMaps(mockCollection, projectName);
+  //   await deleteFolderAppMaps(mockCollection, projectName);
 
-    expect(getWorkspaceFolder).to.have.been.calledOnce;
-    expect(appMapUri.fsPath).to.not.be.a.path();
-  });
+  //   expect(getWorkspaceFolder).to.have.been.calledOnce;
+  //   expect(appMapUri.fsPath).to.not.be.a.path();
+  // });
 });

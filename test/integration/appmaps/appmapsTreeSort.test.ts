@@ -1,6 +1,7 @@
 // @project project-java
 import assert from 'assert';
 import { initializeWorkspace, waitFor, waitForExtension, withAuthenticatedUser } from '../util';
+import { IAppMapTreeItem } from '../../../src/tree/appMapTreeDataProvider';
 
 describe('AppMaps', () => {
   withAuthenticatedUser();
@@ -19,7 +20,7 @@ describe('AppMaps', () => {
       () =>
         appmapsTree
           .getChildren()
-          .map((root) => root.name)
+          .map((root) => root.label)
           .sort()
           .shift() === 'project-java'
     );
@@ -43,17 +44,21 @@ describe('AppMaps', () => {
     // Since timestamps reflect the file modification time we manually set
     // timestamps here to assert that the sort is done by timestamps.
     // See: AppMapCollectionFile.collectAppMapDescriptor
-    const b = appmaps.find((a) => a.descriptor.metadata?.name?.startsWith('GET /bups'));
-    const v = appmaps.find((a) => a.descriptor.metadata?.name?.startsWith('GET /vets'));
-    const o = appmaps.find((a) => a.descriptor.metadata?.name?.startsWith('GET /oups'));
-    if (b) b.descriptor.timestamp = 1530;
-    if (v) v.descriptor.timestamp = 1527;
-    if (o) o.descriptor.timestamp = 1522;
+    const b = appmaps.find((a) => a.label?.toString().startsWith('GET /bups')) as IAppMapTreeItem;
+    const v = appmaps.find((a) => a.label?.toString().startsWith('GET /vets')) as IAppMapTreeItem;
+    const o = appmaps.find((a) => a.label?.toString().startsWith('GET /oups')) as IAppMapTreeItem;
+    assert(b.appmap);
+    assert(v.appmap);
+    assert(o.appmap);
+
+    if (b) b.appmap.descriptor.timestamp = 1530;
+    if (v) v.appmap.descriptor.timestamp = 1527;
+    if (o) o.appmap.descriptor.timestamp = 1522;
     // getChildren should sort them by timestamp
     appmaps = appmapsTree.getChildren(requestFolder);
 
     assert.deepStrictEqual(
-      appmaps.map((appmap) => appmap.descriptor.metadata?.name),
+      appmaps.map((appmap) => appmap.label),
       [
         'GET /bups (500) - 15:30:47.872',
         'GET /vets.html (200) - 15:27:11.736',
