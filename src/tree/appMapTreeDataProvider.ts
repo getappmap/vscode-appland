@@ -39,9 +39,11 @@ class AppMapFolder {
   ): string {
     let name: string;
     if (recorderType && recorderType.length > 1) {
-      name = `${recorderType[0].toLocaleUpperCase()}${recorderType.slice(
-        1
-      )} (${language} + ${recorderName})`;
+      const baseName = `${recorderType[0].toLocaleUpperCase()}${recorderType.slice(1)}`;
+      const descriptorName = [language, recorderName].filter(Boolean).join(' + ');
+      const tokens = [baseName];
+      if (descriptorName) tokens.push(`(${descriptorName})`);
+      name = tokens.join(' ');
     } else if (recorderName) {
       name = recorderName;
     } else {
@@ -259,7 +261,7 @@ export class AppMapTreeDataProvider implements vscode.TreeDataProvider<vscode.Tr
     if (!projects || this.appmaps.appMaps().length === 0) return [];
 
     const appmapsByProject = new Map<vscode.WorkspaceFolder, AppMapLoader[]>();
-    const projectsWithAppMaps = this.appmaps.allAppMaps().reduce((projectsWithAppMaps, appmap) => {
+    const projectsWithAppMaps = this.appmaps.appMaps().reduce((projectsWithAppMaps, appmap) => {
       const project = projects.find((project) =>
         appmap.descriptor.resourceUri.fsPath.startsWith(project.uri.fsPath)
       );

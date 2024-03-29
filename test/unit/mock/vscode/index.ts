@@ -9,6 +9,8 @@ import CodeAction from './CodeAction';
 import CodeActionKind from './CodeActionKind';
 import * as extensions from './extensions';
 import { URI, Utils } from 'vscode-uri';
+import ThemeIcon from './ThemeIcon';
+import TreeItem from './TreeItem';
 import workspace from './workspace';
 import window from './window';
 import commands from './commands';
@@ -22,6 +24,12 @@ enum UIKind {
 enum StatusBarAlignment {
   Left = 1,
   Right = 2,
+}
+
+enum TreeItemCollapsibleState {
+  None = 0,
+  Collapsed = 1,
+  Expanded = 2,
 }
 
 const MockVSCode = {
@@ -39,7 +47,9 @@ const MockVSCode = {
   commands,
   StatusBarAlignment,
   env,
-  TreeItem: class {},
+  ThemeIcon,
+  TreeItem,
+  TreeItemCollapsibleState,
   UIKind,
 };
 
