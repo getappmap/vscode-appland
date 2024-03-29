@@ -1,19 +1,15 @@
 import * as vscode from 'vscode';
-// import { join } from 'path';
-import { isDeepStrictEqual } from 'util';
+import { join } from 'path';
 import AppMapCollection from '../services/appmapCollection';
 import AppMapLoader from '../services/appmapLoader';
 import { AppmapUptodateService } from '../services/appmapUptodateService';
 import assert from 'assert';
+import { warn } from 'console';
 
 const LABEL_NO_NAME = 'Untitled AppMap';
 
 // const lightChangedIcon = join(__dirname, '../images/modified-file-icon-dark.svg');
 // const darkChangedIcon = join(__dirname, '../images/modified-file-icon-light.svg');
-
-// export interface AppMapsTreeItem {
-//   filterAppMaps(appmaps: AppMapLoader[]): AppMapLoader[];
-// }
 
 export interface IAppMapTreeItem {
   appmap: AppMapLoader | undefined;
@@ -27,10 +23,10 @@ class AppMapFolder {
   public name: string;
 
   constructor(
-    protected language: string,
-    protected recorderType?: string,
-    protected recorderName?: string,
-    protected collection?: string
+    public language: string,
+    public recorderType?: string,
+    public recorderName?: string,
+    public collection?: string
   ) {
     this.name = AppMapFolder.folderName(language, recorderType, recorderName, collection);
   }
@@ -94,7 +90,19 @@ class WorkspaceTreeItem extends vscode.TreeItem implements IAppMapTreeItem {
   }
 }
 
+type SortFunction = (a: AppMapLoader, b: AppMapLoader) => number;
+type NameFunction = (name: string) => string;
+
 class FolderTreeItem extends vscode.TreeItem implements IAppMapTreeItem {
+  // Here you can specify the sort function used for different recording types.
+  // Typical choices are alphabetical and chronological.
+  static SortMethod: Record<string, SortFunction> = {
+    requests: FolderTreeItem.sortByTimestamp,
+    request: FolderTreeItem.sortByTimestamp,
+    remote: FolderTreeItem.sortByName,
+    tests: FolderTreeItem.sortByName,
+  };
+
   public children: (IAppMapTreeItem & vscode.TreeItem)[];
   public appmap: AppMapLoader | undefined = undefined;
 
@@ -123,10 +131,27 @@ class FolderTreeItem extends vscode.TreeItem implements IAppMapTreeItem {
       return appmapsByFolder;
     }, new Map<string, { folder: AppMapFolder; appmaps: AppMapLoader[] }>());
     return [...appmapsByFolder.keys()].sort().map((key) => {
-      const appmaps = appmapsByFolder.get(key);
-      assert(appmaps);
-      return new FolderTreeItem(workspaceTreeItem, appmaps.folder, appmaps.appmaps);
+      const folderContent = appmapsByFolder.get(key);
+      assert(folderContent);
+
+      let { recorderType } = folderContent.folder;
+      if (!recorderType) recorderType = 'unknown recorder type';
+      const sortFunction = FolderTreeItem.SortMethod[recorderType] || FolderTreeItem.sortByName;
+      warn(`Sorting ${appmaps.length} appmaps by ${recorderType}`); // TODO: Remove
+      folderContent.appmaps.sort(sortFunction);
+
+      return new FolderTreeItem(workspaceTreeItem, folderContent.folder, folderContent.appmaps);
     });
+  }
+
+  protected static sortByTimestamp(a: AppMapLoader, b: AppMapLoader): number {
+    return b.descriptor.timestamp - a.descriptor.timestamp;
+  }
+
+  protected static sortByName(a: AppMapLoader, b: AppMapLoader): number {
+    const aName = (a.descriptor.metadata?.name as string) || LABEL_NO_NAME;
+    const bName = (b.descriptor.metadata?.name as string) || LABEL_NO_NAME;
+    return aName.localeCompare(bName);
   }
 }
 
@@ -138,23 +163,29 @@ class AppMapTreeItem extends vscode.TreeItem implements IAppMapTreeItem {
     public appmap: AppMapLoader,
     public collapsibleState: vscode.TreeItemCollapsibleState
   ) {
-    super(appmap.descriptor.metadata?.name || LABEL_NO_NAME, collapsibleState);
+    super(
+      AppMapTreeItem.normalizeName(
+        appmap.descriptor.metadata?.name || LABEL_NO_NAME,
+        appmap.descriptor.metadata?.recorder?.type || 'undefined'
+      ),
+      collapsibleState
+    );
 
-    this.tooltip = appmap.descriptor.metadata?.name;
-    this.iconPath =
-      appmap.descriptor.metadata?.test_status === 'failed'
-        ? new vscode.ThemeIcon('warning')
-        : new vscode.ThemeIcon('file');
+    const isFailed = appmap.descriptor.metadata?.test_status === 'failed';
 
-    // let iconPath: vscode.ThemeIcon | { light: string; dark: string } = new vscode.ThemeIcon('file');
-    // if (!this.isUptodate(element)) iconPath = { light: darkChangedIcon, dark: lightChangedIcon };
-    // if (this.isFailed(element)) iconPath = new vscode.ThemeIcon('warning');
+    let iconPath: vscode.ThemeIcon | { light: string; dark: string };
+    if (isFailed) iconPath = new vscode.ThemeIcon('warning');
+    // TODO :Revive
+    // else if (!this.isUptodate(element)) iconPath = { light: darkChangedIcon, dark: lightChangedIcon };
+    else iconPath = new vscode.ThemeIcon('file');
 
     this.command = {
       title: 'Open',
       command: 'vscode.openWith',
       arguments: [this.appmap.descriptor.resourceUri, 'appmap.views.appMapFile'],
     };
+    this.tooltip = appmap.descriptor.metadata?.name;
+    this.iconPath = iconPath;
     this.contextValue = 'appmap.views.appmaps.appMap';
   }
 
@@ -166,10 +197,29 @@ class AppMapTreeItem extends vscode.TreeItem implements IAppMapTreeItem {
       return new AppMapTreeItem(folderTreeItem, appmap, vscode.TreeItemCollapsibleState.None);
     });
   }
-}
 
-type SortFunction = (a: AppMapLoader, b: AppMapLoader) => number;
-type NameFunction = (name: string) => string;
+  // Here you can specify the name normalize function used for different recording types.
+  static NormalizeName: Record<string, NameFunction> = {
+    requests: AppMapTreeItem.goodUrlName,
+    request: AppMapTreeItem.goodUrlName,
+    remote: AppMapTreeItem.identityName,
+    tests: AppMapTreeItem.identityName,
+  };
+
+  protected static normalizeName(name: string, recorderType: string): string {
+    const normalizeFn = AppMapTreeItem.NormalizeName[recorderType] || AppMapTreeItem.identityName;
+    return normalizeFn(name);
+  }
+
+  protected static identityName(name: string): string {
+    return name;
+  }
+
+  // Double forward slashes are sometimes observed in URL paths and they make it into the AppMap name.
+  protected static goodUrlName(name: string): string {
+    return name.replace(/\/{2,}/g, '/');
+  }
+}
 
 export class AppMapTreeDataProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
   private appmaps: AppMapCollection;
@@ -178,23 +228,6 @@ export class AppMapTreeDataProvider implements vscode.TreeDataProvider<vscode.Tr
   // TreeDataProvider is not Disposable, so we can't dispose of this event emitter.
   private _onDidChangeTreeData = new vscode.EventEmitter<undefined>();
   public readonly onDidChangeTreeData = this._onDidChangeTreeData.event;
-
-  // Here you can specify the sort function used for different recording types.
-  // Typical choices are alphabetical and chronological.
-  static SortMethod: Record<string, SortFunction> = {
-    requests: AppMapTreeDataProvider.sortByTimestamp,
-    request: AppMapTreeDataProvider.sortByTimestamp,
-    remote: AppMapTreeDataProvider.sortByName,
-    tests: AppMapTreeDataProvider.sortByName,
-  };
-
-  // Here you can specify the name normalize function used for different recording types.
-  static NormalizeName: Record<string, NameFunction> = {
-    requests: AppMapTreeDataProvider.goodUrlName,
-    request: AppMapTreeDataProvider.goodUrlName,
-    remote: AppMapTreeDataProvider.identityName,
-    tests: AppMapTreeDataProvider.identityName,
-  };
 
   constructor(appmaps: AppMapCollection, appmapsUptodate?: AppmapUptodateService) {
     this.appmaps = appmaps;
@@ -246,61 +279,13 @@ export class AppMapTreeDataProvider implements vscode.TreeDataProvider<vscode.Tr
     );
   }
 
-  protected static sortByTimestamp(a: AppMapLoader, b: AppMapLoader): number {
-    return b.descriptor.timestamp - a.descriptor.timestamp;
-  }
-
-  protected static sortByName(a: AppMapLoader, b: AppMapLoader): number {
-    const aName = (a.descriptor.metadata?.name as string) || LABEL_NO_NAME;
-    const bName = (b.descriptor.metadata?.name as string) || LABEL_NO_NAME;
-    return aName.localeCompare(bName);
-  }
-
-  protected static identityName(name: string): string {
-    return name;
-  }
-
-  // Double forward slashes are sometimes observed in URL paths and they make it into the AppMap name.
-  protected static goodUrlName(name: string): string {
-    return name.replace(/\/{2,}/g, '/');
-  }
-
-  public static folderName(
-    language: string,
-    recorderType: string,
-    recorderName: string,
-    collection?: string
-  ): string {
-    let name: string;
-    if (recorderType) {
-      name = `${recorderType[0].toLocaleUpperCase()}${recorderType.slice(
-        1
-      )} (${language} + ${recorderName})`;
-    } else {
-      name = recorderName;
-    }
-    const tokens = [name];
-    if (collection) {
-      tokens.unshift(collection);
-    }
-    return tokens.join(' - ');
-  }
-
-  protected isFailed(appmap: AppMapLoader): boolean {
-    return appmap.descriptor.metadata?.test_status === 'failed';
-  }
-
   protected isUptodate(appmap: AppMapLoader): boolean {
     if (!this.appmapsUpToDate) return true;
 
     return this.appmapsUpToDate.isUpToDate(appmap.descriptor.resourceUri);
   }
 
-  // This method has to be defined to use TreeView.reveal().
-  // Implementing this only for the root element, because we are
-  // "reveal"ing the root in the appmap.view.focusAppMaps command.
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/naming-convention
-  getParent(element: AppMapTreeItem): vscode.ProviderResult<AppMapTreeItem> {
-    return undefined;
+  getParent(element: AppMapTreeItem): vscode.ProviderResult<vscode.TreeItem & IAppMapTreeItem> {
+    return element.parent;
   }
 }
