@@ -25,6 +25,7 @@ function makeWatcher(opts: Partial<ProcessWatcherOptions> = {}) {
   return new ProcessWatcher(Sinon.stub as any, {
     id: 'test process' as unknown as ProcessId,
     modulePath: testModule,
+    binPath: 'unused',
     cwd: '.',
     ...opts,
   });

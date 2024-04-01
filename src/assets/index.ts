@@ -1,15 +1,15 @@
 import { join } from 'path';
-import AssetDownloader from './assetDownloader';
-import DownloadUrlResolver from './downloadUrlResolver';
-import tryRequest from './tryRequest';
-import { VersionResolver } from './versionResolver';
 import { homedir } from 'os';
-import { fileExists } from '../util';
 import { createWriteStream } from 'fs';
 import { chmod, copyFile, mkdir, symlink, unlink } from 'fs/promises';
+import { Uri } from 'vscode';
+import AssetDownloader from './assetDownloader';
+import DownloadUrlResolver from './downloadUrlResolver';
+import { VersionResolver } from './versionResolver';
+import { fileExists } from '../util';
+import tryRequest from './tryRequest';
 import AssetService from './assetService';
 import * as ResourceVersions from '../../resources/versions.json';
-import { Uri } from 'vscode';
 
 class MavenVersionResolver implements VersionResolver {
   constructor(private readonly groupId: string, private readonly artifactId: string) {}
@@ -38,7 +38,7 @@ class NpmVersionResolver implements VersionResolver {
     const res = await tryRequest(`https://registry.npmjs.org/${this.packageName}/latest`);
     if (res) {
       try {
-        const json: { version: string } = await res.json();
+        const json: { version?: string } = (await res.json()) as Record<string, unknown>;
         return json.version;
       } catch (e: unknown) {
         AssetService.logWarning(`Failed to retrieve ${this.packageName} version from NPM: ${e}`);
@@ -62,7 +62,7 @@ class GitHubVersionResolver implements VersionResolver {
     const res = await tryRequest(`https://api.github.com/repos/${this.repo}/releases/latest`);
     if (res) {
       try {
-        const json: { tag_name?: string } = await res.json();
+        const json: { tag_name?: string } = (await res.json()) as Record<string, unknown>;
         return json.tag_name?.replace(/^v/, '');
       } catch (e: unknown) {
         AssetService.logWarning(`Failed to retrieve ${this.repo} version from GitHub: ${e}`);
@@ -105,11 +105,12 @@ class BundledFileDownloadUrlResolver implements DownloadUrlResolver {
   }
 }
 
-const globalAppMapDir = join(homedir(), '.appmap');
-const appMapCliLibDir = join(globalAppMapDir, 'lib', 'appmap');
-const scannerCliLibDir = join(globalAppMapDir, 'lib', 'scanner');
-const appMapBinDir = join(globalAppMapDir, 'bin');
-const appMapJavaAgentDir = join(globalAppMapDir, 'lib', 'java');
+// These are not cached because homdir may change in testing
+const globalAppMapDir = () => join(homedir(), '.appmap');
+const appMapCliLibDir = () => join(globalAppMapDir(), 'lib', 'appmap');
+const scannerCliLibDir = () => join(globalAppMapDir(), 'lib', 'scanner');
+const appMapBinDir = () => join(globalAppMapDir(), 'bin');
+const appMapJavaAgentDir = () => join(globalAppMapDir(), 'lib', 'java');
 
 async function isAssetMissing(assetPath: string): Promise<boolean> {
   try {
@@ -168,13 +169,13 @@ export const AppMapCliDownloader = new AssetDownloader(
   ],
   {
     shouldDownload: (version: string) =>
-      isAssetMissing(join(appMapCliLibDir, `appmap-v${version}`)),
-    beforeDownload: () => mkdir(appMapCliLibDir, { recursive: true }) as Promise<void>,
+      isAssetMissing(join(appMapCliLibDir(), `appmap-v${version}`)),
+    beforeDownload: () => mkdir(appMapCliLibDir(), { recursive: true }) as Promise<void>,
     download: (stream, version) =>
-      writeToFile(stream, join(appMapCliLibDir, `appmap-v${version}`), 'wx'),
+      writeToFile(stream, join(appMapCliLibDir(), `appmap-v${version}`), 'wx'),
     async afterDownload(version) {
-      const binaryPath = join(appMapCliLibDir, `appmap-v${version}`);
-      const symlinkPath = join(appMapBinDir, 'appmap');
+      const binaryPath = join(appMapCliLibDir(), `appmap-v${version}`);
+      const symlinkPath = join(appMapBinDir(), 'appmap');
       await markExecutable(binaryPath);
       await updateSymlink(binaryPath, symlinkPath);
     },
@@ -191,13 +192,13 @@ export const ScannerDownloader = new AssetDownloader(
   ],
   {
     shouldDownload: (version: string) =>
-      isAssetMissing(join(scannerCliLibDir, `scanner-v${version}`)),
-    beforeDownload: () => mkdir(scannerCliLibDir, { recursive: true }) as Promise<void>,
+      isAssetMissing(join(scannerCliLibDir(), `scanner-v${version}`)),
+    beforeDownload: () => mkdir(scannerCliLibDir(), { recursive: true }) as Promise<void>,
     download: (stream, version) =>
-      writeToFile(stream, join(scannerCliLibDir, `scanner-v${version}`), 'wx'),
+      writeToFile(stream, join(scannerCliLibDir(), `scanner-v${version}`), 'wx'),
     async afterDownload(version) {
-      const binaryPath = join(scannerCliLibDir, `scanner-v${version}`);
-      const symlinkPath = join(appMapBinDir, 'scanner');
+      const binaryPath = join(scannerCliLibDir(), `scanner-v${version}`);
+      const symlinkPath = join(appMapBinDir(), 'scanner');
       await markExecutable(binaryPath);
       await updateSymlink(binaryPath, symlinkPath);
     },
@@ -221,13 +222,13 @@ export const JavaAgentDownloader = new AssetDownloader(
   ],
   {
     shouldDownload: (version: string) =>
-      isAssetMissing(join(appMapJavaAgentDir, `appmap-${version}.jar`)),
-    beforeDownload: () => mkdir(appMapJavaAgentDir, { recursive: true }) as Promise<void>,
+      isAssetMissing(join(appMapJavaAgentDir(), `appmap-${version}.jar`)),
+    beforeDownload: () => mkdir(appMapJavaAgentDir(), { recursive: true }) as Promise<void>,
     download: (stream, version) =>
-      writeToFile(stream, join(appMapJavaAgentDir, `appmap-${version}.jar`), 'wx'),
+      writeToFile(stream, join(appMapJavaAgentDir(), `appmap-${version}.jar`), 'wx'),
     async afterDownload(version) {
-      const binaryPath = join(appMapJavaAgentDir, `appmap-${version}.jar`);
-      const symlinkPath = join(appMapJavaAgentDir, 'appmap.jar');
+      const binaryPath = join(appMapJavaAgentDir(), `appmap-${version}.jar`);
+      const symlinkPath = join(appMapJavaAgentDir(), 'appmap.jar');
       await updateSymlink(binaryPath, symlinkPath);
     },
   }

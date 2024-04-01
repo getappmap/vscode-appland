@@ -23,8 +23,8 @@ describe('Install agent command', () => {
   let pythonExtension: vscode.Extension<PythonExtension>;
 
   before(async () => {
-    const extension = await waitForExtension();
-    await waitFor('waiting for dependency installation', () => extension.processService.ready);
+    const { dependenciesInstalled } = await waitForExtension();
+    await dependenciesInstalled;
 
     vscode.commands.executeCommand(
       'workbench.extensions.installExtension',
