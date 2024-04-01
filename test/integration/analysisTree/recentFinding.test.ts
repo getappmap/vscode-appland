@@ -28,7 +28,7 @@ const findingsFileName = join(
 describe("Runtime analysis findings tree items, when a finding's modified date is recent", () => {
   withAuthenticatedUser();
 
-  let prepareFindingsTask: NodeJS.Timer;
+  let prepareFindingsTask: NodeJS.Timeout;
   let analysisTree: FindingsTreeDataProvider;
   let findingsFileContents: string | undefined;
 

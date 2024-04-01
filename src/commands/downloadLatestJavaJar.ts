@@ -1,13 +1,13 @@
 import * as vscode from 'vscode';
 
-import JavaAssets from '../services/javaAssets';
+import AssetService, { AssetIdentifier } from '../assets/assetService';
 
 export default async function downloadLatestJavaJar(
   context: vscode.ExtensionContext
 ): Promise<void> {
   const command = vscode.commands.registerCommand('appmap.downloadLatestJavaJar', async () => {
     try {
-      await JavaAssets.installLatestJavaJar(true);
+      await AssetService.updateOne(AssetIdentifier.JavaAgent);
       vscode.window.showInformationMessage('appmap.jar has been successfully updated');
     } catch (e) {
       const err = e as Error;

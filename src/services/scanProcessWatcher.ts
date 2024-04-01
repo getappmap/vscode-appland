@@ -6,7 +6,8 @@ import { ProcessId, ProcessWatcher } from './processWatcher';
 export default class ScanProcessWatcher extends ProcessWatcher {
   constructor(
     context: vscode.ExtensionContext,
-    modulePath: string,
+    modulePath: string | undefined,
+    binPath: string,
     appmapDir: string,
     cwd: string,
     env?: NodeJS.ProcessEnv
@@ -15,7 +16,8 @@ export default class ScanProcessWatcher extends ProcessWatcher {
     if (ExtensionSettings.appMapCommandLineVerbose) args.push('--verbose');
     super(context, {
       id: ProcessId.Analysis,
-      modulePath: modulePath,
+      modulePath,
+      binPath,
       log: NodeProcessService.outputChannel,
       args,
       cwd,

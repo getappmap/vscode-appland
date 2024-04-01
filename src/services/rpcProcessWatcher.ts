@@ -2,27 +2,37 @@ import * as vscode from 'vscode';
 import ExtensionSettings from '../configuration/extensionSettings';
 import { NodeProcessService } from './nodeProcessService';
 import { ProcessId, ProcessWatcher, ProcessWatcherOptions } from './processWatcher';
+import AssetService, { AssetIdentifier } from '../assets/assetService';
 
 export default class RpcProcessWatcher extends ProcessWatcher {
   private readonly _onRpcPortChange: vscode.EventEmitter<number> =
     new vscode.EventEmitter<number>();
   public readonly onRpcPortChange = this._onRpcPortChange.event;
   public rpcPort?: number;
+  private configuredPortLogged = false;
   private stdoutBuffer = '';
 
-  constructor(context: vscode.ExtensionContext, modulePath: string, env?: NodeJS.ProcessEnv) {
+  constructor(context: vscode.ExtensionContext, modulePath?: string, env?: NodeJS.ProcessEnv) {
     const args = ['rpc', '--port', '0'];
     const extraOptions = ExtensionSettings.appMapIndexOptions;
     if (extraOptions) args.push(...extraOptions.split(' '));
     if (ExtensionSettings.appMapCommandLineVerbose) args.push('--verbose');
     const options: ProcessWatcherOptions = {
       id: ProcessId.RPC,
-      modulePath: modulePath,
+      modulePath,
+      binPath: AssetService.getAssetPath(AssetIdentifier.AppMapCli),
       log: NodeProcessService.outputChannel,
       args,
       env,
     };
     super(context, options);
+
+    this.rpcPort = ExtensionSettings.navieRpcPort;
+    if (this.rpcPort) {
+      this.options.log?.appendLine(
+        `Using RPC port assigned by extension setting appMap.navie.rpcPort: ${this.rpcPort}`
+      );
+    }
   }
 
   // Override
@@ -38,21 +48,38 @@ export default class RpcProcessWatcher extends ProcessWatcher {
   protected onStdout(data: string): void {
     super.onStdout(data);
 
+    // Wait for the RPC port to be logged, and detect it.
+    // If a project setting overrides the port, report that port instead.
+
     this.stdoutBuffer += data;
     const lines = this.stdoutBuffer.split('\n');
     this.stdoutBuffer = this.stdoutBuffer.slice(-100);
 
-    const portStr = lines
-      .map((line) => {
-        const match = line.match(/^Running JSON-RPC server on port: (\d+)$/);
-        if (match) return match[1];
-      })
-      .find(Boolean);
-    if (portStr) {
-      this.options.log?.appendLine(`AppMap index process listening on port ${portStr}`);
-      this.rpcPort = parseInt(portStr);
+    const detectRpcPort = () =>
+      lines
+        .map((line) => {
+          const match = line.match(/^Running JSON-RPC server on port: (\d+)$/);
+          if (match) return match[1];
+        })
+        .find(Boolean);
+
+    const consumeRpcPort = (portStr: string) => {
+      this.options.log?.appendLine(`AppMap RPC process listening on port ${portStr}`);
+      if (this.rpcPort) {
+        if (!this.configuredPortLogged) {
+          this.options.log?.appendLine(
+            `Ignoring stdout from RPC process for purposes of obtaining the RPC port, because it's already configured as ${this.rpcPort}`
+          );
+          this.configuredPortLogged = true;
+        }
+      } else {
+        this.rpcPort = parseInt(portStr);
+      }
       this._onRpcPortChange.fire(this.rpcPort);
-    }
+    };
+
+    const portStr = detectRpcPort();
+    if (portStr) consumeRpcPort(portStr);
   }
 
   dispose(): void {

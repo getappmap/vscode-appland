@@ -55,7 +55,6 @@ import downloadLatestJavaJar from './commands/downloadLatestJavaJar';
 import IndexJanitor from './lib/indexJanitor';
 import { unregister as unregisterTerminal } from './commands/installer/terminals';
 import getAppmapDir from './commands/getAppmapDir';
-import JavaAssets from './services/javaAssets';
 import checkAndTriggerFirstAppMapNotification from './lib/firstAppMapNotification';
 import Watcher from './services/watcher';
 import ChatSearchWebview from './webviews/chatSearchWebview';
@@ -64,6 +63,7 @@ import appmapState from './commands/appmapState';
 import navieConfigurationService from './services/navieConfigurationService';
 import RpcProcessService from './services/rpcProcessService';
 import CommandRegistry from './commands/commandRegistry';
+import AssetService from './assets/assetService';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   CommandRegistry.setContext(context).addWaitAlias({
@@ -234,16 +234,16 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     const runConfigService = new RunConfigService(projectState, workspaceServices, extensionState);
     context.subscriptions.push(RunConfigService);
 
-    context.subscriptions.push(JavaAssets);
-    JavaAssets.installLatestJavaJar(false);
-
     await workspaceServices.enroll(runConfigService);
 
+    AssetService.register(context);
+    const dependenciesInstalled = AssetService.updateAll();
     const chatSearchWebview: Promise<ChatSearchWebview> = (async () => {
-      processService.onReady(activateUptodateService);
-      await processService.install();
+      await dependenciesInstalled;
+
+      activateUptodateService();
       await workspaceServices.enroll(processService);
-      installAgent(context, processService.hasCLIBin);
+      installAgent(context);
 
       const rpcService = await RpcProcessService.create(
         context,
@@ -322,6 +322,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       configManager,
       runConfigService,
       commandRegistry: CommandRegistry,
+      dependenciesInstalled,
     };
   } catch (exception) {
     Telemetry.sendEvent(DEBUG_EXCEPTION, {

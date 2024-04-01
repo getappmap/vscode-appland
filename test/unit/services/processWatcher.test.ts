@@ -6,11 +6,13 @@ import { join } from 'path';
 import ps from 'ps-node';
 import sinon from 'sinon';
 import { promisify } from 'util';
+import type vscode from 'vscode';
 
 // To be stubbed
 import * as processWatcher from '../../../src/services/processWatcher';
 import * as navieConfigurationService from '../../../src/services/navieConfigurationService';
 import * as authentication from '../../../src/authentication';
+import ExtensionSettings from '../../../src/configuration/extensionSettings';
 
 // To be tested
 import {
@@ -25,6 +27,7 @@ function makeWatcher(opts: Partial<ProcessWatcherOptions> = {}) {
   return new ProcessWatcher(Sinon.stub as any, {
     id: 'test process' as unknown as ProcessId,
     modulePath: testModule,
+    binPath: 'unused',
     cwd: '.',
     ...opts,
   });
@@ -112,6 +115,23 @@ describe('ProcessWatcher', () => {
           APPMAP_API_KEY: 'the-appmap-key',
           APPMAP_API_URL: 'https://api.getappmap.com',
           OPENAI_API_KEY: 'the-openai-key',
+        });
+      });
+
+      it('uses it as Azure OpenAI key if Azure OpenAI is configured', async () => {
+        Sinon.stub(ExtensionSettings, 'appMapCommandLineEnvironment').value({
+          AZURE_OPENAI_API_VERSION: '2024-02-01',
+          AZURE_OPENAI_API_INSTANCE_NAME: 'appmap-openai',
+          AZURE_OPENAI_API_DEPLOYMENT_NAME: 'navie-gpt-35-test',
+        });
+        const env = await processWatcher.loadEnvironment({} as vscode.ExtensionContext);
+        expect(env).to.deep.equal({
+          APPMAP_API_KEY: 'the-appmap-key',
+          APPMAP_API_URL: 'https://api.getappmap.com',
+          AZURE_OPENAI_API_KEY: 'the-openai-key',
+          AZURE_OPENAI_API_VERSION: '2024-02-01',
+          AZURE_OPENAI_API_INSTANCE_NAME: 'appmap-openai',
+          AZURE_OPENAI_API_DEPLOYMENT_NAME: 'navie-gpt-35-test',
         });
       });
     });

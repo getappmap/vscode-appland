@@ -50,31 +50,20 @@ async function accessToken(): Promise<string | undefined> {
 export async function loadEnvironment(
   context: vscode.ExtensionContext
 ): Promise<NodeJS.ProcessEnv> {
-  const env: Record<string, string> = {};
-  const environmentVariables: { env: string; provider: LookupFunction }[] = [
-    {
-      env: 'APPMAP_API_URL',
-      provider: () => Promise.resolve(ExtensionSettings.apiUrl),
-    },
-    {
-      env: 'APPMAP_API_KEY',
-      provider: accessToken.bind(null),
-    },
-    {
-      env: 'OPENAI_API_KEY',
-      provider: getOpenAIApiKey.bind(null, context),
-    },
-  ];
+  const env: Record<string, string | undefined> = {
+    APPMAP_API_URL: ExtensionSettings.apiUrl,
+    APPMAP_API_KEY: await accessToken(),
+    ...ExtensionSettings.appMapCommandLineEnvironment,
+  };
 
-  for (const { env: key, provider } of environmentVariables) {
-    const value = await provider();
-    if (value) env[key] = value;
+  const openAIApiKey = await getOpenAIApiKey(context);
+  if (openAIApiKey) {
+    if ('AZURE_OPENAI_API_VERSION' in env) env.AZURE_OPENAI_API_KEY = openAIApiKey;
+    else env.OPENAI_API_KEY = openAIApiKey;
   }
 
   return env;
 }
-
-type LookupFunction = () => Promise<string | undefined>;
 
 export class ProcessWatcher implements vscode.Disposable {
   public process?: ChildProcess;

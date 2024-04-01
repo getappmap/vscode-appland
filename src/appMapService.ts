@@ -57,4 +57,5 @@ export default interface AppMapService {
   configManager: AppmapConfigManager;
   runConfigService: RunConfigService;
   commandRegistry: typeof CommandRegistry;
+  dependenciesInstalled: Promise<void>;
 }
