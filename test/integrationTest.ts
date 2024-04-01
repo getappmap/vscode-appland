@@ -137,12 +137,10 @@ async function integrationTest() {
         TEST_FILE: testFile,
         APPMAP_WRITE_PIDFILE: 'true',
         APPMAP_INTEGRATION_TEST: 'true',
-        YARN_LOCKFILE_NAME: 'bad.lock',
       },
       launchArgs: [
         '--user-data-dir',
         userDataDir,
-        // '--disable-extensions',
         '--disable-gpu',
         '--password-store=basic',
         workspaceDir,

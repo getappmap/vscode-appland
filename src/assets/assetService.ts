@@ -62,7 +62,7 @@ export default class AssetService {
     }
   }
 
-  public static async updateAll() {
+  public static async updateAll(throwOnError = false): Promise<void> {
     const appmapDir = join(homedir(), '.appmap');
     const dirs = [join(appmapDir, 'bin'), join(appmapDir, 'lib')];
     await Promise.all(dirs.map((dir) => mkdir(dir, { recursive: true })));
@@ -70,12 +70,16 @@ export default class AssetService {
     let holdingLock = false;
     let hasErrors = false;
     const sync = new LockfileSynchronizer(appmapDir);
-    return new Promise<void>((resolve) => {
+    return new Promise<void>((resolve, reject) => {
       sync
         .on('wait', () => {
           this.logInfo(`Waiting for assets to be updated by another process...`);
         })
         .on('error', (e) => {
+          if (throwOnError) {
+            reject(e);
+          }
+
           hasErrors = true;
           this.logError(e.stack);
         })

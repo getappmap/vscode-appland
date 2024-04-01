@@ -236,9 +236,10 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
     await workspaceServices.enroll(runConfigService);
 
+    AssetService.register(context);
+    const dependenciesInstalled = AssetService.updateAll();
     const chatSearchWebview: Promise<ChatSearchWebview> = (async () => {
-      AssetService.register(context);
-      await AssetService.updateAll();
+      await dependenciesInstalled;
 
       activateUptodateService();
       await workspaceServices.enroll(processService);
@@ -321,6 +322,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       configManager,
       runConfigService,
       commandRegistry: CommandRegistry,
+      dependenciesInstalled,
     };
   } catch (exception) {
     Telemetry.sendEvent(DEBUG_EXCEPTION, {

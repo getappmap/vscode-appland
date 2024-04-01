@@ -37,7 +37,7 @@ describe('Runtime analysis failed test tree item', () => {
   withAuthenticatedUser();
 
   let analysisTree: FindingsTreeDataProvider;
-  let prepareFindingsTask: NodeJS.Timer;
+  let prepareFindingsTask: NodeJS.Timeout;
   let appmapStr: string;
 
   const prepareFindings = async () => {

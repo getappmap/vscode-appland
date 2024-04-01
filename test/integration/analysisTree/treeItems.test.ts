@@ -29,7 +29,7 @@ describe('Runtime analysis findings tree items', () => {
   withAuthenticatedUser();
 
   let analysisTree: FindingsTreeDataProvider;
-  let prepareFindingsTask: NodeJS.Timer;
+  let prepareFindingsTask: NodeJS.Timeout;
 
   const prepareFindings = async () => {
     await Promise.all(

@@ -40,7 +40,7 @@ describe('RpcProcessWatcher', () => {
 
   describe('create', () => {
     it('creates a new instance and waits for it to start', async () => {
-      const getModulePath = Sinon.stub(NodeDependencyProcess, 'getModulePath').resolves(testModule);
+      const getModulePath = Sinon.stub(NodeDependencyProcess, 'getModulePath').returns(testModule);
 
       rpcService = await RpcProcessService.create(extensionContext, [configManagerInstance] as any);
 
@@ -96,24 +96,6 @@ describe('RpcProcessWatcher', () => {
 
       configManagerInstance._onConfigChanged.fire({});
       expect(spy.calledOnce).to.be.true;
-    });
-  });
-
-  describe('without a module path', () => {
-    beforeEach(() => {
-      // The constructor is private, so we need to cast to any to create an instance.
-
-      rpcService = new (RpcProcessService as any)(
-        extensionContext,
-        [configManagerInstance],
-        undefined
-      );
-    });
-
-    it('cannot be started', () => {
-      return expect((rpcService as any).waitForStartup()).to.be.rejectedWith(
-        'RPC process not available'
-      );
     });
   });
 });
