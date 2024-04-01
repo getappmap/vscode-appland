@@ -14,9 +14,9 @@ const LABEL_NO_NAME = 'Untitled AppMap';
 export interface IAppMapTreeItem {
   appmap: AppMapLoader | undefined;
 
-  parent: IAppMapTreeItem | undefined;
+  parent: (vscode.TreeItem & IAppMapTreeItem) | undefined;
 
-  children: IAppMapTreeItem[];
+  children: (vscode.TreeItem & IAppMapTreeItem)[];
 }
 
 class AppMapFolder {
@@ -139,7 +139,6 @@ class FolderTreeItem extends vscode.TreeItem implements IAppMapTreeItem {
       let { recorderType } = folderContent.folder;
       if (!recorderType) recorderType = 'unknown recorder type';
       const sortFunction = FolderTreeItem.SortMethod[recorderType] || FolderTreeItem.sortByName;
-      warn(`Sorting ${appmaps.length} appmaps by ${recorderType}`); // TODO: Remove
       folderContent.appmaps.sort(sortFunction);
 
       return new FolderTreeItem(workspaceTreeItem, folderContent.folder, folderContent.appmaps);
