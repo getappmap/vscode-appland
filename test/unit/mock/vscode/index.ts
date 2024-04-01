@@ -13,6 +13,7 @@ import workspace from './workspace';
 import window from './window';
 import commands from './commands';
 import * as env from './env';
+import * as authentication from './authentication';
 
 enum UIKind {
   Desktop = 'Desktop',
@@ -25,6 +26,7 @@ enum StatusBarAlignment {
 }
 
 const MockVSCode = {
+  authentication,
   EventEmitter,
   Terminal,
   TextDocument,
