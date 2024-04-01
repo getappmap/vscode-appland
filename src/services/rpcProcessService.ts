@@ -1,3 +1,4 @@
+import * as vscode from 'vscode';
 import { Disposable, EventEmitter, ExtensionContext } from 'vscode';
 import RpcProcessWatcher from './rpcProcessWatcher';
 import { ProgramName, getModulePath } from './nodeDependencyProcess';
@@ -6,12 +7,13 @@ import { AppmapConfigManagerInstance } from './appmapConfigManager';
 import { Client } from 'jayson/promise';
 import { ConfigurationRpc } from '@appland/rpc';
 import { join } from 'path';
+import { AUTHN_PROVIDER_NAME } from '../authentication';
 
 export default class RpcProcessService implements Disposable {
   public readonly _onRpcPortChange = new EventEmitter<number | undefined>();
   public readonly onRpcPortChange = this._onRpcPortChange.event;
 
-  private processWatcher?: RpcProcessWatcher;
+  private readonly processWatcher: RpcProcessWatcher;
   private rpcPort: number | undefined;
   private diposables: Disposable[] = [];
   private rpcClient?: Client;
@@ -26,12 +28,23 @@ export default class RpcProcessService implements Disposable {
       this.processWatcher.onRpcPortChange((port) => this.onProcessStart(port)),
       ...this.configServices.map((instance) =>
         instance.onConfigChanged(() => this.syncAppMapConfigurations())
-      )
+      ),
+      vscode.authentication.onDidChangeSessions((e) => {
+        if (e.provider.id !== AUTHN_PROVIDER_NAME) return;
+
+        // The API key won't be available immediately. Wait a tick.
+        setTimeout(() => {
+          NodeProcessService.outputChannel.appendLine(
+            'Authentication changed. Restarting the RPC server'
+          );
+          this.processWatcher.restart();
+        }, 0);
+      })
     );
   }
 
   public get available(): boolean {
-    return Boolean(this.rpcPort) && Boolean(this.processWatcher?.running);
+    return Boolean(this.rpcPort) && Boolean(this.processWatcher.running);
   }
 
   public async port(): Promise<number | undefined> {
@@ -78,12 +91,11 @@ export default class RpcProcessService implements Disposable {
   }
 
   private waitForStartup(): Promise<void> {
-    if (!this.processWatcher) return Promise.reject(new Error('RPC process not available'));
     if (this.processWatcher.running) return Promise.resolve();
 
     return new Promise((resolve, reject) => {
       // Wait for the first port change event
-      const disposable = this.processWatcher?.onRpcPortChange(() => {
+      const disposable = this.processWatcher.onRpcPortChange(() => {
         disposable?.dispose();
         clearTimeout(timeout);
         resolve();
@@ -92,7 +104,7 @@ export default class RpcProcessService implements Disposable {
         disposable?.dispose();
         reject(new Error('Timeout waiting for RPC port'));
       }, 60_000);
-      this.processWatcher?.start();
+      this.processWatcher.start();
     });
   }
 
@@ -115,7 +127,7 @@ export default class RpcProcessService implements Disposable {
   }
 
   dispose(): void {
-    this.processWatcher?.dispose();
+    this.processWatcher.dispose();
     this._onRpcPortChange.dispose();
     this.diposables.forEach((d) => d.dispose());
   }
