@@ -159,12 +159,23 @@ async function updateSymlink(assetPath: string, symlinkPath: string): Promise<vo
   }
 }
 
+function getPlatform() {
+  switch (process.platform) {
+    case 'win32':
+      return 'win';
+    case 'darwin':
+      return 'macos';
+    default:
+      return 'linux';
+  }
+}
+
 export const AppMapCliDownloader = new AssetDownloader(
   'AppMap CLI',
   [new NpmVersionResolver('@appland/appmap'), new StaticVersionResolver('appmap')],
   [
     new GitHubDownloadUrlResolver('getappmap/appmap-js', (version) =>
-      encodeURIComponent(`@appland/appmap-v${version}/appmap-${process.platform}-${process.arch}`)
+      encodeURIComponent(`@appland/appmap-v${version}/appmap-${getPlatform()}-${process.arch}`)
     ),
   ],
   {
@@ -187,7 +198,7 @@ export const ScannerDownloader = new AssetDownloader(
   [new NpmVersionResolver('@appland/scanner'), new StaticVersionResolver('scanner')],
   [
     new GitHubDownloadUrlResolver('getappmap/appmap-js', (version) =>
-      encodeURIComponent(`@appland/scanner-v${version}/scanner-${process.platform}-${process.arch}`)
+      encodeURIComponent(`@appland/scanner-v${version}/scanner-${getPlatform()}-${process.arch}`)
     ),
   ],
   {
