@@ -6,6 +6,7 @@ import { VersionResolver } from './versionResolver';
 import AssetService from './assetService';
 import { DEBUG_EXCEPTION, Telemetry } from '../telemetry';
 import ErrorCode from '../telemetry/definitions/errorCodes';
+import { Uri } from 'vscode';
 
 type DownloadHooks = {
   shouldDownload?: (version: string) => boolean | Promise<boolean>;
@@ -78,8 +79,9 @@ export default class AssetDownloader {
 
           stream = Readable.from(res.body);
         } else if (downloadUrl.startsWith('file://')) {
-          AssetService.logInfo(`Updating ${this.assetName} ${versionString} from ${downloadUrl}`);
-          stream = createReadStream(downloadUrl.slice('file://'.length));
+          const uri = Uri.parse(downloadUrl);
+          AssetService.logInfo(`Updating ${this.assetName} ${versionString} from ${uri}`);
+          stream = createReadStream(uri.fsPath);
         } else {
           throw new Error(`Unsupported download URL: ${downloadUrl}`);
         }
