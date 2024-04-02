@@ -1,3 +1,10 @@
+## [0.117.1](https://github.com/getappmap/vscode-appland/compare/v0.117.0...v0.117.1) (2024-04-02)
+
+
+### Bug Fixes
+
+* Transform platform identifiers in download URLs ([42713b7](https://github.com/getappmap/vscode-appland/commit/42713b71392d91659fe599709c535bbb3c33df30))
+
 # [0.117.0](https://github.com/getappmap/vscode-appland/compare/v0.116.0...v0.117.0) (2024-04-02)
 
 
