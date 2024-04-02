@@ -1,3 +1,18 @@
+# [0.117.0](https://github.com/getappmap/vscode-appland/compare/v0.116.0...v0.117.0) (2024-04-02)
+
+
+### Bug Fixes
+
+* Retrieving saved filters always returns an array ([214f9fd](https://github.com/getappmap/vscode-appland/commit/214f9fd7bea00ec64e43af6eec4ff4641240f60d))
+* RPC service will restart when the authentication session changes ([74af543](https://github.com/getappmap/vscode-appland/commit/74af5439163e833d40acec52e560bdd104cfef80))
+
+
+### Features
+
+* Allow configuring CLI environment ([2e203fa](https://github.com/getappmap/vscode-appland/commit/2e203fa8546ec8f308cadbd74651e7283e374f58))
+* Configure Navie port manually for dev + debugging ([d7b22c6](https://github.com/getappmap/vscode-appland/commit/d7b22c61d356ae18333e7bf8540398bce16b7627))
+* Implement a more resilient asset download strategy ([2a0108b](https://github.com/getappmap/vscode-appland/commit/2a0108b1eb2a15b832ba8b223fc9538f59605150))
+
 # [0.116.0](https://github.com/getappmap/vscode-appland/compare/v0.115.0...v0.116.0) (2024-03-22)
 
 
