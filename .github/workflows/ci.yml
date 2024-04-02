@@ -28,7 +28,7 @@ jobs:
           key: ${{ github.sha }}
       - uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
           cache: yarn
       - run: yarn install --immutable
       - run: yarn pretest
@@ -58,7 +58,7 @@ jobs:
           key: ${{ github.sha }}
       - uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
           cache: yarn
       - run: xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" -- yarn test:unit
         name: Run unit tests
@@ -86,7 +86,7 @@ jobs:
           key: ${{ github.sha }}
       - uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
           cache: yarn
       - run:
           xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" -- yarn test:integration
@@ -115,7 +115,7 @@ jobs:
           key: ${{ github.sha }}
       - uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
           cache: yarn
       - run: xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" -- yarn test:system
         name: Run system tests
@@ -136,7 +136,7 @@ jobs:
           restore-keys: ${{ runner.os }}-modules-
       - uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
           cache: yarn
       - run: yarn semantic-release
         env:
