@@ -1,3 +1,10 @@
+## [0.117.2](https://github.com/getappmap/vscode-appland/compare/v0.117.1...v0.117.2) (2024-04-02)
+
+
+### Bug Fixes
+
+* Windows binary assets include the `.exe` file extension ([15f4d71](https://github.com/getappmap/vscode-appland/commit/15f4d716e1d189a453c9d183e3a8340c44523e42))
+
 ## [0.117.1](https://github.com/getappmap/vscode-appland/compare/v0.117.0...v0.117.1) (2024-04-02)
 
 
