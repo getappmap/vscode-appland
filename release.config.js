@@ -21,7 +21,12 @@ module.exports = {
         publishCmd: 'yarn publish -p $VSCE_TOKEN',
       },
     ],
-    '@semantic-release/git',
+    [
+      '@semantic-release/git',
+      {
+        assets: ['CHANGELOG.md', 'package.json', 'resources/versions.json'],
+      },
+    ],
     [
       '@semantic-release/github',
       {
