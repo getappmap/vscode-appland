@@ -1,3 +1,10 @@
+## [0.117.3](https://github.com/getappmap/vscode-appland/compare/v0.117.2...v0.117.3) (2024-04-02)
+
+
+### Bug Fixes
+
+* Windows file URIs now properly omit the hostname ([2cae946](https://github.com/getappmap/vscode-appland/commit/2cae946e99ffa48da41e398ca26d250eaaef69d0))
+
 ## [0.117.2](https://github.com/getappmap/vscode-appland/compare/v0.117.1...v0.117.2) (2024-04-02)
 
 
