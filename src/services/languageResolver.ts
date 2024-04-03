@@ -91,7 +91,7 @@ const LANGUAGES: LanguageDefinition[] = [
   {
     id: 'javascript',
     name: 'JavaScript',
-    extensions: ['.cjs', '.es6', '.js', '.jsx', '.mjs', '.ts'],
+    extensions: ['.cjs', '.es6', '.js', '.jsx', '.mjs', '.ts', '.tsx'],
   },
   {
     id: 'kotlin',
