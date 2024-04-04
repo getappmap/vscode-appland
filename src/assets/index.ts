@@ -105,6 +105,9 @@ class BundledFileDownloadUrlResolver implements DownloadUrlResolver {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export const binaryName = (name: string) => (process.platform === 'win32' ? `${name}.exe` : name);
+
 // These are not cached because homdir may change in testing
 const globalAppMapDir = () => join(homedir(), '.appmap');
 const appMapCliLibDir = () => join(globalAppMapDir(), 'lib', 'appmap');
@@ -159,7 +162,7 @@ async function updateSymlink(assetPath: string, symlinkPath: string): Promise<vo
   }
 }
 
-function getPlatform() {
+function getPlatformIdentifier() {
   switch (process.platform) {
     case 'win32':
       return `win-${process.arch}.exe`;
@@ -175,18 +178,24 @@ export const AppMapCliDownloader = new AssetDownloader(
   [new NpmVersionResolver('@appland/appmap'), new StaticVersionResolver('appmap')],
   [
     new GitHubDownloadUrlResolver('getappmap/appmap-js', (version) =>
-      encodeURIComponent(`@appland/appmap-v${version}/appmap-${getPlatform()}`)
+      encodeURIComponent(`@appland/appmap-v${version}/appmap-${getPlatformIdentifier()}`)
     ),
   ],
   {
     shouldDownload: (version: string) =>
       isAssetMissing(join(appMapCliLibDir(), `appmap-v${version}`)),
+    async skippedDownload(version) {
+      // Restore symlinks if need be. Otherwise the user would need to wait until the next release.
+      const binaryPath = join(appMapCliLibDir(), `appmap-v${version}`);
+      const symlinkPath = join(appMapBinDir(), binaryName('appmap'));
+      await updateSymlink(binaryPath, symlinkPath);
+    },
     beforeDownload: () => mkdir(appMapCliLibDir(), { recursive: true }) as Promise<void>,
     download: (stream, version) =>
       writeToFile(stream, join(appMapCliLibDir(), `appmap-v${version}`), 'wx'),
     async afterDownload(version) {
       const binaryPath = join(appMapCliLibDir(), `appmap-v${version}`);
-      const symlinkPath = join(appMapBinDir(), 'appmap');
+      const symlinkPath = join(appMapBinDir(), binaryName('appmap'));
       await markExecutable(binaryPath);
       await updateSymlink(binaryPath, symlinkPath);
     },
@@ -198,18 +207,24 @@ export const ScannerDownloader = new AssetDownloader(
   [new NpmVersionResolver('@appland/scanner'), new StaticVersionResolver('scanner')],
   [
     new GitHubDownloadUrlResolver('getappmap/appmap-js', (version) =>
-      encodeURIComponent(`@appland/scanner-v${version}/scanner-${getPlatform()}`)
+      encodeURIComponent(`@appland/scanner-v${version}/scanner-${getPlatformIdentifier()}`)
     ),
   ],
   {
     shouldDownload: (version: string) =>
       isAssetMissing(join(scannerCliLibDir(), `scanner-v${version}`)),
+    async skippedDownload(version) {
+      // Restore symlinks if need be. Otherwise the user would need to wait until the next release.
+      const binaryPath = join(scannerCliLibDir(), `scanner-v${version}`);
+      const symlinkPath = join(appMapBinDir(), binaryName('scanner'));
+      await updateSymlink(binaryPath, symlinkPath);
+    },
     beforeDownload: () => mkdir(scannerCliLibDir(), { recursive: true }) as Promise<void>,
     download: (stream, version) =>
       writeToFile(stream, join(scannerCliLibDir(), `scanner-v${version}`), 'wx'),
     async afterDownload(version) {
       const binaryPath = join(scannerCliLibDir(), `scanner-v${version}`);
-      const symlinkPath = join(appMapBinDir(), 'scanner');
+      const symlinkPath = join(appMapBinDir(), binaryName('scanner'));
       await markExecutable(binaryPath);
       await updateSymlink(binaryPath, symlinkPath);
     },
