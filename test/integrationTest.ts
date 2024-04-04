@@ -87,7 +87,7 @@ async function integrationTest() {
   const extensionDevelopmentPath = resolve(__dirname, '..');
   const userDataDir = resolve(__dirname, '../.vscode-test/user-data');
 
-  const vscodeExecutablePath = await downloadAndUnzipVSCode();
+  const vscodeExecutablePath = await downloadAndUnzipVSCode(process.env.VSCODE_INSIDERS_VERSION);
   const [cliPath] = resolveCliArgsFromVSCodeExecutablePath(vscodeExecutablePath);
 
   if (process.env.TEST_YARN_INSTALL !== 'false') {
