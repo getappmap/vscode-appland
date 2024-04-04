@@ -1,3 +1,10 @@
+## [0.117.4](https://github.com/getappmap/vscode-appland/compare/v0.117.3...v0.117.4) (2024-04-04)
+
+
+### Bug Fixes
+
+* Windows binaries properly use the .exe extension ([375fd76](https://github.com/getappmap/vscode-appland/commit/375fd768dd401c8bbed299d409915fe8b244c794))
+
 ## [0.117.3](https://github.com/getappmap/vscode-appland/compare/v0.117.2...v0.117.3) (2024-04-02)
 
 
