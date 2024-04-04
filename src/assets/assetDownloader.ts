@@ -8,8 +8,9 @@ import { DEBUG_EXCEPTION, Telemetry } from '../telemetry';
 import ErrorCode from '../telemetry/definitions/errorCodes';
 import { Uri } from 'vscode';
 
-type DownloadHooks = {
+export type DownloadHooks = {
   shouldDownload?: (version: string) => boolean | Promise<boolean>;
+  skippedDownload?: (version: string) => void | Promise<void>;
   beforeDownload?: (version: string) => void | Promise<void>;
   download(stream: Readable, version: string): void | Promise<void>;
   afterDownload?: (version: string) => void | Promise<void>;
@@ -44,6 +45,10 @@ export default class AssetDownloader {
     const shouldDownload = await this.downloadHooks.shouldDownload?.(version);
     if (!shouldDownload) {
       AssetService.logInfo(`${this.assetName} is up to date (${versionString}).`);
+
+      // If this throws it's not a big deal. We weren't going to download anyway.
+      // The asset log will indicate the error.
+      await this.downloadHooks.skippedDownload?.(version);
       return;
     }
 
