@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { AppMapCliDownloader, JavaAgentDownloader, ScannerDownloader } from '.';
+import { AppMapCliDownloader, JavaAgentDownloader, ScannerDownloader, binaryName } from '.';
 import AssetDownloader from './assetDownloader';
 import { homedir } from 'os';
 import { join } from 'path';
@@ -52,9 +52,9 @@ export default class AssetService {
     // This could be a property on each AssetDownloader
     switch (assetId) {
       case AssetIdentifier.AppMapCli:
-        return join(homedir(), '.appmap', 'bin', 'appmap');
+        return join(homedir(), '.appmap', 'bin', binaryName('appmap'));
       case AssetIdentifier.ScannerCli:
-        return join(homedir(), '.appmap', 'bin', 'scanner');
+        return join(homedir(), '.appmap', 'bin', binaryName('scanner'));
       case AssetIdentifier.JavaAgent:
         return join(homedir(), '.appmap', 'lib', 'java', 'appmap.jar');
       default:
