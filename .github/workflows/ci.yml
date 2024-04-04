@@ -3,6 +3,9 @@ name: CI
 on:
   push:
 
+env:
+  VSCODE_INSIDERS_VERSION: 1.87.2
+
 jobs:
   prepare:
     # This first step pulls dependencies and compiles the extension.
