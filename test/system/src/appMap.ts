@@ -32,7 +32,7 @@ export default class AppMap {
   }
 
   get instructionsTree(): Locator {
-    return this.page.locator('.pane:has(.title:text("Instructions"))');
+    return this.page.locator('.pane:has(.title:text("AppMap Recording Instructions"))');
   }
 
   get findingsTree(): Locator {
@@ -40,7 +40,7 @@ export default class AppMap {
   }
 
   get appMapTree(): Locator {
-    return this.page.locator('.pane:has(.title:text("AppMaps"))');
+    return this.page.locator('.pane:has(.title:text("AppMap Data"))');
   }
 
   public instructionsTreeItem(step: InstructionStep): Locator {
@@ -65,17 +65,21 @@ export default class AppMap {
     }
   }
 
-  public async openActionPanel(waitForAppMaps = false): Promise<void> {
-    await this.actionPanelButton.click();
-    await this.ready(waitForAppMaps);
+  public async expandInstructions(): Promise<void> {
+    if (await this.instructionsTree.locator('.pane-body').isHidden()) {
+      await this.instructionsTree.click();
+    }
   }
 
-  public async ready(waitForAppMaps = false): Promise<void> {
-    const welcomeView = await this.page.locator(
-      '.split-view-view:has(.title:text("AppMaps")) >> .welcome-view'
-    );
+  public async openActionPanel(): Promise<void> {
+    await this.actionPanelButton.click();
+  }
 
-    await welcomeView.first().waitFor({ state: waitForAppMaps ? 'hidden' : 'visible' });
+  public async ready(): Promise<void> {
+    const welcomeView = this.page.locator(
+      '.split-view-view:has(.title:text("AppMap Data")) >> .welcome-view'
+    );
+    await welcomeView.first().waitFor({ state: 'visible' });
   }
 
   public async openInstruction(step: InstructionStep): Promise<void> {
