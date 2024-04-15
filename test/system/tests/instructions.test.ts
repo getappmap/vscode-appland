@@ -23,6 +23,7 @@ describe('Instructions tree view', function () {
   it('accurately depicts the installation state', async function () {
     const { driver, project } = this;
     await driver.appMap.openActionPanel();
+    await driver.appMap.expandInstructions();
     await driver.appMap.assertInstructionStepStatus(
       InstructionStep.InstallAppMapAgent,
       InstructionStepStatus.Pending
@@ -72,6 +73,7 @@ describe('Instructions tree view', function () {
     const { driver } = this;
 
     await driver.appMap.openActionPanel();
+    await driver.appMap.expandInstructions();
 
     const pages = [
       { step: InstructionStep.InstallAppMapAgent, title: 'Add AppMap to your project' },
@@ -99,6 +101,7 @@ describe('Instructions tree view', function () {
     };
 
     await driver.appMap.openActionPanel();
+    await driver.appMap.expandInstructions();
     await driver.appMap.openInstruction(InstructionStep.InstallAppMapAgent);
     await assertTabs(1);
 
@@ -114,6 +117,7 @@ describe('Instructions tree view', function () {
     const pidfile = path.join(project.workspacePath, '**', 'index.pid');
     await driver.waitForFile(pidfile);
     await driver.appMap.openActionPanel();
+    await driver.appMap.expandInstructions();
     await project.restoreFiles('**/*.appmap.json');
     await driver.appMap.openInstruction(InstructionStep.NavieIntroduction);
     await driver.appMap.pendingBadge.waitFor({ state: 'hidden' });
@@ -123,6 +127,7 @@ describe('Instructions tree view', function () {
     const { driver, project } = this;
 
     await driver.appMap.openActionPanel();
+    await driver.appMap.expandInstructions();
     await driver.appMap.ready();
 
     await driver.appMap.pendingBadge.waitFor({ state: 'visible' });
@@ -176,6 +181,7 @@ describe('Instructions tree view', function () {
     await driver.waitForReady();
     await driver.appMap.openActionPanel();
     await driver.appMap.ready();
+    await driver.appMap.expandInstructions();
 
     const expectProjectPicker = () =>
       waitFor(
