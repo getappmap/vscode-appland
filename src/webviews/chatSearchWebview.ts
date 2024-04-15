@@ -173,6 +173,18 @@ export default class ChatSearchWebview {
         case 'show-appmap-tree':
           await vscode.commands.executeCommand('appmap.views.appmaps.focus');
           break;
+
+        case 'select-llm-option': {
+          const { option } = message;
+          if (option === 'default') {
+            await vscode.commands.executeCommand('appmap.clearNavieAiSettings');
+          } else if (option === 'own-key') {
+            await vscode.commands.executeCommand('appmap.openAIApiKey.set');
+          } else {
+            console.error(`Unknown option: ${option}`);
+          }
+          break;
+        }
       }
     });
 

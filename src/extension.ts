@@ -61,6 +61,7 @@ import navieConfigurationService from './services/navieConfigurationService';
 import RpcProcessService from './services/rpcProcessService';
 import CommandRegistry from './commands/commandRegistry';
 import AssetService from './assets/assetService';
+import clearNavieAiSettings from './commands/clearNavieAiSettings';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   CommandRegistry.setContext(context).addWaitAlias({
@@ -272,6 +273,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     updateAppMapConfigs(context, runConfigService, workspaceServices);
     downloadLatestJavaJar(context);
     getAppmapDir(context, workspaceServices);
+    clearNavieAiSettings(context);
 
     // Use this notification to track when the extension is activated.
     if (Environment.isSystemTest) {

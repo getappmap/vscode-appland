@@ -79,6 +79,10 @@ export default function mountChatSearchView() {
     app.$on('open-location', (location) => {
       vscode.postMessage({ command: 'open-location', location });
     });
+
+    app.$on('select-llm-option', (option) => {
+      vscode.postMessage({ command: 'select-llm-option', option });
+    });
   });
 
   vscode.postMessage({ command: 'chat-search-ready' });
