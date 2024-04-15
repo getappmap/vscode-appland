@@ -16,6 +16,15 @@ export default function navieConfigurationService(context: vscode.ExtensionConte
           `Appmap OpenAI API Key has been erased. Run the command 'Developer: Reload Window' to stop using AppMap Navie in "bring your own key" mode.`
         );
       }
+
+      const res = await vscode.window.showInformationMessage(
+        'The window must be reloaded for the changes to take effect. Reload now?',
+        { modal: true },
+        'Reload'
+      );
+      if (res === 'Reload') {
+        vscode.commands.executeCommand('workbench.action.reloadWindow');
+      }
     }),
     vscode.commands.registerCommand('appmap.openAIApiKey.status', async () => {
       const key = await getOpenAIApiKey(context);
