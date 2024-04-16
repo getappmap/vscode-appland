@@ -8,6 +8,7 @@ import { AUTHN_PROVIDER_NAME } from '../authentication';
 import getWebviewContent from './getWebviewContent';
 import { workspaceServices } from '../services/workspaceServices';
 import { RunConfigService, RunConfigServiceInstance } from '../services/runConfigService';
+import ExtensionState from '../configuration/extensionState';
 
 type PageMessage = {
   page: string;
@@ -29,12 +30,15 @@ export default class InstallGuideWebView {
 
   public static register(
     context: vscode.ExtensionContext,
-    projectStates: ProjectStateServiceInstance[]
+    projectStates: ProjectStateServiceInstance[],
+    extensionState: ExtensionState
   ): void {
     context.subscriptions.push(
       vscode.commands.registerCommand(
         this.command,
         async (page?: DocPageId, focusCommand?: string) => {
+          extensionState.hasViewedInstallGuide = true;
+
           if (!page) page = defaultPageId(projectStates);
 
           // Short circuit if no project is open. The project picker has the correct prompts
