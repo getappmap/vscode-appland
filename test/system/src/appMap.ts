@@ -84,7 +84,7 @@ export default class AppMap {
 
   public async openInstruction(step: InstructionStep): Promise<void> {
     await this.instructionsTreeItem(step).click();
-    await this.instructionsWebview.ready();
+    if (step !== InstructionStep.NavieIntroduction) await this.instructionsWebview.ready();
   }
 
   public async assertInstructionStepStatus(
