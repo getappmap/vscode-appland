@@ -2,6 +2,28 @@ import assert from 'assert';
 import * as path from 'path';
 import { waitFor } from '../../waitFor';
 import { InstructionStep, InstructionStepStatus } from '../src/appMap';
+import Driver from '../src/driver';
+
+async function waitForTabs(expectedTabs: number, driver: Driver): Promise<void> {
+  let timeout: NodeJS.Timeout;
+  let interval: NodeJS.Timeout;
+
+  return new Promise<void>((resolve, reject) => {
+    timeout = setTimeout(async () => {
+      clearTimeout(timeout);
+      clearInterval(interval);
+      reject(`Expected ${expectedTabs} tabs to be open, actually were ${await driver.tabCount()}`);
+    }, 5_000);
+
+    interval = setInterval(async () => {
+      if ((await driver.tabCount()) === expectedTabs) {
+        clearTimeout(timeout);
+        clearInterval(interval);
+        resolve();
+      }
+    }, 100);
+  });
+}
 
 describe('Instructions tree view', function () {
   beforeEach(async function () {
@@ -52,8 +74,7 @@ describe('Instructions tree view', function () {
       InstructionStepStatus.Complete
     );
 
-    await driver.appMap.openInstruction(InstructionStep.NavieIntroduction);
-
+    // this should already be complete because Navie opens automatically
     await driver.appMap.assertInstructionStepStatus(
       InstructionStep.NavieIntroduction,
       InstructionStepStatus.Complete
@@ -95,18 +116,15 @@ describe('Instructions tree view', function () {
   it('re-uses web views', async function () {
     const { driver } = this;
 
-    const assertTabs = async (expectedCount: number): Promise<void> => {
-      const numTabs = await driver.tabCount();
-      assert.strictEqual(numTabs, expectedCount, 'Wrong number of tabs');
-    };
-
     await driver.appMap.openActionPanel();
     await driver.appMap.expandInstructions();
     await driver.appMap.openInstruction(InstructionStep.InstallAppMapAgent);
-    await assertTabs(1);
+
+    // Navie and the Install Guide should be open
+    await waitForTabs(2, driver);
 
     await driver.appMap.openInstruction(InstructionStep.RecordAppMaps);
-    await assertTabs(1);
+    await waitForTabs(2, driver);
   });
 
   it('hides the pending badge upon completing the installation steps', async function () {
@@ -119,7 +137,7 @@ describe('Instructions tree view', function () {
     await driver.appMap.openActionPanel();
     await driver.appMap.expandInstructions();
     await project.restoreFiles('**/*.appmap.json');
-    await driver.appMap.openInstruction(InstructionStep.NavieIntroduction);
+    // we don't need to open Navie because it opens automatically
     await driver.appMap.pendingBadge.waitFor({ state: 'hidden' });
   });
 
@@ -144,6 +162,13 @@ describe('Instructions tree view', function () {
       InstructionStepStatus.Pending
     );
 
+    // open instructions
+    await driver.appMap.openInstruction(InstructionStep.InstallAppMapAgent);
+
+    // Wait for Navie to open automatically
+    await waitForTabs(2, driver);
+
+    // ensure that the instructions are active
     await driver.appMap.openInstruction(InstructionStep.InstallAppMapAgent);
     await driver.instructionsWebview.getPageByTitle('Add AppMap to your project').waitFor();
 
@@ -158,21 +183,8 @@ describe('Instructions tree view', function () {
     await project.restoreFiles('**/*.appmap.json');
 
     await driver.instructionsWebview.clickButton('Next');
-
-    // Wait five seconds for the second tab to open.
-    // The second tab is the Navie chat interface.
-    await new Promise((resolve, reject) => {
-      const timeout = setTimeout(() => {
-        reject(new Error('Timeout waiting for chat interface'));
-      }, 5_000);
-      const interval = setInterval(async () => {
-        if ((await driver.tabCount()) === 2) {
-          clearTimeout(timeout);
-          clearInterval(interval);
-          resolve(undefined);
-        }
-      }, 100);
-    });
+    // there should be three tabs now: two Navie tabs and the instructions
+    await waitForTabs(3, driver);
   });
 
   it('always opens the project picker in an empty/undefined workspace', async function () {

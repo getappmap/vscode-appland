@@ -8,6 +8,7 @@ export const Keys = {
     INSTALL_VERSION: 'appmap.applandinc.installVersion',
     ANALYSIS_CTA_DISMISSED: 'appmap.applandinc.analysisCTADismissed',
     FIRST_MAP_NOTIFICATION_SHOWN: 'appmap.applandinc.firstAppMapNotificationShown',
+    OPENED_NAVIE: 'appmap.applandinc.opened_navie',
   },
   Workspace: {
     CONFIGURED_AGENT: 'appmap.applandinc.agentConfigured',
@@ -109,6 +110,14 @@ export default class ExtensionState implements vscode.Disposable {
 
   set hasViewedInstallGuide(value: boolean) {
     this.context.globalState.update(Keys.Global.INSTALL_GUIDE_VIEWED, value);
+  }
+
+  get hasViewedNavie(): boolean {
+    return Boolean(this.context.globalState.get(Keys.Global.OPENED_NAVIE, false));
+  }
+
+  set hasViewedNavie(value: boolean) {
+    this.context.globalState.update(Keys.Global.OPENED_NAVIE, value);
   }
 
   get firstAppMapNotificationShown(): boolean {

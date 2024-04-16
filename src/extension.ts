@@ -46,7 +46,7 @@ import openCodeObjectInSource from './commands/openCodeObjectInSource';
 import learnMoreRuntimeAnalysis from './commands/learnMoreRuntimeAnalysis';
 import SignInViewProvider from './webviews/signInWebview';
 import SignInManager from './services/signInManager';
-import tryOpenInstallGuide from './commands/tryOpenInstallGuide';
+import tryOpenNavie from './commands/tryOpenNavie';
 import { AppmapConfigManager } from './services/appmapConfigManager';
 import { findByName } from './commands/findByName';
 import { RunConfigService } from './services/runConfigService';
@@ -147,7 +147,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     await openCodeObjectInSource(context);
     await learnMoreRuntimeAnalysis(context);
     appmapHoverProvider(context, lineInfoIndex);
-    tryOpenInstallGuide(extensionState);
+    tryOpenNavie(extensionState);
 
     const activateUptodateService = async () => {
       if (!(appmapUptodateService && sourceFileWatcher)) return;
@@ -224,8 +224,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     badge.initialize(projectStates);
     context.subscriptions.push(badge);
 
-    InstallGuideWebView.register(context, projectStates);
-    const openedInstallGuide = await vscode.commands.executeCommand('appmap.tryOpenInstallGuide');
+    InstallGuideWebView.register(context, projectStates, extensionState);
 
     FindingsOverviewWebview.register(context);
     FindingInfoWebview.register(context);
@@ -282,7 +281,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     downloadLatestJavaJar(context);
     getAppmapDir(context, workspaceServices);
 
-    if (!openedInstallGuide && !SignInManager.shouldShowSignIn())
+    if (!extensionState.hasViewedInstallGuide && !SignInManager.shouldShowSignIn())
       promptInstall(workspaceServices, extensionState);
 
     // Use this notification to track when the extension is activated.
@@ -296,6 +295,9 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     }
 
     vscode.window.onDidCloseTerminal(unregisterTerminal, null, context.subscriptions);
+
+    // try to open Navie if it's never been opened
+    vscode.commands.executeCommand('appmap.tryOpenNavie');
 
     await AnalysisManager.register(context);
 
