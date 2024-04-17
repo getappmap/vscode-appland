@@ -1,6 +1,7 @@
 /* eslint @typescript-eslint/naming-convention: 0 */
 /* eslint @typescript-eslint/no-unused-vars: 0 */
 
+import Sinon from 'sinon';
 import type { workspace, WorkspaceFolder } from 'vscode';
 import { URI } from 'vscode-uri';
 
@@ -26,11 +27,19 @@ export const TEST_WORKSPACE = {
   name: 'test',
 };
 
+const listener = () => () => ({ dispose: Sinon.stub() });
+
+export const EVENTS = {
+  onDidChangeWorkspaceFolders: listener(),
+  onDidChangeConfiguration: listener(),
+};
+
 export default {
   fs,
   getConfiguration: () => new Map<string, unknown>(),
   workspaceFolders: [],
-  onDidChangeConfiguration: () => () => unimplemented,
+  onDidChangeConfiguration: EVENTS.onDidChangeConfiguration,
+  onDidChangeWorkspaceFolders: EVENTS.onDidChangeWorkspaceFolders,
   getWorkspaceFolder(uri: unknown): WorkspaceFolder | undefined {
     return uri ? TEST_WORKSPACE : undefined;
   },

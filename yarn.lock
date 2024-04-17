@@ -250,10 +250,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/rpc@npm:^1.1.0, @appland/rpc@npm:^1.6.0, @appland/rpc@npm:latest":
+"@appland/rpc@npm:^1.1.0, @appland/rpc@npm:^1.6.0":
   version: 1.6.0
   resolution: "@appland/rpc@npm:1.6.0"
   checksum: 8c407df795ddbd0557e1589eef971ec018ca4ec4d76730b50acfd50c39674c9be7ec995ae43bbfb27e9ce626461a331e0b240944b92a82bde8f4648afef0994c
+  languageName: node
+  linkType: hard
+
+"@appland/rpc@npm:^1.7.0":
+  version: 1.7.0
+  resolution: "@appland/rpc@npm:1.7.0"
+  checksum: 80becef5d694ad0ee93f30b55409ff470f0788ec301672d725de68a78a9a755ce9416662d27d10c78ac8dbf91cb289ac4216391a41d9ca5baf14faedf7fcd184
   languageName: node
   linkType: hard
 
@@ -2911,6 +2918,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"acorn-walk@npm:^8.2.0":
+  version: 8.3.2
+  resolution: "acorn-walk@npm:8.3.2"
+  checksum: 3626b9d26a37b1b427796feaa5261faf712307a8920392c8dce9a5739fb31077667f4ad2ec71c7ac6aaf9f61f04a9d3d67ff56f459587206fc04aa31c27ef392
+  languageName: node
+  linkType: hard
+
 "acorn@npm:^7.1.1, acorn@npm:^7.4.0":
   version: 7.4.1
   resolution: "acorn@npm:7.4.1"
@@ -3177,6 +3191,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"appmap-node@npm:^2.19.3":
+  version: 2.19.3
+  resolution: "appmap-node@npm:2.19.3"
+  dependencies:
+    acorn-walk: ^8.2.0
+    astring: ^1.8.6
+    chalk: <5
+    json5: ^2.2.3
+    meriyah: ^4.3.7
+    source-map-js: ^1.0.2
+    yaml: ^2.3.4
+  bin:
+    appmap-node: bin/appmap-node.js
+  checksum: ffb964654004f859ab082d826ffb831725bf8b1e32c7f18f62692a3077e1b938b9568e63cea29db3940f5c1b953db14b822742dc7db17f0c9893c463fa3a26b2
+  languageName: node
+  linkType: hard
+
 "appmap@workspace:.":
   version: 0.0.0-use.local
   resolution: "appmap@workspace:."
@@ -3186,7 +3217,7 @@ __metadata:
     "@appland/components": ^4.12.0
     "@appland/diagrams": ^1.8.0
     "@appland/models": ^2.10.0
-    "@appland/rpc": latest
+    "@appland/rpc": ^1.7.0
     "@appland/scanner": ^1.86.0
     "@appland/sequence-diagram": ^1.12.0
     "@playwright/test": ^1.22.2
@@ -3214,6 +3245,7 @@ __metadata:
     "@vscode/vsce": ^2.19.0
     "@vue/compiler-sfc": ^3.2.37
     "@yarnpkg/parsers": ^3.0.0-rc.45
+    appmap-node: ^2.19.3
     bootstrap: ^4.5.3
     bootstrap-autocomplete: ^2.3.7
     browserify-fs: ^1.0.0
@@ -3448,6 +3480,15 @@ __metadata:
   version: 2.0.0
   resolution: "astral-regex@npm:2.0.0"
   checksum: 876231688c66400473ba505731df37ea436e574dd524520294cc3bbc54ea40334865e01fa0d074d74d036ee874ee7e62f486ea38bc421ee8e6a871c06f011766
+  languageName: node
+  linkType: hard
+
+"astring@npm:^1.8.6":
+  version: 1.8.6
+  resolution: "astring@npm:1.8.6"
+  bin:
+    astring: bin/astring
+  checksum: 6f034d2acef1dac8bb231e7cc26c573d3c14e1975ea6e04f20312b43d4f462f963209bc64187d25d477a182dc3c33277959a0156ab7a3617aa79b1eac4d88e1f
   languageName: node
   linkType: hard
 
@@ -4115,6 +4156,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"chalk@npm:<5, chalk@npm:^4.0.0, chalk@npm:^4.1.0, chalk@npm:^4.1.1, chalk@npm:^4.1.2":
+  version: 4.1.2
+  resolution: "chalk@npm:4.1.2"
+  dependencies:
+    ansi-styles: ^4.1.0
+    supports-color: ^7.1.0
+  checksum: fe75c9d5c76a7a98d45495b91b2172fa3b7a09e0cc9370e5c8feb1c567b85c4288e2b3fded7cfdd7359ac28d6b3844feb8b82b8686842e93d23c827c417e83fc
+  languageName: node
+  linkType: hard
+
 "chalk@npm:^1.1.3":
   version: 1.1.3
   resolution: "chalk@npm:1.1.3"
@@ -4136,16 +4187,6 @@ __metadata:
     escape-string-regexp: ^1.0.5
     supports-color: ^5.3.0
   checksum: ec3661d38fe77f681200f878edbd9448821924e0f93a9cefc0e26a33b145f1027a2084bf19967160d11e1f03bfe4eaffcabf5493b89098b2782c3fe0b03d80c2
-  languageName: node
-  linkType: hard
-
-"chalk@npm:^4.0.0, chalk@npm:^4.1.0, chalk@npm:^4.1.1, chalk@npm:^4.1.2":
-  version: 4.1.2
-  resolution: "chalk@npm:4.1.2"
-  dependencies:
-    ansi-styles: ^4.1.0
-    supports-color: ^7.1.0
-  checksum: fe75c9d5c76a7a98d45495b91b2172fa3b7a09e0cc9370e5c8feb1c567b85c4288e2b3fded7cfdd7359ac28d6b3844feb8b82b8686842e93d23c827c417e83fc
   languageName: node
   linkType: hard
 
@@ -8641,6 +8682,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"json5@npm:^2.2.3":
+  version: 2.2.3
+  resolution: "json5@npm:2.2.3"
+  bin:
+    json5: lib/cli.js
+  checksum: 2a7436a93393830bce797d4626275152e37e877b265e94ca69c99e3d20c2b9dab021279146a39cdb700e71b2dd32a4cebd1514cd57cee102b1af906ce5040349
+  languageName: node
+  linkType: hard
+
 "jsonc-parser@npm:^3.2.0":
   version: 3.2.0
   resolution: "jsonc-parser@npm:3.2.0"
@@ -9705,6 +9755,13 @@ __metadata:
   version: 1.4.1
   resolution: "merge2@npm:1.4.1"
   checksum: 7268db63ed5169466540b6fb947aec313200bcf6d40c5ab722c22e242f651994619bcd85601602972d3c85bd2cc45a358a4c61937e9f11a061919a1da569b0c2
+  languageName: node
+  linkType: hard
+
+"meriyah@npm:^4.3.7":
+  version: 4.4.2
+  resolution: "meriyah@npm:4.4.2"
+  checksum: 351d47d95823fe5c72a6dcd2676b982c54d8ee29a2b3fbe91f60a142c77492048af06ea8bd5bb8c27e8025487ba4a8e952f8239c4d9cb079acf83475089932d3
   languageName: node
   linkType: hard
 
@@ -14888,6 +14945,15 @@ typescript@^3.9.3:
   version: 2.3.4
   resolution: "yaml@npm:2.3.4"
   checksum: e6d1dae1c6383bcc8ba11796eef3b8c02d5082911c6723efeeb5ba50fc8e881df18d645e64de68e421b577296000bea9c75d6d9097c2f6699da3ae0406c030d8
+  languageName: node
+  linkType: hard
+
+"yaml@npm:^2.3.4":
+  version: 2.4.1
+  resolution: "yaml@npm:2.4.1"
+  bin:
+    yaml: bin.mjs
+  checksum: 4c391d07a5d5e935e058babb71026c9cdc9a6fd889e35dd91b53cfb0a12691b67c6c5c740858e71345fef18cd9c13c554a6dda9196f59820d769d94041badb0b
   languageName: node
   linkType: hard
 
