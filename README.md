@@ -21,8 +21,6 @@ By default Navie proxies requests to OpenAI. This can be changed to a back end o
 
 3. **Ask Navie** for guidance recording AppMap data specific to interactions or code scenarios you're interested in analyzing.
 
-<img width="947" alt="image" src="https://github.com/getappmap/vscode-appland/assets/1229326/41b085dc-3128-42d2-be34-91f6bf0bde9c">
-
 ### Examples
 Here are some examples of Navie making context-aware suggestions, providing tactical solutions, and reasoning about the larger context of the specific code being worked on.
 
