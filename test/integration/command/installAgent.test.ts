@@ -1,11 +1,8 @@
 // @project project-ruby
 
 import assert from 'assert';
-import sinon from 'sinon';
-import os from 'os';
-import path from 'path';
 import * as vscode from 'vscode';
-import { getInstallCommand, InstallAgent } from '../../../src/commands/installAgent';
+import { InstallAgent } from '../../../src/commands/installAgent';
 import { ProjectRuby, waitForExtension } from '../util';
 
 describe('Install agent command', () => {
