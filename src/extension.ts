@@ -38,7 +38,6 @@ import installAgent from './commands/installAgent';
 import AnalysisManager from './services/analysisManager';
 import Environment from './configuration/environment';
 import ErrorCode from './telemetry/definitions/errorCodes';
-import promptInstall from './actions/promptInstall';
 import FindingsOverviewWebview from './webviews/findingsWebview';
 import FindingInfoWebview from './webviews/findingInfoWebview';
 import { AppMapRecommenderService } from './services/appmapRecommenderService';
@@ -222,7 +221,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     badge.initialize(projectStates);
     context.subscriptions.push(badge);
 
-    InstallGuideWebView.register(context, projectStates, extensionState);
+    InstallGuideWebView.register(context, projectStates);
 
     FindingsOverviewWebview.register(context);
     FindingInfoWebview.register(context);
@@ -278,9 +277,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     updateAppMapConfigs(context, runConfigService, workspaceServices);
     downloadLatestJavaJar(context);
     getAppmapDir(context, workspaceServices);
-
-    if (!extensionState.hasViewedInstallGuide && !SignInManager.shouldShowSignIn())
-      promptInstall(workspaceServices, extensionState);
 
     // Use this notification to track when the extension is activated.
     if (Environment.isSystemTest) {

@@ -30,15 +30,12 @@ export default class InstallGuideWebView {
 
   public static register(
     context: vscode.ExtensionContext,
-    projectStates: ProjectStateServiceInstance[],
-    extensionState: ExtensionState
+    projectStates: ProjectStateServiceInstance[]
   ): void {
     context.subscriptions.push(
       vscode.commands.registerCommand(
         this.command,
         async (page?: DocPageId, focusCommand?: string) => {
-          extensionState.hasViewedInstallGuide = true;
-
           if (!page) page = defaultPageId(projectStates);
 
           // Short circuit if no project is open. The project picker has the correct prompts

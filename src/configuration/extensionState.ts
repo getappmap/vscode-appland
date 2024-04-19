@@ -3,7 +3,6 @@ import { hasPreviouslyInstalledExtension } from '../util';
 
 export const Keys = {
   Global: {
-    INSTALL_GUIDE_VIEWED: 'appmap.applandinc.quickstartDocsSeen',
     INSTALL_TIMESTAMP: 'appmap.applandinc.installTimestamp',
     INSTALL_VERSION: 'appmap.applandinc.installVersion',
     ANALYSIS_CTA_DISMISSED: 'appmap.applandinc.analysisCTADismissed',
@@ -100,15 +99,6 @@ export default class ExtensionState implements vscode.Disposable {
    */
   get packageVersion(): string {
     return this.context.extension.packageJSON.version;
-  }
-
-  /** Returns whether or not the user has viewed the install guide. */
-  get hasViewedInstallGuide(): boolean {
-    return Boolean(this.context.globalState.get(Keys.Global.INSTALL_GUIDE_VIEWED, false));
-  }
-
-  set hasViewedInstallGuide(value: boolean) {
-    this.context.globalState.update(Keys.Global.INSTALL_GUIDE_VIEWED, value);
   }
 
   get firstAppMapNotificationShown(): boolean {
