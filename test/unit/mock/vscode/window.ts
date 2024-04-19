@@ -38,4 +38,5 @@ export default {
     return new Terminal(options);
   },
   onDidChangeTerminalState: EmitOnDidChangeTerminalState.event,
+  activeTextEditor: undefined,
 };

@@ -47,7 +47,7 @@ export default class RpcProcessService implements Disposable {
     return Boolean(this.rpcPort) && Boolean(this.processWatcher.running);
   }
 
-  public async port(): Promise<number | undefined> {
+  public port(): number | undefined {
     return this.rpcPort;
   }
 
