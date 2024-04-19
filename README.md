@@ -21,7 +21,8 @@ Navie AI is powered by a new type of AI code context provider, which combines so
 By default Navie uses GPT-4 through a proxy. You can change this to use a local LLM model of your choice, or you can bring your own LLM API key and Navie will communicate directly with your chosen LLM backend.
 
 **AppMap data - runtime traces and interactive visualizations**
-AppMap data are displayed as interactive visualizations of your code’s behavior so you can see how your app works when it runs. Visualizations include: sequence diagrams, dependency maps, trace views, flame graphs for performance analysis. AppMap data is regular JSON files that are stored locally on your own filesystem.
+AppMap data are displayed as interactive visualizations of your code’s behavior so you can see how your app works when it runs. Visualizations include: sequence diagrams, dependency maps, trace views, flame graphs for performance analysis. AppMap data is regular JSON files that are stored locally on your own filesystem.  
+
 
 ## Get started
 1. **Install [the AppMap extension](https://marketplace.visualstudio.com/items?itemName=appland.appmap)** from within the code editor or from the marketplace.  
@@ -29,8 +30,9 @@ AppMap data are displayed as interactive visualizations of your code’s behavio
 2. **Sign in with an email address, or with GitHub or GitLab** and Navie will be available in `@explain` mode. This enables Navie to respond to general coding and development questions and answer questions about using AppMap data.
 
 3. **Ask Navie** for guidance recording AppMap data specific to interactions or code scenarios you're interested in analyzing.
+   
 
-### Examples
+## Examples
 Here are some examples of Navie making context-aware suggestions, providing tactical solutions, and reasoning about the larger context of the specific code being worked on.
 
 1. [Find and fix slow API endpoints in a FastAPI app](https://appmap.io/navie/how-to/fix-slow-api-endpoints-in-a-fastapi-app-with-navie/)
