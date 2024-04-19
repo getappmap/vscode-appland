@@ -1,13 +1,13 @@
 import * as vscode from 'vscode';
 import { promises as fs } from 'fs';
 import { CodeObjectTreeItem } from './classMapTreeDataProvider';
-import { FolderItem } from './appMapTreeDataProvider';
+import { IAppMapTreeItem } from './appMapTreeDataProvider';
 import deleteAppMap from '../lib/deleteAppMap';
 import deleteFolderAppMaps from '../lib/deleteFolderAppMaps';
 import closeEditorByUri from '../lib/closeEditorByUri';
 import AppMapCollection from '../services/appmapCollection';
 import saveAppMapToCollection from '../lib/saveAppMapToCollection';
-import AppMapLoader from '../services/appmapLoader';
+import assert from 'assert';
 
 export default class ContextMenu {
   static async register(
@@ -17,23 +17,36 @@ export default class ContextMenu {
     context.subscriptions.push(
       vscode.commands.registerCommand(
         'appmap.context.openInFileExplorer',
-        async (item: AppMapLoader) => {
+        async (item: IAppMapTreeItem) => {
+          assert(item.appmap);
+          const { descriptor } = item.appmap;
+
           const { remoteName } = vscode.env;
           const command = remoteName === 'wsl' ? 'remote-wsl.revealInExplorer' : 'revealFileInOS';
-          vscode.commands.executeCommand(command, item.descriptor.resourceUri);
+          vscode.commands.executeCommand(command, descriptor.resourceUri);
         }
       )
     );
     context.subscriptions.push(
-      vscode.commands.registerCommand('appmap.context.openAsJson', async (item: AppMapLoader) => {
-        vscode.commands.executeCommand('vscode.openWith', item.descriptor.resourceUri, 'default');
-      })
+      vscode.commands.registerCommand(
+        'appmap.context.openAsJson',
+        async (item: IAppMapTreeItem) => {
+          vscode.commands.executeCommand(
+            'vscode.openWith',
+            item.appmap?.descriptor.resourceUri,
+            'default'
+          );
+        }
+      )
     );
     context.subscriptions.push(
-      vscode.commands.registerCommand('appmap.context.rename', async (item: AppMapLoader) => {
+      vscode.commands.registerCommand('appmap.context.rename', async (item: IAppMapTreeItem) => {
+        assert(item.appmap);
+        const { descriptor } = item.appmap;
+
         const newName = await vscode.window.showInputBox({
           placeHolder: 'Enter AppMap name',
-          value: item.descriptor.metadata?.name as string,
+          value: descriptor.metadata?.name as string,
         });
 
         if (!newName) {
@@ -41,12 +54,12 @@ export default class ContextMenu {
         }
 
         try {
-          const file = await fs.readFile(item.descriptor.resourceUri.fsPath);
+          const file = await fs.readFile(descriptor.resourceUri.fsPath);
           const content = JSON.parse(file.toString());
 
           content.metadata.name = newName;
 
-          fs.writeFile(item.descriptor.resourceUri.fsPath, JSON.stringify(content));
+          fs.writeFile(descriptor.resourceUri.fsPath, JSON.stringify(content));
         } catch (e) {
           const err = e as Error;
           vscode.window.showErrorMessage(
@@ -58,46 +71,54 @@ export default class ContextMenu {
     context.subscriptions.push(
       vscode.commands.registerCommand(
         'appmap.context.saveToCollection',
-        async (item: AppMapLoader) => {
-          saveAppMapToCollection(item.descriptor.resourceUri);
+        async (item: IAppMapTreeItem) => {
+          assert(item.appmap);
+          const { descriptor } = item.appmap;
+
+          saveAppMapToCollection(descriptor.resourceUri);
         }
       )
     );
     context.subscriptions.push(
-      vscode.commands.registerCommand('appmap.context.deleteAppMap', async (item: AppMapLoader) => {
-        let uri: vscode.Uri;
-        if (!item) {
-          const { activeTab } = vscode.window.tabGroups.activeTabGroup;
-          if (!activeTab) {
-            vscode.window.showErrorMessage('No active editor.');
-            return;
+      vscode.commands.registerCommand(
+        'appmap.context.deleteAppMap',
+        async (item: IAppMapTreeItem) => {
+          let uri: vscode.Uri;
+          if (!item) {
+            const { activeTab } = vscode.window.tabGroups.activeTabGroup;
+            if (!activeTab) {
+              vscode.window.showErrorMessage('No active editor.');
+              return;
+            }
+
+            uri = (activeTab.input as vscode.TabInputCustom).uri;
+          } else {
+            assert(item.appmap);
+            const { descriptor } = item.appmap;
+            uri = descriptor.resourceUri;
           }
 
-          uri = (activeTab.input as vscode.TabInputCustom).uri;
-        } else {
-          uri = item.descriptor.resourceUri;
+          await deleteAppMap(uri, appmaps);
+          await closeEditorByUri(uri);
         }
-
-        await deleteAppMap(uri, appmaps);
-        await closeEditorByUri(uri);
-      })
+      )
     );
     context.subscriptions.push(
       vscode.commands.registerCommand(
         'appmap.context.deleteAppMaps',
-        async ({ name }: FolderItem) => {
-          deleteFolderAppMaps(appmaps, name);
+        async (treeItem: IAppMapTreeItem) => {
+          deleteFolderAppMaps(appmaps, treeItem);
         }
       )
     );
     context.subscriptions.push(
       vscode.commands.registerCommand(
         'appmap.context.compareSequenceDiagrams',
-        async (item: AppMapLoader) => {
-          vscode.commands.executeCommand(
-            'appmap.compareSequenceDiagrams',
-            item.descriptor.resourceUri
-          );
+        async (item: IAppMapTreeItem) => {
+          assert(item.appmap);
+          const { descriptor } = item.appmap;
+
+          vscode.commands.executeCommand('appmap.compareSequenceDiagrams', descriptor.resourceUri);
         }
       )
     );

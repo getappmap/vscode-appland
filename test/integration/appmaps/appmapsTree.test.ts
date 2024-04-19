@@ -18,7 +18,7 @@ describe('AppMaps', () => {
       () =>
         appmapsTree
           .getChildren()
-          .map((root) => root.name)
+          .map((root) => root.label)
           .sort()
           .shift() === 'project-a'
     );
@@ -40,12 +40,9 @@ describe('AppMaps', () => {
 
     const appmaps = appmapsTree.getChildren(minitest);
     assert(appmaps, `No appmaps for ${minitest.name}`);
-    assert.deepStrictEqual(
-      appmaps.map((appmap) => appmap.descriptor.metadata?.name),
-      [
-        'Microposts_controller can get microposts as JSON',
-        'Microposts_interface micropost interface',
-      ]
-    );
+    assert.deepStrictEqual(appmaps.map((appmap) => appmap.label).sort(), [
+      'Microposts_controller can get microposts as JSON',
+      'Microposts_interface micropost interface',
+    ]);
   });
 });
