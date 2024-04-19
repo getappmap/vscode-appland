@@ -3,7 +3,7 @@
 import assert from 'assert';
 import * as vscode from 'vscode';
 import PythonInstaller from '../../../../src/commands/installer/python';
-import { waitFor, waitForExtension } from '../../util';
+import { waitForExtension } from '../../util';
 import { join } from 'path';
 import * as sinon from 'sinon';
 import { retry } from '../../../../src/util';
