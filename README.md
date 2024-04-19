@@ -78,7 +78,7 @@ AppMap diagrams include:
 * **Flame Graphs** to spot performance issues and bottlenecks.
 * **Trace Views** to perform detailed function call and data flow tracing.
 
-![appmaps](https://github.com/getappmap/vscode-appland/assets/1229326/9bb95da0-83c1-4fe9-93f2-5c898c0fd185)
+![appmap-visualizations](https://github.com/getappmap/vscode-appland/assets/1229326/dbd0677f-19a2-497f-a61e-4a878ad3380e)
 
 #### Requirements for making AppMap data
 
