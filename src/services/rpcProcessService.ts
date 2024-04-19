@@ -8,26 +8,39 @@ import { Client } from 'jayson/promise';
 import { ConfigurationRpc } from '@appland/rpc';
 import { join } from 'path';
 import { AUTHN_PROVIDER_NAME } from '../authentication';
+import assert from 'assert';
+
+export type RpcConnect = (port: number) => Client;
+
+const defaultRpcConnect: RpcConnect = (port) => Client.http({ port });
+
+export interface RpcProcessServiceState {
+  waitForStartup(): Promise<void>;
+
+  killProcess(): void;
+}
 
 export default class RpcProcessService implements Disposable {
   public readonly _onRpcPortChange = new EventEmitter<number | undefined>();
   public readonly onRpcPortChange = this._onRpcPortChange.event;
 
+  public rpcConnect: RpcConnect = defaultRpcConnect;
+
   private readonly processWatcher: RpcProcessWatcher;
   private rpcPort: number | undefined;
   private diposables: Disposable[] = [];
-  private rpcClient?: Client;
 
-  private constructor(
+  public constructor(
     private readonly context: ExtensionContext,
     private readonly configServices: ReadonlyArray<AppmapConfigManagerInstance>,
     private readonly modulePath?: string
   ) {
     this.processWatcher = new RpcProcessWatcher(this.context, this.modulePath);
     this.diposables.push(
+      vscode.workspace.onDidChangeWorkspaceFolders(() => this.pushConfiguration()),
       this.processWatcher.onRpcPortChange((port) => this.onProcessStart(port)),
       ...this.configServices.map((instance) =>
-        instance.onConfigChanged(() => this.syncAppMapConfigurations())
+        instance.onConfigChanged(async () => await this.pushConfiguration())
       ),
       vscode.authentication.onDidChangeSessions((e) => {
         if (e.provider.id !== AUTHN_PROVIDER_NAME) return;
@@ -43,6 +56,14 @@ export default class RpcProcessService implements Disposable {
     );
   }
 
+  // Provides some internal state access, primarily for testing purposes.
+  public get state(): RpcProcessServiceState {
+    return {
+      waitForStartup: () => this.waitForStartup(),
+      killProcess: () => this.processWatcher.process?.kill(),
+    };
+  }
+
   public get available(): boolean {
     return Boolean(this.rpcPort) && Boolean(this.processWatcher.running);
   }
@@ -51,30 +72,51 @@ export default class RpcProcessService implements Disposable {
     return this.rpcPort;
   }
 
-  private get appmapConfigFiles(): string[] {
-    return this.configServices.flatMap((instance) =>
-      instance.workspaceConfigs.map(({ configFolder }) => join(configFolder, 'appmap.yml'))
-    );
-  }
-
-  private syncAppMapConfigurations(): void {
+  protected async pushConfiguration() {
     if (!this.available) return;
 
-    const { appmapConfigFiles } = this;
+    const { appmapConfigFiles, projectDirectories } = this;
+    assert(this.rpcPort !== undefined, 'RPC port is not defined');
+
+    const rpcClient = this.rpcConnect(this.rpcPort);
 
     NodeProcessService.outputChannel.appendLine(
       [
-        'Syncing AppMap configurations:',
+        'Pushing workspace configuration to RPC server:',
         appmapConfigFiles.length
           ? appmapConfigFiles.map((file) => `- ${file}`).join('\n')
           : '** NO CONFIGURATIONS AVAILABLE **',
       ].join('\n')
     );
 
-    try {
-      this.rpcClient?.request(ConfigurationRpc.V1.Set.Method, {
+    const isV2ConfigurationSupported = async (): Promise<boolean> => {
+      try {
+        const response = await rpcClient.request(ConfigurationRpc.V2.Get.Method, {});
+        return response.error === undefined;
+      } catch (e) {
+        return false;
+      }
+    };
+
+    const pushConfigurationV1 = async () => {
+      await rpcClient.request(ConfigurationRpc.V1.Set.Method, {
         appmapConfigFiles,
       });
+    };
+
+    const pushConfigurationV2 = async () => {
+      await rpcClient.request(ConfigurationRpc.V2.Set.Method, {
+        appmapConfigFiles,
+        projectDirectories,
+      });
+    };
+
+    const configurationFn = (await isV2ConfigurationSupported())
+      ? pushConfigurationV2
+      : pushConfigurationV1;
+
+    try {
+      await configurationFn();
     } catch (e) {
       NodeProcessService.outputChannel.appendLine('Failed to sync AppMap configurations');
       NodeProcessService.outputChannel.appendLine(String(e));
@@ -83,14 +125,13 @@ export default class RpcProcessService implements Disposable {
 
   // The process has just started or restarted
   // The port has likely changed
-  private onProcessStart(port: number): void {
-    this.rpcClient = Client.http({ port });
+  protected async onProcessStart(port: number) {
     this.rpcPort = port;
-    this.syncAppMapConfigurations();
+    await this.pushConfiguration();
     this._onRpcPortChange.fire(port);
   }
 
-  private waitForStartup(): Promise<void> {
+  protected waitForStartup(): Promise<void> {
     if (this.processWatcher.running) return Promise.resolve();
 
     return new Promise((resolve, reject) => {
@@ -108,11 +149,21 @@ export default class RpcProcessService implements Disposable {
     });
   }
 
+  private get appmapConfigFiles(): string[] {
+    return this.configServices.flatMap((instance) =>
+      instance.workspaceConfigs.map(({ configFolder }) => join(configFolder, 'appmap.yml'))
+    );
+  }
+
+  private get projectDirectories(): string[] {
+    return vscode.workspace.workspaceFolders?.map((folder) => folder.uri.fsPath) ?? [];
+  }
+
   public static async create(
     context: ExtensionContext,
-    configServices: ReadonlyArray<AppmapConfigManagerInstance>
+    configServices: ReadonlyArray<AppmapConfigManagerInstance>,
+    modulePath = getModulePath(ProgramName.Appmap)
   ): Promise<RpcProcessService> {
-    const modulePath = getModulePath(ProgramName.Appmap);
     const service = new RpcProcessService(context, configServices, modulePath);
     try {
       await service.waitForStartup();
