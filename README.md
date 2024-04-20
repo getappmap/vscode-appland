@@ -9,6 +9,8 @@ AppMap is a developer tools platform powered by runtime analysis and AI.  Navie 
 
 Navie uses runtime application analysis to improve the quality and accuracy of AI-code suggestions.  Navie can answer more challenging questions about your app and help you with more complex tasks like: 
 
+<br/>
+
 **Troubleshooting and debugging**
 
 **Refactoring & modernizing code**
@@ -16,6 +18,8 @@ Navie uses runtime application analysis to improve the quality and accuracy of A
 **Improving performance and stability**
 
 **Designing secure code**
+
+<br/>
 
 
 **Navie - AI code assistant**  
