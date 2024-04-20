@@ -5,7 +5,7 @@
 
 # AppMap for Visual Studio Code
 
-AppMap is a developer tools platform powered by runtime analysis and AI.  Navie is the first AI coding assistant with the context to understand how your app works when it runs, like a principal engineer or software architect.
+AppMap is a developer tools platform powered by runtime analysis and AI.  Navie is the first AI code architect with the context to understand how your app works when it runs, like a principal engineer or software architect.
 
 Navie uses runtime application analysis to improve the quality and accuracy of AI-code suggestions.  Navie can answer more challenging questions about your app and help you with more complex tasks like: 
 
@@ -22,7 +22,7 @@ Navie uses runtime application analysis to improve the quality and accuracy of A
 <br/>
 
 
-**Navie - AI code assistant**  
+**Navie - AI code architect**  
 Navie AI is powered by a new type of AI code context provider, which combines source code snippets with AppMap’s unique runtime data that you can create each time you run your code. When asked a question, Navie will search for the best context to answer your question including code snippets and AppMap data to provide answers truly specific to your app.
 
 By default Navie uses GPT-4 through a proxy. You can change this to use a local LLM model of your choice, or you can bring your own LLM API key and Navie will communicate directly with your chosen LLM backend.
