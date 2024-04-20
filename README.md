@@ -59,7 +59,9 @@ Navie provides different modes of interaction to assist you with your code and p
 
 - **`@generate`**: Activate code generation mode by beginning any question with the prefix "@generate". In this mode Navie's response are optimized to include code snippets you can use directly in the files are working on.
 
-**💡 Ask Navie - Using the lightbulb -**: This feature is available in the Code Action menu when you have code selected. Choosing ‘Ask Navie’ from the Code Actions Menu initiates a new Navie chat populated with the snippet of selected code, enabling Navie answers based on that specific code snippet. Similarly, if you select some code in the active code window and open Navie, the selected code will be passed along.
+**💡 Ask Navie - Using the lightbulb**: This feature is available in the Code Action menu when you have code selected. Choosing ‘Ask Navie’ from the Code Actions Menu initiates a new Navie chat populated with the snippet of selected code, enabling Navie answers based on that specific code snippet. Similarly, if you select some code in the active code window and open Navie, the selected code will be passed along.
+
+**Ask Navie about a specific AppMap visualization**: You can target your question more specifically to an AppMap, representing a test case, API call, or other interaction by clicking the “Ask Navie” box on any AppMap you open.
 
 ## Bring your own key or model for Navie
 
