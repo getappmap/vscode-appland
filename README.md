@@ -23,6 +23,7 @@ By default Navie uses GPT-4 through a proxy. You can change this to use a local 
 **AppMap data - runtime traces and interactive visualizations**  
 AppMap data are displayed as interactive visualizations of your code’s behavior so you can see how your app works when it runs. Visualizations include: sequence diagrams, dependency maps, trace views, flame graphs for performance analysis. AppMap data is regular JSON files that are stored locally on your own filesystem.  
 
+![implement-redis-3](https://github.com/getappmap/vscode-appland/assets/1229326/471d5f70-1f9f-4de5-8725-076d204c5f9d)
 
 ## Get started
 1. **Install [the AppMap extension](https://marketplace.visualstudio.com/items?itemName=appland.appmap)** from within the code editor or from the marketplace.  
