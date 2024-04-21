@@ -28,7 +28,6 @@ import appmapLinkProvider from './terminalLink/appmapLinkProvider';
 import registerTrees from './tree';
 import ContextMenu from './tree/contextMenu';
 import InstallGuideWebView from './webviews/installGuideWebview';
-import InstallationStatusBadge from './workspace/installationStatus';
 import UriHandler from './uri/uriHandler';
 import OpenAppMapUriHandler from './uri/openAppMapUriHandler';
 import generateOpenApi from './commands/generateOpenApi';
@@ -216,10 +215,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
     registerSequenceDiagram(context, appmapCollectionFile);
     registerCompareSequenceDiagrams(context, appmapCollectionFile);
-
-    const badge = new InstallationStatusBadge('appmap.views.instructions');
-    badge.initialize(projectStates);
-    context.subscriptions.push(badge);
 
     InstallGuideWebView.register(context, projectStates);
 
