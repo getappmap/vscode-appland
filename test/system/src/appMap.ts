@@ -27,10 +27,6 @@ export default class AppMap {
     return this.page.locator('.action-item:has(a.action-label[aria-label="AppMap"])').first();
   }
 
-  get pendingBadge(): Locator {
-    return this.actionPanelButton.locator('.badge.progress-badge').first();
-  }
-
   get instructionsTree(): Locator {
     return this.page.locator('.pane:has(.title:text("AppMap Recording Instructions"))');
   }
