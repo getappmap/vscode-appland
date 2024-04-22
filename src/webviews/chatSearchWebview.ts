@@ -137,6 +137,35 @@ export default class ChatSearchWebview {
           await vscode.commands.executeCommand('vscode.openWith', uri, 'appmap.views.appMapFile');
           break;
         }
+        case 'open-location': {
+          const { location } = message;
+          const [path, lineNumbers] = location.split(':');
+          const [start, end] = (lineNumbers ?? '-').split('-');
+
+          await vscode.commands.executeCommand('vscode.open', vscode.Uri.file(path));
+
+          const { activeTextEditor } = vscode.window;
+          if (activeTextEditor && start) {
+            const startLine = parseInt(start) - 1;
+            if (end) {
+              const endLine = parseInt(end) - 1;
+              activeTextEditor.selection = new vscode.Selection(
+                new vscode.Position(startLine, 0),
+                new vscode.Position(endLine, 0)
+              );
+            } else {
+              activeTextEditor.revealRange(
+                new vscode.Range(
+                  new vscode.Position(startLine, 0),
+                  new vscode.Position(startLine, 0)
+                ),
+                vscode.TextEditorRevealType.InCenter
+              );
+            }
+          }
+
+          break;
+        }
 
         case 'show-appmap-tree':
           await vscode.commands.executeCommand('appmap.views.appmaps.focus');
