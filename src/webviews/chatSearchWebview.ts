@@ -13,6 +13,7 @@ import RpcProcessService from '../services/rpcProcessService';
 import { NodeProcessService } from '../services/nodeProcessService';
 import CommandRegistry from '../commands/commandRegistry';
 import ChatSearchDataService, { LatestAppMap } from '../services/chatSearchDataService';
+import { parseLocation } from '../util';
 
 type ExplainOpts = {
   workspace?: vscode.WorkspaceFolder;
@@ -139,28 +140,15 @@ export default class ChatSearchWebview {
         }
         case 'open-location': {
           const { location } = message;
-          const [path, lineNumbers] = location.split(':');
-          const [start, end] = (lineNumbers ?? '-').split('-');
+          const result = parseLocation(location);
 
-          await vscode.commands.executeCommand('vscode.open', vscode.Uri.file(path));
-
-          const { activeTextEditor } = vscode.window;
-          if (activeTextEditor && start) {
-            const startLine = parseInt(start) - 1;
-            if (end) {
-              const endLine = parseInt(end) - 1;
-              activeTextEditor.selection = new vscode.Selection(
-                new vscode.Position(startLine, 0),
-                new vscode.Position(endLine, 0)
-              );
-            } else {
-              activeTextEditor.revealRange(
-                new vscode.Range(
-                  new vscode.Position(startLine, 0),
-                  new vscode.Position(startLine, 0)
-                ),
-                vscode.TextEditorRevealType.InCenter
-              );
+          if (result instanceof vscode.Uri) {
+            await vscode.commands.executeCommand('vscode.open', result);
+          } else {
+            await vscode.commands.executeCommand('vscode.open', result.uri);
+            const { activeTextEditor } = vscode.window;
+            if (activeTextEditor) {
+              activeTextEditor.revealRange(result.range, vscode.TextEditorRevealType.InCenter);
             }
           }
 
