@@ -41,11 +41,18 @@ async function integrationTest() {
   const projectRootDir = resolve(__dirname, '..');
   const testDir = resolve(__dirname, '../out/test/integration');
 
-  let fileArgs = process.argv.slice(1).filter((arg) => arg.match(/\.test\.(?:js|ts)$/));
-  if (fileArgs.length > 0) {
+  let fileArgs = process.argv.slice(1);
+  if (fileArgs.length > 1) {
+    const matchedArgs = fileArgs.filter((arg) => arg.match(/\.test\.(?:js|ts)$/));
+    if (matchedArgs.length === 0) {
+      throw new Error(`No test files matched ${fileArgs}`);
+    }
+    fileArgs = matchedArgs;
     console.log(
       `Running specific tests provided by command line arguments:\n\t${fileArgs.join('\n\t')}`
     );
+  } else {
+    fileArgs = [];
   }
 
   if (fileArgs.length === 0) {
