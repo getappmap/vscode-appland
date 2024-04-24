@@ -145,10 +145,24 @@ export default class ChatSearchWebview {
           if (result instanceof vscode.Uri) {
             await vscode.commands.executeCommand('vscode.open', result);
           } else {
-            await vscode.commands.executeCommand('vscode.open', result.uri);
-            const { activeTextEditor } = vscode.window;
-            if (activeTextEditor) {
-              activeTextEditor.revealRange(result.range, vscode.TextEditorRevealType.InCenter);
+            if (result.uri.fsPath.endsWith('.appmap.json')) {
+              // Open an AppMap
+              // The range will actually be an event id
+              const viewState = {
+                currentView: 'viewSequence',
+                selectedObject: `event:${result.range.start.line}`,
+              };
+              await vscode.commands.executeCommand(
+                'vscode.open',
+                result.uri.with({ fragment: JSON.stringify(viewState) })
+              );
+            } else {
+              // Open a text document
+              await vscode.commands.executeCommand('vscode.open', result.uri);
+              const { activeTextEditor } = vscode.window;
+              if (activeTextEditor) {
+                activeTextEditor.revealRange(result.range, vscode.TextEditorRevealType.InCenter);
+              }
             }
           }
 
