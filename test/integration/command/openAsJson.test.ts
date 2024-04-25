@@ -36,4 +36,14 @@ describe('openAsJson test', function () {
     );
     assert.isTrue(index !== -1);
   });
+
+  it("doesn't open non-AppMap files", async () => {
+    const showErrorStub = sinon.stub(vscode.window, 'showErrorMessage');
+    const uri: vscode.Uri = vscode.Uri.parse(`file://${appmapFilePath}`);
+    await vscode.workspace.openTextDocument(uri);
+    await vscode.window.showTextDocument(vscode.Uri.file(uri.path));
+    await vscode.commands.executeCommand('appmap.context.openAsJson');
+
+    assert.equal(showErrorStub.callCount, 1);
+  });
 });
