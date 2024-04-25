@@ -4,6 +4,7 @@
 import Sinon from 'sinon';
 import type { workspace, WorkspaceFolder } from 'vscode';
 import { URI } from 'vscode-uri';
+import { join } from 'path';
 
 const unimplemented = () => {
   throw new Error('unimplemented');
@@ -42,5 +43,15 @@ export default {
   onDidChangeWorkspaceFolders: EVENTS.onDidChangeWorkspaceFolders,
   getWorkspaceFolder(uri: unknown): WorkspaceFolder | undefined {
     return uri ? TEST_WORKSPACE : undefined;
+  },
+  findFiles(
+    include: string,
+    _exclude?: string | null,
+    _maxResults?: number,
+    _token?: any
+  ): Promise<URI[]> {
+    const nonWildcardPath = include.replace(/(\*+\/?)/g, '');
+    const absolutePath = join('/', 'example', nonWildcardPath);
+    return Promise.resolve([URI.file(absolutePath)]);
   },
 };

@@ -140,7 +140,7 @@ export default class ChatSearchWebview {
         }
         case 'open-location': {
           const { location } = message;
-          const result = parseLocation(location);
+          const result = await parseLocation(location);
 
           if (result instanceof vscode.Uri) {
             await vscode.commands.executeCommand('vscode.open', result);
@@ -148,9 +148,10 @@ export default class ChatSearchWebview {
             if (result.uri.fsPath.endsWith('.appmap.json')) {
               // Open an AppMap
               // The range will actually be an event id
+              // This means we'll need to add 1 to the (zero-based) line number
               const viewState = {
                 currentView: 'viewSequence',
-                selectedObject: `event:${result.range.start.line}`,
+                selectedObject: `event:${result.range.start.line + 1}`,
               };
               await vscode.commands.executeCommand(
                 'vscode.open',
