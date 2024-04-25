@@ -9,12 +9,10 @@ export default function navieConfigurationService(context: vscode.ExtensionConte
       setOpenAIApiKey(context, apiKey);
       if (apiKey) {
         vscode.window.showInformationMessage(
-          `AppMap OpenAI API key has been stored in VSCode Secrets. Run the command 'Developer: Reload Window' to start using AppMap Navie in "bring your own key" mode.`
+          'AppMap OpenAI API key has been stored in VSCode Secrets.'
         );
       } else {
-        vscode.window.showInformationMessage(
-          `Appmap OpenAI API Key has been erased. Run the command 'Developer: Reload Window' to stop using AppMap Navie in "bring your own key" mode.`
-        );
+        vscode.window.showInformationMessage('AppMap OpenAI API Key has been erased.');
       }
 
       const res = await vscode.window.showInformationMessage(
