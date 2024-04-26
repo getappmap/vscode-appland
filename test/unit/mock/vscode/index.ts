@@ -27,7 +27,14 @@ enum StatusBarAlignment {
   Right = 2,
 }
 
+enum ProgressLocation {
+  SourceControl = 1,
+  Window = 10,
+  Notification = 15,
+}
+
 const MockVSCode = {
+  ProgressLocation,
   authentication,
   EventEmitter,
   Terminal,
