@@ -1,10 +1,18 @@
+import { AbortError } from 'node-fetch';
 import * as vscode from 'vscode';
-import { AppMapCliDownloader, JavaAgentDownloader, ScannerDownloader, binaryName } from '.';
-import AssetDownloader from './assetDownloader';
+import {
+  AppMapCliDownloader,
+  BundledFileDownloadUrlResolver,
+  JavaAgentDownloader,
+  ScannerDownloader,
+  binaryName,
+} from '.';
 import { homedir } from 'os';
 import { join } from 'path';
 import { mkdir } from 'fs/promises';
 import LockfileSynchronizer from '../lib/lockfileSynchronizer';
+
+import * as log from './log';
 
 export enum AssetIdentifier {
   AppMapCli,
@@ -18,34 +26,16 @@ export default class AssetService {
     return this._extensionDirectory;
   }
 
-  private static OutputChannel = vscode.window.createOutputChannel('AppMap: Assets', 'log');
-  private static downloaders = new Map<AssetIdentifier, AssetDownloader>([
+  private static downloaders = new Map<AssetIdentifier, () => Promise<void>>([
     [AssetIdentifier.AppMapCli, AppMapCliDownloader],
     [AssetIdentifier.ScannerCli, ScannerDownloader],
     [AssetIdentifier.JavaAgent, JavaAgentDownloader],
   ]);
 
-  public static log(message: string, level: 'INFO' | 'ERROR' | 'WARN' = 'INFO') {
-    this.OutputChannel.appendLine(
-      `${new Date().toLocaleString()} ${level.padEnd(5, ' ')} ${message}`
-    );
-  }
-
-  public static logInfo(message: string) {
-    this.log(message, 'INFO');
-  }
-
-  public static logError(message: string) {
-    this.log(message, 'ERROR');
-  }
-
-  public static logWarning(message: string) {
-    this.log(message, 'WARN');
-  }
-
   public static register(context: vscode.ExtensionContext) {
     this._extensionDirectory = context.extensionPath;
-    context.subscriptions.push(this.OutputChannel);
+    BundledFileDownloadUrlResolver.extensionDirectory = this._extensionDirectory;
+    context.subscriptions.push(log.OutputChannel);
   }
 
   public static getAssetPath(assetId: AssetIdentifier): string {
@@ -73,7 +63,7 @@ export default class AssetService {
     return new Promise<void>((resolve, reject) => {
       sync
         .on('wait', () => {
-          this.logInfo(`Waiting for assets to be updated by another process...`);
+          log.info(`Waiting for assets to be updated by another process...`);
         })
         .on('error', (e) => {
           if (throwOnError) {
@@ -81,25 +71,28 @@ export default class AssetService {
           }
 
           hasErrors = true;
-          this.logError(e.stack);
+          log.error(e.stack);
         })
         .on('success', () => {
           if (!holdingLock) {
-            this.logInfo('Another process has completed the asset update.');
+            log.info('Another process has completed the asset update.');
           } else if (hasErrors) {
-            this.logError('Asset update completed with errors.');
+            log.error('Asset update completed with errors.');
           } else {
-            this.logInfo('Asset update completed successfully.');
+            log.info('Asset update completed successfully.');
           }
 
           resolve();
         })
         .execute(async () => {
           holdingLock = true;
-          const assets = Array.from(this.downloaders.values());
-          await Promise.all(
-            assets.map((asset) => asset.download().catch((e) => sync.emit('error', e)))
-          );
+          for (const asset of this.downloaders.values())
+            try {
+              await asset();
+            } catch (e) {
+              sync.emit('error', e);
+              if (e instanceof AbortError) return reject(e);
+            }
         });
     });
   }
@@ -118,7 +111,7 @@ export default class AssetService {
             return reject(new Error(`Invalid asset ID ${assetId}`));
           }
 
-          return asset.download();
+          return asset();
         });
     });
   }

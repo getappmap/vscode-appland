@@ -10,6 +10,29 @@ const doNothing = () => {
 
 export const EmitOnDidChangeTerminalState = new EventEmitter<vscode.Terminal>();
 
+function withProgress<R>(
+  options: vscode.ProgressOptions,
+  task: (
+    progress: vscode.Progress<{
+      /**
+       * A progress message that represents a chunk of work
+       */
+      message?: string;
+      /**
+       * An increment for discrete progress. Increments will be summed up until 100% is reached
+       */
+      increment?: number;
+    }>,
+    token: vscode.CancellationToken
+  ) => Thenable<R>
+): Thenable<R> {
+  const cancelEvent = new EventEmitter();
+  return task(
+    { report: doNothing },
+    { isCancellationRequested: false, onCancellationRequested: cancelEvent.event }
+  );
+}
+
 export default {
   createStatusBarItem() {
     return {
@@ -23,7 +46,9 @@ export default {
   },
   showQuickPick: doNothing,
   showErrorMessage: doNothing,
+  showWarningMessage: doNothing,
   showInformationMessage: doNothing,
+  withProgress,
   workspaceFolders: [],
   createOutputChannel: () => ({
     append: doNothing,
