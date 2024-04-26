@@ -75,6 +75,10 @@ export default function mountChatSearchView() {
     app.$on('show-appmap-tree', () => {
       vscode.postMessage({ command: 'show-appmap-tree' });
     });
+
+    app.$on('open-location', (location) => {
+      vscode.postMessage({ command: 'open-location', location });
+    });
   });
 
   vscode.postMessage({ command: 'chat-search-ready' });

@@ -13,6 +13,7 @@ import RpcProcessService from '../services/rpcProcessService';
 import { NodeProcessService } from '../services/nodeProcessService';
 import CommandRegistry from '../commands/commandRegistry';
 import ChatSearchDataService, { LatestAppMap } from '../services/chatSearchDataService';
+import { parseLocation } from '../util';
 
 type ExplainOpts = {
   workspace?: vscode.WorkspaceFolder;
@@ -135,6 +136,37 @@ export default class ChatSearchWebview {
         case 'open-appmap': {
           const uri = vscode.Uri.file(message.path);
           await vscode.commands.executeCommand('vscode.openWith', uri, 'appmap.views.appMapFile');
+          break;
+        }
+        case 'open-location': {
+          const { location } = message;
+          const result = await parseLocation(location);
+
+          if (result instanceof vscode.Uri) {
+            await vscode.commands.executeCommand('vscode.open', result);
+          } else {
+            if (result.uri.fsPath.endsWith('.appmap.json')) {
+              // Open an AppMap
+              // The range will actually be an event id
+              // This means we'll need to add 1 to the (zero-based) line number
+              const viewState = {
+                currentView: 'viewSequence',
+                selectedObject: `event:${result.range.start.line + 1}`,
+              };
+              await vscode.commands.executeCommand(
+                'vscode.open',
+                result.uri.with({ fragment: JSON.stringify(viewState) })
+              );
+            } else {
+              // Open a text document
+              await vscode.commands.executeCommand('vscode.open', result.uri);
+              const { activeTextEditor } = vscode.window;
+              if (activeTextEditor) {
+                activeTextEditor.revealRange(result.range, vscode.TextEditorRevealType.InCenter);
+              }
+            }
+          }
+
           break;
         }
 
