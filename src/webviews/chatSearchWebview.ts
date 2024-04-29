@@ -139,8 +139,8 @@ export default class ChatSearchWebview {
           break;
         }
         case 'open-location': {
-          const { location } = message;
-          const result = await parseLocation(location);
+          const { location, directory } = message;
+          const result = await parseLocation(location, directory);
 
           if (result instanceof vscode.Uri) {
             await vscode.commands.executeCommand('vscode.open', result);
