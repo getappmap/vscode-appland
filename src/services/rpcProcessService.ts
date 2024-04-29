@@ -35,7 +35,9 @@ export default class RpcProcessService implements Disposable {
     private readonly configServices: ReadonlyArray<AppmapConfigManagerInstance>,
     private readonly modulePath?: string
   ) {
-    this.processWatcher = new RpcProcessWatcher(this.context, this.modulePath);
+    this.processWatcher = new RpcProcessWatcher(this.context, this.modulePath, {
+      APPMAP_CODE_EDITOR: 'vscode',
+    });
     this.diposables.push(
       vscode.workspace.onDidChangeWorkspaceFolders(() => this.pushConfiguration()),
       this.processWatcher.onRpcPortChange((port) => this.onProcessStart(port)),
