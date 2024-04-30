@@ -9,7 +9,7 @@ import { join } from 'path';
 import AssetService from '../../../src/assets/assetService';
 import ResourceVersions from '../../../resources/versions.json';
 import downloadHttpRetry from '../../../src/assets/downloadHttpRetry';
-import { BundledFileDownloadUrlResolver } from '../../../src/assets';
+import { BundledFileDownloadUrlResolver, isInitialDownloadCompleted } from '../../../src/assets';
 
 chai.use(chaiFs);
 
@@ -58,6 +58,8 @@ describe('AssetService', () => {
       expect(join(appmapDir, 'lib', 'java'))
         .to.be.a.directory()
         .with.files(['appmap.jar', 'appmap-0.0.0-TEST.jar']);
+
+      expect(await isInitialDownloadCompleted()).to.be.true;
     });
 
     it('falls back to a bundled jar if every strategy fails', async () => {

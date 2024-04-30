@@ -70,6 +70,12 @@ export default function mockAssetApis(opts: AssetVersionMocks = {}) {
     options.denylist
   );
 
+  mockApi(
+    `https://github.com/getappmap/appmap-js/releases/download/%40appland/appmap-v${options.appmap}/appmap-win-x64.exe`,
+    () => '<insert appmap cli here>',
+    options.denylist
+  );
+
   return options;
 }
 
