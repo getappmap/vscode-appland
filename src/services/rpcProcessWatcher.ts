@@ -9,7 +9,6 @@ export default class RpcProcessWatcher extends ProcessWatcher {
     new vscode.EventEmitter<number>();
   public readonly onRpcPortChange = this._onRpcPortChange.event;
   public rpcPort?: number;
-  private configuredPortLogged = false;
   private stdoutBuffer = '';
 
   constructor(context: vscode.ExtensionContext, modulePath?: string, env?: NodeJS.ProcessEnv) {
@@ -65,13 +64,12 @@ export default class RpcProcessWatcher extends ProcessWatcher {
 
     const consumeRpcPort = (portStr: string) => {
       this.options.log?.appendLine(`AppMap RPC process listening on port ${portStr}`);
-      if (this.rpcPort) {
-        if (!this.configuredPortLogged) {
-          this.options.log?.appendLine(
-            `Ignoring stdout from RPC process for purposes of obtaining the RPC port, because it's already configured as ${this.rpcPort}`
-          );
-          this.configuredPortLogged = true;
-        }
+      const { navieRpcPort } = ExtensionSettings;
+      if (navieRpcPort) {
+        this.rpcPort = navieRpcPort;
+        this.options.log?.appendLine(
+          `The RPC port will be overwritten by extension setting appMap.navie.rpcPort: ${this.rpcPort}`
+        );
       } else {
         this.rpcPort = parseInt(portStr);
       }
