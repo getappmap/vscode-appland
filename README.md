@@ -5,31 +5,15 @@
 
 # AppMap for Visual Studio Code
 
-AppMap is a developer tools platform powered by runtime analysis and AI.  Navie is the first AI code architect with the context to understand how your app works when it runs, like a principal engineer or software architect.
+AppMap is a developer tools platform powered by runtime analysis and AI. It's composed of three components:
 
-Navie uses runtime application analysis to improve the quality and accuracy of AI-code suggestions.  Navie can answer more challenging questions about your app and help you with more complex tasks like: 
+* Navie - AI code architect.
+* AppMap data - Runtime traces of your application runtime.
+* AppMap diagrams - Interactive visualizations of AppMap data.
 
-<br/>
+By using AppMap data, Navie is the first AI code architect with the context to understand how your app works when it runs, like a principal engineer or software architect. AppMap data provides Navie with accurate information about application behavior, APIs, database queries, and more, providing valuable context so you can ask more challenging questions and get better answers.
 
-**Troubleshooting and debugging**
-
-**Refactoring & modernizing code**
-
-**Improving performance and stability**
-
-**Designing secure code**
-
-<br/>
-
-
-**Navie - AI code architect**  
-Navie AI is powered by a new type of AI code context provider, which combines source code snippets with AppMap’s unique runtime data that you can create each time you run your code. When asked a question, Navie will search for the best context to answer your question including code snippets and AppMap data to provide answers truly specific to your app.
-
-By default Navie uses GPT-4 through a proxy. You can change this to use a local LLM model of your choice, or you can bring your own LLM API key and Navie will communicate directly with your chosen LLM backend.
-
-**AppMap data - runtime traces and interactive visualizations**  
-AppMap data are displayed as interactive visualizations of your code’s behavior so you can see how your app works when it runs. Visualizations include: sequence diagrams, dependency maps, trace views, flame graphs for performance analysis. AppMap data is regular JSON files that are stored locally on your own filesystem.  
-
+![implement-redis-3](https://github.com/getappmap/vscode-appland/assets/1229326/471d5f70-1f9f-4de5-8725-076d204c5f9d)
 
 ## Get started
 1. **Install [the AppMap extension](https://marketplace.visualstudio.com/items?itemName=appland.appmap)** from within the code editor or from the marketplace.  
@@ -46,8 +30,6 @@ Here are some examples of Navie making context-aware suggestions, providing tact
 2. [Find and fix a database performance issue in Ruby on Rails](https://appmap.io/navie/how-to/find-and-fix-a-database-performance-issue-in-ruby-on-rails/)
 3. [Quickly add a new feature to a complex Python app](https://appmap.io/navie/how-to/adding-a-new-feature-to-a-complex-python-application/)
 4. [Fixing performance issues with MongoDB in a MERN app](https://appmap.io/navie/how-to/fixing-performance-issues-with-mongodb-in-a-mern-app/)
-
-![implement-redis-3](https://github.com/getappmap/vscode-appland/assets/1229326/471d5f70-1f9f-4de5-8725-076d204c5f9d)
 
 ## Chat Modes
 

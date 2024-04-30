@@ -1,15 +1,16 @@
-import { join } from 'path';
-import { homedir } from 'os';
-import { createWriteStream } from 'fs';
-import { chmod, copyFile, mkdir, symlink, unlink } from 'fs/promises';
+import { chmod, copyFile, mkdir, open, symlink, unlink } from 'node:fs/promises';
+import { homedir } from 'node:os';
+import { dirname, join } from 'node:path';
+
 import { Uri } from 'vscode';
-import AssetDownloader from './assetDownloader';
+
 import DownloadUrlResolver from './downloadUrlResolver';
+import * as log from './log';
 import { VersionResolver } from './versionResolver';
 import { fileExists } from '../util';
 import tryRequest from './tryRequest';
-import AssetService from './assetService';
 import * as ResourceVersions from '../../resources/versions.json';
+import downloadHttpRetry from './downloadHttpRetry';
 
 class MavenVersionResolver implements VersionResolver {
   constructor(private readonly groupId: string, private readonly artifactId: string) {}
@@ -26,7 +27,7 @@ class MavenVersionResolver implements VersionResolver {
         const match = /<release>(.*?)<\/release>/.exec(text);
         return match?.[1];
       } catch (e: unknown) {
-        AssetService.logWarning(`Failed to retrieve ${this.artifactId} version from Maven: ${e}`);
+        log.warning(`Failed to retrieve ${this.artifactId} version from Maven: ${e}`);
       }
     }
   }
@@ -41,7 +42,7 @@ class NpmVersionResolver implements VersionResolver {
         const json: { version?: string } = (await res.json()) as Record<string, unknown>;
         return json.version;
       } catch (e: unknown) {
-        AssetService.logWarning(`Failed to retrieve ${this.packageName} version from NPM: ${e}`);
+        log.warning(`Failed to retrieve ${this.packageName} version from NPM: ${e}`);
       }
     }
   }
@@ -65,7 +66,7 @@ class GitHubVersionResolver implements VersionResolver {
         const json: { tag_name?: string } = (await res.json()) as Record<string, unknown>;
         return json.tag_name?.replace(/^v/, '');
       } catch (e: unknown) {
-        AssetService.logWarning(`Failed to retrieve ${this.repo} version from GitHub: ${e}`);
+        log.warning(`Failed to retrieve ${this.repo} version from GitHub: ${e}`);
       }
     }
   }
@@ -94,15 +95,19 @@ class MavenDownloadUrlResolver implements DownloadUrlResolver {
   }
 }
 
-class BundledFileDownloadUrlResolver implements DownloadUrlResolver {
+export class BundledFileDownloadUrlResolver implements DownloadUrlResolver {
   constructor(private readonly resourceName: string) {}
 
   async getDownloadUrl(version: string): Promise<string | undefined> {
     if (version === ResourceVersions[this.resourceName]) {
-      const uri = Uri.file(join(AssetService.extensionDirectory, 'resources', this.resourceName));
+      const uri = Uri.file(
+        join(BundledFileDownloadUrlResolver.extensionDirectory, 'resources', this.resourceName)
+      );
       return uri.toString();
     }
   }
+
+  public static extensionDirectory = '';
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -110,41 +115,58 @@ export const binaryName = (name: string) => (process.platform === 'win32' ? `${n
 
 // These are not cached because homdir may change in testing
 const globalAppMapDir = () => join(homedir(), '.appmap');
-const appMapCliLibDir = () => join(globalAppMapDir(), 'lib', 'appmap');
-const scannerCliLibDir = () => join(globalAppMapDir(), 'lib', 'scanner');
 const appMapBinDir = () => join(globalAppMapDir(), 'bin');
 const appMapJavaAgentDir = () => join(globalAppMapDir(), 'lib', 'java');
 
-async function isAssetMissing(assetPath: string): Promise<boolean> {
+// If this file doesn't exist, we redownload all the assets because the
+// user can be in a broken state from a previous version.
+const downloadMarkerPath = () => join(globalAppMapDir(), '.download-complete');
+export function isInitialDownloadCompleted(): Promise<boolean> {
+  return fileExists(downloadMarkerPath());
+}
+
+export async function initialDownloadCompleted(): Promise<void> {
+  return (await open(downloadMarkerPath(), 'w')).close();
+}
+
+async function downloadRequired(assetPath: string): Promise<boolean> {
   try {
+    if (!(await isInitialDownloadCompleted())) return true;
     const exists = await fileExists(assetPath);
     return !exists;
   } catch {
-    return false;
+    return true;
   }
 }
 
-function writeToFile(stream: NodeJS.ReadableStream, path: string, flags?: string): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const fileWriter = createWriteStream(path, { flags });
+// checks if a path exists and is readable
+async function targetMissing(binaryPath: string) {
+  try {
+    await (await open(binaryPath, 'r')).close();
+    return false;
+  } catch {
+    return true;
+  }
+}
 
-    fileWriter.on('error', reject);
-    fileWriter.on('finish', resolve);
-
-    stream.on('error', (error) => {
-      fileWriter.end();
-      reject(error);
-    });
-
-    stream.pipe(fileWriter);
-  });
+async function download(url: Uri, destinationPath: string): Promise<void> {
+  await mkdir(dirname(destinationPath), { recursive: true });
+  switch (url.scheme) {
+    case 'file':
+      return copyFile(url.fsPath, destinationPath);
+    case 'http':
+    case 'https':
+      return downloadHttpRetry(url, destinationPath);
+    default:
+      return Promise.reject(`Unhandled scheme ${url.scheme}`);
+  }
 }
 
 async function markExecutable(path: string): Promise<void> {
   try {
     await chmod(path, 0o755);
   } catch (e) {
-    AssetService.logWarning(`Failed to mark ${path} as executable: ${e}`);
+    log.warning(`Failed to mark ${path} as executable: ${e}`);
   }
 }
 
@@ -173,89 +195,73 @@ function getPlatformIdentifier() {
   }
 }
 
-export const AppMapCliDownloader = new AssetDownloader(
-  'AppMap CLI',
-  [new NpmVersionResolver('@appland/appmap'), new StaticVersionResolver('appmap')],
-  [
-    new GitHubDownloadUrlResolver('getappmap/appmap-js', (version) =>
-      encodeURIComponent(`@appland/appmap-v${version}/appmap-${getPlatformIdentifier()}`)
-    ),
-  ],
-  {
-    shouldDownload: (version: string) =>
-      isAssetMissing(join(appMapCliLibDir(), `appmap-v${version}`)),
-    async skippedDownload(version) {
-      // Restore symlinks if need be. Otherwise the user would need to wait until the next release.
-      const binaryPath = join(appMapCliLibDir(), `appmap-v${version}`);
-      const symlinkPath = join(appMapBinDir(), binaryName('appmap'));
-      await updateSymlink(binaryPath, symlinkPath);
-    },
-    beforeDownload: () => mkdir(appMapCliLibDir(), { recursive: true }) as Promise<void>,
-    download: (stream, version) =>
-      writeToFile(stream, join(appMapCliLibDir(), `appmap-v${version}`), 'wx'),
-    async afterDownload(version) {
-      const binaryPath = join(appMapCliLibDir(), `appmap-v${version}`);
-      const symlinkPath = join(appMapBinDir(), binaryName('appmap'));
-      await markExecutable(binaryPath);
-      await updateSymlink(binaryPath, symlinkPath);
-    },
+async function resolveVersion(resolvers: VersionResolver[]) {
+  for (const resolver of resolvers) {
+    const result = await resolver.getLatestVersion();
+    if (result) return result;
   }
-);
+}
 
-export const ScannerDownloader = new AssetDownloader(
-  'AppMap Scanner CLI',
-  [new NpmVersionResolver('@appland/scanner'), new StaticVersionResolver('scanner')],
-  [
-    new GitHubDownloadUrlResolver('getappmap/appmap-js', (version) =>
-      encodeURIComponent(`@appland/scanner-v${version}/scanner-${getPlatformIdentifier()}`)
-    ),
-  ],
-  {
-    shouldDownload: (version: string) =>
-      isAssetMissing(join(scannerCliLibDir(), `scanner-v${version}`)),
-    async skippedDownload(version) {
-      // Restore symlinks if need be. Otherwise the user would need to wait until the next release.
-      const binaryPath = join(scannerCliLibDir(), `scanner-v${version}`);
-      const symlinkPath = join(appMapBinDir(), binaryName('scanner'));
-      await updateSymlink(binaryPath, symlinkPath);
-    },
-    beforeDownload: () => mkdir(scannerCliLibDir(), { recursive: true }) as Promise<void>,
-    download: (stream, version) =>
-      writeToFile(stream, join(scannerCliLibDir(), `scanner-v${version}`), 'wx'),
-    async afterDownload(version) {
-      const binaryPath = join(scannerCliLibDir(), `scanner-v${version}`);
-      const symlinkPath = join(appMapBinDir(), binaryName('scanner'));
-      await markExecutable(binaryPath);
-      await updateSymlink(binaryPath, symlinkPath);
-    },
+async function resolveUrl(resolvers: DownloadUrlResolver[], version: string) {
+  for (const resolver of resolvers) {
+    const result = await resolver.getDownloadUrl(version);
+    if (result) return result;
   }
-);
+}
 
-export const JavaAgentDownloader = new AssetDownloader(
-  'AppMap Java Agent',
-  [
+async function downloadCliAsset(name: string) {
+  const pkgName = '@appland/' + name;
+  const version = await resolveVersion([
+    new NpmVersionResolver(pkgName),
+    new StaticVersionResolver(name),
+  ]);
+  if (!version) throw `Error resolving ${name} version`;
+
+  const binaryPath = join(globalAppMapDir(), 'lib', name, `${name}-v${version}`);
+  const symlinkPath = join(appMapBinDir(), binaryName(name));
+
+  if (await downloadRequired(binaryPath)) {
+    const uri = await new GitHubDownloadUrlResolver('getappmap/appmap-js', (version) =>
+      encodeURIComponent(`@appland/${name}-v${version}/${name}-${getPlatformIdentifier()}`)
+    ).getDownloadUrl(version);
+    await download(Uri.parse(uri), binaryPath);
+    await markExecutable(binaryPath);
+    await updateSymlink(binaryPath, symlinkPath);
+  } else if (await targetMissing(symlinkPath)) {
+    await updateSymlink(binaryPath, symlinkPath);
+  }
+}
+
+export const AppMapCliDownloader = () => downloadCliAsset('appmap');
+export const ScannerDownloader = () => downloadCliAsset('scanner');
+export const JavaAgentDownloader = async () => {
+  const version = await resolveVersion([
     new MavenVersionResolver('com.appland', 'appmap-agent'),
     new GitHubVersionResolver('getappmap/appmap-java'),
     new StaticVersionResolver('appmap-java.jar'),
-  ],
-  [
-    new BundledFileDownloadUrlResolver('appmap-java.jar'),
-    new MavenDownloadUrlResolver('com.appland', 'appmap-agent'),
-    new GitHubDownloadUrlResolver(
-      'getappmap/appmap-java',
-      (version) => `v${version}/appmap-${version}.jar`
-    ),
-  ],
-  {
-    shouldDownload: (version: string) =>
-      isAssetMissing(join(appMapJavaAgentDir(), `appmap-${version}.jar`)),
-    beforeDownload: () => mkdir(appMapJavaAgentDir(), { recursive: true }) as Promise<void>,
-    download: (stream, version) =>
-      writeToFile(stream, join(appMapJavaAgentDir(), `appmap-${version}.jar`), 'wx'),
-    async afterDownload(version) {
-      const binaryPath = join(appMapJavaAgentDir(), `appmap-${version}.jar`);
-      const symlinkPath = join(appMapJavaAgentDir(), 'appmap.jar');
-      await updateSymlink(binaryPath, symlinkPath);
-    },
+  ]);
+  if (!version) throw `Error resolving AppMap Java agent version`;
+
+  const binaryPath = join(appMapJavaAgentDir(), `appmap-${version}.jar`);
+  const symlinkPath = join(appMapJavaAgentDir(), 'appmap.jar');
+
+  if (await downloadRequired(binaryPath)) {
+    const uri = await resolveUrl(
+      [
+        new BundledFileDownloadUrlResolver('appmap-java.jar'),
+        new MavenDownloadUrlResolver('com.appland', 'appmap-agent'),
+        new GitHubDownloadUrlResolver(
+          'getappmap/appmap-java',
+          (version) => `v${version}/appmap-${version}.jar`
+        ),
+      ],
+      version
+    );
+    if (!uri) throw `Error resolving AppMap Java agent download URL`;
+    await download(Uri.parse(uri), binaryPath);
+    await markExecutable(binaryPath);
+    await updateSymlink(binaryPath, symlinkPath);
+  } else if (await targetMissing(symlinkPath)) {
+    await updateSymlink(binaryPath, symlinkPath);
   }
-);
+};

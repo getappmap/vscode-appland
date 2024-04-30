@@ -1,5 +1,5 @@
-import AssetService from './assetService';
-import fetch, { Response, RequestInit } from 'node-fetch';
+import * as log from './log';
+import fetch, { Response, RequestInit } from 'node-fetch'; // we could use native but nock doesn't support it
 
 export default async function tryRequest(
   url: string,
@@ -14,13 +14,13 @@ export default async function tryRequest(
     // Just fail if it's non-2xx
     // We're following redirects automatically, so we shouldn't be getting 3xx
     if (!res.ok) {
-      AssetService.logWarning(`Failed to request ${url}: got status ${res.status}`);
+      log.warning(`Failed to request ${url}: got status ${res.status}`);
       return;
     }
 
     return res;
   } catch (e) {
-    AssetService.logWarning(`Failed to request ${url}: ${e}`);
+    log.warning(`Failed to request ${url}: ${e}`);
     return;
   }
 }
