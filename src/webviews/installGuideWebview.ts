@@ -8,6 +8,7 @@ import { AUTHN_PROVIDER_NAME } from '../authentication';
 import getWebviewContent from './getWebviewContent';
 import { workspaceServices } from '../services/workspaceServices';
 import { RunConfigService, RunConfigServiceInstance } from '../services/runConfigService';
+import ExtensionState from '../configuration/extensionState';
 
 type PageMessage = {
   page: string;

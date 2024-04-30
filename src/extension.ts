@@ -28,7 +28,6 @@ import appmapLinkProvider from './terminalLink/appmapLinkProvider';
 import registerTrees from './tree';
 import ContextMenu from './tree/contextMenu';
 import InstallGuideWebView from './webviews/installGuideWebview';
-import InstallationStatusBadge from './workspace/installationStatus';
 import UriHandler from './uri/uriHandler';
 import OpenAppMapUriHandler from './uri/openAppMapUriHandler';
 import generateOpenApi from './commands/generateOpenApi';
@@ -38,7 +37,6 @@ import installAgent from './commands/installAgent';
 import AnalysisManager from './services/analysisManager';
 import Environment from './configuration/environment';
 import ErrorCode from './telemetry/definitions/errorCodes';
-import promptInstall from './actions/promptInstall';
 import FindingsOverviewWebview from './webviews/findingsWebview';
 import FindingInfoWebview from './webviews/findingInfoWebview';
 import { AppMapRecommenderService } from './services/appmapRecommenderService';
@@ -46,7 +44,6 @@ import openCodeObjectInSource from './commands/openCodeObjectInSource';
 import learnMoreRuntimeAnalysis from './commands/learnMoreRuntimeAnalysis';
 import SignInViewProvider from './webviews/signInWebview';
 import SignInManager from './services/signInManager';
-import tryOpenInstallGuide from './commands/tryOpenInstallGuide';
 import { AppmapConfigManager } from './services/appmapConfigManager';
 import { findByName } from './commands/findByName';
 import { RunConfigService } from './services/runConfigService';
@@ -64,6 +61,8 @@ import navieConfigurationService from './services/navieConfigurationService';
 import RpcProcessService from './services/rpcProcessService';
 import CommandRegistry from './commands/commandRegistry';
 import AssetService from './assets/assetService';
+import clearNavieAiSettings from './commands/clearNavieAiSettings';
+import EnvironmentVariableService from './services/environmentVariableService';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   CommandRegistry.setContext(context).addWaitAlias({
@@ -147,7 +146,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     await openCodeObjectInSource(context);
     await learnMoreRuntimeAnalysis(context);
     appmapHoverProvider(context, lineInfoIndex);
-    tryOpenInstallGuide(extensionState);
 
     const activateUptodateService = async () => {
       if (!(appmapUptodateService && sourceFileWatcher)) return;
@@ -220,12 +218,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     registerSequenceDiagram(context, appmapCollectionFile);
     registerCompareSequenceDiagrams(context, appmapCollectionFile);
 
-    const badge = new InstallationStatusBadge('appmap.views.instructions');
-    badge.initialize(projectStates);
-    context.subscriptions.push(badge);
-
     InstallGuideWebView.register(context, projectStates);
-    const openedInstallGuide = await vscode.commands.executeCommand('appmap.tryOpenInstallGuide');
 
     FindingsOverviewWebview.register(context);
     FindingInfoWebview.register(context);
@@ -281,9 +274,9 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     updateAppMapConfigs(context, runConfigService, workspaceServices);
     downloadLatestJavaJar(context);
     getAppmapDir(context, workspaceServices);
+    clearNavieAiSettings(context);
 
-    if (!openedInstallGuide && !SignInManager.shouldShowSignIn())
-      promptInstall(workspaceServices, extensionState);
+    context.subscriptions.push(new EnvironmentVariableService());
 
     // Use this notification to track when the extension is activated.
     if (Environment.isSystemTest) {

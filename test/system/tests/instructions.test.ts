@@ -13,16 +13,10 @@ describe('Instructions tree view', function () {
     await driver.reload();
   });
 
-  it('displays a badge when AppMap installation is pending for an installable project', async function () {
-    const { driver } = this;
-
-    await driver.appMap.pendingBadge.waitFor({ state: 'visible' });
-    assert(await driver.appMap.pendingBadge.isVisible(), 'badge is visible');
-  });
-
   it('accurately depicts the installation state', async function () {
     const { driver, project } = this;
     await driver.appMap.openActionPanel();
+    await driver.appMap.expandInstructions();
     await driver.appMap.assertInstructionStepStatus(
       InstructionStep.InstallAppMapAgent,
       InstructionStepStatus.Pending
@@ -72,6 +66,7 @@ describe('Instructions tree view', function () {
     const { driver } = this;
 
     await driver.appMap.openActionPanel();
+    await driver.appMap.expandInstructions();
 
     const pages = [
       { step: InstructionStep.InstallAppMapAgent, title: 'Add AppMap to your project' },
@@ -99,6 +94,7 @@ describe('Instructions tree view', function () {
     };
 
     await driver.appMap.openActionPanel();
+    await driver.appMap.expandInstructions();
     await driver.appMap.openInstruction(InstructionStep.InstallAppMapAgent);
     await assertTabs(1);
 
@@ -106,26 +102,13 @@ describe('Instructions tree view', function () {
     await assertTabs(1);
   });
 
-  it('hides the pending badge upon completing the installation steps', async function () {
-    const { driver, project } = this;
-
-    await driver.appMap.pendingBadge.waitFor({ state: 'visible' });
-    await project.simulateAppMapInstall();
-    const pidfile = path.join(project.workspacePath, '**', 'index.pid');
-    await driver.waitForFile(pidfile);
-    await driver.appMap.openActionPanel();
-    await project.restoreFiles('**/*.appmap.json');
-    await driver.appMap.openInstruction(InstructionStep.NavieIntroduction);
-    await driver.appMap.pendingBadge.waitFor({ state: 'hidden' });
-  });
-
   it('can be stepped through as expected', async function () {
     const { driver, project } = this;
 
     await driver.appMap.openActionPanel();
+    await driver.appMap.expandInstructions();
     await driver.appMap.ready();
 
-    await driver.appMap.pendingBadge.waitFor({ state: 'visible' });
     await driver.appMap.assertInstructionStepStatus(
       InstructionStep.InstallAppMapAgent,
       InstructionStepStatus.Pending
@@ -176,6 +159,7 @@ describe('Instructions tree view', function () {
     await driver.waitForReady();
     await driver.appMap.openActionPanel();
     await driver.appMap.ready();
+    await driver.appMap.expandInstructions();
 
     const expectProjectPicker = () =>
       waitFor(

@@ -4,19 +4,25 @@ const OPENAI_API_KEY = 'openai.api_key';
 
 export default function navieConfigurationService(context: vscode.ExtensionContext) {
   context.subscriptions.push(
-    vscode.commands.registerCommand('appmap.openAIApiKey.set', async () => {
-      vscode.window.showInputBox({ placeHolder: 'OpenAI API Key' }).then((key) => {
-        setOpenAIApiKey(context, key);
-        if (key) {
-          vscode.window.showInformationMessage(
-            `AppMap OpenAI API key has been stored in VSCode Secrets. Run the command 'Developer: Reload Window' to start using AppMap Navie in "bring your own key" mode.`
-          );
-        } else {
-          vscode.window.showInformationMessage(
-            `Appmap OpenAI API Key has been erased. Run the command 'Developer: Reload Window' to stop using AppMap Navie in "bring your own key" mode.`
-          );
-        }
-      });
+    vscode.commands.registerCommand('appmap.openAIApiKey.set', async (key?: string) => {
+      const apiKey = key ?? (await vscode.window.showInputBox({ placeHolder: 'OpenAI API Key' }));
+      setOpenAIApiKey(context, apiKey);
+      if (apiKey) {
+        vscode.window.showInformationMessage(
+          'AppMap OpenAI API key has been stored in VSCode Secrets.'
+        );
+      } else {
+        vscode.window.showInformationMessage('AppMap OpenAI API Key has been erased.');
+      }
+
+      const res = await vscode.window.showInformationMessage(
+        'The window must be reloaded for the changes to take effect. Reload now?',
+        { modal: true },
+        'Reload'
+      );
+      if (res === 'Reload') {
+        vscode.commands.executeCommand('workbench.action.reloadWindow');
+      }
     }),
     vscode.commands.registerCommand('appmap.openAIApiKey.status', async () => {
       const key = await getOpenAIApiKey(context);

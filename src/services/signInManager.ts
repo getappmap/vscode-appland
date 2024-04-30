@@ -28,7 +28,6 @@ export default class SignInManager {
     try {
       this.signedIn = !!(await getApiKey(true));
       this.updateSignInState();
-      if (this.signedIn) vscode.commands.executeCommand('appmap.tryOpenInstallGuide');
     } catch (e) {
       Telemetry.sendEvent(DEBUG_EXCEPTION, {
         exception: e as Error,

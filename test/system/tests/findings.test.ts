@@ -19,7 +19,8 @@ describe('Findings and scanning', function () {
     await project.restoreFiles('**/*.appmap.json');
     await driver.waitForFile(path.join(project.workspacePath, 'tmp', '**', 'mtime')); // Wait for the indexer
 
-    await driver.appMap.openActionPanel(true);
+    await driver.appMap.openActionPanel();
+    await driver.appMap.ready();
     await driver.appMap.expandFindings();
     await driver.appMap.findingsTree.click();
     await driver.appMap.findingsTreeItem().waitFor();

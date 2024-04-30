@@ -2,7 +2,6 @@ import {
   ExtensionContext,
   SecretStorage,
   Uri,
-  Event,
   SecretStorageChangeEvent,
   EnvironmentVariableCollection,
   EnvironmentVariableMutator,

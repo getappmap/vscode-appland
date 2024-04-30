@@ -387,3 +387,37 @@ export function sanitizeEnvironment(env: NodeJS.ProcessEnv): Record<string, stri
   }
   return sanitizedEnv;
 }
+
+export async function parseLocation(
+  location: string,
+  directory?: string
+): Promise<vscode.Location | vscode.Uri> {
+  const match = location.match(/:(\d+(-\d+)?)$/);
+  if (match) {
+    let locationPath = location.substring(0, match.index);
+    if (!path.isAbsolute(locationPath)) {
+      let workspaceFolder: vscode.WorkspaceFolder | undefined;
+      if (directory) {
+        workspaceFolder = vscode.workspace.getWorkspaceFolder(vscode.Uri.file(directory));
+      }
+
+      const pattern = workspaceFolder
+        ? new vscode.RelativePattern(workspaceFolder, `**/${locationPath}`)
+        : `**/${locationPath}`;
+      const files = await vscode.workspace.findFiles(pattern);
+      if (files.length > 0) {
+        locationPath = files[0].fsPath;
+      }
+    }
+
+    const [startLine, endLine] = match[1].split('-').map((x) => parseInt(x, 10) - 1);
+    return new vscode.Location(
+      vscode.Uri.file(locationPath),
+      new vscode.Range(
+        new vscode.Position(startLine, 0),
+        new vscode.Position(endLine ?? startLine, 0)
+      )
+    );
+  }
+  return vscode.Uri.parse(location);
+}

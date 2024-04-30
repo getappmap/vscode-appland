@@ -20,6 +20,10 @@ function stubWorkspaces(sinon: SinonSandbox, languageExtension = 'rb', numProjec
       uri: vscode.Uri.file(dir),
     }))
   );
+
+  sinon.stub(vscode.workspace, 'getWorkspaceFolder').callsFake((uri: vscode.Uri) => {
+    return vscode.workspace.workspaceFolders?.find((folder) => folder.uri.path === uri.path);
+  });
 }
 
 export function mockSingleProjectWorkspace(sinon: SinonSandbox, languageExtension = 'rb'): void {

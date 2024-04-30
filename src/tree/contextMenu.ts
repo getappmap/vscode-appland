@@ -25,8 +25,18 @@ export default class ContextMenu {
       )
     );
     context.subscriptions.push(
-      vscode.commands.registerCommand('appmap.context.openAsJson', async (item: AppMapLoader) => {
-        vscode.commands.executeCommand('vscode.openWith', item.descriptor.resourceUri, 'default');
+      vscode.commands.registerCommand('appmap.context.openAsJson', async (item?: AppMapLoader) => {
+        let uri: vscode.Uri | null;
+        if (!item) {
+          uri = ContextMenu.getActiveAppMap();
+          if (!uri) {
+            return;
+          }
+        } else {
+          uri = item.descriptor.resourceUri;
+        }
+
+        vscode.commands.executeCommand('vscode.openWith', uri, 'default');
       })
     );
     context.subscriptions.push(
@@ -64,23 +74,23 @@ export default class ContextMenu {
       )
     );
     context.subscriptions.push(
-      vscode.commands.registerCommand('appmap.context.deleteAppMap', async (item: AppMapLoader) => {
-        let uri: vscode.Uri;
-        if (!item) {
-          const { activeTab } = vscode.window.tabGroups.activeTabGroup;
-          if (!activeTab) {
-            vscode.window.showErrorMessage('No active editor.');
-            return;
+      vscode.commands.registerCommand(
+        'appmap.context.deleteAppMap',
+        async (item?: AppMapLoader) => {
+          let uri: vscode.Uri | null;
+          if (!item) {
+            uri = ContextMenu.getActiveAppMap();
+            if (!uri) {
+              return;
+            }
+          } else {
+            uri = item.descriptor.resourceUri;
           }
 
-          uri = (activeTab.input as vscode.TabInputCustom).uri;
-        } else {
-          uri = item.descriptor.resourceUri;
+          await deleteAppMap(uri, appmaps);
+          await closeEditorByUri(uri);
         }
-
-        await deleteAppMap(uri, appmaps);
-        await closeEditorByUri(uri);
-      })
+      )
     );
     context.subscriptions.push(
       vscode.commands.registerCommand(
@@ -109,5 +119,21 @@ export default class ContextMenu {
         }
       )
     );
+  }
+
+  private static getActiveAppMap(): vscode.Uri | null {
+    const { activeTab } = vscode.window.tabGroups.activeTabGroup;
+    if (!activeTab) {
+      vscode.window.showErrorMessage('No active editor.');
+      return null;
+    }
+
+    const input = activeTab.input;
+    if (input instanceof vscode.TabInputCustom && input.viewType === 'appmap.views.appMapFile')
+      return input.uri;
+    else {
+      vscode.window.showErrorMessage('No AppMap open in the active tab.');
+      return null;
+    }
   }
 }

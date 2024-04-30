@@ -3,6 +3,8 @@ import mockery from 'mockery';
 import TextDocument from './TextDocument';
 import Range from './Range';
 import Position from './Position';
+import Location from './Location';
+import Selection from './Selection';
 import EventEmitter from './EventEmitter';
 import Terminal from './Terminal';
 import CodeAction from './CodeAction';
@@ -32,6 +34,8 @@ const MockVSCode = {
   TextDocument,
   Range,
   Position,
+  Location,
+  Selection,
   CodeAction,
   CodeActionKind,
   extensions,

@@ -288,13 +288,28 @@
     },
     "viewsWelcome": [
       {
+        "view": "appmap.views.instructions",
+        "contents": "AppMap is initializing...",
+        "when": "!appmap.initialized"
+      },
+      {
+        "view": "appmap.views.navie",
+        "contents": "AppMap is initializing...",
+        "when": "!appmap.initialized"
+      },
+      {
+        "view": "appmap.views.navie",
+        "contents": "Ask Navie a question about your application to get started.\n[New Navie Chat](command:appmap.explain)\nNavie uses AppMap data to improve the accuracy of Generative AI models. Navie searches through your locally stored AppMap data to identify the application behavior related to your question.",
+        "when": "appmap.initialized"
+      },
+      {
         "view": "appmap.views.appmaps",
         "contents": "AppMap is initializing...",
         "when": "!appmap.initialized"
       },
       {
         "view": "appmap.views.appmaps",
-        "contents": "All the AppMaps that are present in this workspace will be listed here.\n[Open Instructions](command:appmap.openInstallGuide)\n",
+        "contents": "Creating AppMap data for the areas of your application that interest you helps Navie answer very specific questions.\n[Create AppMap Data](command:appmap.openInstallGuide)\n",
         "when": "appmap.initialized"
       },
       {
@@ -311,6 +326,11 @@
         "view": "appmap.views.findings",
         "contents": "AppMap is initializing...",
         "when": "!appmap.initialized"
+      },
+      {
+        "view": "appmap.views.documentation",
+        "contents": "AppMap is initializing...",
+        "when": "!appmap.initialized"
       }
     ],
     "views": {
@@ -323,14 +343,20 @@
           "when": "appMap.showSignIn"
         },
         {
-          "id": "appmap.views.instructions",
-          "name": "Instructions",
+          "id": "appmap.views.navie",
+          "name": "Navie",
           "visibility": "visible",
           "when": "!appMap.showSignIn"
         },
         {
+          "id": "appmap.views.instructions",
+          "name": "AppMap Recording Instructions",
+          "visibility": "collapsed",
+          "when": "!appMap.showSignIn"
+        },
+        {
           "id": "appmap.views.appmaps",
-          "name": "AppMaps",
+          "name": "AppMap Data",
           "contextualTitle": "AppMap",
           "visibility": "visible",
           "icon": "images/logo.svg",
@@ -339,7 +365,7 @@
         {
           "id": "appmap.views.findings",
           "name": "Runtime Analysis",
-          "visibility": "visible",
+          "visibility": "collapsed",
           "when": "!appMap.showSignIn"
         },
         {
@@ -486,6 +512,7 @@
     "@vscode/test-electron": "^2.3.8",
     "@vscode/vsce": "^2.19.0",
     "@vue/compiler-sfc": "^3.2.37",
+    "appmap-node": "^2.19.3",
     "browserify-fs": "^1.0.0",
     "buffer": "^6.0.3",
     "chai": "^4.3.6",
@@ -528,10 +555,10 @@
   "dependencies": {
     "@appland/appmap": "^3.129.0",
     "@appland/client": "^1.14.1",
-    "@appland/components": "^4.12.0",
+    "@appland/components": "^4.21.0",
     "@appland/diagrams": "^1.8.0",
-    "@appland/models": "^2.10.0",
-    "@appland/rpc": "latest",
+    "@appland/models": "^2.10.2",
+    "@appland/rpc": "^1.7.0",
     "@appland/scanner": "^1.86.0",
     "@appland/sequence-diagram": "^1.12.0",
     "@yarnpkg/parsers": "^3.0.0-rc.45",

@@ -65,14 +65,14 @@ __metadata:
   linkType: hard
 
 "@appland/appmap@npm:^3.129.0":
-  version: 3.130.2
-  resolution: "@appland/appmap@npm:3.130.2"
+  version: 3.138.0
+  resolution: "@appland/appmap@npm:3.138.0"
   dependencies:
-    "@appland/client": ^1.15.0
-    "@appland/components": ^4.0.0
+    "@appland/client": ^1.16.0
+    "@appland/components": ^4.12.0
     "@appland/diagrams": ^1.8.0
-    "@appland/models": ^2.10.0
-    "@appland/navie": ^1.2.0
+    "@appland/models": ^2.10.1
+    "@appland/navie": ^1.5.0
     "@appland/openapi": ^1.8.0
     "@appland/rpc": ^1.6.0
     "@appland/scanner": ^1.86.0
@@ -84,6 +84,7 @@ __metadata:
     applicationinsights: ^2.1.4
     async: ^3.2.4
     axios: ^0.27.2
+    better-sqlite3: ^9.5.0
     body-parser: ^1.20.2
     boxen: ^5.0.1
     chalk: ^4.1.2
@@ -131,13 +132,13 @@ __metadata:
       optional: true
   bin:
     appmap: built/cli.js
-  checksum: d6bc8d8baf0717616adf22b72b25d45e68cef8ebbe6716e16855bc87256842ae349b7dc02a54b102fd07489ae421995f0c9b9c7ad33f459c7dd14b7428fb3c01
+  checksum: aa7472bce64c732100f64f06803e8d6ddf403f04c0ee056f496a8d736483c77647c99e018b4bff9358ac7bf2c439004dc8abac74678e0d76e6b2f8a7915b8142
   languageName: node
   linkType: hard
 
-"@appland/client@npm:^1.12.0, @appland/client@npm:^1.14.1, @appland/client@npm:^1.15.0":
-  version: 1.16.0
-  resolution: "@appland/client@npm:1.16.0"
+"@appland/client@npm:^1.12.0, @appland/client@npm:^1.14.1, @appland/client@npm:^1.16.0":
+  version: 1.17.0
+  resolution: "@appland/client@npm:1.17.0"
   dependencies:
     "@appland/models": ^2.10.0
     "@types/form-data": ^2.5.0
@@ -145,45 +146,18 @@ __metadata:
     js-yaml: ^4.1.0
     rxjs: ^7.8.1
     socket.io-client: ^4.7.2
-  checksum: bbb35564249d6e2ead4e084399d4e7cc41b321af69540c7d01d1f37509574e0bf0683959ccbf4a5027f817b35f2739919732f6f20406d9ec3540a5de815caa4d
-  languageName: node
-  linkType: hard
-
-"@appland/components@npm:^4.0.0":
-  version: 4.11.0
-  resolution: "@appland/components@npm:4.11.0"
-  dependencies:
-    "@appland/client": ^1.12.0
-    "@appland/diagrams": ^1.7.0
-    "@appland/models": ^2.10.0
-    "@appland/rpc": ^1.1.0
-    "@appland/sequence-diagram": ^1.11.0
-    buffer: ^6.0.3
-    d3: ^7.8.4
-    d3-flame-graph: ^4.1.3
-    diff: ^5.1.0
-    dom-to-svg: ^0.12.2
-    dompurify: ^3.0.6
-    events: ^3.3.0
-    highlight.js: ^11.9.0
-    jayson: ^4.1.0
-    marked: ^10.0.0
-    marked-highlight: ^2.0.7
-    sql-formatter: ^4.0.2
-    vue: ^2.7.14
-    vuex: ^3.6.0
-  checksum: 2f8b2d24e541133f7928e60b13e0d1001bd6b90ddde2fd9b813badb800dc5b26a56d1b3bbcc5b5131c05bb417968a54180ae325ae1fd060911fc8d428fc83a0a
+  checksum: 0c0fa890cb8ca3b23d79f805d1aee87d7fc2679cc467687897e8b6061678ebc33b477da8cc94cf15a3bf12cc0e9b9abf98daf2c72fcde232af7cabaa5ea472db
   languageName: node
   linkType: hard
 
 "@appland/components@npm:^4.12.0":
-  version: 4.12.0
-  resolution: "@appland/components@npm:4.12.0"
+  version: 4.19.1
+  resolution: "@appland/components@npm:4.19.1"
   dependencies:
     "@appland/client": ^1.12.0
     "@appland/diagrams": ^1.7.0
     "@appland/models": ^2.10.0
-    "@appland/rpc": ^1.1.0
+    "@appland/rpc": ^1.9.0
     "@appland/sequence-diagram": ^1.11.0
     buffer: ^6.0.3
     d3: ^7.8.4
@@ -199,7 +173,34 @@ __metadata:
     sql-formatter: ^4.0.2
     vue: ^2.7.14
     vuex: ^3.6.0
-  checksum: ffec2fd93894c02c5ba3492fcd382cce0aedc8a1e8a4265e57d24f8fb2a8165fc5c0ddd4e69ecc9f95da8f616b68eb4e76d5d8e7803c2396e8b99a8f45ea5843
+  checksum: 093f1db50a8f061fce125d8ffc9b901f36d5cb8a8cf21504b44c4efb0a250678de130fb1343a091271496c3eecc8abefba1220592ab428a178d0573df5b9235c
+  languageName: node
+  linkType: hard
+
+"@appland/components@npm:^4.21.0":
+  version: 4.21.0
+  resolution: "@appland/components@npm:4.21.0"
+  dependencies:
+    "@appland/client": ^1.12.0
+    "@appland/diagrams": ^1.7.0
+    "@appland/models": ^2.10.2
+    "@appland/rpc": ^1.9.0
+    "@appland/sequence-diagram": ^1.11.0
+    buffer: ^6.0.3
+    d3: ^7.8.4
+    d3-flame-graph: ^4.1.3
+    diff: ^5.1.0
+    dom-to-svg: ^0.12.2
+    dompurify: ^3.0.6
+    events: ^3.3.0
+    highlight.js: ^11.9.0
+    jayson: ^4.1.0
+    marked: ^10.0.0
+    marked-highlight: ^2.0.7
+    sql-formatter: ^4.0.2
+    vue: ^2.7.14
+    vuex: ^3.6.0
+  checksum: 0680e29987d71ddff0d1ac607b712423a9b689da4dbeff71b79a4acf0c78ccbb08787790276d0d7aa3c853ec48f96dadc8423435b1ccbdae5b8c46e5ebdbb1d0
   languageName: node
   linkType: hard
 
@@ -218,25 +219,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/models@npm:^2.10.0":
-  version: 2.10.1
-  resolution: "@appland/models@npm:2.10.1"
+"@appland/models@npm:^2.10.0, @appland/models@npm:^2.10.1, @appland/models@npm:^2.10.2":
+  version: 2.10.2
+  resolution: "@appland/models@npm:2.10.2"
   dependencies:
     "@appland/sql-parser": ^1.5.0
     crypto-js: ^4.0.0
-  checksum: 5e45cc2849d0145a5c123e8f812ad0570d345a9734b3fb7f3f7dc8dd1d5fa7a81d4f82ff84a51f281f3ddc0c2626fa8e72616adb470d5c874e6094e66bc39d33
+  checksum: d0150a77a93125b60df365a3e17892922178888e4a06241d2dffd68a3a837629c7b90715ccc9c19e5c8868378dde31e9923c00847e39fedbeeb96c51220f66a8
   languageName: node
   linkType: hard
 
-"@appland/navie@npm:^1.2.0":
-  version: 1.2.1
-  resolution: "@appland/navie@npm:1.2.1"
+"@appland/navie@npm:^1.5.0":
+  version: 1.6.0
+  resolution: "@appland/navie@npm:1.6.0"
   dependencies:
     "@langchain/core": ^0.1.32
     "@langchain/openai": ^0.0.15
     langchain: ^0.1.25
     openai: ^4.28.0
-  checksum: 29b52a8994cf281f4296b3ca15b75d9300df879d91a140e861fb9e1bd70ef121a543598689d0baaefa07f76e4b925c0b44c12152fefdfb9d4ec8db0d73bd5ef2
+  checksum: ac21b7d4fda0f673f28a3fe4e8a69ad83209d11ce984f99f50c0d3642ec084efc080b4d85be6bd8f678cef4e207fe05949dfb777bccd7b867a0499a727310d9a
   languageName: node
   linkType: hard
 
@@ -250,10 +251,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/rpc@npm:^1.1.0, @appland/rpc@npm:^1.6.0, @appland/rpc@npm:latest":
-  version: 1.6.0
-  resolution: "@appland/rpc@npm:1.6.0"
-  checksum: 8c407df795ddbd0557e1589eef971ec018ca4ec4d76730b50acfd50c39674c9be7ec995ae43bbfb27e9ce626461a331e0b240944b92a82bde8f4648afef0994c
+"@appland/rpc@npm:^1.6.0, @appland/rpc@npm:^1.7.0, @appland/rpc@npm:^1.9.0":
+  version: 1.9.0
+  resolution: "@appland/rpc@npm:1.9.0"
+  checksum: 4e838862609034635ea44c6b4b06352e993d2eecacf01609c021700120b383030dda0cceef63f85e7dd04bd498b2263f96b665d4ecf9d0106d9ad66d248b821a
   languageName: node
   linkType: hard
 
@@ -2911,6 +2912,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"acorn-walk@npm:^8.2.0":
+  version: 8.3.2
+  resolution: "acorn-walk@npm:8.3.2"
+  checksum: 3626b9d26a37b1b427796feaa5261faf712307a8920392c8dce9a5739fb31077667f4ad2ec71c7ac6aaf9f61f04a9d3d67ff56f459587206fc04aa31c27ef392
+  languageName: node
+  linkType: hard
+
 "acorn@npm:^7.1.1, acorn@npm:^7.4.0":
   version: 7.4.1
   resolution: "acorn@npm:7.4.1"
@@ -3177,16 +3185,33 @@ __metadata:
   languageName: node
   linkType: hard
 
+"appmap-node@npm:^2.19.3":
+  version: 2.19.3
+  resolution: "appmap-node@npm:2.19.3"
+  dependencies:
+    acorn-walk: ^8.2.0
+    astring: ^1.8.6
+    chalk: <5
+    json5: ^2.2.3
+    meriyah: ^4.3.7
+    source-map-js: ^1.0.2
+    yaml: ^2.3.4
+  bin:
+    appmap-node: bin/appmap-node.js
+  checksum: ffb964654004f859ab082d826ffb831725bf8b1e32c7f18f62692a3077e1b938b9568e63cea29db3940f5c1b953db14b822742dc7db17f0c9893c463fa3a26b2
+  languageName: node
+  linkType: hard
+
 "appmap@workspace:.":
   version: 0.0.0-use.local
   resolution: "appmap@workspace:."
   dependencies:
     "@appland/appmap": ^3.129.0
     "@appland/client": ^1.14.1
-    "@appland/components": ^4.12.0
+    "@appland/components": ^4.21.0
     "@appland/diagrams": ^1.8.0
-    "@appland/models": ^2.10.0
-    "@appland/rpc": latest
+    "@appland/models": ^2.10.2
+    "@appland/rpc": ^1.7.0
     "@appland/scanner": ^1.86.0
     "@appland/sequence-diagram": ^1.12.0
     "@playwright/test": ^1.22.2
@@ -3214,6 +3239,7 @@ __metadata:
     "@vscode/vsce": ^2.19.0
     "@vue/compiler-sfc": ^3.2.37
     "@yarnpkg/parsers": ^3.0.0-rc.45
+    appmap-node: ^2.19.3
     bootstrap: ^4.5.3
     bootstrap-autocomplete: ^2.3.7
     browserify-fs: ^1.0.0
@@ -3451,6 +3477,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"astring@npm:^1.8.6":
+  version: 1.8.6
+  resolution: "astring@npm:1.8.6"
+  bin:
+    astring: bin/astring
+  checksum: 6f034d2acef1dac8bb231e7cc26c573d3c14e1975ea6e04f20312b43d4f462f963209bc64187d25d477a182dc3c33277959a0156ab7a3617aa79b1eac4d88e1f
+  languageName: node
+  linkType: hard
+
 "async-arrays@npm:*":
   version: 1.0.1
   resolution: "async-arrays@npm:1.0.1"
@@ -3594,6 +3629,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"better-sqlite3@npm:^9.5.0":
+  version: 9.6.0
+  resolution: "better-sqlite3@npm:9.6.0"
+  dependencies:
+    bindings: ^1.5.0
+    node-gyp: latest
+    prebuild-install: ^7.1.1
+  checksum: be3a1d2a3f6f9b5141be6607a38c0a51fa5849495b071955e507bc0c2a2fb08430852c1bf03796eec1a53344b25645807db48dcb51c71b0662b74c5a70420bb0
+  languageName: node
+  linkType: hard
+
 "bin-links@npm:^2.2.1":
   version: 2.2.1
   resolution: "bin-links@npm:2.2.1"
@@ -3619,6 +3665,15 @@ __metadata:
   version: 1.3.6
   resolution: "binary-search@npm:1.3.6"
   checksum: 2e6b3459a9c1ba1bd674a6a855a5ef7505f70707422244430e3510e989c0df6074a49fe60784a98b93b51545c9bcace1db1defee06ff861b124c036a2f2836bf
+  languageName: node
+  linkType: hard
+
+"bindings@npm:^1.5.0":
+  version: 1.5.0
+  resolution: "bindings@npm:1.5.0"
+  dependencies:
+    file-uri-to-path: 1.0.0
+  checksum: 65b6b48095717c2e6105a021a7da4ea435aa8d3d3cd085cb9e85bcb6e5773cf318c4745c3f7c504412855940b585bdf9b918236612a1c7a7942491de176f1ae7
   languageName: node
   linkType: hard
 
@@ -4115,6 +4170,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"chalk@npm:<5, chalk@npm:^4.0.0, chalk@npm:^4.1.0, chalk@npm:^4.1.1, chalk@npm:^4.1.2":
+  version: 4.1.2
+  resolution: "chalk@npm:4.1.2"
+  dependencies:
+    ansi-styles: ^4.1.0
+    supports-color: ^7.1.0
+  checksum: fe75c9d5c76a7a98d45495b91b2172fa3b7a09e0cc9370e5c8feb1c567b85c4288e2b3fded7cfdd7359ac28d6b3844feb8b82b8686842e93d23c827c417e83fc
+  languageName: node
+  linkType: hard
+
 "chalk@npm:^1.1.3":
   version: 1.1.3
   resolution: "chalk@npm:1.1.3"
@@ -4136,16 +4201,6 @@ __metadata:
     escape-string-regexp: ^1.0.5
     supports-color: ^5.3.0
   checksum: ec3661d38fe77f681200f878edbd9448821924e0f93a9cefc0e26a33b145f1027a2084bf19967160d11e1f03bfe4eaffcabf5493b89098b2782c3fe0b03d80c2
-  languageName: node
-  linkType: hard
-
-"chalk@npm:^4.0.0, chalk@npm:^4.1.0, chalk@npm:^4.1.1, chalk@npm:^4.1.2":
-  version: 4.1.2
-  resolution: "chalk@npm:4.1.2"
-  dependencies:
-    ansi-styles: ^4.1.0
-    supports-color: ^7.1.0
-  checksum: fe75c9d5c76a7a98d45495b91b2172fa3b7a09e0cc9370e5c8feb1c567b85c4288e2b3fded7cfdd7359ac28d6b3844feb8b82b8686842e93d23c827c417e83fc
   languageName: node
   linkType: hard
 
@@ -6803,6 +6858,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"file-uri-to-path@npm:1.0.0":
+  version: 1.0.0
+  resolution: "file-uri-to-path@npm:1.0.0"
+  checksum: b648580bdd893a008c92c7ecc96c3ee57a5e7b6c4c18a9a09b44fb5d36d79146f8e442578bc0e173dc027adf3987e254ba1dfd6e3ec998b7c282873010502144
+  languageName: node
+  linkType: hard
+
 "fill-range@npm:^7.0.1":
   version: 7.0.1
   resolution: "fill-range@npm:7.0.1"
@@ -8641,6 +8703,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"json5@npm:^2.2.3":
+  version: 2.2.3
+  resolution: "json5@npm:2.2.3"
+  bin:
+    json5: lib/cli.js
+  checksum: 2a7436a93393830bce797d4626275152e37e877b265e94ca69c99e3d20c2b9dab021279146a39cdb700e71b2dd32a4cebd1514cd57cee102b1af906ce5040349
+  languageName: node
+  linkType: hard
+
 "jsonc-parser@npm:^3.2.0":
   version: 3.2.0
   resolution: "jsonc-parser@npm:3.2.0"
@@ -9705,6 +9776,13 @@ __metadata:
   version: 1.4.1
   resolution: "merge2@npm:1.4.1"
   checksum: 7268db63ed5169466540b6fb947aec313200bcf6d40c5ab722c22e242f651994619bcd85601602972d3c85bd2cc45a358a4c61937e9f11a061919a1da569b0c2
+  languageName: node
+  linkType: hard
+
+"meriyah@npm:^4.3.7":
+  version: 4.4.2
+  resolution: "meriyah@npm:4.4.2"
+  checksum: 351d47d95823fe5c72a6dcd2676b982c54d8ee29a2b3fbe91f60a142c77492048af06ea8bd5bb8c27e8025487ba4a8e952f8239c4d9cb079acf83475089932d3
   languageName: node
   linkType: hard
 
@@ -11641,6 +11719,28 @@ __metadata:
   bin:
     prebuild-install: bin.js
   checksum: dbf96d0146b6b5827fc8f67f72074d2e19c69628b9a7a0a17d0fad1bf37e9f06922896972e074197fc00a52eae912993e6ef5a0d471652f561df5cb516f3f467
+  languageName: node
+  linkType: hard
+
+"prebuild-install@npm:^7.1.1":
+  version: 7.1.2
+  resolution: "prebuild-install@npm:7.1.2"
+  dependencies:
+    detect-libc: ^2.0.0
+    expand-template: ^2.0.3
+    github-from-package: 0.0.0
+    minimist: ^1.2.3
+    mkdirp-classic: ^0.5.3
+    napi-build-utils: ^1.0.1
+    node-abi: ^3.3.0
+    pump: ^3.0.0
+    rc: ^1.2.7
+    simple-get: ^4.0.0
+    tar-fs: ^2.0.0
+    tunnel-agent: ^0.6.0
+  bin:
+    prebuild-install: bin.js
+  checksum: 543dadf8c60e004ae9529e6013ca0cbeac8ef38b5f5ba5518cb0b622fe7f8758b34e4b5cb1a791db3cdc9d2281766302df6088bd1a225f206925d6fee17d6c5c
   languageName: node
   linkType: hard
 
@@ -14888,6 +14988,15 @@ typescript@^3.9.3:
   version: 2.3.4
   resolution: "yaml@npm:2.3.4"
   checksum: e6d1dae1c6383bcc8ba11796eef3b8c02d5082911c6723efeeb5ba50fc8e881df18d645e64de68e421b577296000bea9c75d6d9097c2f6699da3ae0406c030d8
+  languageName: node
+  linkType: hard
+
+"yaml@npm:^2.3.4":
+  version: 2.4.1
+  resolution: "yaml@npm:2.4.1"
+  bin:
+    yaml: bin.mjs
+  checksum: 4c391d07a5d5e935e058babb71026c9cdc9a6fd889e35dd91b53cfb0a12691b67c6c5c740858e71345fef18cd9c13c554a6dda9196f59820d769d94041badb0b
   languageName: node
   linkType: hard
 

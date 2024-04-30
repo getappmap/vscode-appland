@@ -1,13 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import '../mock/vscode';
+
 import { default as chai, expect } from 'chai';
 import { default as chaiAsPromised } from 'chai-as-promised';
 import { join } from 'path';
-import RpcProcessService from '../../../src/services/rpcProcessService';
+import Sinon from 'sinon';
+import { Client } from 'jayson/promise';
+import { ConfigurationRpc } from '@appland/rpc';
+
+import RpcProcessService, { RpcProcessServiceState } from '../../../src/services/rpcProcessService';
 import MockExtensionContext from '../../mocks/mockExtensionContext';
 import EventEmitter from '../mock/vscode/EventEmitter';
-import * as NodeDependencyProcess from '../../../src/services/nodeDependencyProcess';
-import Sinon from 'sinon';
+import { waitFor } from '../../waitFor';
 
 chai.use(chaiAsPromised);
 
@@ -18,16 +22,27 @@ class MockConfigManagerInstance {
   public workspaceConfigs = [{ configFolder: __dirname }];
 }
 
-describe('RpcProcessWatcher', () => {
+describe('RpcProcessService', () => {
   let rpcService: RpcProcessService;
+  let rpcServiceState: RpcProcessServiceState;
   let configManagerInstance: MockConfigManagerInstance;
   let extensionContext: MockExtensionContext;
+  let rpcRequest: Sinon.SinonStub;
+  let sinon: Sinon.SinonSandbox;
   const originalTestKey = process.env.APPMAP_TEST_API_KEY;
 
-  beforeEach(() => {
-    Sinon.restore();
+  beforeEach(async () => {
+    sinon = Sinon.createSandbox();
+
     extensionContext = new MockExtensionContext();
     configManagerInstance = new MockConfigManagerInstance();
+
+    rpcService = new RpcProcessService(
+      extensionContext,
+      [configManagerInstance] as any,
+      testModule
+    );
+    rpcServiceState = rpcService.state;
 
     // Required to launch the process
     process.env.APPMAP_TEST_API_KEY = 'test-key';
@@ -38,42 +53,37 @@ describe('RpcProcessWatcher', () => {
     process.env.APPMAP_TEST_API_KEY = originalTestKey;
   });
 
+  const stubRpcConfiguration = () => {
+    rpcRequest = sinon.stub();
+    rpcRequest.resolves({} as any);
+    const rpcClient = {
+      request: rpcRequest,
+    } as unknown as Client;
+    rpcService.rpcConnect = () => rpcClient;
+  };
+
   describe('create', () => {
-    it('creates a new instance and waits for it to start', async () => {
-      const getModulePath = Sinon.stub(NodeDependencyProcess, 'getModulePath').returns(testModule);
+    beforeEach(() => stubRpcConfiguration());
 
-      rpcService = await RpcProcessService.create(extensionContext, [configManagerInstance] as any);
-
-      expect(getModulePath.calledOnce).to.be.true;
+    it('waits for the process to start', async () => {
+      await rpcServiceState.waitForStartup();
       expect(rpcService.available).to.be.true;
     });
   });
 
-  describe('with a module path', () => {
-    beforeEach(() => {
-      // The constructor is private, so we need to cast to any to create an instance.
-      rpcService = new (RpcProcessService as any)(
-        extensionContext,
-        [configManagerInstance],
-        testModule
-      );
+  describe('when the port changes', () => {
+    beforeEach(async () => {
+      stubRpcConfiguration();
+      await rpcServiceState.waitForStartup();
     });
 
-    it('waits for the process to start', async () => {
-      await (rpcService as any).waitForStartup();
-      expect(rpcService.available).to.be.true;
-    });
-
-    it('notifies when the port changes', async () => {
-      const eventListener = Sinon.fake();
+    it('restarts', async () => {
+      const eventListener = sinon.fake();
       rpcService.onRpcPortChange(eventListener);
 
-      await (rpcService as any).waitForStartup();
-      expect(eventListener.calledOnce).to.be.true;
+      await waitFor(`Expecting RPC port change event`, () => eventListener.calledOnce);
 
-      (rpcService as any).processWatcher?.process.kill();
-
-      const restarted = new Promise<void>((resolve, reject) => {
+      const restartFn = new Promise<void>((resolve, reject) => {
         const timeout = setTimeout(() => reject(new Error('Timeout waiting for restart')), 60_000);
         const disposable = rpcService.onRpcPortChange(() => {
           clearTimeout(timeout);
@@ -82,20 +92,56 @@ describe('RpcProcessWatcher', () => {
         });
       });
 
-      // Note that the port is hardcoded in the mockRpc.mjs file.
-      // The process will restart on the same port, so we can't assert the port number.
-      return expect(restarted).to.be.fulfilled;
+      rpcServiceState.killProcess();
+
+      await restartFn;
+      await waitFor(`Expecting RPC port change event`, () => eventListener.calledTwice);
+    });
+  });
+
+  describe('when AppMap configuration state changes', () => {
+    describe('when configuration v2 is available', () => {
+      beforeEach(() => stubRpcConfiguration());
+
+      it('updates v2 RPC configuration', async () => {
+        await rpcServiceState.waitForStartup();
+
+        await waitFor(`Expecting RPC reconfiguration`, () => rpcRequest.callCount === 2);
+
+        expect(rpcRequest.calledWith(ConfigurationRpc.V2.Get.Method)).to.be.true;
+        expect(
+          rpcRequest.calledWith(ConfigurationRpc.V2.Set.Method, {
+            appmapConfigFiles: [join(__dirname, 'appmap.yml')],
+            projectDirectories: [],
+          })
+        ).to.be.true;
+
+        configManagerInstance._onConfigChanged.fire({});
+
+        await waitFor(`Expecting RPC reconfiguration`, () => rpcRequest.callCount === 4);
+      });
     });
 
-    it('calls an RPC method when the configuration changes', async () => {
-      await (rpcService as any).waitForStartup();
-      const spy = Sinon.fake();
-      (rpcService as any).rpcClient = {
-        request: spy,
-      } as any;
+    describe('when configuration v2 is not available', () => {
+      it('updates v1 RPC configuration', async () => {
+        rpcRequest = sinon.stub();
+        rpcRequest.onFirstCall().rejects({ error: 'Method not found', code: -32601 });
+        rpcRequest.onSecondCall().resolves({} as any);
+        const rpcClient = {
+          request: rpcRequest,
+        } as unknown as Client;
+        rpcService.rpcConnect = () => rpcClient;
 
-      configManagerInstance._onConfigChanged.fire({});
-      expect(spy.calledOnce).to.be.true;
+        await rpcServiceState.waitForStartup();
+        await waitFor(`Expecting RPC reconfiguration`, () => rpcRequest.callCount === 2);
+
+        expect(rpcRequest.calledWith(ConfigurationRpc.V2.Get.Method)).to.be.true;
+        expect(
+          rpcRequest.calledWith(ConfigurationRpc.V1.Set.Method, {
+            appmapConfigFiles: [join(__dirname, 'appmap.yml')],
+          })
+        ).to.be.true;
+      });
     });
   });
 });

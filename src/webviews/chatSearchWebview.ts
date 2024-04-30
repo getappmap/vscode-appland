@@ -12,6 +12,8 @@ import AppMapCollection from '../services/appmapCollection';
 import RpcProcessService from '../services/rpcProcessService';
 import { NodeProcessService } from '../services/nodeProcessService';
 import CommandRegistry from '../commands/commandRegistry';
+import ChatSearchDataService, { LatestAppMap } from '../services/chatSearchDataService';
+import { parseLocation } from '../util';
 
 type ExplainOpts = {
   workspace?: vscode.WorkspaceFolder;
@@ -21,6 +23,16 @@ type ExplainOpts = {
   targetAppmapFsPath?: string;
 };
 
+export enum ExplainResponseStatus {
+  NoAppMapRpcPort,
+  Success,
+}
+
+export type ExplainResponse = {
+  status: ExplainResponseStatus;
+  codeSelection?: CodeSelection;
+};
+
 export default class ChatSearchWebview {
   private webviewList = new WebviewList();
   private filterStore: FilterStore;
@@ -28,8 +40,7 @@ export default class ChatSearchWebview {
   private constructor(
     private readonly context: vscode.ExtensionContext,
     private readonly extensionState: ExtensionState,
-    private readonly appmaps: AppMapCollection,
-    private readonly rpcService: RpcProcessService
+    private readonly dataService: ChatSearchDataService
   ) {
     this.filterStore = new FilterStore(context);
     this.filterStore.onDidChangeFilters((event) => {
@@ -44,8 +55,13 @@ export default class ChatSearchWebview {
     return this.webviewList.currentWebview;
   }
 
-  async explain({ workspace, codeSelection, targetAppmap, targetAppmapFsPath }: ExplainOpts = {}) {
-    const appmapRpcPort = await this.rpcService.port();
+  async explain({
+    workspace,
+    codeSelection,
+    targetAppmap,
+    targetAppmapFsPath,
+  }: ExplainOpts = {}): Promise<ExplainResponse> {
+    const appmapRpcPort = this.dataService.appmapRpcPort;
     if (!appmapRpcPort) {
       const optionViewLog = 'View output log';
       const res = await vscode.window.showErrorMessage(
@@ -56,7 +72,7 @@ export default class ChatSearchWebview {
       if (res === optionViewLog) {
         NodeProcessService.outputChannel.show();
       }
-      return;
+      return { status: ExplainResponseStatus.NoAppMapRpcPort };
     }
 
     const panel = vscode.window.createWebviewPanel(
@@ -82,29 +98,17 @@ export default class ChatSearchWebview {
       this.extensionState.setWorkspaceOpenedNavie(workspaceFolder, true);
     });
 
-    const getLatestAppMaps = (count = 10): Array<{ [key: string]: unknown }> => {
-      return this.appmaps
-        .allAppMaps()
-        .sort((a, b) => b.descriptor.timestamp - a.descriptor.timestamp)
-        .slice(0, count)
-        .map((appmap) => ({
-          name: appmap.descriptor.metadata?.name,
-          recordingMethod: appmap.descriptor.metadata?.recorder?.type,
-          createdAt: new Date(appmap.descriptor.timestamp).toISOString(),
-          path: appmap.descriptor.resourceUri.fsPath,
-        }));
-    };
-    let mostRecentAppMaps = getLatestAppMaps();
-
     this.context.subscriptions.push(
-      this.appmaps.onUpdated(() => {
-        mostRecentAppMaps = getLatestAppMaps();
+      this.dataService.onAppMapsUpdated((appmaps: LatestAppMap[]) => {
         panel.webview.postMessage({
           type: 'update',
-          mostRecentAppMaps,
+          mostRecentAppMaps: appmaps,
         });
       })
     );
+
+    const mostRecentAppMaps = this.dataService.latestAppMaps();
+    codeSelection ||= await this.dataService.codeSelection();
 
     panel.webview.onDidReceiveMessage(appmapMessageHandler(this.filterStore, workspace));
     panel.webview.onDidReceiveMessage(async (message) => {
@@ -134,12 +138,60 @@ export default class ChatSearchWebview {
           await vscode.commands.executeCommand('vscode.openWith', uri, 'appmap.views.appMapFile');
           break;
         }
+        case 'open-location': {
+          const { location, directory } = message;
+          const result = await parseLocation(location, directory);
+
+          if (result instanceof vscode.Uri) {
+            await vscode.commands.executeCommand('vscode.open', result);
+          } else {
+            if (result.uri.fsPath.endsWith('.appmap.json')) {
+              // Open an AppMap
+              // The range will actually be an event id
+              // This means we'll need to add 1 to the (zero-based) line number
+              const viewState = {
+                currentView: 'viewSequence',
+                selectedObject: `event:${result.range.start.line + 1}`,
+              };
+              await vscode.commands.executeCommand(
+                'vscode.open',
+                result.uri.with({ fragment: JSON.stringify(viewState) })
+              );
+            } else {
+              // Open a text document
+              await vscode.commands.executeCommand('vscode.open', result.uri);
+              const { activeTextEditor } = vscode.window;
+              if (activeTextEditor) {
+                activeTextEditor.revealRange(result.range, vscode.TextEditorRevealType.InCenter);
+              }
+            }
+          }
+
+          break;
+        }
 
         case 'show-appmap-tree':
           await vscode.commands.executeCommand('appmap.views.appmaps.focus');
           break;
+
+        case 'select-llm-option': {
+          const { option } = message;
+          if (option === 'default') {
+            await vscode.commands.executeCommand('appmap.clearNavieAiSettings');
+          } else if (option === 'own-key') {
+            await vscode.commands.executeCommand('appmap.openAIApiKey.set');
+          } else {
+            console.error(`Unknown option: ${option}`);
+          }
+          break;
+        }
       }
     });
+
+    return {
+      status: ExplainResponseStatus.Success,
+      codeSelection,
+    };
   }
 
   updateFilters(savedFilters: SavedFilter[]) {
@@ -157,6 +209,8 @@ export default class ChatSearchWebview {
     appmaps: AppMapCollection,
     rpcService: RpcProcessService
   ): ChatSearchWebview {
-    return new ChatSearchWebview(context, extensionState, appmaps, rpcService);
+    const dataService = new ChatSearchDataService(rpcService, appmaps);
+
+    return new ChatSearchWebview(context, extensionState, dataService);
   }
 }
