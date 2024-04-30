@@ -39,4 +39,18 @@ describe('AppMapCliDownloader', () => {
     // Upon skipping the download, the missing symlink should be restored
     expect(join(homeDir, '.appmap', 'bin', 'appmap.exe')).to.be.a.file();
   });
+
+  it("does not replace the target if no download happens and it's valid", async () => {
+    await mkdir(join(homeDir, '.appmap', 'bin'), { recursive: true });
+    await mkdir(join(homeDir, '.appmap', 'lib', 'appmap'), { recursive: true });
+    await writeFile(join(homeDir, '.appmap', 'lib', 'appmap', 'appmap-v0.0.0-TEST'), 'test');
+    await writeFile(join(homeDir, '.appmap', 'bin', 'appmap.exe'), 'overriden test');
+
+    await AppMapCliDownloader();
+
+    // The target should not be replaced
+    expect(join(homeDir, '.appmap', 'bin', 'appmap.exe'))
+      .to.be.a.file()
+      .with.content('overriden test');
+  });
 });

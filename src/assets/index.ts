@@ -1,4 +1,4 @@
-import { chmod, copyFile, mkdir, symlink, unlink } from 'node:fs/promises';
+import { chmod, copyFile, mkdir, open, symlink, unlink } from 'node:fs/promises';
 import { homedir } from 'node:os';
 import { dirname, join } from 'node:path';
 
@@ -127,6 +127,16 @@ async function isAssetMissing(assetPath: string): Promise<boolean> {
   }
 }
 
+// checks if a path exists and is readable
+async function targetMissing(binaryPath: string) {
+  try {
+    await (await open(binaryPath, 'r')).close();
+    return false;
+  } catch {
+    return true;
+  }
+}
+
 async function download(url: Uri, destinationPath: string): Promise<void> {
   await mkdir(dirname(destinationPath), { recursive: true });
   switch (url.scheme) {
@@ -196,6 +206,7 @@ async function downloadCliAsset(name: string) {
   if (!version) throw `Error resolving ${name} version`;
 
   const binaryPath = join(globalAppMapDir(), 'lib', name, `${name}-v${version}`);
+  const symlinkPath = join(appMapBinDir(), binaryName(name));
 
   if (await isAssetMissing(binaryPath)) {
     const uri = await new GitHubDownloadUrlResolver('getappmap/appmap-js', (version) =>
@@ -203,10 +214,10 @@ async function downloadCliAsset(name: string) {
     ).getDownloadUrl(version);
     await download(Uri.parse(uri), binaryPath);
     await markExecutable(binaryPath);
+    await updateSymlink(binaryPath, symlinkPath);
+  } else if (await targetMissing(symlinkPath)) {
+    await updateSymlink(binaryPath, symlinkPath);
   }
-
-  const symlinkPath = join(appMapBinDir(), binaryName(name));
-  await updateSymlink(binaryPath, symlinkPath);
 }
 
 export const AppMapCliDownloader = () => downloadCliAsset('appmap');
@@ -220,6 +231,7 @@ export const JavaAgentDownloader = async () => {
   if (!version) throw `Error resolving AppMap Java agent version`;
 
   const binaryPath = join(appMapJavaAgentDir(), `appmap-${version}.jar`);
+  const symlinkPath = join(appMapJavaAgentDir(), 'appmap.jar');
 
   if (await isAssetMissing(binaryPath)) {
     const uri = await resolveUrl(
@@ -236,8 +248,8 @@ export const JavaAgentDownloader = async () => {
     if (!uri) throw `Error resolving AppMap Java agent download URL`;
     await download(Uri.parse(uri), binaryPath);
     await markExecutable(binaryPath);
+    await updateSymlink(binaryPath, symlinkPath);
+  } else if (await targetMissing(symlinkPath)) {
+    await updateSymlink(binaryPath, symlinkPath);
   }
-
-  const symlinkPath = join(appMapJavaAgentDir(), 'appmap.jar');
-  await updateSymlink(binaryPath, symlinkPath);
 };
