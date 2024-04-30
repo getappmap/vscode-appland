@@ -6,7 +6,7 @@ import { mkdir, mkdtemp, rm, writeFile } from 'fs/promises';
 import { default as chai, expect } from 'chai';
 import { default as chaiFs } from 'chai-fs';
 import { join } from 'path';
-import { AppMapCliDownloader } from '../../../src/assets';
+import { AppMapCliDownloader, initialDownloadCompleted } from '../../../src/assets';
 
 chai.use(chaiFs);
 
@@ -33,11 +33,25 @@ describe('AppMapCliDownloader', () => {
     await mkdir(join(homeDir, '.appmap', 'bin'), { recursive: true });
     await mkdir(join(homeDir, '.appmap', 'lib', 'appmap'), { recursive: true });
     await writeFile(join(homeDir, '.appmap', 'lib', 'appmap', 'appmap-v0.0.0-TEST'), 'test');
+    await initialDownloadCompleted();
 
     await AppMapCliDownloader();
 
     // Upon skipping the download, the missing symlink should be restored
-    expect(join(homeDir, '.appmap', 'bin', 'appmap.exe')).to.be.a.file();
+    expect(join(homeDir, '.appmap', 'bin', 'appmap.exe')).to.be.a.file().with.content('test');
+  });
+
+  it('redownloads the asset if initial download is not completed', async () => {
+    await mkdir(join(homeDir, '.appmap', 'bin'), { recursive: true });
+    await mkdir(join(homeDir, '.appmap', 'lib', 'appmap'), { recursive: true });
+    await writeFile(join(homeDir, '.appmap', 'lib', 'appmap', 'appmap-v0.0.0-TEST'), 'test');
+
+    await AppMapCliDownloader();
+
+    // The target should be replaced
+    expect(join(homeDir, '.appmap', 'bin', 'appmap.exe'))
+      .to.be.a.file()
+      .with.content('<insert appmap cli here>');
   });
 
   it("does not replace the target if no download happens and it's valid", async () => {
@@ -45,6 +59,7 @@ describe('AppMapCliDownloader', () => {
     await mkdir(join(homeDir, '.appmap', 'lib', 'appmap'), { recursive: true });
     await writeFile(join(homeDir, '.appmap', 'lib', 'appmap', 'appmap-v0.0.0-TEST'), 'test');
     await writeFile(join(homeDir, '.appmap', 'bin', 'appmap.exe'), 'overriden test');
+    await initialDownloadCompleted();
 
     await AppMapCliDownloader();
 

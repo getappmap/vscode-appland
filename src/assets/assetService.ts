@@ -6,6 +6,7 @@ import {
   JavaAgentDownloader,
   ScannerDownloader,
   binaryName,
+  initialDownloadCompleted,
 } from '.';
 import { homedir } from 'os';
 import { join } from 'path';
@@ -93,6 +94,7 @@ export default class AssetService {
               sync.emit('error', e);
               if (e instanceof AbortError) return reject(e);
             }
+          await initialDownloadCompleted();
         });
     });
   }

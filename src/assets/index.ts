@@ -118,12 +118,24 @@ const globalAppMapDir = () => join(homedir(), '.appmap');
 const appMapBinDir = () => join(globalAppMapDir(), 'bin');
 const appMapJavaAgentDir = () => join(globalAppMapDir(), 'lib', 'java');
 
-async function isAssetMissing(assetPath: string): Promise<boolean> {
+// If this file doesn't exist, we redownload all the assets because the
+// user can be in a broken state from a previous version.
+const downloadMarkerPath = () => join(globalAppMapDir(), '.download-complete');
+export function isInitialDownloadCompleted(): Promise<boolean> {
+  return fileExists(downloadMarkerPath());
+}
+
+export async function initialDownloadCompleted(): Promise<void> {
+  return (await open(downloadMarkerPath(), 'w')).close();
+}
+
+async function downloadRequired(assetPath: string): Promise<boolean> {
   try {
+    if (!(await isInitialDownloadCompleted())) return true;
     const exists = await fileExists(assetPath);
     return !exists;
   } catch {
-    return false;
+    return true;
   }
 }
 
@@ -208,7 +220,7 @@ async function downloadCliAsset(name: string) {
   const binaryPath = join(globalAppMapDir(), 'lib', name, `${name}-v${version}`);
   const symlinkPath = join(appMapBinDir(), binaryName(name));
 
-  if (await isAssetMissing(binaryPath)) {
+  if (await downloadRequired(binaryPath)) {
     const uri = await new GitHubDownloadUrlResolver('getappmap/appmap-js', (version) =>
       encodeURIComponent(`@appland/${name}-v${version}/${name}-${getPlatformIdentifier()}`)
     ).getDownloadUrl(version);
@@ -233,7 +245,7 @@ export const JavaAgentDownloader = async () => {
   const binaryPath = join(appMapJavaAgentDir(), `appmap-${version}.jar`);
   const symlinkPath = join(appMapJavaAgentDir(), 'appmap.jar');
 
-  if (await isAssetMissing(binaryPath)) {
+  if (await downloadRequired(binaryPath)) {
     const uri = await resolveUrl(
       [
         new BundledFileDownloadUrlResolver('appmap-java.jar'),
