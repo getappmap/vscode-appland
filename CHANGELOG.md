@@ -1,3 +1,12 @@
+## [0.118.1](https://github.com/getappmap/vscode-appland/compare/v0.118.0...v0.118.1) (2024-04-30)
+
+
+### Bug Fixes
+
+* Don't replace tool symlinks when not required ([9838923](https://github.com/getappmap/vscode-appland/commit/9838923d8d1095ea7a114ef4083268b11f3e2c75))
+* Fix a case where the RPC port would not properly assign after ([43e2795](https://github.com/getappmap/vscode-appland/commit/43e2795028072ab1cab04b055dc3554ebd35055d))
+* Retry downloads when needed, show progress and allow cancellation ([3b303aa](https://github.com/getappmap/vscode-appland/commit/3b303aa065d732610540d1d839d1c38458631053)), closes [#944](https://github.com/getappmap/vscode-appland/issues/944)
+
 # [0.118.0](https://github.com/getappmap/vscode-appland/compare/v0.117.4...v0.118.0) (2024-04-30)
 
 
