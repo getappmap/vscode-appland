@@ -1,3 +1,27 @@
+# [0.118.0](https://github.com/getappmap/vscode-appland/compare/v0.117.4...v0.118.0) (2024-04-30)
+
+
+### Bug Fixes
+
+* allow openAsJson from command palette ([58476df](https://github.com/getappmap/vscode-appland/commit/58476df1f0e8dcd39eae8411cfd084b4c2b0dc38))
+* Include `directory` when parsing context location ([13ed3fe](https://github.com/getappmap/vscode-appland/commit/13ed3fe5f4b1ab9c97648a2c8ebc8dc4bebba8dd))
+* Remove "installation pending" badge and spinner ([4f029a9](https://github.com/getappmap/vscode-appland/commit/4f029a9b4904b699eb02e04192e510b25afe3cf2))
+* Specify `APPMAP_CODE_EDITOR` for the RPC service ([d2f6dc8](https://github.com/getappmap/vscode-appland/commit/d2f6dc80eae85c035108ccb407f58e2edb4bb716))
+
+
+### Features
+
+* Add a Navie section to the sidebar ([ef35b04](https://github.com/getappmap/vscode-appland/commit/ef35b049b4f9a5f413632f9d1aa65fd5ae013495))
+* Changing the OpenAI API key will prompt to reload the window ([bc8c9c5](https://github.com/getappmap/vscode-appland/commit/bc8c9c5a7b14efd7d919ecdb72e37ac157155e72))
+* Do not automatically open the instructions ([a89b683](https://github.com/getappmap/vscode-appland/commit/a89b683d92ae2793c57892e1c452718846e0dd56))
+* Do not prompt new users to make AppMap recordings ([91669e8](https://github.com/getappmap/vscode-appland/commit/91669e897ad7540cf859c6a5889a23dcb242d960))
+* Implement the LLM configuration frontend ([9ba067d](https://github.com/getappmap/vscode-appland/commit/9ba067dca2c341f6bf3224c3397a4c1c5d8c09ab))
+* Integrate the context pane ([#949](https://github.com/getappmap/vscode-appland/issues/949)) ([da5cdb5](https://github.com/getappmap/vscode-appland/commit/da5cdb585557dfddfe573b0df788f571bb03c993))
+* Reload is now prompted automatically after changing AppMap ([6b0096f](https://github.com/getappmap/vscode-appland/commit/6b0096f6093ec28a442b0564a39277d5f7514730))
+* Send active text editor code selection to Navie ([43dc79e](https://github.com/getappmap/vscode-appland/commit/43dc79ef1c397b62fc90786f7566ba5ae7dca3a6))
+* Update resources/versions.json ([dca0ead](https://github.com/getappmap/vscode-appland/commit/dca0ead2a4a9c5d38eac0bbccb972d71c24ea69e))
+* Update RPC configuration on workspace change ([23e0d7e](https://github.com/getappmap/vscode-appland/commit/23e0d7e39d8647a87df49e5c290636052c46c0c7))
+
 ## [0.117.4](https://github.com/getappmap/vscode-appland/compare/v0.117.3...v0.117.4) (2024-04-04)
 
 
