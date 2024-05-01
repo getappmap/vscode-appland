@@ -1,3 +1,10 @@
+## [0.118.2](https://github.com/getappmap/vscode-appland/compare/v0.118.1...v0.118.2) (2024-05-01)
+
+
+### Bug Fixes
+
+* Update categories and tags ([#959](https://github.com/getappmap/vscode-appland/issues/959)) ([3c5f4be](https://github.com/getappmap/vscode-appland/commit/3c5f4beb9e9519a4c912dcc8854f2ad0936cd6ed))
+
 ## [0.118.1](https://github.com/getappmap/vscode-appland/compare/v0.118.0...v0.118.1) (2024-04-30)
 
 
