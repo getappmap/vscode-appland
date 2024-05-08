@@ -1,0 +1,6 @@
+{
+  "comment": "This file is fetched by the AppMap extension from https://raw.githubusercontent.com/getappmap/vscode-appland/develop/.github/min-versions.json.",
+
+  "vsCode": "1.89.0",
+  "extension": "0.118.2"
+}
