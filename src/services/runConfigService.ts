@@ -106,8 +106,20 @@ export class RunConfigServiceInstance implements WorkspaceServiceInstance {
     this.updateStatus();
   }
 
+  private async ensureTextDocumentClosed(fileName: string) {
+    const filePath = path.resolve(this.folder.uri.path, fileName);
+    const doc = vscode.workspace.textDocuments.find(
+      (td) => td.fileName.endsWith(filePath) && !td.isClosed
+    );
+    if (doc) {
+      await vscode.window.showTextDocument(doc, { preview: true, preserveFocus: false });
+      await vscode.commands.executeCommand('workbench.action.closeActiveEditor');
+    }
+  }
+
   public async updateLaunchConfig(): Promise<void> {
     try {
+      await this.ensureTextDocumentClosed('.vscode/launch.json');
       await this.updateConfig('launch', 'configurations', this.appmapLaunchConfig);
       this.extensionState.setUpdatedLaunchConfig(this.folder, true);
     } catch (e) {
@@ -118,6 +130,7 @@ export class RunConfigServiceInstance implements WorkspaceServiceInstance {
   public async updateTestConfig(): Promise<boolean> {
     if (this.hasJavaTestExtension()) {
       try {
+        await this.ensureTextDocumentClosed('.vscode/settings.json');
         await this.updateConfig('java.test', 'config', this.appmapTestConfig);
         this.extensionState.setUpdatedTestConfig(this.folder, true);
         return true;
