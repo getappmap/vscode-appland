@@ -1,3 +1,11 @@
+# [0.119.0](https://github.com/getappmap/vscode-appland/compare/v0.118.2...v0.119.0) (2024-05-14)
+
+
+### Features
+
+* Change Navie command to "AppMap: Ask Navie AI" ([8ab1208](https://github.com/getappmap/vscode-appland/commit/8ab1208dce25f2b1c5c0e1dbf05c98c59ab44d0d))
+* Update description ([d021d6f](https://github.com/getappmap/vscode-appland/commit/d021d6fb50e3e64beb568d5cf6c8ad93c81ef0df))
+
 ## [0.118.2](https://github.com/getappmap/vscode-appland/compare/v0.118.1...v0.118.2) (2024-05-01)
 
 
