@@ -1,3 +1,10 @@
+## [0.119.2](https://github.com/getappmap/vscode-appland/compare/v0.119.1...v0.119.2) (2024-05-15)
+
+
+### Bug Fixes
+
+* Update the context view on subsequent requests ([9365777](https://github.com/getappmap/vscode-appland/commit/9365777206574b9b1977a016159f16716a63b079))
+
 ## [0.119.1](https://github.com/getappmap/vscode-appland/compare/v0.119.0...v0.119.1) (2024-05-15)
 
 
