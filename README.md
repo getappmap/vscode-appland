@@ -13,7 +13,7 @@ AppMap is a developer tools platform powered by runtime analysis and AI. It's co
 
 By using AppMap data, Navie is the first AI code architect with the context to understand how your app works when it runs, like a principal engineer or software architect. AppMap data provides Navie with accurate information about application behavior, APIs, database queries, and more, providing valuable context so you can ask more challenging questions and get better answers.
 
-![implement-redis-3](https://github.com/getappmap/vscode-appland/assets/1229326/471d5f70-1f9f-4de5-8725-076d204c5f9d)
+![implement-redis](https://github.com/getappmap/vscode-appland/assets/511733/46243179-893e-474c-925a-91b385c3468d)
 
 ## Get started
 1. **Install [the AppMap extension](https://marketplace.visualstudio.com/items?itemName=appland.appmap)** from within the code editor or from the marketplace.  
