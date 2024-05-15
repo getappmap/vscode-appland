@@ -1,3 +1,10 @@
+## [0.119.1](https://github.com/getappmap/vscode-appland/compare/v0.119.0...v0.119.1) (2024-05-15)
+
+
+### Bug Fixes
+
+* Drop mode buttons ([26f7055](https://github.com/getappmap/vscode-appland/commit/26f70557e0455619edf0ebabdf8e0fbbaa310590))
+
 # [0.119.0](https://github.com/getappmap/vscode-appland/compare/v0.118.2...v0.119.0) (2024-05-14)
 
 
