@@ -1,3 +1,10 @@
+## [0.119.3](https://github.com/getappmap/vscode-appland/compare/v0.119.2...v0.119.3) (2024-05-20)
+
+
+### Bug Fixes
+
+* Drop token interpolation ([d9473f0](https://github.com/getappmap/vscode-appland/commit/d9473f0a56c4c650db76d227d2d8aee2e1943f6f))
+
 ## [0.119.2](https://github.com/getappmap/vscode-appland/compare/v0.119.1...v0.119.2) (2024-05-15)
 
 
