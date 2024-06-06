@@ -1,3 +1,4 @@
 {
-  "appMap.inspectEnabled": false
+  "appMap.inspectEnabled": false,
+  "appMap.scannerEnabled": true
 }

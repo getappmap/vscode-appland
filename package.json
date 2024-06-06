@@ -297,6 +297,11 @@
         "appMap.navie.rpcPort": {
           "type": "number",
           "description": "Port number to pass to the Navie UI (used for extension development and debugging only)"
+        },
+        "appMap.scannerEnabled": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable AppMap scanner"
         }
       }
     },
