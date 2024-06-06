@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import Environment from '../configuration/environment';
+import ExtensionSettings from '../configuration/extensionSettings';
 import IndexProcessWatcher from './indexProcessWatcher';
 import { getModulePath, ProgramName } from './nodeDependencyProcess';
 import NodeProcessServiceInstance from './nodeProcessServiceInstance';
@@ -82,20 +83,22 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
       );
     });
 
-    const scannerModulePath = getModulePath(ProgramName.Scanner);
-    const scannerBinPath = AssetService.getAssetPath(AssetIdentifier.ScannerCli);
-    appmapConfigs.forEach((appmapConfig) => {
-      services.push(
-        new ScanProcessWatcher(
-          this.context,
-          scannerModulePath,
-          scannerBinPath,
-          appmapConfig.appmapDir,
-          appmapConfig.configFolder,
-          env
-        )
-      );
-    });
+    if (ExtensionSettings.scannerEnabled) {
+      const scannerModulePath = getModulePath(ProgramName.Scanner);
+      const scannerBinPath = AssetService.getAssetPath(AssetIdentifier.ScannerCli);
+      appmapConfigs.forEach((appmapConfig) => {
+        services.push(
+          new ScanProcessWatcher(
+            this.context,
+            scannerModulePath,
+            scannerBinPath,
+            appmapConfig.appmapDir,
+            appmapConfig.configFolder,
+            env
+          )
+        );
+      });
+    }
 
     return services;
   }
