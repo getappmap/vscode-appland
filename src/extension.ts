@@ -84,6 +84,35 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     const extensionState = new ExtensionState(context);
     context.subscriptions.push(extensionState);
 
+    const uriHandler = new UriHandler();
+    const openAppMapUriHandler = new OpenAppMapUriHandler(context);
+    uriHandler.registerHandlers(openAppMapUriHandler);
+    context.subscriptions.push(vscode.window.registerUriHandler(uriHandler));
+
+    const appmapServerAuthenticationProvider = AppMapServerAuthenticationProvider.enroll(
+      context,
+      uriHandler
+    );
+    context.subscriptions.push(
+      appmapServerAuthenticationProvider.onDidChangeSessions((e) => {
+        if (e.added?.length) vscode.window.showInformationMessage('AppMap activated');
+        AppMapServerConfiguration.updateAppMapClientConfiguration();
+      })
+    );
+
+    vscode.commands.registerCommand('appmap.login', async () => {
+      appmapServerAuthenticationProvider.createSession();
+    });
+    vscode.commands.registerCommand('appmap.logout', async () => {
+      appmapServerAuthenticationProvider.removeSession();
+    });
+
+    await SignInManager.register(extensionState);
+    const signInWebview = new SignInViewProvider(context, appmapServerAuthenticationProvider);
+    context.subscriptions.push(
+      vscode.window.registerWebviewViewProvider(SignInViewProvider.viewType, signInWebview)
+    );
+
     navieConfigurationService(context);
 
     const recommender = new AppMapRecommenderService(extensionState);
@@ -173,29 +202,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       await workspaceServices.enroll(appmapUptodateService);
     };
 
-    const uriHandler = new UriHandler();
-    const openAppMapUriHandler = new OpenAppMapUriHandler(context);
-    uriHandler.registerHandlers(openAppMapUriHandler);
-    context.subscriptions.push(vscode.window.registerUriHandler(uriHandler));
-
-    const appmapServerAuthenticationProvider = AppMapServerAuthenticationProvider.enroll(
-      context,
-      uriHandler
-    );
-    context.subscriptions.push(
-      appmapServerAuthenticationProvider.onDidChangeSessions((e) => {
-        if (e.added?.length) vscode.window.showInformationMessage('AppMap activated');
-        AppMapServerConfiguration.updateAppMapClientConfiguration();
-      })
-    );
-
-    vscode.commands.registerCommand('appmap.login', async () => {
-      appmapServerAuthenticationProvider.createSession();
-    });
-    vscode.commands.registerCommand('appmap.logout', async () => {
-      appmapServerAuthenticationProvider.removeSession();
-    });
-
     const projectState = new ProjectStateService(
       extensionState,
       configWatcher,
@@ -206,12 +212,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     const projectStates = await workspaceServices.enroll(projectState);
 
     openCodeObjectInAppMap(context, appmapCollectionFile, classMapIndex);
-
-    await SignInManager.register(extensionState);
-    const signInWebview = new SignInViewProvider(context, appmapServerAuthenticationProvider);
-    context.subscriptions.push(
-      vscode.window.registerWebviewViewProvider(SignInViewProvider.viewType, signInWebview)
-    );
 
     registerInspectCodeObject(context);
 
