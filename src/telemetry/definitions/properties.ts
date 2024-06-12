@@ -15,7 +15,7 @@ import ProjectStateService from '../../services/projectStateService';
 export const DEBUG_EXCEPTION = new TelemetryDataProvider({
   id: 'appmap.debug.exception',
   async value({ exception }: { exception: Error }): Promise<string> {
-    return exception.stack || '';
+    return exception.stack ?? String(exception);
   },
 });
 
