@@ -385,39 +385,6 @@
       "thread_id": 1
     },
     {
-      "static": false,
-      "receiver": {
-        "kind": "req",
-        "object_id": 4352891728,
-        "value": "<Flask 'src.appa'>",
-        "name": "self",
-        "class": "flask.app.Flask"
-      },
-      "parameters": [
-        {
-          "kind": "req",
-          "object_id": 4384903120,
-          "value": "<Response 275 bytes [302 FOUND]>",
-          "name": "rv",
-          "class": "flask.wrappers.Response"
-        },
-        {
-          "kind": "opt",
-          "object_id": 4305639352,
-          "value": "False",
-          "name": "from_error_handler",
-          "class": "builtins.bool"
-        }
-      ],
-      "id": 14,
-      "event": "call",
-      "thread_id": 1,
-      "defined_class": "flask.app.Flask",
-      "method_id": "finalize_request",
-      "path": "venv/lib/python3.11/site-packages/flask/app.py",
-      "lineno": 1489
-    },
-    {
       "http_server_response": {
         "status_code": 302,
         "mime_type": "text/html; charset=utf-8",
@@ -429,14 +396,9 @@
       },
       "parent_id": 5,
       "elapsed": 1.3361557919997722,
-      "id": 15,
+      "id": 14,
       "event": "return",
       "thread_id": 1
-    },
-    {
-      "event": "return",
-      "thread_id": 1,
-      "parent_id": 14
     }
   ],
   "version": "1.9",
@@ -509,12 +471,6 @@
                   "type": "function",
                   "static": false,
                   "location": "venv/lib/python3.11/site-packages/flask/app.py:1446"
-                },
-                {
-                  "name": "finalize_request",
-                  "type": "function",
-                  "static": false,
-                  "location": "venv/lib/python3.11/site-packages/flask/app.py:1489"
                 }
               ]
             }
