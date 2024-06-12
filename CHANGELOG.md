@@ -1,3 +1,10 @@
+## [0.119.4](https://github.com/getappmap/vscode-appland/compare/v0.119.3...v0.119.4) (2024-06-12)
+
+
+### Bug Fixes
+
+* Address a case where exceptions were lost ([6c8e056](https://github.com/getappmap/vscode-appland/commit/6c8e05697127ea11db546db290a44a644afb08d5))
+
 ## [0.119.3](https://github.com/getappmap/vscode-appland/compare/v0.119.2...v0.119.3) (2024-05-20)
 
 
