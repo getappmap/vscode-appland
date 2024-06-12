@@ -1,3 +1,11 @@
+## [0.119.5](https://github.com/getappmap/vscode-appland/compare/v0.119.4...v0.119.5) (2024-06-12)
+
+
+### Bug Fixes
+
+* Handle cases where the auth provider doesn't register in time ([4e40e11](https://github.com/getappmap/vscode-appland/commit/4e40e11535d1392915863ba7f49a9589a3ec4016))
+* Prevent flickering of the unauthenticated side bar ([528c92f](https://github.com/getappmap/vscode-appland/commit/528c92f2373e990150be18c6770e6fcad86c7ec3))
+
 ## [0.119.4](https://github.com/getappmap/vscode-appland/compare/v0.119.3...v0.119.4) (2024-06-12)
 
 
