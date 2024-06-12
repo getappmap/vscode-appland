@@ -63,6 +63,7 @@ import CommandRegistry from './commands/commandRegistry';
 import AssetService from './assets/assetService';
 import clearNavieAiSettings from './commands/clearNavieAiSettings';
 import EnvironmentVariableService from './services/environmentVariableService';
+import { checkVersions } from './lib/checkVersions';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   CommandRegistry.setContext(context).addWaitAlias({
@@ -83,6 +84,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
   try {
     const extensionState = new ExtensionState(context);
     context.subscriptions.push(extensionState);
+
+    checkVersions(context);
 
     navieConfigurationService(context);
 
