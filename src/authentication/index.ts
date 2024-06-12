@@ -10,8 +10,16 @@ export const AUTHN_PROVIDER_NAME = 'appmap.server';
 export async function getApiKey(createIfNone: boolean): Promise<string | undefined> {
   if (!createIfNone && Environment.appMapTestApiKey) return Environment.appMapTestApiKey;
 
-  const session = await vscode.authentication.getSession(AUTHN_PROVIDER_NAME, ['default'], {
-    createIfNone,
-  });
+  let session: vscode.AuthenticationSession | undefined;
+  try {
+    session = await vscode.authentication.getSession(AUTHN_PROVIDER_NAME, ['default'], {
+      createIfNone,
+    });
+  } catch (e) {
+    // VSCode may throw a string instead of an Error, e.g., if the authentication provider is not registered in time.
+    const err = e instanceof Error ? e : new Error(String(e));
+    console.error(err);
+  }
+
   return session?.accessToken;
 }
