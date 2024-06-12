@@ -215,7 +215,7 @@ async function downloadCliAsset(name: string) {
     new NpmVersionResolver(pkgName),
     new StaticVersionResolver(name),
   ]);
-  if (!version) throw `Error resolving ${name} version`;
+  if (!version) throw new Error(`Error resolving ${name} version`);
 
   const binaryPath = join(globalAppMapDir(), 'lib', name, `${name}-v${version}`);
   const symlinkPath = join(appMapBinDir(), binaryName(name));
@@ -240,7 +240,7 @@ export const JavaAgentDownloader = async () => {
     new GitHubVersionResolver('getappmap/appmap-java'),
     new StaticVersionResolver('appmap-java.jar'),
   ]);
-  if (!version) throw `Error resolving AppMap Java agent version`;
+  if (!version) throw new Error(`Error resolving AppMap Java agent version`);
 
   const binaryPath = join(appMapJavaAgentDir(), `appmap-${version}.jar`);
   const symlinkPath = join(appMapJavaAgentDir(), 'appmap.jar');
@@ -257,7 +257,7 @@ export const JavaAgentDownloader = async () => {
       ],
       version
     );
-    if (!uri) throw `Error resolving AppMap Java agent download URL`;
+    if (!uri) throw new Error(`Error resolving AppMap Java agent download URL`);
     await download(Uri.parse(uri), binaryPath);
     await markExecutable(binaryPath);
     await updateSymlink(binaryPath, symlinkPath);
