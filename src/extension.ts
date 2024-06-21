@@ -63,6 +63,7 @@ import CommandRegistry from './commands/commandRegistry';
 import AssetService from './assets/assetService';
 import clearNavieAiSettings from './commands/clearNavieAiSettings';
 import EnvironmentVariableService from './services/environmentVariableService';
+import ExtensionSettings from './configuration/extensionSettings';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   CommandRegistry.setContext(context).addWaitAlias({
@@ -251,6 +252,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
       return webview;
     })();
+
+    ExtensionSettings.bindContext();
 
     const trees = registerTrees(
       context,

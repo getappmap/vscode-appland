@@ -10,7 +10,7 @@
   },
   "qna": "https://appmap.io/docs/faq.html",
   "engines": {
-    "vscode": "^1.82.0"
+    "vscode": "^1.61.0"
   },
   "agents": {
     "ruby": ">=0.60.0"
@@ -297,6 +297,11 @@
         "appMap.navie.rpcPort": {
           "type": "number",
           "description": "Port number to pass to the Navie UI (used for extension development and debugging only)"
+        },
+        "appMap.scannerEnabled": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable AppMap scanner"
         }
       }
     },
@@ -389,7 +394,7 @@
           "id": "appmap.views.findings",
           "name": "Runtime Analysis",
           "visibility": "collapsed",
-          "when": "!appMap.showSignIn"
+          "when": "!appMap.showSignIn && appmap.scannerEnabled"
         },
         {
           "id": "appmap.views.codeObjects",

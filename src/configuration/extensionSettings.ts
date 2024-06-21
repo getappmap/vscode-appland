@@ -51,4 +51,15 @@ export default class ExtensionSettings {
     const port = vscode.workspace.getConfiguration('appMap').get('navie.rpcPort');
     if (port && typeof port === 'number' && port > 0) return port;
   }
+
+  public static get scannerEnabled(): boolean {
+    return [true, 'true'].includes(
+      vscode.workspace.getConfiguration('appMap').get('scannerEnabled') || false
+    );
+  }
+
+  // Perform any context bindings that are dependent on settings.
+  public static bindContext(): void {
+    vscode.commands.executeCommand('setContext', 'appmap.scannerEnabled', this.scannerEnabled);
+  }
 }
