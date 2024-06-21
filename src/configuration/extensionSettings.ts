@@ -57,4 +57,9 @@ export default class ExtensionSettings {
       vscode.workspace.getConfiguration('appMap').get('scannerEnabled') || false
     );
   }
+
+  // Perform any context bindings that are dependent on settings.
+  public static bindContext(): void {
+    vscode.commands.executeCommand('setContext', 'appmap.scannerEnabled', this.scannerEnabled);
+  }
 }
