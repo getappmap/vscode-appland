@@ -27,11 +27,13 @@ describe('ChatSearchData', () => {
       appmapListeners.push(listener);
     });
     allAppMapsStub = sinon.stub();
+    /* eslint-disable @typescript-eslint/no-explicit-any */
     appmaps = {
       allAppMaps: allAppMapsStub,
       onUpdated: onUpdatedStub,
     } as any;
     const rpcService: RpcProcessService = { port } as any;
+    /* eslint-enable @typescript-eslint/no-explicit-any */
     chatSearchData = new ChatSearchDataService(rpcService, appmaps);
   });
 
