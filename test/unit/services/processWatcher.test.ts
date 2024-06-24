@@ -24,6 +24,7 @@ import {
 const testModule = join(__dirname, 'support', 'simpleProcess.mjs');
 
 function makeWatcher(opts: Partial<ProcessWatcherOptions> = {}) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return new ProcessWatcher(Sinon.stub as any, {
     id: 'test process' as unknown as ProcessId,
     modulePath: testModule,
@@ -96,6 +97,7 @@ describe('ProcessWatcher', () => {
       );
 
       it('propagates the APPMAP_API_KEY', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const env = await processWatcher.loadEnvironment(Sinon.stub() as any);
         expect(env).to.deep.equal({
           APPMAP_API_KEY: 'the-appmap-key',
@@ -110,6 +112,7 @@ describe('ProcessWatcher', () => {
       );
 
       it('propagates the OPENAI_API_KEY', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const env = await processWatcher.loadEnvironment(Sinon.stub() as any);
         expect(env).to.deep.equal({
           APPMAP_API_KEY: 'the-appmap-key',
