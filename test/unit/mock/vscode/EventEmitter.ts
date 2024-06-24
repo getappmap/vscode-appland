@@ -3,7 +3,7 @@ import type vscode from 'vscode';
 export default class EventEmitter<T> implements vscode.EventEmitter<T> {
   private listeners: [(e: T) => unknown, unknown?, vscode.Disposable[]?][] = [];
 
-  public readonly event = (
+  public readonly event: vscode.Event<T> = (
     listener: (e: T) => unknown,
     thisArgs?: unknown,
     disposables?: vscode.Disposable[]
