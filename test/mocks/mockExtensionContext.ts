@@ -30,6 +30,10 @@ export default class MockExtensionContext implements ExtensionContext {
   readonly logUri: Uri;
   readonly logPath: string;
   readonly extensionMode: ExtensionMode = ExtensionMode.Test;
+  readonly languageModelAccessInformation = {
+    onDidChange: new EventEmitter<void>().event,
+    canSendRequest: () => true,
+  };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   readonly extension: any = {
