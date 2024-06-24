@@ -1,3 +1,15 @@
+# [0.120.0](https://github.com/getappmap/vscode-appland/compare/v0.119.5...v0.120.0) (2024-06-24)
+
+
+### Bug Fixes
+
+* Relax the VSCode engine version requirement to v1.61.0 ([2fb955b](https://github.com/getappmap/vscode-appland/commit/2fb955b44fdcd4ad04334ebae5346604ac1c98a9))
+
+
+### Features
+
+* Scanner is disabled by default ([9dc63ec](https://github.com/getappmap/vscode-appland/commit/9dc63eca29e639eae1bc9e2a7c8c5c977654992c))
+
 ## [0.119.5](https://github.com/getappmap/vscode-appland/compare/v0.119.4...v0.119.5) (2024-06-12)
 
 
