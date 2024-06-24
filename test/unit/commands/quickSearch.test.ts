@@ -22,10 +22,12 @@ describe('Quick search', () => {
         'ruby'
       );
 
+      /* eslint-disable @typescript-eslint/no-explicit-any */
       const actions: CodeAction[] = quickSearchProvider.provideCodeActions(
         document as any,
         range as any
       ) as any;
+      /* eslint-enable @typescript-eslint/no-explicit-any */
 
       expect(actions).to.be.an('array');
       expect(actions).to.have.lengthOf(1);

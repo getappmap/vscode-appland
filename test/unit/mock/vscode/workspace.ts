@@ -48,7 +48,7 @@ export default {
     include: string,
     _exclude?: string | null,
     _maxResults?: number,
-    _token?: any
+    _token?: any // eslint-disable-line @typescript-eslint/no-explicit-any
   ): Promise<URI[]> {
     const nonWildcardPath = include.replace(/(\*+\/?)/g, '');
     const absolutePath = join('/', 'example', nonWildcardPath);
