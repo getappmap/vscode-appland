@@ -1,3 +1,10 @@
+# [0.121.0](https://github.com/getappmap/vscode-appland/compare/v0.120.0...v0.121.0) (2024-06-28)
+
+
+### Features
+
+* Upgrade @appland/components to v4.26.0 ([5e19f2b](https://github.com/getappmap/vscode-appland/commit/5e19f2b0f20547a999c46a6832440190a31aa7ee))
+
 # [0.120.0](https://github.com/getappmap/vscode-appland/compare/v0.119.5...v0.120.0) (2024-06-24)
 
 
