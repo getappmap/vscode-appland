@@ -65,16 +65,16 @@ __metadata:
   linkType: hard
 
 "@appland/appmap@npm:^3.129.0":
-  version: 3.138.0
-  resolution: "@appland/appmap@npm:3.138.0"
+  version: 3.150.1
+  resolution: "@appland/appmap@npm:3.150.1"
   dependencies:
-    "@appland/client": ^1.16.0
+    "@appland/client": ^1.17.0
     "@appland/components": ^4.12.0
     "@appland/diagrams": ^1.8.0
-    "@appland/models": ^2.10.1
-    "@appland/navie": ^1.5.0
+    "@appland/models": ^2.10.2
+    "@appland/navie": ^1.16.1
     "@appland/openapi": ^1.8.0
-    "@appland/rpc": ^1.6.0
+    "@appland/rpc": ^1.9.0
     "@appland/scanner": ^1.86.0
     "@appland/sequence-diagram": ^1.12.0
     "@octokit/rest": ^20.0.1
@@ -107,6 +107,7 @@ __metadata:
     js-yaml: ^4.0.3
     jsdom: ^16.6.0
     langchain: ^0.1.25
+    lru-cache: ^10.2.2
     lunr: ^2.3.9
     minimatch: ^5.1.2
     moo: ^0.5.1
@@ -115,7 +116,7 @@ __metadata:
     openapi-types: ^12.1.3
     ora: ^5.4.1
     parse-diff: ^0.11.1
-    pkg: ^5.8.0
+    pkg: ^5.8.1
     port-pid: ^0.0.7
     pretty-bytes: ^5.6.0
     ps-node: ^0.1.6
@@ -132,13 +133,13 @@ __metadata:
       optional: true
   bin:
     appmap: built/cli.js
-  checksum: aa7472bce64c732100f64f06803e8d6ddf403f04c0ee056f496a8d736483c77647c99e018b4bff9358ac7bf2c439004dc8abac74678e0d76e6b2f8a7915b8142
+  checksum: 36b308c41f565af4f83a361651b21de88080111a81fd1a83728efcbf2bb0fed294516b26c0bd926a345409575fd4b86e5427be8509d8a86cd668a6c0169b5f09
   languageName: node
   linkType: hard
 
-"@appland/client@npm:^1.12.0, @appland/client@npm:^1.14.1, @appland/client@npm:^1.16.0":
-  version: 1.17.0
-  resolution: "@appland/client@npm:1.17.0"
+"@appland/client@npm:^1.12.0, @appland/client@npm:^1.14.1, @appland/client@npm:^1.17.0":
+  version: 1.18.1
+  resolution: "@appland/client@npm:1.18.1"
   dependencies:
     "@appland/models": ^2.10.0
     "@types/form-data": ^2.5.0
@@ -146,40 +147,13 @@ __metadata:
     js-yaml: ^4.1.0
     rxjs: ^7.8.1
     socket.io-client: ^4.7.2
-  checksum: 0c0fa890cb8ca3b23d79f805d1aee87d7fc2679cc467687897e8b6061678ebc33b477da8cc94cf15a3bf12cc0e9b9abf98daf2c72fcde232af7cabaa5ea472db
+  checksum: e35e7b4554b2d7c06d5b50b8df733708b38768ba3c46342d35ac7fcb1ef51117827c6de60d75ac92a8c34f851911d46798a7c0e0ff3fd6ea09f74267da1cce7c
   languageName: node
   linkType: hard
 
-"@appland/components@npm:^4.12.0":
-  version: 4.19.1
-  resolution: "@appland/components@npm:4.19.1"
-  dependencies:
-    "@appland/client": ^1.12.0
-    "@appland/diagrams": ^1.7.0
-    "@appland/models": ^2.10.0
-    "@appland/rpc": ^1.9.0
-    "@appland/sequence-diagram": ^1.11.0
-    buffer: ^6.0.3
-    d3: ^7.8.4
-    d3-flame-graph: ^4.1.3
-    diff: ^5.1.0
-    dom-to-svg: ^0.12.2
-    dompurify: ^3.0.6
-    events: ^3.3.0
-    highlight.js: ^11.9.0
-    jayson: ^4.1.0
-    marked: ^10.0.0
-    marked-highlight: ^2.0.7
-    sql-formatter: ^4.0.2
-    vue: ^2.7.14
-    vuex: ^3.6.0
-  checksum: 093f1db50a8f061fce125d8ffc9b901f36d5cb8a8cf21504b44c4efb0a250678de130fb1343a091271496c3eecc8abefba1220592ab428a178d0573df5b9235c
-  languageName: node
-  linkType: hard
-
-"@appland/components@npm:^4.24.4":
-  version: 4.24.4
-  resolution: "@appland/components@npm:4.24.4"
+"@appland/components@npm:^4.12.0, @appland/components@npm:^4.26.0":
+  version: 4.26.0
+  resolution: "@appland/components@npm:4.26.0"
   dependencies:
     "@appland/client": ^1.12.0
     "@appland/diagrams": ^1.7.0
@@ -200,7 +174,7 @@ __metadata:
     sql-formatter: ^4.0.2
     vue: ^2.7.14
     vuex: ^3.6.0
-  checksum: 8fe10a9d91a3b57164df275bac36bdf27eaac78915c652d0c2c0e993dcc2b028972e5d048c6c00b6092d6a35f4b875cea2848db15a272b97cf9731ebaa6e0d17
+  checksum: 9245e37aa27971cef022c6f8b36c59c5653b6f5a76eaa54522828495d2a48db00cffb6fcce6d3f2340560b5c9431ce6ec28e90ec942cb9c43cce1e6ccc804616
   languageName: node
   linkType: hard
 
@@ -219,25 +193,27 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/models@npm:^2.10.0, @appland/models@npm:^2.10.1, @appland/models@npm:^2.10.2":
-  version: 2.10.2
-  resolution: "@appland/models@npm:2.10.2"
+"@appland/models@npm:^2.10.0, @appland/models@npm:^2.10.2":
+  version: 2.10.3
+  resolution: "@appland/models@npm:2.10.3"
   dependencies:
     "@appland/sql-parser": ^1.5.0
     crypto-js: ^4.0.0
-  checksum: d0150a77a93125b60df365a3e17892922178888e4a06241d2dffd68a3a837629c7b90715ccc9c19e5c8868378dde31e9923c00847e39fedbeeb96c51220f66a8
+  checksum: a0fce9fcb99a0147e3157c38a7a0a506ae156fe9d7f0e255ccfb268d5b53b98138a7c37e321878bbff0372366e97ac2d75c50bc2b0078ade006ac50344bd7c42
   languageName: node
   linkType: hard
 
-"@appland/navie@npm:^1.5.0":
-  version: 1.6.0
-  resolution: "@appland/navie@npm:1.6.0"
+"@appland/navie@npm:^1.16.1":
+  version: 1.16.1
+  resolution: "@appland/navie@npm:1.16.1"
   dependencies:
     "@langchain/core": ^0.1.32
     "@langchain/openai": ^0.0.15
+    fast-xml-parser: ^4.4.0
+    js-yaml: ^4.1.0
     langchain: ^0.1.25
     openai: ^4.28.0
-  checksum: ac21b7d4fda0f673f28a3fe4e8a69ad83209d11ce984f99f50c0d3642ec084efc080b4d85be6bd8f678cef4e207fe05949dfb777bccd7b867a0499a727310d9a
+  checksum: 015d9ddf7b1513ac00cb7a74ced5fecd6cd0a85fcae625e0f39ea6f73d11b93a53a95829529382941b47a61f723c5f95f3747923ad0ed60a8103e64db30aec48
   languageName: node
   linkType: hard
 
@@ -251,16 +227,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/rpc@npm:^1.6.0, @appland/rpc@npm:^1.7.0, @appland/rpc@npm:^1.9.0":
-  version: 1.9.0
-  resolution: "@appland/rpc@npm:1.9.0"
-  checksum: 4e838862609034635ea44c6b4b06352e993d2eecacf01609c021700120b383030dda0cceef63f85e7dd04bd498b2263f96b665d4ecf9d0106d9ad66d248b821a
+"@appland/rpc@npm:^1.7.0, @appland/rpc@npm:^1.9.0":
+  version: 1.10.0
+  resolution: "@appland/rpc@npm:1.10.0"
+  checksum: 6a063611d27bdeb8d1b7d47462e83850044acdbc469c4ccb5669378bdeba9e5271e783f8009e8b66be818b541f1589de47d1555dfa4155245920c9e3630b81f9
   languageName: node
   linkType: hard
 
 "@appland/scanner@npm:^1.86.0":
-  version: 1.86.0
-  resolution: "@appland/scanner@npm:1.86.0"
+  version: 1.87.0
+  resolution: "@appland/scanner@npm:1.87.0"
   dependencies:
     "@appland/client": ^1.12.0
     "@appland/models": ^2.10.0
@@ -291,7 +267,7 @@ __metadata:
     yargs: ^17.1.1
   bin:
     scanner: built/cli.js
-  checksum: 47caa2af0e9cfc5c4d647e3f4a3b250975221d741a171e87aeda3661027fb5ad9d3d673c481fb1f1d10a088064d3f5af9ffbf5c42e4d8611314bdfb9da75b45f
+  checksum: 41c138d2a3e70e7e89c7168110d9b36cecb3e251f3eeb717b50f440be37627f27e3a4d328dbfef527d32a5ed75c3c976f99cbcd0ffd2fc702be3b20b9ca17ec8
   languageName: node
   linkType: hard
 
@@ -421,7 +397,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/helper-validator-identifier@npm:^7.16.7, @babel/helper-validator-identifier@npm:^7.18.6":
+"@babel/helper-validator-identifier@npm:^7.18.6":
   version: 7.19.1
   resolution: "@babel/helper-validator-identifier@npm:7.19.1"
   checksum: 0eca5e86a729162af569b46c6c41a63e18b43dbe09fda1d2a3c8924f7d617116af39cac5e4cd5d431bb760b4dca3c0970e0c444789b1db42bcf1fa41fbad0a3a
@@ -466,17 +442,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/types@npm:7.18.4":
-  version: 7.18.4
-  resolution: "@babel/types@npm:7.18.4"
-  dependencies:
-    "@babel/helper-validator-identifier": ^7.16.7
-    to-fast-properties: ^2.0.0
-  checksum: 85df59beb99c1b95e9e41590442f2ffa1e5b1b558d025489db40c9f7c906bd03a17da26c3ec486e5800e80af27c42ca7eee9506d9212ab17766d2d68d30fbf52
-  languageName: node
-  linkType: hard
-
-"@babel/types@npm:^7.18.2":
+"@babel/types@npm:7.19.0, @babel/types@npm:^7.18.2":
   version: 7.19.0
   resolution: "@babel/types@npm:7.19.0"
   dependencies:
@@ -3208,7 +3174,7 @@ __metadata:
   dependencies:
     "@appland/appmap": ^3.129.0
     "@appland/client": ^1.14.1
-    "@appland/components": ^4.24.4
+    "@appland/components": ^4.26.0
     "@appland/diagrams": ^1.8.0
     "@appland/models": ^2.10.2
     "@appland/rpc": ^1.7.0
@@ -5508,15 +5474,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"decompress-response@npm:^4.2.0":
-  version: 4.2.1
-  resolution: "decompress-response@npm:4.2.1"
-  dependencies:
-    mimic-response: ^2.0.0
-  checksum: 4e783ca4dfe9417354d61349750fe05236f565a4415a6ca20983a311be2371debaedd9104c0b0e7b36e5f167aeaae04f84f1a0b3f8be4162f1d7d15598b8fdba
-  languageName: node
-  linkType: hard
-
 "decompress-response@npm:^6.0.0":
   version: 6.0.0
   resolution: "decompress-response@npm:6.0.0"
@@ -5715,15 +5672,6 @@ __metadata:
   version: 6.1.0
   resolution: "detect-indent@npm:6.1.0"
   checksum: ab953a73c72dbd4e8fc68e4ed4bfd92c97eb6c43734af3900add963fd3a9316f3bc0578b018b24198d4c31a358571eff5f0656e81a1f3b9ad5c547d58b2d093d
-  languageName: node
-  linkType: hard
-
-"detect-libc@npm:^1.0.3":
-  version: 1.0.3
-  resolution: "detect-libc@npm:1.0.3"
-  bin:
-    detect-libc: ./bin/detect-libc.js
-  checksum: daaaed925ffa7889bd91d56e9624e6c8033911bb60f3a50a74a87500680652969dbaab9526d1e200a4c94acf80fc862a22131841145a0a8482d60a99c24f4a3e
   languageName: node
   linkType: hard
 
@@ -6810,6 +6758,17 @@ __metadata:
   version: 2.0.6
   resolution: "fast-levenshtein@npm:2.0.6"
   checksum: 92cfec0a8dfafd9c7a15fba8f2cc29cd0b62b85f056d99ce448bbcd9f708e18ab2764bda4dd5158364f4145a7c72788538994f0d1787b956ef0d1062b0f7c24c
+  languageName: node
+  linkType: hard
+
+"fast-xml-parser@npm:^4.4.0":
+  version: 4.4.0
+  resolution: "fast-xml-parser@npm:4.4.0"
+  dependencies:
+    strnum: ^1.0.5
+  bin:
+    fxparser: src/cli/cli.js
+  checksum: ad33a4b5165a0ffcb6e17ae78825bd4619a8298844a8a8408f2ea141a0d2d9439d18865dc5254162f09fe54d510ff18e5d5c0a190869cab21fc745ee66be816b
   languageName: node
   linkType: hard
 
@@ -9554,6 +9513,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lru-cache@npm:^10.2.2":
+  version: 10.2.2
+  resolution: "lru-cache@npm:10.2.2"
+  checksum: 98e8fc93691c546f719a76103ef2bee5a3ac823955c755a47641ec41f8c7fafa1baeaba466937cc1cbfa9cfd47e03536d10e2db3158a64ad91ff3a58a32c893e
+  languageName: node
+  linkType: hard
+
 "lru-cache@npm:^9.0.0":
   version: 9.1.2
   resolution: "lru-cache@npm:9.1.2"
@@ -9869,13 +9835,6 @@ __metadata:
   version: 3.1.0
   resolution: "mimic-fn@npm:3.1.0"
   checksum: f7b167f9115b8bbdf2c3ee55dce9149d14be9e54b237259c4bc1d8d0512ea60f25a1b323f814eb1fe8f5a541662804bcfcfff3202ca58df143edb986849d58db
-  languageName: node
-  linkType: hard
-
-"mimic-response@npm:^2.0.0":
-  version: 2.1.0
-  resolution: "mimic-response@npm:2.1.0"
-  checksum: 014fad6ab936657e5f2f48bd87af62a8e928ebe84472aaf9e14fec4fcb31257a5edff77324d8ac13ddc6685ba5135cf16e381efac324e5f174fb4ddbf902bf07
   languageName: node
   linkType: hard
 
@@ -10352,15 +10311,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-abi@npm:^2.21.0":
-  version: 2.30.1
-  resolution: "node-abi@npm:2.30.1"
-  dependencies:
-    semver: ^5.4.1
-  checksum: 3f4b0c912ce4befcd7ceab4493ba90b51d60dfcc90f567c93f731d897ef8691add601cb64c181683b800f21d479d68f9a6e15d8ab8acd16a5706333b9e30a881
-  languageName: node
-  linkType: hard
-
 "node-abi@npm:^3.3.0":
   version: 3.24.0
   resolution: "node-abi@npm:3.24.0"
@@ -10748,7 +10698,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"npmlog@npm:^4.0.1, npmlog@npm:^4.1.2":
+"npmlog@npm:^4.1.2":
   version: 4.1.2
   resolution: "npmlog@npm:4.1.2"
   dependencies:
@@ -11575,13 +11525,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pkg@npm:^5.8.0":
-  version: 5.8.0
-  resolution: "pkg@npm:5.8.0"
+"pkg@npm:^5.8.1":
+  version: 5.8.1
+  resolution: "pkg@npm:5.8.1"
   dependencies:
     "@babel/generator": 7.18.2
     "@babel/parser": 7.18.4
-    "@babel/types": 7.18.4
+    "@babel/types": 7.19.0
     chalk: ^4.1.2
     fs-extra: ^9.1.0
     globby: ^11.1.0
@@ -11590,7 +11540,7 @@ __metadata:
     minimist: ^1.2.6
     multistream: ^4.1.0
     pkg-fetch: 3.4.2
-    prebuild-install: 6.1.4
+    prebuild-install: 7.1.1
     resolve: ^1.22.0
     stream-meter: ^1.0.4
   peerDependencies:
@@ -11600,7 +11550,7 @@ __metadata:
       optional: true
   bin:
     pkg: lib-es5/bin.js
-  checksum: eb85975275ab4c5760884c1cc9b6251a17a8c15eb1b5a13183d0a5a0385650459e44d8438af7ecf5c5d185b55046cce9ce705b5b6d59ae058a157f49f6fb56a0
+  checksum: 5e750e716c3426706ea1fbd26832faf6a3ab8376b99f20aeb9c40fd48ad48e7b51375cd077b77669f3bfbefee69cc8111f49e0ca39e353fd0fc2dff95a57f822
   languageName: node
   linkType: hard
 
@@ -11677,30 +11627,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prebuild-install@npm:6.1.4":
-  version: 6.1.4
-  resolution: "prebuild-install@npm:6.1.4"
-  dependencies:
-    detect-libc: ^1.0.3
-    expand-template: ^2.0.3
-    github-from-package: 0.0.0
-    minimist: ^1.2.3
-    mkdirp-classic: ^0.5.3
-    napi-build-utils: ^1.0.1
-    node-abi: ^2.21.0
-    npmlog: ^4.0.1
-    pump: ^3.0.0
-    rc: ^1.2.7
-    simple-get: ^3.0.3
-    tar-fs: ^2.0.0
-    tunnel-agent: ^0.6.0
-  bin:
-    prebuild-install: bin.js
-  checksum: de4313eda821305912af922700a2db04bb8e77fe8aa9c2788550f1000c026cbefc82da468ec0c0a37764c5417bd8169dbd540928535fb38d00bb9bbd673dd217
-  languageName: node
-  linkType: hard
-
-"prebuild-install@npm:^7.0.1":
+"prebuild-install@npm:7.1.1, prebuild-install@npm:^7.0.1":
   version: 7.1.1
   resolution: "prebuild-install@npm:7.1.1"
   dependencies:
@@ -12970,17 +12897,6 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"simple-get@npm:^3.0.3":
-  version: 3.1.1
-  resolution: "simple-get@npm:3.1.1"
-  dependencies:
-    decompress-response: ^4.2.0
-    once: ^1.3.1
-    simple-concat: ^1.0.0
-  checksum: 80195e70bf171486e75c31e28e5485468195cc42f85940f8b45c4a68472160144d223eb4d07bc82ef80cb974b7c401db021a540deb2d34ac4b3b8883da2d6401
-  languageName: node
-  linkType: hard
-
 "simple-get@npm:^4.0.0":
   version: 4.0.1
   resolution: "simple-get@npm:4.0.1"
@@ -13490,6 +13406,13 @@ resolve@^2.0.0-next.3:
   version: 2.0.1
   resolution: "strip-json-comments@npm:2.0.1"
   checksum: 1074ccb63270d32ca28edfb0a281c96b94dc679077828135141f27d52a5a398ef5e78bcf22809d23cadc2b81dfbe345eb5fd8699b385c8b1128907dec4a7d1e1
+  languageName: node
+  linkType: hard
+
+"strnum@npm:^1.0.5":
+  version: 1.0.5
+  resolution: "strnum@npm:1.0.5"
+  checksum: 651b2031db5da1bf4a77fdd2f116a8ac8055157c5420f5569f64879133825915ad461513e7202a16d7fec63c54fd822410d0962f8ca12385c4334891b9ae6dd2
   languageName: node
   linkType: hard
 

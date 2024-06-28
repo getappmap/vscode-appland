@@ -172,6 +172,15 @@ export default class InstallGuideWebView {
                 vscode.commands.executeCommand('appmap.explain');
                 break;
 
+              case 'submit-to-navie':
+                {
+                  const { suggestion } = message as {
+                    suggestion: { label: string; prompt: string };
+                  };
+                  vscode.commands.executeCommand('appmap.explain', { suggestion });
+                }
+                break;
+
               default:
                 break;
             }

@@ -21,6 +21,7 @@ type ExplainOpts = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   targetAppmap?: any;
   targetAppmapFsPath?: string;
+  suggestion?: { label: string; prompt: string };
 };
 
 export enum ExplainResponseStatus {
@@ -60,6 +61,7 @@ export default class ChatSearchWebview {
     codeSelection,
     targetAppmap,
     targetAppmapFsPath,
+    suggestion,
   }: ExplainOpts = {}): Promise<ExplainResponse> {
     const appmapRpcPort = this.dataService.appmapRpcPort;
     if (!appmapRpcPort) {
@@ -125,6 +127,7 @@ export default class ChatSearchWebview {
             apiKey: await getApiKey(false),
             targetAppmap,
             targetAppmapFsPath,
+            suggestion,
           });
           break;
         case 'open-record-instructions':
