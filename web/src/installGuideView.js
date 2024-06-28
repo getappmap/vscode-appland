@@ -93,6 +93,10 @@ export default function mountInstallGuide() {
       vscode.postMessage({ command: 'view-output' });
     });
 
+    app.$on('submit-to-navie', (suggestion) => {
+      vscode.postMessage({ command: 'submit-to-navie', suggestion });
+    });
+
     messages.on('page', ({ page }) => {
       app.$refs.ui.jumpTo(page);
     });
