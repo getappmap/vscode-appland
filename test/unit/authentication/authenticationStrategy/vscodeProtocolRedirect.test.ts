@@ -35,7 +35,9 @@ describe('VscodeProtocolRedirect', () => {
   it('should redirect to the correct URL', async () => {
     const queryParams = { client_id: '123' };
     const redirectUrl = await vscodeProtocolRedirect.redirectUrl(Object.entries(queryParams));
-    expect(redirectUrl).to.equal('vscode://appland.appmap/authn-appmap-server?client_id%3D123');
+    expect(redirectUrl).to.equal(
+      'vscode-test://appland.appmap/authn-appmap-server?client_id%3D123'
+    );
   });
 
   it('should return the correct auth URL', () => {
