@@ -22,7 +22,9 @@ export default class VscodeProtocolRedirect implements AuthenticationStrategy {
       }, new URLSearchParams())
       .toString();
 
-    const uri = vscode.Uri.parse(`vscode://appland.appmap/authn-appmap-server`).with({ query });
+    const uri = vscode.Uri.parse(
+      `${vscode.env.uriScheme}://appland.appmap/authn-appmap-server`
+    ).with({ query });
     const externalUri = await vscode.env.asExternalUri(uri);
     return externalUri.toString();
   }
