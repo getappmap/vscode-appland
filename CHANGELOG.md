@@ -1,3 +1,15 @@
+# [0.122.0](https://github.com/getappmap/vscode-appland/compare/v0.121.0...v0.122.0) (2024-07-11)
+
+
+### Bug Fixes
+
+* Do not hardcode vscode protocol scheme ([2255a35](https://github.com/getappmap/vscode-appland/commit/2255a35f0320b9c6e1d8a67e64a4665a6ef7a952))
+
+
+### Features
+
+* Update @appland/components to v4.27.0 ([fced78d](https://github.com/getappmap/vscode-appland/commit/fced78d3e86ad8b0557ce266b7576cfa08c568ae))
+
 # [0.121.0](https://github.com/getappmap/vscode-appland/compare/v0.120.0...v0.121.0) (2024-06-28)
 
 
