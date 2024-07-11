@@ -43,7 +43,7 @@ export default function getWebviewContent(
     <meta http-equiv="Content-Security-Policy" content="
       default-src 'none';
       connect-src ${connectSrc.join(' ').trim()};
-      img-src ${webview.cspSource} data:;
+      img-src ${webview.cspSource} data: blob:;
       script-src ${webview.cspSource} 'unsafe-eval';
       style-src ${webview.cspSource} 'unsafe-inline';
     ">
