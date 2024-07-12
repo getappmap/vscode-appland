@@ -38,19 +38,19 @@ describe('JavaScript analyzer', () => {
   );
 
   test('detects mocha', { pkg: { devDependencies: { mocha: 'latest' } } }, (f) =>
-    expect(f.test).to.include({ title: 'mocha', score: 'early-access' })
+    expect(f.test).to.include({ title: 'Mocha', score: 'early-access' })
   );
 
   test('rejects old mocha', { pkg: { devDependencies: { mocha: '^7' } } }, (f) =>
-    expect(f.test).to.include({ title: 'mocha', score: 'unsupported' })
+    expect(f.test).to.include({ title: 'Mocha', score: 'unsupported' })
   );
 
   test('detects jest', { pkg: { devDependencies: { jest: 'latest' } } }, (f) =>
-    expect(f.test).to.include({ title: 'jest', score: 'early-access' })
+    expect(f.test).to.include({ title: 'Jest', score: 'early-access' })
   );
 
   test('rejects old jest', { pkg: { devDependencies: { jest: '^24' } } }, (f) =>
-    expect(f.test).to.include({ title: 'jest', score: 'unsupported' })
+    expect(f.test).to.include({ title: 'Jest', score: 'unsupported' })
   );
 
   type DepFiles = {
