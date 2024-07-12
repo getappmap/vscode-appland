@@ -294,6 +294,10 @@
           "type": "string",
           "description": "Options to pass to the appmap index command"
         },
+        "appMap.navie.useVSCodeLM": {
+          "type": "boolean",
+          "description": "Use VSCode language model API for Navie AI if available.\nRequires a recent VSCode version and (currently) GitHub Copilot extension."
+        },
         "appMap.navie.rpcPort": {
           "type": "number",
           "description": "Port number to pass to the Navie UI (used for extension development and debugging only)"
