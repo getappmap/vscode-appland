@@ -31,10 +31,10 @@ export default async function analyze(folder: WorkspaceFolder): Promise<ProjectA
       };
     }
 
-    for (const framework of ['junit', 'testng']) {
+    for (const framework of ['JUnit', 'TestNG']) {
       if (dependency(framework)) {
         features.test = {
-          title: framework,
+          title: framework.toLowerCase(),
           score: 'ga',
           text: `This project uses ${framework}. AppMap can record your tests.`,
         };

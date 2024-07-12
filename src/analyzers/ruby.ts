@@ -24,8 +24,8 @@ export default async function analyze(folder: WorkspaceFolder): Promise<ProjectA
       };
     }
 
-    for (const framework of ['minitest', 'rspec']) {
-      if (dependency(framework)) {
+    for (const framework of ['Minitest', 'RSpec']) {
+      if (dependency(framework.toLowerCase())) {
         features.test = {
           title: framework,
           score: 'ga',

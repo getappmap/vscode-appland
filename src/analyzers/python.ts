@@ -55,7 +55,7 @@ export default async function analyze(folder: WorkspaceFolder): Promise<ProjectA
       };
     } else if (dependency('flask')) {
       features.web = {
-        title: 'flask',
+        title: 'Flask',
         score: 'ga',
         text: 'This project uses Flask. AppMap can record the HTTP requests served by your app.',
       };
