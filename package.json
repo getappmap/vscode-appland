@@ -509,6 +509,7 @@
     "test:unit:some": "mocha",
     "test": "yarn test:unit && yarn test:web-client && yarn test:integration && yarn test:system",
     "compile": "NODE_ENV=production tsup --config tsup.config.ts",
+    "compile:dev": "tsup --config tsup.config.ts",
     "watch": "tsup --config tsup.config.ts --watch",
     "package": "vsce package",
     "publish": "vsce publish",
