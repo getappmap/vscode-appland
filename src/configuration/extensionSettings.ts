@@ -52,6 +52,12 @@ export default class ExtensionSettings {
     if (port && typeof port === 'number' && port > 0) return port;
   }
 
+  public static get useVsCodeLM(): boolean {
+    return [true, 'true'].includes(
+      vscode.workspace.getConfiguration('appMap').get('navie.useVSCodeLM') || false
+    );
+  }
+
   public static get scannerEnabled(): boolean {
     return [true, 'true'].includes(
       vscode.workspace.getConfiguration('appMap').get('scannerEnabled') || false

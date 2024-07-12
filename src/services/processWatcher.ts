@@ -6,6 +6,7 @@ import { fileExists, sanitizeEnvironment } from '../util';
 import { join } from 'path';
 import ExtensionSettings from '../configuration/extensionSettings';
 import { getOpenAIApiKey } from './navieConfigurationService';
+import ChatCompletion from './chatCompletion';
 
 export type RetryOptions = {
   // The number of retries made before declaring the process as failed.
@@ -57,7 +58,14 @@ export async function loadEnvironment(
   };
 
   const openAIApiKey = await getOpenAIApiKey(context);
-  if (openAIApiKey) {
+  const chat = await ChatCompletion.instance;
+  if (chat) {
+    env.OPENAI_API_KEY = chat.key;
+    env.OPENAI_BASE_URL = chat.url;
+    // TODO: set these dynamically based on the available models
+    env.APPMAP_NAVIE_TOKEN_LIMIT = '3925';
+    env.APPMAP_NAVIE_MODEL = 'gpt-4-turbo';
+  } else if (openAIApiKey) {
     if ('AZURE_OPENAI_API_VERSION' in env) env.AZURE_OPENAI_API_KEY = openAIApiKey;
     else env.OPENAI_API_KEY = openAIApiKey;
   }
