@@ -1,3 +1,16 @@
+# [0.123.0](https://github.com/getappmap/vscode-appland/compare/v0.122.0...v0.123.0) (2024-07-15)
+
+
+### Bug Fixes
+
+* Normalize casing of dependencies ([98f8708](https://github.com/getappmap/vscode-appland/commit/98f8708240051259c4a234065030ead371adb08c))
+
+
+### Features
+
+* Allow usage of VSCode LLM API ([6a5ef51](https://github.com/getappmap/vscode-appland/commit/6a5ef515b40da9a43bbbf67d9d39acd57bdbb6c2))
+* Update @appland/components to v4.28.1 ([db2ed56](https://github.com/getappmap/vscode-appland/commit/db2ed565c1b07dcf67a2c5dacc260946a61f6b78))
+
 # [0.122.0](https://github.com/getappmap/vscode-appland/compare/v0.121.0...v0.122.0) (2024-07-11)
 
 
