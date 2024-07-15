@@ -17,6 +17,7 @@ import { resetUsageState } from './commands/resetUsageState';
 import AppMapCollectionFile from './services/appmapCollectionFile';
 import { AppmapUptodateService } from './services/appmapUptodateService';
 import { AppMapWatcher } from './services/appmapWatcher';
+import ChatCompletion from './services/chatCompletion';
 import ClassMapIndex from './services/classMapIndex';
 import LineInfoIndex from './services/lineInfoIndex';
 import { NodeProcessService } from './services/nodeProcessService';
@@ -230,6 +231,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
     await workspaceServices.enroll(runConfigService);
 
+    initializeCopilotIntegration(context);
+
     AssetService.register(context);
     const dependenciesInstalled = AssetService.updateAll();
     const chatSearchWebview: Promise<ChatSearchWebview> = (async () => {
@@ -326,5 +329,65 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       errorCode: ErrorCode.InitializationFailure,
     });
     throw exception;
+  }
+}
+
+function initializeCopilotIntegration(context: vscode.ExtensionContext) {
+  // TODO: make the messages and handling generic for all LM extensions
+
+  const hasLM = 'lm' in vscode && 'selectChatModels' in vscode.lm;
+
+  if (ExtensionSettings.useVsCodeLM && checkAvailability())
+    context.subscriptions.push(new ChatCompletion());
+
+  context.subscriptions.push(
+    vscode.workspace.onDidChangeConfiguration(async (e) => {
+      if (e.affectsConfiguration('appMap.navie.useVSCodeLM')) {
+        // Only suggest reloading if it's been disabled or if it's enabled and the extension is available
+        if (
+          (!ExtensionSettings.useVsCodeLM && (await ChatCompletion.instance)) ||
+          (ExtensionSettings.useVsCodeLM && checkAvailability())
+        )
+          notifyReload();
+      }
+    })
+  );
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  let _onModelChange: vscode.Disposable;
+
+  function checkAvailability() {
+    if (!hasLM)
+      vscode.window.showErrorMessage(
+        'AppMap: VS Code LM backend for Navie is enabled, but the LanguageModel API is not available.\nPlease update your VS Code to the latest version.'
+      );
+    else if (!vscode.extensions.getExtension('github.copilot')) {
+      vscode.window
+        .showErrorMessage(
+          'AppMap: VS Code LM backend for Navie is enabled, but the GitHub Copilot extension is not installed.\nPlease install it from the marketplace and reload the window.',
+          'Install Copilot'
+        )
+        .then((selection) => {
+          if (selection === 'Install Copilot') {
+            vscode.commands.executeCommand(
+              'workbench.extensions.installExtension',
+              'github.copilot'
+            );
+            _onModelChange ||= vscode.lm.onDidChangeChatModels(
+              notifyReload,
+              undefined,
+              context.subscriptions
+            );
+          }
+        });
+    } else return true;
+  }
+
+  async function notifyReload() {
+    const result = await vscode.window.showInformationMessage(
+      'AppMap: The Copilot integration has been updated. Please reload the window to apply the changes.',
+      'Reload'
+    );
+    if (result === 'Reload') vscode.commands.executeCommand('workbench.action.reloadWindow');
   }
 }

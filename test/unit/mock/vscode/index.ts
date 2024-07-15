@@ -1,5 +1,7 @@
 import mockery from 'mockery';
 
+import CancellationTokenSource from './CancellationTokenSource';
+import LanguageModelChatMessage from './LanguageModelChatMessage';
 import TextDocument from './TextDocument';
 import Range from './Range';
 import Position from './Position';
@@ -10,6 +12,7 @@ import Terminal from './Terminal';
 import CodeAction from './CodeAction';
 import CodeActionKind from './CodeActionKind';
 import * as extensions from './extensions';
+import * as lm from './lm';
 import { URI, Utils } from 'vscode-uri';
 import workspace from './workspace';
 import window from './window';
@@ -36,7 +39,9 @@ enum ProgressLocation {
 const MockVSCode = {
   ProgressLocation,
   authentication,
+  CancellationTokenSource,
   EventEmitter,
+  LanguageModelChatMessage,
   Terminal,
   TextDocument,
   Range,
@@ -46,6 +51,7 @@ const MockVSCode = {
   CodeAction,
   CodeActionKind,
   extensions,
+  lm,
   Uri: { ...URI, ...Utils },
   workspace,
   window,

@@ -294,6 +294,10 @@
           "type": "string",
           "description": "Options to pass to the appmap index command"
         },
+        "appMap.navie.useVSCodeLM": {
+          "type": "boolean",
+          "description": "Use VSCode language model API for Navie AI if available.\nRequires a recent VSCode version and (currently) GitHub Copilot extension."
+        },
         "appMap.navie.rpcPort": {
           "type": "number",
           "description": "Port number to pass to the Navie UI (used for extension development and debugging only)"
@@ -509,6 +513,7 @@
     "test:unit:some": "mocha",
     "test": "yarn test:unit && yarn test:web-client && yarn test:integration && yarn test:system",
     "compile": "NODE_ENV=production tsup --config tsup.config.ts",
+    "compile:dev": "tsup --config tsup.config.ts",
     "watch": "tsup --config tsup.config.ts --watch",
     "package": "vsce package",
     "publish": "vsce publish",
@@ -583,7 +588,7 @@
   "dependencies": {
     "@appland/appmap": "^3.129.0",
     "@appland/client": "^1.14.1",
-    "@appland/components": "^4.27.0",
+    "@appland/components": "^4.28.1",
     "@appland/diagrams": "^1.8.0",
     "@appland/models": "^2.10.2",
     "@appland/rpc": "^1.7.0",

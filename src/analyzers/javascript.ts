@@ -33,14 +33,14 @@ export default async function analyze(folder: WorkspaceFolder): Promise<ProjectA
   if (dependencies) {
     if (dependencies?.express) {
       features.web = {
-        title: 'express.js',
+        title: 'Express.js',
         score: 'early-access',
         text: 'This project uses Express. AppMap will automatically recognize web requests, SQL queries, and key framework functions during recording.',
       };
     }
 
     const testFeature =
-      detectTest(dependencies, 'mocha', '>= 8') || detectTest(dependencies, 'jest', '>= 25');
+      detectTest(dependencies, 'Mocha', '>= 8') || detectTest(dependencies, 'Jest', '>= 25');
     if (testFeature) features.test = testFeature;
   } else {
     features.lang = {
@@ -121,7 +121,7 @@ function detectTest(
   testPackage: string,
   constraint: string
 ): Feature | undefined {
-  const version = dep && dep[testPackage];
+  const version = dep && dep[testPackage.toLowerCase()];
   if (!version) return undefined;
   if (version === 'latest' || semverIntersects(constraint, version))
     return {
