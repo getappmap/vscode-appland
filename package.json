@@ -3,7 +3,7 @@
   "name": "appmap",
   "displayName": "AppMap",
   "description": "Free AI Software Architect + Runtime Diagrams",
-  "version": "0.123.0",
+  "version": "0.124.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/getappmap/vscode-appland"

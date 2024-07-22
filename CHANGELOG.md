@@ -1,3 +1,15 @@
+# [0.124.0](https://github.com/getappmap/vscode-appland/compare/v0.123.0...v0.124.0) (2024-07-22)
+
+
+### Bug Fixes
+
+* Use system node when spawning AppMap tools in development ([daea44c](https://github.com/getappmap/vscode-appland/commit/daea44c012ead01da06be531b07fa1a2f105802c))
+
+
+### Features
+
+* Update @appland/components to v4.29.0 ([170a87f](https://github.com/getappmap/vscode-appland/commit/170a87f339b02e2323282a315b513448a0637cf6))
+
 # [0.123.0](https://github.com/getappmap/vscode-appland/compare/v0.122.0...v0.123.0) (2024-07-15)
 
 
