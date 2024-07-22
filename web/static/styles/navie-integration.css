@@ -1,0 +1,10 @@
+.context-container__title {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.context__body__table .context__pinned-item {
+  margin: 0 !important;
+  box-shadow: none !important;
+}
