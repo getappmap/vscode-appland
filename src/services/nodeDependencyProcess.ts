@@ -133,10 +133,9 @@ export function spawn(options: SpawnOptions): ChildProcess {
   const env = { ...process.env, ...(options.env || {}) };
   let newProcess: childProcess.ChildProcess;
   if (options.modulePath) {
-    newProcess = childProcess.fork(options.modulePath, options.args || [], {
+    newProcess = childProcess.spawn('node', [options.modulePath, ...(options.args ?? [])], {
       ...options,
       env,
-      execArgv: [],
       stdio: 'pipe',
     });
   } else if (options.binPath) {

@@ -3,6 +3,7 @@ import { VChatSearch } from '@appland/components';
 import MessagePublisher from './messagePublisher';
 import handleAppMapMessages from './handleAppMapMessages';
 import 'highlight.js/styles/base16/snazzy.css';
+import '../static/styles/navie-integration.css';
 
 export default function mountChatSearchView() {
   const vscode = window.acquireVsCodeApi();
