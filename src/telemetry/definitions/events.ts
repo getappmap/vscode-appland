@@ -25,6 +25,8 @@ export const PROJECT_OPEN = new Event({
     Properties.DEPENDENCIES,
     Properties.PROJECT_PATH,
     Properties.VERSION_CONTROL_REPOSITORY,
+    Properties.PROXY_ENABLED,
+    Properties.PROXY_SETTINGS,
   ],
   metrics: [Metrics.NUM_WORKSPACE_FOLDERS],
 });
