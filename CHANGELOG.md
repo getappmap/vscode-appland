@@ -1,3 +1,16 @@
+# [0.125.0](https://github.com/getappmap/vscode-appland/compare/v0.124.0...v0.125.0) (2024-07-30)
+
+
+### Bug Fixes
+
+* Restore some broken styles ([bf49b2f](https://github.com/getappmap/vscode-appland/commit/bf49b2fa028d826dbd410a32014abf66d4764024))
+
+
+### Features
+
+* Report presence of proxy settings ([93cf0e0](https://github.com/getappmap/vscode-appland/commit/93cf0e0157515b145ce67511ce2a7acb0621c86a))
+* Update @appland/components to v4.30.0 ([fecd588](https://github.com/getappmap/vscode-appland/commit/fecd588d75ab93a00acdd3695b4bea75da91e0d7))
+
 # [0.124.0](https://github.com/getappmap/vscode-appland/compare/v0.123.0...v0.124.0) (2024-07-22)
 
 
