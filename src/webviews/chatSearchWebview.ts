@@ -14,6 +14,7 @@ import { NodeProcessService } from '../services/nodeProcessService';
 import CommandRegistry from '../commands/commandRegistry';
 import ChatSearchDataService, { LatestAppMap } from '../services/chatSearchDataService';
 import { parseLocation } from '../util';
+import { proxySettings } from '../lib/proxySettings';
 
 type ExplainOpts = {
   workspace?: vscode.WorkspaceFolder;
@@ -120,6 +121,7 @@ export default class ChatSearchWebview {
             type: 'initChatSearch',
             appmapRpcPort,
             codeSelection,
+            proxySettings: proxySettings(),
             savedFilters: this.filterStore.getSavedFilters(),
             appmapYmlPresent: true, // Note that at the moment this is always true
             mostRecentAppMaps,
