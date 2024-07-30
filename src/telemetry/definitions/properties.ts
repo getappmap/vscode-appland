@@ -11,6 +11,7 @@ import { findRepository } from '../../lib/git';
 import { workspaceServices } from '../../services/workspaceServices';
 import { AppmapConfigManager } from '../../services/appmapConfigManager';
 import ProjectStateService from '../../services/projectStateService';
+import { proxySettings } from '../../lib/proxySettings';
 
 export const DEBUG_EXCEPTION = new TelemetryDataProvider({
   id: 'appmap.debug.exception',
@@ -54,6 +55,21 @@ export const SCANNER_CONFIG_PRESENT = new TelemetryDataProvider({
   async value({ rootDirectory }: { rootDirectory: PathLike }) {
     const isPresent = await fileExists(path.join(rootDirectory.toString(), 'appland-scanner.yml'));
     return String(isPresent);
+  },
+});
+
+export const PROXY_ENABLED = new TelemetryDataProvider({
+  id: 'appmap.proxy.enabled',
+  async value() {
+    const settings = proxySettings();
+    return String(settings.http_proxy || settings.https_proxy);
+  },
+});
+
+export const PROXY_SETTINGS = new TelemetryDataProvider({
+  id: 'appmap.proxy_settings',
+  async value() {
+    return JSON.stringify(proxySettings());
   },
 });
 
