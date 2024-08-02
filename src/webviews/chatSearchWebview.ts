@@ -132,6 +132,9 @@ export default class ChatSearchWebview {
             suggestion,
           });
           break;
+        case 'open-new-chat':
+          void vscode.commands.executeCommand('appmap.explain');
+          break;
         case 'open-record-instructions':
           await vscode.commands.executeCommand('appmap.openInstallGuide', RecordAppMaps);
           break;
