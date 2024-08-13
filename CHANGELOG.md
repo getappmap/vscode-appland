@@ -1,3 +1,17 @@
+# [0.126.0](https://github.com/getappmap/vscode-appland/compare/v0.125.0...v0.126.0) (2024-08-13)
+
+
+### Bug Fixes
+
+* "New chat" button opens a new chat ([e9b317c](https://github.com/getappmap/vscode-appland/commit/e9b317c0598a080f76f467cdf513abe6700bba8e))
+* Restore filter/search commands in AppMap data tree ([2204aa4](https://github.com/getappmap/vscode-appland/commit/2204aa4a56de7af3d9b65eaf7ad8fdfe645ece7a))
+
+
+### Features
+
+* Add a link to data recording instructions in the tree menu ([85f1228](https://github.com/getappmap/vscode-appland/commit/85f1228125f984ac6cdacf38f499107069f82def))
+* New AppMap data recording instructions ([aea7fad](https://github.com/getappmap/vscode-appland/commit/aea7fada2b3d1486cdc1b25d3e741d8fd2351c35))
+
 # [0.125.0](https://github.com/getappmap/vscode-appland/compare/v0.124.0...v0.125.0) (2024-07-30)
 
 
