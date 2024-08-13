@@ -8,3 +8,7 @@
   margin: 0 !important;
   box-shadow: none !important;
 }
+
+.recording-method__ask-navie-button {
+  display: none;
+}
