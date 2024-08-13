@@ -108,7 +108,8 @@
       },
       {
         "command": "appmap.openInstallGuide",
-        "title": "AppMap: Open Install Guide"
+        "title": "AppMap: Open Install Guide",
+        "icon": "$(book)"
       },
       {
         "command": "appmap.view.focusAppMap",
@@ -442,6 +443,11 @@
         }
       ],
       "view/title": [
+        {
+          "command": "appmap.openInstallGuide",
+          "when": "view == appmap.views.appmaps",
+          "group": "navigation@3"
+        },
         {
           "command": "appmap.applyFilter",
           "when": "view == appmap.views.appmaps && appmap.hasData",
