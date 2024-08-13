@@ -5,7 +5,7 @@ chai.config.truncateThreshold = 0;
 
 import { join } from 'path';
 
-import ProjectDirectory from '../system/tests/support/project';
+import ProjectDirectory from '../projectDirectory';
 
 describe('ProjectDirectory', () => {
   describe('with default options', () => {

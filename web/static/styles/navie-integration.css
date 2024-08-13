@@ -9,10 +9,6 @@
   box-shadow: none !important;
 }
 
-.recording-method-grid .popper__body {
-  overflow: hidden;
-  padding: 1rem;
-  background-color: #141924;
-  border-radius: 1rem;
-  border: 1px solid #2d3546;
+.recording-method__ask-navie-button {
+  display: none;
 }

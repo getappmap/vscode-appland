@@ -47,8 +47,6 @@ import SignInViewProvider from './webviews/signInWebview';
 import SignInManager from './services/signInManager';
 import { AppmapConfigManager } from './services/appmapConfigManager';
 import { findByName } from './commands/findByName';
-import { RunConfigService } from './services/runConfigService';
-import updateAppMapConfigs from './commands/updateConfigs';
 import downloadLatestJavaJar from './commands/downloadLatestJavaJar';
 import IndexJanitor from './lib/indexJanitor';
 import { unregister as unregisterTerminal } from './commands/installer/terminals';
@@ -226,10 +224,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     FindingInfoWebview.register(context);
 
     const processService = new NodeProcessService(context);
-    const runConfigService = new RunConfigService(projectState, workspaceServices, extensionState);
-    context.subscriptions.push(RunConfigService);
-
-    await workspaceServices.enroll(runConfigService);
 
     initializeCopilotIntegration(context);
 
@@ -261,7 +255,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     const trees = registerTrees(
       context,
       appmapCollectionFile,
-      projectStates,
       classMapIndex,
       appmapUptodateService
     );
@@ -277,7 +270,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     appmapState(context, editorProvider, chatSearchWebview);
     quickSearch(context);
     resetUsageState(context, extensionState);
-    updateAppMapConfigs(context, runConfigService, workspaceServices);
     downloadLatestJavaJar(context);
     getAppmapDir(context, workspaceServices);
     clearNavieAiSettings(context);
@@ -319,7 +311,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       appmapServerAuthenticationProvider,
       recommender,
       configManager,
-      runConfigService,
       commandRegistry: CommandRegistry,
       dependenciesInstalled,
     };

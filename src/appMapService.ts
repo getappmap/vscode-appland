@@ -11,7 +11,6 @@ import { AppmapUptodateService } from './services/appmapUptodateService';
 import Command from './services/command';
 import { NodeProcessService } from './services/nodeProcessService';
 import ProjectStateService from './services/projectStateService';
-import { RunConfigService } from './services/runConfigService';
 import SignInManager from './services/signInManager';
 import { SourceFileWatcher } from './services/sourceFileWatcher';
 import { WorkspaceServices } from './services/workspaceServices';
@@ -55,7 +54,6 @@ export default interface AppMapService {
   appmapServerAuthenticationProvider: AppMapServerAuthenticationProvider;
   recommender: AppMapRecommenderService;
   configManager: AppmapConfigManager;
-  runConfigService: RunConfigService;
   commandRegistry: typeof CommandRegistry;
   dependenciesInstalled: Promise<void>;
 }

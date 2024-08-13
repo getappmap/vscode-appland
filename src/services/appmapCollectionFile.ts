@@ -46,6 +46,7 @@ export default class AppMapCollectionFile implements AppMapCollection, AppMapsSe
   private emitUpdated(uri?: vscode.Uri): void {
     const workspaceFolder = uri && vscode.workspace.getWorkspaceFolder(uri);
     this._onUpdated.fire(workspaceFolder);
+    vscode.commands.executeCommand('setContext', 'appmap.hasData', this.loaders.size > 0);
   }
 
   static async collectAppMapDescriptor(uri: vscode.Uri): Promise<AppMapDescriptor | undefined> {

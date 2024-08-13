@@ -95,37 +95,9 @@ jobs:
           xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" -- yarn test:integration
         name: Run integration tests
 
-  system:
-    needs: prepare
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/cache@v3
-        id: cache-modules
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: ${{ runner.os }}-modules-
-      - uses: actions/cache@v3
-        id: cache-vscode-test
-        with:
-          path: .vscode-test/vscode-*
-          key: ${{ runner.os }}-vscode-test
-      - uses: actions/cache@v3
-        id: cache-out
-        with:
-          path: out
-          key: ${{ github.sha }}
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          cache: yarn
-      - run: xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" -- yarn test:system
-        name: Run system tests
-
   release:
     runs-on: ubuntu-latest
-    needs: [unit, integration, system]
+    needs: [unit, integration]
     if: github.ref == 'refs/heads/master'
     steps:
       - uses: actions/checkout@v3

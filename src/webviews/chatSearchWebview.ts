@@ -3,7 +3,6 @@ import getWebviewContent from './getWebviewContent';
 import appmapMessageHandler from './appmapMessageHandler';
 import FilterStore, { SavedFilter } from './filterStore';
 import WebviewList from './WebviewList';
-import { ProjectPicker, RecordAppMaps } from '../tree/instructionsTreeDataProvider';
 import { getApiKey } from '../authentication';
 import ExtensionSettings from '../configuration/extensionSettings';
 import { CodeSelection } from '../commands/quickSearch';
@@ -132,11 +131,12 @@ export default class ChatSearchWebview {
             suggestion,
           });
           break;
-        case 'open-record-instructions':
-          await vscode.commands.executeCommand('appmap.openInstallGuide', RecordAppMaps);
+        case 'open-new-chat':
+          void vscode.commands.executeCommand('appmap.explain');
           break;
+        case 'open-record-instructions':
         case 'open-install-instructions':
-          await vscode.commands.executeCommand('appmap.openInstallGuide', ProjectPicker);
+          await vscode.commands.executeCommand('appmap.openInstallGuide');
           break;
         case 'open-appmap': {
           const uri = vscode.Uri.file(message.path);

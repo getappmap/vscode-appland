@@ -24,6 +24,9 @@ export default function mountChatSearchView() {
             appmapYmlPresent: this.appmapYmlPresent,
             targetAppmapData: initialData.targetAppmap,
             targetAppmapFsPath: initialData.targetAppmapFsPath,
+            openNewChat() {
+              vscode.postMessage({ command: 'open-new-chat' });
+            },
           },
         });
       },

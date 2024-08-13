@@ -16,11 +16,6 @@ export const PROJECT_OPEN = new Event({
   properties: [
     Properties.AGENT_CONFIG_PRESENT,
     Properties.SCANNER_CONFIG_PRESENT,
-    Properties.PROJECT_LANGUAGE,
-    Properties.PROJECT_LANGUAGE_DISTRIBUTION,
-    Properties.WEB_FRAMEWORK,
-    Properties.TEST_FRAMEWORK,
-    Properties.IS_INSTALLABLE,
     Properties.HAS_DEVCONTAINER,
     Properties.DEPENDENCIES,
     Properties.PROJECT_PATH,
@@ -33,9 +28,5 @@ export const PROJECT_OPEN = new Event({
 
 export const INSTALL_BUTTON_ERROR = new Event({
   name: 'install-button:error',
-  properties: [
-    Properties.PROJECT_LANGUAGE,
-    Properties.DEBUG_EXCEPTION,
-    Properties.DEFAULT_TERMINALS,
-  ],
+  properties: [Properties.DEBUG_EXCEPTION, Properties.DEFAULT_TERMINALS],
 });

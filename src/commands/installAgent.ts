@@ -86,7 +86,6 @@ export default function installAgent(context: vscode.ExtensionContext): void {
     } catch (err) {
       const exception = err as Error;
       Telemetry.sendEvent(INSTALL_BUTTON_ERROR, {
-        rootDirectory: path,
         exception,
         defaultTerminals,
       });
