@@ -22,7 +22,7 @@ describe('proxySettings', () => {
         if (key === 'http.noProxy') return ['localhost'];
         return undefined;
       }),
-    } as any);
+    } as any); // eslint-disable-line @typescript-eslint/no-explicit-any
 
     // Set mock environment variables
     process.env.http_proxy = 'http://env-http-proxy';

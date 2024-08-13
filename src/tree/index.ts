@@ -1,10 +1,8 @@
 import * as vscode from 'vscode';
 import AppMapCollectionFile from '../services/appmapCollectionFile';
 import Links from './links';
-import { DocsPages, InstructionsTreeDataProvider } from './instructionsTreeDataProvider';
 import { AppMapTreeDataProvider } from './appMapTreeDataProvider';
 import { LinkTreeDataProvider } from './linkTreeDataProvider';
-import { ProjectStateServiceInstance } from '../services/projectStateService';
 import { AppmapUptodateService } from '../services/appmapUptodateService';
 import { AppMapTreeDataProviders } from '../appMapService';
 import { FindingsTreeDataProvider } from './findingsTreeDataProvider';
@@ -14,16 +12,10 @@ import ClassMapIndex from '../services/classMapIndex';
 export default function registerTrees(
   context: vscode.ExtensionContext,
   appmapCollection: AppMapCollectionFile,
-  projectStates: ProjectStateServiceInstance[],
   classMapIndex: ClassMapIndex,
   appmapsUptodate?: AppmapUptodateService
 ): AppMapTreeDataProviders {
   LinkTreeDataProvider.registerCommands(context);
-
-  const instructionsTreeProvider = new InstructionsTreeDataProvider(context, projectStates);
-  const instructionsTree = vscode.window.createTreeView('appmap.views.instructions', {
-    treeDataProvider: instructionsTreeProvider,
-  });
 
   const localAppMapsProvider = new AppMapTreeDataProvider(appmapCollection, appmapsUptodate);
   const localAppMapsTree = vscode.window.createTreeView('appmap.views.appmaps', {
@@ -67,16 +59,6 @@ export default function registerTrees(
   context.subscriptions.push(
     vscode.commands.registerCommand('appmap.view.focusAppMap', () => {
       localAppMapsTree.reveal(appmapCollection.appMaps[0], { select: false });
-    })
-  );
-
-  context.subscriptions.push(
-    vscode.commands.registerCommand('appmap.view.focusInstructions', (index = 0) => {
-      setTimeout(() => {
-        // TODO: (KEG) Here is where we would show the repo state to determine which step should be
-        // shown by default.
-        instructionsTree.reveal(DocsPages[index]);
-      }, 0);
     })
   );
 

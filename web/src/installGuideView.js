@@ -8,7 +8,6 @@ export default function mountInstallGuide() {
   const messages = new MessagePublisher(vscode);
 
   messages.on('init', (initialData) => {
-    let currentPage = initialData.page;
     let currentProject;
 
     const app = new Vue({
@@ -34,36 +33,18 @@ export default function mountInstallGuide() {
           javaAgentStatus: initialData.javaAgentStatus,
         };
       },
-      beforeCreate() {
-        this.$on('open-page', async (pageId) => {
-          // Wait until next frame if there's no current project. It may take some time for the
-          // view to catch up.
-          if (!currentProject) await new Promise((resolve) => requestAnimationFrame(resolve));
-
-          currentPage = pageId;
-
-          vscode.postMessage({
-            command: 'open-page',
-            page: currentPage,
-            project: currentProject,
-            projects: this.projects,
-          });
-        });
-      },
       mounted() {
         document.querySelectorAll('a[href]').forEach((el) => {
           el.addEventListener('click', (e) => {
             vscode.postMessage({ command: 'click-link', uri: e.target.href });
           });
         });
-        this.$refs.ui.jumpTo(initialData.page);
       },
     });
 
     app.$on('clipboard', (text) => {
       vscode.postMessage({
         command: 'clipboard',
-        page: currentPage,
         project: currentProject,
         text,
       });
@@ -77,16 +58,8 @@ export default function mountInstallGuide() {
       messages.rpc('open-navie');
     });
 
-    app.$on('open-instruction', (pageId) => {
-      app.$refs.ui.jumpTo(pageId);
-    });
-
     app.$on('perform-install', (path, language) => {
       vscode.postMessage({ command: 'perform-install', path, language });
-    });
-
-    app.$on('add-java-configs', (projectPath) => {
-      vscode.postMessage({ command: 'add-java-configs', projectPath });
     });
 
     app.$on('view-output', () => {
@@ -95,10 +68,6 @@ export default function mountInstallGuide() {
 
     app.$on('submit-to-navie', (suggestion) => {
       vscode.postMessage({ command: 'submit-to-navie', suggestion });
-    });
-
-    messages.on('page', ({ page }) => {
-      app.$refs.ui.jumpTo(page);
     });
 
     messages.on('projects', ({ projects }) => {
