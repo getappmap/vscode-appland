@@ -404,12 +404,12 @@
       {
         "id": "navie.walkthrough",
         "title": "Get started with AppMap Navie",
-        "description": "Learn how to use Navie to understand your application.",
+        "description": "Your AI software assistant to plan, implement, document and diagram code solutions",
         "steps": [
           {
             "id": "Sign in",
             "title": "Sign into AppMap",
-            "description": "Use the sidebar to sign into AppMap.\n[Open sidebar](command:workbench.view.extension.appmap)\nYou can authenticate with your existing GitHub account or create a new AppMap account with your e-mail.",
+            "description": "Use the sidebar to sign into AppMap.\n[Open sidebar](command:appmap.views.signIn.focus)\nYou can sign in with an email address, a GitHub account or a GitLab account.",
             "media": {
               "image": "images/walkthrough/configure-backend.svg",
               "altText": "AppMap logo hovering above AI sparkles"
@@ -421,8 +421,8 @@
           },
           {
             "id": "configure-backend",
-            "title": "Configure your AI provider",
-            "description": "By default, Navie uses GPT-4o to answer your questions.\n[Use default](command:welcome.markStepComplete)\nYou can configure Navie to use Copilot as the backend or use your own model or key. [See the documentation for details](https://appmap.io/docs/navie/bring-your-own-model.html).",
+            "title": "Choose your preferred AI model",
+            "description": "By default, AppMap Navie provides an LLM service based on GPT-4o.\nYou can configure Navie to use the GitHub Copilot LLM, or use your own model or API key. [See the documentation for details](https://appmap.io/docs/navie/bring-your-own-model.html).",
             "media": {
               "image": "images/walkthrough/configure-backend.svg",
               "altText": "AppMap logo hovering above AI sparkles"
@@ -430,19 +430,29 @@
             "when": "!appMap.showSignIn"
           },
           {
-            "id": "use-navie-ai",
+            "id": "explain-and-diagram",
             "media": {
               "image": "images/walkthrough/ask-navie.svg",
               "altText": "a screenshot of Navie chat"
             },
-            "title": "Ask Navie AI",
-            "description": "Ask Navie a question about your application to get started.\n[Ask Navie AI](command:appmap.explain)\n**Tip**: Use __AppMap: Ask Navie AI__ command from the palette to quickly open Navie.",
+            "title": "Get code explanations and diagrams",
+            "description": "Open Navie to chat interactively about your code. Ask for explanations and diagrams. Navie automatically finds and interprets the most relevant code, documentation, and runtime data traces.\n[Ask Navie AI](command:appmap.explain)\nTip: Use __AppMap: Ask Navie AI__ from the command palette to quickly open Navie.",
+            "when": "!appMap.showSignIn"
+          },
+          {
+            "id": "troubleshoot-and-solve",
+            "media": {
+              "image": "images/walkthrough/ask-navie.svg",
+              "altText": "a screenshot of Navie chat"
+            },
+            "title": "Solve complex coding issues",
+            "description": "Use Navie commands like @plan, @generate, and @test to solve problems quickly. Use the Apply button on any code suggestion apply the code change to the file. \n[Ask Navie AI](command:appmap.explain)\nTip: Use __AppMap: Ask Navie AI__ from the command palette to quickly open Navie.",
             "when": "!appMap.showSignIn"
           },
           {
             "id": "ask-about-selection",
-            "title": "Ask Navie about code selection",
-            "description": "Use the light bulb menu on a code selection to ask Navie about specific code.",
+            "title": "Ask about specific code",
+            "description": "Select code in your editor, then open Navie to ask about that specific code.\nTip: Use __AppMap: Ask Navie AI__ from the command palette to quickly open Navie.\nYou can also use the light bulb menu on a code selection to ask Navie about selected code.",
             "media": {
               "image": "images/walkthrough/light-bulb.svg",
               "altText": "light bulb menu showing Ask Navie option"
@@ -451,8 +461,8 @@
           },
           {
             "id": "create-data",
-            "title": "Record code execution traces",
-            "description": "Creating AppMap data for the areas of your application that interest you helps Navie answer very specific questions.\n[Create AppMap Data](command:appmap.openInstallGuide)\n**Tip:** Use AppMap sidebar to browse the traces you recorded.",
+            "title": "Extend Navie's knowledge with AppMap data",
+            "description": "Recording AppMap trace data provides Navie with deep knowledge of code execution. Navie can see, explain, describe and diagram runtime interactions like HTTP requests and SQL queries.\n[Create AppMap Data](command:appmap.openInstallGuide)\n**Tip:** Use AppMap sidebar to browse the your AppMap trace data files.",
             "media": {
               "image": "images/walkthrough/record-appmaps.png",
               "altText": "an illustration of AppMap sidebar and an open execution diagram"
