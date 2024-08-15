@@ -1,3 +1,11 @@
+# [0.127.0](https://github.com/getappmap/vscode-appland/compare/v0.126.0...v0.127.0) (2024-08-15)
+
+
+### Features
+
+* Add walkthrough ([b2db774](https://github.com/getappmap/vscode-appland/commit/b2db774221c346551133ae75e3fad6623b3ac4a9))
+* Upgrade @appland/components to v4.32.0 ([a1f74d4](https://github.com/getappmap/vscode-appland/commit/a1f74d477c456ea643f03a5c7e21eb3d563f829e))
+
 # [0.126.0](https://github.com/getappmap/vscode-appland/compare/v0.125.0...v0.126.0) (2024-08-13)
 
 
