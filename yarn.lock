@@ -151,7 +151,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/components@npm:^4.12.0, @appland/components@npm:^4.31.0":
+"@appland/components@npm:^4.12.0":
   version: 4.31.0
   resolution: "@appland/components@npm:4.31.0"
   dependencies:
@@ -178,6 +178,36 @@ __metadata:
     vue: ^2.7.14
     vuex: ^3.6.0
   checksum: de74e7e8e2526d538319dd913eec2be7468b72038cd9a9cd29afab92655fab3d1a69bc6f9ccce0d40b19760996f8639b607ff144cda8e5634fa62b746395e29c
+  languageName: node
+  linkType: hard
+
+"@appland/components@npm:^4.32.1":
+  version: 4.32.1
+  resolution: "@appland/components@npm:4.32.1"
+  dependencies:
+    "@appland/client": ^1.12.0
+    "@appland/diagrams": ^1.7.0
+    "@appland/models": ^2.10.2
+    "@appland/rpc": ^1.12.0
+    "@appland/sequence-diagram": ^1.11.0
+    buffer: ^6.0.3
+    d3: ^7.8.4
+    d3-flame-graph: ^4.1.3
+    diff: ^5.1.0
+    dom-to-svg: ^0.12.2
+    dompurify: ^3.0.6
+    events: ^3.3.0
+    highlight.js: ^11.9.0
+    jayson: ^4.1.0
+    js-base64: ^3.7.7
+    marked: ^10.0.0
+    marked-highlight: ^2.0.7
+    mermaid: ^10.9.1
+    pako: ^2.1.0
+    sql-formatter: ^4.0.2
+    vue: ^2.7.14
+    vuex: ^3.6.0
+  checksum: f7f80339510f197d79adb19358870009d5dedbe17db00dcbfbd7c1a81d1b70dd4e8974b8a4d61ee834561451b40874e6a0ae00183af0a937038db6eb902e6f80
   languageName: node
   linkType: hard
 
@@ -230,7 +260,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/rpc@npm:^1.7.0, @appland/rpc@npm:^1.9.0":
+"@appland/rpc@npm:^1.12.0":
+  version: 1.12.0
+  resolution: "@appland/rpc@npm:1.12.0"
+  checksum: 50f3d40cafeb5d815e791f45fd0aa69f893c880259f616ff18cd1ac99e6370aba2c380f4c1a109517efeb61853fe25fc603f5a8a761228581b7fff586dfd7e9f
+  languageName: node
+  linkType: hard
+
+"@appland/rpc@npm:^1.9.0":
   version: 1.10.0
   resolution: "@appland/rpc@npm:1.10.0"
   checksum: 6a063611d27bdeb8d1b7d47462e83850044acdbc469c4ccb5669378bdeba9e5271e783f8009e8b66be818b541f1589de47d1555dfa4155245920c9e3630b81f9
@@ -3239,10 +3276,10 @@ __metadata:
   dependencies:
     "@appland/appmap": ^3.129.0
     "@appland/client": ^1.14.1
-    "@appland/components": ^4.31.0
+    "@appland/components": ^4.32.1
     "@appland/diagrams": ^1.8.0
     "@appland/models": ^2.10.2
-    "@appland/rpc": ^1.7.0
+    "@appland/rpc": ^1.12.0
     "@appland/scanner": ^1.86.0
     "@appland/sequence-diagram": ^1.12.0
     "@playwright/test": ^1.22.2
