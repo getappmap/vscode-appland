@@ -56,5 +56,8 @@ export default class SignInManager {
       this.contextKeyShowSignInWebview,
       this.shouldShowSignIn()
     );
+
+    if (!this.shouldShowSignIn())
+      vscode.commands.executeCommand('workbench.action.openWalkthrough', 'navie.walkthrough');
   }
 }

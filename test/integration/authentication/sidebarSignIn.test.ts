@@ -43,7 +43,7 @@ describe('Sidebar sign-in', () => {
     assert(!SignInManager.shouldShowSignIn());
 
     expectedArgs = ['setContext', 'appMap.showSignIn', false];
-    assert.deepStrictEqual(stubbedExecuteCommand.getCall(1).args, expectedArgs);
+    assert.deepStrictEqual(stubbedExecuteCommand.getCall(2).args, expectedArgs);
   });
 
   it('is not shown for a new user who is authenticated, but is shown when they log out', async () => {
@@ -63,7 +63,7 @@ describe('Sidebar sign-in', () => {
     assert(SignInManager.shouldShowSignIn());
 
     expectedArgs = ['setContext', 'appMap.showSignIn', true];
-    assert.deepStrictEqual(stubbedExecuteCommand.getCall(1).args, expectedArgs);
+    assert.deepStrictEqual(stubbedExecuteCommand.getCall(2).args, expectedArgs);
   });
 
   it('is not shown for an existing user who is not authenticated and then logs in', async () => {
@@ -83,7 +83,7 @@ describe('Sidebar sign-in', () => {
     assert(!SignInManager.shouldShowSignIn());
 
     expectedArgs = ['setContext', 'appMap.showSignIn', false];
-    assert.deepStrictEqual(stubbedExecuteCommand.getCall(1).args, expectedArgs);
+    assert.deepStrictEqual(stubbedExecuteCommand.getCall(2).args, expectedArgs);
   });
 
   it('is shown for a new user who is not authenticated, but is not shown once they log in', async () => {
