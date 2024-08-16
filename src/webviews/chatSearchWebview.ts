@@ -1,8 +1,5 @@
 import * as vscode from 'vscode';
 import getWebviewContent from './getWebviewContent';
-import appmapMessageHandler from './appmapMessageHandler';
-import FilterStore, { SavedFilter } from './filterStore';
-import WebviewList from './WebviewList';
 import { getApiKey } from '../authentication';
 import ExtensionSettings from '../configuration/extensionSettings';
 import { CodeSelection } from '../commands/quickSearch';
@@ -14,6 +11,8 @@ import CommandRegistry from '../commands/commandRegistry';
 import ChatSearchDataService, { LatestAppMap } from '../services/chatSearchDataService';
 import { parseLocation } from '../util';
 import { proxySettings } from '../lib/proxySettings';
+import viewSource from './viewSource';
+import { Telemetry } from '../telemetry';
 
 type ExplainOpts = {
   workspace?: vscode.WorkspaceFolder;
@@ -35,25 +34,14 @@ export type ExplainResponse = {
 };
 
 export default class ChatSearchWebview {
-  private webviewList = new WebviewList();
-  private filterStore: FilterStore;
-
   private constructor(
     private readonly context: vscode.ExtensionContext,
     private readonly extensionState: ExtensionState,
     private readonly dataService: ChatSearchDataService
   ) {
-    this.filterStore = new FilterStore(context);
-    this.filterStore.onDidChangeFilters((event) => {
-      this.updateFilters(event.savedFilters);
-    });
     context.subscriptions.push(
       CommandRegistry.registerCommand('appmap.explain.impl', this.explain.bind(this))
     );
-  }
-
-  get currentWebview(): vscode.Webview | undefined {
-    return this.webviewList.currentWebview;
   }
 
   async explain({
@@ -86,7 +74,6 @@ export default class ChatSearchWebview {
         retainContextWhenHidden: true,
       }
     );
-    this.webviewList.enroll(panel);
 
     panel.webview.html = getWebviewContent(
       panel.webview,
@@ -112,16 +99,23 @@ export default class ChatSearchWebview {
     const mostRecentAppMaps = this.dataService.latestAppMaps();
     codeSelection ||= await this.dataService.codeSelection();
 
-    panel.webview.onDidReceiveMessage(appmapMessageHandler(this.filterStore, workspace));
     panel.webview.onDidReceiveMessage(async (message) => {
       switch (message.command) {
+        case 'viewSource':
+          viewSource(message.text, workspace);
+          break;
+        case 'reportError':
+          Telemetry.reportWebviewError(message.error);
+          break;
+        case 'appmapOpenUrl':
+          vscode.env.openExternal(message.url);
+          break;
         case 'chat-search-ready':
           panel.webview.postMessage({
             type: 'initChatSearch',
             appmapRpcPort,
             codeSelection,
             proxySettings: proxySettings(),
-            savedFilters: this.filterStore.getSavedFilters(),
             appmapYmlPresent: true, // Note that at the moment this is always true
             mostRecentAppMaps,
             apiUrl: ExtensionSettings.apiUrl,
@@ -197,15 +191,6 @@ export default class ChatSearchWebview {
       status: ExplainResponseStatus.Success,
       codeSelection,
     };
-  }
-
-  updateFilters(savedFilters: SavedFilter[]) {
-    this.webviewList.webviews.forEach((webview) => {
-      webview.postMessage({
-        type: 'updateSavedFilters',
-        savedFilters,
-      });
-    });
   }
 
   public static register(
