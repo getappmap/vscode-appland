@@ -81,6 +81,29 @@ export default class RpcProcessWatcher extends ProcessWatcher {
     if (portStr) consumeRpcPort(portStr);
   }
 
+  async start(): Promise<void> {
+    const disposables: vscode.Disposable[] = [];
+    try {
+      await vscode.window.withProgress(
+        {
+          location: vscode.ProgressLocation.Window,
+          cancellable: false,
+          title: 'Starting Navie…',
+        },
+        () =>
+          new Promise<void>((resolve, reject) => {
+            disposables.push(this.onRpcPortChange(() => resolve()));
+            disposables.push(this.onAbort(reject));
+            super.start();
+          })
+      );
+    } catch (e) {
+      vscode.window.showErrorMessage(`Navie failed to start: ${e}`);
+    } finally {
+      disposables.forEach((d) => d.dispose());
+    }
+  }
+
   dispose(): void {
     this._onRpcPortChange.dispose();
     super.dispose();
