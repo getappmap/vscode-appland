@@ -9,7 +9,8 @@
       "name": "Run extension",
       "type": "extensionHost",
       "request": "launch",
-      "args": ["--extensionDevelopmentPath=${workspaceFolder}"],
+      "args": ["--extensionDevelopmentPath=${workspaceFolder}", "--disable-extensions"],
+
       "env": {
         "APPMAP_TELEMETRY_DEBUG": "1",
         "APPMAP_DEV_EXTENSION": "1"
