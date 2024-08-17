@@ -12,7 +12,7 @@ export default class RpcProcessWatcher extends ProcessWatcher {
   private stdoutBuffer = '';
 
   constructor(context: vscode.ExtensionContext, modulePath?: string, env?: NodeJS.ProcessEnv) {
-    const args = ['rpc', '--port', '0'];
+    const args = makeArgs();
     const extraOptions = ExtensionSettings.appMapIndexOptions;
     if (extraOptions) args.push(...extraOptions.split(' '));
     if (ExtensionSettings.appMapCommandLineVerbose) args.push('--verbose');
@@ -72,6 +72,7 @@ export default class RpcProcessWatcher extends ProcessWatcher {
         );
       } else {
         this.rpcPort = parseInt(portStr);
+        this.options.args = makeArgs(this.rpcPort);
       }
       this._onRpcPortChange.fire(this.rpcPort);
     };
@@ -84,4 +85,8 @@ export default class RpcProcessWatcher extends ProcessWatcher {
     this._onRpcPortChange.dispose();
     super.dispose();
   }
+}
+
+function makeArgs(port = 0) {
+  return ['rpc', '--port', port.toFixed()];
 }
