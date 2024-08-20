@@ -53,6 +53,9 @@ export default function mountChatSearchView() {
           this.$refs.ui.$refs.vchat.addUserMessage(initialData.suggestion.label);
           this.$refs.ui.sendMessage(initialData.suggestion.prompt);
         }
+        if (initialData.threadId) {
+          this.$refs.ui.loadThread(initialData.threadId);
+        }
       },
     });
 
@@ -115,7 +118,11 @@ export default function mountChatSearchView() {
     });
 
     app.$on('chat-search-loaded', () => {
-      vscode.postMessage({ command: 'chat-search-loaded'});
+      vscode.postMessage({ command: 'chat-search-loaded' });
+    });
+
+    app.$on('thread-id', (threadId) => {
+      vscode.setState({ threadId });
     });
   });
 

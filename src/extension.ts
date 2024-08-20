@@ -279,7 +279,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     generateOpenApi(context);
     findByName(context, appmapCollectionFile);
 
-    appmapState(context, editorProvider, chatSearchWebview);
+    appmapState(context, editorProvider);
     addToContext(context, chatSearchWebview);
     quickSearch(context);
     resetUsageState(context, extensionState);
