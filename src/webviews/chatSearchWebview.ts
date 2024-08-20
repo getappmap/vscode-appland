@@ -11,7 +11,6 @@ import CommandRegistry from '../commands/commandRegistry';
 import ChatSearchDataService, { LatestAppMap } from '../services/chatSearchDataService';
 import { parseLocation } from '../util';
 import { proxySettings } from '../lib/proxySettings';
-import viewSource from './viewSource';
 import { Telemetry } from '../telemetry';
 
 type ExplainOpts = {
@@ -33,6 +32,10 @@ export type ExplainResponse = {
   codeSelection?: CodeSelection;
 };
 
+export type NavieViewState = {
+  threadId: string | undefined;
+};
+
 export default class ChatSearchWebview {
   private constructor(
     private readonly context: vscode.ExtensionContext,
@@ -40,17 +43,48 @@ export default class ChatSearchWebview {
     private readonly dataService: ChatSearchDataService
   ) {
     context.subscriptions.push(
-      CommandRegistry.registerCommand('appmap.explain.impl', this.explain.bind(this))
+      CommandRegistry.registerCommand('appmap.explain.impl', this.explain.bind(this)),
+      vscode.window.registerWebviewPanelSerializer('appmap.navie', {
+        deserializeWebviewPanel: this.deserializeWebviewPanel.bind(this),
+      }),
+      vscode.window.registerWebviewViewProvider('appmap.navie', {
+        resolveWebviewView: this.resolveWebviewView.bind(this),
+      })
     );
   }
 
-  async explain({
-    workspace,
-    codeSelection,
-    targetAppmap,
-    targetAppmapFsPath,
-    suggestion,
-  }: ExplainOpts = {}): Promise<ExplainResponse> {
+  async deserializeWebviewPanel(webviewPanel: vscode.WebviewPanel, state: unknown) {
+    return this.configureWebviewPanel(
+      webviewPanel,
+      undefined,
+      state ? (state as NavieViewState) : undefined
+    );
+  }
+
+  async resolveWebviewView(
+    webviewView: vscode.WebviewView,
+    context: vscode.WebviewViewResolveContext
+    // token: vscode.CancellationToken
+  ): Promise<void> {
+    let state: NavieViewState | undefined;
+    if (context.state) state = context.state as NavieViewState;
+
+    await this.configureWebviewView(webviewView.webview, undefined, state);
+  }
+
+  async configureWebviewPanel(
+    panel: vscode.WebviewPanel,
+    codeSelection?: CodeSelection,
+    state?: NavieViewState
+  ): Promise<void> {
+    await this.configureWebviewView(panel.webview, codeSelection, state);
+  }
+
+  async configureWebviewView(
+    webview: vscode.Webview,
+    codeSelection?: CodeSelection,
+    state?: NavieViewState
+  ) {
     const appmapRpcPort = this.dataService.appmapRpcPort;
     if (!appmapRpcPort) {
       const optionViewLog = 'View output log';
@@ -65,31 +99,13 @@ export default class ChatSearchWebview {
       return { status: ExplainResponseStatus.NoAppMapRpcPort };
     }
 
-    const panel = vscode.window.createWebviewPanel(
-      'chatSearch',
-      'AppMap AI: Explain',
-      vscode.ViewColumn.One,
-      {
-        enableScripts: true,
-        retainContextWhenHidden: true,
-      }
-    );
-
-    panel.webview.html = getWebviewContent(
-      panel.webview,
-      this.context,
-      'AppMap AI: Explain',
-      'chat-search',
-      { rpcPort: appmapRpcPort }
-    );
-
-    vscode.workspace.workspaceFolders?.forEach((workspaceFolder) => {
-      this.extensionState.setWorkspaceOpenedNavie(workspaceFolder, true);
+    webview.html = getWebviewContent(webview, this.context, 'AppMap AI: Explain', 'chat-search', {
+      rpcPort: appmapRpcPort,
     });
 
     this.context.subscriptions.push(
       this.dataService.onAppMapsUpdated((appmaps: LatestAppMap[]) => {
-        panel.webview.postMessage({
+        webview.postMessage({
           type: 'update',
           mostRecentAppMaps: appmaps,
         });
@@ -97,12 +113,12 @@ export default class ChatSearchWebview {
     );
 
     const mostRecentAppMaps = this.dataService.latestAppMaps();
-    codeSelection ||= await this.dataService.codeSelection();
 
-    panel.webview.onDidReceiveMessage(async (message) => {
+    webview.onDidReceiveMessage(async (message) => {
       switch (message.command) {
         case 'viewSource':
-          viewSource(message.text, workspace);
+          // TODO: Restore this
+          // viewSource(message.text, workspace);
           break;
         case 'reportError':
           Telemetry.reportWebviewError(message.error);
@@ -111,7 +127,7 @@ export default class ChatSearchWebview {
           vscode.env.openExternal(message.url);
           break;
         case 'chat-search-ready':
-          panel.webview.postMessage({
+          webview.postMessage({
             type: 'initChatSearch',
             appmapRpcPort,
             codeSelection,
@@ -120,9 +136,12 @@ export default class ChatSearchWebview {
             mostRecentAppMaps,
             apiUrl: ExtensionSettings.apiUrl,
             apiKey: await getApiKey(false),
+            threadId: state?.threadId,
+            /* TODO: Restore these
             targetAppmap,
             targetAppmapFsPath,
             suggestion,
+            */
           });
           break;
         case 'open-new-chat':
@@ -185,6 +204,32 @@ export default class ChatSearchWebview {
           break;
         }
       }
+    });
+  }
+
+  async explain({
+    workspace,
+    codeSelection,
+    targetAppmap,
+    targetAppmapFsPath,
+    suggestion,
+  }: ExplainOpts = {}): Promise<ExplainResponse> {
+    const panel = vscode.window.createWebviewPanel(
+      'appmap.navie',
+      'AppMap AI: Explain',
+      vscode.ViewColumn.One,
+      {
+        enableScripts: true,
+        retainContextWhenHidden: true,
+      }
+    );
+
+    codeSelection ||= await this.dataService.codeSelection();
+
+    await this.configureWebviewPanel(panel, codeSelection);
+
+    vscode.workspace.workspaceFolders?.forEach((workspaceFolder) => {
+      this.extensionState.setWorkspaceOpenedNavie(workspaceFolder, true);
     });
 
     return {

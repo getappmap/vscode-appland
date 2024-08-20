@@ -65,14 +65,14 @@ __metadata:
   linkType: hard
 
 "@appland/appmap@npm:^3.129.0":
-  version: 3.151.0
-  resolution: "@appland/appmap@npm:3.151.0"
+  version: 3.159.0
+  resolution: "@appland/appmap@npm:3.159.0"
   dependencies:
     "@appland/client": ^1.17.0
     "@appland/components": ^4.12.0
     "@appland/diagrams": ^1.8.0
     "@appland/models": ^2.10.2
-    "@appland/navie": ^1.17.0
+    "@appland/navie": ^1.24.0
     "@appland/openapi": ^1.8.0
     "@appland/rpc": ^1.9.0
     "@appland/scanner": ^1.86.0
@@ -133,33 +133,32 @@ __metadata:
       optional: true
   bin:
     appmap: built/cli.js
-  checksum: 89d1bd839e89a0871211cb922948a8875d16d147ee5d2513417941effa8941eff01257dd40fa2eb5b5b23def9266b4de71e63adaa61bd7654ecfa72b4bb0a433
+  checksum: 8cde9f456ae60bb1d488c232d1932530311c5affe98498a2b7f1558df462bf3288a7f1d4048a15e087c18e6f2c611413deba33dd3a4cfd62e1a961fd331abba0
   languageName: node
   linkType: hard
 
-"@appland/client@npm:^1.12.0, @appland/client@npm:^1.14.1, @appland/client@npm:^1.17.0":
-  version: 1.18.1
-  resolution: "@appland/client@npm:1.18.1"
+"@appland/client@portal:/Users/kgilpin/source/appland/appmap-js/packages/client::locator=appmap%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@appland/client@portal:/Users/kgilpin/source/appland/appmap-js/packages/client::locator=appmap%40workspace%3A."
   dependencies:
-    "@appland/models": ^2.10.0
+    "@appland/models": "workspace:^2.10.0"
     "@types/form-data": ^2.5.0
     form-data: ^4.0.0
     js-yaml: ^4.1.0
     rxjs: ^7.8.1
     socket.io-client: ^4.7.2
-  checksum: e35e7b4554b2d7c06d5b50b8df733708b38768ba3c46342d35ac7fcb1ef51117827c6de60d75ac92a8c34f851911d46798a7c0e0ff3fd6ea09f74267da1cce7c
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@appland/components@npm:^4.12.0":
-  version: 4.31.0
-  resolution: "@appland/components@npm:4.31.0"
+"@appland/components@portal:/Users/kgilpin/source/appland/appmap-js/packages/components::locator=appmap%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@appland/components@portal:/Users/kgilpin/source/appland/appmap-js/packages/components::locator=appmap%40workspace%3A."
   dependencies:
-    "@appland/client": ^1.12.0
-    "@appland/diagrams": ^1.7.0
-    "@appland/models": ^2.10.2
-    "@appland/rpc": ^1.9.0
-    "@appland/sequence-diagram": ^1.11.0
+    "@appland/client": "workspace:^1.12.0"
+    "@appland/diagrams": "workspace:^1.7.0"
+    "@appland/models": "workspace:^2.10.2"
+    "@appland/rpc": "workspace:^1.12.0"
+    "@appland/sequence-diagram": "workspace:^1.11.0"
     buffer: ^6.0.3
     d3: ^7.8.4
     d3-flame-graph: ^4.1.3
@@ -177,106 +176,65 @@ __metadata:
     sql-formatter: ^4.0.2
     vue: ^2.7.14
     vuex: ^3.6.0
-  checksum: de74e7e8e2526d538319dd913eec2be7468b72038cd9a9cd29afab92655fab3d1a69bc6f9ccce0d40b19760996f8639b607ff144cda8e5634fa62b746395e29c
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@appland/components@npm:^4.32.1":
-  version: 4.32.1
-  resolution: "@appland/components@npm:4.32.1"
+"@appland/diagrams@portal:/Users/kgilpin/source/appland/appmap-js/packages/diagrams::locator=appmap%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@appland/diagrams@portal:/Users/kgilpin/source/appland/appmap-js/packages/diagrams::locator=appmap%40workspace%3A."
   dependencies:
-    "@appland/client": ^1.12.0
-    "@appland/diagrams": ^1.7.0
-    "@appland/models": ^2.10.2
-    "@appland/rpc": ^1.12.0
-    "@appland/sequence-diagram": ^1.11.0
-    buffer: ^6.0.3
-    d3: ^7.8.4
-    d3-flame-graph: ^4.1.3
-    diff: ^5.1.0
-    dom-to-svg: ^0.12.2
-    dompurify: ^3.0.6
-    events: ^3.3.0
-    highlight.js: ^11.9.0
-    jayson: ^4.1.0
-    js-base64: ^3.7.7
-    marked: ^10.0.0
-    marked-highlight: ^2.0.7
-    mermaid: ^10.9.1
-    pako: ^2.1.0
-    sql-formatter: ^4.0.2
-    vue: ^2.7.14
-    vuex: ^3.6.0
-  checksum: f7f80339510f197d79adb19358870009d5dedbe17db00dcbfbd7c1a81d1b70dd4e8974b8a4d61ee834561451b40874e6a0ae00183af0a937038db6eb902e6f80
-  languageName: node
-  linkType: hard
-
-"@appland/diagrams@npm:^1.7.0, @appland/diagrams@npm:^1.8.0":
-  version: 1.8.0
-  resolution: "@appland/diagrams@npm:1.8.0"
-  dependencies:
-    "@appland/models": ^2.10.0
+    "@appland/models": "workspace:^2.10.0"
     d3-interpolate: ^3.0.1
     d3-selection: ^3.0.0
     d3-shape: ^3.2.0
     d3-zoom: ^3.0.0
     dagre: ^0.8.5
     deepmerge: ^4.2.2
-  checksum: 9c55f09f015d85ef295d4090ccb030f437ec774f8ae5d4f5cb91d9433ef61235118226979d0d249904b9f1bd10516dd88256cdeca612a325dcac2d92ebfb2a83
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@appland/models@npm:^2.10.0, @appland/models@npm:^2.10.2":
-  version: 2.10.3
-  resolution: "@appland/models@npm:2.10.3"
+"@appland/models@portal:/Users/kgilpin/source/appland/appmap-js/packages/models::locator=appmap%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@appland/models@portal:/Users/kgilpin/source/appland/appmap-js/packages/models::locator=appmap%40workspace%3A."
   dependencies:
     "@appland/sql-parser": ^1.5.0
     crypto-js: ^4.0.0
-  checksum: a0fce9fcb99a0147e3157c38a7a0a506ae156fe9d7f0e255ccfb268d5b53b98138a7c37e321878bbff0372366e97ac2d75c50bc2b0078ade006ac50344bd7c42
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@appland/navie@npm:^1.17.0":
-  version: 1.17.0
-  resolution: "@appland/navie@npm:1.17.0"
+"@appland/navie@npm:^1.24.0":
+  version: 1.24.0
+  resolution: "@appland/navie@npm:1.24.0"
   dependencies:
     "@langchain/core": ^0.1.32
     "@langchain/openai": ^0.0.15
     fast-xml-parser: ^4.4.0
     js-yaml: ^4.1.0
     langchain: ^0.1.25
+    mermaid: ^9
     openai: ^4.28.0
-  checksum: 0aa20accb376b86547c83c26ccc959a22fff12056289bc036b6604c1e7bba04135f75ff44645366902bf5dd9e6262966f423b850c5bc0d7f56931336ba5d8cfe
+  checksum: 26da4d6d5e1c84c21d1b895045fe6541ab579fdc8d99f7564e604bd31deec1d925fca064d4e0f364d684aaadf23e568dd454cbc5c8d3ccbed686938e99150a88
   languageName: node
   linkType: hard
 
-"@appland/openapi@npm:^1.7.0, @appland/openapi@npm:^1.8.0":
-  version: 1.8.0
-  resolution: "@appland/openapi@npm:1.8.0"
+"@appland/openapi@portal:/Users/kgilpin/source/appland/appmap-js/packages/openapi::locator=appmap%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@appland/openapi@portal:/Users/kgilpin/source/appland/appmap-js/packages/openapi::locator=appmap%40workspace%3A."
   dependencies:
-    "@appland/models": ^2.10.0
+    "@appland/models": "workspace:^2.10.0"
     js-yaml: ^4.1.0
-  checksum: 74caad0e582b350e02de1ec6002307f7bc030e9aa0c198ba73e97ed8fa95fa104d997bb216afbaa6d08bba6a0c6388c1ecbfe6291d953ac448822ed2e16ef1ca
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@appland/rpc@npm:^1.12.0":
-  version: 1.12.0
-  resolution: "@appland/rpc@npm:1.12.0"
-  checksum: 50f3d40cafeb5d815e791f45fd0aa69f893c880259f616ff18cd1ac99e6370aba2c380f4c1a109517efeb61853fe25fc603f5a8a761228581b7fff586dfd7e9f
+"@appland/rpc@portal:/Users/kgilpin/source/appland/appmap-js/packages/rpc::locator=appmap%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@appland/rpc@portal:/Users/kgilpin/source/appland/appmap-js/packages/rpc::locator=appmap%40workspace%3A."
   languageName: node
-  linkType: hard
-
-"@appland/rpc@npm:^1.9.0":
-  version: 1.10.0
-  resolution: "@appland/rpc@npm:1.10.0"
-  checksum: 6a063611d27bdeb8d1b7d47462e83850044acdbc469c4ccb5669378bdeba9e5271e783f8009e8b66be818b541f1589de47d1555dfa4155245920c9e3630b81f9
-  languageName: node
-  linkType: hard
+  linkType: soft
 
 "@appland/scanner@npm:^1.86.0":
-  version: 1.87.0
-  resolution: "@appland/scanner@npm:1.87.0"
+  version: 1.88.0
+  resolution: "@appland/scanner@npm:1.88.0"
   dependencies:
     "@appland/client": ^1.12.0
     "@appland/models": ^2.10.0
@@ -307,23 +265,22 @@ __metadata:
     yargs: ^17.1.1
   bin:
     scanner: built/cli.js
-  checksum: 41c138d2a3e70e7e89c7168110d9b36cecb3e251f3eeb717b50f440be37627f27e3a4d328dbfef527d32a5ed75c3c976f99cbcd0ffd2fc702be3b20b9ca17ec8
+  checksum: 689139a11a561bb3c9614130cc9bb075d4b6fc7978a214b3a8984d710dc835ac184c31ad32535eebd8cba34ad7e08fa3227fd2f65afa9db6ea6b6e0fa799f226
   languageName: node
   linkType: hard
 
-"@appland/sequence-diagram@npm:^1.11.0, @appland/sequence-diagram@npm:^1.12.0":
-  version: 1.12.0
-  resolution: "@appland/sequence-diagram@npm:1.12.0"
+"@appland/sequence-diagram@portal:/Users/kgilpin/source/appland/appmap-js/packages/sequence-diagram::locator=appmap%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@appland/sequence-diagram@portal:/Users/kgilpin/source/appland/appmap-js/packages/sequence-diagram::locator=appmap%40workspace%3A."
   dependencies:
-    "@appland/models": ^2.10.0
-    "@appland/openapi": ^1.7.0
+    "@appland/models": "workspace:^2.10.0"
+    "@appland/openapi": "workspace:^1.7.0"
     "@datastructures-js/priority-queue": ^6.1.3
     crypto-js: ^4.1.1
     diff: ^5.1.0
-    lru-cache: 6.0.0
-  checksum: 7eaef796a6f55963247bcf6b00348d3f92d6e62db647a5737c6c6552bbc01eb59060c9be542612e6fcef5c955b43f2bf6557b07d219c96ac01425b032d196fec
+    lru-cache: 10.2.2
   languageName: node
-  linkType: hard
+  linkType: soft
 
 "@appland/sql-parser@npm:^1.5.0":
   version: 1.5.1
@@ -503,7 +460,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@braintree/sanitize-url@npm:^6.0.1":
+"@braintree/sanitize-url@npm:^6.0.0, @braintree/sanitize-url@npm:^6.0.1":
   version: 6.0.4
   resolution: "@braintree/sanitize-url@npm:6.0.4"
   checksum: f5ec6048973722ea1c46ae555d2e9eb848d7fa258994f8ea7d6db9514ee754ea3ef344ef71b3696d486776bcb839f3124e79f67c6b5b2814ed2da220b340627c
@@ -4921,6 +4878,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"cose-base@npm:^2.2.0":
+  version: 2.2.0
+  resolution: "cose-base@npm:2.2.0"
+  dependencies:
+    layout-base: ^2.0.0
+  checksum: 2e694f340bf216c71fc126d237578a4168e138720011d0b48c88bf9bfc7fd45f912eff2c603ef3d1307d6e3ce6f465ed382285a764a3a6620db590c5457d2557
+  languageName: node
+  linkType: hard
+
 "cosmiconfig@npm:8.1.3":
   version: 8.1.3
   resolution: "cosmiconfig@npm:8.1.3"
@@ -5121,6 +5087,24 @@ __metadata:
   peerDependencies:
     cytoscape: ^3.2.0
   checksum: bea6aa139e21bf4135b01b99f8778eed061e074d1a1689771597e8164a999d66f4075d46be584b0a88a5447f9321f38c90c8821df6a9322faaf5afebf4848d97
+  languageName: node
+  linkType: hard
+
+"cytoscape-fcose@npm:^2.1.0":
+  version: 2.2.0
+  resolution: "cytoscape-fcose@npm:2.2.0"
+  dependencies:
+    cose-base: ^2.2.0
+  peerDependencies:
+    cytoscape: ^3.2.0
+  checksum: 94ffe6f131f9c08c2a0a7a6ce1c6c5e523a395bf8d84eba6d4a5f85e23f33788ea3ff807540861a5f78a6914a27729e06a7e6f66784f4f28ea1c030acf500121
+  languageName: node
+  linkType: hard
+
+"cytoscape@npm:^3.23.0":
+  version: 3.30.2
+  resolution: "cytoscape@npm:3.30.2"
+  checksum: 45ec8f256b6bb59d505bf92f937d86d2547c62cd45e02e7e873320f321d39bb57261aad0dad06d0903f2af50decb367aa0a05193043da5332dc6feb37dce888c
   languageName: node
   linkType: hard
 
@@ -5545,6 +5529,16 @@ __metadata:
     d3: ^7.8.2
     lodash-es: ^4.17.21
   checksum: 25194e80dfad48db0dc2e0a273a7c9fcbfdc4cf993b219eaa1e0e0ce0cbb8c63be42fa2aa0c5f9bf9b324c34b8b2e300bb2a1606d5ae35c2de00f9c4ac317d8e
+  languageName: node
+  linkType: hard
+
+"dagre-d3-es@npm:7.0.9":
+  version: 7.0.9
+  resolution: "dagre-d3-es@npm:7.0.9"
+  dependencies:
+    d3: ^7.8.2
+    lodash-es: ^4.17.21
+  checksum: 5f24ad9558e84066e70cfa6979320d93079979ac8b0a3b033e5330742aeeba74e205f66794ab6e0a82354b061a4e29c10a291590d7b2cf82b5780fab5443f5ba
   languageName: node
   linkType: hard
 
@@ -6107,6 +6101,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dompurify@npm:2.4.3":
+  version: 2.4.3
+  resolution: "dompurify@npm:2.4.3"
+  checksum: b440981f2a38cada2085759cc3d1e2f94571afc34343d011a8a6aa1ad91ae6abf651adbfa4994b0e2283f0ce81f7891cdb04b67d0b234c8d190cb70e9691f026
+  languageName: node
+  linkType: hard
+
 "dompurify@npm:^3.0.5":
   version: 3.1.6
   resolution: "dompurify@npm:3.1.6"
@@ -6193,6 +6194,13 @@ __metadata:
   version: 1.1.1
   resolution: "ee-first@npm:1.1.1"
   checksum: 1b4cac778d64ce3b582a7e26b218afe07e207a0f9bfe13cc7395a6d307849cfe361e65033c3251e00c27dd060cab43014c2d6b2647676135e18b77d2d05b3f4f
+  languageName: node
+  linkType: hard
+
+"elkjs@npm:^0.8.2":
+  version: 0.8.2
+  resolution: "elkjs@npm:0.8.2"
+  checksum: ed615c485fa4ac1e858af509df24fdc9f61f2c6576df5f79f6a31c733fda69f235f53cd36af037aa9d2b8a935cb4f823fbd89d784b67f6e51be5100306ea1b39
   languageName: node
   linkType: hard
 
@@ -9312,6 +9320,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"layout-base@npm:^2.0.0":
+  version: 2.0.1
+  resolution: "layout-base@npm:2.0.1"
+  checksum: ef93baf044f67c3680f4f3a6d628bf4c7faba0f70f3e0abb16e4811bed087045208560347ca749e123d169cbf872505ad84e11fb21b0be925997227e042c7f43
+  languageName: node
+  linkType: hard
+
 "level-blobs@npm:^0.1.7":
   version: 0.1.7
   resolution: "level-blobs@npm:0.1.7"
@@ -9813,19 +9828,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lru-cache@npm:6.0.0, lru-cache@npm:^6.0.0":
+"lru-cache@npm:10.2.2, lru-cache@npm:^10.2.2":
+  version: 10.2.2
+  resolution: "lru-cache@npm:10.2.2"
+  checksum: 98e8fc93691c546f719a76103ef2bee5a3ac823955c755a47641ec41f8c7fafa1baeaba466937cc1cbfa9cfd47e03536d10e2db3158a64ad91ff3a58a32c893e
+  languageName: node
+  linkType: hard
+
+"lru-cache@npm:^6.0.0":
   version: 6.0.0
   resolution: "lru-cache@npm:6.0.0"
   dependencies:
     yallist: ^4.0.0
   checksum: f97f499f898f23e4585742138a22f22526254fdba6d75d41a1c2526b3b6cc5747ef59c5612ba7375f42aca4f8461950e925ba08c991ead0651b4918b7c978297
-  languageName: node
-  linkType: hard
-
-"lru-cache@npm:^10.2.2":
-  version: 10.2.2
-  resolution: "lru-cache@npm:10.2.2"
-  checksum: 98e8fc93691c546f719a76103ef2bee5a3ac823955c755a47641ec41f8c7fafa1baeaba466937cc1cbfa9cfd47e03536d10e2db3158a64ad91ff3a58a32c893e
   languageName: node
   linkType: hard
 
@@ -10115,6 +10130,30 @@ __metadata:
     uuid: ^9.0.0
     web-worker: ^1.2.0
   checksum: ec4f463011205ab031fe27ad95730daf815097be9f161866c9c08ac291118dee99a0e841f6e39e7b480c12287a923b71914931eab8beb048bfd991d9957f11ee
+  languageName: node
+  linkType: hard
+
+"mermaid@npm:^9":
+  version: 9.4.3
+  resolution: "mermaid@npm:9.4.3"
+  dependencies:
+    "@braintree/sanitize-url": ^6.0.0
+    cytoscape: ^3.23.0
+    cytoscape-cose-bilkent: ^4.1.0
+    cytoscape-fcose: ^2.1.0
+    d3: ^7.4.0
+    dagre-d3-es: 7.0.9
+    dayjs: ^1.11.7
+    dompurify: 2.4.3
+    elkjs: ^0.8.2
+    khroma: ^2.0.0
+    lodash-es: ^4.17.21
+    non-layered-tidy-tree-layout: ^2.0.2
+    stylis: ^4.1.2
+    ts-dedent: ^2.2.0
+    uuid: ^9.0.0
+    web-worker: ^1.2.0
+  checksum: 9e29177f289cc268ea4a2ca7a45ec0ca06f678007eae15a7cd54c682148a71367e861d2c9c0afa9f7474da154d9920524e59722186820e9bc0d79989305a7064
   languageName: node
   linkType: hard
 
@@ -14048,7 +14087,7 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"stylis@npm:^4.1.3":
+"stylis@npm:^4.1.2, stylis@npm:^4.1.3":
   version: 4.3.2
   resolution: "stylis@npm:4.3.2"
   checksum: 0faa8a97ff38369f47354376cd9f0def9bf12846da54c28c5987f64aaf67dcb6f00dce88a8632013bfb823b2c4d1d62a44f4ac20363a3505a7ab4e21b70179fc

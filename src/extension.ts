@@ -267,7 +267,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     generateOpenApi(context);
     findByName(context, appmapCollectionFile);
 
-    appmapState(context, editorProvider, chatSearchWebview);
+    appmapState(context, editorProvider);
     quickSearch(context);
     resetUsageState(context, extensionState);
     downloadLatestJavaJar(context);
