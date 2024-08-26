@@ -210,6 +210,10 @@
         "title": "AppMap: Ask Navie AI"
       },
       {
+        "command": "appmap.rpc.restart",
+        "title": "AppMap: Restart Navie"
+      },
+      {
         "command": "appmap.login",
         "title": "AppMap: Login"
       },

@@ -137,6 +137,10 @@ export default class RpcProcessService implements Disposable {
     this._onRpcPortChange.fire(port);
   }
 
+  public async restartServer(): Promise<void> {
+    return this.processWatcher.restart();
+  }
+
   protected waitForStartup(): Promise<void> {
     if (this.processWatcher.running) return Promise.resolve();
 

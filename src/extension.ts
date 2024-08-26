@@ -242,6 +242,12 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       );
 
       context.subscriptions.push(new EnvironmentVariableService(rpcService));
+      context.subscriptions.push(
+        vscode.commands.registerCommand('appmap.rpc.restart', async () => {
+          await rpcService.restartServer();
+          vscode.window.showInformationMessage('Navie restarted successfully.');
+        })
+      );
 
       const webview = ChatSearchWebview.register(
         context,
