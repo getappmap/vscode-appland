@@ -143,7 +143,7 @@ export default class ChatCompletion implements Disposable {
       res.on('close', () => cancellation.cancel());
       result = await model.sendRequest(toVSCodeMessages(request.messages), {}, cancellation.token);
     } catch (e) {
-      res.writeHead(500);
+      res.writeHead(422);
       res.end(isNativeError(e) && e.message);
       warn(`Error processing request: ${e}`);
       return;
@@ -164,14 +164,21 @@ async function sendChatCompletionResponse(
   model: LanguageModelChat,
   result: LanguageModelChatResponse
 ) {
-  res.writeHead(200, { 'Content-Type': 'application/json' });
-  const compl = prepareChatCompletionChunk(model);
-  compl.object = 'chat.completion';
-  let content = '';
-  for await (const c of result.text) content += c;
-  compl.choices[0].delta.content = content;
-  compl.choices[0].delta.finish_reason = 'stop';
-  res.end(JSON.stringify(compl));
+  try {
+    const compl = prepareChatCompletionChunk(model);
+    compl.object = 'chat.completion';
+    let content = '';
+    for await (const c of result.text) content += c;
+    compl.choices[0].delta.content = content;
+    compl.choices[0].delta.finish_reason = 'stop';
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(compl));
+  } catch (e) {
+    warn(`Error streaming response: ${e}`);
+    if (isNativeError(e)) warn(e.stack);
+    res.writeHead(422);
+    res.end(isNativeError(e) && e.message);
+  }
 }
 
 async function streamChatCompletion(
@@ -179,18 +186,26 @@ async function streamChatCompletion(
   model: LanguageModelChat,
   result: LanguageModelChatResponse
 ) {
-  res.writeHead(200, { 'Content-Type': 'text/event-stream' });
-  const chunk = prepareChatCompletionChunk(model);
-  res.write(`data: ${JSON.stringify(chunk)}\n\n`);
-  for await (const content of result.text) {
-    chunk.choices[0].delta = { content };
+  try {
+    const chunk = prepareChatCompletionChunk(model);
+    for await (const content of result.text) {
+      if (!res.headersSent) res.writeHead(200, { 'Content-Type': 'text/event-stream' });
+      chunk.choices[0].delta = { content };
+      res.write(`data: ${JSON.stringify(chunk)}\n\n`);
+      debug(`Sending chunk: ${content}`);
+    }
+    chunk.choices[0].delta = { finish_reason: 'stop' };
     res.write(`data: ${JSON.stringify(chunk)}\n\n`);
-    debug(`Sending chunk: ${content}`);
+    res.write('data: [DONE]\n\n');
+    res.end();
+  } catch (e) {
+    warn(`Error streaming response: ${e}`);
+    if (isNativeError(e)) warn(e.stack);
+    if (!res.headersSent) {
+      res.writeHead(422);
+      res.end(isNativeError(e) && e.message);
+    } else res.end(`data: ${JSON.stringify({ error: e })}`);
   }
-  chunk.choices[0].delta = { finish_reason: 'stop' };
-  res.write(`data: ${JSON.stringify(chunk)}\n\n`);
-  res.write('data: [DONE]\n\n');
-  res.end();
 }
 
 interface ChatCompletionChunk {
