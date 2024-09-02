@@ -89,7 +89,7 @@ describe('ChatCompletion', () => {
     expect(response.statusCode).to.equal(200);
     assert(typeof response.data === 'string');
     const result = JSON.parse(response.data);
-    expect(result.choices[0].delta.content).to.equal('Hello, you said: I am good, thank you!');
+    expect(result.choices[0].message.content).to.equal('Hello, you said: I am good, thank you!');
   });
 
   it('should stream chat completion', async () => {
