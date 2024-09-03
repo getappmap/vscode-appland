@@ -1,14 +1,12 @@
 import * as vscode from 'vscode';
 import AppMapEditorProvider from '../editor/appmapEditorProvider';
-import ChatSearchWebview from '../webviews/chatSearchWebview';
 
 export default function appmapState(
   context: vscode.ExtensionContext,
-  appmapEditorProvider: AppMapEditorProvider,
-  chatSearchWebview: Promise<ChatSearchWebview>
+  appmapEditorProvider: AppMapEditorProvider
 ) {
   const currentWebview = async (): Promise<vscode.Webview | undefined> =>
-    appmapEditorProvider.currentWebview || (await chatSearchWebview).currentWebview;
+    appmapEditorProvider.currentWebview;
 
   context.subscriptions.push(
     vscode.commands.registerCommand('appmap.getAppmapState', async () => {

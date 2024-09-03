@@ -53,6 +53,9 @@ export default function mountChatSearchView() {
           this.$refs.ui.$refs.vchat.addUserMessage(initialData.suggestion.label);
           this.$refs.ui.sendMessage(initialData.suggestion.prompt);
         }
+        if (initialData.threadId) {
+          this.$refs.ui.loadThread(initialData.threadId);
+        }
       },
     });
 
@@ -90,6 +93,10 @@ export default function mountChatSearchView() {
 
     app.$on('select-llm-option', (option) => {
       vscode.postMessage({ command: 'select-llm-option', option });
+    });
+
+    app.$on('thread-id', (threadId) => {
+      vscode.setState({ threadId });
     });
   });
 

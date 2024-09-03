@@ -1,3 +1,63 @@
+# [0.127.0](https://github.com/getappmap/vscode-appland/compare/v0.126.0...v0.127.0) (2024-08-15)
+
+
+### Features
+
+* Add walkthrough ([b2db774](https://github.com/getappmap/vscode-appland/commit/b2db774221c346551133ae75e3fad6623b3ac4a9))
+* Upgrade @appland/components to v4.32.0 ([a1f74d4](https://github.com/getappmap/vscode-appland/commit/a1f74d477c456ea643f03a5c7e21eb3d563f829e))
+
+# [0.126.0](https://github.com/getappmap/vscode-appland/compare/v0.125.0...v0.126.0) (2024-08-13)
+
+
+### Bug Fixes
+
+* "New chat" button opens a new chat ([e9b317c](https://github.com/getappmap/vscode-appland/commit/e9b317c0598a080f76f467cdf513abe6700bba8e))
+* Restore filter/search commands in AppMap data tree ([2204aa4](https://github.com/getappmap/vscode-appland/commit/2204aa4a56de7af3d9b65eaf7ad8fdfe645ece7a))
+
+
+### Features
+
+* Add a link to data recording instructions in the tree menu ([85f1228](https://github.com/getappmap/vscode-appland/commit/85f1228125f984ac6cdacf38f499107069f82def))
+* New AppMap data recording instructions ([aea7fad](https://github.com/getappmap/vscode-appland/commit/aea7fada2b3d1486cdc1b25d3e741d8fd2351c35))
+
+# [0.125.0](https://github.com/getappmap/vscode-appland/compare/v0.124.0...v0.125.0) (2024-07-30)
+
+
+### Bug Fixes
+
+* Restore some broken styles ([bf49b2f](https://github.com/getappmap/vscode-appland/commit/bf49b2fa028d826dbd410a32014abf66d4764024))
+
+
+### Features
+
+* Report presence of proxy settings ([93cf0e0](https://github.com/getappmap/vscode-appland/commit/93cf0e0157515b145ce67511ce2a7acb0621c86a))
+* Update @appland/components to v4.30.0 ([fecd588](https://github.com/getappmap/vscode-appland/commit/fecd588d75ab93a00acdd3695b4bea75da91e0d7))
+
+# [0.124.0](https://github.com/getappmap/vscode-appland/compare/v0.123.0...v0.124.0) (2024-07-22)
+
+
+### Bug Fixes
+
+* Use system node when spawning AppMap tools in development ([daea44c](https://github.com/getappmap/vscode-appland/commit/daea44c012ead01da06be531b07fa1a2f105802c))
+
+
+### Features
+
+* Update @appland/components to v4.29.0 ([170a87f](https://github.com/getappmap/vscode-appland/commit/170a87f339b02e2323282a315b513448a0637cf6))
+
+# [0.123.0](https://github.com/getappmap/vscode-appland/compare/v0.122.0...v0.123.0) (2024-07-15)
+
+
+### Bug Fixes
+
+* Normalize casing of dependencies ([98f8708](https://github.com/getappmap/vscode-appland/commit/98f8708240051259c4a234065030ead371adb08c))
+
+
+### Features
+
+* Allow usage of VSCode LLM API ([6a5ef51](https://github.com/getappmap/vscode-appland/commit/6a5ef515b40da9a43bbbf67d9d39acd57bdbb6c2))
+* Update @appland/components to v4.28.1 ([db2ed56](https://github.com/getappmap/vscode-appland/commit/db2ed565c1b07dcf67a2c5dacc260946a61f6b78))
+
 # [0.122.0](https://github.com/getappmap/vscode-appland/compare/v0.121.0...v0.122.0) (2024-07-11)
 
 

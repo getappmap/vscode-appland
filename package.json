@@ -3,7 +3,7 @@
   "name": "appmap",
   "displayName": "AppMap",
   "description": "Free AI Software Architect + Runtime Diagrams",
-  "version": "0.122.0",
+  "version": "0.127.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/getappmap/vscode-appland"
@@ -16,7 +16,8 @@
     "ruby": ">=0.60.0"
   },
   "activationEvents": [
-    "onStartupFinished"
+    "onStartupFinished",
+    "onWebviewPanel:appmap.navie"
   ],
   "icon": "images/logo.png",
   "license": "MIT",
@@ -682,5 +683,15 @@
     "publisherId": "f7f1004e-6038-49cd-a096-4e618fe53f77",
     "isPreReleaseVersion": false
   },
-  "packageManager": "yarn@3.2.3"
+  "packageManager": "yarn@3.2.3",
+  "resolutions": {
+    "@appland/client": "portal:/Users/kgilpin/source/appland/appmap-js/packages/client",
+    "@appland/components": "portal:/Users/kgilpin/source/appland/appmap-js/packages/components",
+    "@appland/diagrams": "portal:/Users/kgilpin/source/appland/appmap-js/packages/diagrams",
+    "@appland/models": "portal:/Users/kgilpin/source/appland/appmap-js/packages/models",
+    "@appland/openapi": "portal:/Users/kgilpin/source/appland/appmap-js/packages/openapi",
+    "@appland/rpc": "portal:/Users/kgilpin/source/appland/appmap-js/packages/rpc",
+    "@appland/sequence-diagram": "portal:/Users/kgilpin/source/appland/appmap-js/packages/sequence-diagram",
+    "@appland/appmap-validate": "portal:/Users/kgilpin/source/appland/appmap-js/packages/validate"
+  }
 }
