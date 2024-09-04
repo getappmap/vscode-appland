@@ -1,3 +1,20 @@
+# [0.128.0](https://github.com/getappmap/vscode-appland/compare/v0.127.0...v0.128.0) (2024-09-04)
+
+
+### Bug Fixes
+
+* Don't hang when Copilot errors on streaming ([9e0cc33](https://github.com/getappmap/vscode-appland/commit/9e0cc33e4b45b1cfbd4df9ff3c56ea0ad0043fe1))
+* Preserve the port when restarting the RPC server ([7dbff69](https://github.com/getappmap/vscode-appland/commit/7dbff69e0fb40e01ab80564b7c5b748f8cdfcb64))
+* Use correct schema for non-streamed responses in chatcompletion ([daa1e88](https://github.com/getappmap/vscode-appland/commit/daa1e884821a21a57b33ec635d9ec32252ef14ba))
+
+
+### Features
+
+* Add a command to restart Navie ([13663ca](https://github.com/getappmap/vscode-appland/commit/13663ca74399c6fefb471527bc7ddce25d83c2d1))
+* Restart the RPC server when the environment variables are changed ([3620230](https://github.com/getappmap/vscode-appland/commit/36202302569339c165b663b8bbc948602cf3df11))
+* Show a message when Navie is starting (and when it can't start) ([9d9aae4](https://github.com/getappmap/vscode-appland/commit/9d9aae4bf43f0ffa95cd1ddadd1407ec68e081f3))
+* Update @appland/components, @appland/rpc ([223784e](https://github.com/getappmap/vscode-appland/commit/223784e6d0c22e5950f0e56d1704c10c7efa1416))
+
 # [0.127.0](https://github.com/getappmap/vscode-appland/compare/v0.126.0...v0.127.0) (2024-08-15)
 
 
