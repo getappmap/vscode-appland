@@ -143,7 +143,7 @@ export default class ChatCompletion implements Disposable {
       res.on('close', () => cancellation.cancel());
       result = await model.sendRequest(toVSCodeMessages(request.messages), {}, cancellation.token);
     } catch (e) {
-      res.writeHead(500);
+      res.writeHead(422);
       res.end(isNativeError(e) && e.message);
       warn(`Error processing request: ${e}`);
       return;
@@ -164,14 +164,17 @@ async function sendChatCompletionResponse(
   model: LanguageModelChat,
   result: LanguageModelChatResponse
 ) {
-  res.writeHead(200, { 'Content-Type': 'application/json' });
-  const compl = prepareChatCompletionChunk(model);
-  compl.object = 'chat.completion';
-  let content = '';
-  for await (const c of result.text) content += c;
-  compl.choices[0].delta.content = content;
-  compl.choices[0].delta.finish_reason = 'stop';
-  res.end(JSON.stringify(compl));
+  try {
+    let content = '';
+    for await (const c of result.text) content += c;
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(makeChatCompletion(model, content)));
+  } catch (e) {
+    warn(`Error streaming response: ${e}`);
+    if (isNativeError(e)) warn(e.stack);
+    res.writeHead(422);
+    res.end(isNativeError(e) && e.message);
+  }
 }
 
 async function streamChatCompletion(
@@ -179,37 +182,95 @@ async function streamChatCompletion(
   model: LanguageModelChat,
   result: LanguageModelChatResponse
 ) {
-  res.writeHead(200, { 'Content-Type': 'text/event-stream' });
-  const chunk = prepareChatCompletionChunk(model);
-  res.write(`data: ${JSON.stringify(chunk)}\n\n`);
-  for await (const content of result.text) {
-    chunk.choices[0].delta = { content };
+  try {
+    const chunk = prepareChatCompletionChunk(model);
+    for await (const content of result.text) {
+      if (!res.headersSent) res.writeHead(200, { 'Content-Type': 'text/event-stream' });
+      else res.write(`data: ${JSON.stringify(chunk)}\n\n`);
+      chunk.choices[0].delta = { content };
+      debug(`Sending chunk: ${content}`);
+    }
+    chunk.choices[0].finish_reason = 'stop';
     res.write(`data: ${JSON.stringify(chunk)}\n\n`);
-    debug(`Sending chunk: ${content}`);
+    res.write('data: [DONE]\n\n');
+    res.end();
+  } catch (e) {
+    warn(`Error streaming response: ${e}`);
+    if (isNativeError(e)) warn(e.stack);
+    if (!res.headersSent) {
+      res.writeHead(422);
+      res.end(isNativeError(e) && e.message);
+    } else res.end(`data: ${JSON.stringify({ error: e })}`);
   }
-  chunk.choices[0].delta = { finish_reason: 'stop' };
-  res.write(`data: ${JSON.stringify(chunk)}\n\n`);
-  res.write('data: [DONE]\n\n');
-  res.end();
 }
 
-interface ChatCompletionChunk {
+interface OpenAIChatCompletion {
   id: string;
   choices: {
+    finish_reason: 'stop' | 'length' | 'tool_calls' | 'content_filter' | 'function_call';
     index: number;
-    delta: {
-      role?: string;
-      content?: string;
-      finish_reason?: string;
+    // logprobs: Choice.Logprobs | null;
+    message: {
+      content?: string | null;
+      refusal?: string | null;
+      role: 'assistant';
+      /*
+    function_call?: ChatCompletionMessage.FunctionCall | null;
+    tool_calls?: Array<ChatCompletionMessageToolCall>;
+  */
     };
   }[];
   created: number;
   model: string;
-  system_fingerprint: string;
-  object: string;
+  object: 'chat.completion';
+  service_tier?: 'scale' | 'default' | null;
+  system_fingerprint?: string;
+  // usage?: CompletionsAPI.CompletionUsage;
 }
 
-function prepareChatCompletionChunk(model: LanguageModelChat): ChatCompletionChunk {
+interface OpenAIChatCompletionChunk {
+  id: string;
+  choices: {
+    delta: {
+      content?: string | null;
+      // function_call?: Delta.FunctionCall;
+      refusal?: string | null;
+      role?: 'system' | 'user' | 'assistant' | 'tool';
+      // tool_calls?: Array<Delta.ToolCall>;
+    };
+    finish_reason?: 'stop' | 'length' | 'tool_calls' | 'content_filter' | 'function_call' | null;
+    index: number;
+    // logprobs?: Choice.Logprobs | null;
+  }[];
+  created: number;
+  model: string;
+  object: 'chat.completion.chunk';
+  service_tier?: 'scale' | 'default' | null;
+  system_fingerprint?: string;
+  // usage?: CompletionsAPI.CompletionUsage;
+}
+
+function makeChatCompletion(model: LanguageModelChat, content: string): OpenAIChatCompletion {
+  return {
+    id: randomKey(),
+    choices: [
+      {
+        index: 0,
+        message: {
+          role: 'assistant',
+          content,
+        },
+        finish_reason: 'stop',
+      },
+    ],
+    created: new Date().getTime() / 1000,
+    model: model.version,
+    system_fingerprint: model.id,
+    object: 'chat.completion',
+  };
+}
+
+function prepareChatCompletionChunk(model: LanguageModelChat): OpenAIChatCompletionChunk {
   return {
     id: randomKey(),
     choices: [

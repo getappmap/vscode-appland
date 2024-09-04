@@ -1,41 +1,42 @@
 import * as vscode from 'vscode';
 
+import RpcProcessService from './rpcProcessService';
+
 export default class EnvironmentVariableService implements vscode.Disposable {
   private disposables: vscode.Disposable[] = [];
-  private readonly timeoutPeriod = 60_000 * 3; // 3 minutes
-  private timeout?: NodeJS.Timeout;
+  private debounce?: NodeJS.Timeout;
+  private restarting = false;
 
-  constructor() {
+  constructor(private rpcService: RpcProcessService) {
     this.disposables.push(
       vscode.workspace.onDidChangeConfiguration((e) => {
         if (e.affectsConfiguration('appMap.commandLineEnvironment')) {
-          this.notifyEnvironmentChanged();
+          this.scheduleRestart();
         }
       })
     );
   }
 
-  private async notifyEnvironmentChanged(): Promise<void> {
-    // If timeout is present, we can't send another notification.
-    if (this.timeout) return;
+  private scheduleRestart() {
+    if (this.debounce) {
+      this.debounce.refresh();
+    } else {
+      this.debounce = setTimeout(() => this.restartRpcServer(), 5000);
+    }
+  }
 
-    // Allow another notification to be sent after the timeout, assuming the configuration changes again.
-    this.timeout = setTimeout(() => {
-      this.timeout = undefined;
-    }, this.timeoutPeriod);
-
-    const res = await vscode.window.showInformationMessage(
-      'Changes to the AppMap command line environment require a reload of the AppMap extension to apply. Reload now?',
-      'Reload'
-    );
-
-    if (res === 'Reload') {
-      vscode.commands.executeCommand('workbench.action.reloadWindow');
+  private restartRpcServer(): void {
+    // if we're restarting now, schedule another restart
+    // since the user is obviously still mucking with the env
+    if (this.restarting) this.scheduleRestart();
+    else {
+      this.debounce = undefined;
+      this.restarting = true;
+      this.rpcService.restart().finally(() => (this.restarting = false));
     }
   }
 
   dispose(): void {
-    if (this.timeout) clearTimeout(this.timeout);
     this.disposables.forEach((d) => d.dispose());
   }
 }

@@ -144,4 +144,37 @@ describe('RpcProcessService', () => {
       });
     });
   });
+
+  describe('restart()', () => {
+    beforeEach(async () => {
+      stubRpcConfiguration();
+      await rpcServiceState.waitForStartup();
+    });
+
+    it('restarts the RPC server, keeping the port', async () => {
+      const eventListener = sinon.fake();
+      rpcService.onRpcPortChange(eventListener);
+
+      await waitFor(`Expecting RPC port change event`, () => eventListener.calledOnce);
+
+      const port = rpcService.port();
+      expect(port).to.be.greaterThan(0);
+
+      const restartFn = new Promise<void>((resolve, reject) => {
+        const timeout = setTimeout(() => reject(new Error('Timeout waiting for restart')), 60_000);
+        const disposable = rpcService.onRpcPortChange(() => {
+          clearTimeout(timeout);
+          disposable.dispose();
+          resolve();
+        });
+      });
+
+      await rpcService.restart();
+
+      await restartFn;
+      await waitFor(`Expecting RPC port change event`, () => eventListener.calledTwice);
+
+      expect(rpcService.port()).to.equal(port);
+    });
+  });
 });

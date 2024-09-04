@@ -4,7 +4,11 @@ import http from 'node:http';
 
 import { expect } from 'chai';
 import sinon from 'sinon';
-import type { LanguageModelChat, LanguageModelChatResponse } from 'vscode';
+import type {
+  LanguageModelChat,
+  LanguageModelChatMessage,
+  LanguageModelChatResponse,
+} from 'vscode';
 
 import ChatCompletion from '../../../src/services/chatCompletion';
 import { addMockChatModel } from '../mock/vscode/lm';
@@ -19,11 +23,7 @@ const mockModel: LanguageModelChat = {
   },
   maxInputTokens: 325,
   name: 'Test Model',
-  async sendRequest(messages): Promise<LanguageModelChatResponse> {
-    // say hello and echo the last message
-    const lastMessage = messages[messages.length - 1];
-    return { text: makeStream(`Hello, you said: ${lastMessage.content}`) };
-  },
+  sendRequest: sendRequestEcho,
   vendor: 'Test Vendor',
 };
 
@@ -32,6 +32,7 @@ addMockChatModel(mockModel);
 describe('ChatCompletion', () => {
   let chatCompletion: ChatCompletion;
   before(async () => {
+    mockModel.sendRequest = sendRequestEcho;
     chatCompletion = new ChatCompletion(0, 'test-key');
     await chatCompletion.ready;
   });
@@ -75,7 +76,7 @@ describe('ChatCompletion', () => {
 
   it('should handle error processing request', async () => {
     const res = await postAuthorized(chatCompletion.url, { model: 'test-model', messages: [] });
-    expect(res.statusCode).to.equal(500);
+    expect(res.statusCode).to.equal(422);
   });
 
   it('should send chat completion response', async () => {
@@ -88,7 +89,7 @@ describe('ChatCompletion', () => {
     expect(response.statusCode).to.equal(200);
     assert(typeof response.data === 'string');
     const result = JSON.parse(response.data);
-    expect(result.choices[0].delta.content).to.equal('Hello, you said: I am good, thank you!');
+    expect(result.choices[0].message.content).to.equal('Hello, you said: I am good, thank you!');
   });
 
   it('should stream chat completion', async () => {
@@ -111,6 +112,43 @@ describe('ChatCompletion', () => {
       contents.push(result.choices[0].delta.content);
     }
     expect(contents.join('')).to.equal('Hello, you said: I am good, thank you!');
+  });
+
+  describe('when streaming errors', () => {
+    beforeEach(() => {
+      mockModel.sendRequest = async () => {
+        return {
+          // eslint-disable-next-line require-yield
+          text: (async function* () {
+            throw new Error('test error');
+          })(),
+        };
+      };
+    });
+
+    it('reports errors when streaming', async () => {
+      const messages = [
+        { content: 'Hello', role: 'user' },
+        { content: 'How are you?', role: 'assistant' },
+        { content: 'I am good, thank you!', role: 'user' },
+      ];
+      const response = await postAuthorized(
+        chatCompletion.url,
+        { model: 'test-model', messages, stream: true },
+        true
+      );
+      expect(response.statusCode).to.equal(422);
+    });
+
+    it('reports errors when not streaming', async () => {
+      const messages = [
+        { content: 'Hello', role: 'user' },
+        { content: 'How are you?', role: 'assistant' },
+        { content: 'I am good, thank you!', role: 'user' },
+      ];
+      const response = await postAuthorized(chatCompletion.url, { model: 'test-model', messages });
+      expect(response.statusCode).to.equal(422);
+    });
   });
 });
 
@@ -168,6 +206,14 @@ async function* makeStream(text: string): AsyncIterable<string> {
   while ((match = re.exec(text))) {
     yield match[0];
   }
+}
+
+async function sendRequestEcho(
+  messages: LanguageModelChatMessage[]
+): Promise<LanguageModelChatResponse> {
+  // say hello and echo the last message
+  const lastMessage = messages[messages.length - 1];
+  return { text: makeStream(`Hello, you said: ${lastMessage.content}`) };
 }
 
 // read an async iterable stream of SSE chunks

@@ -12,7 +12,7 @@ export default class RpcProcessWatcher extends ProcessWatcher {
   private stdoutBuffer = '';
 
   constructor(context: vscode.ExtensionContext, modulePath?: string, env?: NodeJS.ProcessEnv) {
-    const args = ['rpc', '--port', '0'];
+    const args = makeArgs();
     const extraOptions = ExtensionSettings.appMapIndexOptions;
     if (extraOptions) args.push(...extraOptions.split(' '));
     if (ExtensionSettings.appMapCommandLineVerbose) args.push('--verbose');
@@ -72,6 +72,7 @@ export default class RpcProcessWatcher extends ProcessWatcher {
         );
       } else {
         this.rpcPort = parseInt(portStr);
+        this.options.args = makeArgs(this.rpcPort);
       }
       this._onRpcPortChange.fire(this.rpcPort);
     };
@@ -80,8 +81,35 @@ export default class RpcProcessWatcher extends ProcessWatcher {
     if (portStr) consumeRpcPort(portStr);
   }
 
+  async start(): Promise<void> {
+    const disposables: vscode.Disposable[] = [];
+    try {
+      await vscode.window.withProgress(
+        {
+          location: vscode.ProgressLocation.Window,
+          cancellable: false,
+          title: 'Starting Navie…',
+        },
+        () =>
+          new Promise<void>((resolve, reject) => {
+            disposables.push(this.onRpcPortChange(() => resolve()));
+            disposables.push(this.onAbort(reject));
+            super.start();
+          })
+      );
+    } catch (e) {
+      vscode.window.showErrorMessage(`Navie failed to start: ${e}`);
+    } finally {
+      disposables.forEach((d) => d.dispose());
+    }
+  }
+
   dispose(): void {
     this._onRpcPortChange.dispose();
     super.dispose();
   }
+}
+
+function makeArgs(port = 0) {
+  return ['rpc', '--port', port.toFixed()];
 }

@@ -74,6 +74,10 @@ export default class RpcProcessService implements Disposable {
     return this.rpcPort;
   }
 
+  public restart(): Promise<void> {
+    return this.processWatcher.restart();
+  }
+
   protected async pushConfiguration() {
     if (!this.available) return;
 
@@ -131,6 +135,10 @@ export default class RpcProcessService implements Disposable {
     this.rpcPort = port;
     await this.pushConfiguration();
     this._onRpcPortChange.fire(port);
+  }
+
+  public async restartServer(): Promise<void> {
+    return this.processWatcher.restart();
   }
 
   protected waitForStartup(): Promise<void> {

@@ -240,6 +240,15 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
         context,
         workspaceServices.getServiceInstances(configManager)
       );
+
+      context.subscriptions.push(new EnvironmentVariableService(rpcService));
+      context.subscriptions.push(
+        vscode.commands.registerCommand('appmap.rpc.restart', async () => {
+          await rpcService.restartServer();
+          vscode.window.showInformationMessage('Navie restarted successfully.');
+        })
+      );
+
       const webview = ChatSearchWebview.register(
         context,
         extensionState,
@@ -273,8 +282,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     downloadLatestJavaJar(context);
     getAppmapDir(context, workspaceServices);
     clearNavieAiSettings(context);
-
-    context.subscriptions.push(new EnvironmentVariableService());
 
     // Use this notification to track when the extension is activated.
     if (Environment.isSystemTest) {
