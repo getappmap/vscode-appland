@@ -68,4 +68,9 @@ export default class ExtensionSettings {
   public static bindContext(): void {
     vscode.commands.executeCommand('setContext', 'appmap.scannerEnabled', this.scannerEnabled);
   }
+
+  public static get maxPinnedFileSizeKB(): number {
+    const ret = vscode.workspace.getConfiguration('appMap').get('maxPinnedFileSizeKB') as number;
+    return ret !== undefined ? ret : 20000;
+  }
 }

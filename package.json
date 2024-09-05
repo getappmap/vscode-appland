@@ -244,6 +244,18 @@
       {
         "command": "appmap.openAIApiKey.status",
         "title": "AppMap: Check OpenAI API Key Status"
+      },
+      {
+        "command": "appmap.editor.title.addToContext",
+        "title": "AppMap: Add File To Context"
+      },
+      {
+        "command": "appmap.explorer.addToContext",
+        "title": "AppMap: Add Files To Context"
+      },
+      {
+        "command": "appmap.addToContext",
+        "title": "AppMap: Add Files To Context"
       }
     ],
     "configuration": {
@@ -307,6 +319,11 @@
           "type": "boolean",
           "default": false,
           "description": "Enable AppMap scanner"
+        },
+        "appMap.maxPinnedFileSizeKB": {
+          "type": "number",
+          "default": 20,
+          "description": "Maximum size of a file (in KB) that can be pinned to the Navie context"
         }
       }
     },
@@ -501,6 +518,30 @@
         {
           "command": "appmap.context.deleteAppMaps",
           "when": "false"
+        },
+        {
+          "command": "appmap.editor.title.addToContext",
+          "when": "false"
+        },
+        {
+          "command": "appmap.explorer.addToContext",
+          "when": "false"
+        },
+        {
+          "command": "appmap.addToContext",
+          "when": "activeWebviewPanelId=='chatSearch'"
+        }
+      ],
+      "editor/title/context": [
+        {
+          "command": "appmap.editor.title.addToContext",
+          "when": "activeWebviewPanelId=='chatSearch' && resourceScheme == 'file'"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "appmap.explorer.addToContext",
+          "when": "activeWebviewPanelId=='chatSearch'"
         }
       ],
       "view/title": [

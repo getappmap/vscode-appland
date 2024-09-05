@@ -1,3 +1,5 @@
+import { PinFileRequest } from '@appland/components';
+import assert from 'assert';
 import * as vscode from 'vscode';
 import getWebviewContent from './getWebviewContent';
 import appmapMessageHandler from './appmapMessageHandler';
@@ -54,6 +56,61 @@ export default class ChatSearchWebview {
 
   get currentWebview(): vscode.Webview | undefined {
     return this.webviewList.currentWebview;
+  }
+
+  async doPinFiles(panel: vscode.WebviewPanel, reqs: PinFileRequest[]) {
+    const maxPinnedFileSize = ExtensionSettings.maxPinnedFileSizeKB * 1024;
+    type PinFileRequestWithLength = PinFileRequest & { contentLength?: number };
+    const requests = await Promise.all(
+      reqs.map(async (r: PinFileRequest): Promise<PinFileRequestWithLength> => {
+        let contentLength = r.content?.length;
+        if (!r.content) {
+          assert(r.uri, `doPinFiles, ${r.name}: no content, no uri`);
+          const u: vscode.Uri = vscode.Uri.parse(r.uri);
+          const stat = await vscode.workspace.fs.stat(u);
+          contentLength = stat.size;
+          if (contentLength < maxPinnedFileSize) {
+            const doc = await vscode.workspace.openTextDocument(u);
+            r.content = doc.getText();
+          }
+        }
+
+        return {
+          name: r.name,
+          uri: r.uri,
+          content: r.content,
+          contentLength,
+        };
+      })
+    );
+
+    const goodRequests = requests.filter((r: PinFileRequestWithLength) => {
+      if (r.contentLength > maxPinnedFileSize) {
+        const setting = ExtensionSettings.maxPinnedFileSizeKB;
+        const len = Math.round(r.contentLength / 1024);
+        vscode.window
+          .showErrorMessage(
+            `${r.name} (${len}KB) exceeds the maximum file size of ${setting}KB.`,
+            'Change',
+            'Cancel'
+          )
+          .then((answer) => {
+            if (answer === 'Change') {
+              vscode.commands.executeCommand(
+                'workbench.action.openSettings',
+                'appmap.maxPinnedFileSizeKB'
+              );
+            }
+          });
+        return false;
+      }
+      return true;
+    });
+
+    if (goodRequests.length > 0) {
+      const msg = { type: 'pin-files', requests: goodRequests.map((r) => new PinFileRequest(r)) };
+      panel.webview.postMessage(msg);
+    }
   }
 
   async explain({
@@ -190,6 +247,23 @@ export default class ChatSearchWebview {
           }
           break;
         }
+        case 'choose-files-to-pin': {
+          await this.chooseFilesToPin().then(async (uris: vscode.Uri[] | undefined) => {
+            if (!uris) return;
+            const requests: PinFileRequest[] = uris.map((u) => ({
+              name: u.toString(),
+              uri: u.toString(),
+            }));
+            this.doPinFiles(panel, requests);
+          });
+          break;
+        }
+
+        case 'fetch-pinned-files': {
+          const { requests } = message;
+          this.doPinFiles(panel, requests);
+          break;
+        }
       }
     });
 
@@ -197,6 +271,10 @@ export default class ChatSearchWebview {
       status: ExplainResponseStatus.Success,
       codeSelection,
     };
+  }
+
+  async chooseFilesToPin() {
+    return vscode.window.showOpenDialog({ canSelectMany: true });
   }
 
   updateFilters(savedFilters: SavedFilter[]) {

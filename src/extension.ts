@@ -3,6 +3,7 @@ import * as vscode from 'vscode';
 import assert from 'assert';
 import RemoteRecording from './actions/remoteRecording';
 import AppMapService from './appMapService';
+import addToContext from './commands/addToContext';
 import deleteAllAppMaps from './commands/deleteAllAppMaps';
 import registerInspectCodeObject from './commands/inspectCodeObject';
 import registerSequenceDiagram from './commands/sequenceDiagram';
@@ -277,6 +278,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     findByName(context, appmapCollectionFile);
 
     appmapState(context, editorProvider, chatSearchWebview);
+    addToContext(context, chatSearchWebview);
     quickSearch(context);
     resetUsageState(context, extensionState);
     downloadLatestJavaJar(context);
