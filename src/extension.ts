@@ -61,7 +61,6 @@ import RpcProcessService from './services/rpcProcessService';
 import CommandRegistry from './commands/commandRegistry';
 import AssetService from './assets/assetService';
 import clearNavieAiSettings from './commands/clearNavieAiSettings';
-import EnvironmentVariableService from './services/environmentVariableService';
 import ExtensionSettings from './configuration/extensionSettings';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
@@ -241,8 +240,10 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
         workspaceServices.getServiceInstances(configManager)
       );
 
-      context.subscriptions.push(new EnvironmentVariableService(rpcService));
       context.subscriptions.push(
+        vscode.workspace.onDidChangeConfiguration((e) => {
+          if (e.affectsConfiguration('appMap.commandLineEnvironment')) rpcService.scheduleRestart();
+        }),
         vscode.commands.registerCommand('appmap.rpc.restart', async () => {
           await rpcService.restartServer();
           vscode.window.showInformationMessage('Navie restarted successfully.');

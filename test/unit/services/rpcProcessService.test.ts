@@ -176,5 +176,17 @@ describe('RpcProcessService', () => {
 
       expect(rpcService.port()).to.equal(port);
     });
+
+    it('debounces the restart calls', async () => {
+      const restartSpy = sinon.spy(rpcService, 'restart');
+
+      rpcService.debounceTime = 50;
+
+      rpcService.scheduleRestart();
+      rpcService.scheduleRestart();
+      rpcService.scheduleRestart();
+
+      await waitFor(`Expecting debounced restart`, () => restartSpy.calledOnce);
+    });
   });
 });

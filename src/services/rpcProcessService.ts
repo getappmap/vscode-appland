@@ -29,6 +29,8 @@ export default class RpcProcessService implements Disposable {
   private readonly processWatcher: RpcProcessWatcher;
   private rpcPort: number | undefined;
   private diposables: Disposable[] = [];
+  private debounce?: NodeJS.Timeout;
+  private restarting = false;
 
   public constructor(
     private readonly context: ExtensionContext,
@@ -76,6 +78,25 @@ export default class RpcProcessService implements Disposable {
 
   public restart(): Promise<void> {
     return this.processWatcher.restart();
+  }
+
+  public debounceTime = 5000;
+
+  public scheduleRestart() {
+    if (this.debounce) {
+      this.debounce.refresh();
+    } else {
+      this.debounce = setTimeout(() => this.debouncedRestart(), this.debounceTime).unref();
+    }
+  }
+
+  private debouncedRestart(): void {
+    if (this.restarting) this.scheduleRestart();
+    else {
+      this.debounce = undefined;
+      this.restarting = true;
+      this.restart().finally(() => (this.restarting = false));
+    }
   }
 
   protected async pushConfiguration() {
