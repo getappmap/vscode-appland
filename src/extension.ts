@@ -248,7 +248,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
           await rpcService.restartServer();
           vscode.window.showInformationMessage('Navie restarted successfully.');
         }),
-        ChatCompletion.onSettingsChanged(rpcService.restartServer, rpcService)
+        ChatCompletion.onSettingsChanged(rpcService.scheduleRestart, rpcService)
       );
 
       const webview = ChatSearchWebview.register(

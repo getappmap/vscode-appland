@@ -13,7 +13,6 @@ import vscode, {
   LanguageModelChat,
   LanguageModelChatMessage,
   LanguageModelChatResponse,
-  lm,
 } from 'vscode';
 
 import ExtensionSettings from '../configuration/extensionSettings';
@@ -75,6 +74,30 @@ export default class ChatCompletion implements Disposable {
     return `http://localhost:${this.port}/vscode/copilot`;
   }
 
+  get env(): Record<string, string> {
+    const pref = ChatCompletion.preferredModel;
+    return {
+      OPENAI_API_KEY: this.key,
+      OPENAI_BASE_URL: this.url,
+      APPMAP_NAVIE_TOKEN_LIMIT: String(pref?.maxInputTokens ?? 3926),
+      APPMAP_NAVIE_MODEL: pref?.family ?? 'gpt-4o',
+    };
+  }
+
+  private static models: vscode.LanguageModelChat[] = [];
+
+  static get preferredModel(): vscode.LanguageModelChat | undefined {
+    return ChatCompletion.models[0];
+  }
+
+  static async refreshModels(): Promise<void> {
+    const previousBest = this.preferredModel?.id;
+    ChatCompletion.models = (await vscode.lm.selectChatModels()).sort(
+      (a, b) => b.maxInputTokens - a.maxInputTokens + b.family.localeCompare(a.family)
+    );
+    if (this.preferredModel?.id !== previousBest) this.settingsChanged.fire();
+  }
+
   static get instance(): Promise<ChatCompletion | undefined> {
     if (!instance) return Promise.resolve(undefined);
     return instance;
@@ -123,14 +146,14 @@ export default class ChatCompletion implements Disposable {
       return;
     }
 
-    const model =
-      (await lm.selectChatModels({ family: request.model }))[0] ??
-      (await lm.selectChatModels({ version: request.model }))[0];
+    const modelName = request.model;
+    const model = ChatCompletion.models.find((m) =>
+      [m.id, m.name, m.family, m.version].includes(modelName)
+    );
     if (!model) {
       res.writeHead(404);
-      const availableModels = await lm.selectChatModels();
-      const message = `Model ${request.model} not found. Available models: ${JSON.stringify(
-        availableModels
+      const message = `Model ${modelName} not found. Available models: ${JSON.stringify(
+        ChatCompletion.models
       )}`;
       warn(message);
       res.end(message);
@@ -166,7 +189,6 @@ export default class ChatCompletion implements Disposable {
 
   static initialize(context: ExtensionContext) {
     // TODO: make the messages and handling generic for all LM extensions
-
     const hasLM = 'lm' in vscode && 'selectChatModels' in vscode.lm;
 
     if (ExtensionSettings.useVsCodeLM && checkAvailability())
@@ -184,6 +206,15 @@ export default class ChatCompletion implements Disposable {
       })
     );
 
+    if (hasLM) {
+      ChatCompletion.refreshModels();
+      vscode.lm.onDidChangeChatModels(
+        ChatCompletion.refreshModels,
+        undefined,
+        context.subscriptions
+      );
+    }
+
     function checkAvailability() {
       if (!hasLM)
         vscode.window.showErrorMessage(
@@ -197,14 +228,11 @@ export default class ChatCompletion implements Disposable {
           )
           .then((selection) => {
             if (selection === 'Install Copilot') {
-              vscode.lm.onDidChangeChatModels(
-                () => {
-                  context.subscriptions.push(new ChatCompletion());
-                  ChatCompletion.settingsChanged.fire();
-                },
-                undefined,
-                context.subscriptions
-              );
+              const odc = vscode.lm.onDidChangeChatModels(() => {
+                context.subscriptions.push(new ChatCompletion());
+                ChatCompletion.settingsChanged.fire();
+                odc.dispose();
+              });
               vscode.commands.executeCommand(
                 'workbench.extensions.installExtension',
                 'github.copilot'

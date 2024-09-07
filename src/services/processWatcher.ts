@@ -51,21 +51,17 @@ async function accessToken(): Promise<string | undefined> {
 export async function loadEnvironment(
   context: vscode.ExtensionContext
 ): Promise<NodeJS.ProcessEnv> {
+  const chat = await ChatCompletion.instance;
+
   const env: Record<string, string | undefined> = {
     APPMAP_API_URL: ExtensionSettings.apiUrl,
     APPMAP_API_KEY: await accessToken(),
     ...ExtensionSettings.appMapCommandLineEnvironment,
+    ...chat?.env,
   };
 
   const openAIApiKey = await getOpenAIApiKey(context);
-  const chat = await ChatCompletion.instance;
-  if (chat) {
-    env.OPENAI_API_KEY = chat.key;
-    env.OPENAI_BASE_URL = chat.url;
-    // TODO: set these dynamically based on the available models
-    env.APPMAP_NAVIE_TOKEN_LIMIT = '3925';
-    env.APPMAP_NAVIE_MODEL = 'gpt-4-turbo';
-  } else if (openAIApiKey) {
+  if (!chat && openAIApiKey) {
     if ('AZURE_OPENAI_API_VERSION' in env) env.AZURE_OPENAI_API_KEY = openAIApiKey;
     else env.OPENAI_API_KEY = openAIApiKey;
   }
