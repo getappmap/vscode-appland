@@ -11,7 +11,7 @@ import type {
 } from 'vscode';
 
 import ChatCompletion from '../../../src/services/chatCompletion';
-import { addMockChatModel } from '../mock/vscode/lm';
+import { addMockChatModel, resetModelMocks } from '../mock/vscode/lm';
 import assert from 'node:assert';
 
 const mockModel: LanguageModelChat = {
@@ -27,10 +27,15 @@ const mockModel: LanguageModelChat = {
   vendor: 'Test Vendor',
 };
 
-addMockChatModel(mockModel);
-
 describe('ChatCompletion', () => {
   let chatCompletion: ChatCompletion;
+
+  beforeEach(async () => {
+    resetModelMocks();
+    addMockChatModel(mockModel);
+    await ChatCompletion.refreshModels();
+  });
+
   before(async () => {
     mockModel.sendRequest = sendRequestEcho;
     chatCompletion = new ChatCompletion(0, 'test-key');
@@ -40,6 +45,49 @@ describe('ChatCompletion', () => {
 
   afterEach(() => {
     sinon.restore();
+  });
+
+  it('should return the correct environment variables', () => {
+    const env = chatCompletion.env;
+    expect(env).to.deep.equal({
+      OPENAI_API_KEY: 'test-key',
+      OPENAI_BASE_URL: chatCompletion.url,
+      APPMAP_NAVIE_TOKEN_LIMIT: '325',
+      APPMAP_NAVIE_MODEL: 'test-family',
+    });
+  });
+
+  it('should refresh models and set the preferred model', async () => {
+    resetModelMocks();
+    const mockModel1 = {
+      ...mockModel,
+      id: 'model-1',
+      family: 'family-1',
+      version: 'version-1',
+      maxInputTokens: 100,
+      name: 'Model 1',
+      vendor: 'Vendor 1',
+    };
+    const mockModel2 = {
+      ...mockModel,
+      id: 'model-2',
+      family: 'family-2',
+      version: 'version-2',
+      maxInputTokens: 200,
+      name: 'Model 2',
+      vendor: 'Vendor 2',
+    };
+    addMockChatModel(mockModel1);
+    addMockChatModel(mockModel2);
+
+    await ChatCompletion.refreshModels();
+    expect(ChatCompletion.preferredModel).to.equal(mockModel2);
+  });
+
+  it('should return undefined if no models are available', async () => {
+    resetModelMocks();
+    await ChatCompletion.refreshModels();
+    expect(ChatCompletion.preferredModel).to.be.undefined;
   });
 
   it('should create a server and listen on a random port', async () => {
