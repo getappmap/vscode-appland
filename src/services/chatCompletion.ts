@@ -6,14 +6,17 @@ import { createServer } from 'node:http';
 import { debuglog } from 'node:util';
 import { isNativeError } from 'node:util/types';
 
-import {
+import vscode, {
   CancellationTokenSource,
   Disposable,
+  ExtensionContext,
   LanguageModelChat,
   LanguageModelChatMessage,
   LanguageModelChatResponse,
   lm,
 } from 'vscode';
+
+import ExtensionSettings from '../configuration/extensionSettings';
 
 const debug = debuglog('appmap-vscode:chat-completion');
 
@@ -156,6 +159,60 @@ export default class ChatCompletion implements Disposable {
   async dispose(): Promise<void> {
     if ((await instance) === this) instance = undefined;
     this.server.close();
+  }
+
+  private static settingsChanged = new vscode.EventEmitter<void>();
+  static onSettingsChanged = ChatCompletion.settingsChanged.event;
+
+  static initialize(context: ExtensionContext) {
+    // TODO: make the messages and handling generic for all LM extensions
+
+    const hasLM = 'lm' in vscode && 'selectChatModels' in vscode.lm;
+
+    if (ExtensionSettings.useVsCodeLM && checkAvailability())
+      context.subscriptions.push(new ChatCompletion());
+
+    context.subscriptions.push(
+      vscode.workspace.onDidChangeConfiguration(async (e) => {
+        if (e.affectsConfiguration('appMap.navie.useVSCodeLM')) {
+          const instance = await ChatCompletion.instance;
+          if (!ExtensionSettings.useVsCodeLM && instance) await instance.dispose();
+          else if (ExtensionSettings.useVsCodeLM && checkAvailability())
+            context.subscriptions.push(new ChatCompletion());
+          this.settingsChanged.fire();
+        }
+      })
+    );
+
+    function checkAvailability() {
+      if (!hasLM)
+        vscode.window.showErrorMessage(
+          'AppMap: VS Code LM backend for Navie is enabled, but the LanguageModel API is not available.\nPlease update your VS Code to the latest version.'
+        );
+      else if (!vscode.extensions.getExtension('github.copilot')) {
+        vscode.window
+          .showErrorMessage(
+            'AppMap: VS Code LM backend for Navie is enabled, but the GitHub Copilot extension is not installed.\nPlease install it from the marketplace and reload the window.',
+            'Install Copilot'
+          )
+          .then((selection) => {
+            if (selection === 'Install Copilot') {
+              vscode.lm.onDidChangeChatModels(
+                () => {
+                  context.subscriptions.push(new ChatCompletion());
+                  ChatCompletion.settingsChanged.fire();
+                },
+                undefined,
+                context.subscriptions
+              );
+              vscode.commands.executeCommand(
+                'workbench.extensions.installExtension',
+                'github.copilot'
+              );
+            }
+          });
+      } else return true;
+    }
   }
 }
 
