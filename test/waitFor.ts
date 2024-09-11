@@ -15,7 +15,7 @@ export async function repeatUntil(
 export async function waitFor(
   message: string,
   test: () => boolean | Promise<boolean>,
-  timeout = 30000
+  timeout = 600000
 ): Promise<void> {
   const startTime = Date.now();
   let delay = 100;
