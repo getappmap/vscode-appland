@@ -4,7 +4,7 @@ on:
   push:
 
 env:
-  VSCODE_INSIDERS_VERSION: 1.87.2
+  VSCODE_INSIDERS_VERSION: 1.92.2
 
 jobs:
   prepare:
