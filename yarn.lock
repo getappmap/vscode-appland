@@ -150,7 +150,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/components@npm:^4.12.0, @appland/components@npm:^4.35.0":
+"@appland/components@npm:^4.12.0":
   version: 4.36.0
   resolution: "@appland/components@npm:4.36.0"
   dependencies:
@@ -179,6 +179,38 @@ __metadata:
     vue: ^2.7.14
     vuex: ^3.6.0
   checksum: 81b3635adec5f081becfc0b67bc7aa5edb3160d1fd2a0cc0d03ddf1cab1e3023403d5859122670331715af8b2acdb22628d60d851733f51b11733e8151c8d147
+  languageName: node
+  linkType: hard
+
+"@appland/components@npm:^4.37.0":
+  version: 4.37.0
+  resolution: "@appland/components@npm:4.37.0"
+  dependencies:
+    "@appland/client": ^1.12.0
+    "@appland/diagrams": ^1.7.0
+    "@appland/models": ^2.10.2
+    "@appland/rpc": ^1.13.0
+    "@appland/sequence-diagram": ^1.11.0
+    "@types/sax": ^1.2.7
+    buffer: ^6.0.3
+    d3: ^7.8.4
+    d3-flame-graph: ^4.1.3
+    diff: ^5.1.0
+    dom-to-svg: ^0.12.2
+    dompurify: ^3.0.6
+    events: ^3.3.0
+    highlight.js: ^11.9.0
+    jayson: ^4.1.0
+    js-base64: ^3.7.7
+    marked: ^10.0.0
+    marked-highlight: ^2.0.7
+    mermaid: ^10.9.1
+    pako: ^2.1.0
+    sax: ^1.4.1
+    sql-formatter: ^4.0.2
+    vue: ^2.7.14
+    vuex: ^3.6.0
+  checksum: 7f9cb0f13e1a5d72e4bff6ed337d48b3b9be8c20eea773ca70665ffd7f7013aac58fc96692771bf188530b15bf351cc67720f844f2d27bce03dd02b64594c26b
   languageName: node
   linkType: hard
 
@@ -3022,7 +3054,7 @@ __metadata:
   dependencies:
     "@appland/appmap": ^3.129.0
     "@appland/client": ^1.14.1
-    "@appland/components": ^4.35.0
+    "@appland/components": ^4.37.0
     "@appland/diagrams": ^1.8.0
     "@appland/models": ^2.10.2
     "@appland/rpc": ^1.15.0
