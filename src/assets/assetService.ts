@@ -10,10 +10,11 @@ import {
 } from '.';
 import { homedir } from 'os';
 import { join } from 'path';
-import { mkdir } from 'fs/promises';
+import { mkdir, readdir } from 'fs/promises';
 import LockfileSynchronizer from '../lib/lockfileSynchronizer';
 
 import * as log from './log';
+import semverSort from 'semver/functions/sort';
 
 export enum AssetIdentifier {
   AppMapCli,
@@ -37,6 +38,27 @@ export default class AssetService {
     this._extensionDirectory = context.extensionPath;
     BundledFileDownloadUrlResolver.extensionDirectory = this._extensionDirectory;
     context.subscriptions.push(log.OutputChannel);
+  }
+
+  public static async getMostRecentVersion(assetId: AssetIdentifier): Promise<string | undefined> {
+    const basename = {
+      [AssetIdentifier.AppMapCli]: 'appmap',
+      [AssetIdentifier.ScannerCli]: 'scanner',
+      [AssetIdentifier.JavaAgent]: 'java',
+    }[assetId];
+    if (!basename) {
+      throw new Error(`Invalid asset ID ${assetId}`);
+    }
+
+    const path = join(homedir(), '.appmap', 'lib', basename);
+    try {
+      const ents = await readdir(path);
+      const versions: string[] = semverSort(ents.map((ent) => ent.split(/-v?/)[1]).filter(Boolean));
+      return versions.pop();
+    } catch (e) {
+      log.error(`Failed to retrieve most recent version of ${basename}: ${e}`);
+      return undefined;
+    }
   }
 
   public static getAssetPath(assetId: AssetIdentifier): string {

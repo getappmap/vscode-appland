@@ -32,6 +32,13 @@ export const DEBUG_LOG = new TelemetryDataProvider({
   },
 });
 
+export const DEBUG_VERSION = new TelemetryDataProvider({
+  id: 'appmap.debug.version',
+  value({ version }: { version?: string }) {
+    return version;
+  },
+});
+
 export const AGENT_CONFIG_PRESENT = new TelemetryDataProvider({
   id: 'appmap.agent.config_present',
   async value({ uri }: { uri: vscode.Uri }) {

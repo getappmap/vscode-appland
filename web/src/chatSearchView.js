@@ -58,6 +58,20 @@ export default function mountChatSearchView() {
 
     handleAppMapMessages(app, vscode);
 
+    messages.on('fetch-pinned-files', (props) => {
+      const { requests } = props;
+      vscode.postMessage({ command: 'fetch-pinned-files', requests });
+    });
+
+    messages.on('choose-files-to-pin', () => {
+      vscode.postMessage({ command: 'choose-files-to-pin' });
+    });
+
+    messages.on('pin-files', (props) => {
+      const { requests } = props;
+      app.$root.$emit('pin-files', requests);
+    });
+
     messages.on('update', (props) => {
       Object.entries(props)
         .filter(([key]) => key !== 'type')
@@ -90,6 +104,14 @@ export default function mountChatSearchView() {
 
     app.$on('select-llm-option', (option) => {
       vscode.postMessage({ command: 'select-llm-option', option });
+    });
+
+    app.$on('fetch-pinned-files', (requests) => {
+      vscode.postMessage({ command: 'fetch-pinned-files', requests });
+    });
+
+    app.$on('pin', (event) => {
+      vscode.postMessage({ command: 'pin', event });
     });
   });
 

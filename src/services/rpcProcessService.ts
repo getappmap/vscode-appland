@@ -9,6 +9,9 @@ import { ConfigurationRpc } from '@appland/rpc';
 import { join } from 'path';
 import { AUTHN_PROVIDER_NAME } from '../authentication';
 import assert from 'assert';
+import { DEBUG_EXCEPTION, Telemetry } from '../telemetry';
+import ErrorCode from '../telemetry/definitions/errorCodes';
+import AssetService, { AssetIdentifier } from '../assets/assetService';
 
 export type RpcConnect = (port: number) => Client;
 
@@ -29,6 +32,8 @@ export default class RpcProcessService implements Disposable {
   private readonly processWatcher: RpcProcessWatcher;
   private rpcPort: number | undefined;
   private diposables: Disposable[] = [];
+  private debounce?: NodeJS.Timeout;
+  private restarting = false;
 
   public constructor(
     private readonly context: ExtensionContext,
@@ -44,6 +49,15 @@ export default class RpcProcessService implements Disposable {
       ...this.configServices.map((instance) =>
         instance.onConfigChanged(async () => await this.pushConfiguration())
       ),
+      this.processWatcher.onError(async (e) => {
+        const log = this.processWatcher.process?.log.toString();
+        Telemetry.sendEvent(DEBUG_EXCEPTION, {
+          exception: e,
+          errorCode: ErrorCode.ProcessFailure,
+          version: await AssetService.getMostRecentVersion(AssetIdentifier.AppMapCli),
+          log,
+        });
+      }),
       vscode.authentication.onDidChangeSessions((e) => {
         if (e.provider.id !== AUTHN_PROVIDER_NAME) return;
 
@@ -76,6 +90,25 @@ export default class RpcProcessService implements Disposable {
 
   public restart(): Promise<void> {
     return this.processWatcher.restart();
+  }
+
+  public debounceTime = 5000;
+
+  public scheduleRestart() {
+    if (this.debounce) {
+      this.debounce.refresh();
+    } else {
+      this.debounce = setTimeout(() => this.debouncedRestart(), this.debounceTime).unref();
+    }
+  }
+
+  private debouncedRestart(): void {
+    if (this.restarting) this.scheduleRestart();
+    else {
+      this.debounce = undefined;
+      this.restarting = true;
+      this.restart().finally(() => (this.restarting = false));
+    }
   }
 
   protected async pushConfiguration() {

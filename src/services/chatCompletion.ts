@@ -6,14 +6,16 @@ import { createServer } from 'node:http';
 import { debuglog } from 'node:util';
 import { isNativeError } from 'node:util/types';
 
-import {
+import vscode, {
   CancellationTokenSource,
   Disposable,
+  ExtensionContext,
   LanguageModelChat,
   LanguageModelChatMessage,
   LanguageModelChatResponse,
-  lm,
 } from 'vscode';
+
+import ExtensionSettings from '../configuration/extensionSettings';
 
 const debug = debuglog('appmap-vscode:chat-completion');
 
@@ -72,6 +74,30 @@ export default class ChatCompletion implements Disposable {
     return `http://localhost:${this.port}/vscode/copilot`;
   }
 
+  get env(): Record<string, string> {
+    const pref = ChatCompletion.preferredModel;
+    return {
+      OPENAI_API_KEY: this.key,
+      OPENAI_BASE_URL: this.url,
+      APPMAP_NAVIE_TOKEN_LIMIT: String(pref?.maxInputTokens ?? 3926),
+      APPMAP_NAVIE_MODEL: pref?.family ?? 'gpt-4o',
+    };
+  }
+
+  private static models: vscode.LanguageModelChat[] = [];
+
+  static get preferredModel(): vscode.LanguageModelChat | undefined {
+    return ChatCompletion.models[0];
+  }
+
+  static async refreshModels(): Promise<void> {
+    const previousBest = this.preferredModel?.id;
+    ChatCompletion.models = (await vscode.lm.selectChatModels()).sort(
+      (a, b) => b.maxInputTokens - a.maxInputTokens + b.family.localeCompare(a.family)
+    );
+    if (this.preferredModel?.id !== previousBest) this.settingsChanged.fire();
+  }
+
   static get instance(): Promise<ChatCompletion | undefined> {
     if (!instance) return Promise.resolve(undefined);
     return instance;
@@ -120,14 +146,14 @@ export default class ChatCompletion implements Disposable {
       return;
     }
 
-    const model =
-      (await lm.selectChatModels({ family: request.model }))[0] ??
-      (await lm.selectChatModels({ version: request.model }))[0];
+    const modelName = request.model;
+    const model = ChatCompletion.models.find((m) =>
+      [m.id, m.name, m.family, m.version].includes(modelName)
+    );
     if (!model) {
       res.writeHead(404);
-      const availableModels = await lm.selectChatModels();
-      const message = `Model ${request.model} not found. Available models: ${JSON.stringify(
-        availableModels
+      const message = `Model ${modelName} not found. Available models: ${JSON.stringify(
+        ChatCompletion.models
       )}`;
       warn(message);
       res.end(message);
@@ -156,6 +182,65 @@ export default class ChatCompletion implements Disposable {
   async dispose(): Promise<void> {
     if ((await instance) === this) instance = undefined;
     this.server.close();
+  }
+
+  private static settingsChanged = new vscode.EventEmitter<void>();
+  static onSettingsChanged = ChatCompletion.settingsChanged.event;
+
+  static initialize(context: ExtensionContext) {
+    // TODO: make the messages and handling generic for all LM extensions
+    const hasLM = 'lm' in vscode && 'selectChatModels' in vscode.lm;
+
+    if (ExtensionSettings.useVsCodeLM && checkAvailability())
+      context.subscriptions.push(new ChatCompletion());
+
+    context.subscriptions.push(
+      vscode.workspace.onDidChangeConfiguration(async (e) => {
+        if (e.affectsConfiguration('appMap.navie.useVSCodeLM')) {
+          const instance = await ChatCompletion.instance;
+          if (!ExtensionSettings.useVsCodeLM && instance) await instance.dispose();
+          else if (ExtensionSettings.useVsCodeLM && checkAvailability())
+            context.subscriptions.push(new ChatCompletion());
+          this.settingsChanged.fire();
+        }
+      })
+    );
+
+    if (hasLM) {
+      ChatCompletion.refreshModels();
+      vscode.lm.onDidChangeChatModels(
+        ChatCompletion.refreshModels,
+        undefined,
+        context.subscriptions
+      );
+    }
+
+    function checkAvailability() {
+      if (!hasLM)
+        vscode.window.showErrorMessage(
+          'AppMap: VS Code LM backend for Navie is enabled, but the LanguageModel API is not available.\nPlease update your VS Code to the latest version.'
+        );
+      else if (!vscode.extensions.getExtension('github.copilot')) {
+        vscode.window
+          .showErrorMessage(
+            'AppMap: VS Code LM backend for Navie is enabled, but the GitHub Copilot extension is not installed.\nPlease install it from the marketplace and reload the window.',
+            'Install Copilot'
+          )
+          .then((selection) => {
+            if (selection === 'Install Copilot') {
+              const odc = vscode.lm.onDidChangeChatModels(() => {
+                context.subscriptions.push(new ChatCompletion());
+                ChatCompletion.settingsChanged.fire();
+                odc.dispose();
+              });
+              vscode.commands.executeCommand(
+                'workbench.extensions.installExtension',
+                'github.copilot'
+              );
+            }
+          });
+      } else return true;
+    }
   }
 }
 
