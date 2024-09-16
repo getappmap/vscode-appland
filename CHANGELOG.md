@@ -1,3 +1,17 @@
+# [0.129.0](https://github.com/getappmap/vscode-appland/compare/v0.128.0...v0.129.0) (2024-09-16)
+
+
+### Bug Fixes
+
+* Log errors that would prevent Navie from servicing requests ([b95139d](https://github.com/getappmap/vscode-appland/commit/b95139d9294c2a9fc3946b78ff855ffe3994137d))
+
+
+### Features
+
+* Choose models dynamically when using VSCode LM ([353ee6f](https://github.com/getappmap/vscode-appland/commit/353ee6f1864b446ce076755adfb325300c450a55))
+* new commands to add files to context ([1c1d33e](https://github.com/getappmap/vscode-appland/commit/1c1d33eeb12c197b782770c45001a590d1beeab4))
+* Restart Navie automatically when flipping VSCode LM option ([3e7c90a](https://github.com/getappmap/vscode-appland/commit/3e7c90a3d61ef1edfd996dc909ee93278d0dfc7b))
+
 # [0.128.0](https://github.com/getappmap/vscode-appland/compare/v0.127.0...v0.128.0) (2024-09-04)
 
 
