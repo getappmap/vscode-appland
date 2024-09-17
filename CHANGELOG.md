@@ -1,3 +1,10 @@
+## [0.129.1](https://github.com/getappmap/vscode-appland/compare/v0.129.0...v0.129.1) (2024-09-17)
+
+
+### Bug Fixes
+
+* Update @appland/components to v4.37.3 ([d1cb537](https://github.com/getappmap/vscode-appland/commit/d1cb537b7c9fc9b18293359a34076266270a2c09))
+
 # [0.129.0](https://github.com/getappmap/vscode-appland/compare/v0.128.0...v0.129.0) (2024-09-16)
 
 
