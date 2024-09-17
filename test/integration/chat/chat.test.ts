@@ -29,7 +29,7 @@ describe('chat', () => {
 
   beforeEach(() => (sandbox = sinon.createSandbox()));
   afterEach(async () => {
-    vscode.commands.executeCommand('workbench.action.closeActiveEditor');
+    await vscode.commands.executeCommand('workbench.action.closeActiveEditor');
     sandbox.restore();
   });
 
@@ -44,23 +44,23 @@ describe('chat', () => {
     let chatView: vscode.Webview;
 
     beforeEach(async () => {
-      await vscode.commands.executeCommand('appmap.explain');
-      const v = chatSearchWebview.currentWebview;
-      assert(v);
-
-      await new Promise<void>((resolve) => {
-        v.onDidReceiveMessage(async (msg) => {
-          if (msg.command === 'chat-search-ready') {
-            resolve();
-          }
-        });
+      const p = new Promise<vscode.Webview>((resolve) => {
+        const waitForLoaded = (wv: vscode.Webview): void => {
+          wv.onDidReceiveMessage((msg) => {
+            if (msg.command === 'chat-search-loaded') {
+              resolve(wv);
+            }
+          });
+        };
+        chatSearchWebview.onWebview = waitForLoaded;
       });
-      chatView = v;
+      await vscode.commands.executeCommand('appmap.explain');
+      chatView = await p;
     });
 
     const waitForPin = () =>
       new Promise<PinFileEvent>((resolve) => {
-        chatView.onDidReceiveMessage(async (msg) => {
+        chatView.onDidReceiveMessage((msg) => {
           if (msg.command === 'pin') {
             resolve(msg.event);
           }
@@ -82,7 +82,7 @@ describe('chat', () => {
 
     describe('appmap.addToContext', () => {
       it('pins a file', async () => {
-        return withTmpDir(async (tmpDir) => {
+        await withTmpDir(async (tmpDir) => {
           const files = await newTmpFiles(tmpDir);
           sandbox.stub(chatSearchWebview, 'chooseFilesToPin').resolves(files);
           const p = waitForPin();
@@ -107,7 +107,7 @@ describe('chat', () => {
 
     describe('appmap.editor.title.addToContext', () => {
       it('pins a file', async () => {
-        return withTmpDir(async (tmpDir) => {
+        await withTmpDir(async (tmpDir) => {
           const files = await newTmpFiles(tmpDir);
           const p = waitForPin();
           await vscode.commands.executeCommand('appmap.editor.title.addToContext', files[0]);
