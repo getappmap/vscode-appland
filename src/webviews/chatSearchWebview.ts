@@ -39,6 +39,7 @@ export type ExplainResponse = {
 export default class ChatSearchWebview {
   private webviewList = new WebviewList();
   private filterStore: FilterStore;
+  private _onWebview?: (wv: vscode.Webview) => void;
 
   private constructor(
     private readonly context: vscode.ExtensionContext,
@@ -56,6 +57,10 @@ export default class ChatSearchWebview {
 
   get currentWebview(): vscode.Webview | undefined {
     return this.webviewList.currentWebview;
+  }
+
+  set onWebview(cb: (wv: vscode.Webview) => void) {
+    this._onWebview = cb;
   }
 
   async doPinFiles(panel: vscode.WebviewPanel, reqs: PinFileRequest[]) {
@@ -144,6 +149,9 @@ export default class ChatSearchWebview {
       }
     );
     this.webviewList.enroll(panel);
+    if (this._onWebview) {
+      this._onWebview(panel.webview);
+    }
 
     panel.webview.html = getWebviewContent(
       panel.webview,
