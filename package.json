@@ -530,19 +530,19 @@
         },
         {
           "command": "appmap.addToContext",
-          "when": "activeWebviewPanelId=='chatSearch'"
+          "when": "activeWebviewPanelId=='appmap.navie'"
         }
       ],
       "editor/title/context": [
         {
           "command": "appmap.editor.title.addToContext",
-          "when": "activeWebviewPanelId=='chatSearch' && resourceScheme == 'file'"
+          "when": "activeWebviewPanelId=='appmap.navie' && resourceScheme == 'file'"
         }
       ],
       "explorer/context": [
         {
           "command": "appmap.explorer.addToContext",
-          "when": "activeWebviewPanelId=='chatSearch'"
+          "when": "activeWebviewPanelId=='appmap.navie'"
         }
       ],
       "view/title": [

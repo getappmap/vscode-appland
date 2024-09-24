@@ -14,6 +14,7 @@ import ChatSearchDataService, { LatestAppMap } from '../services/chatSearchDataS
 import { parseLocation } from '../util';
 import { proxySettings } from '../lib/proxySettings';
 import { Telemetry } from '../telemetry';
+import WebviewList from './WebviewList';
 
 type ExplainOpts = {
   workspace?: vscode.WorkspaceFolder;
@@ -40,6 +41,7 @@ export type NavieViewState = {
 
 export default class ChatSearchWebview {
   private _onWebview?: (wv: vscode.Webview) => void;
+  private webviewList = new WebviewList();
 
   private constructor(
     private readonly context: vscode.ExtensionContext,
@@ -55,6 +57,10 @@ export default class ChatSearchWebview {
         resolveWebviewView: this.resolveWebviewView.bind(this),
       })
     );
+  }
+
+  get currentWebview(): vscode.Webview | undefined {
+    return this.webviewList.currentWebview;
   }
 
   set onWebview(cb: (wv: vscode.Webview) => void) {
@@ -140,6 +146,7 @@ export default class ChatSearchWebview {
     codeSelection?: CodeSelection,
     state?: NavieViewState
   ): Promise<void> {
+    this.webviewList.enroll(panel);
     await this.configureWebviewView(panel.webview, codeSelection, state);
   }
 
