@@ -45,7 +45,7 @@ export default function mountChatSearchView() {
           this.$refs.ui.updateFilters(updatedSavedFilters);
         },
       },
-      mounted() {
+      async mounted() {
         if (initialData.codeSelection) {
           this.$refs.ui.includeCodeSelection(initialData.codeSelection);
         }
@@ -53,9 +53,38 @@ export default function mountChatSearchView() {
           this.$refs.ui.$refs.vchat.addUserMessage(initialData.suggestion.label);
           this.$refs.ui.sendMessage(initialData.suggestion.prompt);
         }
-        if (initialData.threadId) {
-          this.$refs.ui.loadThread(initialData.threadId);
+        if (initialData.state) {
+          await this.$nextTick();
+          const { vchat: chat } = app.$refs.ui.$refs;
+          chat.messages = initialData.state.messages;
+          chat.threadId = initialData.state.threadId;
+          app.$refs.ui.pinnedItems.push(...initialData.state.pinnedItems);
+          app.$refs.ui.contextResponse = initialData.state.contextResponse;
+          app.$refs.ui.isChatting = initialData.state.isChatting;
+
+          await this.$nextTick();
+          const messageViewModels = [...document.querySelectorAll('.message')].map(
+            ({ __vue__ }) => __vue__
+          );
+          const lastMessage = messageViewModels[messageViewModels.length - 1];
+          if (lastMessage && !lastMessage.isUser) {
+            lastMessage.nextStepSuggestions = [];
+          }
+
+          await this.$nextTick();
+          chat.scrollToBottom();
         }
+        setInterval(() => {
+          const { vchat: chat } = app.$refs.ui.$refs;
+          const state = {
+            messages: chat.messages,
+            threadId: chat.threadId,
+            pinnedItems: app.$refs.ui.pinnedItems,
+            contextResponse: app.$refs.ui.contextResponse,
+            isChatting: app.$refs.ui.isChatting,
+          };
+          vscode.setState(state);
+        }, 1000);
       },
     });
 

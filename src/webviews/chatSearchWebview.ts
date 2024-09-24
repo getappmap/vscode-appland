@@ -210,7 +210,7 @@ export default class ChatSearchWebview {
             mostRecentAppMaps,
             apiUrl: ExtensionSettings.apiUrl,
             apiKey: await getApiKey(false),
-            threadId: state?.threadId,
+            state,
             /* TODO: Restore these
             targetAppmap,
             targetAppmapFsPath,
