@@ -24,6 +24,7 @@ export default function mountChatSearchView() {
             appmapYmlPresent: this.appmapYmlPresent,
             targetAppmapData: initialData.targetAppmap,
             targetAppmapFsPath: initialData.targetAppmapFsPath,
+            useAnimation: initialData.useAnimation,
             openNewChat() {
               vscode.postMessage({ command: 'open-new-chat' });
             },
@@ -115,7 +116,7 @@ export default function mountChatSearchView() {
     });
 
     app.$on('chat-search-loaded', () => {
-      vscode.postMessage({ command: 'chat-search-loaded'});
+      vscode.postMessage({ command: 'chat-search-loaded' });
     });
   });
 

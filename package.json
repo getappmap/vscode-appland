@@ -324,6 +324,11 @@
           "type": "number",
           "default": 20,
           "description": "Maximum size of a file (in KB) that can be pinned to the Navie context"
+        },
+        "appMap.useAnimation": {
+          "type": "boolean",
+          "default": true,
+          "description": "Use animations"
         }
       }
     },
