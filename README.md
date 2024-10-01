@@ -37,9 +37,15 @@ Navie provides different modes of interaction to assist you with your code and p
 
 - **`@explain` (default)**: Navie makes context-aware suggestions, provides specific solutions, and reasons about the larger context of the specific code being worked on.
 
-- **`@help`**: Activate help mode by beginning any question with the prefix "@help". This mode offers assistance with using AppMap, including guidance for generating and leveraging AppMap data effectively.
+- **`@plan`**: Navie focuses the AI response on building a detailed implementation plan for the relevant query. This will focus Navie on only understanding the problem and the application to generate a step-by-step plan.
 
 - **`@generate`**: Activate code generation mode by beginning any question with the prefix "@generate". In this mode Navie's response are optimized to include code snippets you can use directly in the files are working on.
+
+- **`@test`**: Navie's responses are optimized for test case creation, such as unit testing or integration testing. This prefix will understand how your tests are currently written and provide updated tests based on features or code that is provided. 
+
+- **`@diagram`**:  Navie will create and render a Mermaid compatible diagram within the Navie chat window. You can open this diagram in the [Mermaid Live Editor](https://mermaid.live), copy the Mermaid Definitions to your clipboard, save to disk, or expand a full window view.
+
+- **`@help`**: Activate help mode by beginning any question with the prefix "@help". This mode offers assistance with using AppMap, including guidance for generating and leveraging AppMap data effectively.
 
 **💡 Ask Navie - Using the lightbulb**: This feature is available in the Code Action menu when you have code selected. Choosing ‘Ask Navie’ from the Code Actions Menu initiates a new Navie chat populated with the snippet of selected code, enabling Navie answers based on that specific code snippet. Similarly, if you select some code in the active code window and open Navie, the selected code will be passed along.
 
