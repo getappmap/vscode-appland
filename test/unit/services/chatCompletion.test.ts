@@ -19,8 +19,8 @@ const mockModel: LanguageModelChat = {
   id: 'test-model',
   family: 'test-family',
   version: 'test-model',
-  async countTokens(): Promise<number> {
-    return 0;
+  async countTokens(content: string): Promise<number> {
+    return content.length;
   },
   maxInputTokens: 325,
   name: 'Test Model',
@@ -192,12 +192,13 @@ describe('ChatCompletion', () => {
   });
 
   describe('when streaming errors', () => {
+    let error = new Error('test error');
     beforeEach(() => {
       mockModel.sendRequest = async () => {
         return {
           // eslint-disable-next-line require-yield
           text: (async function* () {
-            throw new Error('test error');
+            throw error;
           })(),
         };
       };
@@ -223,8 +224,43 @@ describe('ChatCompletion', () => {
         { content: 'How are you?', role: 'assistant' },
         { content: 'I am good, thank you!', role: 'user' },
       ];
+      const response = await postAuthorized(chatCompletion.url, {
+        model: 'test-model',
+        messages,
+      });
+      expect(response.statusCode).to.equal(422);
+    });
+
+    it('reports token usage when exceeded (streaming)', async () => {
+      error = new Error('Message exceeds token limit.');
+      const messages = [
+        { content: 'Hello', role: 'user' },
+        { content: 'How are you?', role: 'assistant' },
+        { content: 'I am good, thank you!', role: 'user' },
+      ];
+      const response = await postAuthorized(chatCompletion.url, {
+        model: 'test-model',
+        messages,
+        stream: true,
+      });
+      expect(response.statusCode).to.equal(422);
+      expect(response.data).to.equal(
+        '{"error":{"message":"This model\'s maximum context length is 325 tokens. However, your messages resulted in 38 tokens.","type":"invalid_request_error","param":"messages","code":"context_length_exceeded"}}'
+      );
+    });
+
+    it('reports token usage when exceeded (non-streaming)', async () => {
+      error = new Error('Message exceeds token limit.');
+      const messages = [
+        { content: 'Hello', role: 'user' },
+        { content: 'How are you?', role: 'assistant' },
+        { content: 'I am good, thank you!', role: 'user' },
+      ];
       const response = await postAuthorized(chatCompletion.url, { model: 'test-model', messages });
       expect(response.statusCode).to.equal(422);
+      expect(response.data).to.equal(
+        '{"error":{"message":"This model\'s maximum context length is 325 tokens. However, your messages resulted in 38 tokens.","type":"invalid_request_error","param":"messages","code":"context_length_exceeded"}}'
+      );
     });
   });
 });
