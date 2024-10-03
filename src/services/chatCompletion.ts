@@ -76,12 +76,24 @@ export default class ChatCompletion implements Disposable {
 
   get env(): Record<string, string> {
     const pref = ChatCompletion.preferredModel;
-    return {
+
+    const modelTokenLimit = pref?.maxInputTokens ?? 3926;
+    const tokenLimitSetting = ExtensionSettings.navieContextTokenLimit;
+    const tokenLimits = [modelTokenLimit, tokenLimitSetting].filter(
+      (limit) => limit && limit > 0
+    ) as number[];
+
+    const env: Record<string, string> = {
       OPENAI_API_KEY: this.key,
       OPENAI_BASE_URL: this.url,
-      APPMAP_NAVIE_TOKEN_LIMIT: String(pref?.maxInputTokens ?? 3926),
       APPMAP_NAVIE_MODEL: pref?.family ?? 'gpt-4o',
     };
+
+    if (tokenLimits.length) {
+      env['APPMAP_NAVIE_TOKEN_LIMIT'] = Math.min(...tokenLimits).toString();
+    }
+
+    return env;
   }
 
   private static models: vscode.LanguageModelChat[] = [];

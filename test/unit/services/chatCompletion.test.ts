@@ -9,6 +9,7 @@ import type {
   LanguageModelChatMessage,
   LanguageModelChatResponse,
 } from 'vscode';
+import { workspace } from 'vscode';
 
 import ChatCompletion from '../../../src/services/chatCompletion';
 import { addMockChatModel, resetModelMocks } from '../mock/vscode/lm';
@@ -33,8 +34,18 @@ describe('ChatCompletion', () => {
   beforeEach(async () => {
     resetModelMocks();
     addMockChatModel(mockModel);
+
     await ChatCompletion.refreshModels();
   });
+
+  function mockTokenLimitSetting(limit: number | undefined) {
+    sinon.stub(workspace, 'getConfiguration').returns({
+      get: sinon.stub().callsFake((key) => {
+        if (key === 'navie.contextTokenLimit') return limit;
+        return undefined;
+      }),
+    } as any); // eslint-disable-line @typescript-eslint/no-explicit-any
+  }
 
   before(async () => {
     mockModel.sendRequest = sendRequestEcho;
@@ -54,6 +65,24 @@ describe('ChatCompletion', () => {
       OPENAI_BASE_URL: chatCompletion.url,
       APPMAP_NAVIE_TOKEN_LIMIT: '325',
       APPMAP_NAVIE_MODEL: 'test-family',
+    });
+  });
+
+  describe('when token limit is configured below the LLM default', () => {
+    beforeEach(() => mockTokenLimitSetting(100));
+
+    it('applies the configuration setting', () => {
+      const env = chatCompletion.env;
+      expect(env['APPMAP_NAVIE_TOKEN_LIMIT']).to.equal('100');
+    });
+  });
+
+  describe('when token limit is configured above the LLM default', () => {
+    beforeEach(() => mockTokenLimitSetting(100_000));
+
+    it('uses the LLM limit', () => {
+      const env = chatCompletion.env;
+      expect(env['APPMAP_NAVIE_TOKEN_LIMIT']).to.equal('325');
     });
   });
 
