@@ -4,7 +4,8 @@
   white-space: nowrap;
 }
 
-.context__body__table .context__pinned-item {
+.context__body__table .context__pinned-item,
+.pinned-items__body__table .pinned-items__pinned-item {
   margin: 0 !important;
   box-shadow: none !important;
 }

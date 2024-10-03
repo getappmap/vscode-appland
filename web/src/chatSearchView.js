@@ -1,9 +1,9 @@
-import Vue from 'vue';
 import { VChatSearch } from '@appland/components';
-import MessagePublisher from './messagePublisher';
-import handleAppMapMessages from './handleAppMapMessages';
 import 'highlight.js/styles/base16/snazzy.css';
+import Vue from 'vue';
 import '../static/styles/navie-integration.css';
+import handleAppMapMessages from './handleAppMapMessages';
+import MessagePublisher from './messagePublisher';
 
 export default function mountChatSearchView() {
   const vscode = window.acquireVsCodeApi();
@@ -24,6 +24,8 @@ export default function mountChatSearchView() {
             appmapYmlPresent: this.appmapYmlPresent,
             targetAppmapData: initialData.targetAppmap,
             targetAppmapFsPath: initialData.targetAppmapFsPath,
+            useAnimation: initialData.useAnimation,
+            editorType: initialData.editorType,
             openNewChat() {
               vscode.postMessage({ command: 'open-new-chat' });
             },
@@ -106,6 +108,10 @@ export default function mountChatSearchView() {
       vscode.postMessage({ command: 'select-llm-option', option });
     });
 
+    app.$on('choose-files-to-pin', () => {
+      vscode.postMessage({ command: 'choose-files-to-pin' });
+    });
+
     app.$on('fetch-pinned-files', (requests) => {
       vscode.postMessage({ command: 'fetch-pinned-files', requests });
     });
@@ -115,7 +121,7 @@ export default function mountChatSearchView() {
     });
 
     app.$on('chat-search-loaded', () => {
-      vscode.postMessage({ command: 'chat-search-loaded'});
+      vscode.postMessage({ command: 'chat-search-loaded' });
     });
   });
 

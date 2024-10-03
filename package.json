@@ -324,6 +324,11 @@
           "type": "number",
           "default": 20,
           "description": "Maximum size of a file (in KB) that can be pinned to the Navie context"
+        },
+        "appMap.useAnimation": {
+          "type": "boolean",
+          "default": true,
+          "description": "Use animations"
         }
       }
     },
@@ -695,7 +700,7 @@
   "dependencies": {
     "@appland/appmap": "^3.129.0",
     "@appland/client": "^1.14.1",
-    "@appland/components": "^4.37.4",
+    "@appland/components": "^4.38.1",
     "@appland/diagrams": "^1.8.0",
     "@appland/models": "^2.10.2",
     "@appland/rpc": "^1.15.0",
