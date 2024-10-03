@@ -315,6 +315,11 @@
           "type": "number",
           "description": "Port number to pass to the Navie UI (used for extension development and debugging only)"
         },
+        "appMap.navie.contextTokenLimit": {
+          "type": "number",
+          "default": 8000,
+          "description": "Default size of the context to send to Navie AI"
+        },
         "appMap.scannerEnabled": {
           "type": "boolean",
           "default": false,
