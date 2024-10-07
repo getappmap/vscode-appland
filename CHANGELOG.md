@@ -1,3 +1,22 @@
+# [0.130.0](https://github.com/getappmap/vscode-appland/compare/v0.129.1...v0.130.0) (2024-10-07)
+
+
+### Bug Fixes
+
+* add setting to control animation ([609d2f7](https://github.com/getappmap/vscode-appland/commit/609d2f7ad0e582f11c6dd2e085fbbf4bdefea6d3))
+* Apply user token limit, with a default of 8_000 ([d5c1bc4](https://github.com/getappmap/vscode-appland/commit/d5c1bc43590b385871d5715da84fa1ede5145d3e))
+* make sure Chat input gets focus ([bcc155c](https://github.com/getappmap/vscode-appland/commit/bcc155c305f4f209166b72df49244f898d371665))
+* style pinning help ([6cd4573](https://github.com/getappmap/vscode-appland/commit/6cd45735dc7c5986e6cbc4e11bdcefa4a21c313f))
+* Update @appland/components to v4.37.4 ([8a5c3a6](https://github.com/getappmap/vscode-appland/commit/8a5c3a694413261dc47046e7d7ee0f0e1abeaccc))
+* Update @appland/components to v4.38.3 ([5e55a75](https://github.com/getappmap/vscode-appland/commit/5e55a755933c0a6902446dd0e5a69eac6cf260bd))
+* Update marketplace readme ([6a70b39](https://github.com/getappmap/vscode-appland/commit/6a70b39f90d68b727f81c8562a300f11c442eda8))
+* Write an OpenAI-compatible error when context overflows ([7126fde](https://github.com/getappmap/vscode-appland/commit/7126fdea0070ef59538454da5687d8b5e19dd4bf))
+
+
+### Features
+
+* Add setting appMap.navie.contextTokenLimit ([0f3083a](https://github.com/getappmap/vscode-appland/commit/0f3083a2adebb3f54f3aa2502b2e9108185890ac))
+
 ## [0.129.1](https://github.com/getappmap/vscode-appland/compare/v0.129.0...v0.129.1) (2024-09-17)
 
 
