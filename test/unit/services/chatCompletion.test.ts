@@ -9,6 +9,7 @@ import type {
   LanguageModelChatMessage,
   LanguageModelChatResponse,
 } from 'vscode';
+import { workspace } from 'vscode';
 
 import ChatCompletion from '../../../src/services/chatCompletion';
 import { addMockChatModel, resetModelMocks } from '../mock/vscode/lm';
@@ -18,8 +19,8 @@ const mockModel: LanguageModelChat = {
   id: 'test-model',
   family: 'test-family',
   version: 'test-model',
-  async countTokens(): Promise<number> {
-    return 0;
+  async countTokens(content: string): Promise<number> {
+    return content.length;
   },
   maxInputTokens: 325,
   name: 'Test Model',
@@ -33,8 +34,18 @@ describe('ChatCompletion', () => {
   beforeEach(async () => {
     resetModelMocks();
     addMockChatModel(mockModel);
+
     await ChatCompletion.refreshModels();
   });
+
+  function mockTokenLimitSetting(limit: number | undefined) {
+    sinon.stub(workspace, 'getConfiguration').returns({
+      get: sinon.stub().callsFake((key) => {
+        if (key === 'navie.contextTokenLimit') return limit;
+        return undefined;
+      }),
+    } as any); // eslint-disable-line @typescript-eslint/no-explicit-any
+  }
 
   before(async () => {
     mockModel.sendRequest = sendRequestEcho;
@@ -54,6 +65,24 @@ describe('ChatCompletion', () => {
       OPENAI_BASE_URL: chatCompletion.url,
       APPMAP_NAVIE_TOKEN_LIMIT: '325',
       APPMAP_NAVIE_MODEL: 'test-family',
+    });
+  });
+
+  describe('when token limit is configured below the LLM default', () => {
+    beforeEach(() => mockTokenLimitSetting(100));
+
+    it('applies the configuration setting', () => {
+      const env = chatCompletion.env;
+      expect(env['APPMAP_NAVIE_TOKEN_LIMIT']).to.equal('100');
+    });
+  });
+
+  describe('when token limit is configured above the LLM default', () => {
+    beforeEach(() => mockTokenLimitSetting(100_000));
+
+    it('uses the LLM limit', () => {
+      const env = chatCompletion.env;
+      expect(env['APPMAP_NAVIE_TOKEN_LIMIT']).to.equal('325');
     });
   });
 
@@ -163,12 +192,13 @@ describe('ChatCompletion', () => {
   });
 
   describe('when streaming errors', () => {
+    let error = new Error('test error');
     beforeEach(() => {
       mockModel.sendRequest = async () => {
         return {
           // eslint-disable-next-line require-yield
           text: (async function* () {
-            throw new Error('test error');
+            throw error;
           })(),
         };
       };
@@ -194,8 +224,43 @@ describe('ChatCompletion', () => {
         { content: 'How are you?', role: 'assistant' },
         { content: 'I am good, thank you!', role: 'user' },
       ];
+      const response = await postAuthorized(chatCompletion.url, {
+        model: 'test-model',
+        messages,
+      });
+      expect(response.statusCode).to.equal(422);
+    });
+
+    it('reports token usage when exceeded (streaming)', async () => {
+      error = new Error('Message exceeds token limit.');
+      const messages = [
+        { content: 'Hello', role: 'user' },
+        { content: 'How are you?', role: 'assistant' },
+        { content: 'I am good, thank you!', role: 'user' },
+      ];
+      const response = await postAuthorized(chatCompletion.url, {
+        model: 'test-model',
+        messages,
+        stream: true,
+      });
+      expect(response.statusCode).to.equal(422);
+      expect(response.data).to.equal(
+        '{"error":{"message":"This model\'s maximum context length is 325 tokens. However, your messages resulted in 38 tokens.","type":"invalid_request_error","param":"messages","code":"context_length_exceeded"}}'
+      );
+    });
+
+    it('reports token usage when exceeded (non-streaming)', async () => {
+      error = new Error('Message exceeds token limit.');
+      const messages = [
+        { content: 'Hello', role: 'user' },
+        { content: 'How are you?', role: 'assistant' },
+        { content: 'I am good, thank you!', role: 'user' },
+      ];
       const response = await postAuthorized(chatCompletion.url, { model: 'test-model', messages });
       expect(response.statusCode).to.equal(422);
+      expect(response.data).to.equal(
+        '{"error":{"message":"This model\'s maximum context length is 325 tokens. However, your messages resulted in 38 tokens.","type":"invalid_request_error","param":"messages","code":"context_length_exceeded"}}'
+      );
     });
   });
 });

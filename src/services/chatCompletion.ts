@@ -76,12 +76,24 @@ export default class ChatCompletion implements Disposable {
 
   get env(): Record<string, string> {
     const pref = ChatCompletion.preferredModel;
-    return {
+
+    const modelTokenLimit = pref?.maxInputTokens ?? 3926;
+    const tokenLimitSetting = ExtensionSettings.navieContextTokenLimit;
+    const tokenLimits = [modelTokenLimit, tokenLimitSetting].filter(
+      (limit) => limit && limit > 0
+    ) as number[];
+
+    const env: Record<string, string> = {
       OPENAI_API_KEY: this.key,
       OPENAI_BASE_URL: this.url,
-      APPMAP_NAVIE_TOKEN_LIMIT: String(pref?.maxInputTokens ?? 3926),
       APPMAP_NAVIE_MODEL: pref?.family ?? 'gpt-4o',
     };
+
+    if (tokenLimits.length) {
+      env['APPMAP_NAVIE_TOKEN_LIMIT'] = Math.min(...tokenLimits).toString();
+    }
+
+    return env;
   }
 
   private static models: vscode.LanguageModelChat[] = [];
@@ -163,11 +175,12 @@ export default class ChatCompletion implements Disposable {
     debug(`Processing request: ${JSON.stringify(request)}`);
 
     let result: LanguageModelChatResponse;
+    const messages = toVSCodeMessages(request.messages);
     try {
       const cancellation = new CancellationTokenSource();
       req.on('close', () => cancellation.cancel());
       res.on('close', () => cancellation.cancel());
-      result = await model.sendRequest(toVSCodeMessages(request.messages), {}, cancellation.token);
+      result = await model.sendRequest(messages, {}, cancellation.token);
     } catch (e) {
       res.writeHead(422);
       res.end(isNativeError(e) && e.message);
@@ -175,8 +188,16 @@ export default class ChatCompletion implements Disposable {
       return;
     }
 
-    if ('stream' in request && request.stream) streamChatCompletion(res, model, result);
-    else sendChatCompletionResponse(res, model, result);
+    const countTokens = async () => {
+      const tokenCounts = await Promise.all(
+        messages.map(({ content }) => model.countTokens(content))
+      );
+      return tokenCounts.reduce((sum, c) => sum + c, 0);
+    };
+
+    if ('stream' in request && request.stream)
+      streamChatCompletion(res, model, result, countTokens);
+    else sendChatCompletionResponse(res, model, result, countTokens);
   }
 
   async dispose(): Promise<void> {
@@ -247,7 +268,8 @@ export default class ChatCompletion implements Disposable {
 async function sendChatCompletionResponse(
   res: ServerResponse<IncomingMessage>,
   model: LanguageModelChat,
-  result: LanguageModelChatResponse
+  result: LanguageModelChatResponse,
+  countTokens: () => Promise<number>
 ) {
   try {
     let content = '';
@@ -257,15 +279,59 @@ async function sendChatCompletionResponse(
   } catch (e) {
     warn(`Error streaming response: ${e}`);
     if (isNativeError(e)) warn(e.stack);
-    res.writeHead(422);
-    res.end(isNativeError(e) && e.message);
+    const apiError = await convertToOpenAiApiError(e, model, countTokens);
+    res.writeHead(422).end(JSON.stringify(apiError));
+  }
+}
+
+interface OpenAiApiError {
+  error: {
+    message: string;
+    type?: string;
+    param?: string;
+    code?: string;
+  };
+}
+
+async function convertToOpenAiApiError(
+  e: unknown,
+  model: LanguageModelChat,
+  countTokens: () => Promise<number>
+): Promise<OpenAiApiError> {
+  if (!isNativeError(e)) return { error: { message: String(e), type: 'server_error' } };
+
+  switch (e.message) {
+    case 'Message exceeds token limit.': {
+      const error = {
+        message: `This model's maximum context length is ${model.maxInputTokens} tokens.`,
+        type: 'invalid_request_error',
+        param: 'messages',
+        code: 'context_length_exceeded',
+      };
+      try {
+        const tokensUsed = await countTokens();
+        error.message += ` However, your messages resulted in ${tokensUsed} tokens.`;
+      } catch (e) {
+        warn(`Error counting tokens: ${e}`);
+      }
+      return { error };
+    }
+
+    default:
+      return {
+        error: {
+          message: e.message,
+          type: 'server_error',
+        },
+      };
   }
 }
 
 async function streamChatCompletion(
   res: ServerResponse,
   model: LanguageModelChat,
-  result: LanguageModelChatResponse
+  result: LanguageModelChatResponse,
+  countTokens: () => Promise<number>
 ) {
   try {
     const chunk = prepareChatCompletionChunk(model);
@@ -282,10 +348,12 @@ async function streamChatCompletion(
   } catch (e) {
     warn(`Error streaming response: ${e}`);
     if (isNativeError(e)) warn(e.stack);
+    const apiError = await convertToOpenAiApiError(e, model, countTokens);
     if (!res.headersSent) {
-      res.writeHead(422);
-      res.end(isNativeError(e) && e.message);
-    } else res.end(`data: ${JSON.stringify({ error: e })}`);
+      res.writeHead(422, { 'Content-Type': 'application/json' }).end(JSON.stringify(apiError));
+    } else {
+      res.end(`data: ${JSON.stringify(apiError)}`);
+    }
   }
 }
 

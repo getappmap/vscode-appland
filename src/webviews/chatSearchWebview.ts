@@ -194,6 +194,8 @@ export default class ChatSearchWebview {
             targetAppmap,
             targetAppmapFsPath,
             suggestion,
+            useAnimation: ExtensionSettings.useAnimation,
+            editorType: 'vscode',
           });
           break;
         case 'open-new-chat':

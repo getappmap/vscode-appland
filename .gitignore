@@ -33,4 +33,5 @@ resources/*.jar
 
 # AppMap
 tmp/appmap
+.navie/**/diff.txt
 

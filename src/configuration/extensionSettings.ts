@@ -52,6 +52,11 @@ export default class ExtensionSettings {
     if (port && typeof port === 'number' && port > 0) return port;
   }
 
+  public static get navieContextTokenLimit(): number | undefined {
+    const limit = vscode.workspace.getConfiguration('appMap').get('navie.contextTokenLimit');
+    if (limit && typeof limit === 'number' && limit > 0) return limit;
+  }
+
   public static get useVsCodeLM(): boolean {
     return [true, 'true'].includes(
       vscode.workspace.getConfiguration('appMap').get('navie.useVSCodeLM') || false
@@ -72,5 +77,11 @@ export default class ExtensionSettings {
   public static get maxPinnedFileSizeKB(): number {
     const ret = vscode.workspace.getConfiguration('appMap').get('maxPinnedFileSizeKB') as number;
     return ret !== undefined ? ret : 20000;
+  }
+
+  public static get useAnimation(): boolean {
+    return [true, 'true'].includes(
+      vscode.workspace.getConfiguration('appMap').get('useAnimation') || false
+    );
   }
 }
