@@ -65,6 +65,7 @@ describe('ChatCompletion', () => {
       OPENAI_BASE_URL: chatCompletion.url,
       APPMAP_NAVIE_TOKEN_LIMIT: '325',
       APPMAP_NAVIE_MODEL: 'test-family',
+      APPMAP_NAVIE_COMPLETION_BACKEND: 'openai',
     });
   });
 
