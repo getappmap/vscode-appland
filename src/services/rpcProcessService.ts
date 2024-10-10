@@ -102,7 +102,7 @@ export default class RpcProcessService implements Disposable {
     }
   }
 
-  private debouncedRestart(): void {
+  public debouncedRestart(): void {
     if (this.restarting) this.scheduleRestart();
     else {
       this.debounce = undefined;
