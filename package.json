@@ -309,7 +309,8 @@
         },
         "appMap.navie.useVSCodeLM": {
           "type": "boolean",
-          "description": "Use VSCode language model API for Navie AI if available.\nRequires a recent VSCode version and (currently) GitHub Copilot extension."
+          "description": "Use GitHub Copilot as Navie backend if available.\nRequires a recent VSCode version and GitHub Copilot extension.",
+          "default": true
         },
         "appMap.navie.rpcPort": {
           "type": "number",

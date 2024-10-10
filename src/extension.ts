@@ -225,7 +225,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
     const processService = new NodeProcessService(context);
 
-    ChatCompletion.initialize(context);
+    await ChatCompletion.initialize(context);
 
     AssetService.register(context);
     const dependenciesInstalled = AssetService.updateAll();
@@ -249,7 +249,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
           await rpcService.restartServer();
           vscode.window.showInformationMessage('Navie restarted successfully.');
         }),
-        ChatCompletion.onSettingsChanged(rpcService.scheduleRestart, rpcService)
+        ChatCompletion.onSettingsChanged(rpcService.debouncedRestart, rpcService)
       );
 
       const webview = ChatSearchWebview.register(
