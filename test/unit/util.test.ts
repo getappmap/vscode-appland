@@ -94,10 +94,7 @@ describe('parseLocation', () => {
       const result = (await parseLocation('C:\\path\\to\\file.rb')) as URI;
 
       expect(result instanceof URI).to.be.true;
-
-      // TODO: This may have different behavior on Windows
-      //       i.e. it may be a URI with a drive letter
-      expect(result.fsPath).to.equal('\\path\\to\\file.rb');
+      expect(result.fsPath).to.equal('c:\\path\\to\\file.rb');
     });
 
     it('should parse a location with a line number', async () => {

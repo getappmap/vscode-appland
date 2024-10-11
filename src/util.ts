@@ -419,5 +419,7 @@ export async function parseLocation(
       )
     );
   }
-  return vscode.Uri.parse(location);
+  // Remove any file:// prefix from the URI. Uri.file() will add it back. Otherwise, it'll be interpreted as
+  // part of the path, perhaps a drive letter.
+  return vscode.Uri.file(location.replace(/file:\/\//g, ''));
 }
