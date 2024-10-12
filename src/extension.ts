@@ -228,7 +228,10 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     await ChatCompletion.initialize(context);
 
     AssetService.register(context);
-    const dependenciesInstalled = AssetService.updateAll();
+    const dependenciesInstalled = ExtensionSettings.appMapCommandLineToolsPath
+      ? // do not try to download if we're using local tools anyway
+        Promise.resolve()
+      : AssetService.updateAll();
     const chatSearchWebview: Promise<ChatSearchWebview> = (async () => {
       await dependenciesInstalled;
 
