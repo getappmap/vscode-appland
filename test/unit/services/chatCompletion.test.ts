@@ -125,7 +125,7 @@ describe('ChatCompletion', () => {
     expect(instance).to.equal(chatCompletion);
 
     expect(chatCompletion.port).to.be.above(0);
-    expect(chatCompletion.url).to.match(/^http:\/\/localhost:\d+\/vscode\/copilot$/);
+    expect(chatCompletion.url).to.match(/^http:\/\/127.0.0.1:\d+\/vscode\/copilot$/);
 
     // make an actual HTTP request to the server
     const res = await get(chatCompletion.url);

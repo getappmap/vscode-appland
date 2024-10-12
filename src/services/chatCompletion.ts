@@ -30,7 +30,11 @@ let instance: Promise<ChatCompletion> | undefined;
 export default class ChatCompletion implements Disposable {
   public readonly server: Server;
 
-  constructor(private portNumber = 0, public readonly key = randomKey()) {
+  constructor(
+    private portNumber = 0,
+    public readonly key = randomKey(),
+    public readonly host = '127.0.0.1'
+  ) {
     this.server = createServer(async (req, res) => {
       try {
         await this.handleRequest(req, res);
@@ -45,7 +49,7 @@ export default class ChatCompletion implements Disposable {
         res.end(isNativeError(e) && e.message);
       }
     });
-    this.server.listen(portNumber);
+    this.server.listen(portNumber, host);
     const listening = new Promise<ChatCompletion>((resolve, reject) =>
       this.server
         .on('listening', () => {
@@ -75,7 +79,7 @@ export default class ChatCompletion implements Disposable {
   }
 
   get url(): string {
-    return `http://localhost:${this.port}/vscode/copilot`;
+    return `http://${this.host}:${this.port}/vscode/copilot`;
   }
 
   get env(): Record<string, string> {
