@@ -43,6 +43,7 @@ export default class RpcProcessService implements Disposable {
   private diposables: Disposable[] = [];
   private debounce?: NodeJS.Timeout;
   private restarting = false;
+  private restartTimeout?: NodeJS.Timeout;
 
   public constructor(
     private readonly context: ExtensionContext,
@@ -105,6 +106,7 @@ export default class RpcProcessService implements Disposable {
     return this.processWatcher.restart();
   }
 
+  public restartDelay = 100;
   public debounceTime = 5000;
 
   public scheduleRestart() {
@@ -117,11 +119,18 @@ export default class RpcProcessService implements Disposable {
 
   public debouncedRestart(): void {
     if (this.restarting) this.scheduleRestart();
-    else {
-      this.debounce = undefined;
-      this.restarting = true;
-      this.restart().finally(() => (this.restarting = false));
-    }
+    else if (!this.restartTimeout) {
+      // Add a small delay before triggering the restart to allow bulk configuration changes to
+      // propagate without triggering a longer debounce timeout.
+      this.restartTimeout = setTimeout(() => {
+        this.debounce = undefined;
+        this.restarting = true;
+        this.restartTimeout = undefined;
+        this.restart().finally(() => (this.restarting = false));
+      }, this.restartDelay).unref();
+    } /* else {
+      There's already a pending restart, so we don't need to do anything.
+    } */
   }
 
   protected async pushConfiguration() {
@@ -240,8 +249,6 @@ export default class RpcProcessService implements Disposable {
   }
 
   async updateSettings(settings: RpcSettings): Promise<void> {
-    let shouldRestart = false;
-
     if (settings.useCopilot !== undefined) {
       const config = vscode.workspace.getConfiguration('appMap.navie');
       const key = 'useVSCodeLM';
@@ -252,15 +259,13 @@ export default class RpcProcessService implements Disposable {
       if (otherSettings?.workspaceValue !== undefined) {
         await config.update(key, undefined, undefined);
       }
-
-      shouldRestart = true;
     }
 
     if (Object.hasOwnProperty.call(settings, 'openAIApiKey')) {
       const sameKey = await openAIApiKeyEquals(this.context, settings.openAIApiKey);
       if (!sameKey) {
         await setOpenAIApiKey(this.context, settings.openAIApiKey);
-        shouldRestart = true;
+        this.debouncedRestart();
       }
     }
 
@@ -270,9 +275,6 @@ export default class RpcProcessService implements Disposable {
         env[k] = v;
       });
       await vscode.workspace.getConfiguration('appMap').update('commandLineEnvironment', env, true);
-      shouldRestart = true;
     }
-
-    if (shouldRestart) this.restart();
   }
 }

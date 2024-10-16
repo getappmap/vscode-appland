@@ -246,7 +246,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
       context.subscriptions.push(
         vscode.workspace.onDidChangeConfiguration((e) => {
-          if (e.affectsConfiguration('appMap.commandLineEnvironment')) rpcService.scheduleRestart();
+          if (e.affectsConfiguration('appMap.commandLineEnvironment'))
+            rpcService.debouncedRestart();
         }),
         vscode.commands.registerCommand('appmap.rpc.restart', async () => {
           await rpcService.restartServer();
