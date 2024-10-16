@@ -13,6 +13,7 @@ import MockExtensionContext from '../../mocks/mockExtensionContext';
 import EventEmitter from '../mock/vscode/EventEmitter';
 import { waitFor } from '../../waitFor';
 import vscode from '../mock/vscode';
+import { Configuration } from '../mock/vscode/workspace';
 
 chai.use(chaiAsPromised);
 
@@ -192,35 +193,41 @@ describe('RpcProcessService', () => {
   });
 
   describe('updateSettings', () => {
-    it('does not restart if no settings are changed', async () => {
-      const restartSpy = sinon.spy(rpcService, 'restart');
-      await rpcService.updateSettings({});
-      expect(restartSpy.called).to.be.false;
+    afterEach(() => {
+      sinon.restore();
     });
 
-    it('restarts if the useCopilot setting is changed', async () => {
-      const restartSpy = sinon.spy(rpcService, 'restart');
+    it('does nothing if no settings are changed', async () => {
+      const updateSpy = sinon.spy(Configuration.prototype, 'update');
+      const restartSpy = sinon.spy(rpcService, 'debouncedRestart');
+      await rpcService.updateSettings({});
+      expect(restartSpy.called).to.be.false;
+      expect(updateSpy.called).to.be.false;
+    });
+
+    it('updates `useVSCodeLM` if the useCopilot setting is changed', async () => {
+      const updateSpy = sinon.spy(Configuration.prototype, 'update');
       await rpcService.updateSettings({ useCopilot: true });
-      expect(restartSpy.called).to.be.true;
+      expect(updateSpy.calledWith('useVSCodeLM', true)).to.be.true;
     });
 
     it('restarts if the openAIApiKey setting is changed', async () => {
-      const restartSpy = sinon.spy(rpcService, 'restart');
+      const restartSpy = sinon.spy(rpcService, 'debouncedRestart');
       await rpcService.updateSettings({ openAIApiKey: 'new-key' });
       expect(restartSpy.called).to.be.true;
     });
 
     it('does not restart if the openAIApiKey setting is the same', async () => {
       extensionContext.secrets.store('openai.api_key', 'old-key');
-      const restartSpy = sinon.spy(rpcService, 'restart');
+      const restartSpy = sinon.spy(rpcService, 'debouncedRestart');
       await rpcService.updateSettings({ openAIApiKey: 'old-key' });
       expect(restartSpy.called).to.be.false;
     });
 
-    it('restarts if the env setting is changed', async () => {
-      const restartSpy = sinon.spy(rpcService, 'restart');
+    it('updates `commandLineEnvironment` if the env setting is changed', async () => {
+      const updateSpy = sinon.spy(Configuration.prototype, 'update');
       await rpcService.updateSettings({ env: { foo: 'bar' } });
-      expect(restartSpy.called).to.be.true;
+      expect(updateSpy.calledWith('commandLineEnvironment', { foo: 'bar' })).to.be.true;
     });
 
     it('properly sets env values', async () => {

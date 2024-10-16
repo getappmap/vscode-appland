@@ -35,7 +35,7 @@ export const EVENTS = {
   onDidChangeConfiguration: listener(),
 };
 
-class Configuration extends Map<string, unknown> {
+export class Configuration extends Map<string, unknown> {
   get(key: string, defaultValue?: unknown): unknown {
     return super.get(key) ?? defaultValue;
   }
