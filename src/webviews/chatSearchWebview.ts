@@ -178,7 +178,7 @@ export default class ChatSearchWebview {
           type: 'navie-restarted',
         });
       }),
-      this.rpcService.onRestart(() => {
+      this.rpcService.onBeforeRestart(() => {
         panel.webview.postMessage({
           type: 'navie-restarting',
         });
