@@ -84,6 +84,14 @@ export default function mountChatSearchView() {
         });
     });
 
+    messages
+      .on('navie-restarting', () => {
+        app.$refs.ui.onNavieRestarting();
+      })
+      .on('navie-restarted', () => {
+        app.$refs.ui.loadNavieConfig();
+      });
+
     app.$on('open-install-instructions', () => {
       vscode.postMessage({ command: 'open-install-instructions' });
     });
