@@ -82,8 +82,8 @@ export default class RpcProcessService implements Disposable {
     );
   }
 
-  get onRestart(): vscode.Event<void> {
-    return this.processWatcher.onRestart;
+  get onBeforeRestart(): vscode.Event<void> {
+    return this.processWatcher.onBeforeRestart;
   }
 
   // Provides some internal state access, primarily for testing purposes.
