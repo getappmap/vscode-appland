@@ -12,6 +12,7 @@ import assert from 'assert';
 import { DEBUG_EXCEPTION, Telemetry } from '../telemetry';
 import ErrorCode from '../telemetry/definitions/errorCodes';
 import AssetService, { AssetIdentifier } from '../assets/assetService';
+import { openAIApiKeyEquals, setOpenAIApiKey } from './navieConfigurationService';
 
 export type RpcConnect = (port: number) => Client;
 
@@ -21,6 +22,14 @@ export interface RpcProcessServiceState {
   waitForStartup(): Promise<void>;
 
   killProcess(): void;
+}
+
+interface RpcSettings {
+  useCopilot?: boolean;
+  openAIApiKey?: string;
+
+  // If an env var is set to undefined, it will be removed from the env.
+  env?: Record<string, string | undefined>;
 }
 
 export default class RpcProcessService implements Disposable {
@@ -70,6 +79,10 @@ export default class RpcProcessService implements Disposable {
         }, 0);
       })
     );
+  }
+
+  get onRestart(): vscode.Event<void> {
+    return this.processWatcher.onRestart;
   }
 
   // Provides some internal state access, primarily for testing purposes.
@@ -224,5 +237,42 @@ export default class RpcProcessService implements Disposable {
     this.processWatcher.dispose();
     this._onRpcPortChange.dispose();
     this.diposables.forEach((d) => d.dispose());
+  }
+
+  async updateSettings(settings: RpcSettings): Promise<void> {
+    let shouldRestart = false;
+
+    if (settings.useCopilot !== undefined) {
+      const config = vscode.workspace.getConfiguration('appMap.navie');
+      const key = 'useVSCodeLM';
+
+      await config.update(key, settings.useCopilot, true);
+
+      const otherSettings = config.inspect(key);
+      if (otherSettings?.workspaceValue !== undefined) {
+        await config.update(key, undefined, undefined);
+      }
+
+      shouldRestart = true;
+    }
+
+    if (Object.hasOwnProperty.call(settings, 'openAIApiKey')) {
+      const sameKey = await openAIApiKeyEquals(this.context, settings.openAIApiKey);
+      if (!sameKey) {
+        await setOpenAIApiKey(this.context, settings.openAIApiKey);
+        shouldRestart = true;
+      }
+    }
+
+    if (settings.env) {
+      const env = vscode.workspace.getConfiguration('appMap').get('commandLineEnvironment', {});
+      Object.entries(settings.env).forEach(([k, v]) => {
+        env[k] = v;
+      });
+      await vscode.workspace.getConfiguration('appMap').update('commandLineEnvironment', env, true);
+      shouldRestart = true;
+    }
+
+    if (shouldRestart) this.restart();
   }
 }
