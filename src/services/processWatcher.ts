@@ -76,6 +76,7 @@ export class ProcessWatcher implements vscode.Disposable {
 
   protected _onError: vscode.EventEmitter<Error> = new vscode.EventEmitter<Error>();
   protected _onAbort: vscode.EventEmitter<Error> = new vscode.EventEmitter<Error>();
+  protected _onRestart: vscode.EventEmitter<void> = new vscode.EventEmitter<void>();
 
   protected shouldRun = false;
   protected hasAborted = false;
@@ -99,6 +100,11 @@ export class ProcessWatcher implements vscode.Disposable {
   // will not be retried.
   public get onAbort(): vscode.Event<Error> {
     return this._onAbort.event;
+  }
+
+  // Fired when the process is restarted.
+  public get onRestart(): vscode.Event<void> {
+    return this._onRestart.event;
   }
 
   public get id(): ProcessId {
@@ -169,6 +175,7 @@ export class ProcessWatcher implements vscode.Disposable {
   }
 
   async restart(): Promise<void> {
+    this._onRestart.fire();
     await this.stop();
     await this.start();
   }

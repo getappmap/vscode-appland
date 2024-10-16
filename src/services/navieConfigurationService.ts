@@ -39,6 +39,15 @@ export default function navieConfigurationService(context: vscode.ExtensionConte
   );
 }
 
+export async function openAIApiKeyEquals(
+  extensionContext: vscode.ExtensionContext,
+  key: string | undefined
+): Promise<boolean> {
+  const { secrets } = extensionContext;
+  const storedKey = await secrets.get(OPENAI_API_KEY);
+  return key === storedKey;
+}
+
 export async function setOpenAIApiKey(
   extensionContext: vscode.ExtensionContext,
   key: string | undefined
