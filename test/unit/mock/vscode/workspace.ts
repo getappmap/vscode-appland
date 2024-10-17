@@ -35,9 +35,42 @@ export const EVENTS = {
   onDidChangeConfiguration: listener(),
 };
 
+export class Configuration extends Map<string, unknown> {
+  get(key: string, defaultValue?: unknown): unknown {
+    return super.get(key) ?? defaultValue;
+  }
+
+  inspect(key: string): { workspaceValue?: unknown } | undefined {
+    return {};
+  }
+
+  update(key: string, value: unknown, target?: unknown): Promise<void> {
+    if (value === undefined || value === null) {
+      this.delete(key);
+    } else {
+      let filteredValue = value;
+      if (typeof value === 'object') {
+        // Undefined/null values are deleted
+        filteredValue = Object.entries(value).reduce((acc, [k, v]) => {
+          if (v !== undefined && v !== null) acc[k] = v;
+          return acc;
+        }, {});
+      }
+      this.set(key, filteredValue);
+    }
+    return Promise.resolve();
+  }
+}
+
+const configs = new Map<string, Configuration>();
+
 export default {
   fs,
-  getConfiguration: () => new Map<string, unknown>(),
+  getConfiguration: (key: string) => {
+    let config = configs.get(key);
+    if (!config) configs.set(key, (config = new Configuration()));
+    return config;
+  },
   workspaceFolders: [],
   onDidChangeConfiguration: EVENTS.onDidChangeConfiguration,
   onDidChangeWorkspaceFolders: EVENTS.onDidChangeWorkspaceFolders,

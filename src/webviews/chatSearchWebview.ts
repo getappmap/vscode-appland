@@ -44,7 +44,8 @@ export default class ChatSearchWebview {
   private constructor(
     private readonly context: vscode.ExtensionContext,
     private readonly extensionState: ExtensionState,
-    private readonly dataService: ChatSearchDataService
+    private readonly dataService: ChatSearchDataService,
+    private readonly rpcService: RpcProcessService
   ) {
     this.filterStore = new FilterStore(context);
     this.filterStore.onDidChangeFilters((event) => {
@@ -171,6 +172,16 @@ export default class ChatSearchWebview {
           type: 'update',
           mostRecentAppMaps: appmaps,
         });
+      }),
+      this.rpcService.onRpcPortChange(() => {
+        panel.webview.postMessage({
+          type: 'navie-restarted',
+        });
+      }),
+      this.rpcService.onBeforeRestart(() => {
+        panel.webview.postMessage({
+          type: 'navie-restarting',
+        });
       })
     );
 
@@ -248,12 +259,36 @@ export default class ChatSearchWebview {
 
         case 'select-llm-option': {
           const { option } = message;
-          if (option === 'default') {
-            await vscode.commands.executeCommand('appmap.clearNavieAiSettings');
-          } else if (option === 'own-key') {
-            await vscode.commands.executeCommand('appmap.openAIApiKey.set');
-          } else {
-            console.error(`Unknown option: ${option}`);
+          switch (option) {
+            case 'default':
+              this.rpcService.updateSettings({
+                useCopilot: false,
+                openAIApiKey: '',
+                env: {
+                  OPENAI_BASE_URL: undefined,
+                  OPENAI_API_KEY: undefined,
+                  AZURE_OPENAI_API_KEY: undefined,
+                  ANTHROPIC_API_KEY: undefined,
+                },
+              });
+              break;
+
+            case 'copilot':
+              this.rpcService.updateSettings({ useCopilot: true });
+              break;
+
+            case 'own-key':
+              this.rpcService.updateSettings({
+                useCopilot: false,
+                openAIApiKey: await vscode.window.showInputBox({ placeHolder: 'OpenAI API Key' }),
+                env: {
+                  OPENAI_BASE_URL: undefined,
+                },
+              });
+              break;
+
+            default:
+              console.error(`Unknown option: ${option}`);
           }
           break;
         }
@@ -304,6 +339,6 @@ export default class ChatSearchWebview {
   ): ChatSearchWebview {
     const dataService = new ChatSearchDataService(rpcService, appmaps);
 
-    return new ChatSearchWebview(context, extensionState, dataService);
+    return new ChatSearchWebview(context, extensionState, dataService, rpcService);
   }
 }

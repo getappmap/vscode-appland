@@ -16,6 +16,7 @@ import vscode, {
 } from 'vscode';
 
 import ExtensionSettings from '../configuration/extensionSettings';
+import once from '../lib/once';
 
 const debug = debuglog('appmap-vscode:chat-completion');
 
@@ -29,7 +30,11 @@ let instance: Promise<ChatCompletion> | undefined;
 export default class ChatCompletion implements Disposable {
   public readonly server: Server;
 
-  constructor(private portNumber = 0, public readonly key = randomKey()) {
+  constructor(
+    private portNumber = 0,
+    public readonly key = randomKey(),
+    public readonly host = '127.0.0.1'
+  ) {
     this.server = createServer(async (req, res) => {
       try {
         await this.handleRequest(req, res);
@@ -44,7 +49,7 @@ export default class ChatCompletion implements Disposable {
         res.end(isNativeError(e) && e.message);
       }
     });
-    this.server.listen(portNumber);
+    this.server.listen(portNumber, host);
     const listening = new Promise<ChatCompletion>((resolve, reject) =>
       this.server
         .on('listening', () => {
@@ -57,7 +62,10 @@ export default class ChatCompletion implements Disposable {
         .on('error', reject)
     );
     this.server.on('error', (e) => warn(`Chat completion server error: ${e}`));
-    instance ??= listening;
+    if (!instance) {
+      instance = listening;
+      ChatCompletion.settingsChanged.fire();
+    }
   }
 
   get ready(): Promise<void> {
@@ -71,13 +79,14 @@ export default class ChatCompletion implements Disposable {
   }
 
   get url(): string {
-    return `http://localhost:${this.port}/vscode/copilot`;
+    return `http://${this.host}:${this.port}/vscode/copilot`;
   }
 
   get env(): Record<string, string> {
     const pref = ChatCompletion.preferredModel;
+    if (!pref) return {};
 
-    const modelTokenLimit = pref?.maxInputTokens ?? 3926;
+    const modelTokenLimit = pref.maxInputTokens;
     const tokenLimitSetting = ExtensionSettings.navieContextTokenLimit;
     const tokenLimits = [modelTokenLimit, tokenLimitSetting].filter(
       (limit) => limit && limit > 0
@@ -86,7 +95,8 @@ export default class ChatCompletion implements Disposable {
     const env: Record<string, string> = {
       OPENAI_API_KEY: this.key,
       OPENAI_BASE_URL: this.url,
-      APPMAP_NAVIE_MODEL: pref?.family ?? 'gpt-4o',
+      APPMAP_NAVIE_MODEL: pref.family,
+      APPMAP_NAVIE_COMPLETION_BACKEND: 'openai',
     };
 
     if (tokenLimits.length) {
@@ -102,16 +112,16 @@ export default class ChatCompletion implements Disposable {
     return ChatCompletion.models[0];
   }
 
-  static async refreshModels(): Promise<void> {
+  static async refreshModels(): Promise<boolean> {
     const previousBest = this.preferredModel?.id;
     ChatCompletion.models = (await vscode.lm.selectChatModels()).sort(
       (a, b) => b.maxInputTokens - a.maxInputTokens + b.family.localeCompare(a.family)
     );
-    if (this.preferredModel?.id !== previousBest) this.settingsChanged.fire();
+    return this.preferredModel?.id !== previousBest;
   }
 
-  static get instance(): Promise<ChatCompletion | undefined> {
-    if (!instance) return Promise.resolve(undefined);
+  static get instance(): Promise<ChatCompletion> | undefined {
+    if (!instance) return undefined;
     return instance;
   }
 
@@ -201,67 +211,112 @@ export default class ChatCompletion implements Disposable {
   }
 
   async dispose(): Promise<void> {
-    if ((await instance) === this) instance = undefined;
+    if ((await instance) === this) {
+      instance = undefined;
+      ChatCompletion.settingsChanged.fire();
+    }
     this.server.close();
   }
 
   private static settingsChanged = new vscode.EventEmitter<void>();
   static onSettingsChanged = ChatCompletion.settingsChanged.event;
 
-  static initialize(context: ExtensionContext) {
-    // TODO: make the messages and handling generic for all LM extensions
-    const hasLM = 'lm' in vscode && 'selectChatModels' in vscode.lm;
-
-    if (ExtensionSettings.useVsCodeLM && checkAvailability())
-      context.subscriptions.push(new ChatCompletion());
+  static async initialize(context: ExtensionContext) {
+    if (await this.checkConfiguration(context))
+      context.subscriptions.push(
+        vscode.lm.onDidChangeChatModels(() => this.checkConfiguration(context))
+      );
 
     context.subscriptions.push(
-      vscode.workspace.onDidChangeConfiguration(async (e) => {
-        if (e.affectsConfiguration('appMap.navie.useVSCodeLM')) {
-          const instance = await ChatCompletion.instance;
-          if (!ExtensionSettings.useVsCodeLM && instance) await instance.dispose();
-          else if (ExtensionSettings.useVsCodeLM && checkAvailability())
-            context.subscriptions.push(new ChatCompletion());
-          this.settingsChanged.fire();
-        }
-      })
+      vscode.workspace.onDidChangeConfiguration(
+        (e) =>
+          e.affectsConfiguration('appMap.navie.useVSCodeLM') &&
+          this.checkConfiguration(context, true)
+      )
     );
+  }
 
-    if (hasLM) {
-      ChatCompletion.refreshModels();
-      vscode.lm.onDidChangeChatModels(
-        ChatCompletion.refreshModels,
-        undefined,
-        context.subscriptions
-      );
+  static async checkConfiguration(context: ExtensionContext, switched = false): Promise<boolean> {
+    // TODO: make the messages and handling generic for all LM extensions
+    const hasLM = 'lm' in vscode && 'selectChatModels' in vscode.lm;
+    const wantsLM = ExtensionSettings.useVsCodeLM;
+
+    if (!hasLM) {
+      if (wantsLM) {
+        if (switched)
+          vscode.window.showErrorMessage(
+            'AppMap: Copilot backend for Navie is enabled, but the LanguageModel API is not available.\nPlease update your VS Code to the latest version.'
+          );
+        else if (once(context, 'no-lm-api-available'))
+          vscode.window.showInformationMessage(
+            'AppMap: Navie can use Copilot, but the LanguageModel API is not available.\nPlease update your VS Code to the latest version if you want to use it.'
+          );
+      }
+      return hasLM;
+    }
+    once.reset(context, 'no-lm-api-available');
+
+    if (!wantsLM) {
+      if (instance) {
+        await instance.then((i) => i.dispose());
+        // must have been switched, so show message
+        vscode.window.showInformationMessage('AppMap: Copilot backend for Navie is disabled.');
+        once.reset(context, 'chat-completion-ready');
+        once.reset(context, 'chat-completion-no-models');
+      }
+      return hasLM;
     }
 
-    function checkAvailability() {
-      if (!hasLM)
-        vscode.window.showErrorMessage(
-          'AppMap: VS Code LM backend for Navie is enabled, but the LanguageModel API is not available.\nPlease update your VS Code to the latest version.'
+    // now it's hasLM and wantsLM
+    const changed = await this.refreshModels();
+    if (this.preferredModel) {
+      if (!instance) {
+        context.subscriptions.push(new this());
+        await this.instance;
+      } else if (changed) ChatCompletion.settingsChanged.fire();
+      if (switched)
+        vscode.window.showInformationMessage(
+          `AppMap: Copilot backend for Navie is enabled, using model: ${this.preferredModel.name}`
         );
-      else if (!vscode.extensions.getExtension('github.copilot')) {
+      else if (once(context, 'chat-completion-ready'))
+        vscode.window.showInformationMessage(
+          `AppMap: Copilot backend for Navie is ready. Model: ${this.preferredModel.name}`
+        );
+      once.reset(context, 'chat-completion-no-models');
+    } else {
+      if (instance) await instance.then((i) => i.dispose());
+      if (switched)
         vscode.window
           .showErrorMessage(
-            'AppMap: VS Code LM backend for Navie is enabled, but the GitHub Copilot extension is not installed.\nPlease install it from the marketplace and reload the window.',
+            'AppMap: Copilot backend for Navie is enabled, but no compatible models were found.\nInstall Copilot to continue.',
             'Install Copilot'
           )
-          .then((selection) => {
-            if (selection === 'Install Copilot') {
-              const odc = vscode.lm.onDidChangeChatModels(() => {
-                context.subscriptions.push(new ChatCompletion());
-                ChatCompletion.settingsChanged.fire();
-                odc.dispose();
-              });
+          .then(
+            (selection) =>
+              selection === 'Install Copilot' &&
               vscode.commands.executeCommand(
                 'workbench.extensions.installExtension',
                 'github.copilot'
-              );
-            }
-          });
-      } else return true;
+              )
+          );
+      else if (once(context, 'chat-completion-no-models'))
+        vscode.window
+          .showInformationMessage(
+            'AppMap: Navie can use Copilot, but no compatible models were found.\nYou can install Copilot to use this feature.',
+            'Install Copilot'
+          )
+          .then(
+            (selection) =>
+              selection === 'Install Copilot' &&
+              vscode.commands.executeCommand(
+                'workbench.extensions.installExtension',
+                'github.copilot'
+              )
+          );
+      once.reset(context, 'chat-completion-ready');
     }
+
+    return hasLM;
   }
 }
 

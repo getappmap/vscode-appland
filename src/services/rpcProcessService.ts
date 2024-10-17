@@ -12,6 +12,7 @@ import assert from 'assert';
 import { DEBUG_EXCEPTION, Telemetry } from '../telemetry';
 import ErrorCode from '../telemetry/definitions/errorCodes';
 import AssetService, { AssetIdentifier } from '../assets/assetService';
+import { openAIApiKeyEquals, setOpenAIApiKey } from './navieConfigurationService';
 
 export type RpcConnect = (port: number) => Client;
 
@@ -21,6 +22,14 @@ export interface RpcProcessServiceState {
   waitForStartup(): Promise<void>;
 
   killProcess(): void;
+}
+
+interface RpcSettings {
+  useCopilot?: boolean;
+  openAIApiKey?: string;
+
+  // If an env var is set to undefined, it will be removed from the env.
+  env?: Record<string, string | undefined>;
 }
 
 export default class RpcProcessService implements Disposable {
@@ -34,6 +43,7 @@ export default class RpcProcessService implements Disposable {
   private diposables: Disposable[] = [];
   private debounce?: NodeJS.Timeout;
   private restarting = false;
+  private restartTimeout?: NodeJS.Timeout;
 
   public constructor(
     private readonly context: ExtensionContext,
@@ -72,6 +82,10 @@ export default class RpcProcessService implements Disposable {
     );
   }
 
+  get onBeforeRestart(): vscode.Event<void> {
+    return this.processWatcher.onBeforeRestart;
+  }
+
   // Provides some internal state access, primarily for testing purposes.
   public get state(): RpcProcessServiceState {
     return {
@@ -92,6 +106,7 @@ export default class RpcProcessService implements Disposable {
     return this.processWatcher.restart();
   }
 
+  public restartDelay = 100;
   public debounceTime = 5000;
 
   public scheduleRestart() {
@@ -102,13 +117,20 @@ export default class RpcProcessService implements Disposable {
     }
   }
 
-  private debouncedRestart(): void {
+  public debouncedRestart(): void {
     if (this.restarting) this.scheduleRestart();
-    else {
-      this.debounce = undefined;
-      this.restarting = true;
-      this.restart().finally(() => (this.restarting = false));
-    }
+    else if (!this.restartTimeout) {
+      // Add a small delay before triggering the restart to allow bulk configuration changes to
+      // propagate without triggering a longer debounce timeout.
+      this.restartTimeout = setTimeout(() => {
+        this.debounce = undefined;
+        this.restarting = true;
+        this.restartTimeout = undefined;
+        this.restart().finally(() => (this.restarting = false));
+      }, this.restartDelay).unref();
+    } /* else {
+      There's already a pending restart, so we don't need to do anything.
+    } */
   }
 
   protected async pushConfiguration() {
@@ -224,5 +246,35 @@ export default class RpcProcessService implements Disposable {
     this.processWatcher.dispose();
     this._onRpcPortChange.dispose();
     this.diposables.forEach((d) => d.dispose());
+  }
+
+  async updateSettings(settings: RpcSettings): Promise<void> {
+    if (settings.useCopilot !== undefined) {
+      const config = vscode.workspace.getConfiguration('appMap.navie');
+      const key = 'useVSCodeLM';
+
+      await config.update(key, settings.useCopilot, true);
+
+      const otherSettings = config.inspect(key);
+      if (otherSettings?.workspaceValue !== undefined) {
+        await config.update(key, undefined, undefined);
+      }
+    }
+
+    if (Object.hasOwnProperty.call(settings, 'openAIApiKey')) {
+      const sameKey = await openAIApiKeyEquals(this.context, settings.openAIApiKey);
+      if (!sameKey) {
+        await setOpenAIApiKey(this.context, settings.openAIApiKey);
+        this.debouncedRestart();
+      }
+    }
+
+    if (settings.env) {
+      const env = vscode.workspace.getConfiguration('appMap').get('commandLineEnvironment', {});
+      Object.entries(settings.env).forEach(([k, v]) => {
+        env[k] = v;
+      });
+      await vscode.workspace.getConfiguration('appMap').update('commandLineEnvironment', env, true);
+    }
   }
 }

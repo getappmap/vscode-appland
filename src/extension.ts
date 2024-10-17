@@ -225,10 +225,13 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
     const processService = new NodeProcessService(context);
 
-    ChatCompletion.initialize(context);
+    await ChatCompletion.initialize(context);
 
     AssetService.register(context);
-    const dependenciesInstalled = AssetService.updateAll();
+    const dependenciesInstalled = ExtensionSettings.appMapCommandLineToolsPath
+      ? // do not try to download if we're using local tools anyway
+        Promise.resolve()
+      : AssetService.updateAll();
     const chatSearchWebview: Promise<ChatSearchWebview> = (async () => {
       await dependenciesInstalled;
 
@@ -243,13 +246,14 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
       context.subscriptions.push(
         vscode.workspace.onDidChangeConfiguration((e) => {
-          if (e.affectsConfiguration('appMap.commandLineEnvironment')) rpcService.scheduleRestart();
+          if (e.affectsConfiguration('appMap.commandLineEnvironment'))
+            rpcService.debouncedRestart();
         }),
         vscode.commands.registerCommand('appmap.rpc.restart', async () => {
           await rpcService.restartServer();
           vscode.window.showInformationMessage('Navie restarted successfully.');
         }),
-        ChatCompletion.onSettingsChanged(rpcService.scheduleRestart, rpcService)
+        ChatCompletion.onSettingsChanged(rpcService.debouncedRestart, rpcService)
       );
 
       const webview = ChatSearchWebview.register(

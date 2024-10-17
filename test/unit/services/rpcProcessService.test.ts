@@ -12,6 +12,8 @@ import RpcProcessService, { RpcProcessServiceState } from '../../../src/services
 import MockExtensionContext from '../../mocks/mockExtensionContext';
 import EventEmitter from '../mock/vscode/EventEmitter';
 import { waitFor } from '../../waitFor';
+import vscode from '../mock/vscode';
+import { Configuration } from '../mock/vscode/workspace';
 
 chai.use(chaiAsPromised);
 
@@ -187,6 +189,54 @@ describe('RpcProcessService', () => {
       rpcService.scheduleRestart();
 
       await waitFor(`Expecting debounced restart`, () => restartSpy.calledOnce);
+    });
+  });
+
+  describe('updateSettings', () => {
+    afterEach(() => {
+      sinon.restore();
+    });
+
+    it('does nothing if no settings are changed', async () => {
+      const updateSpy = sinon.spy(Configuration.prototype, 'update');
+      const restartSpy = sinon.spy(rpcService, 'debouncedRestart');
+      await rpcService.updateSettings({});
+      expect(restartSpy.called).to.be.false;
+      expect(updateSpy.called).to.be.false;
+    });
+
+    it('updates `useVSCodeLM` if the useCopilot setting is changed', async () => {
+      const updateSpy = sinon.spy(Configuration.prototype, 'update');
+      await rpcService.updateSettings({ useCopilot: true });
+      expect(updateSpy.calledWith('useVSCodeLM', true)).to.be.true;
+    });
+
+    it('restarts if the openAIApiKey setting is changed', async () => {
+      const restartSpy = sinon.spy(rpcService, 'debouncedRestart');
+      await rpcService.updateSettings({ openAIApiKey: 'new-key' });
+      expect(restartSpy.called).to.be.true;
+    });
+
+    it('does not restart if the openAIApiKey setting is the same', async () => {
+      extensionContext.secrets.store('openai.api_key', 'old-key');
+      const restartSpy = sinon.spy(rpcService, 'debouncedRestart');
+      await rpcService.updateSettings({ openAIApiKey: 'old-key' });
+      expect(restartSpy.called).to.be.false;
+    });
+
+    it('updates `commandLineEnvironment` if the env setting is changed', async () => {
+      const updateSpy = sinon.spy(Configuration.prototype, 'update');
+      await rpcService.updateSettings({ env: { foo: 'bar' } });
+      expect(updateSpy.calledWith('commandLineEnvironment', { foo: 'bar' })).to.be.true;
+    });
+
+    it('properly sets env values', async () => {
+      vscode.workspace
+        .getConfiguration('appMap')
+        .update('commandLineEnvironment', { foo: 'bar', bar: 'baz' }, true);
+      await rpcService.updateSettings({ env: { foo: undefined, baz: 'qux' } });
+      const env = vscode.workspace.getConfiguration('appMap').get('commandLineEnvironment');
+      expect(env).to.deep.equal({ bar: 'baz', baz: 'qux' });
     });
   });
 });
