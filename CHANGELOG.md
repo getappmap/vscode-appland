@@ -1,3 +1,18 @@
+# [0.131.0](https://github.com/getappmap/vscode-appland/compare/v0.130.0...v0.131.0) (2024-10-17)
+
+
+### Bug Fixes
+
+* Bind chat completion server to localhost ([9a0810d](https://github.com/getappmap/vscode-appland/commit/9a0810da1e960722b6d00befbc9d9ad4424920df))
+* Fix an issue when opening sequence diagrams from Navie on Windows ([3391fbf](https://github.com/getappmap/vscode-appland/commit/3391fbfaae6934672f23d010c4c74c63f40d2252))
+
+
+### Features
+
+* Enable Copilot by default if available ([9fa0f59](https://github.com/getappmap/vscode-appland/commit/9fa0f59563659ec6b0f2a41a35d2645dba4aeacd))
+* Language model provider now updates dynamically ([1c1cdb3](https://github.com/getappmap/vscode-appland/commit/1c1cdb312b65fbe227465fdde8c6dac48edb1d7d))
+* Upgrade @appland/components to v4.39.0 ([4df4fcc](https://github.com/getappmap/vscode-appland/commit/4df4fcc225fdd883877f884d237302a4399da96d))
+
 # [0.130.0](https://github.com/getappmap/vscode-appland/compare/v0.129.1...v0.130.0) (2024-10-07)
 
 
