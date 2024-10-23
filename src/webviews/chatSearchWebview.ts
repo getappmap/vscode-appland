@@ -304,6 +304,15 @@ export default class ChatSearchWebview {
           break;
         }
 
+        case 'click-link': {
+          const location = await parseLocation(message.link);
+          if (location) {
+            const uri = location instanceof vscode.Location ? location.uri : location;
+            await vscode.commands.executeCommand('vscode.open', uri);
+          }
+          break;
+        }
+
         case 'fetch-pinned-files': {
           const { requests } = message;
           this.doPinFiles(panel, requests);
