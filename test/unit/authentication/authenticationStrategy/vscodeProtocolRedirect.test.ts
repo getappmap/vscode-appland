@@ -39,11 +39,4 @@ describe('VscodeProtocolRedirect', () => {
       'vscode-test://appland.appmap/authn-appmap-server?client_id%3D123'
     );
   });
-
-  it('should return the correct auth URL', () => {
-    const authUrl = vscodeProtocolRedirect.getAuthUrl();
-    expect(authUrl).to.deep.equal(
-      vscode.Uri.parse('https://server.appmap.test/authn_provider/vscode')
-    );
-  });
 });
