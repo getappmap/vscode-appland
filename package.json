@@ -440,10 +440,10 @@
         "steps": [
           {
             "id": "Sign in",
-            "title": "Sign into AppMap",
-            "description": "Use the sidebar to sign into AppMap.\n[Open sidebar](command:appmap.views.signIn.focus)\nYou can sign in with an email address, a GitHub account or a GitLab account.",
+            "title": "Activate AppMap",
+            "description": "Sign-in with email, GitHub, or GitLab to activate AppMap.\n[Open activation form](command:appmap.views.signIn.focus)",
             "media": {
-              "image": "images/walkthrough/configure-backend.svg",
+              "image": "images/walkthrough/access-the-activation-form-walkthrough.png",
               "altText": "AppMap logo hovering above AI sparkles"
             },
             "when": "appMap.showSignIn",
@@ -454,9 +454,9 @@
           {
             "id": "configure-backend",
             "title": "Choose your preferred AI model",
-            "description": "By default, AppMap Navie provides an LLM service based on GPT-4o.\nYou can configure Navie to use the GitHub Copilot LLM, or use your own model or API key. [See the documentation for details](https://appmap.io/docs/navie/bring-your-own-model.html).",
+            "description": "AppMap Navie uses the GitHub Copilot LLM if GitHub Copilot is installed. Otherwise, it defaults to the GPT-4o LLM.\n  See the documentation for instructions on using other models.[See the documentation for details](https://appmap.io/docs/navie/bring-your-own-model.html).",
             "media": {
-              "image": "images/walkthrough/configure-backend.svg",
+              "image": "images/walkthrough/modify-llm-in-chat.png",
               "altText": "AppMap logo hovering above AI sparkles"
             },
             "when": "!appMap.showSignIn"
