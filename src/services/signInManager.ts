@@ -22,11 +22,11 @@ export default class SignInManager {
     });
   }
 
-  public static async signIn(): Promise<void> {
+  public static async signIn(ssoTarget?: string): Promise<void> {
     if (this.signedIn) return;
 
     try {
-      this.signedIn = !!(await getApiKey(true));
+      this.signedIn = !!(await getApiKey(true, ssoTarget));
       this.updateSignInState();
     } catch (e) {
       Telemetry.sendEvent(DEBUG_EXCEPTION, {

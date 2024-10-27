@@ -21,8 +21,8 @@ export default function mountSignInView() {
       },
     });
 
-    app.$on('sign-in', () => {
-      messages.rpc('sign-in');
+    app.$on('sign-in', (ssoTarget) => {
+      messages.rpc('sign-in', ssoTarget);
     });
 
     app.$on('activate', (apiKey) => {

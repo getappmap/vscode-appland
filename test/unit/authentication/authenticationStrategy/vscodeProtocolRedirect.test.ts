@@ -29,7 +29,13 @@ describe('VscodeProtocolRedirect', () => {
   });
 
   it('should have the correct authnPath', () => {
-    expect(vscodeProtocolRedirect.authnPath).to.equal('authn_provider/vscode');
+    expect(vscodeProtocolRedirect.getAuthnPath()).to.equal('authn_provider/vscode');
+  });
+
+  it('should include the SSO target', () => {
+    expect(vscodeProtocolRedirect.getAuthnPath('github')).to.equal(
+      'authn_provider/vscode?ssoTarget=github'
+    );
   });
 
   it('should redirect to the correct URL', async () => {

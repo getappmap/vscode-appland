@@ -7,12 +7,19 @@ import Environment from '../configuration/environment';
 // extension (because of Webpack), but fails during tests. As a quick fix, this export has been moved out.
 export const AUTHN_PROVIDER_NAME = 'appmap.server';
 
-export async function getApiKey(createIfNone: boolean): Promise<string | undefined> {
+export async function getApiKey(
+  createIfNone: boolean,
+  ssoTarget?: string
+): Promise<string | undefined> {
   if (!createIfNone && Environment.appMapTestApiKey) return Environment.appMapTestApiKey;
 
   let session: vscode.AuthenticationSession | undefined;
   try {
-    session = await vscode.authentication.getSession(AUTHN_PROVIDER_NAME, ['default'], {
+    const scopes = ['default'];
+    if (ssoTarget) {
+      scopes.push(`ssoTarget:${ssoTarget}`);
+    }
+    session = await vscode.authentication.getSession(AUTHN_PROVIDER_NAME, scopes, {
       createIfNone,
     });
   } catch (e) {

@@ -1,12 +1,15 @@
 import * as vscode from 'vscode';
 import AuthenticationStrategy from '.';
-import extensionSettings from '../../configuration/extensionSettings';
 import AppMapServerAuthenticationHandler from '../../uri/appmapServerAuthenticationHandler';
 import UriHandler from '../../uri/uriHandler';
 
 export default class VscodeProtocolRedirect implements AuthenticationStrategy {
-  public get authnPath(): string {
-    return 'authn_provider/vscode';
+  public getAuthnPath(ssoTarget?: string): string {
+    let path = 'authn_provider/vscode';
+    if (ssoTarget) {
+      path += `?ssoTarget=${ssoTarget}`;
+    }
+    return path;
   }
 
   constructor(
@@ -15,12 +18,11 @@ export default class VscodeProtocolRedirect implements AuthenticationStrategy {
   ) {}
 
   async redirectUrl(params: ReadonlyArray<[string, string]>): Promise<string> {
-    const query = params
-      .reduce((query, [k, v]) => {
-        query.append(k, v);
-        return query;
-      }, new URLSearchParams())
-      .toString();
+    const queryParams = params.reduce((query, [k, v]) => {
+      query.append(k, v);
+      return query;
+    }, new URLSearchParams());
+    const query = queryParams.toString();
 
     const uri = vscode.Uri.parse(
       `${vscode.env.uriScheme}://appland.appmap/authn-appmap-server`

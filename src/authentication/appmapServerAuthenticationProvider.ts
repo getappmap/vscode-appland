@@ -120,12 +120,12 @@ export default class AppMapServerAuthenticationProvider implements vscode.Authen
     }
   }
 
-  async createSession(): Promise<vscode.AuthenticationSession> {
+  async createSession(scopes: string[]): Promise<vscode.AuthenticationSession> {
     const session = this.consumePendingLicenseKey();
     if (session) {
       this.session = session;
     } else if (!this.session) {
-      this.session = await this.performSignIn();
+      this.session = await this.performSignIn(scopes);
       debug('createSession(); session %savailable', this.session ? '' : 'not ');
     }
 
@@ -159,7 +159,7 @@ export default class AppMapServerAuthenticationProvider implements vscode.Authen
     return;
   }
 
-  async performSignIn(): Promise<vscode.AuthenticationSession | undefined> {
+  async performSignIn(scopes: string[]): Promise<vscode.AuthenticationSession | undefined> {
     const nonce = randomUUID();
     const authnHandler = new AppMapServerAuthenticationHandler(nonce);
     const authnStrategies = [
@@ -167,12 +167,19 @@ export default class AppMapServerAuthenticationProvider implements vscode.Authen
       new LocalWebserver(authnHandler),
     ];
 
+    const ssoTarget: string | undefined = scopes
+      .find((s) => s.startsWith('ssoTarget:'))
+      ?.split(':')[1];
+
     for (const [index, authnStrategy] of authnStrategies.entries()) {
       authnStrategy.prepareSignIn();
       const redirectUri = await authnStrategy.redirectUrl([['nonce', nonce]]);
-      const authnUrl = AppMapServerAuthenticationProvider.authURL(authnStrategy.authnPath, {
-        redirect_url: redirectUri.toString(),
-      });
+      const authnUrl = AppMapServerAuthenticationProvider.authURL(
+        authnStrategy.getAuthnPath(ssoTarget),
+        {
+          redirect_url: redirectUri.toString(),
+        }
+      );
       vscode.env.openExternal(authnUrl);
       const session = await vscode.window.withProgress<vscode.AuthenticationSession | AuthFailure>(
         {
