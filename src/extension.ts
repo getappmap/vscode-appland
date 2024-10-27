@@ -101,7 +101,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     );
 
     vscode.commands.registerCommand('appmap.login', async () => {
-      appmapServerAuthenticationProvider.createSession();
+      appmapServerAuthenticationProvider.createSession([]);
     });
     vscode.commands.registerCommand('appmap.logout', async () => {
       appmapServerAuthenticationProvider.removeSession();

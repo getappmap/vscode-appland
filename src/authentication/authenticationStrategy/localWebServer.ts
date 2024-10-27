@@ -6,7 +6,7 @@ import loginPage from '../../../web/static/html/authn_success.html';
 export default class LocalWebserver implements AuthenticationStrategy {
   private server?: Server;
 
-  public get authnPath(): string {
+  public getAuthnPath(): string {
     return 'authn_provider/localhost';
   }
 
