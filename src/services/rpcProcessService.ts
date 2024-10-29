@@ -180,7 +180,11 @@ export default class RpcProcessService implements Disposable {
       await configurationFn();
     } catch (e) {
       NodeProcessService.outputChannel.appendLine('Failed to sync AppMap configurations');
-      NodeProcessService.outputChannel.appendLine(String(e));
+      if (e instanceof AggregateError) {
+        e.errors.forEach((err) => NodeProcessService.outputChannel.appendLine(String(err)));
+      } else {
+        NodeProcessService.outputChannel.appendLine(String(e));
+      }
     }
   }
 
