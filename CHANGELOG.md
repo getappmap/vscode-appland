@@ -1,3 +1,15 @@
+## [0.131.1](https://github.com/getappmap/vscode-appland/compare/v0.131.0...v0.131.1) (2024-11-11)
+
+
+### Bug Fixes
+
+* Bring back autofocus, sans the bug ([69a05c8](https://github.com/getappmap/vscode-appland/commit/69a05c8a8100595a01ab6a5805c03c10040f1efc))
+* Drop the automatic input focus ([4419bfd](https://github.com/getappmap/vscode-appland/commit/4419bfd9071ceb5675237ec80170481d4319c536))
+* Links to files can now be opened ([b667f41](https://github.com/getappmap/vscode-appland/commit/b667f4125fbd6d8effcaa183a02c1bc71d2b8e43))
+* Log aggregate errors if configuration sync fails ([711f6e0](https://github.com/getappmap/vscode-appland/commit/711f6e05675a0c76c3a53b029c859409cc1bd475))
+* parse pinned file paths correctly ([22d4283](https://github.com/getappmap/vscode-appland/commit/22d428335368fd194599d07edd1597ca3c75c2c8))
+* skip login page when authenticating with SSO ([ca27207](https://github.com/getappmap/vscode-appland/commit/ca272071826c8a7322beb9ec29b7c570e356a871))
+
 # [0.131.0](https://github.com/getappmap/vscode-appland/compare/v0.130.0...v0.131.0) (2024-10-17)
 
 
