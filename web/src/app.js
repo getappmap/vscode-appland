@@ -42,10 +42,10 @@ if (moduleName in modules) {
   // to work well enough to be worthwhile.
   window.addEventListener('focus', () => {
     const elt = body.querySelector('[focus]');
-    if (elt && document.activeElement !== elt) {
+    if (elt && document.activeElement === document.body) {
       elt.focus();
       setTimeout(() => {
-        if (document.activeElement !== elt) {
+        if (document.hasFocus() && document.activeElement === document.body) {
           elt.focus();
         }
       }, 200);

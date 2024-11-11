@@ -388,28 +388,32 @@ export function sanitizeEnvironment(env: NodeJS.ProcessEnv): Record<string, stri
   return sanitizedEnv;
 }
 
+export async function expandPath(filePath: string, directory?: string): Promise<string> {
+  if (path.isAbsolute(filePath)) return filePath;
+
+  let workspaceFolder: vscode.WorkspaceFolder | undefined;
+  if (directory) {
+    workspaceFolder = vscode.workspace.getWorkspaceFolder(vscode.Uri.file(directory));
+  }
+
+  const pattern = workspaceFolder
+    ? new vscode.RelativePattern(workspaceFolder, `**/${filePath}`)
+    : `**/${filePath}`;
+  const files = await vscode.workspace.findFiles(pattern);
+  if (files.length > 0) {
+    return files[0].fsPath;
+  }
+
+  return filePath;
+}
+
 export async function parseLocation(
   location: string,
   directory?: string
 ): Promise<vscode.Location | vscode.Uri> {
   const match = location.match(/:(\d+(-\d+)?)$/);
   if (match) {
-    let locationPath = location.substring(0, match.index);
-    if (!path.isAbsolute(locationPath)) {
-      let workspaceFolder: vscode.WorkspaceFolder | undefined;
-      if (directory) {
-        workspaceFolder = vscode.workspace.getWorkspaceFolder(vscode.Uri.file(directory));
-      }
-
-      const pattern = workspaceFolder
-        ? new vscode.RelativePattern(workspaceFolder, `**/${locationPath}`)
-        : `**/${locationPath}`;
-      const files = await vscode.workspace.findFiles(pattern);
-      if (files.length > 0) {
-        locationPath = files[0].fsPath;
-      }
-    }
-
+    const locationPath = await expandPath(location.substring(0, match.index), directory);
     const [startLine, endLine] = match[1].split('-').map((x) => parseInt(x, 10) - 1);
     return new vscode.Location(
       vscode.Uri.file(locationPath),
@@ -421,5 +425,6 @@ export async function parseLocation(
   }
   // Remove any file:// prefix from the URI. Uri.file() will add it back. Otherwise, it'll be interpreted as
   // part of the path, perhaps a drive letter.
-  return vscode.Uri.file(location.replace(/file:\/\//g, ''));
+  const locationPath = await expandPath(location.replace(/file:\/\//g, ''), directory);
+  return vscode.Uri.file(locationPath);
 }

@@ -72,7 +72,7 @@ export default class ChatSearchWebview {
         let contentLength = r.content?.length;
         if (!r.content) {
           assert(r.uri, `doPinFiles, ${r.name}: no content, no uri`);
-          const u: vscode.Uri = vscode.Uri.parse(r.uri);
+          const u: vscode.Uri = vscode.Uri.file(r.uri.toString().replace(/file:\/\//g, ''));
           const stat = await vscode.workspace.fs.stat(u);
           contentLength = stat.size;
           if (contentLength < maxPinnedFileSize) {
@@ -301,6 +301,15 @@ export default class ChatSearchWebview {
             }));
             this.doPinFiles(panel, requests);
           });
+          break;
+        }
+
+        case 'click-link': {
+          const location = await parseLocation(message.link);
+          if (location) {
+            const uri = location instanceof vscode.Location ? location.uri : location;
+            await vscode.commands.executeCommand('vscode.open', uri);
+          }
           break;
         }
 

@@ -29,7 +29,13 @@ describe('VscodeProtocolRedirect', () => {
   });
 
   it('should have the correct authnPath', () => {
-    expect(vscodeProtocolRedirect.authnPath).to.equal('authn_provider/vscode');
+    expect(vscodeProtocolRedirect.getAuthnPath()).to.equal('authn_provider/vscode');
+  });
+
+  it('should include the SSO target', () => {
+    expect(vscodeProtocolRedirect.getAuthnPath('github')).to.equal(
+      'authn_provider/vscode?ssoTarget=github'
+    );
   });
 
   it('should redirect to the correct URL', async () => {
@@ -37,13 +43,6 @@ describe('VscodeProtocolRedirect', () => {
     const redirectUrl = await vscodeProtocolRedirect.redirectUrl(Object.entries(queryParams));
     expect(redirectUrl).to.equal(
       'vscode-test://appland.appmap/authn-appmap-server?client_id%3D123'
-    );
-  });
-
-  it('should return the correct auth URL', () => {
-    const authUrl = vscodeProtocolRedirect.getAuthUrl();
-    expect(authUrl).to.deep.equal(
-      vscode.Uri.parse('https://server.appmap.test/authn_provider/vscode')
     );
   });
 });

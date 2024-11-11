@@ -67,7 +67,7 @@ describe('Authenticate', () => {
         });
 
         const obtainedSession =
-          await appmapService.appmapServerAuthenticationProvider.createSession();
+          await appmapService.appmapServerAuthenticationProvider.createSession([]);
 
         assert(obtainedSession, 'session');
         assert.deepStrictEqual(obtainedSession, session);
