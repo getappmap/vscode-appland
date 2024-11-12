@@ -83,6 +83,14 @@ export class LinkTreeDataProvider implements vscode.TreeDataProvider<vscode.Tree
       return treeItem;
     });
 
+    const walkthroughItem = new vscode.TreeItem('Walkthrough');
+    walkthroughItem.id = 'DOC_WALKTHROUGH' as string;
+    walkthroughItem.command = {
+      command: 'workbench.action.openWalkthrough',
+      arguments: ['appland.appmap#navie.walkthrough'],
+    } as vscode.Command;
+    items.push(walkthroughItem);
+
     return Promise.resolve(items);
   }
 

@@ -57,7 +57,6 @@ export default class SignInManager {
       this.shouldShowSignIn()
     );
 
-    if (!this.shouldShowSignIn())
-      vscode.commands.executeCommand('workbench.action.openWalkthrough', 'navie.walkthrough');
+    if (this.shouldShowSignIn()) vscode.commands.executeCommand('appmap.explain');
   }
 }
