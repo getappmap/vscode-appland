@@ -15,10 +15,18 @@ export default class SignInManager {
     this.firstInstalledVersion = semver.coerce(extensionState.firstVersionInstalled);
     await this.updateSignInState();
 
+    if (!extensionState.hasSeenWalkthrough()) {
+      vscode.commands.executeCommand(
+        'workbench.action.openWalkthrough',
+        'appland.appmap#navie.walkthrough'
+      );
+      extensionState.setSeenWalkthrough();
+    }
+
     vscode.authentication.onDidChangeSessions((e) => {
       if (e.provider.id !== AUTHN_PROVIDER_NAME) return;
 
-      setTimeout(this.updateSignInState.bind(this), 0);
+      setTimeout(() => this.updateSignInState(), 0);
     });
   }
 
@@ -27,7 +35,7 @@ export default class SignInManager {
 
     try {
       this.signedIn = !!(await getApiKey(true, ssoTarget));
-      this.updateSignInState();
+      await this.updateSignInState();
     } catch (e) {
       Telemetry.sendEvent(DEBUG_EXCEPTION, {
         exception: e as Error,
@@ -56,8 +64,5 @@ export default class SignInManager {
       this.contextKeyShowSignInWebview,
       this.shouldShowSignIn()
     );
-
-    if (!this.shouldShowSignIn())
-      vscode.commands.executeCommand('workbench.action.openWalkthrough', 'navie.walkthrough');
   }
 }
