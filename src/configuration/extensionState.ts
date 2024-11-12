@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { hasPreviouslyInstalledExtension } from '../util';
+import semver from 'semver';
 
 export const Keys = {
   Global: {
@@ -7,6 +8,7 @@ export const Keys = {
     INSTALL_VERSION: 'appmap.applandinc.installVersion',
     ANALYSIS_CTA_DISMISSED: 'appmap.applandinc.analysisCTADismissed',
     FIRST_MAP_NOTIFICATION_SHOWN: 'appmap.applandinc.firstAppMapNotificationShown',
+    SEEN_WALKTHROUGH: 'appmap.applandinc.seenWalkthrough',
   },
   Workspace: {
     CONFIGURED_AGENT: 'appmap.applandinc.agentConfigured',
@@ -121,6 +123,10 @@ export default class ExtensionState implements vscode.Disposable {
     return this.context.globalState.get(Keys.Global.INSTALL_VERSION, 'unknown');
   }
 
+  installedPriorTo(version: string): boolean {
+    return semver.lt(this.firstVersionInstalled, version);
+  }
+
   /** Returns whether or not the user has opened an AppMap from within the given workspace folder. */
   getWorkspaceOpenedAppMap(workspaceFolder: vscode.WorkspaceFolder): boolean {
     return this.getWorkspaceFlag(Keys.Workspace.OPENED_APPMAP, workspaceFolder.uri.fsPath);
@@ -178,6 +184,18 @@ export default class ExtensionState implements vscode.Disposable {
 
   setUpdatedTestConfig(workspaceFolder: vscode.WorkspaceFolder, value: boolean): void {
     this.setWorkspaceFlag(Keys.Workspace.UPDATED_TEST_CONFIG, value, workspaceFolder);
+  }
+
+  private static readonly walkthroughVersion = '0.131.1';
+  hasSeenWalkthrough(): boolean {
+    return (
+      this.installedPriorTo(ExtensionState.walkthroughVersion) ||
+      (this.context.globalState.get(Keys.Global.SEEN_WALKTHROUGH) ?? false)
+    );
+  }
+
+  setSeenWalkthrough(): void {
+    this.context.globalState.update(Keys.Global.SEEN_WALKTHROUGH, true);
   }
 
   resetState(): void {
