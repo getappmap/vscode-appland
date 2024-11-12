@@ -1,3 +1,10 @@
+## [0.131.2](https://github.com/getappmap/vscode-appland/compare/v0.131.1...v0.131.2) (2024-11-12)
+
+
+### Bug Fixes
+
+* The walkthrough now only opens once ([fbaf453](https://github.com/getappmap/vscode-appland/commit/fbaf4534172baef7f015a1ff371d6591c534313e))
+
 ## [0.131.1](https://github.com/getappmap/vscode-appland/compare/v0.131.0...v0.131.1) (2024-11-11)
 
 
