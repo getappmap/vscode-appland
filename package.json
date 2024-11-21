@@ -214,6 +214,10 @@
         "title": "AppMap: Restart Navie"
       },
       {
+        "command": "appmap.copilot.selectModel",
+        "title": "AppMap: Select Copilot Model"
+      },
+      {
         "command": "appmap.login",
         "title": "AppMap: Login"
       },
@@ -335,6 +339,10 @@
           "type": "boolean",
           "default": true,
           "description": "Use animations"
+        },
+        "appMap.copilot.preferredModel": {
+          "type": "string",
+          "description": "Preferred Copilot model to use"
         }
       }
     },

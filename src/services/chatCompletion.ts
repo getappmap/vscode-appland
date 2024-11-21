@@ -112,7 +112,12 @@ export default class ChatCompletion implements Disposable {
   }
 
   static get preferredModel(): vscode.LanguageModelChat | undefined {
-    return ChatCompletion.models[0];
+    const modelId = ExtensionSettings.preferredCopilotModel;
+    if (modelId) {
+      const model = this.models.find((m) => m.id === modelId);
+      if (model) return model;
+    }
+    return this.models[0];
   }
 
   static async refreshModels(): Promise<boolean> {

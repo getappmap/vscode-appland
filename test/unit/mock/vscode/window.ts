@@ -4,7 +4,8 @@ import EventEmitter from './EventEmitter';
 import Terminal from './Terminal';
 import type * as vscode from 'vscode';
 
-const doNothing = () => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const doNothing = (..._args: unknown[]) => {
   // nop
 };
 

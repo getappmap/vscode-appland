@@ -63,6 +63,7 @@ import CommandRegistry from './commands/commandRegistry';
 import AssetService from './assets/assetService';
 import clearNavieAiSettings from './commands/clearNavieAiSettings';
 import ExtensionSettings from './configuration/extensionSettings';
+import PickCopilotModelCommand from './commands/pickCopilotModel';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   CommandRegistry.setContext(context).addWaitAlias({
@@ -226,6 +227,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     const processService = new NodeProcessService(context);
 
     await ChatCompletion.initialize(context);
+    PickCopilotModelCommand.register(context);
 
     AssetService.register(context);
     const dependenciesInstalled = ExtensionSettings.appMapCommandLineToolsPath
