@@ -79,6 +79,14 @@ export default class ExtensionSettings {
     return ret !== undefined ? ret : 20000;
   }
 
+  public static get preferredCopilotModel(): string | undefined {
+    return vscode.workspace.getConfiguration('appMap').get('copilot.preferredModel', 'gpt-4o');
+  }
+
+  public static setPreferredCopilotModel(model: string | undefined): Thenable<void> {
+    return vscode.workspace.getConfiguration('appMap').update('copilot.preferredModel', model);
+  }
+
   public static get useAnimation(): boolean {
     return [true, 'true'].includes(
       vscode.workspace.getConfiguration('appMap').get('useAnimation') || false
