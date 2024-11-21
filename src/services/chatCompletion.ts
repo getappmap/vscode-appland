@@ -106,7 +106,10 @@ export default class ChatCompletion implements Disposable {
     return env;
   }
 
-  private static models: vscode.LanguageModelChat[] = [];
+  private static _models: vscode.LanguageModelChat[] = [];
+  public static get models(): ReadonlyArray<vscode.LanguageModelChat> {
+    return this._models;
+  }
 
   static get preferredModel(): vscode.LanguageModelChat | undefined {
     return ChatCompletion.models[0];
@@ -114,7 +117,7 @@ export default class ChatCompletion implements Disposable {
 
   static async refreshModels(): Promise<boolean> {
     const previousBest = this.preferredModel?.id;
-    ChatCompletion.models = (await vscode.lm.selectChatModels()).sort(
+    this._models = (await vscode.lm.selectChatModels()).sort(
       (a, b) => b.maxInputTokens - a.maxInputTokens + b.family.localeCompare(a.family)
     );
     return this.preferredModel?.id !== previousBest;
