@@ -120,12 +120,16 @@ export default class ChatCompletion implements Disposable {
     return this.models[0];
   }
 
+  // This is used to determine whether the preferred model has changed upon refreshing the models.
+  private static previousModelId: string | undefined;
+
   static async refreshModels(): Promise<boolean> {
-    const previousBest = this.preferredModel?.id;
     this._models = (await vscode.lm.selectChatModels()).sort(
       (a, b) => b.maxInputTokens - a.maxInputTokens + b.family.localeCompare(a.family)
     );
-    return this.preferredModel?.id !== previousBest;
+    const hasChanged = this.previousModelId !== this.preferredModel?.id;
+    this.previousModelId = this.preferredModel?.id;
+    return hasChanged;
   }
 
   static get instance(): Promise<ChatCompletion> | undefined {
@@ -238,7 +242,8 @@ export default class ChatCompletion implements Disposable {
     context.subscriptions.push(
       vscode.workspace.onDidChangeConfiguration(
         (e) =>
-          e.affectsConfiguration('appMap.navie.useVSCodeLM') &&
+          (e.affectsConfiguration('appMap.navie.useVSCodeLM') ||
+            e.affectsConfiguration('appMap.copilot.preferredModel')) &&
           this.checkConfiguration(context, true)
       )
     );
