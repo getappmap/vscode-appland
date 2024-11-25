@@ -1,3 +1,10 @@
+# [0.132.0](https://github.com/getappmap/vscode-appland/compare/v0.131.2...v0.132.0) (2024-11-25)
+
+
+### Features
+
+* Add a command to change Copilot models ([c3d1c29](https://github.com/getappmap/vscode-appland/commit/c3d1c29af1678b27a70e957abc4c546d364172fc))
+
 ## [0.131.2](https://github.com/getappmap/vscode-appland/compare/v0.131.1...v0.131.2) (2024-11-12)
 
 
