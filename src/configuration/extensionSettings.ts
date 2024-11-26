@@ -84,7 +84,9 @@ export default class ExtensionSettings {
   }
 
   public static setPreferredCopilotModel(model: string | undefined): Thenable<void> {
-    return vscode.workspace.getConfiguration('appMap').update('copilot.preferredModel', model);
+    return vscode.workspace
+      .getConfiguration('appMap')
+      .update('copilot.preferredModel', model, true);
   }
 
   public static get useAnimation(): boolean {
