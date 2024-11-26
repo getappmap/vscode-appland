@@ -1,3 +1,11 @@
+## [0.132.1](https://github.com/getappmap/vscode-appland/compare/v0.132.0...v0.132.1) (2024-11-26)
+
+
+### Bug Fixes
+
+* Handle default for empty string in `copilot.preferredModel` ([13247e2](https://github.com/getappmap/vscode-appland/commit/13247e29df1325bf87d2ee3e2a97867928048424))
+* Write `copilot.preferredModel` to global settings ([73f7ff5](https://github.com/getappmap/vscode-appland/commit/73f7ff5913dcda42e0bc9f44ed6bffa91fcd6f07))
+
 # [0.132.0](https://github.com/getappmap/vscode-appland/compare/v0.131.2...v0.132.0) (2024-11-25)
 
 
