@@ -80,7 +80,7 @@ export default class ExtensionSettings {
   }
 
   public static get preferredCopilotModel(): string | undefined {
-    return vscode.workspace.getConfiguration('appMap').get('copilot.preferredModel', 'gpt-4o');
+    return vscode.workspace.getConfiguration('appMap').get('copilot.preferredModel') || 'gpt-4o';
   }
 
   public static setPreferredCopilotModel(model: string | undefined): Thenable<void> {
