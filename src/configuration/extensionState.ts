@@ -124,7 +124,16 @@ export default class ExtensionState implements vscode.Disposable {
   }
 
   installedPriorTo(version: string): boolean {
-    return semver.lt(this.firstVersionInstalled, version);
+    if (!semver.valid(version)) {
+      console.warn(`Invalid version string provided to installedPriorTo: ${version}`);
+      return false;
+    }
+    const firstVersion = this.firstVersionInstalled;
+    if (firstVersion === 'unknown' || !semver.valid(firstVersion)) {
+      console.warn(`First installed version is invalid or unknown: ${firstVersion}`);
+      return true;
+    }
+    return semver.lt(firstVersion, version);
   }
 
   /** Returns whether or not the user has opened an AppMap from within the given workspace folder. */
