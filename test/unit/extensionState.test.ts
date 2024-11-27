@@ -1,3 +1,5 @@
+import './mock/vscode';
+
 import assert from 'assert';
 import { SinonSandbox, createSandbox } from 'sinon';
 import ExtensionState, { Keys } from '../../src/configuration/extensionState';
