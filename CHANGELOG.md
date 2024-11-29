@@ -1,3 +1,10 @@
+## [0.132.2](https://github.com/getappmap/vscode-appland/compare/v0.132.1...v0.132.2) (2024-11-29)
+
+
+### Bug Fixes
+
+* Handle unknown first installed version gracefully ([d9df4d9](https://github.com/getappmap/vscode-appland/commit/d9df4d98c415214635bcac96078155dd9bc1e77f))
+
 ## [0.132.1](https://github.com/getappmap/vscode-appland/compare/v0.132.0...v0.132.1) (2024-11-26)
 
 
