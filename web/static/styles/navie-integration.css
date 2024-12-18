@@ -1,3 +1,31 @@
+:root {
+  --appmap-color-background: var(--vscode-editor-background);
+  --appmap-color-highlight: var(--vscode-list-highlightForeground);
+  --appmap-color-highlight-light: var(--vscode-focusBorder);
+  --appmap-color-highlight-dark: var(--vscode-editorSuggestWidget-selectedBackground);
+  --appmap-color-input-bg: var(--vscode-input-background);
+  --appmap-color-input-fg: var(--vscode-input-foreground);
+  --appmap-color-button-fg: var(--vscode-button-foreground);
+  --appmap-color-button-bg: var(--vscode-button-background);
+  --appmap-color-button-bg-hover: var(--vscode-button-hoverBackground);
+  --appmap-color-selection: var(--vscode-editor-selectionBackground);
+  --appmap-color-border: var(--vscode-dropdown-border);
+  --appmap-color-foreground: var(--vscode-editor-foreground);
+  --appmap-color-foreground-secondary: rgba(white);
+  --appmap-color-foreground-light: var(--vscode-inputOption-activeForeground);
+  --appmap-color-foreground-dark: var(--vscode-editor-foreground);
+  --appmap-font-family: var(--vscode-font-family);
+  --appmap-font-size: var(--vscode-font-size);
+  --appmap-font-weight: var(--vscode-font-weight);
+  --appmap-color-success: var(--vscode-terminal-ansiGreen);
+  --appmap-color-error: var(--vscode-terminal-ansiRed);
+  --appmap-color-warning: var(--vscode-terminal-ansiYellow);
+  --appmap-color-link: var(--vscode-textLink-foreground);
+  --appmap-color-link-hover: var(--vscode-textLink-activeForeground);
+  --appmap-color-tile-background: var(--vscode-welcomePage-tileBackground);
+  --appmap-color-tile-shadow: var(--vscode-welcomePage-tileShadow);
+}
+
 .context-container__title {
   text-overflow: ellipsis;
   overflow: hidden;

@@ -318,6 +318,18 @@ export default class ChatSearchWebview {
           this.doPinFiles(panel, requests);
           break;
         }
+
+        case 'save-message': {
+          const {
+            message: { content },
+          } = message;
+          const document = await vscode.workspace.openTextDocument({
+            language: 'markdown',
+            content: content.replace(/^\s*<!-- file:.* -->/gm, ''),
+          });
+          vscode.window.showTextDocument(document, vscode.ViewColumn.Active);
+          break;
+        }
       }
     });
 
