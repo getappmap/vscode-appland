@@ -150,41 +150,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/components@npm:^4.12.0":
-  version: 4.36.0
-  resolution: "@appland/components@npm:4.36.0"
-  dependencies:
-    "@appland/client": ^1.12.0
-    "@appland/diagrams": ^1.7.0
-    "@appland/models": ^2.10.2
-    "@appland/rpc": ^1.13.0
-    "@appland/sequence-diagram": ^1.11.0
-    "@types/sax": ^1.2.7
-    buffer: ^6.0.3
-    d3: ^7.8.4
-    d3-flame-graph: ^4.1.3
-    diff: ^5.1.0
-    dom-to-svg: ^0.12.2
-    dompurify: ^3.0.6
-    events: ^3.3.0
-    highlight.js: ^11.9.0
-    jayson: ^4.1.0
-    js-base64: ^3.7.7
-    marked: ^10.0.0
-    marked-highlight: ^2.0.7
-    mermaid: ^10.9.1
-    pako: ^2.1.0
-    sax: ^1.4.1
-    sql-formatter: ^4.0.2
-    vue: ^2.7.14
-    vuex: ^3.6.0
-  checksum: 81b3635adec5f081becfc0b67bc7aa5edb3160d1fd2a0cc0d03ddf1cab1e3023403d5859122670331715af8b2acdb22628d60d851733f51b11733e8151c8d147
-  languageName: node
-  linkType: hard
-
-"@appland/components@npm:^4.40.1":
-  version: 4.40.1
-  resolution: "@appland/components@npm:4.40.1"
+"@appland/components@npm:^4.12.0, @appland/components@npm:^4.42.0":
+  version: 4.42.0
+  resolution: "@appland/components@npm:4.42.0"
   dependencies:
     "@appland/client": ^1.12.0
     "@appland/diagrams": ^1.7.0
@@ -210,7 +178,7 @@ __metadata:
     sql-formatter: ^4.0.2
     vue: ^2.7.16
     vuex: ^3.6.0
-  checksum: 86e06b4aedc140c7452b9e1c50e378363eea67c49642a31d4e9d472f116728e8712769fdaf9b72b1b5970119e01fe2d392626a48c84692e6b8901bc88e49d7dd
+  checksum: a03cb15c97ca7fe8d8c8ab41073f9ae453db448e888ce5c280987ad42bc445de58bcfd0a07526d10c1c8dbbf5bda0193bf4be467f8677749d2b0496077758b57
   languageName: node
   linkType: hard
 
@@ -266,10 +234,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/rpc@npm:^1.13.0, @appland/rpc@npm:^1.15.0":
-  version: 1.15.0
-  resolution: "@appland/rpc@npm:1.15.0"
-  checksum: f57baea60bfe08da7b17f38c35217fa0ca1baef041ffa4e3b7a1904f3c998adab407bab1188d00dc9a71dbde1ab7cb9820c73f8f9c8f6a41469d8885bae01ecf
+"@appland/rpc@npm:^1.13.0, @appland/rpc@npm:^1.16.0":
+  version: 1.16.0
+  resolution: "@appland/rpc@npm:1.16.0"
+  checksum: 9fda41a351a489ab18e07b81d26d9ca2158f4a0c86f642791bf509289b26dc83b80a075b5907632eb9b6e2fa5e027114622d5d1c4bd4a0e3c497cf3edcca6a00
   languageName: node
   linkType: hard
 
@@ -501,13 +469,13 @@ __metadata:
   linkType: hard
 
 "@babel/parser@npm:^7.23.5":
-  version: 7.26.1
-  resolution: "@babel/parser@npm:7.26.1"
+  version: 7.26.3
+  resolution: "@babel/parser@npm:7.26.3"
   dependencies:
-    "@babel/types": ^7.26.0
+    "@babel/types": ^7.26.3
   bin:
     parser: ./bin/babel-parser.js
-  checksum: 354320d1a0a7102b2f25620ceea1bbc809f5225432a73e8a8874009d2f82ed29e2b035fe68fb6d18bb7eafed78df1ec0fa12e8d8226b295d7a020f9b852de653
+  checksum: e2bff2e9fa6540ee18fecc058bc74837eda2ddcecbe13454667314a93fc0ba26c1fb862c812d84f6d5f225c3bd8d191c3a42d4296e287a882c4e1f82ff2815ff
   languageName: node
   linkType: hard
 
@@ -544,13 +512,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/types@npm:^7.26.0":
-  version: 7.26.0
-  resolution: "@babel/types@npm:7.26.0"
+"@babel/types@npm:^7.26.3":
+  version: 7.26.3
+  resolution: "@babel/types@npm:7.26.3"
   dependencies:
     "@babel/helper-string-parser": ^7.25.9
     "@babel/helper-validator-identifier": ^7.25.9
-  checksum: a3dd37dabac693018872da96edb8c1843a605c1bfacde6c3f504fba79b972426a6f24df70aa646356c0c1b19bdd2c722c623c684a996c002381071680602280d
+  checksum: 195f428080dcaadbcecc9445df7f91063beeaa91b49ccd78f38a5af6b75a6a58391d0c6614edb1ea322e57889a1684a0aab8e667951f820196901dd341f931e9
   languageName: node
   linkType: hard
 
@@ -3104,10 +3072,10 @@ __metadata:
   dependencies:
     "@appland/appmap": ^3.129.0
     "@appland/client": ^1.14.1
-    "@appland/components": ^4.40.1
+    "@appland/components": ^4.42.0
     "@appland/diagrams": ^1.8.0
     "@appland/models": ^2.10.2
-    "@appland/rpc": ^1.15.0
+    "@appland/rpc": ^1.16.0
     "@appland/scanner": ^1.86.0
     "@appland/sequence-diagram": ^1.12.0
     "@playwright/test": ^1.22.2
