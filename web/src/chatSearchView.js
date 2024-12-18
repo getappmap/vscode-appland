@@ -135,6 +135,10 @@ export default function mountChatSearchView() {
     app.$on('click-link', (link) => {
       vscode.postMessage({ command: 'click-link', link });
     });
+
+    app.$on('save-message', (message) => {
+      vscode.postMessage({ command: 'save-message', message });
+    });
   });
 
   vscode.postMessage({ command: 'chat-search-ready' });
