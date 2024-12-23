@@ -22,10 +22,10 @@
   "license": "MIT",
   "main": "./out/extension.js",
   "categories": [
+    "AI",
     "Visualization",
     "Machine Learning",
     "Programming Languages",
-    "Snippets",
     "Linters",
     "Debuggers"
   ],
