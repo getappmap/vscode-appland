@@ -22,11 +22,11 @@
   "license": "MIT",
   "main": "./out/extension.js",
   "categories": [
+    "AI",
+    "Chat",
     "Visualization",
     "Machine Learning",
     "Programming Languages",
-    "Snippets",
-    "Linters",
     "Debuggers"
   ],
   "keywords": [
