@@ -5,7 +5,7 @@
 
 # AppMap for Visual Studio Code
 
-AppMap Navie is AI-driven chat with a deep understanding of your code. Build effective solutions
+AppMap Navie is an AI-driven chat with a deep understanding of your code. Build effective solutions
 using an intuitive chat interface and powerful code visualizations. Use AppMap's runtime tracing to
 improve the accuracy and depth of AI generation.
 
