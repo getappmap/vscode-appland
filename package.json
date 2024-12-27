@@ -3,7 +3,7 @@
   "name": "appmap",
   "displayName": "AppMap",
   "description": "AI-driven chat with a deep understanding of your code. Build effective solutions using an intuitive chat interface and powerful code visualizations.",
-  "version": "0.132.2",
+  "version": "0.132.3",
   "repository": {
     "type": "git",
     "url": "https://github.com/getappmap/vscode-appland"

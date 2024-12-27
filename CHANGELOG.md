@@ -1,3 +1,11 @@
+## [0.132.3](https://github.com/getappmap/vscode-appland/compare/v0.132.2...v0.132.3) (2024-12-27)
+
+
+### Bug Fixes
+
+* Alter marketplace categories ([3b7fc15](https://github.com/getappmap/vscode-appland/commit/3b7fc152a74164db7f5e4d0487fc8fe65fbeb492))
+* Update README ([#1063](https://github.com/getappmap/vscode-appland/issues/1063)) ([ee5de12](https://github.com/getappmap/vscode-appland/commit/ee5de12ae7c1845d58467c243203510374682996))
+
 ## [0.132.2](https://github.com/getappmap/vscode-appland/compare/v0.132.1...v0.132.2) (2024-11-29)
 
 
