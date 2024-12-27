@@ -2,7 +2,7 @@
   "publisher": "appland",
   "name": "appmap",
   "displayName": "AppMap",
-  "description": "Free AI Software Architect + Runtime Diagrams",
+  "description": "AI-driven chat with a deep understanding of your code. Build effective solutions using an intuitive chat interface and powerful code visualizations.",
   "version": "0.132.2",
   "repository": {
     "type": "git",
