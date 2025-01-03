@@ -10,10 +10,10 @@
   --appmap-color-button-bg-hover: var(--vscode-button-hoverBackground);
   --appmap-color-selection: var(--vscode-editor-selectionBackground);
   --appmap-color-border: var(--vscode-dropdown-border);
-  --appmap-color-foreground: var(--vscode-editor-foreground);
+  --appmap-color-foreground: var(--vscode-foreground);
   --appmap-color-foreground-secondary: rgba(white);
   --appmap-color-foreground-light: var(--vscode-inputOption-activeForeground);
-  --appmap-color-foreground-dark: var(--vscode-editor-foreground);
+  --appmap-color-foreground-dark: var(--vscode-foreground);
   --appmap-font-family: var(--vscode-font-family);
   --appmap-font-size: var(--vscode-font-size);
   --appmap-font-weight: var(--vscode-font-weight);
