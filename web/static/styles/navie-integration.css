@@ -18,7 +18,7 @@
   --appmap-font-size: var(--vscode-font-size);
   --appmap-font-weight: var(--vscode-font-weight);
   --appmap-color-success: var(--vscode-terminal-ansiGreen);
-  --appmap-color-error: var(--vscode-terminal-ansiRed);
+  --appmap-color-error: var(--vscode-errorForeground);
   --appmap-color-warning: var(--vscode-terminal-ansiYellow);
   --appmap-color-link: var(--vscode-textLink-foreground);
   --appmap-color-link-hover: var(--vscode-textLink-activeForeground);
