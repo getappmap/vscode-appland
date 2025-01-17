@@ -115,7 +115,10 @@ export default class ChatSearchWebview {
     });
 
     if (goodRequests.length > 0) {
-      const msg = { type: 'pin-files', requests: goodRequests.map((r) => new PinFileRequest(r)) };
+      const msg = {
+        type: 'pin-files',
+        requests: goodRequests.map((r) => ({ uri: r.uri.toString() })),
+      };
       panel.webview.postMessage(msg);
     }
   }
@@ -350,7 +353,7 @@ export default class ChatSearchWebview {
     rpcService: RpcProcessService
   ): ChatSearchWebview {
     const dataService = new ChatSearchDataService(rpcService, appmaps);
-
-    return new ChatSearchWebview(context, extensionState, dataService, rpcService);
+    const provider = new ChatSearchWebview(context, extensionState, dataService, rpcService);
+    return provider;
   }
 }

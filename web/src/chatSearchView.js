@@ -27,6 +27,7 @@ export default function mountChatSearchView() {
             useAnimation: initialData.useAnimation,
             editorType: initialData.editorType,
             preselectedModelId: initialData.selectedModelId,
+            threadId: initialData.threadId,
             openNewChat() {
               vscode.postMessage({ command: 'open-new-chat' });
             },
