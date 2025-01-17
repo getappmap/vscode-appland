@@ -1,134 +1,73 @@
+import { basename } from 'path';
+import vscode, {
+  CustomDocument,
+  CustomEditorProvider,
+  CustomReadonlyEditorProvider,
+  ExtensionContext,
+  Uri,
+} from 'vscode';
+import ExtensionState from '../configuration/extensionState';
+import ChatSearchDataService from '../services/chatSearchDataService';
+import RpcProcessService from '../services/rpcProcessService';
+import getWebviewContent from '../webviews/getWebviewContent';
+import { NodeProcessService } from '../services/nodeProcessService';
+import appmapMessageHandler from '../webviews/appmapMessageHandler';
+import { parseLocation } from '../util';
+import { getApiKey } from '../authentication';
+import { proxySettings } from '../lib/proxySettings';
+import ExtensionSettings from '../configuration/extensionSettings';
 import { PinFileRequest } from '@appland/components';
 import assert from 'assert';
-import * as vscode from 'vscode';
-import getWebviewContent from './getWebviewContent';
-import appmapMessageHandler from './appmapMessageHandler';
-import FilterStore, { SavedFilter } from './filterStore';
-import WebviewList from './WebviewList';
-import { getApiKey } from '../authentication';
-import ExtensionSettings from '../configuration/extensionSettings';
-import { CodeSelection } from '../commands/quickSearch';
-import ExtensionState from '../configuration/extensionState';
+import { threadId } from 'worker_threads';
 import AppMapCollection from '../services/appmapCollection';
-import RpcProcessService from '../services/rpcProcessService';
-import { NodeProcessService } from '../services/nodeProcessService';
-import CommandRegistry from '../commands/commandRegistry';
-import ChatSearchDataService, { LatestAppMap } from '../services/chatSearchDataService';
-import { parseLocation } from '../util';
-import { proxySettings } from '../lib/proxySettings';
 
-type ExplainOpts = {
-  workspace?: vscode.WorkspaceFolder;
-  codeSelection?: CodeSelection;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  targetAppmap?: any;
-  targetAppmapFsPath?: string;
-  suggestion?: { label: string; prompt: string };
-};
+class NavieDocument implements CustomDocument {
+  constructor(public readonly uri: Uri) {}
 
-export enum ExplainResponseStatus {
-  NoAppMapRpcPort,
-  Success,
+  get threadId(): string {
+    const uri = this.uri.toString();
+    const fileName = basename(uri);
+    return fileName.replace(/\.navie\.jsonl$/, '');
+  }
+
+  dispose(): void {
+    // noop
+  }
 }
 
-export type ExplainResponse = {
-  status: ExplainResponseStatus;
-  codeSelection?: CodeSelection;
-};
+export default class NavieEditorProvider implements CustomReadonlyEditorProvider<NavieDocument> {
+  private static readonly viewType = 'appmap.views.navie';
 
-export default class ChatSearchWebview {
-  private webviewList = new WebviewList();
-  private filterStore: FilterStore;
-  private _onWebview?: (wv: vscode.Webview) => void;
+  public static register(
+    context: ExtensionContext,
+    extensionState: ExtensionState,
+    appmaps: AppMapCollection,
+    rpcService: RpcProcessService
+  ): void {
+    const dataService = new ChatSearchDataService(rpcService, appmaps);
+    const provider = new NavieEditorProvider(context, extensionState, dataService, rpcService);
+    context.subscriptions.push(
+      vscode.window.registerCustomEditorProvider(NavieEditorProvider.viewType, provider, {
+        webviewOptions: { retainContextWhenHidden: true },
+      })
+    );
+  }
 
-  private constructor(
+  constructor(
     private readonly context: vscode.ExtensionContext,
     private readonly extensionState: ExtensionState,
     private readonly dataService: ChatSearchDataService,
     private readonly rpcService: RpcProcessService
-  ) {
-    this.filterStore = new FilterStore(context);
-    this.filterStore.onDidChangeFilters((event) => {
-      this.updateFilters(event.savedFilters);
-    });
-    context.subscriptions.push(
-      CommandRegistry.registerCommand('appmap.explain.impl', this.explain.bind(this))
-    );
+  ) {}
+
+  public openCustomDocument(uri: Uri): NavieDocument {
+    return new NavieDocument(uri);
   }
 
-  get currentWebview(): vscode.Webview | undefined {
-    return this.webviewList.currentWebview;
-  }
-
-  set onWebview(cb: (wv: vscode.Webview) => void) {
-    this._onWebview = cb;
-  }
-
-  async doPinFiles(panel: vscode.WebviewPanel, reqs: PinFileRequest[]) {
-    const maxPinnedFileSize = ExtensionSettings.maxPinnedFileSizeKB * 1024;
-    type PinFileRequestWithLength = PinFileRequest & { contentLength?: number };
-    const requests = await Promise.all(
-      reqs.map(async (r: PinFileRequest): Promise<PinFileRequestWithLength> => {
-        let contentLength = r.content?.length;
-        if (!r.content) {
-          assert(r.uri, `doPinFiles, ${r.name}: no content, no uri`);
-          const u: vscode.Uri = vscode.Uri.file(r.uri.toString().replace(/file:\/\//g, ''));
-          const stat = await vscode.workspace.fs.stat(u);
-          contentLength = stat.size;
-          if (contentLength < maxPinnedFileSize) {
-            const doc = await vscode.workspace.openTextDocument(u);
-            r.content = doc.getText();
-          }
-        }
-
-        return {
-          name: r.name,
-          uri: r.uri,
-          content: r.content,
-          contentLength,
-        };
-      })
-    );
-
-    const goodRequests = requests.filter((r: PinFileRequestWithLength) => {
-      if (r.contentLength > maxPinnedFileSize) {
-        const setting = ExtensionSettings.maxPinnedFileSizeKB;
-        const len = Math.round(r.contentLength / 1024);
-        vscode.window
-          .showErrorMessage(
-            `${r.name} (${len}KB) exceeds the maximum file size of ${setting}KB.`,
-            'Change',
-            'Cancel'
-          )
-          .then((answer) => {
-            if (answer === 'Change') {
-              vscode.commands.executeCommand(
-                'workbench.action.openSettings',
-                'appmap.maxPinnedFileSizeKB'
-              );
-            }
-          });
-        return false;
-      }
-      return true;
-    });
-
-    if (goodRequests.length > 0) {
-      const msg = {
-        type: 'pin-files',
-        requests: goodRequests.map((r) => ({ uri: r.uri.toString() })),
-      };
-      panel.webview.postMessage(msg);
-    }
-  }
-
-  async explain({
-    workspace,
-    codeSelection,
-    targetAppmap,
-    targetAppmapFsPath,
-    suggestion,
-  }: ExplainOpts = {}): Promise<ExplainResponse> {
+  public async resolveCustomEditor(
+    document: NavieDocument,
+    webviewPanel: vscode.WebviewPanel
+  ): Promise<void> {
     const appmapRpcPort = this.dataService.appmapRpcPort;
     if (!appmapRpcPort) {
       const optionViewLog = 'View output log';
@@ -140,25 +79,15 @@ export default class ChatSearchWebview {
       if (res === optionViewLog) {
         NodeProcessService.outputChannel.show();
       }
-      return { status: ExplainResponseStatus.NoAppMapRpcPort };
+      return;
     }
 
-    const panel = vscode.window.createWebviewPanel(
-      'chatSearch',
-      'AppMap AI: Explain',
-      vscode.ViewColumn.One,
-      {
-        enableScripts: true,
-        retainContextWhenHidden: true,
-      }
-    );
-    this.webviewList.enroll(panel);
-    if (this._onWebview) {
-      this._onWebview(panel.webview);
-    }
+    webviewPanel.webview.options = {
+      enableScripts: true,
+    };
 
-    panel.webview.html = getWebviewContent(
-      panel.webview,
+    webviewPanel.webview.html = getWebviewContent(
+      webviewPanel.webview,
       this.context,
       'AppMap AI: Explain',
       'chat-search',
@@ -170,46 +99,36 @@ export default class ChatSearchWebview {
     });
 
     this.context.subscriptions.push(
-      this.dataService.onAppMapsUpdated((appmaps: LatestAppMap[]) => {
-        panel.webview.postMessage({
-          type: 'update',
-          mostRecentAppMaps: appmaps,
-        });
-      }),
       this.rpcService.onRpcPortChange(() => {
-        panel.webview.postMessage({
+        webviewPanel.webview.postMessage({
           type: 'navie-restarted',
         });
       }),
       this.rpcService.onBeforeRestart(() => {
-        panel.webview.postMessage({
+        webviewPanel.webview.postMessage({
           type: 'navie-restarting',
         });
       })
     );
 
     const mostRecentAppMaps = this.dataService.latestAppMaps();
-    codeSelection ||= await this.dataService.codeSelection();
+    const codeSelection = await this.dataService.codeSelection();
 
-    panel.webview.onDidReceiveMessage(appmapMessageHandler(this.filterStore, workspace));
-    panel.webview.onDidReceiveMessage(async (message) => {
+    webviewPanel.webview.onDidReceiveMessage(async (message) => {
       switch (message.command) {
         case 'chat-search-ready':
-          panel.webview.postMessage({
+          webviewPanel.webview.postMessage({
             type: 'initChatSearch',
             appmapRpcPort,
             codeSelection,
             proxySettings: proxySettings(),
-            savedFilters: this.filterStore.getSavedFilters(),
             appmapYmlPresent: true, // Note that at the moment this is always true
             mostRecentAppMaps,
             apiUrl: ExtensionSettings.apiUrl,
             apiKey: await getApiKey(false),
-            targetAppmap,
-            targetAppmapFsPath,
-            suggestion,
             useAnimation: ExtensionSettings.useAnimation,
             editorType: 'vscode',
+            threadId: document.threadId,
           });
           break;
         case 'open-new-chat':
@@ -302,7 +221,7 @@ export default class ChatSearchWebview {
               name: u.toString(),
               uri: u.toString(),
             }));
-            this.doPinFiles(panel, requests);
+            this.doPinFiles(webviewPanel, requests);
           });
           break;
         }
@@ -318,7 +237,7 @@ export default class ChatSearchWebview {
 
         case 'fetch-pinned-files': {
           const { requests } = message;
-          this.doPinFiles(panel, requests);
+          this.doPinFiles(webviewPanel, requests);
           break;
         }
 
@@ -341,34 +260,64 @@ export default class ChatSearchWebview {
         }
       }
     });
-
-    return {
-      status: ExplainResponseStatus.Success,
-      codeSelection,
-    };
   }
 
   async chooseFilesToPin() {
     return vscode.window.showOpenDialog({ canSelectMany: true });
   }
 
-  updateFilters(savedFilters: SavedFilter[]) {
-    this.webviewList.webviews.forEach((webview) => {
-      webview.postMessage({
-        type: 'updateSavedFilters',
-        savedFilters,
-      });
-    });
-  }
+  async doPinFiles(panel: vscode.WebviewPanel, reqs: PinFileRequest[]) {
+    const maxPinnedFileSize = ExtensionSettings.maxPinnedFileSizeKB * 1024;
+    type PinFileRequestWithLength = PinFileRequest & { contentLength?: number };
+    const requests = await Promise.all(
+      reqs.map(async (r: PinFileRequest): Promise<PinFileRequestWithLength> => {
+        let contentLength = r.content?.length;
+        if (!r.content) {
+          assert(r.uri, `doPinFiles, ${r.name}: no content, no uri`);
+          const u: vscode.Uri = vscode.Uri.file(r.uri.toString().replace(/file:\/\//g, ''));
+          const stat = await vscode.workspace.fs.stat(u);
+          contentLength = stat.size;
+          if (contentLength < maxPinnedFileSize) {
+            const doc = await vscode.workspace.openTextDocument(u);
+            r.content = doc.getText();
+          }
+        }
 
-  public static register(
-    context: vscode.ExtensionContext,
-    extensionState: ExtensionState,
-    appmaps: AppMapCollection,
-    rpcService: RpcProcessService
-  ): ChatSearchWebview {
-    const dataService = new ChatSearchDataService(rpcService, appmaps);
-    const provider = new ChatSearchWebview(context, extensionState, dataService, rpcService);
-    return provider;
+        return {
+          name: r.name,
+          uri: r.uri,
+          content: r.content,
+          contentLength,
+        };
+      })
+    );
+
+    const goodRequests = requests.filter((r: PinFileRequestWithLength) => {
+      if (r.contentLength > maxPinnedFileSize) {
+        const setting = ExtensionSettings.maxPinnedFileSizeKB;
+        const len = Math.round(r.contentLength / 1024);
+        vscode.window
+          .showErrorMessage(
+            `${r.name} (${len}KB) exceeds the maximum file size of ${setting}KB.`,
+            'Change',
+            'Cancel'
+          )
+          .then((answer) => {
+            if (answer === 'Change') {
+              vscode.commands.executeCommand(
+                'workbench.action.openSettings',
+                'appmap.maxPinnedFileSizeKB'
+              );
+            }
+          });
+        return false;
+      }
+      return true;
+    });
+
+    if (goodRequests.length > 0) {
+      const msg = { type: 'pin-files', requests: goodRequests.map((r) => new PinFileRequest(r)) };
+      panel.webview.postMessage(msg);
+    }
   }
 }

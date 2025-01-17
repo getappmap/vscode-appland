@@ -85,9 +85,23 @@
           }
         ],
         "priority": "default"
+      },
+      {
+        "viewType": "appmap.views.navie",
+        "displayName": "AppMap Navie",
+        "selector": [
+          {
+            "filenamePattern": "*.navie.jsonl"
+          }
+        ],
+        "priority": "default"
       }
     ],
     "commands": [
+      {
+        "command": "appmap.navie.history",
+        "title": "AppMap: Open Navie History"
+      },
       {
         "command": "appmap.getAppmapState",
         "title": "AppMap: Copy Current AppMap State to Clipboard"
@@ -732,7 +746,7 @@
     "proper-lockfile": "^4.1.2",
     "semver": "^7.3.5",
     "vscode-extension-telemetry": "^0.1.7",
-    "vue": "^2.7.14",
+    "vue": "^2.7.16",
     "vue-template-compiler": "^2.7.14",
     "vuex": "^3.6.0"
   },
@@ -742,5 +756,14 @@
     "publisherId": "f7f1004e-6038-49cd-a096-4e618fe53f77",
     "isPreReleaseVersion": false
   },
-  "packageManager": "yarn@3.2.3"
+  "packageManager": "yarn@3.2.3",
+  "resolutions": {
+    "@appland/client": "portal:/home/db/dev/applandinc/appmap-js/packages/client",
+    "@appland/components": "portal:/home/db/dev/applandinc/appmap-js/packages/components",
+    "@appland/diagrams": "portal:/home/db/dev/applandinc/appmap-js/packages/diagrams",
+    "@appland/models": "portal:/home/db/dev/applandinc/appmap-js/packages/models",
+    "@appland/openapi": "portal:/home/db/dev/applandinc/appmap-js/packages/openapi",
+    "@appland/rpc": "portal:/home/db/dev/applandinc/appmap-js/packages/rpc",
+    "@appland/sequence-diagram": "portal:/home/db/dev/applandinc/appmap-js/packages/sequence-diagram"
+  }
 }

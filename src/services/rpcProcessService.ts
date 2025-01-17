@@ -133,6 +133,12 @@ export default class RpcProcessService implements Disposable {
     } */
   }
 
+  rpcClient(): Client {
+    if (!this.available) throw new Error('RPC server is not available');
+    if (this.rpcPort === undefined) throw new Error('RPC port is not defined');
+    return this.rpcConnect(this.rpcPort);
+  }
+
   protected async pushConfiguration() {
     if (!this.available) return;
 
