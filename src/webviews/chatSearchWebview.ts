@@ -72,7 +72,8 @@ export default class ChatSearchWebview {
         let contentLength = r.content?.length;
         if (!r.content) {
           assert(r.uri, `doPinFiles, ${r.name}: no content, no uri`);
-          const u: vscode.Uri = vscode.Uri.file(r.uri.toString().replace(/file:\/\//g, ''));
+          const fsPath = decodeURIComponent(r.uri.toString()).replace(/file:\/\//g, '');
+          const u: vscode.Uri = vscode.Uri.file(fsPath);
           const stat = await vscode.workspace.fs.stat(u);
           contentLength = stat.size;
           if (contentLength < maxPinnedFileSize) {

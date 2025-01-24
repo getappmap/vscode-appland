@@ -5,8 +5,9 @@ import Terminal from './Terminal';
 import type * as vscode from 'vscode';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const doNothing = (..._args: unknown[]) => {
-  // nop
+const doNothing = (..._args: unknown[]): unknown => {
+  // nop, but return a promise in case the caller is expecting one
+  return Promise.resolve(undefined);
 };
 
 export const EmitOnDidChangeTerminalState = new EventEmitter<vscode.Terminal>();
