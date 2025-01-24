@@ -1,5 +1,6 @@
 import '../mock/vscode';
 
+import assert from 'node:assert';
 import http from 'node:http';
 
 import { expect } from 'chai';
@@ -12,8 +13,8 @@ import type {
 import { workspace } from 'vscode';
 
 import ChatCompletion from '../../../src/services/chatCompletion';
+import MockExtensionContext from '../../mocks/mockExtensionContext';
 import { addMockChatModel, resetModelMocks } from '../mock/vscode/lm';
-import assert from 'node:assert';
 
 const mockModel: LanguageModelChat = {
   id: 'test-model',
@@ -32,7 +33,6 @@ describe('ChatCompletion', () => {
   let chatCompletion: ChatCompletion;
 
   beforeEach(async () => {
-    resetModelMocks();
     addMockChatModel(mockModel);
 
     await ChatCompletion.refreshModels();
@@ -56,6 +56,7 @@ describe('ChatCompletion', () => {
 
   afterEach(() => {
     sinon.restore();
+    resetModelMocks();
   });
 
   it('should return the correct environment variables', () => {
@@ -263,6 +264,28 @@ describe('ChatCompletion', () => {
         '{"error":{"message":"This model\'s maximum context length is 325 tokens. However, your messages resulted in 38 tokens.","type":"invalid_request_error","param":"messages","code":"context_length_exceeded"}}'
       );
     });
+  });
+});
+
+describe('ChatCompletion.initialize', () => {
+  let context: MockExtensionContext;
+
+  beforeEach(() => {
+    context = new MockExtensionContext();
+  });
+
+  it('should wait for the models to settle', async () => {
+    workspace.getConfiguration('appMap').update('navie.useVSCodeLM', true);
+    const inil = ChatCompletion.initialize(context);
+    setTimeout(() => addMockChatModel(mockModel), 10);
+    await inil;
+
+    expect(ChatCompletion.preferredModel).to.equal(mockModel);
+  });
+
+  afterEach(() => {
+    context.dispose();
+    resetModelMocks();
   });
 });
 

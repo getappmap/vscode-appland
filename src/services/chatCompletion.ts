@@ -242,7 +242,11 @@ export default class ChatCompletion implements Disposable {
           this.checkConfiguration(context, true)
       )
     );
+
+    this.initialized = true;
   }
+
+  private static initialized = false;
 
   static async checkConfiguration(context: ExtensionContext, switched = false): Promise<boolean> {
     // TODO: make the messages and handling generic for all LM extensions
@@ -307,20 +311,33 @@ export default class ChatCompletion implements Disposable {
                 'github.copilot'
               )
           );
-      else if (once(context, 'chat-completion-no-models'))
-        vscode.window
-          .showInformationMessage(
-            'AppMap: Navie can use Copilot, but no compatible models were found.\nYou can install Copilot to use this feature.',
-            'Install Copilot'
-          )
-          .then(
-            (selection) =>
-              selection === 'Install Copilot' &&
-              vscode.commands.executeCommand(
-                'workbench.extensions.installExtension',
-                'github.copilot'
-              )
-          );
+      else {
+        if (!this.initialized) {
+          // No models, but we're still initializing. Give a moment to settle, maybe a model will appear.
+          // This can happen if our extension starts loading before copilot.
+          let subscription: undefined | vscode.Disposable;
+          const changed = await new Promise<boolean>((resolve) => {
+            subscription = vscode.lm.onDidChangeChatModels(() => resolve(true));
+            setTimeout(() => resolve(false), 1000).unref();
+          });
+          subscription?.dispose();
+          if (changed) return this.checkConfiguration(context);
+        }
+        if (once(context, 'chat-completion-no-models'))
+          vscode.window
+            .showInformationMessage(
+              'AppMap: Navie can use Copilot, but no compatible models were found.\nYou can install Copilot to use this feature.',
+              'Install Copilot'
+            )
+            .then(
+              (selection) =>
+                selection === 'Install Copilot' &&
+                vscode.commands.executeCommand(
+                  'workbench.extensions.installExtension',
+                  'github.copilot'
+                )
+            );
+      }
       once.reset(context, 'chat-completion-ready');
     }
 
