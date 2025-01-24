@@ -1,3 +1,11 @@
+## [0.133.1](https://github.com/getappmap/vscode-appland/compare/v0.133.0...v0.133.1) (2025-01-24)
+
+
+### Bug Fixes
+
+* Fix an issue which broke pinned files on Windows ([d7ff974](https://github.com/getappmap/vscode-appland/commit/d7ff974ac8afc0bb8dab5e38ed03975709c7a65d))
+* Wait for lm models to settle when initializing ([2431375](https://github.com/getappmap/vscode-appland/commit/2431375d3a39e8d50baebe46379bf9253f81794f)), closes [#1068](https://github.com/getappmap/vscode-appland/issues/1068)
+
 # [0.133.0](https://github.com/getappmap/vscode-appland/compare/v0.132.3...v0.133.0) (2024-12-30)
 
 
