@@ -714,7 +714,7 @@
   "dependencies": {
     "@appland/appmap": "^3.129.0",
     "@appland/client": "^1.14.1",
-    "@appland/components": "^4.42.0",
+    "@appland/components": "^4.44.0",
     "@appland/diagrams": "^1.8.0",
     "@appland/models": "^2.10.2",
     "@appland/rpc": "^1.16.0",
@@ -742,5 +742,8 @@
     "publisherId": "f7f1004e-6038-49cd-a096-4e618fe53f77",
     "isPreReleaseVersion": false
   },
-  "packageManager": "yarn@3.2.3"
+  "packageManager": "yarn@3.2.3",
+  "resolutions": {
+    "node-gyp": "^10"
+  }
 }
