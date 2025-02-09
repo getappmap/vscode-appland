@@ -16,6 +16,7 @@ import vscode, {
 } from 'vscode';
 
 import ExtensionSettings from '../configuration/extensionSettings';
+import { ensureExclusionsDownloaded, tryDownloadingExclusions } from '../lib/exclusionUtils';
 import once from '../lib/once';
 
 const debug = debuglog('appmap-vscode:chat-completion');
@@ -35,6 +36,7 @@ export default class ChatCompletion implements Disposable {
     public readonly key = randomKey(),
     public readonly host = '127.0.0.1'
   ) {
+    tryDownloadingExclusions();
     this.server = createServer(async (req, res) => {
       try {
         await this.handleRequest(req, res);
@@ -134,6 +136,14 @@ export default class ChatCompletion implements Disposable {
   }
 
   async handleRequest(req: IncomingMessage, res: ServerResponse): Promise<void> {
+    try {
+      await ensureExclusionsDownloaded();
+    } catch {
+      res.writeHead(503);
+      res.end('Content exclusion download failed');
+      return;
+    }
+
     if (req.method !== 'POST') {
       res.writeHead(405);
       res.end();
