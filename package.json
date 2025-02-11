@@ -659,6 +659,7 @@
     "@types/mocha": "^8.2.0",
     "@types/mockery": "^1.4.30",
     "@types/node": "^18",
+    "@types/node-fetch": "^2.6.12",
     "@types/proper-lockfile": "^4.1.2",
     "@types/ps-node": "^0.1.1",
     "@types/semver": "^7.3.9",
@@ -712,7 +713,6 @@
     "yaml": "^2.1.1"
   },
   "dependencies": {
-    "@appland/appmap": "^3.129.0",
     "@appland/client": "^1.14.1",
     "@appland/components": "^4.44.0",
     "@appland/diagrams": "^1.8.0",
@@ -742,8 +742,5 @@
     "publisherId": "f7f1004e-6038-49cd-a096-4e618fe53f77",
     "isPreReleaseVersion": false
   },
-  "packageManager": "yarn@3.2.3",
-  "resolutions": {
-    "node-gyp": "^10"
-  }
+  "packageManager": "yarn@3.2.3"
 }

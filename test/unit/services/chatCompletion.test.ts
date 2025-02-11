@@ -4,7 +4,7 @@ import assert from 'node:assert';
 import http from 'node:http';
 
 import { expect } from 'chai';
-import sinon from 'sinon';
+import sinon, { SinonStub } from 'sinon';
 import type {
   LanguageModelChat,
   LanguageModelChatMessage,
@@ -15,6 +15,7 @@ import { workspace } from 'vscode';
 import ChatCompletion from '../../../src/services/chatCompletion';
 import MockExtensionContext from '../../mocks/mockExtensionContext';
 import { addMockChatModel, resetModelMocks } from '../mock/vscode/lm';
+import * as ExclusionUtils from '../../../src/lib/exclusionUtils';
 
 const mockModel: LanguageModelChat = {
   id: 'test-model',
@@ -31,9 +32,13 @@ const mockModel: LanguageModelChat = {
 
 describe('ChatCompletion', () => {
   let chatCompletion: ChatCompletion;
+  let ensureExclusionsDownloaded: SinonStub<[], Promise<void>>;
 
   beforeEach(async () => {
     addMockChatModel(mockModel);
+    ensureExclusionsDownloaded = sinon
+      .stub(ExclusionUtils, 'ensureExclusionsDownloaded')
+      .resolves();
 
     await ChatCompletion.refreshModels();
   });
@@ -169,6 +174,18 @@ describe('ChatCompletion', () => {
     assert(typeof response.data === 'string');
     const result = JSON.parse(response.data);
     expect(result.choices[0].message.content).to.equal('Hello, you said: I am good, thank you!');
+  });
+
+  it('should return an error if content exclusions cannot be downloaded', async () => {
+    ensureExclusionsDownloaded.rejects(new Error('test error'));
+
+    const messages = [
+      { content: 'Hello', role: 'user' },
+      { content: 'How are you?', role: 'assistant' },
+      { content: 'I am good, thank you!', role: 'user' },
+    ];
+    const response = await postAuthorized(chatCompletion.url, { model: 'test-model', messages });
+    expect(response.statusCode).to.equal(503);
   });
 
   it('should stream chat completion', async () => {
