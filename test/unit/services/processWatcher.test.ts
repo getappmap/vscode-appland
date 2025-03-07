@@ -1,4 +1,5 @@
 import '../mock/vscode';
+import MockExtensionContext from '../../mocks/mockExtensionContext';
 import Sinon from 'sinon';
 import { expect } from 'chai';
 import assert from 'node:assert';
@@ -10,7 +11,7 @@ import type vscode from 'vscode';
 
 // To be stubbed
 import * as processWatcher from '../../../src/services/processWatcher';
-import * as navieConfigurationService from '../../../src/services/navieConfigurationService';
+import { setSecretEnvVars } from '../../../src/services/navieConfigurationService';
 import * as authentication from '../../../src/authentication';
 import ExtensionSettings from '../../../src/configuration/extensionSettings';
 
@@ -25,7 +26,7 @@ const testModule = join(__dirname, 'support', 'simpleProcess.mjs');
 
 function makeWatcher(opts: Partial<ProcessWatcherOptions> = {}) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return new ProcessWatcher(Sinon.stub as any, {
+  return new ProcessWatcher(new MockExtensionContext(), {
     id: 'test process' as unknown as ProcessId,
     modulePath: testModule,
     binPath: 'unused',
@@ -40,7 +41,6 @@ describe('ProcessWatcher', () => {
   afterEach(() => Sinon.restore());
 
   describe('stop', () => {
-    beforeEach(() => Sinon.stub(navieConfigurationService, 'getOpenAIApiKey').resolves(undefined));
     it('does not send error event', async () => {
       const watcher = makeWatcher();
       let errorReceived: undefined | Error;
@@ -91,14 +91,14 @@ describe('ProcessWatcher', () => {
   });
 
   describe('loadEnvironment', () => {
-    describe('without OpenAI API key', () => {
-      beforeEach(() =>
-        Sinon.stub(navieConfigurationService, 'getOpenAIApiKey').resolves(undefined)
-      );
+    let context: vscode.ExtensionContext;
+    beforeEach(() => {
+      context = new MockExtensionContext();
+    });
 
+    describe('without OpenAI API key', () => {
       it('propagates the APPMAP_API_KEY', async () => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const env = await processWatcher.loadEnvironment(Sinon.stub() as any);
+        const env = await processWatcher.loadEnvironment(context);
         expect(env).to.deep.equal({
           APPMAP_API_KEY: 'the-appmap-key',
           APPMAP_API_URL: 'https://api.getappmap.com',
@@ -107,34 +107,14 @@ describe('ProcessWatcher', () => {
     });
 
     describe('with OpenAI API key', () => {
-      beforeEach(() =>
-        Sinon.stub(navieConfigurationService, 'getOpenAIApiKey').resolves('the-openai-key')
-      );
+      beforeEach(() => setSecretEnvVars(context, { OPENAI_API_KEY: 'the-openai-key' }));
 
       it('propagates the OPENAI_API_KEY', async () => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const env = await processWatcher.loadEnvironment(Sinon.stub() as any);
+        const env = await processWatcher.loadEnvironment(context);
         expect(env).to.deep.equal({
           APPMAP_API_KEY: 'the-appmap-key',
           APPMAP_API_URL: 'https://api.getappmap.com',
           OPENAI_API_KEY: 'the-openai-key',
-        });
-      });
-
-      it('uses it as Azure OpenAI key if Azure OpenAI is configured', async () => {
-        Sinon.stub(ExtensionSettings, 'appMapCommandLineEnvironment').value({
-          AZURE_OPENAI_API_VERSION: '2024-02-01',
-          AZURE_OPENAI_API_INSTANCE_NAME: 'appmap-openai',
-          AZURE_OPENAI_API_DEPLOYMENT_NAME: 'navie-gpt-35-test',
-        });
-        const env = await processWatcher.loadEnvironment({} as vscode.ExtensionContext);
-        expect(env).to.deep.equal({
-          APPMAP_API_KEY: 'the-appmap-key',
-          APPMAP_API_URL: 'https://api.getappmap.com',
-          AZURE_OPENAI_API_KEY: 'the-openai-key',
-          AZURE_OPENAI_API_VERSION: '2024-02-01',
-          AZURE_OPENAI_API_INSTANCE_NAME: 'appmap-openai',
-          AZURE_OPENAI_API_DEPLOYMENT_NAME: 'navie-gpt-35-test',
         });
       });
     });
