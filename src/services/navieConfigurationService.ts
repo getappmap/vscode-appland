@@ -63,3 +63,56 @@ export async function getOpenAIApiKey(
   const { secrets } = extensionContext;
   return await secrets.get(OPENAI_API_KEY);
 }
+
+export async function migrateOpenAIApiKey(
+  extensionContext: vscode.ExtensionContext
+): Promise<void> {
+  const value = await getOpenAIApiKey(extensionContext);
+  if (value) {
+    await setSecretEnvVars(extensionContext, { OPENAI_API_KEY: value });
+  }
+}
+
+const NAVIE_SECRET_ENV_KEY = 'appmap.navie.env';
+
+export async function getSecretEnv(
+  extensionContext: vscode.ExtensionContext
+): Promise<Record<string, string>> {
+  const { secrets } = extensionContext;
+  const envVar = await secrets.get(NAVIE_SECRET_ENV_KEY);
+  return envVar ? JSON.parse(envVar) : {};
+}
+
+export async function getSecretEnvVar(
+  extensionContext: vscode.ExtensionContext,
+  envVarName: string
+): Promise<string | undefined> {
+  const env = await getSecretEnv(extensionContext);
+  return env[envVarName];
+}
+
+/**
+ * Set environment variables within the secret environment context.
+ * @param extensionContext The extension context.
+ * @param envVars The environment variables to set. If a value is undefined, the variable will be deleted.
+ * @returns true if the value was changed, false if no change was made.
+ */
+export async function setSecretEnvVars(
+  extensionContext: vscode.ExtensionContext,
+  envVars: Record<string, string | undefined>
+): Promise<boolean> {
+  const env = await getSecretEnv(extensionContext);
+  let changed = false;
+  for (const [envVarName, value] of Object.entries(envVars)) {
+    if (env[envVarName] !== value) {
+      changed = true;
+      if (value !== undefined && value !== '') {
+        env[envVarName] = value;
+      } else {
+        delete env[envVarName];
+      }
+    }
+  }
+  await extensionContext.secrets.store(NAVIE_SECRET_ENV_KEY, JSON.stringify(env));
+  return changed;
+}
