@@ -300,6 +300,11 @@
           "type": "boolean",
           "description": "Enable verbose output from AppMap command line tools"
         },
+        "appMap.selectedModel": {
+          "type": "string",
+          "description": "Selected model to use for Navie AI",
+          "default": "*:gpt-4o"
+        },
         "appMap.commandLineEnvironment": {
           "type": "object",
           "description": "Environment variables to pass to AppMap command line tools. NOTE: Requires a restart to take effect.",

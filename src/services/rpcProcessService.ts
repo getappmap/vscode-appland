@@ -5,14 +5,15 @@ import { ProgramName, getModulePath } from './nodeDependencyProcess';
 import { NodeProcessService } from './nodeProcessService';
 import { AppmapConfigManagerInstance } from './appmapConfigManager';
 import { Client } from 'jayson/promise';
-import { ConfigurationRpc } from '@appland/rpc';
+import { ConfigurationRpc, NavieRpc } from '@appland/rpc';
 import { join } from 'path';
 import { AUTHN_PROVIDER_NAME } from '../authentication';
 import assert from 'assert';
 import { DEBUG_EXCEPTION, Telemetry } from '../telemetry';
 import ErrorCode from '../telemetry/definitions/errorCodes';
 import AssetService, { AssetIdentifier } from '../assets/assetService';
-import { openAIApiKeyEquals, setOpenAIApiKey } from './navieConfigurationService';
+import { setSecretEnvVars } from './navieConfigurationService';
+import ChatCompletion from './chatCompletion';
 
 export type RpcConnect = (port: number) => Client;
 
@@ -24,12 +25,10 @@ export interface RpcProcessServiceState {
   killProcess(): void;
 }
 
-interface RpcSettings {
-  useCopilot?: boolean;
-  openAIApiKey?: string;
-
+interface UpdateEnvOptions {
   // If an env var is set to undefined, it will be removed from the env.
   env?: Record<string, string | undefined>;
+  secretEnv?: Record<string, string | undefined>;
 }
 
 export default class RpcProcessService implements Disposable {
@@ -176,6 +175,24 @@ export default class RpcProcessService implements Disposable {
       ? pushConfigurationV2
       : pushConfigurationV1;
 
+    const chatCompletion = await ChatCompletion.instance;
+    const copilotModels = ChatCompletion.models;
+    if (copilotModels.length) {
+      const models = copilotModels.map((model) => ({
+        name: model.name,
+        id: model.id,
+        provider: 'Copilot',
+        createdAt: new Date().toISOString(),
+        baseUrl: chatCompletion?.url,
+        apiKey: chatCompletion?.key,
+        maxInputTokens: model.maxInputTokens,
+      }));
+
+      rpcClient.request(NavieRpc.V1.Models.Add.Method, models).catch((e) => {
+        NodeProcessService.outputChannel.appendLine(`Failed to add models: ${e}`);
+      });
+    }
+
     try {
       await configurationFn();
     } catch (e) {
@@ -252,33 +269,34 @@ export default class RpcProcessService implements Disposable {
     this.diposables.forEach((d) => d.dispose());
   }
 
-  async updateSettings(settings: RpcSettings): Promise<void> {
-    if (settings.useCopilot !== undefined) {
-      const config = vscode.workspace.getConfiguration('appMap.navie');
-      const key = 'useVSCodeLM';
-
-      await config.update(key, settings.useCopilot, true);
-
-      const otherSettings = config.inspect(key);
-      if (otherSettings?.workspaceValue !== undefined) {
-        await config.update(key, undefined, undefined);
-      }
+  async updateEnv(change: UpdateEnvOptions): Promise<void> {
+    let secretEnvChanged = false;
+    if (change.secretEnv) {
+      secretEnvChanged = await setSecretEnvVars(this.context, change.secretEnv);
     }
 
-    if (Object.hasOwnProperty.call(settings, 'openAIApiKey')) {
-      const sameKey = await openAIApiKeyEquals(this.context, settings.openAIApiKey);
-      if (!sameKey) {
-        await setOpenAIApiKey(this.context, settings.openAIApiKey);
-        this.debouncedRestart();
-      }
-    }
-
-    if (settings.env) {
+    if (change.env) {
       const env = vscode.workspace.getConfiguration('appMap').get('commandLineEnvironment', {});
-      Object.entries(settings.env).forEach(([k, v]) => {
-        env[k] = v;
+      let envChanged = false;
+      Object.entries(change.env).forEach(([k, v]) => {
+        if (env[k] !== v) {
+          envChanged = true;
+          if (v !== undefined) {
+            env[k] = v;
+          } else {
+            delete env[k];
+          }
+        }
       });
-      await vscode.workspace.getConfiguration('appMap').update('commandLineEnvironment', env, true);
+      if (envChanged) {
+        await vscode.workspace
+          .getConfiguration('appMap')
+          .update('commandLineEnvironment', env, true);
+      }
+    }
+
+    if (secretEnvChanged) {
+      this.debouncedRestart();
     }
   }
 }
