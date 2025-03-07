@@ -26,6 +26,7 @@ export default function mountChatSearchView() {
             targetAppmapFsPath: initialData.targetAppmapFsPath,
             useAnimation: initialData.useAnimation,
             editorType: initialData.editorType,
+            preselectedModelId: initialData.selectedModelId,
             openNewChat() {
               vscode.postMessage({ command: 'open-new-chat' });
             },
@@ -88,9 +89,28 @@ export default function mountChatSearchView() {
       .on('navie-restarting', () => {
         app.$refs.ui.onNavieRestarting();
       })
-      .on('navie-restarted', () => {
-        app.$refs.ui.loadNavieConfig();
+      .on('navie-restarted', async () => {
+        /* eslint-disable no-console */
+        app.$refs.ui.loadNavieConfig().catch((e) => console.error(e));
+        app.$refs.ui.loadModelConfig().catch((e) => console.error(e));
+
+        // Request the model list a few times to make sure it has time to fully load
+        for (let i = 0; i < 5; i += 1) {
+          app.$refs.ui.initializeModels().catch((e) => console.error(e));
+
+          // eslint-disable-next-line no-await-in-loop
+          await new Promise((resolve) => setTimeout(resolve, (i + 1) * 2000));
+        }
+        /* eslint-enable no-console */
       });
+
+    app.$on('change-model-config', ({ key, value, secret }) => {
+      vscode.postMessage({ command: 'change-model-config', key, value, secret });
+    });
+
+    app.$on('select-model', (model) => {
+      vscode.postMessage({ command: 'select-model', model });
+    });
 
     app.$on('open-install-instructions', () => {
       vscode.postMessage({ command: 'open-install-instructions' });

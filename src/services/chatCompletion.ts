@@ -82,30 +82,6 @@ export default class ChatCompletion implements Disposable {
     return `http://${this.host}:${this.port}/vscode/copilot`;
   }
 
-  get env(): Record<string, string> {
-    const pref = ChatCompletion.preferredModel;
-    if (!pref) return {};
-
-    const modelTokenLimit = pref.maxInputTokens;
-    const tokenLimitSetting = ExtensionSettings.navieContextTokenLimit;
-    const tokenLimits = [modelTokenLimit, tokenLimitSetting].filter(
-      (limit) => limit && limit > 0
-    ) as number[];
-
-    const env: Record<string, string> = {
-      OPENAI_API_KEY: this.key,
-      OPENAI_BASE_URL: this.url,
-      APPMAP_NAVIE_MODEL: pref.family,
-      APPMAP_NAVIE_COMPLETION_BACKEND: 'openai',
-    };
-
-    if (tokenLimits.length) {
-      env['APPMAP_NAVIE_TOKEN_LIMIT'] = Math.min(...tokenLimits).toString();
-    }
-
-    return env;
-  }
-
   private static _models: vscode.LanguageModelChat[] = [];
   public static get models(): ReadonlyArray<vscode.LanguageModelChat> {
     return this._models;

@@ -5,9 +5,9 @@ __metadata:
   version: 6
   cacheKey: 8
 
-"@anthropic-ai/sdk@npm:^0.25.2":
-  version: 0.25.2
-  resolution: "@anthropic-ai/sdk@npm:0.25.2"
+"@anthropic-ai/sdk@npm:^0.37.0":
+  version: 0.37.0
+  resolution: "@anthropic-ai/sdk@npm:0.37.0"
   dependencies:
     "@types/node": ^18.11.18
     "@types/node-fetch": ^2.6.4
@@ -16,7 +16,7 @@ __metadata:
     form-data-encoder: 1.7.2
     formdata-node: ^4.3.2
     node-fetch: ^2.6.7
-  checksum: b38f6a43f6f678e49f1b53226cc55654c23cf0fd1902cf3fcf98c0ae78f4c229518964f4cb31bc39da41925c806e7f4cc7ec14c511d387f07db3136b111bc744
+  checksum: ce33d7bbccd56b2b724d9a9cac5f490a96c9c8f008736a6ccd5d66098b3347c8a7fe5fdd8e0b3b59a5c32b15fb56bb3b207987fee2af24fe2730a84992a1f6a1
   languageName: node
   linkType: hard
 
@@ -63,17 +63,18 @@ __metadata:
   linkType: hard
 
 "@appland/appmap@npm:^3.129.0":
-  version: 3.163.4
-  resolution: "@appland/appmap@npm:3.163.4"
+  version: 3.186.0
+  resolution: "@appland/appmap@npm:3.186.0"
   dependencies:
     "@appland/client": ^1.17.0
     "@appland/components": ^4.12.0
     "@appland/diagrams": ^1.8.0
     "@appland/models": ^2.10.2
-    "@appland/navie": ^1.27.0
+    "@appland/navie": ^1.42.1
     "@appland/openapi": ^1.8.0
     "@appland/rpc": ^1.13.0
     "@appland/scanner": ^1.86.0
+    "@appland/search": ^1.1.0
     "@appland/sequence-diagram": ^1.12.0
     "@octokit/rest": ^20.0.1
     "@sidvind/better-ajv-errors": ^0.9.1
@@ -82,7 +83,6 @@ __metadata:
     applicationinsights: ^2.1.4
     async: ^3.2.4
     axios: ^0.27.2
-    better-sqlite3: ^9.5.0
     body-parser: ^1.20.2
     boxen: ^5.0.1
     chalk: ^4.1.2
@@ -90,8 +90,8 @@ __metadata:
     cli-progress: ^3.12.0
     conf: <11
     connect: ^3.7.0
-    connect-cors: ^0.5.6
     console-table-printer: ^2.9.0
+    cors: ^2.8.5
     crypto-js: ^4.0.0
     debug: ^4.3.6
     detect-indent: ^6.1.0
@@ -110,6 +110,7 @@ __metadata:
     lunr: ^2.3.9
     minimatch: ^5.1.2
     moo: ^0.5.1
+    node-sqlite3-wasm: ^0.8.34
     open: ^8.2.1
     openapi-diff: ^0.23.6
     openapi-types: ^12.1.3
@@ -132,32 +133,31 @@ __metadata:
       optional: true
   bin:
     appmap: built/cli.js
-  checksum: eb19c00d5753e9c1960888af0a93956894486352f8b399ee1f69b157f9fce2b54dd289b3a1a354e8fc5e6823e90412be93b79ef30270cf24a07b923b3d9b5308
+  checksum: 6aea8acb10b21498c40a25c772fedec6f47af3d4eb3f698300936e82dbed5e816645cfc3e253f8beb24fc8beaa2675d5882cc8ea9da1e6872f7050bcecdca9e6
   languageName: node
   linkType: hard
 
-"@appland/client@npm:^1.12.0, @appland/client@npm:^1.14.1, @appland/client@npm:^1.17.0":
-  version: 1.20.0
-  resolution: "@appland/client@npm:1.20.0"
+"@appland/client@portal:/home/db/dev/applandinc/appmap-js/packages/client::locator=appmap%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@appland/client@portal:/home/db/dev/applandinc/appmap-js/packages/client::locator=appmap%40workspace%3A."
   dependencies:
-    "@appland/models": ^2.10.0
+    "@appland/models": "workspace:^2.10.0"
     "@types/form-data": ^2.5.0
     form-data: ^4.0.0
     js-yaml: ^4.1.0
     rxjs: ^7.8.1
     socket.io-client: ^4.7.2
-  checksum: de83f53df7afaa9349ca0740753a9cd885a107b580fbad4cf910538b716839bb34060f2a645933667db862db9049e80fee4f281c8df6d66091c132617985bc92
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@appland/components@npm:^4.12.0":
-  version: 4.42.0
-  resolution: "@appland/components@npm:4.42.0"
+"@appland/components@portal:/home/db/dev/applandinc/appmap-js/packages/components::locator=appmap%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@appland/components@portal:/home/db/dev/applandinc/appmap-js/packages/components::locator=appmap%40workspace%3A."
   dependencies:
-    "@appland/client": ^1.12.0
-    "@appland/diagrams": ^1.7.0
-    "@appland/models": ^2.10.2
-    "@appland/rpc": ^1.13.0
+    "@appland/client": "workspace:^1.12.0"
+    "@appland/diagrams": "workspace:^1.7.0"
+    "@appland/models": "workspace:^2.10.2"
+    "@appland/rpc": "workspace:^1.13.0"
     "@appland/sequence-diagram": ^1.11.0
     "@types/sax": ^1.2.7
     buffer: ^6.0.3
@@ -178,100 +178,67 @@ __metadata:
     sql-formatter: ^4.0.2
     vue: ^2.7.16
     vuex: ^3.6.0
-  checksum: a03cb15c97ca7fe8d8c8ab41073f9ae453db448e888ce5c280987ad42bc445de58bcfd0a07526d10c1c8dbbf5bda0193bf4be467f8677749d2b0496077758b57
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@appland/components@npm:^4.44.0":
-  version: 4.44.0
-  resolution: "@appland/components@npm:4.44.0"
+"@appland/diagrams@portal:/home/db/dev/applandinc/appmap-js/packages/diagrams::locator=appmap%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@appland/diagrams@portal:/home/db/dev/applandinc/appmap-js/packages/diagrams::locator=appmap%40workspace%3A."
   dependencies:
-    "@appland/client": ^1.12.0
-    "@appland/diagrams": ^1.7.0
-    "@appland/models": ^2.10.2
-    "@appland/rpc": ^1.13.0
-    "@appland/sequence-diagram": ^1.11.0
-    "@types/sax": ^1.2.7
-    buffer: ^6.0.3
-    d3: ^7.8.4
-    d3-flame-graph: ^4.1.3
-    diff: ^5.1.0
-    dom-to-svg: ^0.12.2
-    dompurify: ^3.0.6
-    events: ^3.3.0
-    highlight.js: ^11.9.0
-    jayson: ^4.1.0
-    js-base64: ^3.7.7
-    marked: ^10.0.0
-    marked-highlight: ^2.0.7
-    mermaid: ^10.9.1
-    pako: ^2.1.0
-    sax: ^1.4.1
-    sql-formatter: ^4.0.2
-    vue: ^2.7.16
-    vuex: ^3.6.0
-  checksum: d437c0776e3999224d7ac6d5332b088c9c4b1d4108d9704de7a3d2b7374359badd7cb8268b54fb6ca61feaaea470e84b53c43e75ba4a3d77e8c906500a86a885
-  languageName: node
-  linkType: hard
-
-"@appland/diagrams@npm:^1.7.0, @appland/diagrams@npm:^1.8.0":
-  version: 1.8.0
-  resolution: "@appland/diagrams@npm:1.8.0"
-  dependencies:
-    "@appland/models": ^2.10.0
+    "@appland/models": "workspace:^2.10.0"
     d3-interpolate: ^3.0.1
     d3-selection: ^3.0.0
     d3-shape: ^3.2.0
     d3-zoom: ^3.0.0
     dagre: ^0.8.5
     deepmerge: ^4.2.2
-  checksum: 9c55f09f015d85ef295d4090ccb030f437ec774f8ae5d4f5cb91d9433ef61235118226979d0d249904b9f1bd10516dd88256cdeca612a325dcac2d92ebfb2a83
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@appland/models@npm:^2.10.0, @appland/models@npm:^2.10.2":
-  version: 2.10.3
-  resolution: "@appland/models@npm:2.10.3"
+"@appland/models@portal:/home/db/dev/applandinc/appmap-js/packages/models::locator=appmap%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@appland/models@portal:/home/db/dev/applandinc/appmap-js/packages/models::locator=appmap%40workspace%3A."
   dependencies:
     "@appland/sql-parser": ^1.5.0
     crypto-js: ^4.0.0
-  checksum: a0fce9fcb99a0147e3157c38a7a0a506ae156fe9d7f0e255ccfb268d5b53b98138a7c37e321878bbff0372366e97ac2d75c50bc2b0078ade006ac50344bd7c42
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@appland/navie@npm:^1.27.0":
-  version: 1.27.1
-  resolution: "@appland/navie@npm:1.27.1"
+"@appland/navie@portal:/home/db/dev/applandinc/appmap-js/packages/navie::locator=appmap%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@appland/navie@portal:/home/db/dev/applandinc/appmap-js/packages/navie::locator=appmap%40workspace%3A."
   dependencies:
-    "@langchain/anthropic": ^0.2.14
+    "@langchain/anthropic": ^0.3.1
     "@langchain/core": ^0.2.27
+    "@langchain/google-vertexai-web": ^0.1.0
     "@langchain/openai": ^0.2.7
     fast-xml-parser: ^4.4.0
     js-yaml: ^4.1.0
+    jsdom: ^16.6.0
     langchain: ^0.2.16
     mermaid: ^9
     openai: ^4.56.0
+    p-retry: 4
     zod: ^3.23.8
-  checksum: a79f01f502f5786df8a9d3d40131909727b4d628ca7e411b9d82706185684fd59f73fde135332da0c7c3afd1789bad22290d7bb5deac6a63d4eee052152e30ca
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@appland/openapi@npm:^1.7.0, @appland/openapi@npm:^1.8.0":
-  version: 1.8.0
-  resolution: "@appland/openapi@npm:1.8.0"
+"@appland/openapi@portal:/home/db/dev/applandinc/appmap-js/packages/openapi::locator=appmap%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@appland/openapi@portal:/home/db/dev/applandinc/appmap-js/packages/openapi::locator=appmap%40workspace%3A."
   dependencies:
-    "@appland/models": ^2.10.0
+    "@appland/models": "workspace:^2.10.0"
     js-yaml: ^4.1.0
-  checksum: 74caad0e582b350e02de1ec6002307f7bc030e9aa0c198ba73e97ed8fa95fa104d997bb216afbaa6d08bba6a0c6388c1ecbfe6291d953ac448822ed2e16ef1ca
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@appland/rpc@npm:^1.13.0, @appland/rpc@npm:^1.16.0":
-  version: 1.16.0
-  resolution: "@appland/rpc@npm:1.16.0"
-  checksum: 9fda41a351a489ab18e07b81d26d9ca2158f4a0c86f642791bf509289b26dc83b80a075b5907632eb9b6e2fa5e027114622d5d1c4bd4a0e3c497cf3edcca6a00
+"@appland/rpc@portal:/home/db/dev/applandinc/appmap-js/packages/rpc::locator=appmap%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@appland/rpc@portal:/home/db/dev/applandinc/appmap-js/packages/rpc::locator=appmap%40workspace%3A."
+  dependencies:
+    "@appland/client": "workspace:*"
   languageName: node
-  linkType: hard
+  linkType: soft
 
 "@appland/scanner@npm:^1.86.0":
   version: 1.88.0
@@ -307,6 +274,20 @@ __metadata:
   bin:
     scanner: built/cli.js
   checksum: 689139a11a561bb3c9614130cc9bb075d4b6fc7978a214b3a8984d710dc835ac184c31ad32535eebd8cba34ad7e08fa3227fd2f65afa9db6ea6b6e0fa799f226
+  languageName: node
+  linkType: hard
+
+"@appland/search@npm:^1.1.0":
+  version: 1.2.0
+  resolution: "@appland/search@npm:1.2.0"
+  dependencies:
+    cachedir: ^2.4.0
+    isbinaryfile: ^5.0.4
+    node-sqlite3-wasm: ^0.8.34
+    yargs: ^17.7.2
+  bin:
+    search: built/cli.js
+  checksum: d3f4ef4be590f5b0442083fbf7ab916c0a9dee06a38b90e10857cb1ede3902c647d617ba00a7388d7678f52da5531128f3c238dbcb8dc28d1d94b34e94a8d931
   languageName: node
   linkType: hard
 
@@ -491,15 +472,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/parser@npm:^7.18.4":
-  version: 7.20.7
-  resolution: "@babel/parser@npm:7.20.7"
-  bin:
-    parser: ./bin/babel-parser.js
-  checksum: 25b5266e3bd4be837092685f6b7ef886f1308ff72659a24342eb646ae5014f61ed1771ce8fc20636c890fcae19304fc72c069564ca6075207b7fbf3f75367275
-  languageName: node
-  linkType: hard
-
 "@babel/parser@npm:^7.23.5":
   version: 7.26.3
   resolution: "@babel/parser@npm:7.26.3"
@@ -564,7 +536,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@braintree/sanitize-url@npm:^6.0.0, @braintree/sanitize-url@npm:^6.0.1":
+"@braintree/sanitize-url@npm:^6.0.1":
   version: 6.0.4
   resolution: "@braintree/sanitize-url@npm:6.0.4"
   checksum: f5ec6048973722ea1c46ae555d2e9eb848d7fa258994f8ea7d6db9514ee754ea3ef344ef71b3696d486776bcb839f3124e79f67c6b5b2814ed2da220b340627c
@@ -865,16 +837,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@langchain/anthropic@npm:^0.2.14":
-  version: 0.2.16
-  resolution: "@langchain/anthropic@npm:0.2.16"
+"@langchain/anthropic@npm:^0.3.1":
+  version: 0.3.15
+  resolution: "@langchain/anthropic@npm:0.3.15"
   dependencies:
-    "@anthropic-ai/sdk": ^0.25.2
-    "@langchain/core": ">=0.2.21 <0.3.0"
+    "@anthropic-ai/sdk": ^0.37.0
     fast-xml-parser: ^4.4.1
     zod: ^3.22.4
     zod-to-json-schema: ^3.22.4
-  checksum: c8c7424a079335603e539f7dd94b31bbb54e01016b347b2123e34c04e98f83f3f84ce6c55a6c7e00612c9f8a5e7b8180c9e80570e9cae2433caf37983e673f5a
+  peerDependencies:
+    "@langchain/core": ">=0.2.21 <0.4.0"
+  checksum: 2c8913b34b6028a52ba0c4362fbe783ca6cc2626f490b5df688b1d74475e9d0d7bc6b88d464cf87b7c8eb618c833cd2aaaf8801a379b50dd1fa53f1fd27a5e3a
   languageName: node
   linkType: hard
 
@@ -894,6 +867,41 @@ __metadata:
     zod: ^3.22.4
     zod-to-json-schema: ^3.22.3
   checksum: 902d1582073d9de321d36bf0b25e9220422a71f10a2f1f8d433883f22d8a9372276c6b501dbf512a71dbb5c147a745abb06f65ef0d9d1f9aadf751270b56db69
+  languageName: node
+  linkType: hard
+
+"@langchain/google-common@npm:~0.1.8":
+  version: 0.1.8
+  resolution: "@langchain/google-common@npm:0.1.8"
+  dependencies:
+    uuid: ^10.0.0
+    zod-to-json-schema: ^3.22.4
+  peerDependencies:
+    "@langchain/core": ">=0.2.21 <0.4.0"
+  checksum: f6c2c15d13fdcecf34bf0add9eaee2cfe0c3c3708c7f9182df935abc130fddff899e95f284e5f30bc63d26ddbbd91a6fb362ce47a1f3a1a973e030ae77c0ab47
+  languageName: node
+  linkType: hard
+
+"@langchain/google-vertexai-web@npm:^0.1.0":
+  version: 0.1.8
+  resolution: "@langchain/google-vertexai-web@npm:0.1.8"
+  dependencies:
+    "@langchain/google-webauth": ~0.1.8
+  peerDependencies:
+    "@langchain/core": ">=0.2.21 <0.4.0"
+  checksum: 2eeeb076832e6838702c6ffc52d48cabcba2428bd25709303a17195e5dae84e3a51ba82fb4b7cb589c93f68df3b034a5501cf52d7b6056dbebbaebfbe18ace2c
+  languageName: node
+  linkType: hard
+
+"@langchain/google-webauth@npm:~0.1.8":
+  version: 0.1.8
+  resolution: "@langchain/google-webauth@npm:0.1.8"
+  dependencies:
+    "@langchain/google-common": ~0.1.8
+    web-auth-library: ^1.0.3
+  peerDependencies:
+    "@langchain/core": ">=0.2.21 <0.4.0"
+  checksum: da5672e544653cf3ae9076e166096de8a56efbce164d59a2b2d1e2768ad955576b450967a57c067e73485a4545f3b32b1af0d6d3c9684c672fe091daf77172f4
   languageName: node
   linkType: hard
 
@@ -2704,17 +2712,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vue/compiler-sfc@npm:2.7.14":
-  version: 2.7.14
-  resolution: "@vue/compiler-sfc@npm:2.7.14"
-  dependencies:
-    "@babel/parser": ^7.18.4
-    postcss: ^8.4.14
-    source-map: ^0.6.1
-  checksum: 25e00abaecb311f1effbf539bc3e4fdeedb39d35f9c2947b2640187a047e6a7400e693fd7da1d3a98977b9078c5bf629ca47f8b9a59dc14a080c0a1e1dd06a49
-  languageName: node
-  linkType: hard
-
 "@vue/compiler-sfc@npm:2.7.16":
   version: 2.7.16
   resolution: "@vue/compiler-sfc@npm:2.7.16"
@@ -3255,7 +3252,7 @@ __metadata:
     typescript: ^4.9.5
     vscode-extension-telemetry: ^0.1.7
     vscode-uri: ^3.0.7
-    vue: ^2.7.14
+    vue: ^2.7.16
     vue-template-compiler: ^2.7.14
     vuex: ^3.6.0
     yaml: ^2.1.1
@@ -3550,17 +3547,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"better-sqlite3@npm:^9.5.0":
-  version: 9.6.0
-  resolution: "better-sqlite3@npm:9.6.0"
-  dependencies:
-    bindings: ^1.5.0
-    node-gyp: latest
-    prebuild-install: ^7.1.1
-  checksum: be3a1d2a3f6f9b5141be6607a38c0a51fa5849495b071955e507bc0c2a2fb08430852c1bf03796eec1a53344b25645807db48dcb51c71b0662b74c5a70420bb0
-  languageName: node
-  linkType: hard
-
 "bin-links@npm:^2.2.1":
   version: 2.2.1
   resolution: "bin-links@npm:2.2.1"
@@ -3579,15 +3565,6 @@ __metadata:
   version: 2.2.0
   resolution: "binary-extensions@npm:2.2.0"
   checksum: ccd267956c58d2315f5d3ea6757cf09863c5fc703e50fbeb13a7dc849b812ef76e3cf9ca8f35a0c48498776a7478d7b4a0418e1e2b8cb9cb9731f2922aaad7f8
-  languageName: node
-  linkType: hard
-
-"bindings@npm:^1.5.0":
-  version: 1.5.0
-  resolution: "bindings@npm:1.5.0"
-  dependencies:
-    file-uri-to-path: 1.0.0
-  checksum: 65b6b48095717c2e6105a021a7da4ea435aa8d3d3cd085cb9e85bcb6e5773cf318c4745c3f7c504412855940b585bdf9b918236612a1c7a7942491de176f1ae7
   languageName: node
   linkType: hard
 
@@ -3988,6 +3965,13 @@ __metadata:
     tar: ^6.1.11
     unique-filename: ^3.0.0
   checksum: b7422c113b4ec750f33beeca0f426a0024c28e3172f332218f48f963e5b970647fa1ac05679fe5bb448832c51efea9fda4456b9a95c3a1af1105fe6c1833cde2
+  languageName: node
+  linkType: hard
+
+"cachedir@npm:^2.4.0":
+  version: 2.4.0
+  resolution: "cachedir@npm:2.4.0"
+  checksum: 43198514eaa61f65b5535ed29ad651f22836fba3868ed58a6a87731f05462f317d39098fa3ac778801c25455483c9b7f32a2fcad1f690a978947431f12a0f4d0
   languageName: node
   linkType: hard
 
@@ -4631,16 +4615,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"connect-cors@npm:^0.5.6":
-  version: 0.5.6
-  resolution: "connect-cors@npm:0.5.6"
-  dependencies:
-    connect: ">= 1.6.4"
-  checksum: 704b1dcac0b630afba2abdbd12c5064416a58d6f60ba319d5514221be531a48064ca759de2d9322f79040189cf6948e74467fc963d26f6811a87268ee6ff7d2e
-  languageName: node
-  linkType: hard
-
-"connect@npm:>= 1.6.4, connect@npm:^3.7.0":
+"connect@npm:^3.7.0":
   version: 3.7.0
   resolution: "connect@npm:3.7.0"
   dependencies:
@@ -4770,21 +4745,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"cors@npm:^2.8.5":
+  version: 2.8.5
+  resolution: "cors@npm:2.8.5"
+  dependencies:
+    object-assign: ^4
+    vary: ^1
+  checksum: ced838404ccd184f61ab4fdc5847035b681c90db7ac17e428f3d81d69e2989d2b680cc254da0e2554f5ed4f8a341820a1ce3d1c16b499f6e2f47a1b9b07b5006
+  languageName: node
+  linkType: hard
+
 "cose-base@npm:^1.0.0":
   version: 1.0.3
   resolution: "cose-base@npm:1.0.3"
   dependencies:
     layout-base: ^1.0.0
   checksum: 3f3d592316df74adb215ca91e430f1c22b6e890bc0025b32ae1f6464c73fdb9614816cb40a8d38b40c6a3e9e7b8c64eda90d53fb9a4a6948abec17dad496f30b
-  languageName: node
-  linkType: hard
-
-"cose-base@npm:^2.2.0":
-  version: 2.2.0
-  resolution: "cose-base@npm:2.2.0"
-  dependencies:
-    layout-base: ^2.0.0
-  checksum: 2e694f340bf216c71fc126d237578a4168e138720011d0b48c88bf9bfc7fd45f912eff2c603ef3d1307d6e3ce6f465ed382285a764a3a6620db590c5457d2557
   languageName: node
   linkType: hard
 
@@ -4984,18 +4960,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cytoscape-fcose@npm:^2.1.0":
-  version: 2.2.0
-  resolution: "cytoscape-fcose@npm:2.2.0"
-  dependencies:
-    cose-base: ^2.2.0
-  peerDependencies:
-    cytoscape: ^3.2.0
-  checksum: 94ffe6f131f9c08c2a0a7a6ce1c6c5e523a395bf8d84eba6d4a5f85e23f33788ea3ff807540861a5f78a6914a27729e06a7e6f66784f4f28ea1c030acf500121
-  languageName: node
-  linkType: hard
-
-"cytoscape@npm:^3.23.0, cytoscape@npm:^3.28.1":
+"cytoscape@npm:^3.28.1":
   version: 3.30.2
   resolution: "cytoscape@npm:3.30.2"
   checksum: 45ec8f256b6bb59d505bf92f937d86d2547c62cd45e02e7e873320f321d39bb57261aad0dad06d0903f2af50decb367aa0a05193043da5332dc6feb37dce888c
@@ -5416,16 +5381,6 @@ __metadata:
     d3: ^7.8.2
     lodash-es: ^4.17.21
   checksum: 25194e80dfad48db0dc2e0a273a7c9fcbfdc4cf993b219eaa1e0e0ce0cbb8c63be42fa2aa0c5f9bf9b324c34b8b2e300bb2a1606d5ae35c2de00f9c4ac317d8e
-  languageName: node
-  linkType: hard
-
-"dagre-d3-es@npm:7.0.9":
-  version: 7.0.9
-  resolution: "dagre-d3-es@npm:7.0.9"
-  dependencies:
-    d3: ^7.8.2
-    lodash-es: ^4.17.21
-  checksum: 5f24ad9558e84066e70cfa6979320d93079979ac8b0a3b033e5330742aeeba74e205f66794ab6e0a82354b061a4e29c10a291590d7b2cf82b5780fab5443f5ba
   languageName: node
   linkType: hard
 
@@ -5992,13 +5947,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dompurify@npm:2.4.3":
-  version: 2.4.3
-  resolution: "dompurify@npm:2.4.3"
-  checksum: b440981f2a38cada2085759cc3d1e2f94571afc34343d011a8a6aa1ad91ae6abf651adbfa4994b0e2283f0ce81f7891cdb04b67d0b234c8d190cb70e9691f026
-  languageName: node
-  linkType: hard
-
 "dompurify@npm:^3.0.5":
   version: 3.1.6
   resolution: "dompurify@npm:3.1.6"
@@ -6082,13 +6030,6 @@ __metadata:
   version: 1.1.1
   resolution: "ee-first@npm:1.1.1"
   checksum: 1b4cac778d64ce3b582a7e26b218afe07e207a0f9bfe13cc7395a6d307849cfe361e65033c3251e00c27dd060cab43014c2d6b2647676135e18b77d2d05b3f4f
-  languageName: node
-  linkType: hard
-
-"elkjs@npm:^0.8.2":
-  version: 0.8.2
-  resolution: "elkjs@npm:0.8.2"
-  checksum: ed615c485fa4ac1e858af509df24fdc9f61f2c6576df5f79f6a31c733fda69f235f53cd36af037aa9d2b8a935cb4f823fbd89d784b67f6e51be5100306ea1b39
   languageName: node
   linkType: hard
 
@@ -6993,13 +6934,6 @@ __metadata:
   dependencies:
     flat-cache: ^3.0.4
   checksum: f49701feaa6314c8127c3c2f6173cfefff17612f5ed2daaafc6da13b5c91fd43e3b2a58fd0d63f9f94478a501b167615931e7200e31485e320f74a33885a9c74
-  languageName: node
-  linkType: hard
-
-"file-uri-to-path@npm:1.0.0":
-  version: 1.0.0
-  resolution: "file-uri-to-path@npm:1.0.0"
-  checksum: b648580bdd893a008c92c7ecc96c3ee57a5e7b6c4c18a9a09b44fb5d36d79146f8e442578bc0e173dc027adf3987e254ba1dfd6e3ec998b7c282873010502144
   languageName: node
   linkType: hard
 
@@ -8579,6 +8513,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"isbinaryfile@npm:^5.0.4":
+  version: 5.0.4
+  resolution: "isbinaryfile@npm:5.0.4"
+  checksum: d88982a889369d83a5937b4b4d2288ed3b3dbbcee8fc74db40058f3c089a2c7beb9e5305b7177e82d87ff38fb62be8d60960f7a2d669ca08240ef31c1435b884
+  languageName: node
+  linkType: hard
+
 "isbuffer@npm:~0.0.0":
   version: 0.0.0
   resolution: "isbuffer@npm:0.0.0"
@@ -8661,6 +8602,13 @@ __metadata:
   bin:
     jayson: bin/jayson.js
   checksum: 86464322fbdc6db65d2bb4fc278cb6c86fad5c2a506065490d39459f09ba0d30f2b4fb740b33828a1424791419b6c8bd295dc54d361a4ad959bf70cc62b1ca7e
+  languageName: node
+  linkType: hard
+
+"jose@npm:>= 4.12.0 < 5.0.0":
+  version: 4.15.9
+  resolution: "jose@npm:4.15.9"
+  checksum: 41abe1c99baa3cf8a78ebbf93da8f8e50e417b7a26754c4afa21865d87527b8ac2baf66de2c5f6accc3f7d7158658dae7364043677236ea1d07895b040097f15
   languageName: node
   linkType: hard
 
@@ -9288,13 +9236,6 @@ __metadata:
   version: 1.0.2
   resolution: "layout-base@npm:1.0.2"
   checksum: e4c312765ac4fa13b49c940e701461309c7a0aa07f784f81d31f626b945dced90a8abf83222388a5af16b7074271f745501a90ef5a3af676abb2e7eb16d55b2e
-  languageName: node
-  linkType: hard
-
-"layout-base@npm:^2.0.0":
-  version: 2.0.1
-  resolution: "layout-base@npm:2.0.1"
-  checksum: ef93baf044f67c3680f4f3a6d628bf4c7faba0f70f3e0abb16e4811bed087045208560347ca749e123d169cbf872505ad84e11fb21b0be925997227e042c7f43
   languageName: node
   linkType: hard
 
@@ -10069,7 +10010,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mermaid@npm:^10.9.1":
+"mermaid@npm:10.9.1":
   version: 10.9.1
   resolution: "mermaid@npm:10.9.1"
   dependencies:
@@ -10094,30 +10035,6 @@ __metadata:
     uuid: ^9.0.0
     web-worker: ^1.2.0
   checksum: ec4f463011205ab031fe27ad95730daf815097be9f161866c9c08ac291118dee99a0e841f6e39e7b480c12287a923b71914931eab8beb048bfd991d9957f11ee
-  languageName: node
-  linkType: hard
-
-"mermaid@npm:^9":
-  version: 9.4.3
-  resolution: "mermaid@npm:9.4.3"
-  dependencies:
-    "@braintree/sanitize-url": ^6.0.0
-    cytoscape: ^3.23.0
-    cytoscape-cose-bilkent: ^4.1.0
-    cytoscape-fcose: ^2.1.0
-    d3: ^7.4.0
-    dagre-d3-es: 7.0.9
-    dayjs: ^1.11.7
-    dompurify: 2.4.3
-    elkjs: ^0.8.2
-    khroma: ^2.0.0
-    lodash-es: ^4.17.21
-    non-layered-tidy-tree-layout: ^2.0.2
-    stylis: ^4.1.2
-    ts-dedent: ^2.2.0
-    uuid: ^9.0.0
-    web-worker: ^1.2.0
-  checksum: 9e29177f289cc268ea4a2ca7a45ec0ca06f678007eae15a7cd54c682148a71367e861d2c9c0afa9f7474da154d9920524e59722186820e9bc0d79989305a7064
   languageName: node
   linkType: hard
 
@@ -11069,6 +10986,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"node-sqlite3-wasm@npm:^0.8.34":
+  version: 0.8.36
+  resolution: "node-sqlite3-wasm@npm:0.8.36"
+  checksum: 1285ad72f51aef7c281c6af82323f7464b2f57b3b6ed545d4ffaecce584400e8b51c3b60f3b8da71d1bbffc54fe4bd3d3cf3b685152fece615b971da77f78a3d
+  languageName: node
+  linkType: hard
+
 "non-layered-tidy-tree-layout@npm:^2.0.2":
   version: 2.0.2
   resolution: "non-layered-tidy-tree-layout@npm:2.0.2"
@@ -11362,7 +11286,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"object-assign@npm:^4.0.1, object-assign@npm:^4.1.0, object-assign@npm:^4.1.1":
+"object-assign@npm:^4, object-assign@npm:^4.0.1, object-assign@npm:^4.1.0, object-assign@npm:^4.1.1":
   version: 4.1.1
   resolution: "object-assign@npm:4.1.1"
   checksum: fcc6e4ea8c7fe48abfbb552578b1c53e0d194086e2e6bbbf59e0a536381a292f39943c6e9628af05b5528aa5e3318bb30d6b2e53cadaf5b8fe9e12c4b69af23f
@@ -12288,28 +12212,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prebuild-install@npm:^7.1.1":
-  version: 7.1.2
-  resolution: "prebuild-install@npm:7.1.2"
-  dependencies:
-    detect-libc: ^2.0.0
-    expand-template: ^2.0.3
-    github-from-package: 0.0.0
-    minimist: ^1.2.3
-    mkdirp-classic: ^0.5.3
-    napi-build-utils: ^1.0.1
-    node-abi: ^3.3.0
-    pump: ^3.0.0
-    rc: ^1.2.7
-    simple-get: ^4.0.0
-    tar-fs: ^2.0.0
-    tunnel-agent: ^0.6.0
-  bin:
-    prebuild-install: bin.js
-  checksum: 543dadf8c60e004ae9529e6013ca0cbeac8ef38b5f5ba5518cb0b622fe7f8758b34e4b5cb1a791db3cdc9d2281766302df6088bd1a225f206925d6fee17d6c5c
-  languageName: node
-  linkType: hard
-
 "prelude-ls@npm:^1.2.1":
   version: 1.2.1
   resolution: "prelude-ls@npm:1.2.1"
@@ -13123,6 +13025,13 @@ resolve@^2.0.0-next.3:
   version: 1.0.4
   resolution: "reusify@npm:1.0.4"
   checksum: c3076ebcc22a6bc252cb0b9c77561795256c22b757f40c0d8110b1300723f15ec0fc8685e8d4ea6d7666f36c79ccc793b1939c748bf36f18f542744a4e379fcc
+  languageName: node
+  linkType: hard
+
+"rfc4648@npm:^1.5.2":
+  version: 1.5.4
+  resolution: "rfc4648@npm:1.5.4"
+  checksum: 4bfd555f16b8ed1bceb3cf4d79242cf3253a2600de51f45ac19549f366b4b8edc0d9b8feaae778059c137f1d10ebd87e125fc839636f6267a7b6badaa95a9f00
   languageName: node
   linkType: hard
 
@@ -14135,7 +14044,7 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"stylis@npm:^4.1.2, stylis@npm:^4.1.3":
+"stylis@npm:^4.1.3":
   version: 4.3.4
   resolution: "stylis@npm:4.3.4"
   checksum: 7e3a482c7bba6e0e9e3187972e958acf800b1abe99f23e081fcb5dea8e4a05eca44286c1381ce2bc7179245ddbd7bf1f74237ed413fce7491320a543bcfebda9
@@ -15151,6 +15060,13 @@ typescript@^3.9.3:
   languageName: node
   linkType: hard
 
+"vary@npm:^1":
+  version: 1.1.2
+  resolution: "vary@npm:1.1.2"
+  checksum: ae0123222c6df65b437669d63dfa8c36cee20a504101b2fcd97b8bf76f91259c17f9f2b4d70a1e3c6bbcee7f51b28392833adb6b2770b23b01abec84e369660b
+  languageName: node
+  linkType: hard
+
 "verror@npm:^1.10.0":
   version: 1.10.1
   resolution: "verror@npm:1.10.1"
@@ -15211,16 +15127,6 @@ typescript@^3.9.3:
   languageName: node
   linkType: hard
 
-"vue@npm:^2.7.14":
-  version: 2.7.14
-  resolution: "vue@npm:2.7.14"
-  dependencies:
-    "@vue/compiler-sfc": 2.7.14
-    csstype: ^3.1.0
-  checksum: 8b06da67cc40870c66a30b7a6bc2874950cd4383792c371eb30497dd14fc7b41cf308b1c4517368d8f0e7ac16198c08de19236f6a79fe43f4bdbc4a1d9d4ad07
-  languageName: node
-  linkType: hard
-
 "vue@npm:^2.7.16":
   version: 2.7.16
   resolution: "vue@npm:2.7.16"
@@ -15271,6 +15177,16 @@ typescript@^3.9.3:
   dependencies:
     defaults: ^1.0.3
   checksum: 814e9d1ddcc9798f7377ffa448a5a3892232b9275ebb30a41b529607691c0491de47cba426e917a4d08ded3ee7e9ba2f3fe32e62ee3cd9c7d3bafb7754bd553c
+  languageName: node
+  linkType: hard
+
+"web-auth-library@npm:^1.0.3":
+  version: 1.0.3
+  resolution: "web-auth-library@npm:1.0.3"
+  dependencies:
+    jose: ">= 4.12.0 < 5.0.0"
+    rfc4648: ^1.5.2
+  checksum: 9e2b303a43ac040037b952c8130260edd44c34956e34277e28faa23ebf63fc40ba3a22b7a3cab5f36ea6f7aac16573415ccacb6e5a970fe4f4d2ee5751ae01d1
   languageName: node
   linkType: hard
 
@@ -15797,6 +15713,21 @@ typescript@^3.9.3:
     y18n: ^5.0.5
     yargs-parser: ^21.0.0
   checksum: e9012322870d7e4e912a6ae1f63b203e365f911c0cf158be92c36edefddfb3bd38ce17eb9ef0d18858a4777f047c50589ea22dacb44bd949169ba37dc6d34bee
+  languageName: node
+  linkType: hard
+
+"yargs@npm:^17.7.2":
+  version: 17.7.2
+  resolution: "yargs@npm:17.7.2"
+  dependencies:
+    cliui: ^8.0.1
+    escalade: ^3.1.1
+    get-caller-file: ^2.0.5
+    require-directory: ^2.1.1
+    string-width: ^4.2.3
+    y18n: ^5.0.5
+    yargs-parser: ^21.1.1
+  checksum: 73b572e863aa4a8cbef323dd911d79d193b772defd5a51aab0aca2d446655216f5002c42c5306033968193bdbf892a7a4c110b0d77954a7fdf563e653967b56a
   languageName: node
   linkType: hard
 
