@@ -413,8 +413,8 @@ async function streamChatCompletion(
   result: LanguageModelChatResponse,
   countTokens: () => Promise<number>
 ) {
+  const chunk = prepareChatCompletionChunk(model);
   try {
-    const chunk = prepareChatCompletionChunk(model);
     for await (const content of result.text) {
       if (!res.headersSent) res.writeHead(200, { 'Content-Type': 'text/event-stream' });
       else res.write(`data: ${JSON.stringify(chunk)}\n\n`);
@@ -427,7 +427,15 @@ async function streamChatCompletion(
     res.end();
   } catch (e) {
     warn(`Error streaming response: ${e}`);
-    if (isNativeError(e)) warn(e.stack);
+    if (isNativeError(e)) {
+      warn(e.stack);
+      if (e.message === 'Response got filtered.') {
+        chunk.choices[0].finish_reason = 'content_filter';
+        res.end(`data: ${JSON.stringify(chunk)}\n\n`);
+        return;
+      }
+    }
+
     const apiError = await convertToOpenAiApiError(e, model, countTokens);
     if (!res.headersSent) {
       res.writeHead(422, { 'Content-Type': 'application/json' }).end(JSON.stringify(apiError));
