@@ -1,3 +1,10 @@
+## [0.133.2](https://github.com/getappmap/vscode-appland/compare/v0.133.1...v0.133.2) (2025-03-14)
+
+
+### Bug Fixes
+
+* Propagate Copilot content filter errors ([db9a7eb](https://github.com/getappmap/vscode-appland/commit/db9a7eb5245be12a77517c48e17b17b901e1e990))
+
 ## [0.133.1](https://github.com/getappmap/vscode-appland/compare/v0.133.0...v0.133.1) (2025-01-24)
 
 
