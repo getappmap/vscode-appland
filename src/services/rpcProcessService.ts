@@ -158,18 +158,16 @@ export default class RpcProcessService implements Disposable {
       }
     };
 
-    const pushConfigurationV1 = async () => {
-      await rpcClient.request(ConfigurationRpc.V1.Set.Method, {
+    const pushConfigurationV1 = async () =>
+      rpcClient.request(ConfigurationRpc.V1.Set.Method, {
         appmapConfigFiles,
       });
-    };
 
-    const pushConfigurationV2 = async () => {
-      await rpcClient.request(ConfigurationRpc.V2.Set.Method, {
+    const pushConfigurationV2 = async () =>
+      rpcClient.request(ConfigurationRpc.V2.Set.Method, {
         appmapConfigFiles,
         projectDirectories,
       });
-    };
 
     const configurationFn = (await isV2ConfigurationSupported())
       ? pushConfigurationV2
@@ -188,8 +186,15 @@ export default class RpcProcessService implements Disposable {
         maxInputTokens: model.maxInputTokens,
       }));
 
-      rpcClient.request(NavieRpc.V1.Models.Add.Method, models).catch((e) => {
+      await rpcClient.request(NavieRpc.V1.Models.Add.Method, models).catch((e) => {
         NodeProcessService.outputChannel.appendLine(`Failed to add models: ${e}`);
+      });
+    }
+
+    const modelId = await vscode.workspace.getConfiguration('appMap').get('selectedModel');
+    if (modelId) {
+      await rpcClient.request(NavieRpc.V1.Models.Select.Method, { id: modelId }).catch((e) => {
+        NodeProcessService.outputChannel.appendLine(`Failed to set selected model: ${e}`);
       });
     }
 
