@@ -51,6 +51,7 @@ export default class RpcProcessService implements Disposable {
   ) {
     this.processWatcher = new RpcProcessWatcher(this.context, this.modulePath, {
       APPMAP_CODE_EDITOR: 'vscode',
+      APPMAP_NAVIE_MODEL_SELECTOR: '1',
     });
     this.diposables.push(
       vscode.workspace.onDidChangeWorkspaceFolders(() => this.pushConfiguration()),
@@ -286,7 +287,7 @@ export default class RpcProcessService implements Disposable {
       Object.entries(change.env).forEach(([k, v]) => {
         if (env[k] !== v) {
           envChanged = true;
-          if (v !== undefined) {
+          if (v !== undefined && v !== '') {
             env[k] = v;
           } else {
             delete env[k];

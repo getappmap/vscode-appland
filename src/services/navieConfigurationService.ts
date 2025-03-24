@@ -106,7 +106,7 @@ export async function setSecretEnvVars(
   for (const [envVarName, value] of Object.entries(envVars)) {
     if (env[envVarName] !== value) {
       changed = true;
-      if (value !== undefined) {
+      if (value !== undefined && value !== '') {
         env[envVarName] = value;
       } else {
         delete env[envVarName];
