@@ -28,6 +28,7 @@ export default function mountChatSearchView() {
             editorType: initialData.editorType,
             preselectedModelId: initialData.selectedModelId,
             threadId: initialData.threadId,
+            presubmittedPrompt: initialData.presubmittedPrompt,
             openNewChat() {
               vscode.postMessage({ command: 'open-new-chat' });
             },
@@ -104,6 +105,10 @@ export default function mountChatSearchView() {
         }
         /* eslint-enable no-console */
       });
+
+    app.$on('inline-recommendation', ({ prompt }) => {
+      vscode.postMessage({ command: 'inline-recommendation', prompt });
+    });
 
     app.$on('change-model-config', ({ key, value, secret }) => {
       vscode.postMessage({ command: 'change-model-config', key, value, secret });

@@ -24,6 +24,7 @@ type ExplainOpts = {
   targetAppmap?: any;
   targetAppmapFsPath?: string;
   suggestion?: { label: string; prompt: string };
+  presubmittedPrompt?: string;
 };
 
 export enum ExplainResponseStatus {
@@ -129,6 +130,7 @@ export default class ChatSearchWebview {
     targetAppmap,
     targetAppmapFsPath,
     suggestion,
+    presubmittedPrompt,
   }: ExplainOpts = {}): Promise<ExplainResponse> {
     const appmapRpcPort = this.dataService.appmapRpcPort;
     if (!appmapRpcPort) {
@@ -209,6 +211,7 @@ export default class ChatSearchWebview {
             targetAppmap,
             targetAppmapFsPath,
             suggestion,
+            presubmittedPrompt,
             selectedModelId: vscode.workspace
               .getConfiguration('appMap')
               .get<string>('selectedModel'),
@@ -322,6 +325,12 @@ export default class ChatSearchWebview {
           const { model } = message;
           const modelId = `${model.provider.toLowerCase()}:${model.id.toLowerCase()}`;
           await vscode.workspace.getConfiguration('appMap').update('selectedModel', modelId, true);
+          break;
+        }
+
+        case 'inline-recommendation': {
+          const { prompt } = message;
+          vscode.commands.executeCommand('appmap.explain', { presubmittedPrompt: prompt });
           break;
         }
       }

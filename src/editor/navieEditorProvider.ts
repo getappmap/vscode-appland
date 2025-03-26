@@ -258,6 +258,12 @@ export default class NavieEditorProvider implements CustomReadonlyEditorProvider
           vscode.window.showTextDocument(document, vscode.ViewColumn.Active);
           break;
         }
+
+        case 'inline-recommendation': {
+          const { prompt } = message;
+          vscode.commands.executeCommand('appmap.explain', { presubmittedPrompt: prompt });
+          break;
+        }
       }
     });
   }
