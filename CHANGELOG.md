@@ -1,3 +1,10 @@
+# [0.134.0](https://github.com/getappmap/vscode-appland/compare/v0.133.2...v0.134.0) (2025-04-01)
+
+
+### Features
+
+* Integrate the model selector ([1a295cc](https://github.com/getappmap/vscode-appland/commit/1a295cc215fbc5a8f93a2b2e196d54e2e69e577a))
+
 ## [0.133.2](https://github.com/getappmap/vscode-appland/compare/v0.133.1...v0.133.2) (2025-03-14)
 
 
