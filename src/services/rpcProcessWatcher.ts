@@ -111,5 +111,5 @@ export default class RpcProcessWatcher extends ProcessWatcher {
 }
 
 function makeArgs(port = 0) {
-  return ['rpc', '--port', port.toFixed()];
+  return ['rpc', '--port', port.toFixed(), '--navie-provider', 'local'];
 }

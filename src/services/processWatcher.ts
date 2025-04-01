@@ -5,8 +5,7 @@ import assert from 'assert';
 import { fileExists, sanitizeEnvironment } from '../util';
 import { join } from 'path';
 import ExtensionSettings from '../configuration/extensionSettings';
-import { getOpenAIApiKey } from './navieConfigurationService';
-import ChatCompletion from './chatCompletion';
+import { getSecretEnv } from './navieConfigurationService';
 
 export type RetryOptions = {
   // The number of retries made before declaring the process as failed.
@@ -51,20 +50,12 @@ async function accessToken(): Promise<string | undefined> {
 export async function loadEnvironment(
   context: vscode.ExtensionContext
 ): Promise<NodeJS.ProcessEnv> {
-  const chat = await ChatCompletion.instance;
-
   const env: Record<string, string | undefined> = {
     APPMAP_API_URL: ExtensionSettings.apiUrl,
     APPMAP_API_KEY: await accessToken(),
+    ...(await getSecretEnv(context)),
     ...ExtensionSettings.appMapCommandLineEnvironment,
-    ...chat?.env,
   };
-
-  const openAIApiKey = await getOpenAIApiKey(context);
-  if (!chat && openAIApiKey) {
-    if ('AZURE_OPENAI_API_VERSION' in env) env.AZURE_OPENAI_API_KEY = openAIApiKey;
-    else env.OPENAI_API_KEY = openAIApiKey;
-  }
 
   return env;
 }

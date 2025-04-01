@@ -57,7 +57,9 @@ import Watcher from './services/watcher';
 import ChatSearchWebview from './webviews/chatSearchWebview';
 import quickSearch from './commands/quickSearch';
 import appmapState from './commands/appmapState';
-import navieConfigurationService from './services/navieConfigurationService';
+import navieConfigurationService, {
+  migrateOpenAIApiKey,
+} from './services/navieConfigurationService';
 import RpcProcessService from './services/rpcProcessService';
 import CommandRegistry from './commands/commandRegistry';
 import AssetService from './assets/assetService';
@@ -74,6 +76,10 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
   });
 
   Telemetry.register(context);
+
+  migrateOpenAIApiKey(context).catch((e) => {
+    console.error('Failed to migrate OpenAI API key', e);
+  });
 
   const workspaceServices = initializeWorkspaceServices();
   context.subscriptions.push(workspaceServices);

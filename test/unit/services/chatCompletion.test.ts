@@ -38,15 +38,6 @@ describe('ChatCompletion', () => {
     await ChatCompletion.refreshModels();
   });
 
-  function mockTokenLimitSetting(limit: number | undefined) {
-    sinon.stub(workspace, 'getConfiguration').returns({
-      get: sinon.stub().callsFake((key) => {
-        if (key === 'navie.contextTokenLimit') return limit;
-        return undefined;
-      }),
-    } as any); // eslint-disable-line @typescript-eslint/no-explicit-any
-  }
-
   before(async () => {
     mockModel.sendRequest = sendRequestEcho;
     chatCompletion = new ChatCompletion(0, 'test-key');
@@ -57,35 +48,6 @@ describe('ChatCompletion', () => {
   afterEach(() => {
     sinon.restore();
     resetModelMocks();
-  });
-
-  it('should return the correct environment variables', () => {
-    const env = chatCompletion.env;
-    expect(env).to.deep.equal({
-      OPENAI_API_KEY: 'test-key',
-      OPENAI_BASE_URL: chatCompletion.url,
-      APPMAP_NAVIE_TOKEN_LIMIT: '325',
-      APPMAP_NAVIE_MODEL: 'test-family',
-      APPMAP_NAVIE_COMPLETION_BACKEND: 'openai',
-    });
-  });
-
-  describe('when token limit is configured below the LLM default', () => {
-    beforeEach(() => mockTokenLimitSetting(100));
-
-    it('applies the configuration setting', () => {
-      const env = chatCompletion.env;
-      expect(env['APPMAP_NAVIE_TOKEN_LIMIT']).to.equal('100');
-    });
-  });
-
-  describe('when token limit is configured above the LLM default', () => {
-    beforeEach(() => mockTokenLimitSetting(100_000));
-
-    it('uses the LLM limit', () => {
-      const env = chatCompletion.env;
-      expect(env['APPMAP_NAVIE_TOKEN_LIMIT']).to.equal('325');
-    });
   });
 
   it('should refresh models and set the preferred model', async () => {

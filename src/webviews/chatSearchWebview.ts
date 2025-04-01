@@ -206,6 +206,9 @@ export default class ChatSearchWebview {
             targetAppmap,
             targetAppmapFsPath,
             suggestion,
+            selectedModelId: vscode.workspace
+              .getConfiguration('appMap')
+              .get<string>('selectedModel'),
             useAnimation: ExtensionSettings.useAnimation,
             editorType: 'vscode',
           });
@@ -258,41 +261,6 @@ export default class ChatSearchWebview {
           await vscode.commands.executeCommand('appmap.views.appmaps.focus');
           break;
 
-        case 'select-llm-option': {
-          const { option } = message;
-          switch (option) {
-            case 'default':
-              this.rpcService.updateSettings({
-                useCopilot: false,
-                openAIApiKey: '',
-                env: {
-                  OPENAI_BASE_URL: undefined,
-                  OPENAI_API_KEY: undefined,
-                  AZURE_OPENAI_API_KEY: undefined,
-                  ANTHROPIC_API_KEY: undefined,
-                },
-              });
-              break;
-
-            case 'copilot':
-              this.rpcService.updateSettings({ useCopilot: true });
-              break;
-
-            case 'own-key':
-              this.rpcService.updateSettings({
-                useCopilot: false,
-                openAIApiKey: await vscode.window.showInputBox({ placeHolder: 'OpenAI API Key' }),
-                env: {
-                  OPENAI_BASE_URL: undefined,
-                },
-              });
-              break;
-
-            default:
-              console.error(`Unknown option: ${option}`);
-          }
-          break;
-        }
         case 'choose-files-to-pin': {
           await this.chooseFilesToPin().then(async (uris: vscode.Uri[] | undefined) => {
             if (!uris) return;
@@ -335,6 +303,22 @@ export default class ChatSearchWebview {
             content: [content.replace(/^\s*<!-- file:.* -->/gm, ''), metadataFooter].join('\n\n'),
           });
           vscode.window.showTextDocument(document, vscode.ViewColumn.Active);
+          break;
+        }
+
+        case 'change-model-config': {
+          const { key, value, secret } = message;
+          if (secret) {
+            const options = secret ? { secretEnv: { [key]: value } } : { env: { [key]: value } };
+            this.rpcService.updateEnv(options);
+          }
+          break;
+        }
+
+        case 'select-model': {
+          const { model } = message;
+          const modelId = `${model.provider.toLowerCase()}:${model.id.toLowerCase()}`;
+          await vscode.workspace.getConfiguration('appMap').update('selectedModel', modelId, true);
           break;
         }
       }
