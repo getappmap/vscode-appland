@@ -52,6 +52,7 @@ export default class RpcProcessService implements Disposable {
     this.processWatcher = new RpcProcessWatcher(this.context, this.modulePath, {
       APPMAP_CODE_EDITOR: 'vscode',
       APPMAP_NAVIE_MODEL_SELECTOR: '1',
+      APPMAP_NAVIE_THREAD_LOG: '1',
     });
     this.diposables.push(
       vscode.workspace.onDidChangeWorkspaceFolders(() => this.pushConfiguration()),
@@ -304,5 +305,11 @@ export default class RpcProcessService implements Disposable {
     if (secretEnvChanged) {
       this.debouncedRestart();
     }
+  }
+
+  rpcClient(): Client {
+    if (!this.available) throw new Error('RPC server is not available');
+    if (this.rpcPort === undefined) throw new Error('RPC port is not defined');
+    return this.rpcConnect(this.rpcPort);
   }
 }

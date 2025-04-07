@@ -24,6 +24,7 @@ type ExplainOpts = {
   targetAppmap?: any;
   targetAppmapFsPath?: string;
   suggestion?: { label: string; prompt: string };
+  threadId?: string;
 };
 
 export enum ExplainResponseStatus {
@@ -126,6 +127,7 @@ export default class ChatSearchWebview {
     targetAppmap,
     targetAppmapFsPath,
     suggestion,
+    threadId,
   }: ExplainOpts = {}): Promise<ExplainResponse> {
     const appmapRpcPort = this.dataService.appmapRpcPort;
     if (!appmapRpcPort) {
@@ -211,6 +213,7 @@ export default class ChatSearchWebview {
               .get<string>('selectedModel'),
             useAnimation: ExtensionSettings.useAnimation,
             editorType: 'vscode',
+            threadId,
           });
           break;
         case 'open-new-chat':
