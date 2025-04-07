@@ -4,6 +4,7 @@ import Vue from 'vue';
 import '../static/styles/navie-integration.css';
 import handleAppMapMessages from './handleAppMapMessages';
 import MessagePublisher from './messagePublisher';
+import { threadId } from 'node:worker_threads';
 
 export default function mountChatSearchView() {
   const vscode = window.acquireVsCodeApi();
@@ -27,6 +28,7 @@ export default function mountChatSearchView() {
             useAnimation: initialData.useAnimation,
             editorType: initialData.editorType,
             preselectedModelId: initialData.selectedModelId,
+            threadId: initialData.threadId,
             openNewChat() {
               vscode.postMessage({ command: 'open-new-chat' });
             },
