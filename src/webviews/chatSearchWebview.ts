@@ -24,6 +24,7 @@ type ExplainOpts = {
   targetAppmap?: any;
   targetAppmapFsPath?: string;
   suggestion?: { label: string; prompt: string };
+  threadId?: string;
 };
 
 export enum ExplainResponseStatus {
@@ -115,7 +116,7 @@ export default class ChatSearchWebview {
     });
 
     if (goodRequests.length > 0) {
-      const msg = { type: 'pin-files', requests: goodRequests.map((r) => new PinFileRequest(r)) };
+      const msg = { type: 'pin-files', requests: goodRequests.map(({ uri }) => uri) };
       panel.webview.postMessage(msg);
     }
   }
@@ -126,6 +127,7 @@ export default class ChatSearchWebview {
     targetAppmap,
     targetAppmapFsPath,
     suggestion,
+    threadId,
   }: ExplainOpts = {}): Promise<ExplainResponse> {
     const appmapRpcPort = this.dataService.appmapRpcPort;
     if (!appmapRpcPort) {
@@ -211,6 +213,7 @@ export default class ChatSearchWebview {
               .get<string>('selectedModel'),
             useAnimation: ExtensionSettings.useAnimation,
             editorType: 'vscode',
+            threadId,
           });
           break;
         case 'open-new-chat':
@@ -317,6 +320,7 @@ export default class ChatSearchWebview {
 
         case 'select-model': {
           const { model } = message;
+          if (!model) return;
           const modelId = `${model.provider.toLowerCase()}:${model.id.toLowerCase()}`;
           await vscode.workspace.getConfiguration('appMap').update('selectedModel', modelId, true);
           break;

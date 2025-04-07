@@ -89,6 +89,11 @@
     ],
     "commands": [
       {
+        "command": "appmap.navie.history",
+        "title": "AppMap: Open Navie History",
+        "icon": "$(history)"
+      },
+      {
         "command": "appmap.getAppmapState",
         "title": "AppMap: Copy Current AppMap State to Clipboard"
       },
@@ -593,6 +598,11 @@
           "command": "appmap.stopCurrentRemoteRecording",
           "when": "view == appmap.views.appmaps && appmap.recordingIsRunning",
           "group": "navigation@0"
+        },
+        {
+          "command": "appmap.navie.history",
+          "when": "view == appmap.views.navie",
+          "group": "navigation@0"
         }
       ],
       "view/item/context": [
@@ -719,10 +729,10 @@
   "dependencies": {
     "@appland/appmap": "^3.129.0",
     "@appland/client": "^1.23.0",
-    "@appland/components": "^4.45.0",
+    "@appland/components": "^4.46.1",
     "@appland/diagrams": "^1.8.0",
     "@appland/models": "^2.10.2",
-    "@appland/rpc": "^1.18.0",
+    "@appland/rpc": "^1.19.0",
     "@appland/scanner": "^1.86.0",
     "@appland/sequence-diagram": "^1.12.0",
     "@yarnpkg/parsers": "^3.0.0-rc.45",

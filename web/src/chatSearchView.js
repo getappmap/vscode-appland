@@ -27,6 +27,7 @@ export default function mountChatSearchView() {
             useAnimation: initialData.useAnimation,
             editorType: initialData.editorType,
             preselectedModelId: initialData.selectedModelId,
+            threadId: initialData.threadId,
             openNewChat() {
               vscode.postMessage({ command: 'open-new-chat' });
             },
@@ -50,7 +51,9 @@ export default function mountChatSearchView() {
       },
       mounted() {
         if (initialData.codeSelection) {
-          this.$refs.ui.includeCodeSelection(initialData.codeSelection);
+          this.$root.$on('on-thread-subscription', () => {
+            this.$refs.ui.includeCodeSelection(initialData.codeSelection);
+          });
         }
         if (initialData.suggestion) {
           this.$refs.ui.$refs.vchat.addUserMessage(initialData.suggestion.label);
@@ -142,10 +145,6 @@ export default function mountChatSearchView() {
 
     app.$on('fetch-pinned-files', (requests) => {
       vscode.postMessage({ command: 'fetch-pinned-files', requests });
-    });
-
-    app.$on('pin', (event) => {
-      vscode.postMessage({ command: 'pin', event });
     });
 
     app.$on('chat-search-loaded', () => {
