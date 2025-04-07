@@ -47,6 +47,7 @@ export default defineConfig([
         'socket.io-client': './node_modules/socket.io-client/dist/socket.io.js',
         vue: './node_modules/vue/dist/vue.esm.browser.js',
         vuex: './node_modules/vuex/dist/vuex.esm.browser.js',
+        uuid: './node_modules/uuid/dist/esm-browser/index.js',
       };
     },
     loader: {
