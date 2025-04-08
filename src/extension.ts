@@ -66,6 +66,7 @@ import AssetService from './assets/assetService';
 import clearNavieAiSettings from './commands/clearNavieAiSettings';
 import ExtensionSettings from './configuration/extensionSettings';
 import PickCopilotModelCommand from './commands/pickCopilotModel';
+import OpenNavieHistoryCommand from './commands/openNavieHistory';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   CommandRegistry.setContext(context).addWaitAlias({
@@ -270,6 +271,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
         appmapCollectionFile,
         rpcService
       );
+
+      OpenNavieHistoryCommand.register(context, rpcService);
 
       return webview;
     })();

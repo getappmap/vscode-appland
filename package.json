@@ -89,6 +89,10 @@
     ],
     "commands": [
       {
+        "command": "appmap.navie.history",
+        "title": "AppMap: Open Navie History"
+      },
+      {
         "command": "appmap.getAppmapState",
         "title": "AppMap: Copy Current AppMap State to Clipboard"
       },
@@ -749,6 +753,13 @@
   },
   "packageManager": "yarn@3.2.3",
   "resolutions": {
-    "node-gyp": "^10"
+    "node-gyp": "^10",
+    "@appland/client": "portal:/home/db/dev/applandinc/appmap-js/packages/client",
+    "@appland/components": "portal:/home/db/dev/applandinc/appmap-js/packages/components",
+    "@appland/diagrams": "portal:/home/db/dev/applandinc/appmap-js/packages/diagrams",
+    "@appland/models": "portal:/home/db/dev/applandinc/appmap-js/packages/models",
+    "@appland/openapi": "portal:/home/db/dev/applandinc/appmap-js/packages/openapi",
+    "@appland/rpc": "portal:/home/db/dev/applandinc/appmap-js/packages/rpc",
+    "@appland/sequence-diagram": "portal:/home/db/dev/applandinc/appmap-js/packages/sequence-diagram"
   }
 }
