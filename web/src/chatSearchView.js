@@ -52,7 +52,9 @@ export default function mountChatSearchView() {
       },
       mounted() {
         if (initialData.codeSelection) {
-          this.$refs.ui.includeCodeSelection(initialData.codeSelection);
+          this.$root.$on('on-thread-subscription', () => {
+            this.$refs.ui.includeCodeSelection(initialData.codeSelection);
+          });
         }
         if (initialData.suggestion) {
           this.$refs.ui.$refs.vchat.addUserMessage(initialData.suggestion.label);
