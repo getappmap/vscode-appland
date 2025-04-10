@@ -33,7 +33,7 @@ export default function getWebviewContent(
   );
 
   const connectSrc = options.connectSrc ?? [];
-  if (rpcPort) connectSrc.push(`http://localhost:${rpcPort}`);
+  if (rpcPort) connectSrc.push(`http://localhost:${rpcPort}`, `ws://localhost:${rpcPort}`);
 
   return ` <!DOCTYPE html>
   <html style="${htmlStyle ?? ''}" lang="en">
