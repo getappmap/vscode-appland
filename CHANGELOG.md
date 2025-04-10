@@ -1,3 +1,10 @@
+# [0.135.0](https://github.com/getappmap/vscode-appland/compare/v0.134.0...v0.135.0) (2025-04-10)
+
+
+### Features
+
+* Integrate Navie history ([d316b71](https://github.com/getappmap/vscode-appland/commit/d316b716b2415337907094d708bf0c898be7248c))
+
 # [0.134.0](https://github.com/getappmap/vscode-appland/compare/v0.133.2...v0.134.0) (2025-04-01)
 
 
