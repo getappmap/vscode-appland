@@ -63,8 +63,8 @@ __metadata:
   linkType: hard
 
 "@appland/appmap@npm:^3.129.0":
-  version: 3.188.1
-  resolution: "@appland/appmap@npm:3.188.1"
+  version: 3.188.2
+  resolution: "@appland/appmap@npm:3.188.2"
   dependencies:
     "@appland/client": ^1.17.0
     "@appland/components": ^4.12.0
@@ -137,7 +137,7 @@ __metadata:
       optional: true
   bin:
     appmap: built/cli.js
-  checksum: 8ef369973f6149bb65027f0adfd8b6f209dad236dedb4a85c6534353793353d48e3df709de4bf267f91a0936dc8f4ee46c6aedc345fee2ad44be005c0fb1825a
+  checksum: 31c604b9d5590ba8d0673984e5c80aadc6e45ed98063ad560ead03a14afce9565383cf3176e7865e3ef8801330f18f2bcea944adf9a6ac2b381e890596c1fea1
   languageName: node
   linkType: hard
 
@@ -155,9 +155,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/components@npm:^4.12.0, @appland/components@npm:^4.46.1":
-  version: 4.46.1
-  resolution: "@appland/components@npm:4.46.1"
+"@appland/components@npm:^4.12.0, @appland/components@npm:^4.46.2":
+  version: 4.46.2
+  resolution: "@appland/components@npm:4.46.2"
   dependencies:
     "@appland/client": ^1.12.0
     "@appland/diagrams": ^1.7.0
@@ -183,7 +183,7 @@ __metadata:
     sql-formatter: ^4.0.2
     vue: ^2.7.16
     vuex: ^3.6.0
-  checksum: 32b332d52a668df2e7f3af36c91048b931054dd2b44c58f98d97e8c8986a7b44e9435ff67d6ac466c82658d22d3e828e2158803411a2c811579e674913c16cdc
+  checksum: fd19c897e8c38f58ff2e16f81a4a1691875e96803459065e3055756162d4caec5d303373bbe3f4c263d981a331c08b2973442b116ce3025f32065cb626290c85
   languageName: node
   linkType: hard
 
@@ -3194,7 +3194,7 @@ __metadata:
   dependencies:
     "@appland/appmap": ^3.129.0
     "@appland/client": ^1.23.0
-    "@appland/components": ^4.46.1
+    "@appland/components": ^4.46.2
     "@appland/diagrams": ^1.8.0
     "@appland/models": ^2.10.2
     "@appland/rpc": ^1.19.0
