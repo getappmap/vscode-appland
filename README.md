@@ -5,28 +5,50 @@
 
 # AppMap for Visual Studio Code
 
-AppMap Navie is an AI-driven chat with a deep understanding of your code. Build effective solutions
-using an intuitive chat interface and powerful code visualizations. Use AppMap's runtime tracing to
-improve the accuracy and depth of AI generation.
+### Runtime‑aware AI starts here
 
-## Your AI Code Architect
+#### **Live code behavior, surfaced to your AI tools in your JetBrains IDE**
 
-AppMap Navie acts as an AI Code Architect, equipped with the context to deeply understand how your
-application works. By reducing the time needed to research code changes and enhancing the context
-available to your coding copilot, Navie becomes an indispensable tool in your workflow.
+AppMap Navie for JetBrains brings the power of real-time execution data and AI-driven insights right
+to your code editor. No more guessing what your code does under the hood. Navie watches your
+application run and uses that live context to provide **smarter suggestions**, **faster debugging**,
+and **runtime-aware code reviews**.
 
-## Solve Complex Coding Issues with Confidence
+## Key Benefits
 
-AppMap Navie leverages runtime data and a structured workflow to help developers address challenging
-coding problems. Navie's capabilities include:
+### Smarter AI assistance
 
-- Writing comprehensive documentation
-- Understanding existing systems
-- Planning and implementing changes
-- Generating code and test cases
-- Performing thorough code reviews
+Navie combines static analysis with live AppMap traces, so you can ask things like _"What just
+happened?"_ and get answers based on the actual runtime flow, HTTP calls, SQL queries, exceptions,
+I/O, and more.
+
+### Faster debugging & fewer defects
+
+Pinpoint performance bottlenecks and logic errors through automatically generated sequence diagrams,
+flame graphs, dependency maps, and trace views.
+
+### Context‑aware code reviews
+
+From security checks to maintainability recommendations, Navie’s `@review` mode analyzes your
+current branch changes against your base branch with runtime insights.
+
+### Zero fine‑tuning required
+
+Works out-of-the-box with enterprise‑ready LLMs—simply plug in your API key or let Navie default to
+GitHub Copilot or AppMap’s built‑in endpoint.
 
 ![implement-redis](https://github.com/getappmap/vscode-appland/assets/511733/46243179-893e-474c-925a-91b385c3468d)
+
+## What AppMap Does
+
+- Captures real‑time snapshots of code execution, data flow, and behavior with zero effort and no
+  code changes.
+
+- Feeds runtime context to AI assistants like Navie, GitHub Copilot, Anthropic Claude, Google
+  Gemini, OpenAI, and your own local LLMs.
+
+- Delivers deep code explanations, diagrams, implementation plans, tests, and patch-ready code
+  snippets, all grounded in what your application just did.
 
 ## Get started
 
