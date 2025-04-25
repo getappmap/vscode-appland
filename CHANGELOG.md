@@ -1,3 +1,227 @@
+## [0.135.1](https://github.com/getappmap/vscode-appland/compare/v0.135.0...v0.135.1) (2025-04-11)
+
+
+### Bug Fixes
+
+* Update @appland/components to v4.46.2 ([1d29e38](https://github.com/getappmap/vscode-appland/commit/1d29e381d0dd24ba8530e14c7d379fe0904e4ec3))
+
+# [0.135.0](https://github.com/getappmap/vscode-appland/compare/v0.134.0...v0.135.0) (2025-04-10)
+
+
+### Features
+
+* Integrate Navie history ([d316b71](https://github.com/getappmap/vscode-appland/commit/d316b716b2415337907094d708bf0c898be7248c))
+
+# [0.134.0](https://github.com/getappmap/vscode-appland/compare/v0.133.2...v0.134.0) (2025-04-01)
+
+
+### Features
+
+* Integrate the model selector ([1a295cc](https://github.com/getappmap/vscode-appland/commit/1a295cc215fbc5a8f93a2b2e196d54e2e69e577a))
+
+## [0.133.2](https://github.com/getappmap/vscode-appland/compare/v0.133.1...v0.133.2) (2025-03-14)
+
+
+### Bug Fixes
+
+* Propagate Copilot content filter errors ([db9a7eb](https://github.com/getappmap/vscode-appland/commit/db9a7eb5245be12a77517c48e17b17b901e1e990))
+
+## [0.133.1](https://github.com/getappmap/vscode-appland/compare/v0.133.0...v0.133.1) (2025-01-24)
+
+
+### Bug Fixes
+
+* Fix an issue which broke pinned files on Windows ([d7ff974](https://github.com/getappmap/vscode-appland/commit/d7ff974ac8afc0bb8dab5e38ed03975709c7a65d))
+* Wait for lm models to settle when initializing ([2431375](https://github.com/getappmap/vscode-appland/commit/2431375d3a39e8d50baebe46379bf9253f81794f)), closes [#1068](https://github.com/getappmap/vscode-appland/issues/1068)
+
+# [0.133.0](https://github.com/getappmap/vscode-appland/compare/v0.132.3...v0.133.0) (2024-12-30)
+
+
+### Features
+
+* Update @appland/components to v4.42.0 ([bfd83ad](https://github.com/getappmap/vscode-appland/commit/bfd83ad8c848d31257ab004688eb847feecbcf32))
+
+## [0.132.3](https://github.com/getappmap/vscode-appland/compare/v0.132.2...v0.132.3) (2024-12-27)
+
+
+### Bug Fixes
+
+* Alter marketplace categories ([3b7fc15](https://github.com/getappmap/vscode-appland/commit/3b7fc152a74164db7f5e4d0487fc8fe65fbeb492))
+* Update README ([#1063](https://github.com/getappmap/vscode-appland/issues/1063)) ([ee5de12](https://github.com/getappmap/vscode-appland/commit/ee5de12ae7c1845d58467c243203510374682996))
+
+## [0.132.2](https://github.com/getappmap/vscode-appland/compare/v0.132.1...v0.132.2) (2024-11-29)
+
+
+### Bug Fixes
+
+* Handle unknown first installed version gracefully ([d9df4d9](https://github.com/getappmap/vscode-appland/commit/d9df4d98c415214635bcac96078155dd9bc1e77f))
+
+## [0.132.1](https://github.com/getappmap/vscode-appland/compare/v0.132.0...v0.132.1) (2024-11-26)
+
+
+### Bug Fixes
+
+* Handle default for empty string in `copilot.preferredModel` ([13247e2](https://github.com/getappmap/vscode-appland/commit/13247e29df1325bf87d2ee3e2a97867928048424))
+* Write `copilot.preferredModel` to global settings ([73f7ff5](https://github.com/getappmap/vscode-appland/commit/73f7ff5913dcda42e0bc9f44ed6bffa91fcd6f07))
+
+# [0.132.0](https://github.com/getappmap/vscode-appland/compare/v0.131.2...v0.132.0) (2024-11-25)
+
+
+### Features
+
+* Add a command to change Copilot models ([c3d1c29](https://github.com/getappmap/vscode-appland/commit/c3d1c29af1678b27a70e957abc4c546d364172fc))
+
+## [0.131.2](https://github.com/getappmap/vscode-appland/compare/v0.131.1...v0.131.2) (2024-11-12)
+
+
+### Bug Fixes
+
+* The walkthrough now only opens once ([fbaf453](https://github.com/getappmap/vscode-appland/commit/fbaf4534172baef7f015a1ff371d6591c534313e))
+
+## [0.131.1](https://github.com/getappmap/vscode-appland/compare/v0.131.0...v0.131.1) (2024-11-11)
+
+
+### Bug Fixes
+
+* Bring back autofocus, sans the bug ([69a05c8](https://github.com/getappmap/vscode-appland/commit/69a05c8a8100595a01ab6a5805c03c10040f1efc))
+* Drop the automatic input focus ([4419bfd](https://github.com/getappmap/vscode-appland/commit/4419bfd9071ceb5675237ec80170481d4319c536))
+* Links to files can now be opened ([b667f41](https://github.com/getappmap/vscode-appland/commit/b667f4125fbd6d8effcaa183a02c1bc71d2b8e43))
+* Log aggregate errors if configuration sync fails ([711f6e0](https://github.com/getappmap/vscode-appland/commit/711f6e05675a0c76c3a53b029c859409cc1bd475))
+* parse pinned file paths correctly ([22d4283](https://github.com/getappmap/vscode-appland/commit/22d428335368fd194599d07edd1597ca3c75c2c8))
+* skip login page when authenticating with SSO ([ca27207](https://github.com/getappmap/vscode-appland/commit/ca272071826c8a7322beb9ec29b7c570e356a871))
+
+# [0.131.0](https://github.com/getappmap/vscode-appland/compare/v0.130.0...v0.131.0) (2024-10-17)
+
+
+### Bug Fixes
+
+* Bind chat completion server to localhost ([9a0810d](https://github.com/getappmap/vscode-appland/commit/9a0810da1e960722b6d00befbc9d9ad4424920df))
+* Fix an issue when opening sequence diagrams from Navie on Windows ([3391fbf](https://github.com/getappmap/vscode-appland/commit/3391fbfaae6934672f23d010c4c74c63f40d2252))
+
+
+### Features
+
+* Enable Copilot by default if available ([9fa0f59](https://github.com/getappmap/vscode-appland/commit/9fa0f59563659ec6b0f2a41a35d2645dba4aeacd))
+* Language model provider now updates dynamically ([1c1cdb3](https://github.com/getappmap/vscode-appland/commit/1c1cdb312b65fbe227465fdde8c6dac48edb1d7d))
+* Upgrade @appland/components to v4.39.0 ([4df4fcc](https://github.com/getappmap/vscode-appland/commit/4df4fcc225fdd883877f884d237302a4399da96d))
+
+# [0.130.0](https://github.com/getappmap/vscode-appland/compare/v0.129.1...v0.130.0) (2024-10-07)
+
+
+### Bug Fixes
+
+* add setting to control animation ([609d2f7](https://github.com/getappmap/vscode-appland/commit/609d2f7ad0e582f11c6dd2e085fbbf4bdefea6d3))
+* Apply user token limit, with a default of 8_000 ([d5c1bc4](https://github.com/getappmap/vscode-appland/commit/d5c1bc43590b385871d5715da84fa1ede5145d3e))
+* make sure Chat input gets focus ([bcc155c](https://github.com/getappmap/vscode-appland/commit/bcc155c305f4f209166b72df49244f898d371665))
+* style pinning help ([6cd4573](https://github.com/getappmap/vscode-appland/commit/6cd45735dc7c5986e6cbc4e11bdcefa4a21c313f))
+* Update @appland/components to v4.37.4 ([8a5c3a6](https://github.com/getappmap/vscode-appland/commit/8a5c3a694413261dc47046e7d7ee0f0e1abeaccc))
+* Update @appland/components to v4.38.3 ([5e55a75](https://github.com/getappmap/vscode-appland/commit/5e55a755933c0a6902446dd0e5a69eac6cf260bd))
+* Update marketplace readme ([6a70b39](https://github.com/getappmap/vscode-appland/commit/6a70b39f90d68b727f81c8562a300f11c442eda8))
+* Write an OpenAI-compatible error when context overflows ([7126fde](https://github.com/getappmap/vscode-appland/commit/7126fdea0070ef59538454da5687d8b5e19dd4bf))
+
+
+### Features
+
+* Add setting appMap.navie.contextTokenLimit ([0f3083a](https://github.com/getappmap/vscode-appland/commit/0f3083a2adebb3f54f3aa2502b2e9108185890ac))
+
+## [0.129.1](https://github.com/getappmap/vscode-appland/compare/v0.129.0...v0.129.1) (2024-09-17)
+
+
+### Bug Fixes
+
+* Update @appland/components to v4.37.3 ([d1cb537](https://github.com/getappmap/vscode-appland/commit/d1cb537b7c9fc9b18293359a34076266270a2c09))
+
+# [0.129.0](https://github.com/getappmap/vscode-appland/compare/v0.128.0...v0.129.0) (2024-09-16)
+
+
+### Bug Fixes
+
+* Log errors that would prevent Navie from servicing requests ([b95139d](https://github.com/getappmap/vscode-appland/commit/b95139d9294c2a9fc3946b78ff855ffe3994137d))
+
+
+### Features
+
+* Choose models dynamically when using VSCode LM ([353ee6f](https://github.com/getappmap/vscode-appland/commit/353ee6f1864b446ce076755adfb325300c450a55))
+* new commands to add files to context ([1c1d33e](https://github.com/getappmap/vscode-appland/commit/1c1d33eeb12c197b782770c45001a590d1beeab4))
+* Restart Navie automatically when flipping VSCode LM option ([3e7c90a](https://github.com/getappmap/vscode-appland/commit/3e7c90a3d61ef1edfd996dc909ee93278d0dfc7b))
+
+# [0.128.0](https://github.com/getappmap/vscode-appland/compare/v0.127.0...v0.128.0) (2024-09-04)
+
+
+### Bug Fixes
+
+* Don't hang when Copilot errors on streaming ([9e0cc33](https://github.com/getappmap/vscode-appland/commit/9e0cc33e4b45b1cfbd4df9ff3c56ea0ad0043fe1))
+* Preserve the port when restarting the RPC server ([7dbff69](https://github.com/getappmap/vscode-appland/commit/7dbff69e0fb40e01ab80564b7c5b748f8cdfcb64))
+* Use correct schema for non-streamed responses in chatcompletion ([daa1e88](https://github.com/getappmap/vscode-appland/commit/daa1e884821a21a57b33ec635d9ec32252ef14ba))
+
+
+### Features
+
+* Add a command to restart Navie ([13663ca](https://github.com/getappmap/vscode-appland/commit/13663ca74399c6fefb471527bc7ddce25d83c2d1))
+* Restart the RPC server when the environment variables are changed ([3620230](https://github.com/getappmap/vscode-appland/commit/36202302569339c165b663b8bbc948602cf3df11))
+* Show a message when Navie is starting (and when it can't start) ([9d9aae4](https://github.com/getappmap/vscode-appland/commit/9d9aae4bf43f0ffa95cd1ddadd1407ec68e081f3))
+* Update @appland/components, @appland/rpc ([223784e](https://github.com/getappmap/vscode-appland/commit/223784e6d0c22e5950f0e56d1704c10c7efa1416))
+
+# [0.127.0](https://github.com/getappmap/vscode-appland/compare/v0.126.0...v0.127.0) (2024-08-15)
+
+
+### Features
+
+* Add walkthrough ([b2db774](https://github.com/getappmap/vscode-appland/commit/b2db774221c346551133ae75e3fad6623b3ac4a9))
+* Upgrade @appland/components to v4.32.0 ([a1f74d4](https://github.com/getappmap/vscode-appland/commit/a1f74d477c456ea643f03a5c7e21eb3d563f829e))
+
+# [0.126.0](https://github.com/getappmap/vscode-appland/compare/v0.125.0...v0.126.0) (2024-08-13)
+
+
+### Bug Fixes
+
+* "New chat" button opens a new chat ([e9b317c](https://github.com/getappmap/vscode-appland/commit/e9b317c0598a080f76f467cdf513abe6700bba8e))
+* Restore filter/search commands in AppMap data tree ([2204aa4](https://github.com/getappmap/vscode-appland/commit/2204aa4a56de7af3d9b65eaf7ad8fdfe645ece7a))
+
+
+### Features
+
+* Add a link to data recording instructions in the tree menu ([85f1228](https://github.com/getappmap/vscode-appland/commit/85f1228125f984ac6cdacf38f499107069f82def))
+* New AppMap data recording instructions ([aea7fad](https://github.com/getappmap/vscode-appland/commit/aea7fada2b3d1486cdc1b25d3e741d8fd2351c35))
+
+# [0.125.0](https://github.com/getappmap/vscode-appland/compare/v0.124.0...v0.125.0) (2024-07-30)
+
+
+### Bug Fixes
+
+* Restore some broken styles ([bf49b2f](https://github.com/getappmap/vscode-appland/commit/bf49b2fa028d826dbd410a32014abf66d4764024))
+
+
+### Features
+
+* Report presence of proxy settings ([93cf0e0](https://github.com/getappmap/vscode-appland/commit/93cf0e0157515b145ce67511ce2a7acb0621c86a))
+* Update @appland/components to v4.30.0 ([fecd588](https://github.com/getappmap/vscode-appland/commit/fecd588d75ab93a00acdd3695b4bea75da91e0d7))
+
+# [0.124.0](https://github.com/getappmap/vscode-appland/compare/v0.123.0...v0.124.0) (2024-07-22)
+
+
+### Bug Fixes
+
+* Use system node when spawning AppMap tools in development ([daea44c](https://github.com/getappmap/vscode-appland/commit/daea44c012ead01da06be531b07fa1a2f105802c))
+
+
+### Features
+
+* Update @appland/components to v4.29.0 ([170a87f](https://github.com/getappmap/vscode-appland/commit/170a87f339b02e2323282a315b513448a0637cf6))
+
+# [0.123.0](https://github.com/getappmap/vscode-appland/compare/v0.122.0...v0.123.0) (2024-07-15)
+
+
+### Bug Fixes
+
+* Normalize casing of dependencies ([98f8708](https://github.com/getappmap/vscode-appland/commit/98f8708240051259c4a234065030ead371adb08c))
+
+
+### Features
+
+* Allow usage of VSCode LLM API ([6a5ef51](https://github.com/getappmap/vscode-appland/commit/6a5ef515b40da9a43bbbf67d9d39acd57bdbb6c2))
+* Update @appland/components to v4.28.1 ([db2ed56](https://github.com/getappmap/vscode-appland/commit/db2ed565c1b07dcf67a2c5dacc260946a61f6b78))
+
 # [0.122.0](https://github.com/getappmap/vscode-appland/compare/v0.121.0...v0.122.0) (2024-07-11)
 
 
