@@ -1,3 +1,10 @@
+## [0.135.3](https://github.com/getappmap/vscode-appland/compare/v0.135.2...v0.135.3) (2025-04-28)
+
+
+### Bug Fixes
+
+* Fix thinkos in the readme ([#1085](https://github.com/getappmap/vscode-appland/issues/1085)) ([ec19fa3](https://github.com/getappmap/vscode-appland/commit/ec19fa3629c08a6f0460fb3969520646f43ca281))
+
 ## [0.135.2](https://github.com/getappmap/vscode-appland/compare/v0.135.1...v0.135.2) (2025-04-26)
 
 
