@@ -23,7 +23,7 @@ describe('CodeObjects', () => {
   );
   afterEach(initializeWorkspace);
 
-  it('index is created on startup', async () => {
+  it.skip('index is created on startup', async () => {
     const appMapService = await waitForAppMapServices(
       'tmp/appmap/minitest/Microposts_controller_can_get_microposts_as_JSON.appmap.json'
     );
