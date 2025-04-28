@@ -7,7 +7,7 @@
 
 ### Runtime‑aware AI starts here
 
-#### **Live code behavior, surfaced to your AI tools in your VSCode**
+#### **Live code behavior, surfaced to your AI tools in Visual Studio Code**
 
 AppMap Navie for Visual Studio Code brings the power of real-time execution data and AI-driven insights right
 to your code editor. No more guessing what your code does under the hood. Navie watches your
