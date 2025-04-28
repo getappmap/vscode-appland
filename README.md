@@ -1,5 +1,3 @@
-[![Version](https://img.shields.io/visual-studio-marketplace/v/appland.appmap)](https://marketplace.visualstudio.com/items?itemName=appland.appmap)
-[![Avg Stars](https://img.shields.io/visual-studio-marketplace/stars/appland.appmap)](https://marketplace.visualstudio.com/items?itemName=appland.appmap)
 [![GitHub Stars](https://img.shields.io/github/stars/getappmap/vscode-appland?style=social)](https://github.com/getappmap/vscode-appland)
 [![Slack](https://img.shields.io/badge/Slack-Join%20the%20community-green)](https://appmap.io/slack)
 
@@ -9,10 +7,10 @@
 
 #### **Live code behavior, surfaced to your AI tools in Visual Studio Code**
 
-AppMap Navie for Visual Studio Code brings the power of real-time execution data and AI-driven insights right
-to your code editor. No more guessing what your code does under the hood. Navie watches your
-application run and uses that live context to provide **smarter suggestions**, **faster debugging**,
-and **runtime-aware code reviews**.
+AppMap Navie for Visual Studio Code brings the power of real-time execution data and AI-driven
+insights right to your code editor. No more guessing what your code does under the hood. Navie
+watches your application run and uses that live context to provide **smarter suggestions**, **faster
+debugging**, and **runtime-aware code reviews**.
 
 ## Key Benefits
 
