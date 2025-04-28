@@ -7,9 +7,9 @@
 
 ### Runtime‑aware AI starts here
 
-#### **Live code behavior, surfaced to your AI tools in your JetBrains IDE**
+#### **Live code behavior, surfaced to your AI tools in Visual Studio Code**
 
-AppMap Navie for JetBrains brings the power of real-time execution data and AI-driven insights right
+AppMap Navie for Visual Studio Code brings the power of real-time execution data and AI-driven insights right
 to your code editor. No more guessing what your code does under the hood. Navie watches your
 application run and uses that live context to provide **smarter suggestions**, **faster debugging**,
 and **runtime-aware code reviews**.
