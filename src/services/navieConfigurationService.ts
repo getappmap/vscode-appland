@@ -70,6 +70,9 @@ export async function migrateOpenAIApiKey(
   const value = await getOpenAIApiKey(extensionContext);
   if (value) {
     await setSecretEnvVars(extensionContext, { OPENAI_API_KEY: value });
+
+    // Remove the old key so it's not migrated again
+    await setOpenAIApiKey(extensionContext, undefined);
   }
 }
 
