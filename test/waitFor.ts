@@ -14,19 +14,20 @@ export async function repeatUntil(
 
 export async function waitFor(
   message: string,
-  test: () => boolean | Promise<boolean>,
+  test: () => boolean | Promise<boolean> | Promise<void>,
   timeout = 30000
 ): Promise<void> {
   const startTime = Date.now();
   let delay = 100;
 
   let exception: Error | undefined;
-  let result: boolean | undefined;
+  let result: boolean | undefined | void;
 
   const check = async () => {
     try {
       result = await test();
-      return result;
+      if (typeof result === 'boolean') return result;
+      else return true;
     } catch (e) {
       exception = e as Error;
       return false;
