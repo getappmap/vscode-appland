@@ -1,3 +1,10 @@
+## [0.135.4](https://github.com/getappmap/vscode-appland/compare/v0.135.3...v0.135.4) (2025-05-02)
+
+
+### Bug Fixes
+
+* Only migrate OpenAI API key once ([36cface](https://github.com/getappmap/vscode-appland/commit/36cface04d5d06c05b926855b2bb62066cd429ad))
+
 ## [0.135.3](https://github.com/getappmap/vscode-appland/compare/v0.135.2...v0.135.3) (2025-04-28)
 
 
