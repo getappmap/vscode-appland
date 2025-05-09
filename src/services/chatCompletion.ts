@@ -184,7 +184,7 @@ export default class ChatCompletion implements Disposable {
 
     const countTokens = async () => {
       const tokenCounts = await Promise.all(
-        messages.map(({ content }) => model.countTokens(content))
+        messages.map((m) => model.countTokens(contentOfMessage(m)))
       );
       return tokenCounts.reduce((sum, c) => sum + c, 0);
     };
@@ -530,4 +530,12 @@ function toVSCodeMessages(messages: Message[]): LanguageModelChatMessage[] {
 
 function randomKey(): string {
   return randomBytes(16).toString('hex');
+}
+
+function contentOfMessage(message: LanguageModelChatMessage): string {
+  // in some vscode versions, the content is not a string
+  // but an array of { value: string } objects
+  const content = message.content as unknown;
+  if (Array.isArray(content)) return content.map((c) => c.value).join('');
+  else return String(content);
 }
