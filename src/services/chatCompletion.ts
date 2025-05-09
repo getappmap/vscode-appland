@@ -336,11 +336,14 @@ async function sendChatCompletionResponse(
     warn(`Error streaming response: ${e}`);
     if (isNativeError(e)) warn(e.stack);
     const apiError = await convertToOpenAiApiError(e, model, countTokens);
-    res.writeHead(422).end(JSON.stringify(apiError));
+    const status = apiError.status || 422;
+    delete apiError.status;
+    res.writeHead(status).end(JSON.stringify(apiError));
   }
 }
 
 interface OpenAiApiError {
+  status?: number;
   error: {
     message: string;
     type?: string;
@@ -370,7 +373,7 @@ async function convertToOpenAiApiError(
       } catch (e) {
         warn(`Error counting tokens: ${e}`);
       }
-      return { error };
+      return { status: 400, error };
     }
 
     default:
@@ -414,7 +417,9 @@ async function streamChatCompletion(
 
     const apiError = await convertToOpenAiApiError(e, model, countTokens);
     if (!res.headersSent) {
-      res.writeHead(422, { 'Content-Type': 'application/json' }).end(JSON.stringify(apiError));
+      const status = apiError.status || 422;
+      delete apiError.status;
+      res.writeHead(status, { 'Content-Type': 'application/json' }).end(JSON.stringify(apiError));
     } else {
       res.end(`data: ${JSON.stringify(apiError)}`);
     }
