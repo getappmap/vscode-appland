@@ -215,7 +215,7 @@ export class ResolvedFinding {
 
     const tokens = path.split(':', 2);
     const fileName = tokens[0];
-    let line: string | number = 1;
+    let line = 1;
     if (tokens.length > 1) {
       const parsedLine = parseInt(tokens[1], 10);
       if (!isNaN(parsedLine) && parsedLine > 0) {
