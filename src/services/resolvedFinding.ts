@@ -215,8 +215,15 @@ export class ResolvedFinding {
 
     const tokens = path.split(':', 2);
     const fileName = tokens[0];
-    let line: string | number = 1;
-    if (tokens.length > 1) line = tokens[1];
+    let line = 1;
+    if (tokens.length > 1) {
+      const parsedLine = parseInt(tokens[1], 10);
+      if (!isNaN(parsedLine) && parsedLine > 0) {
+        line = parsedLine;
+      } else {
+        console.warn(`Invalid line number in finding stack frame: ${tokens[1]}, falling back to 1`);
+      }
+    }
     const filePath = await resolveFilePath(folder.uri.fsPath, fileName);
     if (!filePath) return;
 
