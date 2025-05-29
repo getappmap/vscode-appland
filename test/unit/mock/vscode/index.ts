@@ -36,6 +36,11 @@ enum ProgressLocation {
   Notification = 15,
 }
 
+enum QuickPickItemKind {
+  Default = 0,
+  Separator = 1,
+}
+
 const MockVSCode = {
   ProgressLocation,
   authentication,
@@ -47,6 +52,10 @@ const MockVSCode = {
   Range,
   Position,
   Location,
+  ThemeIcon: class {
+    constructor(public id: string) {}
+  },
+  QuickPickItemKind,
   Selection,
   CodeAction,
   CodeActionKind,

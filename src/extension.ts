@@ -10,6 +10,8 @@ import registerSequenceDiagram from './commands/sequenceDiagram';
 import registerCompareSequenceDiagrams from './commands/compareSequenceDiagram';
 import openCodeObjectInAppMap from './commands/openCodeObjectInAppMap';
 import outOfDateTests from './commands/outOfDateTests';
+import PickCopilotModelCommand from './commands/pickCopilotModel';
+import QuickReviewCommand from './commands/quickReview';
 import ExtensionState from './configuration/extensionState';
 import AppMapEditorProvider from './editor/appmapEditorProvider';
 import appmapHoverProvider from './hover/appmapHoverProvider';
@@ -65,7 +67,6 @@ import CommandRegistry from './commands/commandRegistry';
 import AssetService from './assets/assetService';
 import clearNavieAiSettings from './commands/clearNavieAiSettings';
 import ExtensionSettings from './configuration/extensionSettings';
-import PickCopilotModelCommand from './commands/pickCopilotModel';
 import OpenNavieHistoryCommand from './commands/openNavieHistory';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
@@ -149,6 +150,9 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
     const configWatcher = new Watcher('**/appmap.yml');
     context.subscriptions.push(configWatcher);
+
+    // Register Quick Review command
+    QuickReviewCommand.register(context);
 
     const configManager = new AppmapConfigManager(configWatcher);
     await workspaceServices.enroll(configManager);
