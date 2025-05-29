@@ -94,6 +94,11 @@
         "icon": "$(history)"
       },
       {
+        "command": "appmap.navie.quickReview",
+        "title": "AppMap: Start Quick Review",
+        "icon": "$(law)"
+      },
+      {
         "command": "appmap.getAppmapState",
         "title": "AppMap: Copy Current AppMap State to Clipboard"
       },
@@ -373,7 +378,7 @@
       },
       {
         "view": "appmap.views.navie",
-        "contents": "Ask Navie a question about your application to get started.\n[New Navie Chat](command:appmap.explain)\nNavie uses AppMap data to improve the accuracy of Generative AI models. Navie searches through your locally stored AppMap data to identify the application behavior related to your question.",
+        "contents": "Ask Navie anything about your application, or get AI-driven code reviews.\n\n[$(comment) New Navie Chat](command:appmap.explain)\n\n[$(law) Review Your Code](command:appmap.navie.quickReview)\nNavie enhances Generative AI models by analyzing your locally stored AppMap data, ensuring highly accurate and context-aware responses specific to your application's behavior.\n[$(link-external) Learn more about AppMap](https://appmap.io/docs/)",
         "when": "appmap.initialized"
       },
       {
@@ -603,6 +608,11 @@
           "command": "appmap.navie.history",
           "when": "view == appmap.views.navie",
           "group": "navigation@0"
+        },
+        {
+          "command": "appmap.navie.quickReview",
+          "when": "view == appmap.views.navie",
+          "group": "navigation@1"
         }
       ],
       "view/item/context": [
