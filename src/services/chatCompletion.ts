@@ -184,7 +184,7 @@ export default class ChatCompletion implements Disposable {
 
     const countTokens = async () => {
       const tokenCounts = await Promise.all(
-        messages.map(({ content }) => model.countTokens(content))
+        messages.map((m) => model.countTokens(contentOfMessage(m)))
       );
       return tokenCounts.reduce((sum, c) => sum + c, 0);
     };
@@ -336,11 +336,14 @@ async function sendChatCompletionResponse(
     warn(`Error streaming response: ${e}`);
     if (isNativeError(e)) warn(e.stack);
     const apiError = await convertToOpenAiApiError(e, model, countTokens);
-    res.writeHead(422).end(JSON.stringify(apiError));
+    const status = apiError.status || 422;
+    delete apiError.status;
+    res.writeHead(status).end(JSON.stringify(apiError));
   }
 }
 
 interface OpenAiApiError {
+  status?: number;
   error: {
     message: string;
     type?: string;
@@ -370,7 +373,7 @@ async function convertToOpenAiApiError(
       } catch (e) {
         warn(`Error counting tokens: ${e}`);
       }
-      return { error };
+      return { status: 400, error };
     }
 
     default:
@@ -414,7 +417,9 @@ async function streamChatCompletion(
 
     const apiError = await convertToOpenAiApiError(e, model, countTokens);
     if (!res.headersSent) {
-      res.writeHead(422, { 'Content-Type': 'application/json' }).end(JSON.stringify(apiError));
+      const status = apiError.status || 422;
+      delete apiError.status;
+      res.writeHead(status, { 'Content-Type': 'application/json' }).end(JSON.stringify(apiError));
     } else {
       res.end(`data: ${JSON.stringify(apiError)}`);
     }
@@ -530,4 +535,12 @@ function toVSCodeMessages(messages: Message[]): LanguageModelChatMessage[] {
 
 function randomKey(): string {
   return randomBytes(16).toString('hex');
+}
+
+function contentOfMessage(message: LanguageModelChatMessage): string {
+  // in some vscode versions, the content is not a string
+  // but an array of { value: string } objects
+  const content = message.content as unknown;
+  if (Array.isArray(content)) return content.map((c) => c.value).join('');
+  else return String(content);
 }

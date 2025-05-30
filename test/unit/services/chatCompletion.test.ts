@@ -207,7 +207,7 @@ describe('ChatCompletion', () => {
         messages,
         stream: true,
       });
-      expect(response.statusCode).to.equal(422);
+      expect(response.statusCode).to.equal(400);
       expect(response.data).to.equal(
         '{"error":{"message":"This model\'s maximum context length is 325 tokens. However, your messages resulted in 38 tokens.","type":"invalid_request_error","param":"messages","code":"context_length_exceeded"}}'
       );
@@ -221,7 +221,7 @@ describe('ChatCompletion', () => {
         { content: 'I am good, thank you!', role: 'user' },
       ];
       const response = await postAuthorized(chatCompletion.url, { model: 'test-model', messages });
-      expect(response.statusCode).to.equal(422);
+      expect(response.statusCode).to.equal(400);
       expect(response.data).to.equal(
         '{"error":{"message":"This model\'s maximum context length is 325 tokens. However, your messages resulted in 38 tokens.","type":"invalid_request_error","param":"messages","code":"context_length_exceeded"}}'
       );
