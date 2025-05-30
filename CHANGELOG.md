@@ -1,3 +1,10 @@
+# [0.136.0](https://github.com/getappmap/vscode-appland/compare/v0.135.4...v0.136.0) (2025-05-30)
+
+
+### Features
+
+* Implement quick review command ([1494fc1](https://github.com/getappmap/vscode-appland/commit/1494fc18862a24c63c43be6741e899dd4e76604c))
+
 ## [0.135.4](https://github.com/getappmap/vscode-appland/compare/v0.135.3...v0.135.4) (2025-05-02)
 
 
