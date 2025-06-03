@@ -1,3 +1,12 @@
+## [0.136.1](https://github.com/getappmap/vscode-appland/compare/v0.136.0...v0.136.1) (2025-06-03)
+
+
+### Bug Fixes
+
+* Gracefully handle invalid line numbers in finding stack traces ([#1092](https://github.com/getappmap/vscode-appland/issues/1092)) ([8b5aa58](https://github.com/getappmap/vscode-appland/commit/8b5aa587c35780ef9055cd53e75b884bfa849f11))
+* Send status 400 on context overflow ([3db0554](https://github.com/getappmap/vscode-appland/commit/3db05549da9108752c5ff675ab902c0191a82393))
+* Update token counting to handle message content format variations ([e54d391](https://github.com/getappmap/vscode-appland/commit/e54d39122f8e44f35c64cab34af340610e6ca7a0))
+
 # [0.136.0](https://github.com/getappmap/vscode-appland/compare/v0.135.4...v0.136.0) (2025-05-30)
 
 
