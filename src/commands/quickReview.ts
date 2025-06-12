@@ -4,6 +4,7 @@ import { promisify } from 'node:util';
 import * as vscode from 'vscode';
 
 import type { GitExtension, Repository } from '../../types/vscode.git';
+import ReviewWebview from '../webviews/reviewWebview';
 
 const execPromise = promisify(exec);
 
@@ -90,12 +91,8 @@ export default class QuickReviewCommand {
       context.workspaceState.update(LAST_PICKED_STATE, baseRef);
 
       // Open Navie chat with review command
-      const prompt = `@review /base=${baseRef}`;
-      await vscode.commands.executeCommand('appmap.explain', {
-        suggestion: {
-          label: prompt,
-          prompt,
-        },
+      await vscode.commands.executeCommand(ReviewWebview.command, {
+        baseRef: baseRef,
       });
     } catch (error) {
       vscode.window.showErrorMessage(
