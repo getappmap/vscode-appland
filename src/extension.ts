@@ -257,6 +257,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
         context,
         workspaceServices.getServiceInstances(configManager)
       );
+
+      await AnalysisManager.register(context);
       ReviewWebview.register(context, rpcService);
 
       context.subscriptions.push(
@@ -319,8 +321,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     }
 
     vscode.window.onDidCloseTerminal(unregisterTerminal, null, context.subscriptions);
-
-    await AnalysisManager.register(context);
 
     if (extensionState.isNewInstall) vscode.commands.executeCommand('appmap.views.signIn.focus');
 

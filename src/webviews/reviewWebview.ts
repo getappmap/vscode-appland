@@ -2,6 +2,8 @@ import * as vscode from 'vscode';
 import getWebviewContent from './getWebviewContent';
 import WebviewList from './WebviewList';
 import type RpcProcessService from '../services/rpcProcessService';
+import AnalysisManager from '../services/analysisManager';
+import { bestFilePath } from '../lib/bestFilePath';
 
 export default class ReviewWebview {
   private static readonly viewType = 'appmap.views.review';
@@ -29,23 +31,54 @@ export default class ReviewWebview {
         panel.webview.html = getWebviewContent(panel.webview, context, 'AppMap Review', 'review', {
           rpcPort,
         });
-        panel.webview.postMessage({ type: 'init', rpcPort, ...options });
+
+        function updateFindings() {
+          panel.webview.postMessage({
+            type: 'update-findings',
+            findings: AnalysisManager?.findingsIndex?.findings() ?? [],
+          });
+        }
+
+        context.subscriptions.push(
+          AnalysisManager.onAnalysisToggled(() => {
+            updateFindings();
+          })
+        );
 
         // Handle messages from webview
         panel.webview.onDidReceiveMessage(async (message) => {
           switch (message.type) {
             case 'ready': {
-              // Initialize the webview with any necessary data
               panel.webview.postMessage({
-                type: 'initialize',
-                data: {
-                  // Add any initialization data needed by VReview component
-                },
+                type: 'init',
+                findings: AnalysisManager?.findingsIndex?.findings() ?? [],
+                rpcPort,
+                ...options,
               });
               break;
             }
             case 'error': {
               vscode.window.showErrorMessage(message.error);
+              break;
+            }
+            case 'open-file': {
+              const { path } = message;
+              const bestPath = await bestFilePath(path.replace(/:\d+$/, ''));
+              if (bestPath) {
+                vscode.commands.executeCommand('vscode.open', bestPath);
+              }
+              break;
+            }
+            case 'open-appmap-finding': {
+              const { path, findingHash } = message;
+              const state = JSON.stringify({ selectedObject: `analysis-finding:${findingHash}` });
+              const uri = vscode.Uri.file(path);
+              vscode.commands.executeCommand('vscode.open', uri.with({ fragment: state }));
+              break;
+            }
+            case 'open-navie-thread': {
+              const { threadId } = message;
+              await vscode.commands.executeCommand('appmap.explain', { threadId });
               break;
             }
             default: {

@@ -1,0 +1,236 @@
+{
+  "features": [
+    {
+      "description": "Added user authentication via Spring Security with support for user roles including USER, CUSTOMER, VET, and ADMIN",
+      "hasCoverage": true,
+      "testDetails": {
+        "file": "LoginTests.java",
+        "location": "src/test/java/org/springframework/samples/petclinic/security/LoginTests.java:26-50",
+        "tests": [
+          {
+            "name": "testSuccessfulLoginAsAdmin",
+            "status": "pass"
+          },
+          {
+            "name": "testSuccessfulLoginAsUser",
+            "status": "fail",
+            "message": "Expected role 'ADMIN' to be granted but was 'USER'"
+          }
+        ]
+      }
+    },
+    {
+      "description": "Added CSRF protection to all form submissions in the application to prevent cross-site request forgery attacks",
+      "hasCoverage": false,
+      "aiPrompt": "Generate test cases for CSRF protection in Spring Security:\n1. Test that forms without CSRF token are rejected\n2. Test that forms with invalid CSRF tokens are rejected\n3. Test that forms with valid CSRF tokens are accepted\n4. Test CSRF token rotation after successful form submission\n"
+    },
+    {
+      "description": "Added a login form that allows users to authenticate with username and password",
+      "hasCoverage": true,
+      "testDetails": {
+        "file": "LoginTests.java",
+        "location": "src/test/java/org/springframework/samples/petclinic/security/LoginTests.java:26-50",
+        "tests": [
+          {
+            "name": "testLoginFormRendering",
+            "status": "pass"
+          },
+          {
+            "name": "testLoginValidation",
+            "status": "fail",
+            "message": "Form validation not triggered for empty password field"
+          }
+        ]
+      }
+    },
+    {
+      "description": "Added a logout feature that allows authenticated users to sign out",
+      "hasCoverage": true,
+      "testDetails": {
+        "file": "LoginTests.java",
+        "location": "src/test/java/org/springframework/samples/petclinic/security/LoginTests.java:95-106",
+        "tests": [
+          {
+            "name": "testLogout",
+            "status": "pass"
+          }
+        ]
+      }
+    },
+    {
+      "description": "Added role-based access control that restricts access to owner-related functionality to users with ADMIN role",
+      "hasCoverage": false,
+      "aiPrompt": "Generate test cases for role-based access control:\n1. Test that users without ADMIN role cannot access restricted endpoints\n2. Test that users with ADMIN role can access all endpoints\n3. Test role inheritance and hierarchy\n4. Test custom access denied handling\n"
+    },
+    {
+      "description": "Added display of currently logged in username on the welcome page",
+      "hasCoverage": false,
+      "aiPrompt": "Generate test cases for username display functionality:\n1. Test that authenticated users see their username\n2. Test that anonymous users don't see any username\n3. Test username display after login/logout\n4. Test username display with special characters\n"
+    },
+    {
+      "description": "Added functionality to redirect users back to their originally requested page after successful login",
+      "hasCoverage": true,
+      "testDetails": {
+        "file": "LoginTests.java",
+        "location": "src/test/java/org/springframework/samples/petclinic/security/LoginTests.java:52-76",
+        "tests": [
+          {
+            "name": "testSuccessfulRedirectAfterLogin",
+            "status": "fail",
+            "message": "Redirect URL not properly encoded, causing invalid redirect path"
+          }
+        ]
+      }
+    },
+    {
+      "description": "Added support for internationalized (i18n) login/logout text in multiple languages including English, German, Spanish, Persian, Korean, Portuguese, Russian, and Turkish",
+      "hasCoverage": true,
+      "testDetails": {
+        "file": "I18nPropertiesSyncTest.java",
+        "location": "src/test/java/org/springframework/samples/petclinic/system/I18nPropertiesSyncTest.java:25-83",
+        "tests": [
+          {
+            "name": "checkNonInternationalizedStrings",
+            "status": "pass"
+          },
+          {
+            "name": "testRTLSupport",
+            "status": "fail",
+            "message": "RTL layout not properly applied for Persian language"
+          }
+        ]
+      }
+    }
+  ],
+  "suggestions": [
+      {
+        "id": "734e35f9-e59b-492a-bb13-7f50a2898acb",
+        "title": "Duplicate CSRF token",
+        "type": "security",
+        "priority": "high",
+        "location": "src/main/resources/templates/owners/createOrUpdateOwnerForm.html:33",
+        "code": "<input\n  type=\"hidden\"\n  th:name=\"${_csrf.parameterName}\"\n  th:value=\"${_csrf.token}\"\n/>\n<input\n  type=\"hidden\"\n  th:name=\"${_csrf.parameterName}\"\n  th:value=\"${_csrf.token}\"\n/>\n",
+        "category": "security"
+      },
+      {
+        "id": "b888b150-757f-4eb2-9421-ed112309bbea",
+        "title": "Default admin password in data.sql",
+        "type": "security",
+        "priority": "high",
+        "location": "src/main/resources/db/h2/data.sql:61",
+        "code": "-- The password is \"password\" encoded with bcrypt, for development purposes only\nINSERT INTO users VALUES (default, 'admin', '$2a$12$34gXhmF2aGTUsJqINxzTyusB3n4pOQ2nvTc45K/kjsc0WeJQo1T3a', default);\n",
+        "category": "security"
+      },
+      {
+        "id": "04682d7e-bb81-4515-bbfd-1d5121d76134",
+        "title": "Open redirect vulnerability",
+        "type": "security",
+        "priority": "medium",
+        "location": "src/main/java/org/springframework/samples/petclinic/config/SecurityConfig.java:42",
+        "code": "http.authorizeHttpRequests(authorize -> authorize.requestMatchers(\"/\", \"/oups\", \"/error\")\n  .permitAll()\n",
+        "category": "security",
+        "runtime": {
+          "stackTrace": "at SecurityConfig.configure(SecurityConfig.java:42)\nat SecurityAutoConfiguration.defaultWebSecurityConfiguration(SecurityAutoConfiguration.java:76)\nat NativeMethodAccessorImpl.invoke0(Native Method)\nat NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n",
+          "sequenceDiagram": "sequenceDiagram\n    participant Client\n    participant SecurityFilter\n    participant Controller\n    Client->>SecurityFilter: GET /redirect?url=evil.com\n    SecurityFilter->>SecurityFilter: No URL validation\n    SecurityFilter->>Controller: Forward request\n    Controller-->>Client: Redirect to evil.com\n"
+        }
+      },
+      {
+        "id": "cc28524b-3546-4a02-a1eb-006f44625f0a",
+        "title": "Add index on lastName column",
+        "type": "performance",
+        "priority": "medium",
+        "location": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java:127",
+        "code": "private Page<Owner> findPaginatedForOwnersLastName(int page, String lastname) {\n    int pageSize = 5;\n    Pageable pageable = PageRequest.of(page - 1, pageSize);\n    return owners.findByLastNameStartingWith(lastname, pageable);\n}\n",
+        "category": "sql",
+        "runtime": {
+          "stackTrace": "at JpaRepository.findAll(JpaRepository.java:147)\nat OwnerController.findPaginatedForOwnersLastName(OwnerController.java:127)\nat OwnerController.processFindForm(OwnerController.java:98)\n",
+          "sequenceDiagram": "sequenceDiagram\n    participant Client\n    participant Controller\n    participant Repository\n    participant Database\n    Client->>Controller: GET /owners?lastName=Smith\n    Controller->>Repository: findByLastNameStartingWith()\n    Note right of Repository: Full table scan<br/>No index used\n    Repository->>Database: SELECT * FROM owners<br/>WHERE last_name LIKE 'Smith%'\n    Database-->>Repository: Results (slow)\n    Repository-->>Controller: Page<Owner>\n    Controller-->>Client: Owner list page\n"
+        }
+      },
+      {
+        "id": "a71e7d18-c35b-4e64-959a-c639483660da",
+        "title": "Add index on visit_date",
+        "type": "performance",
+        "priority": "medium",
+        "location": "src/main/resources/db/h2/schema.sql:62",
+        "code": "CREATE TABLE visits (\n    id INT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,\n    pet_id INT,\n    visit_date DATE,\n    description VARCHAR(255)\n);\n",
+        "category": "sql"
+      },
+      {
+        "id": "66bac08a-b9eb-4303-8177-05ad2f4df940",
+        "title": "Add rate limiting on login attempts",
+        "type": "security",
+        "priority": "high",
+        "location": "src/main/java/org/springframework/samples/petclinic/security/JpaUserDetailsService.java:25",
+        "code": "@Override\n@Transactional(readOnly = true)\npublic UserDetails loadUserByUsername(String username)\n",
+        "category": "sql"
+      },
+      {
+        "id": "4e17821d-38df-47a1-bf82-5ecca4ada407",
+        "title": "Add audit columns to users table",
+        "type": "security",
+        "priority": "high",
+        "location": "src/main/resources/db/h2/schema.sql:73",
+        "code": "CREATE TABLE users (\n    id INTEGER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,\n    username VARCHAR(80) NOT NULL UNIQUE,\n    password VARCHAR(255) NOT NULL,\n    enabled BOOLEAN DEFAULT TRUE NOT NULL\n);\n",
+        "category": "sql"
+      },
+      {
+        "id": "9e70e3a0-ac42-4417-8bfd-5b63c6e4a358",
+        "title": "Remove hardcoded credentials",
+        "type": "security",
+        "priority": "high",
+        "location": "src/main/resources/db/h2/data.sql:60",
+        "code": "-- The password is \"password\" encoded with bcrypt, for development purposes only\nINSERT INTO users VALUES (default, 'admin', '$2a$12$34gXhmF2aGTUsJqINxzTyusB3n4pOQ2nvTc45K/kjsc0WeJQo1T3a', default);\n",
+        "category": "sql"
+      },
+      {
+        "id": "cf24852d-bea6-4fa9-bb8f-4aa85903e0c4",
+        "title": "Missing security headers",
+        "type": "security",
+        "priority": "medium",
+        "location": "src/main/java/org/springframework/samples/petclinic/config/SecurityConfig.java:41",
+        "code": "http.authorizeHttpRequests(authorize -> authorize.requestMatchers(\"/\", \"/oups\", \"/error\")\n",
+        "category": "http"
+      },
+      {
+        "id": "b014e487-e4aa-402f-ae20-9d575af74133",
+        "title": "Missing login attempt limiting",
+        "type": "security",
+        "priority": "medium",
+        "location": "src/main/java/org/springframework/samples/petclinic/config/SecurityConfig.java:47",
+        "code": ".formLogin(formLogin -> formLogin.permitAll().successHandler(successHandler))\n",
+        "category": "http"
+      },
+      {
+        "id": "caa49131-a28a-4c52-a01b-8b48b4055cd5",
+        "title": "Missing secure session configuration",
+        "type": "security",
+        "priority": "high",
+        "location": "src/main/java/org/springframework/samples/petclinic/config/SecurityConfig.java:38",
+        "code": "public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {\n",
+        "category": "http"
+      },
+      {
+        "id": "ec7f096e-53c7-4ff9-a72e-615a858f074f",
+        "title": "Static resource caching",
+        "type": "performance",
+        "priority": "low",
+        "location": "src/main/java/org/springframework/samples/petclinic/config/SecurityConfig.java:41",
+        "code": "http.authorizeHttpRequests(authorize -> authorize.requestMatchers(\"/\", \"/oups\", \"/error\")\n",
+        "category": "http"
+      },
+      {
+        "id": "cd9dc95b-fbe2-42c8-9af8-5e937728a29e",
+        "title": "Inconsistent HTTP status codes",
+        "type": "style",
+        "priority": "medium",
+        "location": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java:138",
+        "code": "public String processUpdateOwnerForm(@Valid Owner owner, BindingResult result, @PathVariable(\"ownerId\") int ownerId)\n",
+        "category": "http",
+        "runtime": {
+          "stackTrace": "at OwnerController.processUpdateOwnerForm(OwnerController.java:138)\nat DispatcherServlet.doDispatch(DispatcherServlet.java:1067)\nat FrameworkServlet.processRequest(FrameworkServlet.java:1006)\n",
+          "sequenceDiagram": "sequenceDiagram\n    participant Client\n    participant Controller\n    participant Service\n    Client->>Controller: POST /owners/{id}\n    Controller->>Service: updateOwner()\n    Note right of Controller: Returns 200 OK<br/>instead of 204\n    Service-->>Controller: Owner updated\n    Controller-->>Client: Success response\n"
+        }
+      }
+    ]
+}
