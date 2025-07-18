@@ -4,6 +4,7 @@ import { promisify } from 'node:util';
 import * as vscode from 'vscode';
 
 import type { GitExtension, Repository } from '../../types/vscode.git';
+import ReviewWebview from '../webviews/reviewWebview';
 
 const execPromise = promisify(exec);
 
@@ -90,13 +91,7 @@ export default class QuickReviewCommand {
       context.workspaceState.update(LAST_PICKED_STATE, baseRef);
 
       // Open Navie chat with review command
-      const prompt = `@review /base=${baseRef}`;
-      await vscode.commands.executeCommand('appmap.explain', {
-        suggestion: {
-          label: prompt,
-          prompt,
-        },
-      });
+      await startReview(baseRef);
     } catch (error) {
       vscode.window.showErrorMessage(
         `Failed to start code review: ${error instanceof Error ? error.message : String(error)}`
@@ -256,3 +251,18 @@ const COMMON_MAIN_BRANCH_ICONS = {
   qa: new vscode.ThemeIcon('shield'),
   prod: new vscode.ThemeIcon('globe'),
 };
+
+async function startReview(baseRef?: string): Promise<void> {
+  // start the UI if appMap.experimentalReviewUI is enabled
+  if (vscode.workspace.getConfiguration('appMap').get<boolean>('experimentalReviewUI')) {
+    return ReviewWebview.open({ baseRef });
+  } else {
+    const prompt = `@review /base=${baseRef ?? 'HEAD'}`;
+    return vscode.commands.executeCommand('appmap.explain', {
+      suggestion: {
+        label: prompt,
+        prompt,
+      },
+    });
+  }
+}

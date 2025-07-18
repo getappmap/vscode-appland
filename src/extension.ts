@@ -46,6 +46,7 @@ import FindingInfoWebview from './webviews/findingInfoWebview';
 import { AppMapRecommenderService } from './services/appmapRecommenderService';
 import openCodeObjectInSource from './commands/openCodeObjectInSource';
 import learnMoreRuntimeAnalysis from './commands/learnMoreRuntimeAnalysis';
+import ReviewWebview from './webviews/reviewWebview';
 import SignInViewProvider from './webviews/signInWebview';
 import SignInManager from './services/signInManager';
 import { AppmapConfigManager } from './services/appmapConfigManager';
@@ -256,6 +257,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
         context,
         workspaceServices.getServiceInstances(configManager)
       );
+      ReviewWebview.register(context, rpcService);
 
       context.subscriptions.push(
         vscode.workspace.onDidChangeConfiguration((e) => {
