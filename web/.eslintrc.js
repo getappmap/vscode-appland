@@ -14,4 +14,12 @@ module.exports = {
     'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
     'no-param-reassign': ['error', { props: false }],
   },
+  overrides: [
+    {
+      files: ['*.ts'],
+      parser: '@typescript-eslint/parser',
+      plugins: ['@typescript-eslint'],
+      extends: ['plugin:@typescript-eslint/recommended'],
+    },
+  ],
 };

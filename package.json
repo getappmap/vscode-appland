@@ -306,6 +306,11 @@
           "type": "string",
           "description": "Location of AppMap command line tools (used for extension development only)"
         },
+        "appMap.experimentalReviewUI": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable the experimental code review UI"
+        },
         "appMap.commandLineVerbose": {
           "type": "boolean",
           "description": "Enable verbose output from AppMap command line tools"
