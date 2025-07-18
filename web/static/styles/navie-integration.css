@@ -2,7 +2,7 @@
   --appmap-color-background: var(--vscode-editor-background);
   --appmap-color-highlight: var(--vscode-list-highlightForeground);
   --appmap-color-highlight-light: var(--vscode-focusBorder);
-  --appmap-color-highlight-dark: var(--vscode-editorSuggestWidget-selectedBackground);
+  --appmap-color-highlight-dark: var(--vscode-list-dropBackground);
   --appmap-color-input-bg: var(--vscode-input-background);
   --appmap-color-input-fg: var(--vscode-input-foreground);
   --appmap-color-button-fg: var(--vscode-button-foreground);
