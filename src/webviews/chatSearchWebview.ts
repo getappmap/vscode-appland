@@ -9,6 +9,7 @@ import { getApiKey } from '../authentication';
 import ExtensionSettings from '../configuration/extensionSettings';
 import { CodeSelection } from '../commands/quickSearch';
 import ExtensionState from '../configuration/extensionState';
+import openLocation from '../lib/openLocation';
 import AppMapCollection from '../services/appmapCollection';
 import RpcProcessService from '../services/rpcProcessService';
 import { NodeProcessService } from '../services/nodeProcessService';
@@ -230,32 +231,7 @@ export default class ChatSearchWebview {
         }
         case 'open-location': {
           const { location, directory } = message;
-          const result = await parseLocation(location, directory);
-
-          if (result instanceof vscode.Uri) {
-            await vscode.commands.executeCommand('vscode.open', result);
-          } else {
-            if (result.uri.fsPath.endsWith('.appmap.json')) {
-              // Open an AppMap
-              // The range will actually be an event id
-              // This means we'll need to add 1 to the (zero-based) line number
-              const viewState = {
-                currentView: 'viewSequence',
-                selectedObject: `event:${result.range.start.line + 1}`,
-              };
-              await vscode.commands.executeCommand(
-                'vscode.open',
-                result.uri.with({ fragment: JSON.stringify(viewState) })
-              );
-            } else {
-              // Open a text document
-              await vscode.commands.executeCommand('vscode.open', result.uri);
-              const { activeTextEditor } = vscode.window;
-              if (activeTextEditor) {
-                activeTextEditor.revealRange(result.range, vscode.TextEditorRevealType.InCenter);
-              }
-            }
-          }
+          await openLocation(location, directory);
 
           break;
         }

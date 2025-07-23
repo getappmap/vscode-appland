@@ -61,9 +61,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/components@npm:^4.46.3":
-  version: 4.46.3
-  resolution: "@appland/components@npm:4.46.3"
+"@appland/components@npm:^4.47.0":
+  version: 4.47.0
+  resolution: "@appland/components@npm:4.47.0"
   dependencies:
     "@appland/client": ^1.12.0
     "@appland/diagrams": ^1.7.0
@@ -81,6 +81,7 @@ __metadata:
     highlight.js: ^11.9.0
     jayson: ^4.1.0
     js-base64: ^3.7.7
+    lucide-vue: ^0.511.0
     marked: ^10.0.0
     marked-highlight: ^2.0.7
     mermaid: ^10.9.1
@@ -89,7 +90,7 @@ __metadata:
     sql-formatter: ^4.0.2
     vue: ^2.7.16
     vuex: ^3.6.0
-  checksum: fd92eff33f21ba58438c286430b4d93337674762afdd5dec60184b17369acb22ed2e9f591a619d2de410de2037f3a24800ead443227974ae92db051e5d51c0b3
+  checksum: 23ef18353dccea40d10ae608cc9ad54ac00fb88a4b9476b95c5031db0723bb49715b534db75e7ce3cbfc3dbafb5ef9370e48301654a379a9fccca6ea9dcbb3b4
   languageName: node
   linkType: hard
 
@@ -128,12 +129,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/rpc@npm:^1.13.0, @appland/rpc@npm:^1.19.0":
+"@appland/rpc@npm:^1.13.0":
   version: 1.19.0
   resolution: "@appland/rpc@npm:1.19.0"
   dependencies:
     "@appland/client": 1.23.0
   checksum: e1d670731b0a47e01d719e1d9503305da1e35423eb7422f54154d041112b9fbf6547ae7700b9c5c83d0e3eb48c2f5e7b0b35f81abad15fca70f002c1b2b19465
+  languageName: node
+  linkType: hard
+
+"@appland/rpc@npm:^1.22.0":
+  version: 1.22.0
+  resolution: "@appland/rpc@npm:1.22.0"
+  dependencies:
+    "@appland/client": 1.23.0
+  checksum: fcab610149cf83107a89aebc02f3f3079939ddaad0a45754db6c2ead3f4313c20362f49428098699159ae524eb22a5732107db0f06f516ade399e97a2bc88711
   languageName: node
   linkType: hard
 
@@ -2514,10 +2524,10 @@ __metadata:
   resolution: "appmap@workspace:."
   dependencies:
     "@appland/client": ^1.23.0
-    "@appland/components": ^4.46.3
+    "@appland/components": ^4.47.0
     "@appland/diagrams": ^1.8.0
     "@appland/models": ^2.10.2
-    "@appland/rpc": ^1.19.0
+    "@appland/rpc": ^1.22.0
     "@appland/scanner": ^1.86.0
     "@appland/sequence-diagram": ^1.12.0
     "@playwright/test": ^1.22.2
@@ -8150,6 +8160,15 @@ __metadata:
   version: 2.2.1
   resolution: "ltgt@npm:2.2.1"
   checksum: 7e3874296f7538bc8087b428ac4208008d7b76916354b34a08818ca7c83958c1df10ec427eeeaad895f6b81e41e24745b18d30f89abcc21d228b94f6961d50a2
+  languageName: node
+  linkType: hard
+
+"lucide-vue@npm:^0.511.0":
+  version: 0.511.0
+  resolution: "lucide-vue@npm:0.511.0"
+  peerDependencies:
+    vue: ^2.6.12
+  checksum: a7093425391be810c3a9a0ebb27e1b4db358f4b1964c798d35cc6c4ff45800f01e7d948bda7fdc6c1bcc6809ad83719d646d6733932512e00cf52dc4c21d135b
   languageName: node
   linkType: hard
 

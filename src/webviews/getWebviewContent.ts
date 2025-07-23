@@ -7,7 +7,8 @@ type AppmapModule =
   | 'chat-search'
   | 'findings-view'
   | 'finding-info-view'
-  | 'sign-in-view';
+  | 'sign-in-view'
+  | 'review';
 
 type getWebviewContentOptions = {
   htmlStyle?: string;
