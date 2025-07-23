@@ -1,3 +1,10 @@
+# [0.137.0](https://github.com/getappmap/vscode-appland/compare/v0.136.1...v0.137.0) (2025-07-23)
+
+
+### Features
+
+* **review-ui:** Introduce experimental code review UI ([7264e29](https://github.com/getappmap/vscode-appland/commit/7264e2949a54408b0d37219e2d2c0ad06d9e2bcd))
+
 ## [0.136.1](https://github.com/getappmap/vscode-appland/compare/v0.136.0...v0.136.1) (2025-06-03)
 
 
