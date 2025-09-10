@@ -228,6 +228,41 @@ describe('AssetService', () => {
           join(cache, 'appmap-linux-x64-0.1.0'),
         ]);
     });
+
+    it('considers files in the old directory layout', async () => {
+      await mkdir(join(homeDir, '.appmap', 'lib', 'java'), { recursive: true });
+      await mkdir(join(homeDir, '.appmap', 'lib', 'scanner'), { recursive: true });
+      await mkdir(join(homeDir, '.appmap', 'lib', 'appmap'), { recursive: true });
+
+      const jarPath = join(homeDir, '.appmap', 'lib', 'java', 'appmap-0.10.0.jar');
+      const scannerPath = join(
+        homeDir,
+        '.appmap',
+        'lib',
+        'scanner',
+        `scanner-${platform}-${arch}-0.10.0`
+      );
+      const appmapPath = join(
+        homeDir,
+        '.appmap',
+        'lib',
+        'appmap',
+        `appmap-${platform}-${arch}-0.10.0`
+      );
+
+      await writeFile(jarPath, '');
+      await writeFile(scannerPath, '');
+      await writeFile(appmapPath, '');
+
+      const javaAssets = await listAssets(AssetIdentifier.JavaAgent);
+      expect(javaAssets).to.be.an('array').with.members([jarPath]);
+
+      const scannerAssets = await listAssets(AssetIdentifier.ScannerCli);
+      expect(scannerAssets).to.be.an('array').with.members([scannerPath]);
+
+      const appmapAssets = await listAssets(AssetIdentifier.AppMapCli);
+      expect(appmapAssets).to.be.an('array').with.members([appmapPath]);
+    });
   });
 
   describe('ensureLinks', () => {

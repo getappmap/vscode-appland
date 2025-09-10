@@ -307,7 +307,13 @@ export enum AssetIdentifier {
 }
 
 export async function listAssets(assetId: AssetIdentifier): Promise<string[]> {
-  const DIRS = [cacheDir(), BundledFileDownloadUrlResolver.resourcePath];
+  const DIRS = [
+    cacheDir(),
+    BundledFileDownloadUrlResolver.resourcePath,
+    join(globalAppMapDir(), 'lib', 'java'),
+    join(globalAppMapDir(), 'lib', 'appmap'),
+    join(globalAppMapDir(), 'lib', 'scanner'),
+  ];
   const results: string[] = [];
   for (const dir of DIRS) {
     try {
