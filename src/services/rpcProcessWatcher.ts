@@ -2,7 +2,8 @@ import * as vscode from 'vscode';
 import ExtensionSettings from '../configuration/extensionSettings';
 import { NodeProcessService } from './nodeProcessService';
 import { ProcessId, ProcessWatcher, ProcessWatcherOptions } from './processWatcher';
-import AssetService, { AssetIdentifier } from '../assets/assetService';
+import AssetService from '../assets/assetService';
+import { AssetIdentifier } from '../assets';
 
 export default class RpcProcessWatcher extends ProcessWatcher {
   private readonly _onRpcPortChange: vscode.EventEmitter<number> =

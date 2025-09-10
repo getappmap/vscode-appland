@@ -15,7 +15,8 @@ import * as vscode from 'vscode';
 import ChangeEventDebouncer from './changeEventDebouncer';
 import { WorkspaceService, WorkspaceServiceInstance } from './workspaceService';
 import { workspaceServices } from './workspaceServices';
-import AssetService, { AssetIdentifier } from '../assets/assetService';
+import AssetService from '../assets/assetService';
+import { AssetIdentifier } from '../assets';
 
 export default class AppmapUptodateServiceInstance
   extends EventEmitter

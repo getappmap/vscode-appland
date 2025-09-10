@@ -2,11 +2,16 @@ import '../mock/vscode';
 import mockAssetApis from './mockAssetApis';
 import Sinon from 'sinon';
 import os, { tmpdir } from 'os';
-import { mkdir, mkdtemp, rm, stat, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, rm, stat, symlink, writeFile } from 'node:fs/promises';
 import { default as chai, expect } from 'chai';
 import { default as chaiFs } from 'chai-fs';
 import { join } from 'path';
-import { AppMapCliDownloader, cacheDir, initialDownloadCompleted } from '../../../src/assets';
+import {
+  AppMapCliDownloader,
+  BundledFileDownloadUrlResolver,
+  cacheDir,
+  initialDownloadCompleted,
+} from '../../../src/assets';
 
 chai.use(chaiFs);
 
@@ -19,6 +24,7 @@ describe('AppMapCliDownloader', () => {
   beforeEach(async () => {
     homeDir = await mkdtemp(join(tmpdir(), 'vscode-appland-appmap-download-test-'));
     Sinon.stub(os, 'homedir').returns(homeDir);
+    BundledFileDownloadUrlResolver.extensionDirectory = homeDir;
     Sinon.stub(process, 'platform').value(platform);
     Sinon.stub(process, 'arch').value(arch);
     cache = cacheDir();
@@ -69,6 +75,24 @@ describe('AppMapCliDownloader', () => {
     expect(join(homeDir, '.appmap', 'bin', 'appmap.exe'))
       .to.be.a.file()
       .with.content('overriden test');
+  });
+
+  it('does not download if the same version is bundled', async () => {
+    const bundledDir = join(homeDir, 'resources');
+    await mkdir(bundledDir, { recursive: true });
+    await writeFile(join(bundledDir, 'appmap-win-x64-0.0.0-TEST.exe'), 'BUNDLED');
+
+    await mkdir(join(homeDir, '.appmap', 'bin'), { recursive: true });
+    await symlink(
+      join(bundledDir, 'appmap-win-x64-0.0.0-TEST.exe'),
+      join(homeDir, '.appmap', 'bin', 'appmap.exe')
+    );
+    await initialDownloadCompleted();
+
+    await AppMapCliDownloader();
+
+    // The target should not be replaced
+    expect(join(homeDir, '.appmap', 'bin', 'appmap.exe')).to.be.a.file().with.content('BUNDLED');
   });
 
   describe('file naming and permissions', () => {

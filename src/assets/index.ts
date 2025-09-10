@@ -1,7 +1,8 @@
-import { chmod, copyFile, mkdir, open, symlink, unlink } from 'node:fs/promises';
+import { chmod, copyFile, mkdir, open, readdir, symlink, unlink } from 'node:fs/promises';
 import { homedir } from 'node:os';
-import { dirname, join } from 'node:path';
+import { basename, dirname, join } from 'node:path';
 
+import semverCompareBuild from 'semver/functions/compare-build';
 import { Uri } from 'vscode';
 
 import DownloadUrlResolver from './downloadUrlResolver';
@@ -241,8 +242,14 @@ async function downloadCliAsset(name: string) {
   const platformId = getPlatformIdentifier();
   const binaryVerName = binaryName(`${name}-${platformId}-${version}`);
 
-  const binaryPath = join(cacheDir(), binaryVerName);
+  let binaryPath = join(cacheDir(), binaryVerName);
   const symlinkPath = join(appMapBinDir(), binaryName(name));
+
+  // check if a bundled version is available
+  const bundledPath = join(BundledFileDownloadUrlResolver.resourcePath, binaryVerName);
+  if (await fileExists(bundledPath)) {
+    binaryPath = bundledPath;
+  }
 
   if (await downloadRequired(binaryPath)) {
     const uri = await new GitHubDownloadUrlResolver('getappmap/appmap-js', (version) =>
@@ -291,3 +298,55 @@ export const JavaAgentDownloader = async () => {
     await updateSymlink(binaryPath, symlinkPath);
   }
 };
+
+export enum AssetIdentifier {
+  AppMapCli,
+  ScannerCli,
+  JavaAgent,
+}
+
+export async function listAssets(assetId: AssetIdentifier): Promise<string[]> {
+  const DIRS = [cacheDir(), BundledFileDownloadUrlResolver.resourcePath];
+  const results: string[] = [];
+  for (const dir of DIRS) {
+    try {
+      const ents = await readdir(dir);
+      for (const ent of ents) {
+        if (
+          (assetId === AssetIdentifier.JavaAgent && ent.endsWith('.jar')) ||
+          (assetId === AssetIdentifier.AppMapCli &&
+            ent.startsWith('appmap') &&
+            ent.includes(getPlatformIdentifier())) ||
+          (assetId === AssetIdentifier.ScannerCli &&
+            ent.startsWith('scanner') &&
+            ent.includes(getPlatformIdentifier()))
+        ) {
+          results.push(join(dir, ent));
+        }
+      }
+    } catch (e) {
+      // ignore, directory may not exist
+    }
+  }
+
+  // sort by version descending
+  results.sort((a, b) => {
+    const va = versionFromPath(a);
+    const vb = versionFromPath(b);
+    if (va && vb) return -semverCompareBuild(va, vb);
+    if (va) return -1;
+    if (vb) return 1;
+    return 0;
+  });
+
+  return results;
+}
+
+export function versionFromPath(p: string): string | undefined {
+  const base = basename(p)
+    .replace(/\.exe$/, '')
+    .replace(/\.jar$/, '');
+  const match = base.match(/-(\d.*)$/);
+  if (!match) return undefined;
+  return match[1];
+}

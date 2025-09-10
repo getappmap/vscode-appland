@@ -6,7 +6,8 @@ import { mkdir, mkdtemp, rm, writeFile } from 'fs/promises';
 import { default as chai, expect } from 'chai';
 import { default as chaiFs } from 'chai-fs';
 import { join } from 'path';
-import AssetService, { AssetIdentifier } from '../../../src/assets/assetService';
+import AssetService from '../../../src/assets/assetService';
+import { AssetIdentifier, listAssets } from '../../../src/assets';
 import ResourceVersions from '../../../resources/versions.json';
 import downloadHttpRetry from '../../../src/assets/downloadHttpRetry';
 import {
@@ -157,7 +158,7 @@ describe('AssetService', () => {
 
   describe('listAssets', () => {
     it('returns an empty list if the asset directory does not exist', async () => {
-      const assets = await AssetService.listAssets(AssetIdentifier.AppMapCli);
+      const assets = await listAssets(AssetIdentifier.AppMapCli);
       expect(assets).to.be.an('array').that.is.empty;
     });
 
@@ -168,13 +169,69 @@ describe('AssetService', () => {
       await writeFile(join(bundledDir, 'scanner-linux-x64-0.9.0'), '');
       BundledFileDownloadUrlResolver.extensionDirectory = homeDir;
 
-      const assets = await AssetService.listAssets(AssetIdentifier.AppMapCli);
+      const assets = await listAssets(AssetIdentifier.AppMapCli);
       expect(assets).to.be.an('array').that.has.lengthOf(1);
       expect(assets[0]).to.match(/appmap-linux-x64-0.9.0$/);
 
-      const scannerAssets = await AssetService.listAssets(AssetIdentifier.ScannerCli);
+      const scannerAssets = await listAssets(AssetIdentifier.ScannerCli);
       expect(scannerAssets).to.be.an('array').that.has.lengthOf(1);
       expect(scannerAssets[0]).to.match(/scanner-linux-x64-0.9.0$/);
+    });
+
+    it('includes appmap-java.jar from resources', async () => {
+      const bundledDir = join(homeDir, 'resources');
+      await mkdir(bundledDir, { recursive: true });
+      await writeFile(join(bundledDir, 'appmap-java.jar'), '');
+      BundledFileDownloadUrlResolver.extensionDirectory = homeDir;
+
+      const assets = await listAssets(AssetIdentifier.JavaAgent);
+      expect(assets).to.be.an('array').that.has.lengthOf(1);
+      expect(assets[0]).to.match(/appmap-java.jar$/);
+    });
+  });
+
+  describe('ensureLinks', () => {
+    it('returns true if all links are present', async () => {
+      mockAssetApis();
+      await AssetService.updateAll(true);
+      const allPresent = await AssetService.ensureLinks();
+      expect(allPresent).to.be.true;
+    });
+
+    it('restores missing links and returns false', async () => {
+      mockAssetApis();
+
+      const appmapDir = join(homeDir, '.appmap');
+
+      let allPresent = await AssetService.ensureLinks();
+      expect(allPresent).to.be.false;
+
+      await AssetService.updateAll(true);
+      allPresent = await AssetService.ensureLinks();
+      expect(allPresent).to.be.true;
+      expect(appmapDir).to.be.a.directory().with.subDirs(['bin', 'lib']);
+      expect(join(appmapDir, 'bin', 'scanner')).to.be.a.file();
+      expect(join(appmapDir, 'bin', 'appmap')).to.be.a.file();
+      expect(join(appmapDir, 'lib', 'java')).to.be.a.directory().with.files(['appmap.jar']);
+    });
+
+    it('can link up bundled assets if no cached version exists', async () => {
+      const bundledDir = join(homeDir, 'resources');
+      await mkdir(bundledDir, { recursive: true });
+      await writeFile(join(bundledDir, 'appmap-linux-x64-0.9.0'), '');
+      await writeFile(join(bundledDir, 'scanner-linux-x64-0.9.0'), '');
+      await writeFile(join(bundledDir, 'appmap-java.jar'), '');
+      BundledFileDownloadUrlResolver.extensionDirectory = homeDir;
+
+      const allPresent = await AssetService.ensureLinks();
+      expect(allPresent).to.be.true;
+
+      const appmapDir = join(homeDir, '.appmap');
+      expect(appmapDir).to.be.a.directory().with.subDirs(['bin', 'lib']);
+      expect(join(appmapDir, 'bin', 'scanner')).to.be.a.file();
+      expect(join(appmapDir, 'bin', 'appmap')).to.be.a.file();
+      expect(join(appmapDir, 'lib')).to.be.a.directory().with.subDirs(['java']);
+      expect(join(appmapDir, 'lib', 'java')).to.be.a.directory().with.files(['appmap.jar']);
     });
   });
 });

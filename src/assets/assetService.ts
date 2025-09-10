@@ -1,7 +1,6 @@
 import { basename, join } from 'node:path';
 
 import { AbortError } from 'node-fetch';
-import semverCompareBuild from 'semver/functions/compare-build';
 import * as vscode from 'vscode';
 import {
   AppMapCliDownloader,
@@ -9,21 +8,19 @@ import {
   JavaAgentDownloader,
   ScannerDownloader,
   binaryName,
-  cacheDir,
-  getPlatformIdentifier,
   initialDownloadCompleted,
+  markExecutable,
+  updateSymlink,
+  AssetIdentifier,
+  listAssets,
+  versionFromPath,
 } from '.';
 import { homedir } from 'os';
-import { mkdir, readdir } from 'fs/promises';
+import { mkdir } from 'fs/promises';
 import LockfileSynchronizer from '../lib/lockfileSynchronizer';
 
 import * as log from './log';
-
-export enum AssetIdentifier {
-  AppMapCli,
-  ScannerCli,
-  JavaAgent,
-}
+import { stat } from 'node:fs/promises';
 
 export default class AssetService {
   private static _extensionDirectory: string;
@@ -43,45 +40,41 @@ export default class AssetService {
     context.subscriptions.push(log.OutputChannel);
   }
 
-  public static async listAssets(assetId: AssetIdentifier): Promise<string[]> {
-    const DIRS = [cacheDir(), BundledFileDownloadUrlResolver.resourcePath];
-    const results: string[] = [];
-    for (const dir of DIRS) {
+  // make sure all present assets have their symlinks in place
+  public static async ensureLinks(): Promise<boolean> {
+    const appmapDir = join(homedir(), '.appmap');
+    const dirs = [join(appmapDir, 'bin'), join(appmapDir, 'lib', 'java')];
+    await Promise.all(dirs.map((dir) => mkdir(dir, { recursive: true })));
+
+    let allPresent = true;
+    for (const assetId of AssetService.downloaders.keys()) {
+      const assetPath = AssetService.getAssetPath(assetId);
       try {
-        const ents = await readdir(dir);
-        for (const ent of ents) {
-          if (
-            (assetId === AssetIdentifier.JavaAgent && ent.endsWith('.jar')) ||
-            (assetId === AssetIdentifier.AppMapCli &&
-              ent.startsWith('appmap') &&
-              ent.includes(getPlatformIdentifier())) ||
-            (assetId === AssetIdentifier.ScannerCli &&
-              ent.startsWith('scanner') &&
-              ent.includes(getPlatformIdentifier()))
-          ) {
-            results.push(join(dir, ent));
-          }
+        await stat(assetPath);
+      } catch {
+        const assets = await listAssets(assetId);
+        if (assets.length === 0) {
+          allPresent = false;
+          continue;
+        } // else we have a cached version, just need to restore the link
+
+        const target = assets[0];
+        log.info(`Restoring missing asset ${assetPath} from cached version ${target}`);
+        if (assetId !== AssetIdentifier.JavaAgent) await markExecutable(target);
+        try {
+          await updateSymlink(target, assetPath);
+        } catch (e) {
+          log.error(`Failed to restore symlink for ${assetPath}: ${e}`);
+          allPresent = false;
         }
-      } catch (e) {
-        // ignore, directory may not exist
+        // make sure it's executable
       }
     }
-
-    // sort by version descending
-    results.sort((a, b) => {
-      const va = versionFromPath(a);
-      const vb = versionFromPath(b);
-      if (va && vb) return -semverCompareBuild(va, vb);
-      if (va) return -1;
-      if (vb) return 1;
-      return 0;
-    });
-
-    return results;
+    return allPresent;
   }
 
   public static async getMostRecentVersion(assetId: AssetIdentifier): Promise<string | undefined> {
-    const assets = await this.listAssets(assetId);
+    const assets = await listAssets(assetId);
     if (assets.length === 0) return undefined;
     return versionFromPath(assets[0]);
   }
@@ -98,6 +91,16 @@ export default class AssetService {
       default:
         throw new Error(`Invalid asset ID ${assetId}`);
     }
+  }
+
+  // ensure all assets are present and have their symlinks in place
+  // if all are present, returns immediately but updates in the background
+  // if any are missing, waits for the update to complete
+  public static async ensureAssets(): Promise<void> {
+    const allPresent = await this.ensureLinks();
+    const update = this.updateAll();
+    if (allPresent) return;
+    else return update;
   }
 
   public static async updateAll(throwOnError = false): Promise<void> {
@@ -164,13 +167,4 @@ export default class AssetService {
         });
     });
   }
-}
-
-function versionFromPath(p: string): string | undefined {
-  const base = basename(p)
-    .replace(/\.exe$/, '')
-    .replace(/\.jar$/, '');
-  const match = base.match(/-(\d.*)$/);
-  if (!match) return undefined;
-  return match[1];
 }
