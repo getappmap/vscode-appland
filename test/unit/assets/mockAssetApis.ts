@@ -59,22 +59,26 @@ export default function mockAssetApis(opts: AssetVersionMocks = {}) {
     () => '<insert jar here>',
     options.denylist
   );
-  mockApi(
-    `https://github.com/getappmap/appmap-js/releases/download/%40appland/scanner-v${options.scanner}/scanner-linux-x64`,
-    () => '<insert scanner here>',
-    options.denylist
-  );
-  mockApi(
-    `https://github.com/getappmap/appmap-js/releases/download/%40appland/appmap-v${options.appmap}/appmap-linux-x64`,
-    () => '<insert appmap cli here>',
-    options.denylist
-  );
 
-  mockApi(
-    `https://github.com/getappmap/appmap-js/releases/download/%40appland/appmap-v${options.appmap}/appmap-win-x64.exe`,
-    () => '<insert appmap cli here>',
-    options.denylist
-  );
+  // mock all the platform/arch combinations so tests don't have to care about
+  // what the current platform/arch is
+  const platforms = ['linux', 'macos', 'win'];
+  const archs = ['x64', 'arm64'];
+  for (const platform of platforms) {
+    for (const arch of archs) {
+      const binarySuffix = `${platform}-${arch}${platform === 'win' ? '.exe' : ''}`;
+      mockApi(
+        `https://github.com/getappmap/appmap-js/releases/download/%40appland/scanner-v${options.scanner}/scanner-${binarySuffix}`,
+        () => '<insert scanner here>',
+        options.denylist
+      );
+      mockApi(
+        `https://github.com/getappmap/appmap-js/releases/download/%40appland/appmap-v${options.appmap}/appmap-${binarySuffix}`,
+        () => '<insert appmap cli here>',
+        options.denylist
+      );
+    }
+  }
 
   return options;
 }

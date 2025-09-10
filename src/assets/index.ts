@@ -177,6 +177,8 @@ async function updateSymlink(assetPath: string, symlinkPath: string): Promise<vo
     // if the symlink that we're trying to remove does not exist, don't do anything
   }
 
+  // make sure the target directory exists
+  await mkdir(dirname(symlinkPath), { recursive: true });
   try {
     await symlink(assetPath, symlinkPath, 'file');
   } catch (e) {
@@ -187,7 +189,7 @@ async function updateSymlink(assetPath: string, symlinkPath: string): Promise<vo
 function getPlatformIdentifier() {
   switch (process.platform) {
     case 'win32':
-      return `win-${process.arch}.exe`;
+      return `win-${process.arch}`;
     case 'darwin':
       return `macos-${process.arch}`;
     default:
@@ -217,12 +219,20 @@ async function downloadCliAsset(name: string) {
   ]);
   if (!version) throw new Error(`Error resolving ${name} version`);
 
-  const binaryPath = join(globalAppMapDir(), 'lib', name, `${name}-v${version}`);
+  const platformId = getPlatformIdentifier();
+  const binaryVerName =
+    `${name}-${platformId}-${version}` + (process.platform === 'win32' ? '.exe' : '');
+
+  const binaryPath = join(globalAppMapDir(), 'lib', name, binaryVerName);
   const symlinkPath = join(appMapBinDir(), binaryName(name));
 
   if (await downloadRequired(binaryPath)) {
     const uri = await new GitHubDownloadUrlResolver('getappmap/appmap-js', (version) =>
-      encodeURIComponent(`@appland/${name}-v${version}/${name}-${getPlatformIdentifier()}`)
+      encodeURIComponent(
+        `@appland/${name}-v${version}/${name}-${getPlatformIdentifier()}${
+          process.platform === 'win32' ? '.exe' : ''
+        }`
+      )
     ).getDownloadUrl(version);
     await download(Uri.parse(uri), binaryPath);
     await markExecutable(binaryPath);
