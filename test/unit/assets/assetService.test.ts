@@ -191,14 +191,7 @@ describe('AssetService', () => {
 
     it('handles invalid version strings', async () => {
       await mkdir(cache, { recursive: true });
-      const VERSIONS = [
-        '0.1.0',
-        '0.11.0.part',
-        '0.2.0',
-        'not-a-version',
-        '0.10.0',
-        'also-not-a-version',
-      ];
+      const VERSIONS = ['0.1.0', '0.2.0', 'not-a-version', '0.10.0', 'also-not-a-version'];
       for (const v of VERSIONS) {
         await writeFile(join(cache, `appmap-linux-x64-${v}`), '');
       }
@@ -208,6 +201,29 @@ describe('AssetService', () => {
         .to.be.an('array')
         .with.members([
           join(cache, 'appmap-linux-x64-0.10.0'),
+          join(cache, 'appmap-linux-x64-0.2.0'),
+          join(cache, 'appmap-linux-x64-0.1.0'),
+        ]);
+    });
+
+    it("ignores files that don't match the expected pattern", async () => {
+      await mkdir(cache, { recursive: true });
+      const FILES = [
+        'appmap-linux-x64-0.1.0',
+        'appmap-linux-x64-0.1.0.part',
+        'appmap-linux-x64-0.2.0',
+        'not-an-appmap-asset',
+        'appmap-windows-x64-0.10.0.exe',
+        'also-not-an-appmap-asset',
+      ];
+      for (const f of FILES) {
+        await writeFile(join(cache, f), '');
+      }
+
+      const assets = await listAssets(AssetIdentifier.AppMapCli);
+      expect(assets)
+        .to.be.an('array')
+        .with.members([
           join(cache, 'appmap-linux-x64-0.2.0'),
           join(cache, 'appmap-linux-x64-0.1.0'),
         ]);

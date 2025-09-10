@@ -313,6 +313,7 @@ export async function listAssets(assetId: AssetIdentifier): Promise<string[]> {
     try {
       const ents = await readdir(dir);
       for (const ent of ents) {
+        if (ent.endsWith('.part')) continue; // skip partial downloads
         if (
           (assetId === AssetIdentifier.JavaAgent && ent.endsWith('.jar')) ||
           (assetId === AssetIdentifier.AppMapCli &&
