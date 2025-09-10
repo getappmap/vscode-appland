@@ -21,7 +21,7 @@ function downloadGitHubRelease(repo, version) {
   const url = `https://github.com/${repo}/releases/download/v${version}/appmap-${version}.jar`;
   return fetch(url)
     .then((res) => res.arrayBuffer())
-    .then((data) => writeFile(join(resourceDir, 'appmap-java.jar'), Buffer.from(data)));
+    .then((data) => writeFile(join(resourceDir, `appmap-${version}.jar`), Buffer.from(data)));
 }
 
 async function fileExists(path) {
