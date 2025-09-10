@@ -118,7 +118,7 @@ describe('AssetService', () => {
       await mkdir(cache, { recursive: true });
 
       const SCANNER_VS = ['0.1.0', '0.2.0', '0.10.0', '0.2.1', '0.11.0-beta1', '0.11.0+22'];
-      const APPMAP_VS = ['0.1.1', '0.2.1', '0.10.1', '0.2.2', '0.10.1-beta2'];
+      const APPMAP_VS = ['0.1.1', '0.2.1', '0.10.1', '0.2.2', '0.10.1-beta2', '0.11.0-alpha1'];
       const JAVA_VS = ['0.1.2', '0.2.2', '0.10.2', '0.2.3'];
 
       for (const v of JAVA_VS) {
@@ -136,7 +136,7 @@ describe('AssetService', () => {
       await writeFile(join(cache, `scanner-windows-x64-99.99.99.exe`), '');
 
       const expected = {
-        AppMapCli: '0.10.1',
+        AppMapCli: '0.11.0-alpha1',
         ScannerCli: '0.11.0+22',
         JavaAgent: '0.10.2',
       };
@@ -176,6 +176,22 @@ describe('AssetService', () => {
       const scannerAssets = await listAssets(AssetIdentifier.ScannerCli);
       expect(scannerAssets).to.be.an('array').that.has.lengthOf(1);
       expect(scannerAssets[0]).to.match(/scanner-linux-x64-0.9.0$/);
+    });
+
+    it('includes bundled assets correctly on Windows', async () => {
+      Sinon.stub(process, 'platform').value('win32');
+      const bundledDir = join(homeDir, 'resources');
+      await mkdir(bundledDir, { recursive: true });
+      await writeFile(join(bundledDir, 'appmap-win-x64-0.9.0.exe'), '');
+      await writeFile(join(bundledDir, 'scanner-win-x64-0.9.0.exe'), '');
+      BundledFileDownloadUrlResolver.extensionDirectory = homeDir;
+
+      const assets = await listAssets(AssetIdentifier.AppMapCli);
+      expect(assets).to.be.an('array').that.has.lengthOf(1);
+      expect(assets[0]).to.match(/appmap-win-x64-0.9.0.exe$/);
+      const scannerAssets = await listAssets(AssetIdentifier.ScannerCli);
+      expect(scannerAssets).to.be.an('array').that.has.lengthOf(1);
+      expect(scannerAssets[0]).to.match(/scanner-win-x64-0.9.0.exe$/);
     });
 
     it('includes appmap-java.jar from resources', async () => {
