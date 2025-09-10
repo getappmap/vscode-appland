@@ -117,7 +117,7 @@ describe('AssetService', () => {
     it('returns the most recent version', async () => {
       await mkdir(cache, { recursive: true });
 
-      const SCANNER_VS = ['0.1.0', '0.2.0', '0.10.0', '0.2.1', '0.10.0-beta1', '0.10.0+22'];
+      const SCANNER_VS = ['0.1.0', '0.2.0', '0.10.0', '0.2.1', '0.11.0-beta1', '0.11.0+22'];
       const APPMAP_VS = ['0.1.1', '0.2.1', '0.10.1', '0.2.2', '0.10.1-beta2'];
       const JAVA_VS = ['0.1.2', '0.2.2', '0.10.2', '0.2.3'];
 
@@ -137,7 +137,7 @@ describe('AssetService', () => {
 
       const expected = {
         AppMapCli: '0.10.1',
-        ScannerCli: '0.10.0+22',
+        ScannerCli: '0.11.0+22',
         JavaAgent: '0.10.2',
       };
 
@@ -187,6 +187,30 @@ describe('AssetService', () => {
       const assets = await listAssets(AssetIdentifier.JavaAgent);
       expect(assets).to.be.an('array').that.has.lengthOf(1);
       expect(assets[0]).to.match(/appmap-java.jar$/);
+    });
+
+    it('handles invalid version strings', async () => {
+      await mkdir(cache, { recursive: true });
+      const VERSIONS = [
+        '0.1.0',
+        '0.11.0.part',
+        '0.2.0',
+        'not-a-version',
+        '0.10.0',
+        'also-not-a-version',
+      ];
+      for (const v of VERSIONS) {
+        await writeFile(join(cache, `appmap-linux-x64-${v}`), '');
+      }
+
+      const assets = await listAssets(AssetIdentifier.AppMapCli);
+      expect(assets.slice(0, 3))
+        .to.be.an('array')
+        .with.members([
+          join(cache, 'appmap-linux-x64-0.10.0'),
+          join(cache, 'appmap-linux-x64-0.2.0'),
+          join(cache, 'appmap-linux-x64-0.1.0'),
+        ]);
     });
   });
 

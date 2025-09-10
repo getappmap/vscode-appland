@@ -2,6 +2,7 @@ import { chmod, copyFile, mkdir, open, readdir, symlink, unlink } from 'node:fs/
 import { homedir } from 'node:os';
 import { basename, dirname, join } from 'node:path';
 
+import semverClean from 'semver/functions/clean';
 import semverCompareBuild from 'semver/functions/compare-build';
 import { Uri } from 'vscode';
 
@@ -331,8 +332,8 @@ export async function listAssets(assetId: AssetIdentifier): Promise<string[]> {
 
   // sort by version descending
   results.sort((a, b) => {
-    const va = versionFromPath(a);
-    const vb = versionFromPath(b);
+    const va = semverClean(versionFromPath(a) ?? '', { loose: true });
+    const vb = semverClean(versionFromPath(b) ?? '', { loose: true });
     if (va && vb) return -semverCompareBuild(va, vb);
     if (va) return -1;
     if (vb) return 1;
