@@ -49,11 +49,11 @@ describe('AssetService', () => {
 
       expect(join(appmapDir, 'lib', 'appmap'))
         .to.be.a.directory()
-        .with.files(['appmap-v0.0.0-TEST']);
+        .with.files(['appmap-linux-x64-0.0.0-TEST']);
 
       expect(join(appmapDir, 'lib', 'scanner'))
         .to.be.a.directory()
-        .with.files(['scanner-v0.0.0-TEST']);
+        .with.files(['scanner-linux-x64-0.0.0-TEST']);
 
       expect(join(appmapDir, 'lib', 'java'))
         .to.be.a.directory()
@@ -101,10 +101,10 @@ describe('AssetService', () => {
       expect(join(appmapDir, 'bin', 'appmap')).to.be.a.file();
       expect(join(appmapDir, 'lib', 'appmap'))
         .to.be.a.directory()
-        .with.files([`appmap-v${ResourceVersions.appmap}`]);
+        .with.files([`appmap-linux-x64-${ResourceVersions.appmap}`]);
       expect(join(appmapDir, 'lib', 'scanner'))
         .to.be.a.directory()
-        .with.files([`scanner-v${ResourceVersions.scanner}`]);
+        .with.files([`scanner-linux-x64-${ResourceVersions.scanner}`]);
     });
   });
 });
