@@ -220,8 +220,7 @@ async function downloadCliAsset(name: string) {
   if (!version) throw new Error(`Error resolving ${name} version`);
 
   const platformId = getPlatformIdentifier();
-  const binaryVerName =
-    `${name}-${platformId}-${version}` + (process.platform === 'win32' ? '.exe' : '');
+  const binaryVerName = binaryName(`${name}-${platformId}-${version}`);
 
   const binaryPath = join(globalAppMapDir(), 'lib', name, binaryVerName);
   const symlinkPath = join(appMapBinDir(), binaryName(name));
@@ -229,9 +228,7 @@ async function downloadCliAsset(name: string) {
   if (await downloadRequired(binaryPath)) {
     const uri = await new GitHubDownloadUrlResolver('getappmap/appmap-js', (version) =>
       encodeURIComponent(
-        `@appland/${name}-v${version}/${name}-${getPlatformIdentifier()}${
-          process.platform === 'win32' ? '.exe' : ''
-        }`
+        binaryName(`@appland/${name}-v${version}/${name}-${getPlatformIdentifier()}`)
       )
     ).getDownloadUrl(version);
     await download(Uri.parse(uri), binaryPath);
