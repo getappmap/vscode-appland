@@ -9,7 +9,7 @@ import { default as chaiFs } from 'chai-fs';
 
 import Sinon from 'sinon';
 
-import { JavaAgentDownloader } from '../../../src/assets';
+import { cacheDir, JavaAgentDownloader } from '../../../src/assets';
 import mockAssetApis from './mockAssetApis';
 
 chai.use(chaiFs);
@@ -18,18 +18,18 @@ describe('JavaAgentDownloader', () => {
   it('downloads the Java agent to the expected location', async () => {
     await JavaAgentDownloader();
 
-    const downloadDir = join(homeDir, '.appmap', 'lib', 'java');
+    expect(cache).to.be.a.directory().with.files(['appmap-0.0.0-TEST.jar']);
 
-    expect(join(downloadDir, 'appmap-0.0.0-TEST.jar'))
-      .to.be.a.file()
-      .with.content('<insert jar here>');
+    expect(join(cache, 'appmap-0.0.0-TEST.jar')).to.be.a.file().with.content('<insert jar here>');
   });
 
   let homeDir: string;
+  let cache: string;
 
   beforeEach(async () => {
     homeDir = await mkdtemp(join(tmpdir(), 'vscode-appland-appmap-download-test-'));
     Sinon.stub(os, 'homedir').returns(homeDir);
+    cache = cacheDir();
     mockAssetApis();
   });
   afterEach(() => {

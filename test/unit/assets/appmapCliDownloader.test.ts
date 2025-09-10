@@ -6,12 +6,13 @@ import { mkdir, mkdtemp, rm, stat, writeFile } from 'node:fs/promises';
 import { default as chai, expect } from 'chai';
 import { default as chaiFs } from 'chai-fs';
 import { join } from 'path';
-import { AppMapCliDownloader, initialDownloadCompleted } from '../../../src/assets';
+import { AppMapCliDownloader, cacheDir, initialDownloadCompleted } from '../../../src/assets';
 
 chai.use(chaiFs);
 
 describe('AppMapCliDownloader', () => {
   let homeDir: string;
+  let cache: string;
   const platform = 'win32';
   const arch = 'x64';
 
@@ -20,6 +21,7 @@ describe('AppMapCliDownloader', () => {
     Sinon.stub(os, 'homedir').returns(homeDir);
     Sinon.stub(process, 'platform').value(platform);
     Sinon.stub(process, 'arch').value(arch);
+    cache = cacheDir();
     mockAssetApis();
   });
 
@@ -31,11 +33,8 @@ describe('AppMapCliDownloader', () => {
 
   it('fixes missing symlinks', async () => {
     await mkdir(join(homeDir, '.appmap', 'bin'), { recursive: true });
-    await mkdir(join(homeDir, '.appmap', 'lib', 'appmap'), { recursive: true });
-    await writeFile(
-      join(homeDir, '.appmap', 'lib', 'appmap', 'appmap-win-x64-0.0.0-TEST.exe'),
-      'test'
-    );
+    await mkdir(cache, { recursive: true });
+    await writeFile(join(cache, 'appmap-win-x64-0.0.0-TEST.exe'), 'test');
     await initialDownloadCompleted();
 
     await AppMapCliDownloader();
@@ -46,11 +45,8 @@ describe('AppMapCliDownloader', () => {
 
   it('redownloads the asset if initial download is not completed', async () => {
     await mkdir(join(homeDir, '.appmap', 'bin'), { recursive: true });
-    await mkdir(join(homeDir, '.appmap', 'lib', 'appmap'), { recursive: true });
-    await writeFile(
-      join(homeDir, '.appmap', 'lib', 'appmap', 'appmap-win-x64-0.0.0-TEST.exe'),
-      'test'
-    );
+    await mkdir(cache, { recursive: true });
+    await writeFile(join(cache, 'appmap-win-x64-0.0.0-TEST.exe'), 'test');
 
     await AppMapCliDownloader();
 
@@ -62,11 +58,8 @@ describe('AppMapCliDownloader', () => {
 
   it("does not replace the target if no download happens and it's valid", async () => {
     await mkdir(join(homeDir, '.appmap', 'bin'), { recursive: true });
-    await mkdir(join(homeDir, '.appmap', 'lib', 'appmap'), { recursive: true });
-    await writeFile(
-      join(homeDir, '.appmap', 'lib', 'appmap', 'appmap-win-x64-0.0.0-TEST.exe'),
-      'test'
-    );
+    await mkdir(cache, { recursive: true });
+    await writeFile(join(cache, 'appmap-win-x64-0.0.0-TEST.exe'), 'test');
     await writeFile(join(homeDir, '.appmap', 'bin', 'appmap.exe'), 'overriden test');
     await initialDownloadCompleted();
 
@@ -92,13 +85,12 @@ describe('AppMapCliDownloader', () => {
       it(`correctly names the file for ${c.platform}-${c.arch}`, async () => {
         Sinon.stub(process, 'platform').value(c.platform);
         Sinon.stub(process, 'arch').value(c.arch);
+        cache = cacheDir();
 
         await AppMapCliDownloader();
 
-        const downloadDir = join(homeDir, '.appmap', 'lib', 'appmap');
-        expect(downloadDir).to.be.a.directory().with.files([c.expectedName]);
-
-        const expectedPath = join(homeDir, '.appmap', 'lib', 'appmap', c.expectedName);
+        expect(cache).to.be.a.directory().with.files([c.expectedName]);
+        const expectedPath = join(cache, c.expectedName);
 
         expect(expectedPath).to.be.a.file().with.content('<insert appmap cli here>');
 

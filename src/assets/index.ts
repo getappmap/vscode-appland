@@ -118,6 +118,23 @@ const globalAppMapDir = () => join(homedir(), '.appmap');
 const appMapBinDir = () => join(globalAppMapDir(), 'bin');
 const appMapJavaAgentDir = () => join(globalAppMapDir(), 'lib', 'java');
 
+// return platform-appriopriate cache directory
+export function cacheDir(): string {
+  const home = homedir();
+  switch (process.platform) {
+    case 'win32':
+      return process.env.LOCALAPPDATA
+        ? join(process.env.LOCALAPPDATA, 'AppMap', 'cache')
+        : join(home, 'AppData', 'Local', 'AppMap', 'cache');
+    case 'darwin':
+      return join(home, 'Library', 'Caches', 'AppMap');
+    default:
+      return process.env.XDG_CACHE_HOME
+        ? join(process.env.XDG_CACHE_HOME, 'appmap')
+        : join(home, '.cache', 'appmap');
+  }
+}
+
 // If this file doesn't exist, we redownload all the assets because the
 // user can be in a broken state from a previous version.
 const downloadMarkerPath = () => join(globalAppMapDir(), '.download-complete');
@@ -186,7 +203,7 @@ async function updateSymlink(assetPath: string, symlinkPath: string): Promise<vo
   }
 }
 
-function getPlatformIdentifier() {
+export function getPlatformIdentifier() {
   switch (process.platform) {
     case 'win32':
       return `win-${process.arch}`;
@@ -222,7 +239,7 @@ async function downloadCliAsset(name: string) {
   const platformId = getPlatformIdentifier();
   const binaryVerName = binaryName(`${name}-${platformId}-${version}`);
 
-  const binaryPath = join(globalAppMapDir(), 'lib', name, binaryVerName);
+  const binaryPath = join(cacheDir(), binaryVerName);
   const symlinkPath = join(appMapBinDir(), binaryName(name));
 
   if (await downloadRequired(binaryPath)) {
@@ -249,7 +266,7 @@ export const JavaAgentDownloader = async () => {
   ]);
   if (!version) throw new Error(`Error resolving AppMap Java agent version`);
 
-  const binaryPath = join(appMapJavaAgentDir(), `appmap-${version}.jar`);
+  const binaryPath = join(cacheDir(), `appmap-${version}.jar`);
   const symlinkPath = join(appMapJavaAgentDir(), 'appmap.jar');
 
   if (await downloadRequired(binaryPath)) {

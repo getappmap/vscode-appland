@@ -9,12 +9,17 @@ import { join } from 'path';
 import AssetService, { AssetIdentifier } from '../../../src/assets/assetService';
 import ResourceVersions from '../../../resources/versions.json';
 import downloadHttpRetry from '../../../src/assets/downloadHttpRetry';
-import { BundledFileDownloadUrlResolver, isInitialDownloadCompleted } from '../../../src/assets';
+import {
+  BundledFileDownloadUrlResolver,
+  cacheDir,
+  isInitialDownloadCompleted,
+} from '../../../src/assets';
 
 chai.use(chaiFs);
 
 describe('AssetService', () => {
   let homeDir: string;
+  let cache: string;
   const platform = 'linux';
   const arch = 'x64';
 
@@ -23,6 +28,7 @@ describe('AssetService', () => {
     Sinon.stub(os, 'homedir').returns(homeDir);
     Sinon.stub(process, 'platform').value(platform);
     Sinon.stub(process, 'arch').value(arch);
+    cache = cacheDir();
     downloadHttpRetry.maxTries = 1; // don't retry, we're testing fallbacks
   });
 
@@ -43,21 +49,15 @@ describe('AssetService', () => {
       expect(join(appmapDir, 'bin', 'scanner')).to.be.a.file();
       expect(join(appmapDir, 'bin', 'appmap')).to.be.a.file();
 
-      expect(join(appmapDir, 'lib'))
+      expect(cache)
         .to.be.a.directory()
-        .with.subDirs(['appmap', 'java', 'scanner']);
+        .with.files([
+          'appmap-linux-x64-0.0.0-TEST',
+          'scanner-linux-x64-0.0.0-TEST',
+          'appmap-0.0.0-TEST.jar',
+        ]);
 
-      expect(join(appmapDir, 'lib', 'appmap'))
-        .to.be.a.directory()
-        .with.files(['appmap-linux-x64-0.0.0-TEST']);
-
-      expect(join(appmapDir, 'lib', 'scanner'))
-        .to.be.a.directory()
-        .with.files(['scanner-linux-x64-0.0.0-TEST']);
-
-      expect(join(appmapDir, 'lib', 'java'))
-        .to.be.a.directory()
-        .with.files(['appmap.jar', 'appmap-0.0.0-TEST.jar']);
+      expect(join(appmapDir, 'lib', 'java')).to.be.a.directory().with.files(['appmap.jar']);
 
       expect(await isInitialDownloadCompleted()).to.be.true;
     });
@@ -78,9 +78,7 @@ describe('AssetService', () => {
       const appmapDir = join(homeDir, '.appmap');
       expect(appmapDir).to.be.a.directory().with.subDirs(['bin', 'lib']);
       expect(join(appmapDir, 'bin')).to.be.a.directory().and.empty;
-      expect(join(appmapDir, 'lib', 'java'))
-        .to.be.a.directory()
-        .with.files([`appmap-${expectedVersion}.jar`, 'appmap.jar']);
+      expect(join(appmapDir, 'lib', 'java')).to.be.a.directory().with.files(['appmap.jar']);
       expect(join(appmapDir, 'lib', 'java', 'appmap.jar'))
         .to.be.a.file()
         .with.content('<insert bundled jar here>');
@@ -99,12 +97,13 @@ describe('AssetService', () => {
       expect(appmapDir).to.be.a.directory().with.subDirs(['bin', 'lib']);
       expect(join(appmapDir, 'bin', 'scanner')).to.be.a.file();
       expect(join(appmapDir, 'bin', 'appmap')).to.be.a.file();
-      expect(join(appmapDir, 'lib', 'appmap'))
+      expect(cache)
         .to.be.a.directory()
-        .with.files([`appmap-linux-x64-${ResourceVersions.appmap}`]);
-      expect(join(appmapDir, 'lib', 'scanner'))
-        .to.be.a.directory()
-        .with.files([`scanner-linux-x64-${ResourceVersions.scanner}`]);
+        .with.files([
+          `appmap-linux-x64-${ResourceVersions.appmap}`,
+          `scanner-linux-x64-${ResourceVersions.scanner}`,
+          'appmap-0.0.0-TEST.jar',
+        ]);
     });
   });
 
@@ -115,26 +114,44 @@ describe('AssetService', () => {
     });
 
     it('returns the most recent version', async () => {
-      const appmapDir = join(homeDir, '.appmap', 'lib', 'appmap');
-      await mkdir(appmapDir, { recursive: true });
-      await writeFile(join(appmapDir, 'appmap-linux-x64-0.1.0'), '');
-      await writeFile(join(appmapDir, 'appmap-linux-x64-0.2.0'), '');
-      await writeFile(join(appmapDir, 'appmap-linux-x64-0.10.0'), '');
-      await writeFile(join(appmapDir, 'appmap-linux-x64-0.2.1'), '');
+      await mkdir(cache, { recursive: true });
 
-      const version = await AssetService.getMostRecentVersion(AssetIdentifier.AppMapCli);
-      expect(version).to.equal('0.10.0');
-    });
+      const SCANNER_VS = ['0.1.0', '0.2.0', '0.10.0', '0.2.1', '0.10.0-beta1', '0.10.0+22'];
+      const APPMAP_VS = ['0.1.1', '0.2.1', '0.10.1', '0.2.2', '0.10.1-beta2'];
+      const JAVA_VS = ['0.1.2', '0.2.2', '0.10.2', '0.2.3'];
 
-    it('returns undefined if the asset ID is invalid', async () => {
-      let caught = false;
-      try {
-        // @ts-expect-error testing invalid input
-        await AssetService.getMostRecentVersion('invalid');
-      } catch {
-        caught = true;
+      for (const v of JAVA_VS) {
+        await writeFile(join(cache, `appmap-${v}.jar`), '');
       }
-      expect(caught).to.be.true;
+      for (const v of SCANNER_VS) {
+        await writeFile(join(cache, `scanner-linux-x64-${v}`), '');
+      }
+      for (const v of APPMAP_VS) {
+        await writeFile(join(cache, `appmap-linux-x64-${v}`), '');
+      }
+
+      // write ostensibly newer versions for other platforms
+      await writeFile(join(cache, `appmap-windows-x64-99.99.99.exe`), '');
+      await writeFile(join(cache, `scanner-windows-x64-99.99.99.exe`), '');
+
+      const expected = {
+        AppMapCli: '0.10.1',
+        ScannerCli: '0.10.0+22',
+        JavaAgent: '0.10.2',
+      };
+
+      for (const [id, ver] of Object.entries(expected)) {
+        const v = await AssetService.getMostRecentVersion(AssetIdentifier[id]);
+        expect(v).to.equal(ver);
+        expect(AssetService.getAssetPath(AssetIdentifier[id])).to.equal(
+          join(
+            homeDir,
+            '.appmap',
+            id === 'JavaAgent' ? 'lib' : 'bin',
+            id === 'JavaAgent' ? 'java/appmap.jar' : id === 'AppMapCli' ? 'appmap' : 'scanner'
+          )
+        );
+      }
     });
   });
 });

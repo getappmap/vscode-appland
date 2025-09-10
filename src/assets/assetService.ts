@@ -1,4 +1,7 @@
+import { basename, join } from 'node:path';
+
 import { AbortError } from 'node-fetch';
+import semverCompareBuild from 'semver/functions/compare-build';
 import * as vscode from 'vscode';
 import {
   AppMapCliDownloader,
@@ -6,15 +9,15 @@ import {
   JavaAgentDownloader,
   ScannerDownloader,
   binaryName,
+  cacheDir,
+  getPlatformIdentifier,
   initialDownloadCompleted,
 } from '.';
 import { homedir } from 'os';
-import { join } from 'path';
 import { mkdir, readdir } from 'fs/promises';
 import LockfileSynchronizer from '../lib/lockfileSynchronizer';
 
 import * as log from './log';
-import semverSort from 'semver/functions/sort';
 
 export enum AssetIdentifier {
   AppMapCli,
@@ -40,29 +43,47 @@ export default class AssetService {
     context.subscriptions.push(log.OutputChannel);
   }
 
-  public static async getMostRecentVersion(assetId: AssetIdentifier): Promise<string | undefined> {
-    const basename = {
-      [AssetIdentifier.AppMapCli]: 'appmap',
-      [AssetIdentifier.ScannerCli]: 'scanner',
-      [AssetIdentifier.JavaAgent]: 'java',
-    }[assetId];
-    if (!basename) {
-      throw new Error(`Invalid asset ID ${assetId}`);
+  public static async listAssets(assetId: AssetIdentifier): Promise<string[]> {
+    const DIRS = [cacheDir()];
+    const results: string[] = [];
+    try {
+      for (const dir of DIRS) {
+        const ents = await readdir(dir);
+        for (const ent of ents) {
+          if (
+            (assetId === AssetIdentifier.JavaAgent && ent.endsWith('.jar')) ||
+            (assetId === AssetIdentifier.AppMapCli &&
+              ent.startsWith('appmap') &&
+              ent.includes(getPlatformIdentifier())) ||
+            (assetId === AssetIdentifier.ScannerCli &&
+              ent.startsWith('scanner') &&
+              ent.includes(getPlatformIdentifier()))
+          ) {
+            results.push(join(dir, ent));
+          }
+        }
+      }
+    } catch (e) {
+      log.error(`Failed to list assets: ${e}`);
     }
 
-    const path = join(homedir(), '.appmap', 'lib', basename);
-    try {
-      const ents = await readdir(path);
-      console.log(ents);
-      const versions: string[] = semverSort(
-        ents.map((ent) => ent.split(/-v?/).at(-1)).filter(Boolean) as string[]
-      );
-      console.log(versions);
-      return versions.pop();
-    } catch (e) {
-      log.error(`Failed to retrieve most recent version of ${basename}: ${e}`);
-      return undefined;
-    }
+    // sort by version descending
+    results.sort((a, b) => {
+      const va = versionFromPath(a);
+      const vb = versionFromPath(b);
+      if (va && vb) return -semverCompareBuild(va, vb);
+      if (va) return -1;
+      if (vb) return 1;
+      return 0;
+    });
+
+    return results;
+  }
+
+  public static async getMostRecentVersion(assetId: AssetIdentifier): Promise<string | undefined> {
+    const assets = await this.listAssets(assetId);
+    if (assets.length === 0) return undefined;
+    return versionFromPath(assets[0]);
   }
 
   public static getAssetPath(assetId: AssetIdentifier): string {
@@ -143,4 +164,13 @@ export default class AssetService {
         });
     });
   }
+}
+
+function versionFromPath(p: string): string | undefined {
+  const base = basename(p)
+    .replace(/\.exe$/, '')
+    .replace(/\.jar$/, '');
+  const match = base.match(/-(\d.*)$/);
+  if (!match) return undefined;
+  return match[1];
 }
