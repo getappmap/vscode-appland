@@ -232,7 +232,9 @@ async function resolveUrl(resolvers: DownloadUrlResolver[], version: string) {
   }
 }
 
-async function downloadCliAsset(name: string) {
+async function downloadCliAsset(assetId: AssetIdentifier.AppMapCli | AssetIdentifier.ScannerCli) {
+  const name = assetId === AssetIdentifier.AppMapCli ? 'appmap' : 'scanner';
+
   const pkgName = '@appland/' + name;
   const version = await resolveVersion([
     new NpmVersionResolver(pkgName),
@@ -246,10 +248,14 @@ async function downloadCliAsset(name: string) {
   let binaryPath = join(cacheDir(), binaryVerName);
   const symlinkPath = join(appMapBinDir(), binaryName(name));
 
-  // check if a bundled version is available
-  const bundledPath = join(BundledFileDownloadUrlResolver.resourcePath, binaryVerName);
-  if (await fileExists(bundledPath)) {
-    binaryPath = bundledPath;
+  // check if we already have the same or newer version in the cache
+  const assets = await listAssets(assetId);
+  if (assets.length > 0) {
+    const v = versionFromPath(assets[0]);
+    const semv = v && semverClean(v, { loose: true });
+    if (semv && semverCompareBuild(semv, version) >= 0) {
+      binaryPath = assets[0];
+    }
   }
 
   if (await downloadRequired(binaryPath)) {
@@ -266,8 +272,8 @@ async function downloadCliAsset(name: string) {
   }
 }
 
-export const AppMapCliDownloader = () => downloadCliAsset('appmap');
-export const ScannerDownloader = () => downloadCliAsset('scanner');
+export const AppMapCliDownloader = () => downloadCliAsset(AssetIdentifier.AppMapCli);
+export const ScannerDownloader = () => downloadCliAsset(AssetIdentifier.ScannerCli);
 export const JavaAgentDownloader = async () => {
   const version = await resolveVersion([
     new MavenVersionResolver('com.appland', 'appmap-agent'),

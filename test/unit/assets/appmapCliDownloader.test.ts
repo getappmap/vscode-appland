@@ -95,6 +95,28 @@ describe('AppMapCliDownloader', () => {
     expect(join(homeDir, '.appmap', 'bin', 'appmap.exe')).to.be.a.file().with.content('BUNDLED');
   });
 
+  it('does not download if a newer version is bundled', async () => {
+    const bundledDir = join(homeDir, 'resources');
+    await mkdir(bundledDir, { recursive: true });
+    await writeFile(join(bundledDir, 'appmap-win-x64-0.0.1-TEST.exe'), 'BUNDLED');
+
+    await mkdir(cache, { recursive: true });
+    await mkdir(join(homeDir, '.appmap', 'bin'), { recursive: true });
+    await symlink(
+      join(bundledDir, 'appmap-win-x64-0.0.1-TEST.exe'),
+      join(homeDir, '.appmap', 'bin', 'appmap.exe')
+    );
+    await initialDownloadCompleted();
+
+    await AppMapCliDownloader();
+
+    // The target should not be replaced
+    expect(join(homeDir, '.appmap', 'bin', 'appmap.exe')).to.be.a.file().with.content('BUNDLED');
+
+    // the cache should remain empty
+    expect(cache).to.be.a.directory().with.files([]);
+  });
+
   describe('file naming and permissions', () => {
     const cases = [
       { platform: 'linux', arch: 'x64', expectedName: 'appmap-linux-x64-0.0.0-TEST' },
