@@ -6,7 +6,7 @@ import { mkdir, mkdtemp, rm, writeFile } from 'fs/promises';
 import { default as chai, expect } from 'chai';
 import { default as chaiFs } from 'chai-fs';
 import { join } from 'path';
-import AssetService from '../../../src/assets/assetService';
+import AssetService, { AssetIdentifier } from '../../../src/assets/assetService';
 import ResourceVersions from '../../../resources/versions.json';
 import downloadHttpRetry from '../../../src/assets/downloadHttpRetry';
 import { BundledFileDownloadUrlResolver, isInitialDownloadCompleted } from '../../../src/assets';
@@ -105,6 +105,36 @@ describe('AssetService', () => {
       expect(join(appmapDir, 'lib', 'scanner'))
         .to.be.a.directory()
         .with.files([`scanner-linux-x64-${ResourceVersions.scanner}`]);
+    });
+  });
+
+  describe('getMostRecentVersion', () => {
+    it('returns undefined if the asset directory does not exist', async () => {
+      const version = await AssetService.getMostRecentVersion(AssetIdentifier.AppMapCli);
+      expect(version).to.be.undefined;
+    });
+
+    it('returns the most recent version', async () => {
+      const appmapDir = join(homeDir, '.appmap', 'lib', 'appmap');
+      await mkdir(appmapDir, { recursive: true });
+      await writeFile(join(appmapDir, 'appmap-linux-x64-0.1.0'), '');
+      await writeFile(join(appmapDir, 'appmap-linux-x64-0.2.0'), '');
+      await writeFile(join(appmapDir, 'appmap-linux-x64-0.10.0'), '');
+      await writeFile(join(appmapDir, 'appmap-linux-x64-0.2.1'), '');
+
+      const version = await AssetService.getMostRecentVersion(AssetIdentifier.AppMapCli);
+      expect(version).to.equal('0.10.0');
+    });
+
+    it('returns undefined if the asset ID is invalid', async () => {
+      let caught = false;
+      try {
+        // @ts-expect-error testing invalid input
+        await AssetService.getMostRecentVersion('invalid');
+      } catch {
+        caught = true;
+      }
+      expect(caught).to.be.true;
     });
   });
 });

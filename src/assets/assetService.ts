@@ -53,7 +53,11 @@ export default class AssetService {
     const path = join(homedir(), '.appmap', 'lib', basename);
     try {
       const ents = await readdir(path);
-      const versions: string[] = semverSort(ents.map((ent) => ent.split(/-v?/)[1]).filter(Boolean));
+      console.log(ents);
+      const versions: string[] = semverSort(
+        ents.map((ent) => ent.split(/-v?/).at(-1)).filter(Boolean) as string[]
+      );
+      console.log(versions);
       return versions.pop();
     } catch (e) {
       log.error(`Failed to retrieve most recent version of ${basename}: ${e}`);
