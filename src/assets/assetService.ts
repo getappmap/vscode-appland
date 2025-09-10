@@ -44,10 +44,10 @@ export default class AssetService {
   }
 
   public static async listAssets(assetId: AssetIdentifier): Promise<string[]> {
-    const DIRS = [cacheDir()];
+    const DIRS = [cacheDir(), BundledFileDownloadUrlResolver.resourcePath];
     const results: string[] = [];
-    try {
-      for (const dir of DIRS) {
+    for (const dir of DIRS) {
+      try {
         const ents = await readdir(dir);
         for (const ent of ents) {
           if (
@@ -62,9 +62,9 @@ export default class AssetService {
             results.push(join(dir, ent));
           }
         }
+      } catch (e) {
+        // ignore, directory may not exist
       }
-    } catch (e) {
-      log.error(`Failed to list assets: ${e}`);
     }
 
     // sort by version descending

@@ -100,14 +100,16 @@ export class BundledFileDownloadUrlResolver implements DownloadUrlResolver {
 
   async getDownloadUrl(version: string): Promise<string | undefined> {
     if (version === ResourceVersions[this.resourceName]) {
-      const uri = Uri.file(
-        join(BundledFileDownloadUrlResolver.extensionDirectory, 'resources', this.resourceName)
-      );
+      const uri = Uri.file(join(BundledFileDownloadUrlResolver.resourcePath, this.resourceName));
       return uri.toString();
     }
   }
 
   public static extensionDirectory = '';
+
+  public static get resourcePath() {
+    return join(this.extensionDirectory, 'resources');
+  }
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -179,7 +181,7 @@ async function download(url: Uri, destinationPath: string): Promise<void> {
   }
 }
 
-async function markExecutable(path: string): Promise<void> {
+export async function markExecutable(path: string): Promise<void> {
   try {
     await chmod(path, 0o755);
   } catch (e) {
@@ -187,7 +189,7 @@ async function markExecutable(path: string): Promise<void> {
   }
 }
 
-async function updateSymlink(assetPath: string, symlinkPath: string): Promise<void> {
+export async function updateSymlink(assetPath: string, symlinkPath: string): Promise<void> {
   try {
     await unlink(symlinkPath);
   } catch {

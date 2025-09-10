@@ -154,4 +154,27 @@ describe('AssetService', () => {
       }
     });
   });
+
+  describe('listAssets', () => {
+    it('returns an empty list if the asset directory does not exist', async () => {
+      const assets = await AssetService.listAssets(AssetIdentifier.AppMapCli);
+      expect(assets).to.be.an('array').that.is.empty;
+    });
+
+    it('includes bundled assets', async () => {
+      const bundledDir = join(homeDir, 'resources');
+      await mkdir(bundledDir, { recursive: true });
+      await writeFile(join(bundledDir, 'appmap-linux-x64-0.9.0'), '');
+      await writeFile(join(bundledDir, 'scanner-linux-x64-0.9.0'), '');
+      BundledFileDownloadUrlResolver.extensionDirectory = homeDir;
+
+      const assets = await AssetService.listAssets(AssetIdentifier.AppMapCli);
+      expect(assets).to.be.an('array').that.has.lengthOf(1);
+      expect(assets[0]).to.match(/appmap-linux-x64-0.9.0$/);
+
+      const scannerAssets = await AssetService.listAssets(AssetIdentifier.ScannerCli);
+      expect(scannerAssets).to.be.an('array').that.has.lengthOf(1);
+      expect(scannerAssets[0]).to.match(/scanner-linux-x64-0.9.0$/);
+    });
+  });
 });
