@@ -40,7 +40,7 @@ async function main() {
   const appmapVersion = await fetchLatestNpmVersion('@appland/appmap');
   const scannerVersion = await fetchLatestNpmVersion('@appland/scanner');
   const agentJarVersion = await fetchLatestGitHubReleaseVersion('getappmap/appmap-java');
-  const jarExists = await fileExists(join(resourceDir, 'appmap-java.jar'));
+  const jarExists = await fileExists(join(resourceDir, `appmap-${agentJarVersion}.jar`));
   const versionDeclarations = await readFile(join(resourceDir, 'versions.json'), 'utf-8').then(
     JSON.parse
   );
