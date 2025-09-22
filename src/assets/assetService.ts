@@ -1,7 +1,10 @@
-import { basename, join } from 'node:path';
+import { join } from 'node:path';
 
 import { AbortError } from 'node-fetch';
 import * as vscode from 'vscode';
+
+import ExtensionSettings from '../configuration/extensionSettings';
+
 import {
   AppMapCliDownloader,
   BundledFileDownloadUrlResolver,
@@ -98,12 +101,23 @@ export default class AssetService {
   // if any are missing, waits for the update to complete
   public static async ensureAssets(): Promise<void> {
     const allPresent = await this.ensureLinks();
+    if (!allPresent && !ExtensionSettings.autoUpdateTools) {
+      throw new Error(
+        'Automatic tool updates are disabled and some AppMap tools are missing. You may need to enable automatic updates or install the tools manually.'
+      );
+    }
+
     const update = this.updateAll();
     if (allPresent) return;
     else return update;
   }
 
   public static async updateAll(throwOnError = false): Promise<void> {
+    if (!ExtensionSettings.autoUpdateTools) {
+      log.info('Automatic tool updates are disabled, skipping update.');
+      return;
+    }
+
     const appmapDir = join(homedir(), '.appmap');
     const dirs = [join(appmapDir, 'bin'), join(appmapDir, 'lib')];
     await Promise.all(dirs.map((dir) => mkdir(dir, { recursive: true })));

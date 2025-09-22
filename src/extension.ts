@@ -247,7 +247,13 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
         Promise.resolve()
       : AssetService.ensureAssets();
     const chatSearchWebview: Promise<ChatSearchWebview> = (async () => {
-      await dependenciesInstalled;
+      try {
+        await dependenciesInstalled;
+      } catch (e) {
+        if (e instanceof Error)
+          vscode.window.showErrorMessage(`Error installing AppMap tools: ${e.message}`);
+        else vscode.window.showErrorMessage(`Error installing AppMap tools: ${e}`);
+      }
 
       activateUptodateService();
       await workspaceServices.enroll(processService);
