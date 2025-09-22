@@ -81,18 +81,13 @@ async function main(vsixPath: string, siteConfigPath: string) {
   console.log(`Successfully modified VSIX. New file is at: ${outputVsixPath}`);
 }
 
-if (
-  import.meta.url === `file://${process.argv[1]}` ||
-  import.meta.url === `file://${process.cwd()}/${process.argv[1]}`
-) {
-  const args = process.argv.slice(2);
-  if (args.length !== 2) {
-    console.error('Usage: bundleConfig <input.vsix> <site-config.json>');
-    process.exit(1);
-  }
-  const [vsixPath, siteConfigPath] = args;
-  main(vsixPath, siteConfigPath).catch((err) => {
-    console.error('Error:', err);
-    process.exit(1);
-  });
+const args = process.argv.slice(2);
+if (args.length !== 2) {
+  console.error('Usage: bundleConfig <input.vsix> <site-config.json>');
+  process.exitCode = 1;
 }
+const [vsixPath, siteConfigPath] = args;
+main(vsixPath, siteConfigPath).catch((err) => {
+  console.error('Error:', err);
+  process.exitCode = 1;
+});
