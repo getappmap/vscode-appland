@@ -37,7 +37,8 @@ binaries.
 ## Modifying a Published VSIX to Bundle Custom Binaries
 
 You can prepare a modified VSIX package with custom binaries by adding or replacing files in the
-`resources` directory.
+`extension/resources` directory (note the package root is in `extension` subdirectory of the zip
+file).
 
 ### Steps
 
@@ -45,16 +46,16 @@ You can prepare a modified VSIX package with custom binaries by adding or replac
    A VSIX file is a zip archive. Extract it using any zip tool.
 
 2. **Add or Replace Binaries:**  
-   Place your binaries in the `resources` directory at the root of the extracted archive, following
-   the naming conventions above.
+   Place your binaries in the `extension/resources` directory at the root of the extracted archive,
+   following the naming conventions above.
 
 3. **Repack the VSIX:**  
-   Zip the contents back up, ensuring the directory structure is preserved and the `resources`
-   directory is at the root.
+   Zip the contents back up, ensuring the directory structure is preserved and the
+   `extension/resources` directory is at the root.
 
 4. **Install the Modified VSIX:**  
    Install the VSIX in Visual Studio Code as usual. The extension will detect and use the bundled
-   binaries from the `resources` directory.
+   binaries from the `extension/resources` directory.
 
 ### Notes
 
