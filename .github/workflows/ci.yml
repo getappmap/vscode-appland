@@ -98,6 +98,30 @@ jobs:
           xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" -- yarn test:integration
         name: Run integration tests
 
+  build-vsix:
+    needs: prepare
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/cache@v3
+        id: cache-modules
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: ${{ runner.os }}-modules-
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: yarn
+      - run: yarn install --immutable
+      - run: yarn compile
+      - run: yarn package
+        name: Build VSIX package
+      - uses: actions/upload-artifact@v3
+        with:
+          name: vscode-appland.vsix
+          path: '*.vsix'
+
   release:
     runs-on: ubuntu-latest
     needs: [unit, integration]
