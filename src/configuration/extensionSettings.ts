@@ -35,8 +35,29 @@ export default class ExtensionSettings {
     );
   }
 
-  public static get appMapCommandLineEnvironment(): Readonly<Record<string, string>> | undefined {
-    return vscode.workspace.getConfiguration('appMap').get('commandLineEnvironment');
+  public static get appMapCommandLineEnvironment(): Readonly<Record<string, string>> {
+    const env = vscode.workspace.getConfiguration('appMap').get('commandLineEnvironment') || {};
+    const result = { ...env } as Record<string, string>;
+
+    const telemetryConfig = this.telemetryConfiguration;
+    if (telemetryConfig.backend === 'splunk') {
+      result.APPMAP_TELEMETRY_BACKEND ??= 'splunk';
+      result.APPMAP_TELEMETRY_DISABLED ??= 'false';
+      if (telemetryConfig.url) result.SPLUNK_URL ??= telemetryConfig.url;
+      if (telemetryConfig.token) result.SPLUNK_TOKEN ??= telemetryConfig.token;
+    }
+
+    return result;
+  }
+
+  /* Get the (hidden) telemetry configuration from settings. */
+  public static get telemetryConfiguration(): TelemetryConfiguration {
+    const telemetryConfig = vscode.workspace.getConfiguration('appMap')?.get('telemetry');
+    // Ensure the config is a simple object with string keys and values.
+    if (telemetryConfig && typeof telemetryConfig === 'object' && !Array.isArray(telemetryConfig)) {
+      return telemetryConfig as TelemetryConfiguration;
+    }
+    return {};
   }
 
   public static get appMapIndexOptions(): string | undefined {
@@ -94,4 +115,10 @@ export default class ExtensionSettings {
       vscode.workspace.getConfiguration('appMap').get('useAnimation') || false
     );
   }
+}
+
+export interface TelemetryConfiguration {
+  backend?: 'appinsights' | 'splunk';
+  url?: string;
+  token?: string;
 }
