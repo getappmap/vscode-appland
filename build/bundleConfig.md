@@ -40,7 +40,18 @@ ts-node build/bundleConfig.ts <input.vsix> <site-config.json>
 Suppose you have:
 
 - VSIX file: `my-extension.vsix`
-- Config file: `site-config.json`
+- Config file: `site-config.json`, for example:
+
+```json
+{
+  "appMap.telemetry": {
+    "backend": "splunk",
+    "url": "https://splunk.example.com:443",
+    "token": "333-abc-xyz"
+  },
+  "appMap.autoUpdateTools": false
+}
+```
 
 Run:
 
