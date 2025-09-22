@@ -253,6 +253,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
         if (e instanceof Error)
           vscode.window.showErrorMessage(`Error installing AppMap tools: ${e.message}`);
         else vscode.window.showErrorMessage(`Error installing AppMap tools: ${e}`);
+        throw e; // no sense continuing if we can't install the tools
       }
 
       activateUptodateService();
