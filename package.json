@@ -363,6 +363,11 @@
         "appMap.copilot.preferredModel": {
           "type": "string",
           "description": "Preferred Copilot model to use"
+        },
+        "appMap.autoUpdateTools": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable automatic updates and downloads of AppMap tools."
         }
       }
     },
