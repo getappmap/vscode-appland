@@ -2,38 +2,23 @@
 
 ## Overview
 
-`bundleConfig.ts` is a Node.js script for updating a VSIX extension package with configuration
-values from a `site-config.json` file. It injects configuration defaults, appends a date-based
-version suffix, and repacks the VSIX.
+`bundleConfig.ps1` is a PowerShell script for updating a VSIX extension package with configuration
+values from a `site-config.json` file. It injects configuration defaults and repacks the VSIX.
 
 ## Prerequisites
 
-- Node.js (v16+ recommended; Node 20+ can run `.ts` files directly)
+- PowerShell
 - A VSIX file to modify
 - A `site-config.json` file with configuration values
 
 ## Usage
 
-With Node.js 20+ (or any version supporting direct TypeScript execution):
-
-```
-node build/bundleConfig.ts <input.vsix> <site-config.json>
+```powershell
+./build/bundleConfig.ps1 -VsixPath <path/to/your.vsix> -SiteConfigPath <path/to/your/site-config.json>
 ```
 
-Or, if using a compiled version:
-
-```
-node build/bundleConfig.js <input.vsix> <site-config.json>
-```
-
-Or, with ts-node:
-
-```
-ts-node build/bundleConfig.ts <input.vsix> <site-config.json>
-```
-
-- `<input.vsix>`: Path to the VSIX file to modify
-- `<site-config.json>`: Path to the configuration file
+- `<path/to/your.vsix>`: Path to the VSIX file to modify
+- `<path/to/your/site-config.json>`: Path to the configuration file
 
 ## Example
 
@@ -55,20 +40,19 @@ Suppose you have:
 
 Run:
 
-```
-node build/bundleConfig.ts my-extension.vsix site-config.json
+```powershell
+./build/bundleConfig.ps1 -VsixPath my-extension.vsix -SiteConfigPath site-config.json
 ```
 
-This will produce a new VSIX file named `my-extension-YYYYmmDD.vsix` (with today's date), containing
-the updated configuration and version.
+This will produce a new VSIX file named `my-extension-mod.vsix`, containing the updated
+configuration.
 
 ## What it does
 
-- Extracts the VSIX
+- Extracts the VSIX to a temporary directory
 - Updates `extension/package.json` with values from `site-config.json`
 - Adds `site-config.json` to the VSIX for reference
-- Appends a date suffix to the version
-- Repackages the VSIX
+- Repackages the VSIX into a new file with a `-mod.vsix` suffix
 
 ## Troubleshooting
 
