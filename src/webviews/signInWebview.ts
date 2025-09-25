@@ -55,7 +55,8 @@ export default class SignInViewProvider implements vscode.WebviewViewProvider {
         case 'activate': {
           const apiKey = message.data;
           this.authProvider.customCancellationToken.cancel();
-          await this.authProvider.enterLicenseKeyCommand(apiKey);
+          // If the license key is coming from the webview we have already validated it
+          await this.authProvider.enterLicenseKeyCommand(apiKey, true);
           break;
         }
 
