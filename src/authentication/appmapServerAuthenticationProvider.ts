@@ -53,7 +53,7 @@ export default class AppMapServerAuthenticationProvider implements vscode.Authen
     return provider;
   }
 
-  async enterLicenseKeyCommand(licenseKey?: string) {
+  async enterLicenseKeyCommand(licenseKey?: string, assumeValid = false): Promise<void> {
     if (!licenseKey) {
       licenseKey = await vscode.window.showInputBox({
         title: `Enter your AppMap license key`,
@@ -63,7 +63,10 @@ export default class AppMapServerAuthenticationProvider implements vscode.Authen
 
     if (!licenseKey) return;
 
-    if (!(await LicenseKey.check(licenseKey))) {
+    // Only check validity if the license key is coming from user input.
+    // This is to avoid proxy issues — sometimes the embedded chrome
+    // will be able to connect to AppMap server, but the extension cannot.
+    if (!(assumeValid || (await LicenseKey.check(licenseKey)))) {
       vscode.window.showErrorMessage('Invalid license key');
       return;
     }
