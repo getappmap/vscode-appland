@@ -14,50 +14,42 @@ values from a `site-config.json` file. It injects configuration defaults and rep
 ## Usage
 
 ```powershell
-./build/bundleConfig.ps1 -VsixPath <path/to/your.vsix> -SiteConfigPath <path/to/your/site-config.json> [-Binaries <path/to/binary1> <path/to/binary2> ...]
+./build/bundleConfig.ps1 -VsixPath <path/to/your.vsix> -SiteConfigPath <path/to/your/site-config.json> [-PlatformIdentifier <platform>] [-Binaries <path/to/binary1>,<path/to/binary2>]
 ```
 
-- `<path/to/your.vsix>`: Path to the VSIX file to modify
-- `<path/to/your/site-config.json>`: Path to the configuration file
-- `-Binaries`: (Optional) One or more paths to binary files to include in the VSIX under
-  `/extension/resources`
+- `<path/to/your.vsix>`: Path to the VSIX file to modify.
+- `<path/to/your/site-config.json>`: Path to the configuration file.
+- `-PlatformIdentifier`: (Optional) The platform identifier for which to download tools (e.g.,
+  `win-x64`, `linux-x64`, `macos-arm64`). If provided, the script will download the `appmap` and
+  `scanner` tools from GitHub.
+- `-Binaries`: (Optional) A comma-separated list of paths to binary files to include in the VSIX
+  under `/extension/resources`.
 
 ## Example
 
 Suppose you have:
 
 - VSIX file: `my-extension.vsix`
-- Config file: `site-config.json`, for example:
+- Config file: `site-config.json`
 
-```json
-{
-  "appMap.telemetry": {
-    "backend": "splunk",
-    "url": "https://splunk.example.com:443",
-    "token": "333-abc-xyz"
-  },
-  "appMap.autoUpdateTools": false
-}
-```
-
-- Binary files: `appmap-win-x64-3.193.0.exe`, `scanner-win-x64-1.88.2.exe`
-
-Run:
+To download the tools for Windows x64 and bundle them into the VSIX, run:
 
 ```powershell
-./build/bundleConfig.ps1 -VsixPath my-extension.vsix -SiteConfigPath site-config.json -Binaries appmap-win-x64-3.193.0.exe,scanner-win-x64-1.88.2.exe
+./build/bundleConfig.ps1 -VsixPath my-extension.vsix -SiteConfigPath site-config.json -PlatformIdentifier win-x64
 ```
 
-This will produce a new VSIX file named `my-extension-mod.vsix`, containing the updated
-configuration and the binaries in `/extension/resources`.
+This will download the latest versions of the `appmap` and `scanner` tools for Windows x64 to the
+current directory, and then bundle them into a new VSIX file named `my-extension-mod.vsix`.
 
 ## What it does
 
-- Extracts the VSIX to a temporary directory
-- Updates `extension/package.json` with values from `site-config.json`
-- Adds `site-config.json` to the VSIX for reference
-- Adds any provided binaries to `/extension/resources` in the VSIX
-- Repackages the VSIX into a new file with a `-mod.vsix` suffix
+- If a `-PlatformIdentifier` is provided, it downloads the `appmap` and `scanner` tools from GitHub
+  for the specified platform.
+- Extracts the VSIX to a temporary directory.
+- Updates `extension/package.json` with values from `site-config.json`.
+- Adds `site-config.json` to the VSIX for reference.
+- Adds any provided or downloaded binaries to `/extension/resources` in the VSIX.
+- Repackages the VSIX into a new file with a `-mod.vsix` suffix.
 
 ## Troubleshooting
 

@@ -8,18 +8,75 @@ param(
     [string]$SiteConfigPath,
 
     [Parameter(Mandatory=$false)]
-    [string[]]$BinariesRaw
+    [string]$PlatformIdentifier,
+
+    [Parameter(Mandatory=$false)]
+    [string[]]$Binaries
 )
 
-# Normalize Binaries to an array, supporting comma-separated string or array
-if ($BinariesRaw) {
-    if ($BinariesRaw.Count -eq 1 -and $BinariesRaw[0] -is [string] -and $BinariesRaw[0] -like "*,*") {
-        $Binaries = $BinariesRaw[0] -split ","
-    } else {
-        $Binaries = $BinariesRaw
-    }
-} else {
+# --- Hardcoded tool information ---
+$ToolsOwner = 'getappmap'
+$ToolsRepo = 'appmap-js'
+$ToolsToDownload = @('appmap', 'scanner')
+# --------------------------------
+
+# Initialize Binaries as an empty array if not provided
+if (-not $Binaries) {
     $Binaries = @()
+}
+
+# Split $Binaries into an array if it's a single string with spaces or commas
+if ($Binaries.Count -eq 1) {
+    $Binaries = $Binaries[0] -split '[\s,]+'
+}
+
+function Get-NpmLatestVersion($packageName) {
+    try {
+        Write-Host "Fetching the latest version for $packageName from npm..."
+        $version = (npm view $packageName version).Trim()
+        Write-Host "Latest version for $packageName is $version"
+        return $version
+    } catch {
+        Write-Error "Failed to get latest version for $packageName from npm. Error: $_"
+        return $null
+    }
+}
+
+function Download-File($url, $path) {
+    if (Test-Path $path) {
+        Write-Host "File $path already exists. Skipping download."
+        return $true
+    }
+    try {
+        Write-Host "Downloading from $url to $path..."
+        Invoke-WebRequest -Uri $url -OutFile $path
+        Write-Host "Download complete."
+        return $true
+    } catch {
+        Write-Error "Failed to download file from $url. Error: $_"
+        return $false
+    }
+}
+
+if ($PlatformIdentifier) {
+    Write-Host "Platform identifier provided: $PlatformIdentifier. Preparing to download tools."
+    foreach ($tool in $ToolsToDownload) {
+        $tool = $tool.Trim()
+        $latestVersion = Get-NpmLatestVersion -packageName "@appland/$tool"
+        if ($latestVersion) {
+            $os, $arch = $PlatformIdentifier.Split('-')
+            $binaryExtension = if ($os -eq 'win') { ".exe" } else { "" }
+            $fileName = "${tool}-${os}-${arch}-${latestVersion}${binaryExtension}"
+            $downloadPath = Join-Path (Get-Location) $fileName
+
+            $artifactName = "@appland/${tool}-v${latestVersion}/${tool}-${PlatformIdentifier}${binaryExtension}"
+            $url = "https://github.com/$ToolsOwner/$ToolsRepo/releases/download/$artifactName"
+            
+            if (Download-File -url $url -path $downloadPath) {
+                $Binaries += $downloadPath
+            }
+        }
+    }
 }
 
 try {
@@ -34,6 +91,7 @@ try {
     $tempDir = Join-Path $baseTemp ([System.Guid]::NewGuid().ToString())
     New-Item -ItemType Directory -Path $tempDir | Out-Null
 
+    Write-Host "Extracting VSIX package $VsixPath to a temporary directory..."
     # 2. Extract the VSIX
     Expand-Archive -Path $VsixPath -DestinationPath $tempDir
 
@@ -45,6 +103,7 @@ try {
     $packageJsonContent = Get-Content -Path $packageJsonPath -Raw
     $packageJson = $packageJsonContent | ConvertFrom-Json
 
+    Write-Host "Reading site configuration from $SiteConfigPath..."
     $siteConfigContent = Get-Content -Path $SiteConfigPath -Raw
     if (-not $siteConfigContent) {
         throw "Error: site-config.json not found or empty"
@@ -52,6 +111,7 @@ try {
     $siteConfig = $siteConfigContent | ConvertFrom-Json -AsHashtable
 
     # 3. Backup original package.json and update it
+    Write-Host "Updating package.json with site configuration..."
     Copy-Item -Path $packageJsonPath -Destination (Join-Path $tempDir "extension/package.json.orig")
 
     if (-not $packageJson.contributes) {
@@ -97,19 +157,28 @@ try {
     }
 
     # 4. Add site-config.json to the VSIX folder for reference
+    Write-Host "Adding site-config.json to the VSIX package..."
     Copy-Item -Path $SiteConfigPath -Destination (Join-Path $tempDir "extension/site-config.json")
+
+    $resourcesDir = Join-Path $tempDir "extension/resources"
+    if (-not (Test-Path $resourcesDir)) {
+        New-Item -ItemType Directory -Path $resourcesDir | Out-Null
+    }
 
     # 4a. Add binaries to /extension/resources if provided
     if ($Binaries -and $Binaries.Count -gt 0) {
-        $resourcesDir = Join-Path $tempDir "extension/resources"
-        if (-not (Test-Path $resourcesDir)) {
-            New-Item -ItemType Directory -Path $resourcesDir | Out-Null
-        }
+        Write-Host "Adding binaries to the VSIX package..."
         foreach ($bin in $Binaries) {
             $bin = $bin.Trim()
             if (Test-Path $bin) {
-                Write-Host "Adding binary: $bin"
+                $binFilename = Split-Path -leaf $bin
+                Write-Host "- Adding $binFilename to /extension/resources"
                 Copy-Item -Path $bin -Destination $resourcesDir -Force
+                if ($IsLinux -or $IsMacOS) {
+                    Write-Host "  - Setting executable permissions for $binFilename"
+                    $destPath = Join-Path $resourcesDir $binFilename
+                    chmod +x $destPath
+                }
             } else {
                 Write-Warning "Binary not found: $bin"
             }
@@ -124,6 +193,7 @@ try {
     if (Test-Path $outputVsixPath) {
         Remove-Item $outputVsixPath
     }
+    Write-Host "Repacking the VSIX package to $outputVsixPath..."
     Compress-Archive -Path (Join-Path $tempDir "*") -DestinationPath $outputVsixPath
 
     Write-Host "Successfully modified VSIX. New file is at: $outputVsixPath"
@@ -131,6 +201,7 @@ try {
 } finally {
     # 7. Clean up the temporary directory
     if ($tempDir -and (Test-Path $tempDir)) {
+        Write-Host "Cleaning up temporary files..."
         Remove-Item -Recurse -Force -Path $tempDir
     }
 }
