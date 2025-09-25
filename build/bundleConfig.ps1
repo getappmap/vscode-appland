@@ -5,8 +5,22 @@ param(
     [string]$VsixPath,
 
     [Parameter(Mandatory=$true)]
-    [string]$SiteConfigPath
+    [string]$SiteConfigPath,
+
+    [Parameter(Mandatory=$false)]
+    [string[]]$BinariesRaw
 )
+
+# Normalize Binaries to an array, supporting comma-separated string or array
+if ($BinariesRaw) {
+    if ($BinariesRaw.Count -eq 1 -and $BinariesRaw[0] -is [string] -and $BinariesRaw[0] -like "*,*") {
+        $Binaries = $BinariesRaw[0] -split ","
+    } else {
+        $Binaries = $BinariesRaw
+    }
+} else {
+    $Binaries = @()
+}
 
 try {
     # 1. Create a temporary directory for extraction
@@ -84,6 +98,23 @@ try {
 
     # 4. Add site-config.json to the VSIX folder for reference
     Copy-Item -Path $SiteConfigPath -Destination (Join-Path $tempDir "extension/site-config.json")
+
+    # 4a. Add binaries to /extension/resources if provided
+    if ($Binaries -and $Binaries.Count -gt 0) {
+        $resourcesDir = Join-Path $tempDir "extension/resources"
+        if (-not (Test-Path $resourcesDir)) {
+            New-Item -ItemType Directory -Path $resourcesDir | Out-Null
+        }
+        foreach ($bin in $Binaries) {
+            $bin = $bin.Trim()
+            if (Test-Path $bin) {
+                Write-Host "Adding binary: $bin"
+                Copy-Item -Path $bin -Destination $resourcesDir -Force
+            } else {
+                Write-Warning "Binary not found: $bin"
+            }
+        }
+    }
 
     # 5. Write the updated package.json
     $packageJson | ConvertTo-Json -Depth 10 | Set-Content -Path $packageJsonPath
