@@ -245,9 +245,16 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     const dependenciesInstalled = ExtensionSettings.appMapCommandLineToolsPath
       ? // do not try to download if we're using local tools anyway
         Promise.resolve()
-      : AssetService.updateAll();
+      : AssetService.ensureAssets();
     const chatSearchWebview: Promise<ChatSearchWebview> = (async () => {
-      await dependenciesInstalled;
+      try {
+        await dependenciesInstalled;
+      } catch (e) {
+        if (e instanceof Error)
+          vscode.window.showErrorMessage(`Error installing AppMap tools: ${e.message}`);
+        else vscode.window.showErrorMessage(`Error installing AppMap tools: ${e}`);
+        throw e; // no sense continuing if we can't install the tools
+      }
 
       activateUptodateService();
       await workspaceServices.enroll(processService);

@@ -6,7 +6,8 @@ import { Installer } from './installer';
 import DefaultInstaller from './installer/default';
 import PythonInstaller from './installer/python';
 import CommandRegistry from './commandRegistry';
-import AssetService, { AssetIdentifier } from '../assets/assetService';
+import AssetService from '../assets/assetService';
+import { AssetIdentifier } from '../assets';
 
 export const InstallAgent = 'appmap.installAgent';
 

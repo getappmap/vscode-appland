@@ -13,7 +13,8 @@ import { DEBUG_EXCEPTION, Telemetry } from '../telemetry';
 import ErrorCode from '../telemetry/definitions/errorCodes';
 import { AppmapConfigManager } from '../services/appmapConfigManager';
 import { workspaceServices } from '../services/workspaceServices';
-import AssetService, { AssetIdentifier } from '../assets/assetService';
+import AssetService from '../assets/assetService';
+import { AssetIdentifier } from '../assets';
 
 export const GenerateOpenApi = 'appmap.generateOpenApi';
 
