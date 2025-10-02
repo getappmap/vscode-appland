@@ -1,26 +1,28 @@
+import { join } from 'node:path';
+
 import { AbortError } from 'node-fetch';
 import * as vscode from 'vscode';
+
+import ExtensionSettings from '../configuration/extensionSettings';
+
 import {
   AppMapCliDownloader,
   BundledFileDownloadUrlResolver,
   JavaAgentDownloader,
   ScannerDownloader,
   binaryName,
-  initialDownloadCompleted,
+  markExecutable,
+  updateSymlink,
+  AssetIdentifier,
+  listAssets,
+  versionFromPath,
 } from '.';
 import { homedir } from 'os';
-import { join } from 'path';
-import { mkdir, readdir } from 'fs/promises';
+import { mkdir } from 'fs/promises';
 import LockfileSynchronizer from '../lib/lockfileSynchronizer';
 
 import * as log from './log';
-import semverSort from 'semver/functions/sort';
-
-export enum AssetIdentifier {
-  AppMapCli,
-  ScannerCli,
-  JavaAgent,
-}
+import { stat } from 'node:fs/promises';
 
 export default class AssetService {
   private static _extensionDirectory: string;
@@ -40,25 +42,43 @@ export default class AssetService {
     context.subscriptions.push(log.OutputChannel);
   }
 
-  public static async getMostRecentVersion(assetId: AssetIdentifier): Promise<string | undefined> {
-    const basename = {
-      [AssetIdentifier.AppMapCli]: 'appmap',
-      [AssetIdentifier.ScannerCli]: 'scanner',
-      [AssetIdentifier.JavaAgent]: 'java',
-    }[assetId];
-    if (!basename) {
-      throw new Error(`Invalid asset ID ${assetId}`);
-    }
+  // make sure all present assets have their symlinks in place
+  public static async ensureLinks(): Promise<boolean> {
+    const appmapDir = join(homedir(), '.appmap');
+    const dirs = [join(appmapDir, 'bin'), join(appmapDir, 'lib', 'java')];
+    await Promise.all(dirs.map((dir) => mkdir(dir, { recursive: true })));
 
-    const path = join(homedir(), '.appmap', 'lib', basename);
-    try {
-      const ents = await readdir(path);
-      const versions: string[] = semverSort(ents.map((ent) => ent.split(/-v?/)[1]).filter(Boolean));
-      return versions.pop();
-    } catch (e) {
-      log.error(`Failed to retrieve most recent version of ${basename}: ${e}`);
-      return undefined;
+    let allPresent = true;
+    for (const assetId of AssetService.downloaders.keys()) {
+      const assetPath = AssetService.getAssetPath(assetId);
+      try {
+        await stat(assetPath);
+      } catch {
+        const assets = await listAssets(assetId);
+        if (assets.length === 0) {
+          allPresent = false;
+          continue;
+        } // else we have a cached version, just need to restore the link
+
+        const target = assets[0];
+        log.info(`Restoring missing asset ${assetPath} from cached version ${target}`);
+        if (assetId !== AssetIdentifier.JavaAgent) await markExecutable(target);
+        try {
+          await updateSymlink(target, assetPath);
+        } catch (e) {
+          log.error(`Failed to restore symlink for ${assetPath}: ${e}`);
+          allPresent = false;
+        }
+        // make sure it's executable
+      }
     }
+    return allPresent;
+  }
+
+  public static async getMostRecentVersion(assetId: AssetIdentifier): Promise<string | undefined> {
+    const assets = await listAssets(assetId);
+    if (assets.length === 0) return undefined;
+    return versionFromPath(assets[0]);
   }
 
   public static getAssetPath(assetId: AssetIdentifier): string {
@@ -75,7 +95,28 @@ export default class AssetService {
     }
   }
 
+  // ensure all assets are present and have their symlinks in place
+  // if all are present, returns immediately but updates in the background
+  // if any are missing, waits for the update to complete
+  public static async ensureAssets(): Promise<void> {
+    const allPresent = await this.ensureLinks();
+    if (!allPresent && !ExtensionSettings.autoUpdateTools) {
+      throw new Error(
+        'Automatic tool updates are disabled and some AppMap tools are missing. You may need to enable automatic updates or install the tools manually.'
+      );
+    }
+
+    const update = this.updateAll();
+    if (allPresent) return;
+    else return update;
+  }
+
   public static async updateAll(throwOnError = false): Promise<void> {
+    if (!ExtensionSettings.autoUpdateTools) {
+      log.info('Automatic tool updates are disabled, skipping update.');
+      return;
+    }
+
     const appmapDir = join(homedir(), '.appmap');
     const dirs = [join(appmapDir, 'bin'), join(appmapDir, 'lib')];
     await Promise.all(dirs.map((dir) => mkdir(dir, { recursive: true })));
@@ -116,7 +157,6 @@ export default class AssetService {
               sync.emit('error', e);
               if (e instanceof AbortError) return reject(e);
             }
-          await initialDownloadCompleted();
         });
     });
   }

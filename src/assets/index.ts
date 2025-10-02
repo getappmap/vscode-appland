@@ -1,7 +1,9 @@
-import { chmod, copyFile, mkdir, open, symlink, unlink } from 'node:fs/promises';
+import { chmod, copyFile, mkdir, open, readdir, symlink, unlink } from 'node:fs/promises';
 import { homedir } from 'node:os';
-import { dirname, join } from 'node:path';
+import { basename, dirname, join } from 'node:path';
 
+import semverClean from 'semver/functions/clean';
+import semverCompareBuild from 'semver/functions/compare-build';
 import { Uri } from 'vscode';
 
 import DownloadUrlResolver from './downloadUrlResolver';
@@ -100,14 +102,16 @@ export class BundledFileDownloadUrlResolver implements DownloadUrlResolver {
 
   async getDownloadUrl(version: string): Promise<string | undefined> {
     if (version === ResourceVersions[this.resourceName]) {
-      const uri = Uri.file(
-        join(BundledFileDownloadUrlResolver.extensionDirectory, 'resources', this.resourceName)
-      );
+      const uri = Uri.file(join(BundledFileDownloadUrlResolver.resourcePath, this.resourceName));
       return uri.toString();
     }
   }
 
   public static extensionDirectory = '';
+
+  public static get resourcePath() {
+    return join(this.extensionDirectory, 'resources');
+  }
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -118,20 +122,25 @@ const globalAppMapDir = () => join(homedir(), '.appmap');
 const appMapBinDir = () => join(globalAppMapDir(), 'bin');
 const appMapJavaAgentDir = () => join(globalAppMapDir(), 'lib', 'java');
 
-// If this file doesn't exist, we redownload all the assets because the
-// user can be in a broken state from a previous version.
-const downloadMarkerPath = () => join(globalAppMapDir(), '.download-complete');
-export function isInitialDownloadCompleted(): Promise<boolean> {
-  return fileExists(downloadMarkerPath());
-}
-
-export async function initialDownloadCompleted(): Promise<void> {
-  return (await open(downloadMarkerPath(), 'w')).close();
+// return platform-appriopriate cache directory
+export function cacheDir(): string {
+  const home = homedir();
+  switch (process.platform) {
+    case 'win32':
+      return process.env.LOCALAPPDATA
+        ? join(process.env.LOCALAPPDATA, 'AppMap', 'cache')
+        : join(home, 'AppData', 'Local', 'AppMap', 'cache');
+    case 'darwin':
+      return join(home, 'Library', 'Caches', 'AppMap');
+    default:
+      return process.env.XDG_CACHE_HOME
+        ? join(process.env.XDG_CACHE_HOME, 'appmap')
+        : join(home, '.cache', 'appmap');
+  }
 }
 
 async function downloadRequired(assetPath: string): Promise<boolean> {
   try {
-    if (!(await isInitialDownloadCompleted())) return true;
     const exists = await fileExists(assetPath);
     return !exists;
   } catch {
@@ -162,7 +171,7 @@ async function download(url: Uri, destinationPath: string): Promise<void> {
   }
 }
 
-async function markExecutable(path: string): Promise<void> {
+export async function markExecutable(path: string): Promise<void> {
   try {
     await chmod(path, 0o755);
   } catch (e) {
@@ -170,13 +179,15 @@ async function markExecutable(path: string): Promise<void> {
   }
 }
 
-async function updateSymlink(assetPath: string, symlinkPath: string): Promise<void> {
+export async function updateSymlink(assetPath: string, symlinkPath: string): Promise<void> {
   try {
     await unlink(symlinkPath);
   } catch {
     // if the symlink that we're trying to remove does not exist, don't do anything
   }
 
+  // make sure the target directory exists
+  await mkdir(dirname(symlinkPath), { recursive: true });
   try {
     await symlink(assetPath, symlinkPath, 'file');
   } catch (e) {
@@ -184,10 +195,10 @@ async function updateSymlink(assetPath: string, symlinkPath: string): Promise<vo
   }
 }
 
-function getPlatformIdentifier() {
+export function getPlatformIdentifier() {
   switch (process.platform) {
     case 'win32':
-      return `win-${process.arch}.exe`;
+      return `win-${process.arch}`;
     case 'darwin':
       return `macos-${process.arch}`;
     default:
@@ -209,7 +220,9 @@ async function resolveUrl(resolvers: DownloadUrlResolver[], version: string) {
   }
 }
 
-async function downloadCliAsset(name: string) {
+async function downloadCliAsset(assetId: AssetIdentifier.AppMapCli | AssetIdentifier.ScannerCli) {
+  const name = assetId === AssetIdentifier.AppMapCli ? 'appmap' : 'scanner';
+
   const pkgName = '@appland/' + name;
   const version = await resolveVersion([
     new NpmVersionResolver(pkgName),
@@ -217,12 +230,34 @@ async function downloadCliAsset(name: string) {
   ]);
   if (!version) throw new Error(`Error resolving ${name} version`);
 
-  const binaryPath = join(globalAppMapDir(), 'lib', name, `${name}-v${version}`);
+  const platformId = getPlatformIdentifier();
+  const binaryVerName = binaryName(`${name}-${platformId}-${version}`);
+
+  const binaryPath = join(cacheDir(), binaryVerName);
   const symlinkPath = join(appMapBinDir(), binaryName(name));
+
+  // check if we already have the same or newer version in the cache
+  const assets = await listAssets(assetId);
+  if (assets.length > 0) {
+    const v = versionFromPath(assets[0]);
+    const semv = v && semverClean(v, { loose: true });
+    if (semv && semverCompareBuild(semv, version) >= 0) {
+      const cached = assets[0];
+      if (await targetMissing(symlinkPath)) {
+        log.info(`Linking ${symlinkPath} to cached version ${cached}`);
+        await updateSymlink(cached, symlinkPath);
+      } else {
+        log.info(`Cached version ${cached} is up to date`);
+      }
+      return;
+    }
+  }
 
   if (await downloadRequired(binaryPath)) {
     const uri = await new GitHubDownloadUrlResolver('getappmap/appmap-js', (version) =>
-      encodeURIComponent(`@appland/${name}-v${version}/${name}-${getPlatformIdentifier()}`)
+      encodeURIComponent(
+        binaryName(`@appland/${name}-v${version}/${name}-${getPlatformIdentifier()}`)
+      )
     ).getDownloadUrl(version);
     await download(Uri.parse(uri), binaryPath);
     await markExecutable(binaryPath);
@@ -232,8 +267,8 @@ async function downloadCliAsset(name: string) {
   }
 }
 
-export const AppMapCliDownloader = () => downloadCliAsset('appmap');
-export const ScannerDownloader = () => downloadCliAsset('scanner');
+export const AppMapCliDownloader = () => downloadCliAsset(AssetIdentifier.AppMapCli);
+export const ScannerDownloader = () => downloadCliAsset(AssetIdentifier.ScannerCli);
 export const JavaAgentDownloader = async () => {
   const version = await resolveVersion([
     new MavenVersionResolver('com.appland', 'appmap-agent'),
@@ -242,8 +277,24 @@ export const JavaAgentDownloader = async () => {
   ]);
   if (!version) throw new Error(`Error resolving AppMap Java agent version`);
 
-  const binaryPath = join(appMapJavaAgentDir(), `appmap-${version}.jar`);
+  const binaryPath = join(cacheDir(), `appmap-${version}.jar`);
   const symlinkPath = join(appMapJavaAgentDir(), 'appmap.jar');
+
+  const assets = await listAssets(AssetIdentifier.JavaAgent);
+  if (assets.length > 0) {
+    const v = versionFromPath(assets[0]);
+    const semv = v && semverClean(v, { loose: true });
+    if (semv && semverCompareBuild(semv, version) >= 0) {
+      const cached = assets[0];
+      if (await targetMissing(symlinkPath)) {
+        log.info(`Linking ${symlinkPath} to cached version ${cached}`);
+        await updateSymlink(cached, symlinkPath);
+      } else {
+        log.info(`Cached version ${cached} is up to date`);
+      }
+      return;
+    }
+  }
 
   if (await downloadRequired(binaryPath)) {
     const uri = await resolveUrl(
@@ -265,3 +316,62 @@ export const JavaAgentDownloader = async () => {
     await updateSymlink(binaryPath, symlinkPath);
   }
 };
+
+export enum AssetIdentifier {
+  AppMapCli,
+  ScannerCli,
+  JavaAgent,
+}
+
+export async function listAssets(assetId: AssetIdentifier): Promise<string[]> {
+  const DIRS = [
+    cacheDir(),
+    BundledFileDownloadUrlResolver.resourcePath,
+    join(globalAppMapDir(), 'lib', 'java'),
+    join(globalAppMapDir(), 'lib', 'appmap'),
+    join(globalAppMapDir(), 'lib', 'scanner'),
+  ];
+  const results: string[] = [];
+  for (const dir of DIRS) {
+    try {
+      const ents = await readdir(dir);
+      for (const ent of ents) {
+        if (ent.endsWith('.part')) continue; // skip partial downloads
+        if (
+          (assetId === AssetIdentifier.JavaAgent && ent.endsWith('.jar')) ||
+          (assetId === AssetIdentifier.AppMapCli &&
+            ent.startsWith('appmap') &&
+            ent.includes(getPlatformIdentifier())) ||
+          (assetId === AssetIdentifier.ScannerCli &&
+            ent.startsWith('scanner') &&
+            ent.includes(getPlatformIdentifier()))
+        ) {
+          results.push(join(dir, ent));
+        }
+      }
+    } catch (e) {
+      // ignore, directory may not exist
+    }
+  }
+
+  // sort by version descending
+  results.sort((a, b) => {
+    const va = semverClean(versionFromPath(a) ?? '', { loose: true });
+    const vb = semverClean(versionFromPath(b) ?? '', { loose: true });
+    if (va && vb) return -semverCompareBuild(va, vb);
+    if (va) return -1;
+    if (vb) return 1;
+    return 0;
+  });
+
+  return results;
+}
+
+export function versionFromPath(p: string): string | undefined {
+  const base = basename(p)
+    .replace(/\.exe$/, '')
+    .replace(/\.jar$/, '');
+  const match = base.match(/-(\d.*)$/);
+  if (!match) return undefined;
+  return match[1];
+}

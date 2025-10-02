@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 
-import AssetService, { AssetIdentifier } from '../assets/assetService';
+import AssetService from '../assets/assetService';
+import { AssetIdentifier } from '../assets';
 
 export default async function downloadLatestJavaJar(
   context: vscode.ExtensionContext
