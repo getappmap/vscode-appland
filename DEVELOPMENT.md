@@ -114,3 +114,15 @@ running in the background.
 
 By downloading and using AppMap you agree to the
 [Terms and Conditions](https://appmap.io/community/terms-and-conditions).
+
+## Customizing the VSIX package
+
+The VSIX package can be customized with a `site-config.json` file. This is useful for pre-configuring the extension for a specific environment. The `build/bundleConfig.ps1` script is provided for this purpose.
+
+### Usage
+
+```powershell
+./build/bundleConfig.ps1 -VsixPath <path/to/your.vsix> -SiteConfigPath <path/to/your/site-config.json>
+```
+
+This will create a new VSIX file with the `-mod` suffix, which includes the configuration from the `site-config.json` file.
