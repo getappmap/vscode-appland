@@ -22,7 +22,8 @@ import { readFile } from 'fs/promises';
 import appmapMessageHandler from '../webviews/appmapMessageHandler';
 import FilterStore from '../webviews/filterStore';
 import WebviewList from '../webviews/WebviewList';
-import AssetService, { AssetIdentifier } from '../assets/assetService';
+import AssetService from '../assets/assetService';
+import { AssetIdentifier } from '../assets';
 
 export type FindingInfo = ResolvedFinding & {
   stackLocations?: StackLocation[];

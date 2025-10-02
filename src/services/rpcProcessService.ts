@@ -11,7 +11,8 @@ import { AUTHN_PROVIDER_NAME } from '../authentication';
 import assert from 'assert';
 import { DEBUG_EXCEPTION, Telemetry } from '../telemetry';
 import ErrorCode from '../telemetry/definitions/errorCodes';
-import AssetService, { AssetIdentifier } from '../assets/assetService';
+import AssetService from '../assets/assetService';
+import { AssetIdentifier } from '../assets';
 import { setSecretEnvVars } from './navieConfigurationService';
 import ChatCompletion from './chatCompletion';
 
