@@ -1,5 +1,5 @@
 import https from 'node:https';
-
+import { readFileSync } from 'node:fs';
 import fetch, { type Response } from 'node-fetch';
 
 export default class SplunkTelemetryReporter {
@@ -10,17 +10,37 @@ export default class SplunkTelemetryReporter {
     private extensionId: string,
     private extensionVersion: string,
     private url: string,
-    private token: string
+    private token: string,
+    ca?: string
   ) {
     const urlObj = new URL(this.url);
     if (!urlObj.port) urlObj.port = SplunkTelemetryReporter.DEFAULT_PORT;
     if (urlObj.pathname === '/') urlObj.pathname = '/services/collector/event/1.0';
     this.url = urlObj.toString();
     if (urlObj.protocol === 'https:') {
+      let rejectUnauthorized = false;
+      let caCert: string | Buffer | undefined;
+      if (ca) {
+        rejectUnauthorized = true;
+        if (ca === 'system') {
+          // use system ca
+        } else if (ca.startsWith('@')) {
+          try {
+            caCert = readFileSync(ca.slice(1));
+          } catch (err) {
+            // fall back to system
+            console.warn(`Could not read CA certificate file ${ca.slice(1)}: ${err}`);
+            console.warn('Falling back to system CA certificates');
+          }
+        } else {
+          caCert = ca;
+        }
+      }
+
       this.agent = new https.Agent({
         keepAlive: true,
-        // Splunk instances may use self-signed certificates
-        rejectUnauthorized: false,
+        rejectUnauthorized,
+        ca: caCert,
       });
     }
   }

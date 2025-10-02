@@ -47,7 +47,13 @@ export class Telemetry {
     if (telemetryConfig.backend === 'splunk') {
       const { url, token } = telemetryConfig;
       if (url && token) {
-        this.reporter = new SplunkTelemetryReporter(EXTENSION_ID, EXTENSION_VERSION, url, token);
+        this.reporter = new SplunkTelemetryReporter(
+          EXTENSION_ID,
+          EXTENSION_VERSION,
+          url,
+          token,
+          telemetryConfig.ca
+        );
         void this.testConnection();
         if (this.debugChannel) {
           this.debugChannel.appendLine('Using Splunk telemetry reporter at ' + url);
