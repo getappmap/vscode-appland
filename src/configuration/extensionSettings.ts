@@ -115,6 +115,10 @@ export default class ExtensionSettings {
       vscode.workspace.getConfiguration('appMap').get('useAnimation') || false
     );
   }
+
+  public static get autoUpdateTools(): boolean {
+    return vscode.workspace.getConfiguration('appMap').get<boolean>('autoUpdateTools') ?? true;
+  }
 }
 
 export interface TelemetryConfiguration {
