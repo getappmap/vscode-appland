@@ -45,6 +45,7 @@ export default class ExtensionSettings {
       result.APPMAP_TELEMETRY_DISABLED ??= 'false';
       if (telemetryConfig.url) result.SPLUNK_URL ??= telemetryConfig.url;
       if (telemetryConfig.token) result.SPLUNK_TOKEN ??= telemetryConfig.token;
+      if (telemetryConfig.ca) result.SPLUNK_CA_CERT ??= telemetryConfig.ca;
     }
 
     return result;
@@ -125,4 +126,5 @@ export interface TelemetryConfiguration {
   backend?: 'appinsights' | 'splunk';
   url?: string;
   token?: string;
+  ca?: string;
 }
