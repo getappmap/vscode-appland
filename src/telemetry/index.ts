@@ -63,13 +63,7 @@ export class Telemetry {
           this.debugChannel.appendLine('Splunk telemetry reporter is not configured properly.');
         }
         // Don't send telemetry if Splunk is configured but the URL or token are missing.
-        this.reporter = {
-          // eslint-disable-next-line @typescript-eslint/no-empty-function
-          sendTelemetryEvent: () => {},
-          // eslint-disable-next-line @typescript-eslint/no-empty-function
-          sendTelemetryErrorEvent: () => {},
-          dispose: () => Promise.resolve(),
-        };
+        this.reporter = NOOP_TELEMETRY;
       }
     } else {
       this.reporter = new TelemetryReporter(EXTENSION_ID, EXTENSION_VERSION, INSTRUMENTATION_KEY);
@@ -143,5 +137,17 @@ export class Telemetry {
     this.reporter.sendTelemetryEvent('open_uri', { uri: uri.toString() });
   }
 }
+
+const NOOP_TELEMETRY: Reporter = {
+  sendTelemetryEvent(): void {
+    /* no-op */
+  },
+  sendTelemetryErrorEvent(): void {
+    /* no-op */
+  },
+  dispose(): Promise<void> {
+    return Promise.resolve();
+  },
+};
 
 export * from './definitions/events';
