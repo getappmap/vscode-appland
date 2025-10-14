@@ -1,3 +1,18 @@
+# [0.138.0](https://github.com/getappmap/vscode-appland/compare/v0.137.0...v0.138.0) (2025-10-14)
+
+
+### Bug Fixes
+
+* Do not recheck license key coming from the signin view ([c869c50](https://github.com/getappmap/vscode-appland/commit/c869c50ab0e00210a45a26c8230af71a8d2c6e64))
+
+
+### Features
+
+* **build:** Add VSIX customization script and documentation ([c913b2e](https://github.com/getappmap/vscode-appland/commit/c913b2e0cdf8e9c04170539dc1f128fd18f000e0))
+* **config:** Introduce setting for automatic tool updates ([eef7a6c](https://github.com/getappmap/vscode-appland/commit/eef7a6c08b6f0b86e4cf3413e530a79457f4aaea))
+* add build-vsix job to CI workflow for packaging VSIX files ([32f2358](https://github.com/getappmap/vscode-appland/commit/32f23587529397b6098b0e353f0acbdc58d89c4f))
+* add Splunk telemetry support and configuration options ([db1a629](https://github.com/getappmap/vscode-appland/commit/db1a62946a29b68224ba2f43391187b0e8203cb9))
+
 # [0.137.0](https://github.com/getappmap/vscode-appland/compare/v0.136.1...v0.137.0) (2025-07-23)
 
 
