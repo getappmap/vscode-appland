@@ -2,7 +2,7 @@
 
 param(
     [Parameter(Mandatory=$true)]
-    [string]$VsixPath,
+    [string]$PackagePath,
 
     [Parameter(Mandatory=$true)]
     [string]$SiteConfigPath,
@@ -95,88 +95,97 @@ try {
     $tempDir = Join-Path $baseTemp ([System.Guid]::NewGuid().ToString())
     New-Item -ItemType Directory -Path $tempDir | Out-Null
 
-    Write-Host "Extracting VSIX package $VsixPath to a temporary directory..."
-    # 2. Extract the VSIX
-    Expand-Archive -Path $VsixPath -DestinationPath $tempDir
+    Write-Host "Extracting package $PackagePath to a temporary directory..."
+    # 2. Extract the package
+    Expand-Archive -Path $PackagePath -DestinationPath $tempDir
 
-    $packageJsonPath = Join-Path $tempDir "extension/package.json"
-    if (-not (Test-Path $packageJsonPath)) {
-        throw "Error: package.json not found in VSIX"
+    $topLevelDirs = Get-ChildItem -Path $tempDir -Directory
+    if ($topLevelDirs.Count -ne 1) {
+        throw "Error: Expected a single top-level directory in the package, but found $($topLevelDirs.Count)."
     }
+    $topLevelDir = $topLevelDirs[0]
+    
+    $packageJsonPath = Join-Path $topLevelDir.FullName "package.json"
+    if (Test-Path $packageJsonPath) {
+        $packageJsonContent = Get-Content -Path $packageJsonPath -Raw
+        $packageJson = $packageJsonContent | ConvertFrom-Json
 
-    $packageJsonContent = Get-Content -Path $packageJsonPath -Raw
-    $packageJson = $packageJsonContent | ConvertFrom-Json
-
-    Write-Host "Reading site configuration from $SiteConfigPath..."
-    $siteConfigContent = Get-Content -Path $SiteConfigPath -Raw
-    if (-not $siteConfigContent) {
-        throw "Error: site-config.json not found or empty"
-    }
-    $siteConfig = $siteConfigContent | ConvertFrom-Json -AsHashtable
-
-    # 3. Backup original package.json and update it
-    Write-Host "Updating package.json with site configuration..."
-    Copy-Item -Path $packageJsonPath -Destination (Join-Path $tempDir "extension/package.json.orig")
-
-    if (-not $packageJson.contributes) {
-        $packageJson | Add-Member -MemberType NoteProperty -Name "contributes" -Value ([pscustomobject]@{configuration = [pscustomobject]@{properties = [pscustomobject]@{}}})
-    } elseif (-not $packageJson.contributes.configuration) {
-        $packageJson.contributes | Add-Member -MemberType NoteProperty -Name "configuration" -Value ([pscustomobject]@{properties = [pscustomobject]@{}})
-    }
-
-    $configProperties = $packageJson.contributes.configuration.properties
-
-    function Get-JsonSchemaType($val) {
-        if ($null -eq $val) { return 'null' }
-        $typeName = $val.GetType().Name
-        switch ($typeName) {
-            'String' { return 'string' }
-            'Int32' { return 'integer' }
-            'Int64' { return 'integer' }
-            'Double' { return 'number' }
-            'Single' { return 'number' }
-            'Boolean' { return 'boolean' }
-            'Hashtable' { return 'object' }
-            'OrderedHashtable' { return 'object' }
-            'Object[]' { return 'array' }
-            'ArrayList' { return 'array' }
-            default { return 'string' }
+        Write-Host "Reading site configuration from $SiteConfigPath..."
+        $siteConfigContent = Get-Content -Path $SiteConfigPath -Raw
+        if (-not $siteConfigContent) {
+            throw "Error: site-config.json not found or empty"
         }
-    }
+        $siteConfig = $siteConfigContent | ConvertFrom-Json -AsHashtable
 
-    foreach ($key in $siteConfig.Keys) {
-        $value = $siteConfig[$key]
-        Write-Host "Setting $key to $($value | ConvertTo-Json -Compress)"
+        # 3. Backup original package.json and update it
+        Write-Host "Updating package.json with site configuration..."
+        Copy-Item -Path $packageJsonPath -Destination (Join-Path $topLevelDir.FullName "package.json.orig")
 
-        if ($configProperties.PSObject.Properties[$key]) {
-            $configProperties.$key.default = $value
-        } else {
-            $newProperty = [pscustomobject]@{
-                type = Get-JsonSchemaType $value
-                default = $value
-                markdownDescription = ""
+        if (-not $packageJson.contributes) {
+            $packageJson | Add-Member -MemberType NoteProperty -Name "contributes" -Value ([pscustomobject]@{configuration = [pscustomobject]@{properties = [pscustomobject]@{}}})
+        } elseif (-not $packageJson.contributes.configuration) {
+            $packageJson.contributes | Add-Member -MemberType NoteProperty -Name "configuration" -Value ([pscustomobject]@{properties = [pscustomobject]@{}})
+        }
+
+        $configProperties = $packageJson.contributes.configuration.properties
+
+        function Get-JsonSchemaType($val) {
+            if ($null -eq $val) { return 'null' }
+            $typeName = $val.GetType().Name
+            switch ($typeName) {
+                'String' { return 'string' }
+                'Int32' { return 'integer' }
+                'Int64' { return 'integer' }
+                'Double' { return 'number' }
+                'Single' { return 'number' }
+                'Boolean' { return 'boolean' }
+                'Hashtable' { return 'object' }
+                'OrderedHashtable' { return 'object' }
+                'Object[]' { return 'array' }
+                'ArrayList' { return 'array' }
+                default { return 'string' }
             }
-            $configProperties | Add-Member -MemberType NoteProperty -Name $key -Value $newProperty
         }
+
+        foreach ($key in $siteConfig.Keys) {
+            $value = $siteConfig[$key]
+            Write-Host "Setting $key to $($value | ConvertTo-Json -Compress)"
+
+            if ($configProperties.PSObject.Properties[$key]) {
+                $configProperties.$key.default = $value
+            } else {
+                $newProperty = [pscustomobject]@{
+                    type = Get-JsonSchemaType $value
+                    default = $value
+                    markdownDescription = ""
+                }
+                $configProperties | Add-Member -MemberType NoteProperty -Name $key -Value $newProperty
+            }
+        }
+        
+        # 5. Write the updated package.json
+        $packageJson | ConvertTo-Json -Depth 10 | Set-Content -Path $packageJsonPath
+    } else {
+        Write-Host "package.json not found (expected for IntelliJ packages). Skipping configuration update."
     }
 
-    # 4. Add site-config.json to the VSIX folder for reference
-    Write-Host "Adding site-config.json to the VSIX package..."
-    Copy-Item -Path $SiteConfigPath -Destination (Join-Path $tempDir "extension/site-config.json")
+    # 4. Add site-config.json to the package folder
+    Write-Host "Adding site-config.json to the package..."
+    Copy-Item -Path $SiteConfigPath -Destination (Join-Path $topLevelDir.FullName "site-config.json")
 
-    $resourcesDir = Join-Path $tempDir "extension/resources"
+    $resourcesDir = Join-Path $topLevelDir.FullName "resources"
     if (-not (Test-Path $resourcesDir)) {
         New-Item -ItemType Directory -Path $resourcesDir | Out-Null
     }
 
-    # 4a. Add binaries to /extension/resources if provided
+    # 4a. Add binaries to /<toplevel>/resources if provided
     if ($Binaries -and $Binaries.Count -gt 0) {
-        Write-Host "Adding binaries to the VSIX package..."
+        Write-Host "Adding binaries to the package..."
         foreach ($bin in $Binaries) {
             $bin = $bin.Trim()
             if (Test-Path $bin) {
                 $binFilename = Split-Path -leaf $bin
-                Write-Host "- Adding $binFilename to /extension/resources"
+                Write-Host "- Adding $binFilename to /$($topLevelDir.Name)/resources"
                 Copy-Item -Path $bin -Destination $resourcesDir -Force
                 if ($IsLinux -or $IsMacOS) {
                     Write-Host "  - Setting executable permissions for $binFilename"
@@ -189,18 +198,17 @@ try {
         }
     }
 
-    # 5. Write the updated package.json
-    $packageJson | ConvertTo-Json -Depth 10 | Set-Content -Path $packageJsonPath
-
-    # 6. Repack the VSIX
-    $outputVsixPath = $VsixPath.Replace(".vsix", "-mod.vsix")
-    if (Test-Path $outputVsixPath) {
-        Remove-Item $outputVsixPath
+    # 6. Repack the package
+    $baseName = [System.IO.Path]::GetFileNameWithoutExtension($PackagePath)
+    $extension = [System.IO.Path]::GetExtension($PackagePath)
+    $outputPackagePath = "$baseName-mod$extension"
+    if (Test-Path $outputPackagePath) {
+        Remove-Item $outputPackagePath
     }
-    Write-Host "Repacking the VSIX package to $outputVsixPath..."
-    Compress-Archive -Path (Join-Path $tempDir "*") -DestinationPath $outputVsixPath
+    Write-Host "Repacking the package to $outputPackagePath..."
+    Compress-Archive -Path (Join-Path $tempDir "*") -DestinationPath $outputPackagePath
 
-    Write-Host "Successfully modified VSIX. New file is at: $outputVsixPath"
+    Write-Host "Successfully modified package. New file is at: $outputPackagePath"
 
 } finally {
     # 7. Clean up the temporary directory
