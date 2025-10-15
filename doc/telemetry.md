@@ -11,7 +11,7 @@ To use the Splunk backend, you need to configure the following settings in your 
 
 ```json
 {
-  "appmap.telemetry": {
+  "appMap.telemetry": {
     "backend": "splunk",
     "url": "<your-splunk-hec-url>",
     "token": "<your-splunk-hec-token>",
@@ -20,11 +20,11 @@ To use the Splunk backend, you need to configure the following settings in your 
 }
 ```
 
-- `appmap.telemetry.backend`: Set this to `splunk` to enable the Splunk backend.
-- `appmap.telemetry.url`: The URL of your Splunk HTTP Event Collector (HEC) endpoint. Note it's
+- `appMap.telemetry.backend`: Set this to `splunk` to enable the Splunk backend.
+- `appMap.telemetry.url`: The URL of your Splunk HTTP Event Collector (HEC) endpoint. Note it's
   recommended to include the port number (usually 8088 or 443).
-- `appmap.telemetry.token`: Your Splunk HEC token.
-- `appmap.telemetry.ca`: Your CA certificate. If not set, the server certificate will not be
+- `appMap.telemetry.token`: Your Splunk HEC token.
+- `appMap.telemetry.ca`: Your CA certificate. If not set, the server certificate will not be
   verified. If set to `system`, the system's default CA certificates will be used. If the value
   starts with `@`, it will be interpreted as a path to a CA certificate file. Otherwise, the value
   will be used as the literal CA certificate.
