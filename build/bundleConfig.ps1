@@ -30,20 +30,38 @@ if ($Binaries.Count -eq 1) {
     $Binaries = $Binaries[0] -split '[\s,]+'
 }
 
-function Get-NpmLatestVersion($packageName) {
+function Get-Releases() {
+    $url = "https://api.github.com/repos/$ToolsOwner/$ToolsRepo/releases"
     try {
-        Write-Host "Fetching the latest version for $packageName from npm registry API..."
-        $encodedName = [System.Web.HttpUtility]::UrlEncode($packageName)
-        $url = "https://registry.npmjs.org/$encodedName"
+        Write-Host "Fetching releases from $url..."
         $response = Invoke-WebRequest -Uri $url -UseBasicParsing
-        $json = $response.Content | ConvertFrom-Json
-        $version = $json."dist-tags".latest
-        Write-Host "Latest version for $packageName is $version"
-        return $version
+        $releases = $response.Content | ConvertFrom-Json
+        return $releases
     } catch {
-        Write-Error "Failed to get latest version for $packageName from npm registry API. Error: $_"
+        Write-Error "Failed to get releases from GitHub API. Error: $_"
         return $null
     }
+}
+
+$script:cachedReleases = $null
+function Get-Releases-Memoized() {
+    if (-not $script:cachedReleases) {
+        $script:cachedReleases = Get-Releases
+    }
+    return $script:cachedReleases
+}
+
+function Get-LatestRelease($package) {
+    $releases = Get-Releases-Memoized
+    # Find the latest release that matches the package
+    foreach ($release in $releases) {
+        if ($release.tag_name -like "*$package*") {
+            Write-Host "Latest release for $package is $($release.tag_name)"
+            return $release
+        }
+    }
+    Write-Error "No matching release found for $package."
+    return $null
 }
 
 function Download-File($url, $path) {
@@ -66,15 +84,20 @@ if ($PlatformIdentifier) {
     Write-Host "Platform identifier provided: $PlatformIdentifier. Preparing to download tools."
     foreach ($tool in $ToolsToDownload) {
         $tool = $tool.Trim()
-        $latestVersion = Get-NpmLatestVersion -packageName "@appland/$tool"
-        if ($latestVersion) {
+        $latestRelease = Get-LatestRelease -package "@appland/$tool"
+        if ($latestRelease) {
             $os, $arch = $PlatformIdentifier.Split('-')
             $binaryExtension = if ($os -eq 'win') { ".exe" } else { "" }
-            $fileName = "${tool}-${os}-${arch}-${latestVersion}${binaryExtension}"
-            $downloadPath = Join-Path (Get-Location) $fileName
+            $url = $latestRelease.assets | Where-Object { $_.name -like "*$tool*$PlatformIdentifier*" } | Select-Object -First 1 | Select-Object -ExpandProperty browser_download_url
+            if (-not $url) {
+                Write-Error "No download URL found for $tool with platform identifier $PlatformIdentifier."
+                continue
+            }
 
-            $artifactName = "@appland/${tool}-v${latestVersion}/${tool}-${PlatformIdentifier}${binaryExtension}"
-            $url = "https://github.com/$ToolsOwner/$ToolsRepo/releases/download/$artifactName"
+            # tag name is like @appland/tool-vX.Y.Z, we want to extract the X.Y.Z part
+            $version = $latestRelease.tag_name -replace '^.*-v', ''
+            $fileName = "${tool}-${os}-${arch}-${version}${binaryExtension}"
+            $downloadPath = Join-Path (Get-Location) $fileName
             
             if (Download-File -url $url -path $downloadPath) {
                 $Binaries += $downloadPath
