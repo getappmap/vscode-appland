@@ -1,5 +1,9 @@
 import { DefaultApiURL } from '@appland/client';
 import * as vscode from 'vscode';
+import { version, publisher, name } from '../../package.json';
+
+const EXTENSION_ID = `${publisher}.${name}`;
+const EXTENSION_VERSION = `${version}`;
 
 export default class ExtensionSettings {
   public static get appMapServerURL(): vscode.Uri {
@@ -47,6 +51,13 @@ export default class ExtensionSettings {
       if (telemetryConfig.token) result.SPLUNK_TOKEN ??= telemetryConfig.token;
       if (telemetryConfig.ca) result.SPLUNK_CA_CERT ??= telemetryConfig.ca;
     }
+
+    result.APPMAP_TELEMETRY_PROPERTIES ??= JSON.stringify({
+      extname: EXTENSION_ID,
+      extversion: EXTENSION_VERSION,
+      ide: vscode.env.appName,
+      ideversion: vscode.version,
+    });
 
     return result;
   }
