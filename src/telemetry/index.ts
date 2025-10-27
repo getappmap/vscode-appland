@@ -7,6 +7,7 @@ import TelemetryResolver from './telemetryResolver';
 import TelemetryDataProvider from './telemetryDataProvider';
 import Event from './event';
 import SplunkTelemetryReporter from './splunkTelemetryReporter';
+import os from 'os';
 
 const EXTENSION_ID = `${publisher}.${name}`;
 const EXTENSION_VERSION = `${version}`;
@@ -36,6 +37,7 @@ type Reporter = Pick<
 export class Telemetry {
   private static reporter: Reporter;
   private static debugChannel?: vscode.OutputChannel;
+  private static isSplunk = false;
 
   static register(context: vscode.ExtensionContext): void {
     if (process.env.APPMAP_TELEMETRY_DEBUG) {
@@ -43,15 +45,31 @@ export class Telemetry {
     }
 
     const telemetryConfig = ExtensionSettings.telemetryConfiguration;
+    const commonProperties: Record<string, string> = {
+      'common.os': os.platform(),
+      'common.platformversion': os.release(),
+      'common.extname': EXTENSION_ID,
+      'common.extversion': EXTENSION_VERSION,
+      'common.ide': vscode.env.appName,
+      'common.ideversion': vscode.version,
+    };
 
     if (telemetryConfig.backend === 'splunk') {
+      this.isSplunk = true;
       const { url, token } = telemetryConfig;
       if (url && token) {
+        const splunkProperties: Record<string, string> = {
+          ...commonProperties,
+        };
+        try {
+          splunkProperties['common.username'] = os.userInfo().username;
+        } catch (e) {
+          // ignore
+        }
         this.reporter = new SplunkTelemetryReporter(
-          EXTENSION_ID,
-          EXTENSION_VERSION,
           url,
           token,
+          splunkProperties,
           telemetryConfig.ca
         );
         void this.testConnection();
@@ -105,6 +123,16 @@ export class Telemetry {
 
     if (event.metrics) {
       metrics = await telemetry.resolve(...(event.metrics as unknown as DataResolverArray<number>));
+    }
+
+    if (!this.isSplunk) {
+      properties = {
+        ...properties,
+        // Add common properties when using Application Insights
+        // (others are added automatically by the AI SDK).
+        'common.ide': vscode.env.appName,
+        'common.ideversion': vscode.version,
+      };
     }
 
     this.debugChannel?.appendLine(

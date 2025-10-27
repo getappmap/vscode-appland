@@ -7,10 +7,9 @@ export default class SplunkTelemetryReporter {
   private agent: https.Agent | undefined;
 
   constructor(
-    private extensionId: string,
-    private extensionVersion: string,
     private url: string,
     private token: string,
+    private commonProperties: Record<string, string>,
     ca?: string
   ) {
     const urlObj = new URL(this.url);
@@ -81,10 +80,8 @@ export default class SplunkTelemetryReporter {
     measurements?: { [key: string]: number }
   ): void {
     const data = {
-      extensionId: this.extensionId,
-      extensionVersion: this.extensionVersion,
       eventName,
-      properties,
+      properties: { ...this.commonProperties, ...properties },
       measurements,
     };
     this.send(data);
