@@ -80,7 +80,7 @@ export default class SplunkTelemetryReporter {
     measurements?: { [key: string]: number }
   ): void {
     const data = {
-      eventName,
+      name: eventName,
       properties: { ...this.commonProperties, ...properties },
       measurements,
     };
