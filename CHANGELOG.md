@@ -1,3 +1,17 @@
+# [0.139.0](https://github.com/getappmap/vscode-appland/compare/v0.138.0...v0.139.0) (2025-10-29)
+
+
+### Bug Fixes
+
+* **telemetry:** Correctly assign event name in telemetry data structure in splunk ([b2f1f66](https://github.com/getappmap/vscode-appland/commit/b2f1f66797408893cce623bd665efff27ab9681a))
+
+
+### Features
+
+* **telemetry:** Enhance telemetry reporting with extension metadata and common properties ([97afb7e](https://github.com/getappmap/vscode-appland/commit/97afb7e5a6014c447d2e8615207bfac3d3fd383c))
+* Generalize bundleConfig.ps1 for different package types ([d68001d](https://github.com/getappmap/vscode-appland/commit/d68001dc76c77f22f0a6f08054575beb60604b1f))
+* Implement GitHub releases fetching for tool downloads in bundleConfig.ps1 ([3077b61](https://github.com/getappmap/vscode-appland/commit/3077b614d73a76b9a34ffbe7424e93730226374b))
+
 # [0.138.0](https://github.com/getappmap/vscode-appland/compare/v0.137.0...v0.138.0) (2025-10-14)
 
 
