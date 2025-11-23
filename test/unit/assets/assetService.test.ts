@@ -25,6 +25,7 @@ describe('AssetService', () => {
     Sinon.stub(os, 'homedir').returns(homeDir);
     Sinon.stub(process, 'platform').value(platform);
     Sinon.stub(process, 'arch').value(arch);
+    Sinon.stub(BundledFileDownloadUrlResolver, 'extensionDirectory').value(homeDir);
     cache = cacheDir();
     downloadHttpRetry.maxTries = 1; // don't retry, we're testing fallbacks
   });
@@ -63,8 +64,6 @@ describe('AssetService', () => {
         javaAgent: expectedVersion,
         denylist: ['maven', 'github', 'npm'],
       });
-
-      BundledFileDownloadUrlResolver.extensionDirectory = homeDir;
 
       await mkdir(join(homeDir, 'resources'), { recursive: true });
       await writeFile(join(homeDir, 'resources', 'appmap-java.jar'), '<insert bundled jar here>');
@@ -161,7 +160,6 @@ describe('AssetService', () => {
       await mkdir(bundledDir, { recursive: true });
       await writeFile(join(bundledDir, 'appmap-linux-x64-0.9.0'), '');
       await writeFile(join(bundledDir, 'scanner-linux-x64-0.9.0'), '');
-      BundledFileDownloadUrlResolver.extensionDirectory = homeDir;
 
       const assets = await listAssets(AssetIdentifier.AppMapCli);
       expect(assets).to.be.an('array').that.has.lengthOf(1);
@@ -178,7 +176,6 @@ describe('AssetService', () => {
       await mkdir(bundledDir, { recursive: true });
       await writeFile(join(bundledDir, 'appmap-win-x64-0.9.0.exe'), '');
       await writeFile(join(bundledDir, 'scanner-win-x64-0.9.0.exe'), '');
-      BundledFileDownloadUrlResolver.extensionDirectory = homeDir;
 
       const assets = await listAssets(AssetIdentifier.AppMapCli);
       expect(assets).to.be.an('array').that.has.lengthOf(1);
@@ -192,7 +189,6 @@ describe('AssetService', () => {
       const bundledDir = join(homeDir, 'resources');
       await mkdir(bundledDir, { recursive: true });
       await writeFile(join(bundledDir, 'appmap-java.jar'), '');
-      BundledFileDownloadUrlResolver.extensionDirectory = homeDir;
 
       const assets = await listAssets(AssetIdentifier.JavaAgent);
       expect(assets).to.be.an('array').that.has.lengthOf(1);
@@ -306,7 +302,6 @@ describe('AssetService', () => {
       await writeFile(join(bundledDir, 'appmap-linux-x64-0.9.0'), '');
       await writeFile(join(bundledDir, 'scanner-linux-x64-0.9.0'), '');
       await writeFile(join(bundledDir, 'appmap-java.jar'), '');
-      BundledFileDownloadUrlResolver.extensionDirectory = homeDir;
 
       const allPresent = await AssetService.ensureLinks();
       expect(allPresent).to.be.true;
