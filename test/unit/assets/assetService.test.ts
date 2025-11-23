@@ -5,7 +5,7 @@ import os, { tmpdir } from 'os';
 import { mkdir, mkdtemp, rm, writeFile } from 'fs/promises';
 import { default as chai, expect } from 'chai';
 import { default as chaiFs } from 'chai-fs';
-import { join } from 'path';
+import { dirname, join } from 'node:path';
 import AssetService from '../../../src/assets/assetService';
 import { AssetIdentifier, listAssets } from '../../../src/assets';
 import ResourceVersions from '../../../resources/versions.json';
@@ -312,6 +312,22 @@ describe('AssetService', () => {
       expect(join(appmapDir, 'bin', 'appmap')).to.be.a.file();
       expect(join(appmapDir, 'lib')).to.be.a.directory().with.subDirs(['java']);
       expect(join(appmapDir, 'lib', 'java')).to.be.a.directory().with.files(['appmap.jar']);
+    });
+
+    it('replaces an older copied binary with a newer bundled version', async () => {
+      const bundledDir = join(homeDir, 'resources');
+      await mkdir(bundledDir, { recursive: true });
+      await writeFile(join(bundledDir, 'appmap-linux-x64-2.0.0-TEST'), 'NEW_BUNDLED_BINARY');
+      await writeFile(join(bundledDir, 'scanner-linux-x64-2.0.0-TEST'), 'SCANNER_BINARY');
+      await writeFile(join(bundledDir, 'appmap-java.jar'), 'JAVA_AGENT');
+
+      const appmapBinPath = join(homeDir, '.appmap', 'bin', 'appmap');
+      await mkdir(dirname(appmapBinPath), { recursive: true });
+      await writeFile(appmapBinPath, 'OLD_BINARY');
+
+      const allPresent = await AssetService.ensureLinks();
+      expect(allPresent).to.be.true;
+      expect(appmapBinPath).to.be.a.file().with.content('NEW_BUNDLED_BINARY');
     });
   });
 });

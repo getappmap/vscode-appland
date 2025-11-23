@@ -51,25 +51,19 @@ export default class AssetService {
     let allPresent = true;
     for (const assetId of AssetService.downloaders.keys()) {
       const assetPath = AssetService.getAssetPath(assetId);
-      try {
-        await stat(assetPath);
-      } catch {
-        const assets = await listAssets(assetId);
-        if (assets.length === 0) {
-          allPresent = false;
-          continue;
-        } // else we have a cached version, just need to restore the link
+      const assets = await listAssets(assetId);
+      if (assets.length === 0) {
+        allPresent = false;
+        continue;
+      }
 
-        const target = assets[0];
-        log.info(`Restoring missing asset ${assetPath} from cached version ${target}`);
-        if (assetId !== AssetIdentifier.JavaAgent) await markExecutable(target);
-        try {
-          await updateSymlink(target, assetPath);
-        } catch (e) {
-          log.error(`Failed to restore symlink for ${assetPath}: ${e}`);
-          allPresent = false;
-        }
-        // make sure it's executable
+      const target = assets[0];
+      if (assetId !== AssetIdentifier.JavaAgent) await markExecutable(target);
+      try {
+        await updateSymlink(target, assetPath);
+      } catch (e) {
+        log.error(`Failed to restore symlink or copy for ${assetPath}: ${e}`);
+        allPresent = false;
       }
     }
     return allPresent;
