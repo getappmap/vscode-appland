@@ -22,7 +22,6 @@ import { mkdir } from 'fs/promises';
 import LockfileSynchronizer from '../lib/lockfileSynchronizer';
 
 import * as log from './log';
-import { stat } from 'node:fs/promises';
 
 export default class AssetService {
   private static _extensionDirectory: string;

@@ -1,4 +1,5 @@
 import nock from 'nock';
+import { GithubReleaseCache } from '../../../src/assets';
 
 type AssetVersionMocks = {
   appmap?: string;
@@ -6,11 +7,7 @@ type AssetVersionMocks = {
   javaAgent?: string;
   denylist?: string[];
 };
-function mockApi(
-  url: URL | string,
-  response: () => string | Record<string, unknown>,
-  denylist: string[]
-) {
+function mockApi(url: URL | string, response: () => nock.Body, denylist: string[]) {
   const { origin, pathname } = typeof url === 'string' ? new URL(url) : url;
   const isDenylisted = denylist.some((deny) => origin.includes(deny));
   const scope = nock(origin).get(pathname);
@@ -50,6 +47,14 @@ export default function mockAssetApis(opts: AssetVersionMocks = {}) {
     options.denylist
   );
   mockApi(
+    'https://api.github.com/repos/getappmap/appmap-js/releases',
+    () => [
+      { tag_name: `@appland/appmap-v${options.appmap}` },
+      { tag_name: `@appland/scanner-v${options.scanner}` },
+    ],
+    options.denylist
+  );
+  mockApi(
     `https://repo1.maven.org/maven2/com/appland/appmap-agent/${options.javaAgent}/appmap-agent-${options.javaAgent}.jar`,
     () => '<insert jar here>',
     options.denylist
@@ -83,4 +88,7 @@ export default function mockAssetApis(opts: AssetVersionMocks = {}) {
   return options;
 }
 
-mockAssetApis.restore = () => nock.cleanAll();
+mockAssetApis.restore = () => {
+  nock.cleanAll();
+  GithubReleaseCache.clear();
+};

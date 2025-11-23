@@ -82,15 +82,11 @@ describe('AssetService', () => {
       mockAssetApis({
         appmap: ResourceVersions.appmap,
         scanner: ResourceVersions.scanner,
-        denylist: ['npm'], // This is the only strategy for versioning the AppMap CLI and Scanner
+        denylist: ['npm', 'api.github'],
       });
 
       await AssetService.updateAll(false);
 
-      const appmapDir = join(homeDir, '.appmap');
-      expect(appmapDir).to.be.a.directory().with.subDirs(['bin', 'lib']);
-      expect(join(appmapDir, 'bin', 'scanner')).to.be.a.file();
-      expect(join(appmapDir, 'bin', 'appmap')).to.be.a.file();
       expect(cache)
         .to.be.a.directory()
         .with.files([
@@ -98,6 +94,10 @@ describe('AssetService', () => {
           `scanner-linux-x64-${ResourceVersions.scanner}`,
           'appmap-0.0.0-TEST.jar',
         ]);
+      const appmapDir = join(homeDir, '.appmap');
+      expect(appmapDir).to.be.a.directory().with.subDirs(['bin', 'lib']);
+      expect(join(appmapDir, 'bin', 'scanner')).to.be.a.file();
+      expect(join(appmapDir, 'bin', 'appmap')).to.be.a.file();
     });
   });
 
