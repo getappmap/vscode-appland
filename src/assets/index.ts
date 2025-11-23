@@ -58,17 +58,51 @@ class StaticVersionResolver implements VersionResolver {
   }
 }
 
-class GitHubVersionResolver implements VersionResolver {
-  constructor(private readonly repo: string) {}
+interface GitHubRelease {
+  tag_name: string;
+}
 
-  async getLatestVersion(): Promise<string | undefined> {
-    const res = await tryRequest(`https://api.github.com/repos/${this.repo}/releases/latest`);
+// exported mainly for testing purposes
+export const GithubReleaseCache = new Map<string, Promise<GitHubRelease[] | undefined>>();
+
+async function fetchGitHubReleases(repo: string): Promise<GitHubRelease[] | undefined> {
+  if (GithubReleaseCache.has(repo)) {
+    return GithubReleaseCache.get(repo);
+  }
+
+  const promise = (async () => {
+    const res = await tryRequest(`https://api.github.com/repos/${repo}/releases`);
     if (res) {
       try {
-        const json: { tag_name?: string } = (await res.json()) as Record<string, unknown>;
-        return json.tag_name?.replace(/^v/, '');
-      } catch (e: unknown) {
-        log.warning(`Failed to retrieve ${this.repo} version from GitHub: ${e}`);
+        const json = (await res.json()) as GitHubRelease[];
+        if (Array.isArray(json)) {
+          return json.map((release) => ({ tag_name: release.tag_name }));
+        }
+      } catch (e) {
+        log.warning(`Failed to retrieve ${repo} releases from GitHub: ${e}`);
+      }
+    }
+    return undefined;
+  })();
+
+  GithubReleaseCache.set(repo, promise);
+  return promise;
+}
+
+export class GitHubReleaseResolver implements VersionResolver {
+  constructor(private readonly repo: string, private readonly prefix = 'v') {}
+
+  async getLatestVersion(): Promise<string | undefined> {
+    const releases = await fetchGitHubReleases(this.repo);
+    if (!releases) return undefined;
+
+    const stableVersionRegex = /^\d+\.\d+\.\d+$/;
+
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    for (const { tag_name } of releases) {
+      if (tag_name?.startsWith(this.prefix)) {
+        const version = tag_name.substring(this.prefix.length);
+        if (stableVersionRegex.test(version)) return version;
       }
     }
   }
@@ -225,6 +259,7 @@ async function downloadCliAsset(assetId: AssetIdentifier.AppMapCli | AssetIdenti
 
   const pkgName = '@appland/' + name;
   const version = await resolveVersion([
+    new GitHubReleaseResolver('getappmap/appmap-js', `${pkgName}-v`),
     new NpmVersionResolver(pkgName),
     new StaticVersionResolver(name),
   ]);
@@ -272,7 +307,7 @@ export const ScannerDownloader = () => downloadCliAsset(AssetIdentifier.ScannerC
 export const JavaAgentDownloader = async () => {
   const version = await resolveVersion([
     new MavenVersionResolver('com.appland', 'appmap-agent'),
-    new GitHubVersionResolver('getappmap/appmap-java'),
+    new GitHubReleaseResolver('getappmap/appmap-java'),
     new StaticVersionResolver('appmap-java.jar'),
   ]);
   if (!version) throw new Error(`Error resolving AppMap Java agent version`);
