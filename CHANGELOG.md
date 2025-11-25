@@ -1,3 +1,15 @@
+# [0.140.0](https://github.com/getappmap/vscode-appland/compare/v0.139.0...v0.140.0) (2025-11-25)
+
+
+### Bug Fixes
+
+* **assets:** Unconditionally update asset symlinks and copies ([eb80d40](https://github.com/getappmap/vscode-appland/commit/eb80d403c99ca956ba7ff03eebf3c7916c570444)), closes [#1105](https://github.com/getappmap/vscode-appland/issues/1105)
+
+
+### Features
+
+* Use GitHub releases for CLI version checks ([36905ba](https://github.com/getappmap/vscode-appland/commit/36905ba8a06e8321c285d6ed32a6946b07a2a83d))
+
 # [0.139.0](https://github.com/getappmap/vscode-appland/compare/v0.138.0...v0.139.0) (2025-10-29)
 
 
