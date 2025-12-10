@@ -26,7 +26,6 @@ export default class PickCopilotModelCommand {
     );
     if (!model) return;
 
-    await ExtensionSettings.setPreferredCopilotModel(model.details);
-    return vscode.commands.executeCommand('appmap.rpc.restart');
+    return ExtensionSettings.setPreferredCopilotModel(model.details);
   }
 }
