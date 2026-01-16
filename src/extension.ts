@@ -8,6 +8,7 @@ import deleteAllAppMaps from './commands/deleteAllAppMaps';
 import registerInspectCodeObject from './commands/inspectCodeObject';
 import registerSequenceDiagram from './commands/sequenceDiagram';
 import registerCompareSequenceDiagrams from './commands/compareSequenceDiagram';
+import registerGenerateSequenceDiagramFiles from './commands/generateSequenceDiagramFiles';
 import openCodeObjectInAppMap from './commands/openCodeObjectInAppMap';
 import outOfDateTests from './commands/outOfDateTests';
 import PickCopilotModelCommand from './commands/pickCopilotModel';
@@ -230,6 +231,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
     registerSequenceDiagram(context, appmapCollectionFile);
     registerCompareSequenceDiagrams(context, appmapCollectionFile);
+    registerGenerateSequenceDiagramFiles(context);
 
     InstallGuideWebView.register(context, projectStates);
 

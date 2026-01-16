@@ -216,6 +216,11 @@
         "title": "AppMap: Compare Sequence Diagrams"
       },
       {
+        "command": "appmap.generateSequenceDiagramFiles",
+        "title": "AppMap: Generate Sequence Diagram (PlantUML)",
+        "icon": "$(symbol-structure)"
+      },
+      {
         "command": "appmap.explain",
         "title": "AppMap: Ask Navie AI"
       },
@@ -560,6 +565,10 @@
           "when": "false"
         },
         {
+          "command": "appmap.generateSequenceDiagramFiles",
+          "when": "false"
+        },
+        {
           "command": "appmap.context.deleteAppMaps",
           "when": "false"
         },
@@ -651,6 +660,11 @@
         {
           "command": "appmap.context.compareSequenceDiagrams",
           "when": "view == appmap.views.appmaps && viewItem == appmap.views.appmaps.appMap"
+        },
+        {
+          "command": "appmap.generateSequenceDiagramFiles",
+          "when": "view == appmap.views.appmaps && viewItem == appmap.views.appmaps.appMap",
+          "group": "navigation@4"
         },
         {
           "command": "appmap.context.deleteAppMaps",
