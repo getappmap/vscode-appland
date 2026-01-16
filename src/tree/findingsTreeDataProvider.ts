@@ -109,7 +109,7 @@ class RuleTreeItem extends vscode.TreeItem {
   }
 }
 
-class FindingTreeItem extends vscode.TreeItem {
+export class FindingTreeItem extends vscode.TreeItem {
   constructor(public ruleTreeItem: RuleTreeItem, public finding: ResolvedFinding) {
     super(FindingTreeItem.label(finding));
 

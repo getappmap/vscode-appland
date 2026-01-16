@@ -47,6 +47,7 @@ import FindingInfoWebview from './webviews/findingInfoWebview';
 import { AppMapRecommenderService } from './services/appmapRecommenderService';
 import openCodeObjectInSource from './commands/openCodeObjectInSource';
 import learnMoreRuntimeAnalysis from './commands/learnMoreRuntimeAnalysis';
+import openFindingAsMarkdown from './commands/openFindingAsMarkdown';
 import ReviewWebview from './webviews/reviewWebview';
 import SignInViewProvider from './webviews/signInWebview';
 import SignInManager from './services/signInManager';
@@ -237,6 +238,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
     FindingsOverviewWebview.register(context);
     FindingInfoWebview.register(context);
+    openFindingAsMarkdown(context);
 
     const processService = new NodeProcessService(context);
 
