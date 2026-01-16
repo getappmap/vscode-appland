@@ -5,13 +5,13 @@ import AppMapLoader from '../services/appmapLoader';
 import { getWorkspaceFolderFromPath, timeAgo } from '../util';
 import { AppmapConfigManager } from '../services/appmapConfigManager';
 import { workspaceServices } from '../services/workspaceServices';
-import { AppMapQuickPickItem } from './AppMapQuickPickItem';
 
 export async function promptForAppMap(
   appmaps: AppMapLoader[],
   exclude: vscode.Uri[] = []
 ): Promise<vscode.Uri | undefined> {
   const now = Date.now();
+  const uriMap = new Map<string, vscode.Uri>();
   const items = (
     await Promise.all(
       appmaps
@@ -43,17 +43,20 @@ export async function promptForAppMap(
             }
           }
 
-          return {
-            resourceUri: appmap.descriptor.resourceUri,
-            label: label.join(' '),
+          const itemLabel = label.join(' ');
+          const item: vscode.QuickPickItem = {
+            label: itemLabel,
             description: timeAgo(appmap.descriptor.timestamp, now),
             detail: path,
-          } as AppMapQuickPickItem;
+          };
+          // Store the URI in a map keyed by the detail (file path) which is unique
+          uriMap.set(path, appmap.descriptor.resourceUri);
+          return item;
         })
     )
   ).sort((a, b) => a.label.localeCompare(b.label));
-  const result = await vscode.window.showQuickPick<AppMapQuickPickItem>(items);
+  const result = await vscode.window.showQuickPick(items);
   if (!result) return;
 
-  return result.resourceUri;
+  return uriMap.get(result.detail!);
 }

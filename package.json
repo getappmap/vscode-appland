@@ -170,6 +170,11 @@
         "title": "AppMap: Copy Out-of-Date Tests to Clipboard"
       },
       {
+        "command": "appmap.openFindingAsMarkdown",
+        "title": "AppMap: Open Finding as Markdown",
+        "icon": "$(markdown)"
+      },
+      {
         "command": "appmap.context.openInFileExplorer",
         "title": "AppMap View: Open in File Explorer"
       },
@@ -214,6 +219,11 @@
       {
         "command": "appmap.compareSequenceDiagrams",
         "title": "AppMap: Compare Sequence Diagrams"
+      },
+      {
+        "command": "appmap.generateSequenceDiagramFiles",
+        "title": "AppMap: Generate Sequence Diagram (PlantUML)",
+        "icon": "$(symbol-structure)"
       },
       {
         "command": "appmap.explain",
@@ -560,6 +570,14 @@
           "when": "false"
         },
         {
+          "command": "appmap.generateSequenceDiagramFiles",
+          "when": "false"
+        },
+        {
+          "command": "appmap.openFindingAsMarkdown",
+          "when": "false"
+        },
+        {
           "command": "appmap.context.deleteAppMaps",
           "when": "false"
         },
@@ -653,12 +671,22 @@
           "when": "view == appmap.views.appmaps && viewItem == appmap.views.appmaps.appMap"
         },
         {
+          "command": "appmap.generateSequenceDiagramFiles",
+          "when": "view == appmap.views.appmaps && viewItem == appmap.views.appmaps.appMap",
+          "group": "navigation@4"
+        },
+        {
           "command": "appmap.context.deleteAppMaps",
           "when": "view == appmap.views.appmaps && viewItem == appmap.views.appmaps.appMapCollection"
         },
         {
           "command": "appmap.context.inspectCodeObject",
           "when": "config.appMap.inspectEnabled == true && ( viewItem == appmap.views.codeObjects.package || viewItem == appmap.views.codeObjects.class || viewItem == appmap.views.codeObjects.function || viewItem == appmap.views.codeObjects.query || viewItem == appmap.views.codeObjects.route )"
+        },
+        {
+          "command": "appmap.openFindingAsMarkdown",
+          "when": "view == appmap.views.findings && viewItem == appmap.views.analysis.finding",
+          "group": "inline"
         }
       ]
     }

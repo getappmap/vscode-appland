@@ -5,6 +5,7 @@ import present from '../lib/present';
 import ValueCache from '../lib/ValueCache';
 import assert from 'assert';
 import { warn } from 'console';
+import { RawEventData } from '../types/rawEvent';
 
 class StackFrameIndex {
   locationByFrame = new Map<string, vscode.Location>();
@@ -187,13 +188,17 @@ export class ResolvedFinding {
     const filePath = filePaths.find(Boolean);
     if (!filePath) return;
 
+    // Note: finding.event and finding.relatedEvents are incorrectly typed as Event
+    // in @appland/scanner, but actually contain raw JSON data with snake_case properties
+    const rawEvent = finding.event as unknown as RawEventData;
     const state = {
       currentView: 'viewFlow',
-      selectedObject: `event:${finding.event.id}`,
+      selectedObject: `event:${rawEvent.id}`,
     } as any; // eslint-disable-line @typescript-eslint/no-explicit-any
 
     if (finding.relatedEvents) {
-      state.traceFilter = finding.relatedEvents.map((evt) => ['id', evt.id].join(':')).join(' ');
+      const rawRelatedEvents = finding.relatedEvents as unknown as RawEventData[];
+      state.traceFilter = rawRelatedEvents.map((evt) => ['id', evt.id].join(':')).join(' ');
     }
 
     const uri = vscode.Uri.file(filePath);

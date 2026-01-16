@@ -8,6 +8,7 @@ import deleteAllAppMaps from './commands/deleteAllAppMaps';
 import registerInspectCodeObject from './commands/inspectCodeObject';
 import registerSequenceDiagram from './commands/sequenceDiagram';
 import registerCompareSequenceDiagrams from './commands/compareSequenceDiagram';
+import registerGenerateSequenceDiagramFiles from './commands/generateSequenceDiagramFiles';
 import openCodeObjectInAppMap from './commands/openCodeObjectInAppMap';
 import outOfDateTests from './commands/outOfDateTests';
 import PickCopilotModelCommand from './commands/pickCopilotModel';
@@ -46,6 +47,7 @@ import FindingInfoWebview from './webviews/findingInfoWebview';
 import { AppMapRecommenderService } from './services/appmapRecommenderService';
 import openCodeObjectInSource from './commands/openCodeObjectInSource';
 import learnMoreRuntimeAnalysis from './commands/learnMoreRuntimeAnalysis';
+import openFindingAsMarkdown from './commands/openFindingAsMarkdown';
 import ReviewWebview from './webviews/reviewWebview';
 import SignInViewProvider from './webviews/signInWebview';
 import SignInManager from './services/signInManager';
@@ -230,11 +232,13 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
     registerSequenceDiagram(context, appmapCollectionFile);
     registerCompareSequenceDiagrams(context, appmapCollectionFile);
+    registerGenerateSequenceDiagramFiles(context);
 
     InstallGuideWebView.register(context, projectStates);
 
     FindingsOverviewWebview.register(context);
     FindingInfoWebview.register(context);
+    openFindingAsMarkdown(context);
 
     const processService = new NodeProcessService(context);
 
