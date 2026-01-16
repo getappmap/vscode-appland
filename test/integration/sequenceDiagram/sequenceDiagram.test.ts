@@ -2,7 +2,6 @@ import * as vscode from 'vscode';
 import { SinonSandbox, createSandbox } from 'sinon';
 import { initializeWorkspace, waitForExtension, waitFor } from '../util';
 import { EXPAND_PACKAGES_TITLE, PACKAGES_TITLE } from '../../../src/lib/sequenceDiagram';
-import { AppMapQuickPickItem } from '../../../src/lib/AppMapQuickPickItem';
 import { join } from 'path';
 import assert from 'assert';
 import { fileExists } from '../../../src/util';
@@ -27,9 +26,9 @@ describe('Sequence diagram', () => {
     );
 
     sinon.stub(vscode.window, 'showQuickPick').resolves({
-      resourceUri: appmapUri,
       label: 'Microposts_interface micropost interface',
-    } as AppMapQuickPickItem);
+      detail: appmapUri.fsPath,
+    } as vscode.QuickPickItem);
 
     const inputBox = sinon.stub(vscode.window, 'showInputBox');
 

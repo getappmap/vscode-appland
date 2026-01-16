@@ -2,7 +2,6 @@ import * as vscode from 'vscode';
 import { SinonSandbox, createSandbox } from 'sinon';
 import { initializeWorkspace, waitForExtension, waitFor } from '../util';
 import { EXPAND_PACKAGES_TITLE, PACKAGES_TITLE } from '../../../src/lib/sequenceDiagram';
-import { AppMapQuickPickItem } from '../../../src/lib/AppMapQuickPickItem';
 import { join } from 'path';
 import assert from 'assert';
 import { fileExists } from '../../../src/util';
@@ -34,9 +33,9 @@ describe('Compare sequence diagram', () => {
 
     const quickPick = sinon.stub(vscode.window, 'showQuickPick');
     quickPick.onFirstCall().resolves({
-      resourceUri: baseUri,
       label: 'Microposts_controller_can_get_microposts_as_JSON',
-    } as AppMapQuickPickItem);
+      detail: baseUri.fsPath,
+    } as vscode.QuickPickItem);
 
     const inputBox = sinon.stub(vscode.window, 'showInputBox');
 
@@ -50,9 +49,9 @@ describe('Compare sequence diagram', () => {
       .calledWith(sinon.match({ title: EXPAND_PACKAGES_TITLE }));
 
     quickPick.onSecondCall().resolves({
-      resourceUri: headUri,
       label: 'Microposts_interface_micropost_interface',
-    } as AppMapQuickPickItem);
+      detail: headUri.fsPath,
+    } as vscode.QuickPickItem);
 
     const openExternal = sinon.stub(vscode.env, 'openExternal');
 
