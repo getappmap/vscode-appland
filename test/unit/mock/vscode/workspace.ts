@@ -37,7 +37,13 @@ export const EVENTS = {
 
 export class Configuration extends Map<string, unknown> {
   get(key: string, defaultValue?: unknown): unknown {
-    return super.get(key) ?? defaultValue;
+    const value = super.get(key) ?? defaultValue;
+    // Simulate VS Code's proxy-backed configuration objects, which do not support
+    // property deletion (attempting to do so throws a TypeError at runtime).
+    if (value !== null && typeof value === 'object' && !Array.isArray(value)) {
+      return Object.freeze({ ...value });
+    }
+    return value;
   }
 
   inspect(key: string): { workspaceValue?: unknown } | undefined {

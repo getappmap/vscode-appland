@@ -295,7 +295,11 @@ export default class RpcProcessService implements Disposable {
     }
 
     if (change.env) {
-      const env = vscode.workspace.getConfiguration('appMap').get('commandLineEnvironment', {});
+      // we need to clone the returned object because it's
+      // a proxy and we can't delete properties from it directly
+      const env = {
+        ...vscode.workspace.getConfiguration('appMap').get('commandLineEnvironment', {}),
+      };
       let envChanged = false;
       Object.entries(change.env).forEach(([k, v]) => {
         if (env[k] !== v) {
@@ -311,6 +315,8 @@ export default class RpcProcessService implements Disposable {
         await vscode.workspace
           .getConfiguration('appMap')
           .update('commandLineEnvironment', env, true);
+        // note that the RPC server will be restarted in response to the configuration
+        // change event, so we don't need to trigger it manually here
       }
     }
 
