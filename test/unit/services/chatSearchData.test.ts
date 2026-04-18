@@ -4,37 +4,29 @@ import Sinon from 'sinon';
 import '../mock/vscode';
 import * as vscode from 'vscode';
 
-import AppMapCollection from '../../../src/services/appmapCollection';
-import RpcProcessService from '../../../src/services/rpcProcessService';
-import ChatSearchDataService, { LatestAppMap } from '../../../src/services/chatSearchDataService';
+import MockAppMapCollection from '../../mocks/mockAppMapCollection';
+import MockAppMapLoader from '../../mocks/mockAppMapLoader';
 
-type AppMapListener = (appmaps: LatestAppMap[]) => void;
+import RpcProcessService from '../../../src/services/rpcProcessService';
+import ChatSearchDataService from '../../../src/services/chatSearchDataService';
 
 describe('ChatSearchData', () => {
   let sinon: Sinon.SinonSandbox;
   let chatSearchData: ChatSearchDataService;
   let port: Sinon.SinonStub;
-  let onUpdatedStub: Sinon.SinonStub;
-  let allAppMapsStub: Sinon.SinonStub;
-  let appmapListeners: Array<AppMapListener>;
-  let appmaps: AppMapCollection;
+  let appmaps: MockAppMapCollection;
 
   beforeEach(async () => {
     sinon = Sinon.createSandbox();
-    port = sinon.stub();
-    appmapListeners = [];
-    onUpdatedStub = sinon.stub().callsFake((listener: AppMapListener) => {
-      appmapListeners.push(listener);
-    });
-    allAppMapsStub = sinon.stub();
-    /* eslint-disable @typescript-eslint/no-explicit-any */
-    appmaps = {
-      allAppMaps: allAppMapsStub,
-      onUpdated: onUpdatedStub,
-    } as any;
-    const rpcService: RpcProcessService = { port } as any;
-    /* eslint-enable @typescript-eslint/no-explicit-any */
+
+    appmaps = new MockAppMapCollection();
+    const rpcService = sinon.createStubInstance(RpcProcessService);
+    port = rpcService.port;
     chatSearchData = new ChatSearchDataService(rpcService, appmaps);
+  });
+
+  afterEach(() => {
+    sinon.restore();
   });
 
   describe('when no port is available', () => {
@@ -107,15 +99,16 @@ describe('ChatSearchData', () => {
 
   describe('latestAppMaps', () => {
     // Mock appmaps with timestamps
-    const mockAppMaps = [...Array(20).keys()].map((i) => ({
-      descriptor: {
-        timestamp: Date.now() - i * 1000, // Assure descending order by timestamp
-        metadata: { name: `AppMap ${i}` },
-        resourceUri: { fsPath: `path/to/appmap${i}.json` },
-      },
-    }));
+    const mockAppMaps = [...Array(20).keys()].map(
+      (i) =>
+        new MockAppMapLoader({
+          timestamp: Date.now() - i * 1000, // Assure descending order by timestamp
+          metadata: { name: `AppMap ${i}` },
+          resourceUri: vscode.Uri.file(`path/to/appmap${i}.json`),
+        })
+    );
 
-    beforeEach(() => allAppMapsStub.returns(mockAppMaps));
+    beforeEach(() => sinon.stub(appmaps, 'allAppMaps').returns(mockAppMaps));
 
     it('provides the latest 10 appmaps based on timestamp', async () => {
       const latestAppMaps = chatSearchData.latestAppMaps();
@@ -137,10 +130,7 @@ describe('ChatSearchData', () => {
         });
 
         // Trigger the update
-        expect(appmapListeners).to.have.lengthOf(1);
-        for (const listener of appmapListeners) {
-          listener([sinon.stub() as unknown as LatestAppMap]);
-        }
+        appmaps._onUpdated.fire(undefined);
       });
     });
   });

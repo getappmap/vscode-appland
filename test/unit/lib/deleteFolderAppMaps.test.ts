@@ -1,16 +1,19 @@
+import MockVSCode from '../mock/vscode';
+
 import { default as chai, expect } from 'chai';
 import { default as chaiFs } from 'chai-fs';
-import sinonChai from 'sinon-chai';
+import { randomUUID } from 'crypto';
+import { promises as fs } from 'fs';
 import { tmpdir } from 'os';
 import path from 'path';
-import { randomUUID } from 'crypto';
-import '../mock/vscode';
-import { promises as fs } from 'fs';
-import type AppMapCollection from '../../../src/services/appmapCollection';
-import { URI } from 'vscode-uri';
-import deleteFolderAppMaps from '../../../src/lib/deleteFolderAppMaps';
 import Sinon from 'sinon';
-import MockVSCode from '../mock/vscode';
+import sinonChai from 'sinon-chai';
+import { URI } from 'vscode-uri';
+
+import deleteFolderAppMaps from '../../../src/lib/deleteFolderAppMaps';
+
+import MockAppMapCollection from '../../mocks/mockAppMapCollection';
+import MockAppMapLoader from '../../mocks/mockAppMapLoader';
 
 chai.use(chaiFs);
 chai.use(sinonChai);
@@ -21,7 +24,7 @@ describe('deleteFolderAppMaps', () => {
   let indexDir: string;
   let appMapUri: URI;
   let sandbox: Sinon.SinonSandbox;
-  let mockCollection: AppMapCollection;
+  let mockCollection: MockAppMapCollection;
 
   beforeEach(async () => {
     sandbox = Sinon.createSandbox();
@@ -29,11 +32,12 @@ describe('deleteFolderAppMaps', () => {
     projectDir = path.join(tmpdir(), projectName);
     indexDir = path.join(projectDir, 'test');
     appMapUri = URI.file(path.join(projectDir, 'test.appmap.json'));
-    mockCollection = {
-      appMaps: () => [{ descriptor: { resourceUri: appMapUri } }],
-      has: () => true,
-      remove: () => true,
-    } as unknown as AppMapCollection;
+    mockCollection = new MockAppMapCollection();
+    sandbox
+      .stub(mockCollection, 'appMaps')
+      .returns([new MockAppMapLoader({ resourceUri: appMapUri })]);
+    sandbox.stub(mockCollection, 'has').returns(true);
+    sandbox.stub(mockCollection, 'remove').returns();
 
     await fs.mkdir(indexDir, { recursive: true });
     await fs.writeFile(appMapUri.fsPath, '{}');
