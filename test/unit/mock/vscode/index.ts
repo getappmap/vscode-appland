@@ -15,7 +15,7 @@ import * as extensions from './extensions';
 import * as lm from './lm';
 import { URI, Utils } from 'vscode-uri';
 import workspace from './workspace';
-import window from './window';
+import { default as window, ViewColumn } from './window';
 import commands from './commands';
 import * as env from './env';
 import * as authentication from './authentication';
@@ -56,6 +56,7 @@ const MockVSCode = {
     constructor(public id: string) {}
   },
   QuickPickItemKind,
+  ViewColumn,
   Selection,
   CodeAction,
   CodeActionKind,

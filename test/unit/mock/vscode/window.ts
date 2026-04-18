@@ -35,6 +35,26 @@ function withProgress<R>(
   );
 }
 
+export enum ViewColumn {
+  Active = -1,
+  Beside = -2,
+  One = 1,
+  Two = 2,
+  Three = 3,
+  Four = 4,
+  Five = 5,
+  Six = 6,
+  Seven = 7,
+  Eight = 8,
+  Nine = 9,
+}
+
+export interface MockWebviewPanel extends vscode.WebviewPanel {
+  receiveMessage(message: unknown): void;
+}
+
+export const WebviewPanels: MockWebviewPanel[] = [];
+
 export default {
   createStatusBarItem() {
     return {
@@ -61,6 +81,38 @@ export default {
     show: doNothing,
     dispose: doNothing,
   }),
+  createWebviewPanel: (
+    viewType: string,
+    title: string,
+    showOptions: ViewColumn | { preserveFocus?: boolean; viewColumn: ViewColumn },
+    options?: vscode.WebviewPanelOptions & vscode.WebviewOptions
+  ): vscode.WebviewPanel => {
+    const onDidReceiveMessage = new EventEmitter<unknown>();
+    const viewColumn = typeof showOptions === 'number' ? showOptions : showOptions.viewColumn;
+    const panel: MockWebviewPanel = {
+      viewType,
+      title,
+      visible: true,
+      active: true,
+      viewColumn,
+      options: options || {},
+      webview: {
+        html: '',
+        options: options || {},
+        onDidReceiveMessage: onDidReceiveMessage.event,
+        postMessage: async () => false,
+        asWebviewUri: (uri: vscode.Uri) => uri,
+        cspSource: 'mock-csp-source',
+      },
+      onDidChangeViewState: new EventEmitter<vscode.WebviewPanelOnDidChangeViewStateEvent>().event,
+      onDidDispose: new EventEmitter<void>().event,
+      dispose: doNothing,
+      reveal: doNothing,
+      receiveMessage: (msg: unknown) => onDidReceiveMessage.fire(msg),
+    };
+    WebviewPanels.push(panel);
+    return panel;
+  },
   createTerminal(options: vscode.TerminalOptions = { cwd: cwd() }) {
     return new Terminal(options);
   },

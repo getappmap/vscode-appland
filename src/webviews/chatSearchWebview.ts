@@ -287,10 +287,8 @@ export default class ChatSearchWebview {
 
         case 'change-model-config': {
           const { key, value, secret } = message;
-          if (secret) {
-            const options = secret ? { secretEnv: { [key]: value } } : { env: { [key]: value } };
-            this.rpcService.updateEnv(options);
-          }
+          const options = secret ? { secretEnv: { [key]: value } } : { env: { [key]: value } };
+          await this.rpcService.updateEnv(options);
           break;
         }
 
