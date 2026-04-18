@@ -3,9 +3,6 @@ name: CI
 on:
   push:
 
-env:
-  VSCODE_INSIDERS_VERSION: 1.87.2
-
 jobs:
   prepare:
     # This first step pulls dependencies and compiles the extension.
@@ -20,11 +17,6 @@ jobs:
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
           restore-keys: ${{ runner.os }}-modules-
       - uses: actions/cache@v3
-        id: cache-vscode-test
-        with:
-          path: .vscode-test/vscode-*
-          key: ${{ runner.os }}-vscode-test
-      - uses: actions/cache@v3
         id: cache-out
         with:
           path: out
@@ -35,7 +27,6 @@ jobs:
           cache: yarn
       - run: yarn install --immutable
       - run: yarn pretest
-      - run: yarn test:precache
       - run: yarn compile
 
   unit:
@@ -49,11 +40,6 @@ jobs:
           path: node_modules
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
           restore-keys: ${{ runner.os }}-modules-
-      - uses: actions/cache@v3
-        id: cache-vscode-test
-        with:
-          path: .vscode-test/vscode-*
-          key: ${{ runner.os }}-vscode-test
       - uses: actions/cache@v3
         id: cache-out
         with:
@@ -77,11 +63,6 @@ jobs:
           path: node_modules
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
           restore-keys: ${{ runner.os }}-modules-
-      - uses: actions/cache@v3
-        id: cache-vscode-test
-        with:
-          path: .vscode-test/vscode-*
-          key: ${{ runner.os }}-vscode-test
       - uses: actions/cache@v3
         id: cache-out
         with:

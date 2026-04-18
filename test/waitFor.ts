@@ -19,6 +19,7 @@ export async function waitFor(
 ): Promise<void> {
   const startTime = Date.now();
   let delay = 100;
+  let lastLoggedAt = 0;
 
   let exception: Error | undefined;
   let result: boolean | undefined | void;
@@ -41,8 +42,11 @@ export async function waitFor(
       else throw new Error(message);
     }
 
-    delay = delay * 2;
-    console.log(`Waiting ${delay}ms because: ${message}`);
+    delay = Math.min(Math.round(delay * 1.5), 2000);
+    if (elapsed - lastLoggedAt >= 5000) {
+      console.log(`Waiting for: ${message} (${Math.round(elapsed / 1000)}s elapsed)`);
+      lastLoggedAt = elapsed;
+    }
     await wait(delay);
   }
 }
