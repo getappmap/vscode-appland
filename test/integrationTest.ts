@@ -1,9 +1,5 @@
 import * as cp from 'child_process';
-import {
-  downloadAndUnzipVSCode,
-  resolveCliArgsFromVSCodeExecutablePath,
-  runTests as runTestsInElectron,
-} from '@vscode/test-electron';
+import { downloadAndUnzipVSCode, runTests as runTestsInElectron } from '@vscode/test-electron';
 import { exists, existsSync, readFile } from 'fs';
 import { promisify } from 'util';
 import { glob } from 'glob';
@@ -95,7 +91,6 @@ async function integrationTest() {
   const userDataDir = resolve(__dirname, '../.vscode-test/user-data');
 
   const vscodeExecutablePath = await downloadAndUnzipVSCode(process.env.VSCODE_INSIDERS_VERSION);
-  const [cliPath] = resolveCliArgsFromVSCodeExecutablePath(vscodeExecutablePath);
 
   if (process.env.TEST_YARN_INSTALL !== 'false') {
     await Promise.all(
@@ -113,24 +108,6 @@ async function integrationTest() {
       })
     );
   }
-
-  cp.spawnSync(
-    cliPath,
-    [
-      '--extensions-dir',
-      extensionDevelopmentPath,
-      '--user-data-dir',
-      userDataDir,
-      '--install-extension',
-      'appland.appmap',
-      '--force',
-      '--password-store=basic',
-    ],
-    {
-      encoding: 'utf-8',
-      stdio: 'inherit',
-    }
-  );
 
   const runTests = async (testFile: string, workspaceDir: string) => {
     startTime = new Date();
