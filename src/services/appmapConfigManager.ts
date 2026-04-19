@@ -321,7 +321,11 @@ export class AppmapConfigManagerInstance implements WorkspaceServiceInstance {
 
     try {
       const stats = await stat(uri.fsPath);
-      this._configMtimes.set(uri.fsPath, stats.mtime.getTime());
+      const mtime = stats.mtime.getTime();
+      if (this._configMtimes.has(uri.fsPath) && mtime <= (this._configMtimes.get(uri.fsPath) || 0))
+        return;
+
+      this._configMtimes.set(uri.fsPath, mtime);
     } catch (e) {
       let handled = false;
       if (e instanceof Error && 'code' in e) {

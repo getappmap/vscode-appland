@@ -184,15 +184,7 @@ export async function waitForAppMapServices(touchFile: string): Promise<AppMapSe
   console.log('[waitForAppMapServices] pidPath: ', pidPath);
   // Make sure the indexer is all the way up before we ask it to do anything.
   try {
-    await waitFor(
-      'Indexer starting',
-      async () => {
-        const touchPath = join(wsPath, 'appmap.yml');
-        await touch(touchPath);
-        return fse.existsSync(pidPath);
-      },
-      10000
-    );
+    await waitFor('Indexer starting', () => fse.existsSync(pidPath), 10000);
   } catch (e) {
     const wsFiles = glob.sync(`${workspaceFolder.uri.fsPath}/**`);
     console.log(`wsFiles: ${JSON.stringify(wsFiles, null, 2)}`);
