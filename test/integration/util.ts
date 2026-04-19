@@ -296,19 +296,29 @@ export async function appmapFiles(): Promise<vscode.Uri[]> {
 // be enabled, and thus the user must be authenticated.
 export function withAuthenticatedUser(): void {
   before(async () => {
-    const { appmapServerAuthenticationProvider, signInManager } = await waitForExtension();
+    const { appmapServerAuthenticationProvider } = await waitForExtension();
     sinon.stub(appmapServerAuthenticationProvider, 'performSignIn').resolves({
       id: 'id',
       accessToken: 'accessToken',
       scopes: ['default'],
-      account: { id: 'id', label: 'label' },
+      account: { id: 'id', label: 'test-user' },
     });
-    await signInManager.signIn();
+    // Set the test API key so getApiKey(false) short-circuits without going through
+    // vscode.authentication.getSession, which requires the consent to be granted
+    // through a UI prompt that is blocked in test environments.
+    // This allows tests to run without hanging on the consent prompt.
+    process.env.APPMAP_TEST_API_KEY = 'test-key';
+    // Call createSession directly to avoid the VS Code "wants to sign in" consent
+    // dialog, which is also blocked in test environments.
+    await appmapServerAuthenticationProvider.createSession(['default']);
   });
 
   after(async () => {
     const { appmapServerAuthenticationProvider } = await waitForExtension();
     sinon.restore();
+    // Clear the key before removing the session so the triggered updateAnalysisState
+    // correctly sees the user as unauthenticated.
+    delete process.env.APPMAP_TEST_API_KEY;
     await appmapServerAuthenticationProvider.removeSession();
   });
 }
