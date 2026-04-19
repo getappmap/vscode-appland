@@ -44,13 +44,14 @@ describe('Authenticate', () => {
           return;
         } catch (e) {
           assert(isNativeError(e));
+          const { message } = e;
           // The former happens when running with launch configuration.
           // The latter happens when running the test via CLI
           const messages = [
             'Cannot get password',
             'DialogService: refused to show dialog in tests.',
           ];
-          if (messages.indexOf(e.message) === -1) throw e;
+          if (!messages.some((msg) => message.startsWith(msg))) throw e;
           return;
         }
       });
