@@ -13,7 +13,13 @@ export default class SignInManager {
 
   public static async register(extensionState: ExtensionState): Promise<void> {
     this.firstInstalledVersion = semver.coerce(extensionState.firstVersionInstalled);
-    await this.updateSignInState();
+    void this.updateSignInState().catch((e) => {
+      console.error('Error updating sign-in state on register():', e);
+      Telemetry.sendEvent(DEBUG_EXCEPTION, {
+        exception: e as Error,
+        errorCode: ErrorCode.UpdateSignInStateFailure,
+      });
+    });
 
     if (!extensionState.hasSeenWalkthrough()) {
       vscode.commands.executeCommand(

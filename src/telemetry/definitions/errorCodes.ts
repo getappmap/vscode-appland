@@ -14,6 +14,7 @@ enum ErrorCode {
   PruneLargeMapError,
   ConfigUpdateError,
   AssetAcquisitionFailure,
+  UpdateSignInStateFailure,
 }
 
 export default ErrorCode;

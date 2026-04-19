@@ -40,7 +40,9 @@ export default class AnalysisManager {
   }
 
   public static async register(context: vscode.ExtensionContext): Promise<void> {
-    await this.updateAnalysisState();
+    void this.updateAnalysisState().catch((e) => {
+      console.error('Error updating analysis state on register():', e);
+    });
 
     context.subscriptions.push(
       vscode.authentication.onDidChangeSessions((e) => {

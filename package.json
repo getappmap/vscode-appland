@@ -72,6 +72,12 @@
     "visualization"
   ],
   "contributes": {
+    "authentication": [
+      {
+        "id": "appmap.server",
+        "label": "AppMap"
+      }
+    ],
     "customEditors": [
       {
         "viewType": "appmap.views.appMapFile",

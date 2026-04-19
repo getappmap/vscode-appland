@@ -7,9 +7,15 @@ import SignInManager from '../../src/services/signInManager';
 import MockExtensionContext from '../mocks/mockExtensionContext';
 import ExtensionState from '../../src/configuration/extensionState';
 
+import { waitFor } from '../waitFor';
+
 describe('Sidebar sign-in', () => {
   let sandbox: sinon.SinonSandbox;
-  let stubbedExecuteCommand;
+  let stubbedExecuteCommand: sinon.SinonStub<[], void>;
+  let getApiKeyStub: sinon.SinonStub<
+    [createIfNone: boolean, ssoTarget?: string],
+    Promise<string | undefined>
+  >;
   const context = new MockExtensionContext();
   const extensionState = new ExtensionState(context);
   const existingUserVersion = '0.66.2';
@@ -20,6 +26,7 @@ describe('Sidebar sign-in', () => {
   beforeEach(() => {
     sandbox = sinon.createSandbox();
     stubbedExecuteCommand = sandbox.stub(vscode.commands, 'executeCommand');
+    getApiKeyStub = sandbox.stub(auth, 'getApiKey');
   });
 
   afterEach(() => {
@@ -27,82 +34,66 @@ describe('Sidebar sign-in', () => {
   });
 
   it('is not shown for an existing user who is logged in and then logs out', async () => {
-    const getApiKeyStub = sandbox.stub(auth, 'getApiKey');
     getApiKeyStub.returns(Promise.resolve(fakeApiKey));
     sandbox.stub(extensionState, 'firstVersionInstalled').value(existingUserVersion);
 
     await SignInManager.register(extensionState);
-    assert(!SignInManager.shouldShowSignIn());
-
-    let expectedArgs = ['setContext', 'appMap.showSignIn', false];
-    assert.deepStrictEqual(stubbedExecuteCommand.getCall(0).args, expectedArgs);
+    await expectShowSignIn(false);
 
     // user logs out
     getApiKeyStub.returns(Promise.resolve(noApiKey));
     await SignInManager.updateSignInState();
-    assert(!SignInManager.shouldShowSignIn());
-
-    expectedArgs = ['setContext', 'appMap.showSignIn', false];
-    assert.deepStrictEqual(stubbedExecuteCommand.getCall(1).args, expectedArgs);
+    await expectShowSignIn(false);
   });
 
   it('is not shown for a new user who is authenticated, but is shown when they log out', async () => {
-    const getApiKeyStub = sandbox.stub(auth, 'getApiKey');
     getApiKeyStub.returns(Promise.resolve(fakeApiKey));
     sandbox.stub(extensionState, 'firstVersionInstalled').value(newUserVersion);
 
     await SignInManager.register(extensionState);
-    assert(!SignInManager.shouldShowSignIn());
-
-    let expectedArgs = ['setContext', 'appMap.showSignIn', false];
-    assert.deepStrictEqual(stubbedExecuteCommand.getCall(0).args, expectedArgs);
+    await expectShowSignIn(false);
 
     // user logs out
     getApiKeyStub.returns(Promise.resolve(noApiKey));
     await SignInManager.updateSignInState();
-    assert(SignInManager.shouldShowSignIn());
-
-    expectedArgs = ['setContext', 'appMap.showSignIn', true];
-    assert.deepStrictEqual(stubbedExecuteCommand.getCall(1).args, expectedArgs);
+    await expectShowSignIn(true);
   });
 
   it('is not shown for an existing user who is not authenticated and then logs in', async () => {
-    const getApiKeyStub = sandbox.stub(auth, 'getApiKey');
     getApiKeyStub.returns(Promise.resolve(noApiKey));
     sandbox.stub(extensionState, 'firstVersionInstalled').value(existingUserVersion);
 
     await SignInManager.register(extensionState);
-    assert(!SignInManager.shouldShowSignIn());
-
-    let expectedArgs = ['setContext', 'appMap.showSignIn', false];
-    assert.deepStrictEqual(stubbedExecuteCommand.getCall(0).args, expectedArgs);
+    await expectShowSignIn(false);
 
     // user logs in
     getApiKeyStub.returns(Promise.resolve(fakeApiKey));
     await SignInManager.updateSignInState();
-    assert(!SignInManager.shouldShowSignIn());
-
-    expectedArgs = ['setContext', 'appMap.showSignIn', false];
-    assert.deepStrictEqual(stubbedExecuteCommand.getCall(1).args, expectedArgs);
+    await expectShowSignIn(false);
   });
 
   it('is shown for a new user who is not authenticated, but is not shown once they log in', async () => {
-    const getApiKeyStub = sandbox.stub(auth, 'getApiKey');
     getApiKeyStub.returns(Promise.resolve(noApiKey));
     sandbox.stub(extensionState, 'firstVersionInstalled').value(newUserVersion);
 
     await SignInManager.register(extensionState);
-    assert(SignInManager.shouldShowSignIn());
-
-    let expectedArgs = ['setContext', 'appMap.showSignIn', true];
-    assert.deepStrictEqual(stubbedExecuteCommand.getCall(0).args, expectedArgs);
+    await expectShowSignIn(true);
 
     // user logs in
     getApiKeyStub.returns(Promise.resolve(fakeApiKey));
     await SignInManager.updateSignInState();
-    assert(!SignInManager.shouldShowSignIn());
-
-    expectedArgs = ['setContext', 'appMap.showSignIn', false];
-    assert.deepStrictEqual(stubbedExecuteCommand.getCall(1).args, expectedArgs);
+    await expectShowSignIn(false);
   });
+
+  async function expectShowSignIn(value: boolean): Promise<void> {
+    await waitFor(`Expected 'appMap.showSignIn' context value to be ${value}`, () => {
+      const call = stubbedExecuteCommand.getCalls().at(-1);
+      if (call) {
+        assert.deepStrictEqual(call.args, ['setContext', 'appMap.showSignIn', value]);
+        assert(SignInManager.shouldShowSignIn() === value);
+        return true;
+      }
+      return false;
+    });
+  }
 });
