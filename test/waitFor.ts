@@ -35,6 +35,9 @@ export async function waitFor(
     }
   };
 
+  // tick through the event loop to allow any pending promises to resolve before starting the check loop
+  await wait(0);
+
   while (!(await check())) {
     const elapsed = Date.now() - startTime;
     if (elapsed > timeout) {
