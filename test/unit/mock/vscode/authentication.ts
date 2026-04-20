@@ -9,3 +9,7 @@ export const onDidChangeSessions = (..._args: any[]) => {
     },
   };
 };
+
+export const getSession = (..._args: any[]) => {
+  return undefined;
+};
