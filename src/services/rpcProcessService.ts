@@ -23,7 +23,7 @@ const defaultRpcConnect: RpcConnect = (port) => Client.http({ port });
 export interface RpcProcessServiceState {
   waitForStartup(): Promise<void>;
 
-  killProcess(): void;
+  killProcess(): Promise<void>;
 }
 
 interface UpdateEnvOptions {
@@ -92,7 +92,16 @@ export default class RpcProcessService implements Disposable {
   public get state(): RpcProcessServiceState {
     return {
       waitForStartup: () => this.waitForStartup(),
-      killProcess: () => this.processWatcher.process?.kill(),
+      killProcess: () => {
+        const process = this.processWatcher.process;
+        if (!process) throw new Error('Process is not running');
+        // Kill the process and wait for it to exit.
+        return new Promise((resolve, reject) => {
+          process.once('exit', resolve);
+          process.once('error', reject);
+          process.kill();
+        });
+      },
     };
   }
 

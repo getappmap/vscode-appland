@@ -74,31 +74,38 @@ describe('RpcProcessService', () => {
     });
   });
 
-  describe('when the port changes', () => {
+  describe('on unexpected process exit', () => {
     beforeEach(async () => {
       stubRpcConfiguration();
       await rpcServiceState.waitForStartup();
     });
 
-    it('restarts', async () => {
+    it('recovers and restarts the RPC server', async () => {
       const eventListener = sinon.fake();
       rpcService.onRpcPortChange(eventListener);
 
       await waitFor(`Expecting RPC port change event`, () => eventListener.calledOnce);
 
-      const restartFn = new Promise<void>((resolve, reject) => {
-        const timeout = setTimeout(() => reject(new Error('Timeout waiting for restart')), 60_000);
-        const disposable = rpcService.onRpcPortChange(() => {
-          clearTimeout(timeout);
-          disposable.dispose();
-          resolve();
-        });
-      });
+      const port = rpcService.port();
+      expect(port).to.be.greaterThan(0);
 
-      rpcServiceState.killProcess();
+      const clock = sinon.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
 
-      await restartFn;
+      try {
+        await rpcServiceState.killProcess();
+
+        // Now that the 'exit' event has been handled and the ProcessWatcher's 2000ms
+        // retry timeout has been scheduled (using the fake timer), we fast-forward
+        // the clock to instantly trigger the restart.
+        await clock.tickAsync(2500);
+      } finally {
+        // Restore real timers immediately so that waitFor and other async operations
+        // don't get stuck waiting for fake time to advance.
+        clock.restore();
+      }
+
       await waitFor(`Expecting RPC port change event`, () => eventListener.calledTwice);
+      expect(rpcService.port()).to.equal(port);
     });
   });
 
