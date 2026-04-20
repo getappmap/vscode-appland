@@ -10,7 +10,7 @@ export default class RpcProcessWatcher extends ProcessWatcher {
     new vscode.EventEmitter<number>();
   public readonly onRpcPortChange = this._onRpcPortChange.event;
   public rpcPort?: number;
-  private stdoutBuffer = '';
+  protected stdoutBuffer = '';
 
   constructor(context: vscode.ExtensionContext, modulePath?: string, env?: NodeJS.ProcessEnv) {
     const args = makeArgs();
@@ -48,38 +48,41 @@ export default class RpcProcessWatcher extends ProcessWatcher {
   protected onStdout(data: string): void {
     super.onStdout(data);
 
-    // Wait for the RPC port to be logged, and detect it.
-    // If a project setting overrides the port, report that port instead.
-
     this.stdoutBuffer += data;
-    const lines = this.stdoutBuffer.split('\n');
-    this.stdoutBuffer = this.stdoutBuffer.slice(-100);
+    let lineEnd: number;
+    // Process each line individually to ensure we accurately detect the RPC port
+    // every time the server announces it.
+    while ((lineEnd = this.stdoutBuffer.indexOf('\n')) !== -1) {
+      const line = this.stdoutBuffer.slice(0, lineEnd).trim();
+      this.stdoutBuffer = this.stdoutBuffer.slice(lineEnd + 1);
 
-    const detectRpcPort = () =>
-      lines
-        .map((line) => {
-          const match = line.match(/^Running JSON-RPC server on port: (\d+)$/);
-          if (match) return match[1];
-        })
-        .find(Boolean);
-
-    const consumeRpcPort = (portStr: string) => {
-      this.options.log?.appendLine(`AppMap RPC process listening on port ${portStr}`);
-      const { navieRpcPort } = ExtensionSettings;
-      if (navieRpcPort) {
-        this.rpcPort = navieRpcPort;
-        this.options.log?.appendLine(
-          `The RPC port will be overwritten by extension setting appMap.navie.rpcPort: ${this.rpcPort}`
-        );
-      } else {
-        this.rpcPort = parseInt(portStr);
-        this.options.args = makeArgs(this.rpcPort);
+      const match = line.match(/^Running JSON-RPC server on port: (\d+)$/);
+      if (match) {
+        this.consumeRpcPort(match[1]);
       }
-      this._onRpcPortChange.fire(this.rpcPort);
-    };
+    }
 
-    const portStr = detectRpcPort();
-    if (portStr) consumeRpcPort(portStr);
+    // Defensive truncation to prevent memory leaks in case the process outputs
+    // an extremely long continuous string without any newline characters.
+    if (this.stdoutBuffer.length > 1024) {
+      this.stdoutBuffer = this.stdoutBuffer.slice(-1024);
+    }
+  }
+
+  private consumeRpcPort(portStr: string) {
+    this.options.log?.appendLine(`AppMap RPC process listening on port ${portStr}`);
+    const { navieRpcPort } = ExtensionSettings;
+    if (navieRpcPort) {
+      this.rpcPort = navieRpcPort;
+      this.options.log?.appendLine(
+        `The RPC port will be overwritten by extension setting appMap.navie.rpcPort: ${this.rpcPort}`
+      );
+    } else {
+      // make sure restarting the process uses the same port if it was dynamically assigned
+      this.rpcPort = parseInt(portStr);
+      this.options.args = makeArgs(this.rpcPort);
+    }
+    this._onRpcPortChange.fire(this.rpcPort);
   }
 
   async start(): Promise<void> {
