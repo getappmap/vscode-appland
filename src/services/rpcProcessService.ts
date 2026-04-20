@@ -272,6 +272,8 @@ export default class RpcProcessService implements Disposable {
   }
 
   dispose(): void {
+    if (this.debounce) clearTimeout(this.debounce);
+    if (this.restartTimeout) clearTimeout(this.restartTimeout);
     this.processWatcher.dispose();
     this._onRpcPortChange.dispose();
     this.diposables.forEach((d) => d.dispose());
