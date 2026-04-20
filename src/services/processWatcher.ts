@@ -71,6 +71,7 @@ export class ProcessWatcher implements vscode.Disposable {
 
   protected shouldRun = false;
   protected hasAborted = false;
+  protected disposed = false;
 
   // A timeout period in which the crash count is to be reset if the timer is fulfilled.
   protected crashTimeout?: NodeJS.Timeout;
@@ -172,6 +173,7 @@ export class ProcessWatcher implements vscode.Disposable {
   }
 
   async start(): Promise<void> {
+    assert(!this.disposed, 'ProcessWatcher has already been disposed');
     const options = { ...this.options };
     options.env = { ...options.env, ...(await loadEnvironment(this.context)) };
 
@@ -237,6 +239,7 @@ export class ProcessWatcher implements vscode.Disposable {
   }
 
   dispose(): void {
+    this.disposed = true;
     // TODO: There's no await here, so onAbort and onError will not be fired.
     this.stop();
     this._onAbort.dispose();

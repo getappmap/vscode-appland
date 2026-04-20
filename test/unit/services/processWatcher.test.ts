@@ -3,6 +3,7 @@ import MockExtensionContext from '../../mocks/mockExtensionContext';
 import Sinon from 'sinon';
 import { expect } from 'chai';
 import assert from 'node:assert';
+import { isNativeError } from 'node:util/types';
 import { join } from 'path';
 import ps from 'ps-node';
 import sinon from 'sinon';
@@ -13,7 +14,6 @@ import type vscode from 'vscode';
 import * as processWatcher from '../../../src/services/processWatcher';
 import { setSecretEnvVars } from '../../../src/services/navieConfigurationService';
 import * as authentication from '../../../src/authentication';
-import ExtensionSettings from '../../../src/configuration/extensionSettings';
 
 // To be tested
 import {
@@ -87,6 +87,24 @@ describe('ProcessWatcher', () => {
 
         expect(await promisify(ps.lookup)({ pid: process.pid })).to.be.empty;
       }).timeout(10000);
+    });
+  });
+
+  describe('dispose', () => {
+    it('prevents the watcher from being started', async () => {
+      const watcher = makeWatcher();
+      watcher.dispose();
+
+      let error: Error | undefined;
+      try {
+        await watcher.start();
+      } catch (e) {
+        assert(isNativeError(e));
+        error = e;
+      }
+
+      assert(error);
+      expect(error.message).to.include('disposed');
     });
   });
 
