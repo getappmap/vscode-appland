@@ -83,7 +83,11 @@ jobs:
     needs: prepare
     runs-on: ubuntu-latest
     steps:
+      # Full history is required so that git describe can walk back to find the nearest tag.
+      # Without this, checkout defaults to a shallow clone (depth=1) and git describe fails.
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
       - uses: actions/cache@v5
         id: cache-modules
         with:
@@ -96,8 +100,12 @@ jobs:
           cache: yarn
       - run: yarn install --immutable
       - run: yarn compile
-      - run: yarn package
-        name: Build VSIX package
+      # Use git describe to embed a development indicator in the version for non-release builds.
+      # On a tagged commit this produces the plain version (e.g. 1.2.3); on any other commit it
+      # appends distance and hash (e.g. 1.2.3-12-gabcdef), making dev artifacts distinguishable
+      # from published releases. --no-update-package-json keeps package.json clean.
+      - name: Build VSIX package
+        run: yarn vsce package --no-git-tag-version --no-update-package-json $(git describe --tags --always | cut -c2-)
       - uses: actions/upload-artifact@v7
         with:
           name: vscode-appland.vsix
