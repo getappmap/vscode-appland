@@ -1,3 +1,11 @@
+## [0.140.2](https://github.com/getappmap/vscode-appland/compare/v0.140.1...v0.140.2) (2026-04-28)
+
+
+### Bug Fixes
+
+* **navie:** allow updating non-secret model configurations ([564f072](https://github.com/getappmap/vscode-appland/commit/564f0725cd75727375636eb5de9e278aa09b07cc))
+* **navie:** clear model config env var when value is blanked ([25cce5f](https://github.com/getappmap/vscode-appland/commit/25cce5fc97b782af64286c9644d9d683f339e639))
+
 ## [0.140.1](https://github.com/getappmap/vscode-appland/compare/v0.140.0...v0.140.1) (2026-04-28)
 
 
