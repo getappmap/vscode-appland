@@ -1,3 +1,10 @@
+## [0.140.1](https://github.com/getappmap/vscode-appland/compare/v0.140.0...v0.140.1) (2026-04-28)
+
+
+### Bug Fixes
+
+* Avoid authentication consent dialogs and accounts menu gaps ([f579d13](https://github.com/getappmap/vscode-appland/commit/f579d13035b8a3d17fc882b10e02b73e5695974f))
+
 # [0.140.0](https://github.com/getappmap/vscode-appland/compare/v0.139.0...v0.140.0) (2025-11-25)
 
 
