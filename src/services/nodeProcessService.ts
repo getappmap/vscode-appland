@@ -11,7 +11,7 @@ import { AppmapConfigManager } from './appmapConfigManager';
 import { workspaceServices } from './workspaceServices';
 import assert from 'assert';
 import AssetService from '../assets/assetService';
-import { AssetIdentifier } from '../assets';
+import { AssetIdentifier } from '../assets/types';
 
 export class NodeProcessService implements WorkspaceService<NodeProcessServiceInstance> {
   public static readonly serviceId = 'NodeProcessService';

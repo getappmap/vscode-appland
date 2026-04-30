@@ -10,13 +10,11 @@ import {
   BundledFileDownloadUrlResolver,
   JavaAgentDownloader,
   ScannerDownloader,
-  binaryName,
   markExecutable,
   updateSymlink,
-  AssetIdentifier,
   listAssets,
-  versionFromPath,
 } from '.';
+import { binaryName, AssetIdentifier, versionFromPath } from './types';
 import { homedir } from 'os';
 import { mkdir } from 'fs/promises';
 import LockfileSynchronizer from '../lib/lockfileSynchronizer';
