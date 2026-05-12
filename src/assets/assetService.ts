@@ -9,6 +9,7 @@ import {
   AppMapCliDownloader,
   BundledFileDownloadUrlResolver,
   JavaAgentDownloader,
+  ManifestManager,
   ScannerDownloader,
   markExecutable,
   updateSymlink,
@@ -37,6 +38,20 @@ export default class AssetService {
     this._extensionDirectory = context.extensionPath;
     BundledFileDownloadUrlResolver.extensionDirectory = this._extensionDirectory;
     context.subscriptions.push(log.OutputChannel);
+
+    // Re-fetch and re-install when the user changes a manifest URL so the
+    // switch (enterprise mirror, pinned version) takes effect without a restart.
+    context.subscriptions.push(
+      vscode.workspace.onDidChangeConfiguration((e) => {
+        if (
+          e.affectsConfiguration('appMap.manifest.appmapUrl') ||
+          e.affectsConfiguration('appMap.manifest.scannerUrl')
+        ) {
+          ManifestManager.clearCache();
+          void this.updateAll();
+        }
+      })
+    );
   }
 
   // make sure all present assets have their symlinks in place

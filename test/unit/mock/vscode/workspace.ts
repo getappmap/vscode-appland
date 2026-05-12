@@ -37,7 +37,23 @@ export const EVENTS = {
 
 export class Configuration extends Map<string, unknown> {
   get(key: string, defaultValue?: unknown): unknown {
-    const value = super.get(key) ?? defaultValue;
+    let value = super.get(key);
+
+    if (value === undefined && key.includes('.')) {
+      const parts = key.split('.');
+      let current: unknown = super.get(parts[0]);
+      for (let i = 1; i < parts.length; i++) {
+        if (current && typeof current === 'object') {
+          current = (current as Record<string, unknown>)[parts[i]];
+        } else {
+          current = undefined;
+          break;
+        }
+      }
+      value = current;
+    }
+
+    value = value ?? defaultValue;
     // Simulate VS Code's proxy-backed configuration objects, which do not support
     // property deletion (attempting to do so throws a TypeError at runtime).
     if (value !== null && typeof value === 'object' && !Array.isArray(value)) {

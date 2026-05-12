@@ -27,22 +27,6 @@ export class MavenVersionResolver implements VersionResolver {
   }
 }
 
-export class NpmVersionResolver implements VersionResolver {
-  constructor(private readonly packageName: string) {}
-
-  async getLatestVersion(): Promise<string | undefined> {
-    const res = await tryRequest(`https://registry.npmjs.org/${this.packageName}/latest`);
-    if (res) {
-      try {
-        const json: { version?: string } = (await res.json()) as Record<string, unknown>;
-        return json.version;
-      } catch (e: unknown) {
-        log.warning(`Failed to retrieve ${this.packageName} version from NPM: ${e}`);
-      }
-    }
-  }
-}
-
 export class StaticVersionResolver implements VersionResolver {
   constructor(private readonly resourceName: string) {}
 

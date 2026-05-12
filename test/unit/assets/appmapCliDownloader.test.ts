@@ -32,6 +32,24 @@ describe('AppMapCliDownloader', () => {
     mockAssetApis.restore();
   });
 
+  it('throws and removes the downloaded binary when its digest does not match', async () => {
+    // Re-mock with a digest that won't match the binary body, so verification fails.
+    mockAssetApis.restore();
+    mockAssetApis({
+      appmapDigest: 'sha256:0000000000000000000000000000000000000000000000000000000000000000',
+    });
+
+    let err: Error | undefined;
+    try {
+      await AppMapCliDownloader();
+    } catch (e) {
+      err = e as Error;
+    }
+
+    expect(err?.message).to.match(/Digest verification failed/);
+    expect(join(cache, 'appmap-win-x64-0.0.0-TEST.exe')).to.not.be.a.path();
+  });
+
   it('fixes missing symlinks', async () => {
     await mkdir(join(homeDir, '.appmap', 'bin'), { recursive: true });
     await mkdir(cache, { recursive: true });
@@ -74,7 +92,25 @@ describe('AppMapCliDownloader', () => {
     expect(join(homeDir, '.appmap', 'bin', 'appmap.exe')).to.be.a.file().with.content('BUNDLED');
   });
 
-  it('does not download if a newer version is bundled', async () => {
+  it('relinks to the manifest version when the symlink points at a different cached binary', async () => {
+    // Simulates the user pinning to an older manifest while a newer cached
+    // binary is currently active — both versions are on disk, the manifest
+    // advertises 0.0.0-TEST, and the symlink still points at 0.0.1-TEST.
+    await mkdir(cache, { recursive: true });
+    await mkdir(join(homeDir, '.appmap', 'bin'), { recursive: true });
+    await writeFile(join(cache, 'appmap-win-x64-0.0.0-TEST.exe'), 'TARGET');
+    await writeFile(join(cache, 'appmap-win-x64-0.0.1-TEST.exe'), 'NEWER');
+    await symlink(
+      join(cache, 'appmap-win-x64-0.0.1-TEST.exe'),
+      join(homeDir, '.appmap', 'bin', 'appmap.exe')
+    );
+
+    await AppMapCliDownloader();
+
+    expect(join(homeDir, '.appmap', 'bin', 'appmap.exe')).to.be.a.file().with.content('TARGET');
+  });
+
+  it('downloads even when a newer version is bundled (the manifest is authoritative)', async () => {
     const bundledDir = join(homeDir, 'resources');
     await mkdir(bundledDir, { recursive: true });
     await writeFile(join(bundledDir, 'appmap-win-x64-0.0.1-TEST.exe'), 'BUNDLED');
@@ -88,11 +124,12 @@ describe('AppMapCliDownloader', () => {
 
     await AppMapCliDownloader();
 
-    // The target should not be replaced
-    expect(join(homeDir, '.appmap', 'bin', 'appmap.exe')).to.be.a.file().with.content('BUNDLED');
-
-    // the cache should remain empty
-    expect(cache).to.be.a.directory().with.files([]);
+    // The manifest advertises 0.0.0-TEST, so the symlink should point at the
+    // freshly downloaded 0.0.0-TEST binary, not the newer bundled 0.0.1-TEST.
+    expect(join(homeDir, '.appmap', 'bin', 'appmap.exe'))
+      .to.be.a.file()
+      .with.content('<insert appmap cli here>');
+    expect(cache).to.be.a.directory().with.files(['appmap-win-x64-0.0.0-TEST.exe']);
   });
 
   describe('file naming and permissions', () => {

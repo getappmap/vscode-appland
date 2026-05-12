@@ -5,6 +5,12 @@ import { version, publisher, name } from '../../package.json';
 const EXTENSION_ID = `${publisher}.${name}`;
 const EXTENSION_VERSION = `${version}`;
 
+// Defaults must stay in sync with the `appMap.manifest.*Url` schema in package.json.
+const DEFAULT_APPMAP_MANIFEST_URL =
+  'https://raw.githubusercontent.com/getappmap/appmap-js/release-manifests/appmap-latest.json';
+const DEFAULT_SCANNER_MANIFEST_URL =
+  'https://raw.githubusercontent.com/getappmap/appmap-js/release-manifests/scanner-latest.json';
+
 export default class ExtensionSettings {
   public static get appMapServerURL(): vscode.Uri {
     const configUrl = vscode.workspace.getConfiguration('appMap').get('applandUrl') as string;
@@ -130,6 +136,20 @@ export default class ExtensionSettings {
 
   public static get autoUpdateTools(): boolean {
     return vscode.workspace.getConfiguration('appMap').get<boolean>('autoUpdateTools') ?? true;
+  }
+
+  public static get appmapManifestUrl(): string {
+    return (
+      vscode.workspace.getConfiguration('appMap').get<string>('manifest.appmapUrl') ||
+      DEFAULT_APPMAP_MANIFEST_URL
+    );
+  }
+
+  public static get scannerManifestUrl(): string {
+    return (
+      vscode.workspace.getConfiguration('appMap').get<string>('manifest.scannerUrl') ||
+      DEFAULT_SCANNER_MANIFEST_URL
+    );
   }
 }
 

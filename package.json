@@ -370,6 +370,16 @@
           "type": "string",
           "description": "Preferred Copilot model to use"
         },
+        "appMap.manifest.appmapUrl": {
+          "type": "string",
+          "default": "https://raw.githubusercontent.com/getappmap/appmap-js/release-manifests/appmap-latest.json",
+          "description": "Release manifest used to discover and verify the AppMap CLI download. Override to pin a specific release or point at an enterprise mirror."
+        },
+        "appMap.manifest.scannerUrl": {
+          "type": "string",
+          "default": "https://raw.githubusercontent.com/getappmap/appmap-js/release-manifests/scanner-latest.json",
+          "description": "Release manifest used to discover and verify the AppMap Scanner download. Override to pin a specific release or point at an enterprise mirror."
+        },
         "appMap.autoUpdateTools": {
           "type": "boolean",
           "default": true,

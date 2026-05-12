@@ -1,11 +1,16 @@
 import nock from 'nock';
-import { GithubReleaseCache } from '../../../src/assets';
+import * as vscode from 'vscode';
+import { GithubReleaseCache, ManifestManager } from '../../../src/assets';
 
 type AssetVersionMocks = {
   appmap?: string;
   scanner?: string;
   javaAgent?: string;
   denylist?: string[];
+  // Override the digest advertised by the mock manifests, e.g. to exercise the
+  // digest-verification failure path.
+  appmapDigest?: string;
+  scannerDigest?: string;
 };
 function mockApi(url: URL | string, response: () => nock.Body, denylist: string[]) {
   const { origin, pathname } = typeof url === 'string' ? new URL(url) : url;
@@ -14,6 +19,14 @@ function mockApi(url: URL | string, response: () => nock.Body, denylist: string[
   return isDenylisted ? scope.reply(403) : scope.reply(200, response());
 }
 const defaultVersion = '0.0.0-TEST';
+
+// SHA-256 digests of the mock binary bodies below. The mock manifests advertise
+// these so that digest verification succeeds in the happy path; if you edit
+// either side, recompute the other or tests will fail mysteriously.
+const APPMAP_BODY = '<insert appmap cli here>';
+const APPMAP_DIGEST = 'sha256:83e6257769b2afdd319b1ab87ab962cc25a40190c59f0b3c693758eab12edc13';
+const SCANNER_BODY = '<insert scanner here>';
+const SCANNER_DIGEST = 'sha256:77618356db5ce696f63b4b64d30da9ec22118628d68d3cad69a2ae70c2217791';
 
 export default function mockAssetApis(opts: AssetVersionMocks = {}) {
   const options = {
@@ -30,33 +43,13 @@ export default function mockAssetApis(opts: AssetVersionMocks = {}) {
     options.denylist
   );
   mockApi(
-    'https://registry.npmjs.org/@appland/appmap/latest',
-    () => ({ version: options.appmap }),
-    options.denylist
-  );
-  mockApi(
-    'https://registry.npmjs.org/@appland/scanner/latest',
-    () => ({ version: options.scanner }),
-    options.denylist
-  );
-  mockApi(
-    'https://api.github.com/repos/getappmap/appmap-java/releases/latest',
-    () => ({
-      tag_name: `v${options.javaAgent}`,
-    }),
-    options.denylist
-  );
-  mockApi(
-    'https://api.github.com/repos/getappmap/appmap-js/releases',
-    () => [
-      { tag_name: `@appland/appmap-v${options.appmap}` },
-      { tag_name: `@appland/scanner-v${options.scanner}` },
-    ],
-    options.denylist
-  );
-  mockApi(
     `https://repo1.maven.org/maven2/com/appland/appmap-agent/${options.javaAgent}/appmap-agent-${options.javaAgent}.jar`,
     () => '<insert jar here>',
+    options.denylist
+  );
+  mockApi(
+    'https://api.github.com/repos/getappmap/appmap-java/releases',
+    () => [{ tag_name: `v${options.javaAgent}` }],
     options.denylist
   );
   mockApi(
@@ -74,16 +67,55 @@ export default function mockAssetApis(opts: AssetVersionMocks = {}) {
       const binarySuffix = `${platform}-${arch}${platform === 'win' ? '.exe' : ''}`;
       mockApi(
         `https://github.com/getappmap/appmap-js/releases/download/%40appland/scanner-v${options.scanner}/scanner-${binarySuffix}`,
-        () => '<insert scanner here>',
+        () => SCANNER_BODY,
         options.denylist
       );
       mockApi(
         `https://github.com/getappmap/appmap-js/releases/download/%40appland/appmap-v${options.appmap}/appmap-${binarySuffix}`,
-        () => '<insert appmap cli here>',
+        () => APPMAP_BODY,
         options.denylist
       );
     }
   }
+
+  mockApi(
+    'https://raw.githubusercontent.com/getappmap/appmap-js/release-manifests/appmap-latest.json',
+    () => ({
+      tag_name: `@appland/appmap-v${options.appmap}`,
+      assets: platforms.flatMap((platform) =>
+        archs.map((arch) => {
+          const binarySuffix = `${platform}-${arch}${platform === 'win' ? '.exe' : ''}`;
+          return {
+            name: `appmap-${binarySuffix}`,
+            url: `https://github.com/getappmap/appmap-js/releases/download/%40appland/appmap-v${options.appmap}/appmap-${binarySuffix}`,
+            digest: options.appmapDigest ?? APPMAP_DIGEST,
+          };
+        })
+      ),
+    }),
+    options.denylist
+  );
+  mockApi(
+    'https://raw.githubusercontent.com/getappmap/appmap-js/release-manifests/scanner-latest.json',
+    () => ({
+      tag_name: `@appland/scanner-v${options.scanner}`,
+      assets: platforms.flatMap((platform) =>
+        archs.map((arch) => {
+          const binarySuffix = `${platform}-${arch}${platform === 'win' ? '.exe' : ''}`;
+          return {
+            name: `scanner-${binarySuffix}`,
+            url: `https://github.com/getappmap/appmap-js/releases/download/%40appland/scanner-v${options.scanner}/scanner-${binarySuffix}`,
+            digest: options.scannerDigest ?? SCANNER_DIGEST,
+          };
+        })
+      ),
+    }),
+    options.denylist
+  );
+
+  // Clear any per-test manifest overrides left in the shared vscode config mock.
+  const config = vscode.workspace.getConfiguration('appMap');
+  config.update('manifest', undefined);
 
   return options;
 }
@@ -91,4 +123,5 @@ export default function mockAssetApis(opts: AssetVersionMocks = {}) {
 mockAssetApis.restore = () => {
   nock.cleanAll();
   GithubReleaseCache.clear();
+  ManifestManager.clearCache();
 };

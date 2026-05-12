@@ -63,7 +63,7 @@ describe('AssetService', () => {
       const expectedVersion = ResourceVersions['appmap-java.jar'];
       mockAssetApis({
         javaAgent: expectedVersion,
-        denylist: ['maven', 'github', 'npm'],
+        denylist: ['maven', 'github'],
       });
 
       await mkdir(join(homeDir, 'resources'), { recursive: true });
@@ -77,28 +77,6 @@ describe('AssetService', () => {
       expect(join(appmapDir, 'lib', 'java', 'appmap.jar'))
         .to.be.a.file()
         .with.content('<insert bundled jar here>');
-    });
-
-    it('falls back to static version identifiers', async () => {
-      mockAssetApis({
-        appmap: ResourceVersions.appmap,
-        scanner: ResourceVersions.scanner,
-        denylist: ['npm', 'api.github'],
-      });
-
-      await AssetService.updateAll(false);
-
-      expect(cache)
-        .to.be.a.directory()
-        .with.files([
-          `appmap-linux-x64-${ResourceVersions.appmap}`,
-          `scanner-linux-x64-${ResourceVersions.scanner}`,
-          'appmap-0.0.0-TEST.jar',
-        ]);
-      const appmapDir = join(homeDir, '.appmap');
-      expect(appmapDir).to.be.a.directory().with.subDirs(['bin', 'lib']);
-      expect(join(appmapDir, 'bin', 'scanner')).to.be.a.file();
-      expect(join(appmapDir, 'bin', 'appmap')).to.be.a.file();
     });
   });
 

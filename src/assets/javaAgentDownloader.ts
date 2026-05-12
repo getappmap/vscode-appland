@@ -40,6 +40,9 @@ async function resolveUrl(resolvers: DownloadUrlResolver[], version: string) {
   }
 }
 
+// The Java agent is still on the legacy multi-source resolution chain
+// (Maven → GitHub releases → bundled static fallback). Replace with a manifest
+// fetch once the Java release pipeline publishes one; see FOLLOWUPS.md.
 export const JavaAgentDownloader = async () => {
   const version = await resolveVersion([
     new MavenVersionResolver('com.appland', 'appmap-agent'),
