@@ -1,3 +1,10 @@
+# [0.141.0](https://github.com/getappmap/vscode-appland/compare/v0.140.2...v0.141.0) (2026-05-14)
+
+
+### Features
+
+* **assets:** manifest-driven CLI discovery with digest verification ([606d422](https://github.com/getappmap/vscode-appland/commit/606d4226e774873369d2c5fdfe35ec8537bd7dbd))
+
 ## [0.140.2](https://github.com/getappmap/vscode-appland/compare/v0.140.1...v0.140.2) (2026-04-28)
 
 
