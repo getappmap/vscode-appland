@@ -67,14 +67,7 @@ export const PROXY_ENABLED = new TelemetryDataProvider({
   id: 'appmap.proxy.enabled',
   async value() {
     const settings = proxySettings();
-    return String(settings.http_proxy || settings.https_proxy);
-  },
-});
-
-export const PROXY_SETTINGS = new TelemetryDataProvider({
-  id: 'appmap.proxy_settings',
-  async value() {
-    return JSON.stringify(proxySettings());
+    return String(!!(settings.http_proxy || settings.https_proxy));
   },
 });
 
