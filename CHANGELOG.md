@@ -1,3 +1,10 @@
+## [0.141.1](https://github.com/getappmap/vscode-appland/compare/v0.141.0...v0.141.1) (2026-05-16)
+
+
+### Bug Fixes
+
+* avoid exposing proxy credentials in telemetry ([9d83dc2](https://github.com/getappmap/vscode-appland/commit/9d83dc2446bf863c9380e3b3ea5639ab1b583b98))
+
 # [0.141.0](https://github.com/getappmap/vscode-appland/compare/v0.140.2...v0.141.0) (2026-05-14)
 
 
