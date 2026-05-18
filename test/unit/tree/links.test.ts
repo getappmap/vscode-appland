@@ -8,7 +8,7 @@ type CheckPromise = Promise<http.IncomingMessage> & {
 };
 
 function check(link: string): CheckPromise {
-  const req = https.request(link, { method: 'HEAD' });
+  const req = https.request(link, { method: 'HEAD', agent: false });
   const promise: CheckPromise = new Promise<http.IncomingMessage>((resolve, reject) => {
     req.once('response', resolve);
     req.once('error', reject);
@@ -19,6 +19,11 @@ function check(link: string): CheckPromise {
 }
 
 describe('documentation links @online', () => {
+  if (!process.env.CI) {
+    it.skip('Skipping online tests (set CI=true to enable)');
+    return;
+  }
+
   const promises = Object.values(links.Documentation).map(({ link }) => check(link));
   for (const promise of promises) {
     const { link } = promise;
