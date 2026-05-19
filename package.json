@@ -276,6 +276,10 @@
       {
         "command": "appmap.addToContext",
         "title": "AppMap: Add Files To Context"
+      },
+      {
+        "command": "appmap.setConfigurationUrl",
+        "title": "AppMap: Set organization configuration URL"
       }
     ],
     "configuration": {
@@ -384,6 +388,10 @@
           "type": "boolean",
           "default": true,
           "description": "Enable automatic updates and downloads of AppMap tools."
+        },
+        "appMap.configurationUrl": {
+          "type": "string",
+          "markdownDescription": "URL of the organization configuration file. AppMap fetches this on startup and applies any `appMap.*` settings it contains. Can also be set via the `APPMAP_CONFIG_URL` environment variable (explicit setting takes precedence)."
         }
       }
     },

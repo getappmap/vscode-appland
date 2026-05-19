@@ -69,6 +69,8 @@ import AssetService from './assets/assetService';
 import clearNavieAiSettings from './commands/clearNavieAiSettings';
 import ExtensionSettings from './configuration/extensionSettings';
 import OpenNavieHistoryCommand from './commands/openNavieHistory';
+import RemoteConfig from './configuration/remoteConfig';
+import setConfigurationUrl from './commands/setConfigurationUrl';
 
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   CommandRegistry.setContext(context).addWaitAlias({
@@ -77,6 +79,24 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     message: 'AppMap Navie is launching',
     cancellable: true,
   });
+
+  const orgConfigChannel = vscode.window.createOutputChannel('AppMap: Organization Config');
+  context.subscriptions.push(orgConfigChannel);
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand('appmap.setConfigurationUrl', () =>
+      setConfigurationUrl().then(() => orgConfigChannel.show(true))
+    ),
+    vscode.workspace.onDidChangeConfiguration((e) => {
+      if (e.affectsConfiguration('appMap.configurationUrl')) {
+        void RemoteConfig.apply(context, orgConfigChannel);
+      }
+    })
+  );
+
+  // note this needs to be awaited before telemetry is initialized
+  // so any telemetry events go to the right place
+  await RemoteConfig.apply(context, orgConfigChannel);
 
   Telemetry.register(context);
 

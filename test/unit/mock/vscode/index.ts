@@ -25,6 +25,12 @@ enum UIKind {
   Web = 'Web',
 }
 
+enum ConfigurationTarget {
+  Global = 1,
+  Workspace = 2,
+  WorkspaceFolder = 3,
+}
+
 enum StatusBarAlignment {
   Left = 1,
   Right = 2,
@@ -43,6 +49,7 @@ enum QuickPickItemKind {
 
 const MockVSCode = {
   ProgressLocation,
+  ConfigurationTarget,
   authentication,
   CancellationTokenSource,
   EventEmitter,

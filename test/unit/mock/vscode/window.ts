@@ -12,6 +12,14 @@ const doNothing = (..._args: unknown[]): unknown => {
 
 export const EmitOnDidChangeTerminalState = new EventEmitter<vscode.Terminal>();
 
+export interface MockOutputChannel extends vscode.OutputChannel {
+  lines: string[];
+}
+
+export function getOutputChannelLines(channel: vscode.OutputChannel): string[] {
+  return (channel as MockOutputChannel).lines;
+}
+
 function withProgress<R>(
   options: vscode.ProgressOptions,
   task: (
@@ -72,15 +80,26 @@ export default {
   showInformationMessage: doNothing,
   withProgress,
   workspaceFolders: [],
-  createOutputChannel: () => ({
-    append: doNothing,
-    appendLine: doNothing,
-    clear: doNothing,
-    hide: doNothing,
-    name: '',
-    show: doNothing,
-    dispose: doNothing,
-  }),
+  createOutputChannel: () => {
+    const lines: string[] = [];
+    return {
+      lines,
+      append: (value: string) => {
+        if (lines.length === 0) lines.push(value);
+        else lines[lines.length - 1] += value;
+      },
+      appendLine: (line: string) => {
+        lines.push(line);
+      },
+      clear: () => {
+        lines.length = 0;
+      },
+      hide: doNothing,
+      name: '',
+      show: doNothing,
+      dispose: doNothing,
+    };
+  },
   createWebviewPanel: (
     viewType: string,
     title: string,

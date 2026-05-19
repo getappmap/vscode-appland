@@ -31,11 +31,23 @@ type Reporter = Pick<
   testConnection?: () => Promise<unknown>;
 };
 
+const NOOP_TELEMETRY: Reporter = {
+  sendTelemetryEvent(): void {
+    /* no-op */
+  },
+  sendTelemetryErrorEvent(): void {
+    /* no-op */
+  },
+  dispose(): Promise<void> {
+    return Promise.resolve();
+  },
+};
+
 /**
  * The primary interface for sending telemetry data.
  */
 export class Telemetry {
-  private static reporter: Reporter;
+  private static reporter: Reporter = NOOP_TELEMETRY;
   private static debugChannel?: vscode.OutputChannel;
   private static isSplunk = false;
 
@@ -165,17 +177,5 @@ export class Telemetry {
     this.reporter.sendTelemetryEvent('open_uri', { uri: uri.toString() });
   }
 }
-
-const NOOP_TELEMETRY: Reporter = {
-  sendTelemetryEvent(): void {
-    /* no-op */
-  },
-  sendTelemetryErrorEvent(): void {
-    /* no-op */
-  },
-  dispose(): Promise<void> {
-    return Promise.resolve();
-  },
-};
 
 export * from './definitions/events';

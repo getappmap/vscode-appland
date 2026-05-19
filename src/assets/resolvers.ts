@@ -1,7 +1,7 @@
 import { Uri } from 'vscode';
 import { join } from 'node:path';
 import * as log from './log';
-import tryRequest from './tryRequest';
+import tryRequest from '../lib/tryRequest';
 import { VersionResolver } from './versionResolver';
 import DownloadUrlResolver from './downloadUrlResolver';
 import * as ResourceVersions from '../../resources/versions.json';
