@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto';
 import { createReadStream } from 'node:fs';
 
 import * as log from './log';
-import tryRequest from './tryRequest';
+import tryRequest from '../lib/tryRequest';
 import { getPlatformIdentifier } from './types';
 
 export interface ManifestAsset {

@@ -86,6 +86,10 @@ export class Configuration extends Map<string, unknown> {
 
 const configs = new Map<string, Configuration>();
 
+export function resetConfigurations(): void {
+  configs.clear();
+}
+
 export default {
   fs,
   getConfiguration: (key: string) => {
