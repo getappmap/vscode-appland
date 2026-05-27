@@ -80,15 +80,23 @@ async function doApply(
   const appMapConfig = vscode.workspace.getConfiguration('appMap');
   const newConfig: Config = {};
 
+  async function tryUpdate(subKey: string, value: unknown): Promise<void> {
+    try {
+      await appMapConfig.update(subKey, value, vscode.ConfigurationTarget.Global);
+    } catch (e) {
+      channel.appendLine(`Failed to update configuration key ${subKey}: ${e}`);
+    }
+  }
+
   // Apply keys from fetched config
   for (const [fullKey, value] of Object.entries(fetched)) {
     const subKey = fullKey.slice('appMap.'.length);
     const current = appMapConfig.get(subKey);
-    if (current !== value) {
+    if (JSON.stringify(current) !== JSON.stringify(value)) {
       channel.appendLine(
         `Setting ${fullKey}: ${JSON.stringify(current)} → ${JSON.stringify(value)}`
       );
-      await appMapConfig.update(subKey, value, vscode.ConfigurationTarget.Global);
+      await tryUpdate(subKey, value);
     }
     newConfig[fullKey] = value;
   }
@@ -99,7 +107,7 @@ async function doApply(
       if (!(oldKey in newConfig)) {
         const subKey = oldKey.slice('appMap.'.length);
         channel.appendLine(`Reverting ${oldKey}`);
-        await appMapConfig.update(subKey, undefined, vscode.ConfigurationTarget.Global);
+        await tryUpdate(subKey, undefined);
       }
     }
   }
@@ -118,12 +126,11 @@ function sanitizeConfig(raw: object): Config {
 
 export default class RemoteConfig {
   static apply(context: vscode.ExtensionContext, channel: vscode.OutputChannel): Promise<void> {
-    applyChain = applyChain.then(
-      () => doApply(context, channel),
-      (error) => {
+    applyChain = applyChain
+      .then(() => doApply(context, channel))
+      .catch((error) => {
         channel.appendLine(`Failed to apply organization configuration: ${error}`);
-      }
-    );
+      });
     return applyChain;
   }
 }

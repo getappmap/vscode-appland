@@ -78,15 +78,22 @@ export class Telemetry {
         } catch (e) {
           // ignore
         }
-        this.reporter = new SplunkTelemetryReporter(
-          url,
-          token,
-          splunkProperties,
-          telemetryConfig.ca
-        );
-        void this.testConnection();
-        if (this.debugChannel) {
-          this.debugChannel.appendLine('Using Splunk telemetry reporter at ' + url);
+        try {
+          this.reporter = new SplunkTelemetryReporter(
+            url,
+            token,
+            splunkProperties,
+            telemetryConfig.ca
+          );
+          void this.testConnection();
+          if (this.debugChannel) {
+            this.debugChannel.appendLine('Using Splunk telemetry reporter at ' + url);
+          }
+        } catch (e) {
+          if (this.debugChannel) {
+            this.debugChannel.appendLine('Failed to initialize Splunk telemetry reporter: ' + e);
+          }
+          this.reporter = NOOP_TELEMETRY;
         }
       } else {
         if (this.debugChannel) {
