@@ -151,6 +151,16 @@ describe('remoteConfig', () => {
       expect(lines.some((l) => l.includes('https://example.com/config.json'))).to.be.true;
       expect(lines.some((l) => l.includes('setting'))).to.be.true;
     });
+
+    it('handles malformed JSON gracefully', async () => {
+      nock.cleanAll();
+      nock('https://example.com').get('/config.json').reply(200, 'not a { json');
+
+      // This should not throw or reject the activation promise
+      await RemoteConfig.apply(context, channel);
+
+      expect(lines.some((l) => l.includes('Failed to fetch'))).to.be.true;
+    });
   });
 
   describe('apply() — fetch failure with cached config', () => {
