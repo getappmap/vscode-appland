@@ -389,6 +389,10 @@
           "default": true,
           "description": "Enable automatic updates and downloads of AppMap tools."
         },
+        "appMap.telemetry": {
+          "type": "object",
+          "description": "Telemetry configuration. NOTE: Requires a restart to take effect."
+        },
         "appMap.configurationUrl": {
           "type": "string",
           "markdownDescription": "URL of the organization configuration file. AppMap fetches this on startup and applies any `appMap.*` settings it contains. Can also be set via the `APPMAP_CONFIG_URL` environment variable (explicit setting takes precedence)."
