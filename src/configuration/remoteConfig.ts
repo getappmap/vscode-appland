@@ -1,15 +1,20 @@
 import * as vscode from 'vscode';
+import * as fs from 'fs/promises';
 import tryRequest from '../lib/tryRequest';
 
 const CACHE_KEY = 'remoteConfig';
 const TIMEOUT_MS = 3000;
 const EXCLUDED_KEY = 'appMap.configurationUrl';
 
-type Config = Record<`appMap.${string}`, unknown>;
+export type Config = Record<`appMap.${string}`, unknown>;
 
 interface ConfigCache {
   url: string;
   config: Config;
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
 export function getConfigUrl(): { url: string; source: 'setting' | 'env var' } | undefined {
@@ -22,6 +27,71 @@ export function getConfigUrl(): { url: string; source: 'setting' | 'env var' } |
 
 // Serialise concurrent apply() calls so startup fetch and config-change watcher never interleave.
 let applyChain: Promise<void> = Promise.resolve();
+
+async function readAndParseLocalConfig(fsPath: string): Promise<Config> {
+  const content = await fs.readFile(fsPath, 'utf8');
+  const parsed = JSON.parse(content);
+  return sanitizeConfig(parsed);
+}
+
+function sanitizeConfig(raw: unknown): Config {
+  if (!isRecord(raw)) {
+    throw new Error('Configuration is not a valid JSON object');
+  }
+
+  const sanitized: Config = {};
+  for (const [key, value] of Object.entries(raw)) {
+    if (!key.startsWith('appMap.') || key === EXCLUDED_KEY) continue;
+    sanitized[key as `appMap.${string}`] = value;
+  }
+  return sanitized;
+}
+
+async function applyConfigKeys(config: Config, channel?: vscode.OutputChannel): Promise<void> {
+  const appMapConfig = vscode.workspace.getConfiguration('appMap');
+  for (const [fullKey, value] of Object.entries(config)) {
+    const subKey = fullKey.slice('appMap.'.length);
+    const current = appMapConfig.get(subKey);
+    if (JSON.stringify(current) !== JSON.stringify(value)) {
+      if (channel) {
+        channel.appendLine(
+          `Setting ${fullKey}: ${JSON.stringify(current)} → ${JSON.stringify(value)}`
+        );
+      }
+      try {
+        await appMapConfig.update(subKey, value, vscode.ConfigurationTarget.Global);
+      } catch (e) {
+        if (channel) {
+          channel.appendLine(`Failed to update configuration key ${subKey}: ${e}`);
+        }
+      }
+    }
+  }
+}
+
+async function rollbackRemoteConfig(
+  context: vscode.ExtensionContext,
+  channel?: vscode.OutputChannel
+): Promise<void> {
+  const cached = context.globalState.get<ConfigCache>(CACHE_KEY);
+  if (cached) {
+    const appMapConfig = vscode.workspace.getConfiguration('appMap');
+    for (const fullKey of Object.keys(cached.config)) {
+      const subKey = fullKey.slice('appMap.'.length);
+      if (channel) {
+        channel.appendLine(`Reverting ${fullKey}`);
+      }
+      try {
+        await appMapConfig.update(subKey, undefined, vscode.ConfigurationTarget.Global);
+      } catch (e) {
+        if (channel) {
+          channel.appendLine(`Failed to update configuration key ${subKey}: ${e}`);
+        }
+      }
+    }
+    await context.globalState.update(CACHE_KEY, undefined);
+  }
+}
 
 async function doApply(
   context: vscode.ExtensionContext,
@@ -62,9 +132,6 @@ async function doApply(
     }
 
     const raw = await result.json();
-    if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
-      throw new Error('response is not a valid JSON object');
-    }
     fetched = sanitizeConfig(raw);
   } catch (e) {
     channel.appendLine(`Failed to fetch organization configuration from ${url}: ${e}`);
@@ -77,51 +144,26 @@ async function doApply(
     }
   }
 
-  const appMapConfig = vscode.workspace.getConfiguration('appMap');
-  const newConfig: Config = {};
-
-  async function tryUpdate(subKey: string, value: unknown): Promise<void> {
-    try {
-      await appMapConfig.update(subKey, value, vscode.ConfigurationTarget.Global);
-    } catch (e) {
-      channel.appendLine(`Failed to update configuration key ${subKey}: ${e}`);
-    }
-  }
-
   // Apply keys from fetched config
-  for (const [fullKey, value] of Object.entries(fetched)) {
-    const subKey = fullKey.slice('appMap.'.length);
-    const current = appMapConfig.get(subKey);
-    if (JSON.stringify(current) !== JSON.stringify(value)) {
-      channel.appendLine(
-        `Setting ${fullKey}: ${JSON.stringify(current)} → ${JSON.stringify(value)}`
-      );
-      await tryUpdate(subKey, value);
-    }
-    newConfig[fullKey] = value;
-  }
+  await applyConfigKeys(fetched, channel);
 
   // Revert keys present in old cache but absent from new fetch
   if (cached) {
+    const appMapConfig = vscode.workspace.getConfiguration('appMap');
     for (const oldKey of Object.keys(cached.config)) {
-      if (!(oldKey in newConfig)) {
+      if (!(oldKey in fetched)) {
         const subKey = oldKey.slice('appMap.'.length);
         channel.appendLine(`Reverting ${oldKey}`);
-        await tryUpdate(subKey, undefined);
+        try {
+          await appMapConfig.update(subKey, undefined, vscode.ConfigurationTarget.Global);
+        } catch (e) {
+          channel.appendLine(`Failed to update configuration key ${subKey}: ${e}`);
+        }
       }
     }
   }
 
-  await context.globalState.update(CACHE_KEY, { url, config: newConfig });
-}
-
-function sanitizeConfig(raw: object): Config {
-  const sanitized: Config = {};
-  for (const [key, value] of Object.entries(raw)) {
-    if (!key.startsWith('appMap.') || key === EXCLUDED_KEY) continue;
-    sanitized[key] = value;
-  }
-  return sanitized;
+  await context.globalState.update(CACHE_KEY, { url, config: fetched });
 }
 
 export default class RemoteConfig {
@@ -132,5 +174,29 @@ export default class RemoteConfig {
         channel.appendLine(`Failed to apply organization configuration: ${error}`);
       });
     return applyChain;
+  }
+
+  // Structured as static class methods rather than exported free functions to bypass
+  // ES Module static binding limitations during unit testing. This allows Sinon to
+  // stub them reliably via dynamic property lookup at runtime.
+
+  static async readAndParseLocalConfig(fsPath: string): Promise<Config> {
+    return readAndParseLocalConfig(fsPath);
+  }
+
+  static async applyConfigKeys(config: Config, channel?: vscode.OutputChannel): Promise<void> {
+    return applyConfigKeys(config, channel);
+  }
+
+  static applyLocalConfig(config: Config, channel?: vscode.OutputChannel): Promise<void> {
+    applyChain = applyChain.then(() => applyConfigKeys(config, channel)).catch(() => undefined);
+    return applyChain;
+  }
+
+  static async rollbackRemoteConfig(
+    context: vscode.ExtensionContext,
+    channel?: vscode.OutputChannel
+  ): Promise<void> {
+    return rollbackRemoteConfig(context, channel);
   }
 }
