@@ -79,9 +79,14 @@ Set `appMap.configurationUrl` in your VS Code settings deployment (e.g. via a ma
 ### 3. User command (manual)
 
 Ask users to run the **AppMap: Set organization configuration URL** command
-(`Ctrl+Shift+P` / `Cmd+Shift+P`, then type `AppMap organization`). They will be prompted to enter
-the URL. If `APPMAP_CONFIG_URL` is set in the environment, the prompt is pre-populated with that
-value — pressing Enter without changes writes it as an explicit permanent setting.
+(`Ctrl+Shift+P` / `Cmd+Shift+P`, then type `AppMap organization`). A quick-pick menu offers two
+options:
+
+- **Set URL** — prompts for a URL. If `APPMAP_CONFIG_URL` is set in the environment, the prompt is
+  pre-populated with that value — pressing Enter without changes writes it as an explicit permanent
+  setting.
+- **Local File** — opens a file browser to select a local JSON configuration file and applies it
+  immediately as a one-shot operation. See [One-shot local file application](#one-shot-local-file-application).
 
 ## Behavior details
 
@@ -115,6 +120,21 @@ stop automatic updates while keeping the configuration in place.
 
 To revert specific settings after removing the URL, clear them manually in the VS Code settings UI
 or `settings.json`.
+
+### One-shot local file application
+
+The **Local File** option in the **Set organization configuration URL** command applies a local JSON
+file directly, without setting a URL. The file is read and applied once; AppMap does not watch it
+for changes.
+
+Applied settings persist in VS Code global settings until changed manually — there is no automatic
+revert path, and subsequent extension restarts do not re-apply or revert them.
+
+If a configuration URL is active when you apply a local file, AppMap first reverts all settings
+that were applied by that URL and clears the URL setting before applying the local file. If the URL
+came from the `APPMAP_CONFIG_URL` environment variable (which AppMap cannot clear), a warning is
+shown: the local file's settings will take effect immediately, but will be overwritten by the remote
+configuration on the next extension activation as long as the environment variable remains set.
 
 ### Key removal
 

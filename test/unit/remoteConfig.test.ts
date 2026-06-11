@@ -4,6 +4,9 @@ import { expect } from 'chai';
 import Sinon from 'sinon';
 import * as vscode from 'vscode';
 import nock from 'nock';
+import * as fs from 'fs/promises';
+import * as path from 'path';
+import * as os from 'os';
 
 import RemoteConfig, { getConfigUrl } from '../../src/configuration/remoteConfig';
 import setConfigurationUrl from '../../src/commands/setConfigurationUrl';
@@ -320,56 +323,227 @@ describe('remoteConfig', () => {
     });
   });
 
+  describe('readAndParseLocalConfig()', () => {
+    it('returns a sanitized Config when the file is valid JSON and a valid object', async () => {
+      const tempFile = path.join(os.tmpdir(), 'valid-config.json');
+      await fs.writeFile(tempFile, '{"appMap.navie.rpcPort": 3000, "other.key": "ignored"}');
+      try {
+        const config = await RemoteConfig.readAndParseLocalConfig(tempFile);
+        expect(config).to.deep.equal({ 'appMap.navie.rpcPort': 3000 });
+      } finally {
+        await fs.unlink(tempFile).catch(() => undefined);
+      }
+    });
+
+    it('throws an error when the file contains invalid JSON', async () => {
+      const tempFile = path.join(os.tmpdir(), 'invalid-config.json');
+      await fs.writeFile(tempFile, 'invalid json');
+      try {
+        await RemoteConfig.readAndParseLocalConfig(tempFile);
+        expect.fail('should have thrown');
+      } catch (e: unknown) {
+        const message = e instanceof Error ? e.message : String(e);
+        expect(message).to.include('Unexpected token');
+      } finally {
+        await fs.unlink(tempFile).catch(() => undefined);
+      }
+    });
+
+    it('throws an error when the file is valid JSON but not an object', async () => {
+      const tempFile = path.join(os.tmpdir(), 'array-config.json');
+      await fs.writeFile(tempFile, '[1, 2, 3]');
+      try {
+        await RemoteConfig.readAndParseLocalConfig(tempFile);
+        expect.fail('should have thrown');
+      } catch (e: unknown) {
+        const message = e instanceof Error ? e.message : String(e);
+        expect(message).to.equal('Configuration is not a valid JSON object');
+      } finally {
+        await fs.unlink(tempFile).catch(() => undefined);
+      }
+    });
+  });
+
   describe('setConfigurationUrl command', () => {
-    it('shows an empty input box when no setting and no env var are present', async () => {
-      const stub = Sinon.stub(vscode.window, 'showInputBox').resolves(undefined);
-      await setConfigurationUrl();
-      expect(stub.calledOnce).to.be.true;
-      expect(stub.firstCall.args[0]?.value).to.equal('');
+    describe('Set URL option', () => {
+      beforeEach(() => {
+        Sinon.stub(vscode.window, 'showQuickPick').resolves({
+          label: 'Set URL',
+          key: 'url',
+        } as unknown as vscode.QuickPickItem);
+      });
+
+      it('shows an empty input box when no setting and no env var are present', async () => {
+        const stub = Sinon.stub(vscode.window, 'showInputBox').resolves(undefined);
+        await setConfigurationUrl(context, channel);
+        expect(stub.calledOnce).to.be.true;
+        expect(stub.firstCall.args[0]?.value).to.equal('');
+      });
+
+      it('pre-populates with env var when no explicit setting exists', async () => {
+        process.env.APPMAP_CONFIG_URL = 'https://env.example.com/config.json';
+        const stub = Sinon.stub(vscode.window, 'showInputBox').resolves(undefined);
+        await setConfigurationUrl(context, channel);
+        expect(stub.firstCall.args[0]?.value).to.equal('https://env.example.com/config.json');
+      });
+
+      it('pre-populates with the current setting value when one is set', async () => {
+        vscode.workspace
+          .getConfiguration('appMap')
+          .update('configurationUrl', 'https://setting.example.com/config.json');
+        const stub = Sinon.stub(vscode.window, 'showInputBox').resolves(undefined);
+        await setConfigurationUrl(context, channel);
+        expect(stub.firstCall.args[0]?.value).to.equal('https://setting.example.com/config.json');
+      });
+
+      it('writes the entered URL to configurationUrl at Global target on confirm', async () => {
+        Sinon.stub(vscode.window, 'showInputBox').resolves('https://new.example.com/config.json');
+        await setConfigurationUrl(context, channel);
+        expect(vscode.workspace.getConfiguration('appMap').get('configurationUrl')).to.equal(
+          'https://new.example.com/config.json'
+        );
+      });
+
+      it('removes the setting when an empty string is submitted', async () => {
+        vscode.workspace
+          .getConfiguration('appMap')
+          .update('configurationUrl', 'https://example.com/config.json');
+        Sinon.stub(vscode.window, 'showInputBox').resolves('');
+        await setConfigurationUrl(context, channel);
+        expect(vscode.workspace.getConfiguration('appMap').get('configurationUrl')).to.be.undefined;
+      });
+
+      it('does nothing when the input box is cancelled', async () => {
+        vscode.workspace
+          .getConfiguration('appMap')
+          .update('configurationUrl', 'https://example.com/config.json');
+        Sinon.stub(vscode.window, 'showInputBox').resolves(undefined);
+        await setConfigurationUrl(context, channel);
+        expect(vscode.workspace.getConfiguration('appMap').get('configurationUrl')).to.equal(
+          'https://example.com/config.json'
+        );
+      });
     });
 
-    it('pre-populates with env var when no explicit setting exists', async () => {
-      process.env.APPMAP_CONFIG_URL = 'https://env.example.com/config.json';
-      const stub = Sinon.stub(vscode.window, 'showInputBox').resolves(undefined);
-      await setConfigurationUrl();
-      expect(stub.firstCall.args[0]?.value).to.equal('https://env.example.com/config.json');
-    });
+    describe('Local File option', () => {
+      let showQuickPickStub: Sinon.SinonStub;
+      let showOpenDialogStub: Sinon.SinonStub;
+      let showErrorMessageStub: Sinon.SinonStub;
+      let showInformationMessageStub: Sinon.SinonStub;
+      let readConfigStub: Sinon.SinonStub;
 
-    it('pre-populates with the current setting value when one is set', async () => {
-      vscode.workspace
-        .getConfiguration('appMap')
-        .update('configurationUrl', 'https://setting.example.com/config.json');
-      const stub = Sinon.stub(vscode.window, 'showInputBox').resolves(undefined);
-      await setConfigurationUrl();
-      expect(stub.firstCall.args[0]?.value).to.equal('https://setting.example.com/config.json');
-    });
+      beforeEach(() => {
+        showQuickPickStub = Sinon.stub(vscode.window, 'showQuickPick').resolves({
+          label: 'Local File',
+          key: 'file',
+        } as unknown as vscode.QuickPickItem);
+        showOpenDialogStub = Sinon.stub(vscode.window, 'showOpenDialog');
+        showErrorMessageStub = Sinon.stub(vscode.window, 'showErrorMessage');
+        showInformationMessageStub = Sinon.stub(vscode.window, 'showInformationMessage');
+        readConfigStub = Sinon.stub(RemoteConfig, 'readAndParseLocalConfig');
+      });
 
-    it('writes the entered URL to configurationUrl at Global target on confirm', async () => {
-      Sinon.stub(vscode.window, 'showInputBox').resolves('https://new.example.com/config.json');
-      await setConfigurationUrl();
-      expect(vscode.workspace.getConfiguration('appMap').get('configurationUrl')).to.equal(
-        'https://new.example.com/config.json'
-      );
-    });
+      it('does nothing when quick pick is cancelled', async () => {
+        showQuickPickStub.resolves(undefined);
+        await setConfigurationUrl(context, channel);
+        expect(showOpenDialogStub.called).to.be.false;
+      });
 
-    it('removes the setting when an empty string is submitted', async () => {
-      vscode.workspace
-        .getConfiguration('appMap')
-        .update('configurationUrl', 'https://example.com/config.json');
-      Sinon.stub(vscode.window, 'showInputBox').resolves('');
-      await setConfigurationUrl();
-      expect(vscode.workspace.getConfiguration('appMap').get('configurationUrl')).to.be.undefined;
-    });
+      it('does nothing when open dialog is cancelled', async () => {
+        showOpenDialogStub.resolves(undefined);
+        await setConfigurationUrl(context, channel);
+        expect(readConfigStub.called).to.be.false;
+      });
 
-    it('does nothing when the input box is cancelled', async () => {
-      vscode.workspace
-        .getConfiguration('appMap')
-        .update('configurationUrl', 'https://example.com/config.json');
-      Sinon.stub(vscode.window, 'showInputBox').resolves(undefined);
-      await setConfigurationUrl();
-      expect(vscode.workspace.getConfiguration('appMap').get('configurationUrl')).to.equal(
-        'https://example.com/config.json'
-      );
+      it('shows error when file is invalid JSON', async () => {
+        showOpenDialogStub.resolves([
+          { fsPath: '/path/to/invalid.json' },
+        ] as unknown as vscode.Uri[]);
+        readConfigStub.rejects(new Error('SyntaxError: Unexpected token o in JSON at position 1'));
+        await setConfigurationUrl(context, channel);
+        expect(showErrorMessageStub.calledOnce).to.be.true;
+        expect(showErrorMessageStub.firstCall.args[0]).to.include(
+          'Failed to parse configuration file'
+        );
+      });
+
+      it('shows error when file is valid JSON but not an object', async () => {
+        showOpenDialogStub.resolves([{ fsPath: '/path/to/array.json' }] as unknown as vscode.Uri[]);
+        readConfigStub.rejects(new Error('Configuration is not a valid JSON object'));
+        await setConfigurationUrl(context, channel);
+        expect(
+          showErrorMessageStub.calledWith(
+            'Failed to parse configuration file: Configuration is not a valid JSON object'
+          )
+        ).to.be.true;
+      });
+
+      it('applies configuration when valid, and no active URL exists', async () => {
+        showOpenDialogStub.resolves([
+          { fsPath: '/path/to/config.json' },
+        ] as unknown as vscode.Uri[]);
+        readConfigStub.resolves({
+          'appMap.navie.rpcPort': 3000,
+          'appMap.useAnimation': true,
+          'other.key': 'ignored',
+        });
+
+        await setConfigurationUrl(context, channel);
+
+        expect(vscode.workspace.getConfiguration('appMap').get('navie.rpcPort')).to.equal(3000);
+        expect(vscode.workspace.getConfiguration('appMap').get('useAnimation')).to.equal(true);
+        expect(
+          showInformationMessageStub.calledWith(
+            'Successfully applied local organization configuration. These settings will persist until changed manually.'
+          )
+        ).to.be.true;
+        expect(lines.some((l) => l.includes('Successfully applied configuration from local file')))
+          .to.be.true;
+      });
+
+      it('rolls back active configuration URL and cached keys before applying', async () => {
+        // First set up an active configuration URL and cache
+        vscode.workspace
+          .getConfiguration('appMap')
+          .update('configurationUrl', 'https://example.com/config.json');
+        await context.globalState.update('remoteConfig', {
+          url: 'https://example.com/config.json',
+          config: { 'appMap.navie.rpcPort': 4000, 'appMap.useAnimation': true },
+        });
+
+        // Set the active settings
+        vscode.workspace.getConfiguration('appMap').update('navie.rpcPort', 4000);
+        vscode.workspace.getConfiguration('appMap').update('useAnimation', true);
+
+        showOpenDialogStub.resolves([
+          { fsPath: '/path/to/config.json' },
+        ] as unknown as vscode.Uri[]);
+        readConfigStub.resolves({ 'appMap.useAnimation': false });
+
+        await setConfigurationUrl(context, channel);
+
+        // Check active URL was removed and cache cleared
+        expect(vscode.workspace.getConfiguration('appMap').get('configurationUrl')).to.be.undefined;
+        expect(context.globalState.get('remoteConfig')).to.be.undefined;
+
+        // Check previous cache keys not in new file are reverted/reset
+        expect(vscode.workspace.getConfiguration('appMap').get('navie.rpcPort')).to.be.undefined;
+
+        // Check new keys are applied correctly
+        expect(vscode.workspace.getConfiguration('appMap').get('useAnimation')).to.equal(false);
+
+        // Check rollback and success notifications
+        expect(
+          showInformationMessageStub.calledWith(
+            'An organization configuration URL was active. It has been removed and its settings have been reset before applying the new configuration.'
+          )
+        ).to.be.true;
+        expect(
+          showInformationMessageStub.calledWith(
+            'Successfully applied local organization configuration. These settings will persist until changed manually.'
+          )
+        ).to.be.true;
+      });
     });
   });
 });

@@ -85,7 +85,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
   context.subscriptions.push(
     vscode.commands.registerCommand('appmap.setConfigurationUrl', () =>
-      setConfigurationUrl().then(() => orgConfigChannel.show(true))
+      setConfigurationUrl(context, orgConfigChannel).then(() => orgConfigChannel.show(true))
     ),
     vscode.workspace.onDidChangeConfiguration((e) => {
       if (e.affectsConfiguration('appMap.configurationUrl')) {

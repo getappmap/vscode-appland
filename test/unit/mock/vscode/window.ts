@@ -75,6 +75,7 @@ export default {
     return '';
   },
   showQuickPick: doNothing,
+  showOpenDialog: doNothing,
   showErrorMessage: doNothing,
   showWarningMessage: doNothing,
   showInformationMessage: doNothing,
