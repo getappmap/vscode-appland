@@ -1,0 +1,27 @@
+name: Restore build
+description: Restore node_modules and compiled output from cache, rebuilding if needed
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@v6
+      with:
+        node-version: 18
+        cache: yarn
+    - uses: actions/cache@v5
+      id: cache-modules
+      with:
+        path: node_modules
+        key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: ${{ runner.os }}-modules-
+    - uses: actions/cache@v5
+      id: cache-out
+      with:
+        path: out
+        key: ${{ github.sha }}
+    - run: yarn install --immutable
+      if: steps.cache-modules.outputs.cache-hit != 'true'
+      shell: bash
+    - run: yarn compile
+      if: steps.cache-out.outputs.cache-hit != 'true'
+      shell: bash
