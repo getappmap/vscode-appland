@@ -781,7 +781,7 @@
   },
   "dependencies": {
     "@appland/client": "^1.23.0",
-    "@appland/components": "^4.47.0",
+    "@appland/components": "^4.49.0",
     "@appland/diagrams": "^1.8.0",
     "@appland/models": "^2.10.2",
     "@appland/rpc": "^1.22.0",
