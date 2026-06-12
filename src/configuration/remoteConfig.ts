@@ -3,6 +3,10 @@ import * as fs from 'fs/promises';
 import tryRequest from '../lib/tryRequest';
 
 const CACHE_KEY = 'remoteConfig';
+// Permanent record that an organization configuration has been applied at least once.
+// Unlike CACHE_KEY, this is never cleared; it drives UI affordances such as hiding
+// the sign-in screen's "apply your organization's configuration" prompt.
+const APPLIED_MARKER_KEY = 'orgConfigAppliedAt';
 const TIMEOUT_MS = 3000;
 const EXCLUDED_KEY = 'appMap.configurationUrl';
 
@@ -164,6 +168,7 @@ async function doApply(
   }
 
   await context.globalState.update(CACHE_KEY, { url, config: fetched });
+  await context.globalState.update(APPLIED_MARKER_KEY, Date.now());
 }
 
 export default class RemoteConfig {
@@ -198,5 +203,15 @@ export default class RemoteConfig {
     channel?: vscode.OutputChannel
   ): Promise<void> {
     return rollbackRemoteConfig(context, channel);
+  }
+
+  static async markApplied(context: vscode.ExtensionContext): Promise<void> {
+    await context.globalState.update(APPLIED_MARKER_KEY, Date.now());
+  }
+
+  static isApplied(context: vscode.ExtensionContext): boolean {
+    return (
+      getConfigUrl() !== undefined || context.globalState.get(APPLIED_MARKER_KEY) !== undefined
+    );
   }
 }

@@ -16,6 +16,8 @@ export default function mountSignInView() {
           ref: 'ui',
           props: {
             appmapServerUrl: initialData.appmapServerUrl,
+            enableOrgConfig: initialData.enableOrgConfig,
+            orgConfigApplied: initialData.orgConfigApplied,
           },
         });
       },
@@ -31,6 +33,12 @@ export default function mountSignInView() {
 
     app.$on('click-sign-in-link', (linkType) => {
       messages.rpc('click-sign-in-link', linkType);
+    });
+
+    app.$on('apply-org-config', async () => {
+      // Generous timeout: the user may take a while in the file picker or URL prompt.
+      const response = await messages.rpc('apply-org-config', undefined, 10 * 60 * 1000);
+      if (response.applied) app.$refs.ui.onOrgConfigApplied();
     });
   });
 

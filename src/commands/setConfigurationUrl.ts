@@ -74,6 +74,7 @@ export default async function setConfigurationUrl(
     }
 
     await RemoteConfig.applyLocalConfig(sanitized, channel);
+    await RemoteConfig.markApplied(context);
     if (channel) {
       channel.appendLine(`Successfully applied configuration from local file: ${uri.fsPath}`);
     }

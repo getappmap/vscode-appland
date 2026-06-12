@@ -61,9 +61,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/components@npm:^4.47.0":
-  version: 4.47.0
-  resolution: "@appland/components@npm:4.47.0"
+"@appland/components@npm:^4.49.0":
+  version: 4.49.0
+  resolution: "@appland/components@npm:4.49.0"
   dependencies:
     "@appland/client": ^1.12.0
     "@appland/diagrams": ^1.7.0
@@ -90,7 +90,7 @@ __metadata:
     sql-formatter: ^4.0.2
     vue: ^2.7.16
     vuex: ^3.6.0
-  checksum: 23ef18353dccea40d10ae608cc9ad54ac00fb88a4b9476b95c5031db0723bb49715b534db75e7ce3cbfc3dbafb5ef9370e48301654a379a9fccca6ea9dcbb3b4
+  checksum: 9d9e9b4adc7d436b7688e62e5b3c8867d93d562e1c91f4197747673f133ef5707867fd316251dd3700d130b37c640b2db8d8fc5feea5576b468833d5667dd844
   languageName: node
   linkType: hard
 
@@ -2506,7 +2506,7 @@ __metadata:
   resolution: "appmap@workspace:."
   dependencies:
     "@appland/client": ^1.23.0
-    "@appland/components": ^4.47.0
+    "@appland/components": ^4.49.0
     "@appland/diagrams": ^1.8.0
     "@appland/models": ^2.10.2
     "@appland/rpc": ^1.22.0

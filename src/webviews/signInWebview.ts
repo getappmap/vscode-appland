@@ -3,6 +3,7 @@ import SignInManager from '../services/signInManager';
 import getWebviewContent from './getWebviewContent';
 import AppMapServerAuthenticationProvider from '../authentication/appmapServerAuthenticationProvider';
 import ExtensionSettings from '../configuration/extensionSettings';
+import RemoteConfig from '../configuration/remoteConfig';
 
 export default class SignInViewProvider implements vscode.WebviewViewProvider {
   public static readonly viewType = 'appmap.views.signIn';
@@ -39,7 +40,25 @@ export default class SignInViewProvider implements vscode.WebviewViewProvider {
           webviewView.webview.postMessage({
             type: 'init-sign-in',
             appmapServerUrl,
+            enableOrgConfig: true,
+            orgConfigApplied: RemoteConfig.isApplied(this.context),
           });
+          break;
+        }
+
+        case 'apply-org-config': {
+          try {
+            await vscode.commands.executeCommand('appmap.setConfigurationUrl');
+            webviewView.webview.postMessage({
+              type: 'apply-org-config',
+              applied: RemoteConfig.isApplied(this.context),
+            });
+          } catch (e) {
+            webviewView.webview.postMessage({
+              type: 'apply-org-config',
+              error: e instanceof Error ? e.message : String(e),
+            });
+          }
           break;
         }
 
