@@ -56,6 +56,24 @@ export class Telemetry {
       this.debugChannel = vscode.window.createOutputChannel('AppMap: Telemetry');
     }
 
+    this.initializeReporter();
+
+    context.subscriptions.push(
+      this,
+      vscode.workspace.onDidChangeConfiguration((e) => {
+        if (e.affectsConfiguration('appMap.telemetry')) {
+          Telemetry.debugChannel?.appendLine(
+            'Telemetry configuration changed. Reinitializing reporter...'
+          );
+          Telemetry.initializeReporter();
+        }
+      })
+    );
+  }
+
+  private static initializeReporter(): void {
+    void this.dispose();
+
     const telemetryConfig = ExtensionSettings.telemetryConfiguration;
     const commonProperties: Record<string, string> = {
       'common.os': os.platform(),
@@ -103,10 +121,22 @@ export class Telemetry {
         this.reporter = NOOP_TELEMETRY;
       }
     } else {
+      this.isSplunk = false;
       this.reporter = new TelemetryReporter(EXTENSION_ID, EXTENSION_VERSION, INSTRUMENTATION_KEY);
+      this.debugChannel?.appendLine('Using Application Insights telemetry reporter.');
     }
+  }
 
-    context.subscriptions.push(this.reporter);
+  static async dispose(): Promise<void> {
+    // set reporter to NOOP_TELEMETRY before yielding to avoid races
+    const reporter = this.reporter;
+    this.reporter = NOOP_TELEMETRY;
+
+    try {
+      await reporter.dispose();
+    } catch (e) {
+      this.debugChannel?.appendLine('Failed to dispose telemetry reporter: ' + e);
+    }
   }
 
   private static async testConnection(): Promise<void> {
@@ -182,6 +212,13 @@ export class Telemetry {
 
   static reportOpenUri(uri: vscode.Uri): void {
     this.reporter.sendTelemetryEvent('open_uri', { uri: uri.toString() });
+  }
+
+  /**
+   * Returns the current active telemetry reporter.
+   */
+  public static getReporter(): Reporter {
+    return this.reporter;
   }
 }
 

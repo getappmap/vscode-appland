@@ -79,7 +79,17 @@ const MockVSCode = {
   UIKind,
 };
 
-class mockTelemetry {}
+class mockTelemetry {
+  sendTelemetryEvent(): void {
+    /* no-op */
+  }
+  sendTelemetryErrorEvent(): void {
+    /* no-op */
+  }
+  dispose(): Promise<void> {
+    return Promise.resolve();
+  }
+}
 
 mockery.registerMock('vscode', MockVSCode);
 mockery.registerMock('vscode-extension-telemetry', mockTelemetry);
