@@ -1,3 +1,17 @@
+# [0.142.0](https://github.com/getappmap/vscode-appland/compare/v0.141.1...v0.142.0) (2026-06-29)
+
+
+### Bug Fixes
+
+* **telemetry:** prevent extension startup failure on invalid configuration ([74ccd41](https://github.com/getappmap/vscode-appland/commit/74ccd411d7c57fda431fdd97a8ca50dc8ebd4833))
+
+
+### Features
+
+* **enterprise:** organization configuration prompt on the sign-in screen ([4c831dc](https://github.com/getappmap/vscode-appland/commit/4c831dcc9c4e896c47d1bb39575ae1c53feb211e)), closes [getappmap/appmap-js#2363](https://github.com/getappmap/appmap-js/issues/2363)
+* **enterprise:** organization configuration URL ([a04989e](https://github.com/getappmap/vscode-appland/commit/a04989e1248af465859b523956ecb62c62f6778c))
+* **telemetry:** support live reconfiguration of extension & background CLI processes ([bb3902b](https://github.com/getappmap/vscode-appland/commit/bb3902b7d6d23ace6400b4f09d352594b932e1d4))
+
 ## [0.141.1](https://github.com/getappmap/vscode-appland/compare/v0.141.0...v0.141.1) (2026-05-16)
 
 
