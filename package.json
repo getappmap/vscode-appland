@@ -2,7 +2,7 @@
   "publisher": "appland",
   "name": "appmap",
   "displayName": "AppMap",
-  "description": "AI-driven chat with a deep understanding of your code. Build effective solutions using an intuitive chat interface and powerful code visualizations.",
+  "description": "Runtime-aware AI starts here. AppMap records how your app actually runs — interactive diagrams for you, and real execution data for any AI coding agent via MCP.",
   "version": "0.142.0",
   "repository": {
     "type": "git",
