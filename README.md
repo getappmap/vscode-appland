@@ -17,8 +17,9 @@ People see the map. Agents query the trace. One run, same ground truth.
 
 ## Why developers use it
 
-- **Review behavior, not just diffs.** See what an AI-generated change actually did at runtime
-  before you open the PR.
+- **A visual check on your AI's work.** On complex changes the diff outgrows what anyone can hold
+  in their head. AppMap shows what the change actually did at runtime, so your approval rests on
+  evidence, not on the AI's own explanation.
 - **Debug in one query, not fifteen greps.** The request path, the SQL, and the exception are one
   trace away, for you and your agent.
 - **Give your agent ground truth.** Answers from real execution over MCP, not guesses from static
