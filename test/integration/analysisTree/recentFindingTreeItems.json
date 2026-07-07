@@ -1,5 +1,8 @@
 [
-  { "label": "Findings table", "children": [] },
+  {
+    "label": "Findings table",
+    "children": []
+  },
   {
     "label": "project-several-findings",
     "children": [
@@ -37,6 +40,10 @@
                       {
                         "label": "log_device.rb",
                         "children": []
+                      },
+                      {
+                        "label": "log_device.rb",
+                        "children": []
                       }
                     ]
                   }
@@ -48,6 +55,14 @@
                   {
                     "label": "N plus 1 SQL query",
                     "children": [
+                      {
+                        "label": "_micropost.html.erb",
+                        "children": []
+                      },
+                      {
+                        "label": "_micropost.html.erb",
+                        "children": []
+                      },
                       {
                         "label": "_micropost.html.erb",
                         "children": []

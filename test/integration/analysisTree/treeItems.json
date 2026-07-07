@@ -1,5 +1,8 @@
 [
-  { "label": "Findings table", "children": [] },
+  {
+    "label": "Findings table",
+    "children": []
+  },
   {
     "label": "project-several-findings",
     "children": [

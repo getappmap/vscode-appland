@@ -11,6 +11,10 @@
               {
                 "label": "log_device.rb",
                 "children": []
+              },
+              {
+                "label": "log_device.rb",
+                "children": []
               }
             ]
           }
@@ -22,6 +26,14 @@
           {
             "label": "N plus 1 SQL query",
             "children": [
+              {
+                "label": "_micropost.html.erb",
+                "children": []
+              },
+              {
+                "label": "_micropost.html.erb",
+                "children": []
+              },
               {
                 "label": "_micropost.html.erb",
                 "children": []

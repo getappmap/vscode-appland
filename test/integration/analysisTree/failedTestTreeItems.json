@@ -16,7 +16,8 @@
         ]
       },
       {
-        "label": "Findings"
+        "label": "Findings",
+        "children": []
       }
     ]
   }
