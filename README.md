@@ -46,27 +46,27 @@ Get started:
 
 ## Ways to use AppMap with your AI
 
-- **Explain unfamiliar code.** Ask your agent how a feature actually works. It answers from recorded
-  requests, SQL, and call trees instead of guessing from file names.
-- **Diagnose bugs in one query.** A single call tree query returns the diagnosis-bearing frames,
-  with captured parameters and return values, that a static agent reconstructs with about fifteen
-  grep-and-read calls.
-- **Review changes against reality.** Record the same flows on your base branch and your PR branch,
-  then compare: sequence diagram diffs and compare reports show what the change actually did,
-  including side effects the code diff never showed.
-- **Scan for behavioral defects.** AppMap's built-in code scanners are a behavioral check for
-  structural code quality defects, the kind static analysis misses and AIs reading source cannot
-  see: N+1 queries, missing authentication, secrets in logs, slow queries. Findings appear right in
-  the editor.
-- **Document APIs from behavior.** Generate OpenAPI definitions from observed HTTP traffic instead
-  of hand-written annotations.
+- **Explain unfamiliar code.** Ask your agent how a feature works. It answers from recorded
+  requests, SQL queries, and call trees.
+- **Diagnose bugs.** A call tree query returns the executed frames for the flow under
+  investigation, with captured parameters and return values.
+- **Compare before and after.** Record the same flows on your base branch and your PR branch;
+  sequence diagram diffs and compare reports show extra calls, changed SQL, and new downstream
+  dependencies.
+- **Scan for behavioral defects.** The built-in code scanners check recorded behavior for
+  structural code quality defects, as distinct from static defects: N+1 queries, missing
+  authentication, secrets in logs, slow queries. Findings appear in the editor.
+- **Generate OpenAPI definitions** from observed HTTP traffic.
 
-### What runtime context is worth
+### The cost, measured
 
-In a controlled AppMap study (June 2026), an agent with trace access held 100% diagnostic accuracy
-under a tight tool-call budget, while the static-context agent fell from 91% to 28% as the budget
-tightened. Pairing a compact model with trace data delivered near-frontier accuracy at about half
-the cost. And recording costs zero model tokens: the running application produces the data.
+A controlled AppMap study (June 2026) compared trace-augmented and static agents on the same bugs
+and the same models. The trace-augmented agent held 100% diagnostic accuracy as the tool-call
+budget tightened to three calls; the static agent fell from 91% to 28%. One call tree query
+returned the frames that the static agent reconstructed with about fifteen file-reading calls. A
+compact model paired with trace data reached 88% verified fixes at $0.57 per fix; a frontier model
+without traces reached 95% at $1.16. Recording a trace consumes no model tokens; the running
+application produces it.
 
 ## See what your code actually does
 
