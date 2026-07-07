@@ -8,8 +8,8 @@
 **Live code behavior, for your eyes and your AI tools, in Visual Studio Code.**
 
 AppMap records how your application actually runs, with zero code changes. Every run becomes
-interactive sequence diagrams, dependency maps, flame graphs, and trace views. The same runtime
-data is available to any AI coding agent through the Model Context Protocol (MCP). GitHub Copilot,
+interactive sequence diagrams, dependency maps, flame graphs, and trace views. The same runtime data
+is available to any AI coding agent through the Model Context Protocol (MCP). GitHub Copilot,
 Claude, Cursor, and any other MCP-capable agent can query real execution traces instead of guessing
 from static code.
 
@@ -17,8 +17,8 @@ People see the map. Agents query the trace. One run, same ground truth.
 
 ## Why developers use it
 
-- **A visual check on your AI's work.** On complex changes the diff outgrows what anyone can hold
-  in their head. AppMap shows what the change actually did at runtime, so your approval rests on
+- **A visual check on your AI's work.** On complex changes the diff outgrows what anyone can hold in
+  their head. AppMap shows what the change actually did at runtime, so your approval rests on
   evidence, not on the AI's own explanation.
 - **Debug in one query, not fifteen greps.** The request path, the SQL, and the exception are one
   trace away, for you and your agent.
@@ -43,6 +43,30 @@ Get started:
 - [Configure the AppMap MCP server for any AI coding agent](https://appmap.io/docs/reference/appmap-mcp.html)
 - [AppMap for Visual Studio Code reference](https://appmap.io/docs/reference/vscode.html)
 - [Record AppMap Data](https://appmap.io/docs/get-started-with-appmap/making-appmap-data.html)
+
+## Ways to use AppMap with your AI
+
+- **Explain unfamiliar code.** Ask your agent how a feature actually works. It answers from recorded
+  requests, SQL, and call trees instead of guessing from file names.
+- **Diagnose bugs in one query.** A single call tree query returns the diagnosis-bearing frames,
+  with captured parameters and return values, that a static agent reconstructs with about fifteen
+  grep-and-read calls.
+- **Review changes against reality.** Record the same flows on your base branch and your PR branch,
+  then compare: sequence diagram diffs and compare reports show what the change actually did,
+  including side effects the code diff never showed.
+- **Scan for behavioral defects.** AppMap's built-in code scanners are a behavioral check for
+  structural code quality defects, the kind static analysis misses and AIs reading source cannot
+  see: N+1 queries, missing authentication, secrets in logs, slow queries. Findings appear right in
+  the editor.
+- **Document APIs from behavior.** Generate OpenAPI definitions from observed HTTP traffic instead
+  of hand-written annotations.
+
+### What runtime context is worth
+
+In a controlled AppMap study (June 2026), an agent with trace access held 100% diagnostic accuracy
+under a tight tool-call budget, while the static-context agent fell from 91% to 28% as the budget
+tightened. Pairing a compact model with trace data delivered near-frontier accuracy at about half
+the cost. And recording costs zero model tokens: the running application produces the data.
 
 ## See what your code actually does
 
@@ -78,8 +102,8 @@ Get started:
 
 ## Documentation
 
-AppMap is open source and built for enterprise environments: recordings and analysis stay local,
-and the data spec is public. For detailed information
+AppMap is open source and built for enterprise environments: recordings and analysis stay local, and
+the data spec is public. For detailed information
 [visit our documentation](https://appmap.io/docs/appmap-docs.html).
 
 ## Licensing and Security
