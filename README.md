@@ -48,25 +48,25 @@ Get started:
 
 - **Explain unfamiliar code.** Ask your agent how a feature works. It answers from recorded
   requests, SQL queries, and call trees.
-- **Diagnose bugs.** A call tree query returns the executed frames for the flow under
-  investigation, with captured parameters and return values.
+- **Diagnose bugs.** A call tree query returns the executed frames for the flow under investigation,
+  with captured parameters and return values.
 - **Compare before and after.** Record the same flows on your base branch and your PR branch;
   sequence diagram diffs and compare reports show extra calls, changed SQL, and new downstream
   dependencies.
-- **Scan for behavioral defects.** The built-in code scanners check recorded behavior for
-  structural code quality defects, as distinct from static defects: N+1 queries, missing
-  authentication, secrets in logs, slow queries. Findings appear in the editor.
+- **Scan for behavioral defects.** The built-in code scanners check recorded behavior for structural
+  code quality defects, as distinct from static defects: N+1 queries, missing authentication,
+  secrets in logs, slow queries. Findings appear in the editor.
 - **Generate OpenAPI definitions** from observed HTTP traffic.
 
 ### The cost, measured
 
 A controlled AppMap study (June 2026) compared trace-augmented and static agents on the same bugs
-and the same models. The trace-augmented agent held 100% diagnostic accuracy as the tool-call
-budget tightened to three calls; the static agent fell from 91% to 28%. One call tree query
-returned the frames that the static agent reconstructed with about fifteen file-reading calls. A
-compact model paired with trace data reached 88% verified fixes at $0.57 per fix; a frontier model
-without traces reached 95% at $1.16. Recording a trace consumes no model tokens; the running
-application produces it.
+and the same models. The trace-augmented agent held 100% diagnostic accuracy as the tool-call budget
+tightened to three calls; the static agent fell from 91% to 28%. One call tree query returned the
+frames that the static agent reconstructed with about fifteen file-reading calls. A compact model
+paired with trace data reached 88% verified fixes at $0.57 per fix; a frontier model without traces
+reached 95% at $1.16. Recording a trace consumes no model tokens; the running application produces
+it.
 
 ## See what your code actually does
 
