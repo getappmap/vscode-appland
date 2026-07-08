@@ -24,7 +24,7 @@ import { waitForAnalysisTree } from './waitForAnalysisTree';
 //   UPDATE_SNAPSHOTS=1 TEST_FILE=./analysisTree/treeItems.test.ts yarn test:integration
 //
 // Review the resulting diff before committing.
-const UPDATE_SNAPSHOTS = !!process.env.UPDATE_SNAPSHOTS;
+const UPDATE_SNAPSHOTS = process.env.UPDATE_SNAPSHOTS === '1';
 
 export interface AnalysisTreeTestOptions {
   /** describe(...) block title */
@@ -130,7 +130,8 @@ async function waitForStableTree(
         latestSerialized = serialized;
         stableSince = performance.now();
       }
-      const loaded = tree.some((item) => item.label === 'project-several-findings');
+      const project = tree.find((item) => item.label === 'project-several-findings');
+      const loaded = !!project?.children?.some((item) => item.label === 'Findings');
       return loaded && performance.now() - stableSince >= SETTLE_MS;
     },
     60000
@@ -157,7 +158,7 @@ export function describeAnalysisTree(options: AnalysisTreeTestOptions): void {
     beforeEach(initializeWorkspace);
     beforeEach(async () => (analysisTree = await waitForAnalysisTree()));
     beforeEach(() => (prepareFindingsTask = setInterval(prepareFindings, 1000)));
-    afterEach(() => (prepareFindingsTask ? clearTimeout(prepareFindingsTask) : undefined));
+    afterEach(() => (prepareFindingsTask ? clearInterval(prepareFindingsTask) : undefined));
     afterEach(initializeWorkspace);
 
     it(options.it, async () => {
