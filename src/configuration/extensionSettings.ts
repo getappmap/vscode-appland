@@ -51,11 +51,18 @@ export default class ExtensionSettings {
 
     const telemetryConfig = this.telemetryConfiguration;
     if (telemetryConfig.backend === 'splunk') {
+      // Splunk telemetry targets enterprise environments where the organization's
+      // telemetry policy is enforced, so it is kept enabled regardless of the
+      // local IDE telemetry setting.
       result.APPMAP_TELEMETRY_BACKEND ??= 'splunk';
       result.APPMAP_TELEMETRY_DISABLED ??= 'false';
       if (telemetryConfig.url) result.SPLUNK_URL ??= telemetryConfig.url;
       if (telemetryConfig.token) result.SPLUNK_TOKEN ??= telemetryConfig.token;
       if (telemetryConfig.ca) result.SPLUNK_CA_CERT ??= telemetryConfig.ca;
+    } else if (!vscode.env.isTelemetryEnabled) {
+      // Propagate the user's IDE telemetry opt-out to child processes (RPC server,
+      // indexer, scanner).
+      result.APPMAP_TELEMETRY_DISABLED ??= 'true';
     }
 
     result.APPMAP_TELEMETRY_PROPERTIES ??= JSON.stringify({

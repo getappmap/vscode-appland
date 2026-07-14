@@ -122,7 +122,19 @@ export class WorkspaceServices implements vscode.Disposable {
   }
 
   /**
-   * Gets all instances of a given service, with an optional folder name.
+   * Gets all instances of a service identified by its class, with an optional workspace folder filter.
+   */
+  getServiceInstancesFromClass<
+    T extends WorkspaceService<I>,
+    I extends WorkspaceServiceInstance = WorkspaceServiceInstanceType<T>
+  >(serviceClass: WorkspaceServiceConstructor<T>, folder?: vscode.WorkspaceFolder): I[] {
+    const service = this.getService(serviceClass);
+    if (!service) return [];
+    return this.getServiceInstances<T, I>(service, folder);
+  }
+
+  /**
+   * Gets all instances of a given service, with an optional workspace folder filter.
    */
   getServiceInstances<
     T extends WorkspaceService<I>,
