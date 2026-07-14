@@ -286,15 +286,28 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       );
       ReviewWebview.register(context, rpcService);
 
+      // Restart the RPC server, indexer and scanner so they pick up the environment
+      // built by ExtensionSettings.appMapCommandLineEnvironment (command-line
+      // environment and telemetry configuration). Both restart paths handle their
+      // own errors, so voiding the returned promise cannot yield an unhandled
+      // rejection.
+      const restartServicesForEnvironmentChange = (reason: string) => {
+        rpcService.debouncedRestart();
+        void processService.restartAll(reason);
+      };
+
       context.subscriptions.push(
         vscode.workspace.onDidChangeConfiguration((e) => {
-          if (
-            e.affectsConfiguration('appMap.commandLineEnvironment') ||
-            e.affectsConfiguration('appMap.telemetry')
-          ) {
-            rpcService.debouncedRestart();
-          }
+          if (e.affectsConfiguration('appMap.commandLineEnvironment'))
+            restartServicesForEnvironmentChange('AppMap command-line environment changed');
+          else if (e.affectsConfiguration('appMap.telemetry'))
+            restartServicesForEnvironmentChange('AppMap telemetry configuration changed');
         }),
+        // Honor the IDE's global telemetry opt-out at runtime by propagating it to
+        // child processes when the user toggles it.
+        vscode.env.onDidChangeTelemetryEnabled(() =>
+          restartServicesForEnvironmentChange('IDE telemetry setting changed')
+        ),
         vscode.commands.registerCommand('appmap.rpc.restart', async () => {
           await rpcService.restartServer();
           vscode.window.showInformationMessage('Navie restarted successfully.');

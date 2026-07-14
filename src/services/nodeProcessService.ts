@@ -37,6 +37,22 @@ export class NodeProcessService implements WorkspaceService<NodeProcessServiceIn
     return instance;
   }
 
+  // Restart every instance of this service so it picks up a fresh environment
+  // (see ExtensionSettings.appMapCommandLineEnvironment). Failures are logged
+  // rather than propagated, so callers can safely fire-and-forget.
+  async restartAll(reason: string): Promise<void> {
+    NodeProcessService.outputChannel.appendLine(`${reason}. Restarting AppMap services.`);
+    const instances = workspaceServices().getServiceInstancesFromClass(NodeProcessService);
+    const results = await Promise.allSettled(instances.map((instance) => instance.restart(reason)));
+    for (const result of results) {
+      if (result.status === 'rejected') {
+        NodeProcessService.outputChannel.appendLine(
+          `Failed to restart AppMap service after ${reason}: ${result.reason}`
+        );
+      }
+    }
+  }
+
   private async handleConfigChange(folder: vscode.WorkspaceFolder): Promise<void> {
     const currentInstance = workspaceServices().getServiceInstanceFromClass(
       NodeProcessService,
