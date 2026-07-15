@@ -3,6 +3,9 @@ import assert from 'assert';
 import { initializeWorkspace, waitFor, waitForExtension, withAuthenticatedUser } from '../util';
 
 describe('AppMaps', () => {
+  // The AppMaps tree is populated by the indexer, which only starts once an API
+  // token is available (ProcessWatcher.canStart), so an authenticated user is
+  // required here even though the test asserts nothing about analysis findings.
   withAuthenticatedUser();
 
   beforeEach(initializeWorkspace);

@@ -18,7 +18,10 @@ async function waitForCodeObjectsTree(): Promise<ClassMapTreeDataProvider> {
   return extension.trees.codeObjects;
 }
 
-describe.only('class map with external service', () => {
+describe('class map with external service', () => {
+  // The Code Objects tree is populated by the indexer, which only starts once an
+  // API token is available (ProcessWatcher.canStart), so an authenticated user is
+  // required even though this suite asserts nothing about analysis findings.
   withAuthenticatedUser();
 
   let codeObjectsTree: ClassMapTreeDataProvider;
