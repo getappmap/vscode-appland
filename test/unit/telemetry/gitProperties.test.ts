@@ -1,6 +1,8 @@
+import '../mock/vscode';
+
 import assert from 'assert';
-import GitProperties, { buildIgnore } from '../../src/telemetry/properties/versionControlGit';
-import { ProjectA, withTmpDir } from './util';
+import GitProperties, { buildIgnore } from '../../../src/telemetry/properties/versionControlGit';
+import { ProjectA, withTmpDir } from '../testFixtures';
 import { promises as fs } from 'fs';
 import * as path from 'path';
 

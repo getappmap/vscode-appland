@@ -1,18 +1,23 @@
+import '../mock/vscode';
+
 import * as vscode from 'vscode';
 import assert from 'assert';
-import { initializeWorkspace, ProjectA, waitForExtension } from '../util';
+import { ProjectA } from '../testFixtures';
 import {
   AppMapTerminalLink,
   AppMapTerminalLinkProvider,
 } from '../../../src/terminalLink/appmapLinkProvider';
 import Sinon from 'sinon';
-import { expect } from '@playwright/test';
 import { join } from 'path';
 
 describe('TerminalLink', () => {
-  beforeEach(initializeWorkspace);
-  beforeEach(waitForExtension);
-  afterEach(initializeWorkspace);
+  // bestFilePath resolves relative AppMap paths by globbing the workspace folders.
+  beforeEach(() =>
+    Sinon.stub(vscode.workspace, 'workspaceFolders').value([
+      { uri: vscode.Uri.file(ProjectA), name: 'project-a', index: 0 },
+    ])
+  );
+  afterEach(() => Sinon.restore());
 
   const firstLink = {
     startIndex: 22,
@@ -52,24 +57,24 @@ describe('TerminalLink', () => {
     await linkProvider.handleTerminalLink(firstLink);
     await linkProvider.handleTerminalLink(secondLink);
 
-    expect(executeCommand.getCalls()).toHaveLength(2);
+    assert.strictEqual(executeCommand.getCalls().length, 2);
 
     {
       const call = executeCommand.getCalls()[0];
-      expect(call.args[0]).toEqual('vscode.open');
-      expect(call.args[1].scheme).toEqual('file');
-      expect(call.args[1].path).toEqual(firstLink.appMapFileName);
-      expect(JSON.parse(call.args[1].fragment)).toEqual({
+      assert.strictEqual(call.args[0], 'vscode.open');
+      assert.strictEqual(call.args[1].scheme, 'file');
+      assert.strictEqual(call.args[1].path, firstLink.appMapFileName);
+      assert.deepStrictEqual(JSON.parse(call.args[1].fragment), {
         currentView: 'viewFlow',
       });
     }
 
     {
       const call = executeCommand.getCalls()[1];
-      expect(call.args[0]).toEqual('vscode.open');
-      expect(call.args[1].scheme).toEqual('file');
-      expect(call.args[1].path).toEqual(join(ProjectA, secondLink.appMapFileName));
-      expect(JSON.parse(call.args[1].fragment)).toEqual({
+      assert.strictEqual(call.args[0], 'vscode.open');
+      assert.strictEqual(call.args[1].scheme, 'file');
+      assert.strictEqual(call.args[1].path, join(ProjectA, secondLink.appMapFileName));
+      assert.deepStrictEqual(JSON.parse(call.args[1].fragment), {
         currentView: 'viewFlow',
         selectedObject: `event:${secondLink.eventId}`,
       });

@@ -1,8 +1,10 @@
+import '../mock/vscode';
+
 import assert from 'assert';
 import sinon from 'sinon';
 import * as vscode from 'vscode';
-import MockExtensionContext from '../mocks/mockExtensionContext';
-import FilterStore, { SavedFilter } from '../../src/webviews/filterStore';
+import MockExtensionContext from '../../mocks/mockExtensionContext';
+import FilterStore, { SavedFilter } from '../../../src/webviews/filterStore';
 
 const defaultFilter = {
   default: true,

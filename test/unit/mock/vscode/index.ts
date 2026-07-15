@@ -96,6 +96,19 @@ const MockVSCode = {
     }
   },
   TreeItemCollapsibleState: { None: 0, Collapsed: 1, Expanded: 2 },
+  TerminalLink: class {
+    constructor(public startIndex: number, public length: number, public tooltip?: string) {}
+  },
+  RelativePattern: class {
+    base: string;
+    baseUri: URI;
+    constructor(base: string | URI | { uri: URI }, public pattern: string) {
+      if (typeof base === 'string') this.baseUri = URI.file(base);
+      else if ('uri' in base) this.baseUri = base.uri;
+      else this.baseUri = base;
+      this.base = this.baseUri.fsPath;
+    }
+  },
   UIKind,
 };
 

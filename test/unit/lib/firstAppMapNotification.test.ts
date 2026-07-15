@@ -1,3 +1,5 @@
+import '../mock/vscode';
+
 import assert from 'assert';
 import * as vscode from 'vscode';
 import { SinonSandbox, createSandbox } from 'sinon';
