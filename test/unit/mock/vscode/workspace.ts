@@ -103,6 +103,16 @@ export default {
   getWorkspaceFolder(uri: unknown): WorkspaceFolder | undefined {
     return uri ? TEST_WORKSPACE : undefined;
   },
+  asRelativePath(pathOrUri: string | { fsPath?: string; path?: string }): string {
+    const p = typeof pathOrUri === 'string' ? pathOrUri : pathOrUri.fsPath ?? pathOrUri.path ?? '';
+    const folders = (this.workspaceFolders || []) as ReadonlyArray<WorkspaceFolder>;
+    for (const folder of folders) {
+      const base = folder.uri.fsPath;
+      if (p === base) return '';
+      if (p.startsWith(`${base}/`)) return p.slice(base.length + 1);
+    }
+    return p;
+  },
   findFiles(
     include: string,
     _exclude?: string | null,

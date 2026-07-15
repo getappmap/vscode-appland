@@ -1,3 +1,9 @@
 node_modules
-tmp/appmap/minitest/Microposts_interface_micropost_interface/
-tmp/appmap/minitest/Users_signup_valid_signup_information_with_account_activation/
+# The scanner/indexer regenerate these index dirs, so ignore their contents — except
+# appmap-findings.json, which is committed as deterministic input for the findings tree
+# unit tests (test/unit/tree/findingsTreeDataProvider.test.ts). The contents must be ignored
+# with /* (not the dir itself), or git cannot re-include the negated file.
+tmp/appmap/minitest/Microposts_interface_micropost_interface/*
+!tmp/appmap/minitest/Microposts_interface_micropost_interface/appmap-findings.json
+tmp/appmap/minitest/Users_signup_valid_signup_information_with_account_activation/*
+!tmp/appmap/minitest/Users_signup_valid_signup_information_with_account_activation/appmap-findings.json
