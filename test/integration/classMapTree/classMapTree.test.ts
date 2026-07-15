@@ -10,7 +10,6 @@ import {
   initializeWorkspace,
   waitFor,
   ProjectBase,
-  withAuthenticatedUser,
 } from '../util';
 import { ClassMapTreeDataProvider } from '../../../src/tree/classMapTreeDataProvider';
 
@@ -26,9 +25,11 @@ async function waitForCodeObjectsTree(): Promise<ClassMapTreeDataProvider> {
   return extension.trees.codeObjects;
 }
 
+// The Code Objects tree is built from the classMap.json written below (indexer
+// output), not from analysis findings, so this suite does not need an authenticated
+// user (which would only spawn the scanner and expose the test to the auth→RPC-restart
+// race).
 describe('class map tree items', () => {
-  withAuthenticatedUser();
-
   let codeObjectsTree: ClassMapTreeDataProvider;
 
   beforeEach(async () => {
