@@ -75,7 +75,27 @@ const MockVSCode = {
   commands,
   StatusBarAlignment,
   env,
-  TreeItem: class {},
+  // Minimal stand-in for vscode.TreeItem: enough for TreeDataProvider unit tests to
+  // read back the label/collapsible state and the fields providers commonly set.
+  TreeItem: class {
+    label?: string;
+    collapsibleState?: number;
+    resourceUri?: unknown;
+    iconPath?: unknown;
+    command?: unknown;
+    id?: string;
+    tooltip?: string;
+    contextValue?: string;
+    constructor(labelOrUri?: unknown, collapsibleState?: number) {
+      if (labelOrUri && typeof labelOrUri === 'object' && 'path' in labelOrUri) {
+        this.resourceUri = labelOrUri;
+      } else {
+        this.label = labelOrUri as string | undefined;
+      }
+      this.collapsibleState = collapsibleState;
+    }
+  },
+  TreeItemCollapsibleState: { None: 0, Collapsed: 1, Expanded: 2 },
   UIKind,
 };
 
