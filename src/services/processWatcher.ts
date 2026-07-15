@@ -6,6 +6,7 @@ import { fileExists, sanitizeEnvironment } from '../util';
 import { join } from 'path';
 import ExtensionSettings from '../configuration/extensionSettings';
 import { getSecretEnv } from './navieConfigurationService';
+import { killGracefully } from './killGracefully';
 
 export type RetryOptions = {
   // The number of retries made before declaring the process as failed.
@@ -24,6 +25,9 @@ export enum ProcessId {
   RPC = 'rpc',
 }
 
+// Excludes ProcessId.RPC intentionally: the RPC process isn't enrolled as a per-workspace
+// NodeProcessServiceInstance watcher (it's owned singly by RpcProcessService, independent of
+// any one workspace folder), so it never appears in NodeProcessServiceInstance.processes.
 export const AllProcessIds = [ProcessId.Index, ProcessId.Analysis];
 
 export type ProcessWatcherOptions = {
@@ -72,6 +76,10 @@ export class ProcessWatcher implements vscode.Disposable {
   protected shouldRun = false;
   protected hasAborted = false;
   protected disposed = false;
+
+  // Tracks a start() call in flight, so a concurrent start() can await the same
+  // spawn instead of racing it and spawning a second process.
+  private startPromise?: Promise<void>;
 
   // A timeout period in which the crash count is to be reset if the timer is fulfilled.
   protected crashTimeout?: NodeJS.Timeout;
@@ -174,16 +182,25 @@ export class ProcessWatcher implements vscode.Disposable {
 
   async start(): Promise<void> {
     assert(!this.disposed, 'ProcessWatcher has already been disposed');
-    const options = { ...this.options };
-    options.env = { ...options.env, ...(await loadEnvironment(this.context)) };
 
-    // If this.process is undefined, don't await until after this.process is set, or the process may be started twice.
     if (this.process) {
       this.process.log.append(
-        `${(options.args || [])[0]} process (${this.process.pid}) already running`
+        `${(this.options.args || [])[0]} process (${this.process.pid}) already running`
       );
       return;
     }
+
+    // A start may already be in flight, awaiting loadEnvironment() below. Share its promise
+    // rather than racing it, or the process may be started twice.
+    if (this.startPromise) return this.startPromise;
+
+    this.startPromise = this.doStart().finally(() => (this.startPromise = undefined));
+    return this.startPromise;
+  }
+
+  private async doStart(): Promise<void> {
+    const options = { ...this.options };
+    options.env = { ...options.env, ...(await loadEnvironment(this.context)) };
 
     this.shouldRun = true;
     this.process = spawn(options);
@@ -220,21 +237,14 @@ export class ProcessWatcher implements vscode.Disposable {
 
     if (this.crashTimeout) clearTimeout(this.crashTimeout);
     const proc = this.process;
-    if (proc) {
-      this.process = undefined;
-      proc.removeAllListeners('exit');
-      const killTimer = setTimeout(() => proc.kill('SIGKILL'), 1000).unref(); // in case SIGTERM didn't work
-      let result: Promise<void> | void = new Promise<void>((resolve) =>
-        proc.once('exit', () => {
-          clearTimeout(killTimer);
-          proc.log.append(
-            `${proc.spawnargs.join(' ')} process has been stopped` + (reason ? `: ${reason}` : '')
-          );
-          resolve();
-        })
+    if (!proc) return;
+
+    this.process = undefined;
+    proc.removeAllListeners('exit');
+    if (await killGracefully(proc)) {
+      proc.log.append(
+        `${proc.spawnargs.join(' ')} process has been stopped` + (reason ? `: ${reason}` : '')
       );
-      if (!proc.kill()) result = undefined;
-      return result;
     }
   }
 

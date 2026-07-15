@@ -12,6 +12,7 @@ import type vscode from 'vscode';
 
 // To be stubbed
 import * as processWatcher from '../../../src/services/processWatcher';
+import * as nodeDependencyProcess from '../../../src/services/nodeDependencyProcess';
 import { setSecretEnvVars } from '../../../src/services/navieConfigurationService';
 import * as authentication from '../../../src/authentication';
 
@@ -88,6 +89,26 @@ describe('ProcessWatcher', () => {
         expect(await promisify(ps.lookup)({ pid: process.pid })).to.be.empty;
       }).timeout(10000);
     });
+  });
+
+  describe('start', () => {
+    it('shares a single spawn across concurrent calls instead of doing redundant work', async () => {
+      const spawnSpy = Sinon.spy(nodeDependencyProcess, 'spawn');
+      const watcher = makeWatcher();
+
+      // Deliberately not awaited: both calls should observe this.process as undefined
+      // while the first is still awaiting loadEnvironment(), and share the same in-flight
+      // start rather than each independently spawning and re-fetching credentials/env.
+      const start1 = watcher.start();
+      const start2 = watcher.start();
+
+      await Promise.all([start1, start2]);
+
+      expect(spawnSpy.callCount).to.equal(1);
+      assert(watcher.process);
+
+      await watcher.stop();
+    }).timeout(10000);
   });
 
   describe('dispose', () => {

@@ -1,7 +1,6 @@
 import * as vscode from 'vscode';
-import { DEBUG_EXCEPTION, Telemetry } from '../telemetry';
-import ErrorCode from '../telemetry/definitions/errorCodes';
 import { ProcessWatcher } from './processWatcher';
+import { reportProcessError } from './reportProcessError';
 import { WorkspaceServiceInstance } from './workspaceService';
 
 export default class NodeProcessServiceInstance implements WorkspaceServiceInstance {
@@ -13,15 +12,7 @@ export default class NodeProcessServiceInstance implements WorkspaceServiceInsta
     public readonly processes: Readonly<ProcessWatcher[]>
   ) {
     this.processes.forEach((p) => {
-      this.disposables.push(
-        p.onError((e) => {
-          Telemetry.sendEvent(DEBUG_EXCEPTION, {
-            exception: e,
-            errorCode: ErrorCode.ProcessFailure,
-            log: p.process?.log.toString(),
-          });
-        })
-      );
+      this.disposables.push(p.onError((e) => reportProcessError(p, e)));
     });
   }
 
@@ -55,7 +46,9 @@ export default class NodeProcessServiceInstance implements WorkspaceServiceInsta
   }
 
   // By using a single interval to start/stop processes we avoid trying to do job control concurrently, which
-  // leads to situations like attempts to start a process that is already running.
+  // leads to situations like attempts to start a process that is already running. Note that this only
+  // serializes the poll job against itself; it does not serialize against external callers of
+  // start()/stop()/restart() below, which is instead handled per-watcher by ProcessWatcher itself.
   protected async startAndStopProcesses(): Promise<void> {
     const processControl = async (): Promise<void> => {
       for (let index = 0; index < this.processes.length; index++) {
