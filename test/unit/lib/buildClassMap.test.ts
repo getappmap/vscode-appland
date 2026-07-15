@@ -1,9 +1,11 @@
+import '../mock/vscode';
+
 import assert from 'assert';
 import { join } from 'path';
 import * as vscode from 'vscode';
-import { buildClassMap } from '../../src/lib/buildClassMap';
-import { CodeObjectEntry, CodeObjectEntryRootType } from '../../src/lib/CodeObjectEntry';
-import { FixtureDir, printCodeObject } from './util';
+import { buildClassMap } from '../../../src/lib/buildClassMap';
+import { CodeObjectEntry, CodeObjectEntryRootType } from '../../../src/lib/CodeObjectEntry';
+import { FixtureDir, printCodeObject } from '../testFixtures';
 
 describe('buildClassMap', () => {
   it('normalizes embedded package names', async () => {

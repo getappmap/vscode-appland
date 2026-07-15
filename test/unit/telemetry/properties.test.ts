@@ -1,5 +1,7 @@
+import '../mock/vscode';
+
 import { deepStrictEqual } from 'assert';
-import { withTmpDir } from '../util';
+import { withTmpDir } from '../testFixtures';
 import { promises as fs } from 'fs';
 import * as path from 'path';
 import { DEPENDENCIES, HAS_DEVCONTAINER } from '../../../src/telemetry/definitions/properties';

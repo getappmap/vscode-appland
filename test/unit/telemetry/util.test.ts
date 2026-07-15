@@ -1,3 +1,5 @@
+import '../mock/vscode';
+
 import { deepStrictEqual } from 'assert';
 import { getRecords } from '../../../src/util';
 

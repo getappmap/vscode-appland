@@ -4,7 +4,7 @@
 import Sinon from 'sinon';
 import type { workspace, WorkspaceFolder } from 'vscode';
 import { URI } from 'vscode-uri';
-import { join } from 'path';
+import { glob } from 'glob';
 
 const unimplemented = () => {
   throw new Error('unimplemented');
@@ -113,14 +113,28 @@ export default {
     }
     return p;
   },
+  // Real filesystem glob, unlike VS Code's indexer-backed findFiles. Accepts either a
+  // string glob (searched across workspaceFolders) or a RelativePattern ({ base, pattern }).
   findFiles(
-    include: string,
-    _exclude?: string | null,
-    _maxResults?: number,
+    include: string | { base?: string; pattern?: string },
+    exclude?: string | null | { pattern?: string },
+    maxResults?: number,
     _token?: any // eslint-disable-line @typescript-eslint/no-explicit-any
   ): Promise<URI[]> {
-    const nonWildcardPath = include.replace(/(\*+\/?)/g, '');
-    const absolutePath = join('/', 'example', nonWildcardPath);
-    return Promise.resolve([URI.file(absolutePath)]);
+    const ignore =
+      typeof exclude === 'string' ? [exclude] : exclude?.pattern ? [exclude.pattern] : undefined;
+    const results: URI[] = [];
+    const collect = (cwd: string, pattern: string) => {
+      for (const p of glob.sync(pattern, { cwd, absolute: true, nodir: true, ignore })) {
+        results.push(URI.file(p));
+      }
+    };
+    if (include && typeof include === 'object') {
+      if (include.base && include.pattern) collect(include.base, include.pattern);
+    } else {
+      const folders = (this.workspaceFolders || []) as ReadonlyArray<WorkspaceFolder>;
+      for (const folder of folders) collect(folder.uri.fsPath, String(include));
+    }
+    return Promise.resolve(maxResults ? results.slice(0, maxResults) : results);
   },
 };

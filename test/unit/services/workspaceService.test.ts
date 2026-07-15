@@ -1,4 +1,7 @@
-import { assert } from 'console';
+import '../mock/vscode';
+
+import assert from 'assert';
+import sinon from 'sinon';
 import * as vscode from 'vscode';
 import { WorkspaceService, WorkspaceServiceInstance } from '../../../src/services/workspaceService';
 import { initializeWorkspaceServices } from '../../../src/services/workspaceServices';
@@ -21,6 +24,14 @@ class TestService implements WorkspaceService<TestServiceInstance> {
 }
 
 describe('WorkspaceService', () => {
+  // A single workspace folder so enroll() creates exactly one service instance.
+  beforeEach(() =>
+    sinon
+      .stub(vscode.workspace, 'workspaceFolders')
+      .value([{ uri: vscode.Uri.file('/test'), name: 'test', index: 0 }])
+  );
+  afterEach(() => sinon.restore());
+
   it('services can be unenrolled', async () => {
     const services = initializeWorkspaceServices();
     await services.enroll(new TestService());
