@@ -108,7 +108,8 @@ export class AppMapTreeDataProvider implements vscode.TreeDataProvider<AppMapTre
     }
   }
 
-  public getChildren(): FolderItem[];
+  public getChildren(): WorkspaceFolderAppMapTreeItem[];
+  public getChildren(element: WorkspaceFolderAppMapTreeItem): FolderItem[];
   public getChildren(element: FolderItem): AppMapLoader[];
   public getChildren(element: AppMapLoader): [];
   public getChildren(element?: AppMapTreeItem): AppMapTreeItem[] {

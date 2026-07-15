@@ -12,6 +12,7 @@ import type { CodeObjectEntry } from '../../src/lib/CodeObjectEntry';
 // resolves to test/fixtures.
 export const FixtureDir = join(__dirname, '../fixtures');
 export const ProjectA = join(FixtureDir, 'workspaces/project-a');
+export const ProjectJava = join(FixtureDir, 'workspaces/project-java');
 
 export async function withTmpDir(fn: (tmpDir: string) => void | Promise<void>): Promise<void> {
   const tmpDir = await promisify(tmp.dir)();
