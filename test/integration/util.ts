@@ -16,23 +16,17 @@ import { findFiles } from '../../src/lib/findFiles';
 
 export { repeatUntil, wait, waitFor };
 
-export const FixtureDir = join(__dirname, '../../../test/fixtures');
-export const ProjectRuby = join(__dirname, '../../../test/fixtures/workspaces/project-ruby');
-export const ProjectA = join(__dirname, '../../../test/fixtures/workspaces/project-a');
-export const ProjectDiagramDiff = join(
-  __dirname,
-  '../../../test/fixtures/workspaces/project-diagram-diff'
-);
-export const ProjectUptodate = join(
-  __dirname,
-  '../../../test/fixtures/workspaces/project-uptodate'
-);
-export const ProjectJava = join(__dirname, '../../../test/fixtures/workspaces/project-java');
-export const ProjectSeveralFindings = join(
-  __dirname,
-  '../../../test/fixtures/workspaces/project-several-findings'
-);
-export const ProjectBase = join(__dirname, '../../../test/fixtures/workspaces/project-base');
+// __dirname is the source directory (test/integration) since tests load via ts-node
+// (see integration/bootstrap.js), so fixtures resolve to test/fixtures one level up.
+export const FixtureDir = join(__dirname, '../fixtures');
+const workspacesDir = join(FixtureDir, 'workspaces');
+export const ProjectRuby = join(workspacesDir, 'project-ruby');
+export const ProjectA = join(workspacesDir, 'project-a');
+export const ProjectDiagramDiff = join(workspacesDir, 'project-diagram-diff');
+export const ProjectUptodate = join(workspacesDir, 'project-uptodate');
+export const ProjectJava = join(workspacesDir, 'project-java');
+export const ProjectSeveralFindings = join(workspacesDir, 'project-several-findings');
+export const ProjectBase = join(workspacesDir, 'project-base');
 
 const PROJECTS = [
   ProjectA,

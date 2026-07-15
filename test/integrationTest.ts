@@ -35,7 +35,7 @@ async function asyncFilter<T>(
 
 async function integrationTest() {
   const projectRootDir = resolve(__dirname, '..');
-  const testDir = resolve(__dirname, '../out/test/integration');
+  const sourceTestDir = resolve(__dirname, 'integration');
 
   let fileArgs = process.argv.slice(1);
   if (fileArgs.length > 1) {
@@ -53,37 +53,22 @@ async function integrationTest() {
 
   if (fileArgs.length === 0) {
     console.log(`Running all integration tests`);
-    fileArgs = (await promisify(glob)('**/*.test.js', { cwd: testDir })).map((file) =>
-      resolve(testDir, file)
-    );
+    fileArgs = await promisify(glob)('**/*.test.ts', { cwd: sourceTestDir });
   }
 
-  const resolvedTestFiles = fileArgs.map((file) => {
-    // Accept file paths relative to the project root or to the test dir.
-    const fullPath = [resolve(testDir, file), resolve(projectRootDir, file)].find((fullPath) => {
-      return existsSync(fullPath);
-    });
+  // The extension test host loads .ts test files directly via ts-node (see
+  // integration/bootstrap.js), so we resolve to TypeScript sources — no compiled output.
+  // Args ending in .js (e.g. copy-pasted from out/) are mapped back to their source.
+  const testFiles = fileArgs.map((file) => {
+    const asSource = file.replace(/\.test\.js$/, '.test.ts');
+    const fullPath = [
+      resolve(sourceTestDir, asSource),
+      resolve(projectRootDir, asSource),
+      resolve(asSource),
+    ].find((candidate) => existsSync(candidate));
     if (!fullPath) throw new Error(`Could not find test file ${file}`);
-
     return fullPath;
   });
-  fileArgs.forEach((file, index) => {
-    if (!resolvedTestFiles[index]) {
-      console.warn(`Could not find test file ${file}`);
-    }
-  });
-  const testFiles = resolvedTestFiles.map((path) => {
-    if (!path) throw new Error(`File path must be truthy`);
-    if (path.endsWith('.js')) return path;
-    const tokens = path.slice(projectRootDir.length).split('/');
-    return resolve(
-      testDir,
-      tokens.slice(3, -1).join('/'),
-      tokens[tokens.length - 1].replace('.ts', '.js')
-    );
-  }) as string[];
-
-  testFiles.forEach((testFile) => assert(existsSync(testFile)));
 
   console.log(`Resolved test paths:\n\t${testFiles.join('\n\t')}`);
 
@@ -114,8 +99,9 @@ async function integrationTest() {
     await runTestsInElectron({
       vscodeExecutablePath,
       extensionDevelopmentPath,
-      // TEST_PATH env var sends the actual test names. index.js is a wrapper which loads Mocha, etc.
-      extensionTestsPath: resolve(testDir, 'index.js'),
+      // bootstrap.js registers ts-node and loads index.ts, which loads Mocha and the
+      // .ts test file named by TEST_FILE.
+      extensionTestsPath: resolve(sourceTestDir, 'bootstrap.js'),
       extensionTestsEnv: {
         PROJECT_DIR: workspaceDir, // A hint to resolve relative paths in settings
         TEST_FILE: testFile,
@@ -136,8 +122,8 @@ async function integrationTest() {
   for (const testFile of testFiles) {
     console.log(`Running integration test: ${testFile}`);
 
-    const preconfigureFile = testFile.replace('.test.js', '.preconfigure.js');
-    if (await promisify(exists)(preconfigureFile)) {
+    const preconfigureFile = testFile.replace(/\.test\.ts$/, '.preconfigure.ts');
+    if (preconfigureFile !== testFile && (await promisify(exists)(preconfigureFile))) {
       console.log(`Running preconfiguration script ${preconfigureFile}`);
       try {
         /* eslint-disable-next-line @typescript-eslint/no-explicit-any */

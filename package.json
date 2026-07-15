@@ -694,7 +694,7 @@
   "scripts": {
     "vscode:prepublish": "node build/updateResources.js && yarn compile",
     "lint": "eslint . --ext .ts",
-    "pretest": "yarn run lint && tsc --strict --skipLibCheck",
+    "pretest": "yarn run lint && tsc --strict --skipLibCheck --noEmit",
     "test:precache": "node -e 'require(\"@vscode/test-electron\").downloadAndUnzipVSCode(process.env.VSCODE_INSIDERS_VERSION)'",
     "test:integration": "ts-node ./test/integrationTest.ts",
     "test:web-client": "mocha web/test/*.test.mjs",
