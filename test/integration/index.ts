@@ -14,17 +14,26 @@ async function run(): Promise<void> {
 
   temp.track();
 
+  // TEST_FILES is a JSON array of absolute test paths sharing one workspace (they run in a
+  // single Electron instance). TEST_FILE remains supported for a single file.
+  const testFilesEnv = process.env.TEST_FILES;
   const testFile = process.env.TEST_FILE;
-  if (!testFile) {
-    throw new Error(`Expecting TEST_FILE env var to indicate which test to run`);
+  const testFiles: string[] = testFilesEnv ? JSON.parse(testFilesEnv) : testFile ? [testFile] : [];
+  if (testFiles.length === 0) {
+    throw new Error(`Expecting TEST_FILES or TEST_FILE env var to indicate which tests to run`);
   }
-  const resolvedTestFile = path.resolve(__dirname, testFile);
-  if (!(await promisify(exists)(resolvedTestFile))) {
-    throw new Error(`TEST_FILE ${resolvedTestFile} does not exist`);
+
+  const resolvedTestFiles: string[] = [];
+  for (const file of testFiles) {
+    const resolved = path.resolve(__dirname, file);
+    if (!(await promisify(exists)(resolved))) {
+      throw new Error(`Test file ${resolved} does not exist`);
+    }
+    resolvedTestFiles.push(resolved);
   }
 
   return new Promise((resolve, reject) => {
-    mocha.addFile(resolvedTestFile);
+    resolvedTestFiles.forEach((file) => mocha.addFile(file));
     try {
       // Run the mocha test
       mocha.run((failures) => {

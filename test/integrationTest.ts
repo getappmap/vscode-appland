@@ -94,17 +94,17 @@ async function integrationTest() {
     );
   }
 
-  const runTests = async (testFile: string, workspaceDir: string) => {
+  const runTests = async (files: string[], workspaceDir: string) => {
     startTime = new Date();
     await runTestsInElectron({
       vscodeExecutablePath,
       extensionDevelopmentPath,
       // bootstrap.js registers ts-node and loads index.ts, which loads Mocha and the
-      // .ts test file named by TEST_FILE.
+      // .ts test files named by TEST_FILES.
       extensionTestsPath: resolve(sourceTestDir, 'bootstrap.js'),
       extensionTestsEnv: {
         PROJECT_DIR: workspaceDir, // A hint to resolve relative paths in settings
-        TEST_FILE: testFile,
+        TEST_FILES: JSON.stringify(files),
         APPMAP_WRITE_PIDFILE: 'true',
         APPMAP_INTEGRATION_TEST: 'true',
       },
@@ -118,50 +118,52 @@ async function integrationTest() {
     });
   };
 
-  let succeeded = true;
-  for (const testFile of testFiles) {
-    console.log(`Running integration test: ${testFile}`);
-
-    const preconfigureFile = testFile.replace(/\.test\.ts$/, '.preconfigure.ts');
-    if (preconfigureFile !== testFile && (await promisify(exists)(preconfigureFile))) {
-      console.log(`Running preconfiguration script ${preconfigureFile}`);
-      try {
-        /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-        const preconfigurationScript = (await import(resolve(preconfigureFile))) as any;
-        await preconfigurationScript.default();
-      } catch (e) {
-        succeeded = false;
-        console.warn(`Test preconfiguration script ${preconfigureFile} failed: ${e}`);
-        continue;
-      }
-    }
-
-    // To specify a workspace project, embed a comment in the test case like:
-    // // @project project-name
+  // A test file selects its workspace with a `// @project <name>` header comment (default:
+  // project-a; `tmpdir` gets a fresh throwaway directory). Files that share a workspace run
+  // together in a single Electron instance instead of one boot per file.
+  const resolveWorkspace = async (
+    testFile: string
+  ): Promise<{ workspaceDir: string; isTmpDir: boolean }> => {
     const headerLines = (await promisify(readFile)(testFile, 'utf8')).split('\n');
     const projectNameMatch = headerLines
       .map((line) => line.trim().match(/@project (.*)/))
       .find(Boolean);
+    // Resolve the default to the same absolute path an explicit `@project project-a` produces,
+    // so default files and project-a files land in one group.
+    if (!projectNameMatch)
+      return { workspaceDir: resolve(__dirname, 'fixtures/workspaces/project-a'), isTmpDir: false };
 
-    let projectName: string | undefined;
-    let isTmpDir = false;
-    if (projectNameMatch) {
-      if (projectNameMatch[1] === 'tmpdir') {
-        projectName = join(tmpdir(), `appmap-vscode-test-${Math.random().toString(36).slice(2)}`);
-        await mkdir(projectName, { recursive: true });
-        isTmpDir = true;
-      } else {
-        projectName = resolve(__dirname, 'fixtures/workspaces', projectNameMatch[1]);
-        assert(await promisify(exists)(projectName), `Project ${projectName} does not exist`);
-        console.log(`Using workspace ${projectName}`);
-      }
+    if (projectNameMatch[1] === 'tmpdir') {
+      const dir = join(tmpdir(), `appmap-vscode-test-${Math.random().toString(36).slice(2)}`);
+      await mkdir(dir, { recursive: true });
+      return { workspaceDir: dir, isTmpDir: true };
     }
 
+    const dir = resolve(__dirname, 'fixtures/workspaces', projectNameMatch[1]);
+    assert(await promisify(exists)(dir), `Project ${dir} does not exist`);
+    return { workspaceDir: dir, isTmpDir: false };
+  };
+
+  const groups = new Map<string, { workspaceDir: string; isTmpDir: boolean; files: string[] }>();
+  for (const testFile of testFiles) {
+    const { workspaceDir, isTmpDir } = await resolveWorkspace(testFile);
+    // tmpdir workspaces are unique per file, so each naturally forms its own group.
+    const group = groups.get(workspaceDir);
+    if (group) group.files.push(testFile);
+    else groups.set(workspaceDir, { workspaceDir, isTmpDir, files: [testFile] });
+  }
+
+  let succeeded = true;
+  for (const { workspaceDir, isTmpDir, files } of groups.values()) {
+    console.log(
+      `Running ${files.length} integration test(s) in ${workspaceDir}:\n\t${files.join('\n\t')}`
+    );
+
     try {
-      await runTests(testFile, projectName || PROJECT_A);
+      await runTests(files, workspaceDir);
     } catch (e) {
       succeeded = false;
-      console.warn(`Test ${testFile} failed: ${e}`);
+      console.warn(`Tests in ${workspaceDir} failed: ${e}`);
       const logs = await asyncFilter(
         glob.sync('.vscode-test/user-data/logs/**/?-AppMap Services.log'),
         async (path) => (await stat(path)).mtime > startTime
@@ -173,8 +175,8 @@ async function integrationTest() {
       });
       if (failFast) break;
     } finally {
-      if (isTmpDir && projectName) {
-        await rm(projectName, { recursive: true });
+      if (isTmpDir) {
+        await rm(workspaceDir, { recursive: true });
       }
     }
   }
