@@ -696,6 +696,7 @@
     "lint": "eslint . --ext .ts",
     "pretest": "yarn run lint && tsc --strict --skipLibCheck --noEmit",
     "test:precache": "node -e 'require(\"@vscode/test-electron\").downloadAndUnzipVSCode(process.env.VSCODE_INSIDERS_VERSION)'",
+    "download-tools": "ts-node scripts/downloadTools.ts",
     "test:integration": "ts-node ./test/integrationTest.ts",
     "test:web-client": "mocha web/test/*.test.mjs",
     "test:unit": "mocha test/unit/**/*.test.[tj]s",
