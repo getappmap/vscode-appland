@@ -1,3 +1,5 @@
+// @isolate — deliberately crashes/restarts the shared background processes, so it must not
+// share an Electron instance with other project-a suites.
 import assert from 'assert';
 import { AllProcessIds } from '../../../src/services/processWatcher';
 import { fileExists } from '../../../src/util';
