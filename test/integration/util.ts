@@ -1,7 +1,6 @@
 import assert from 'assert';
 import { exec } from 'child_process';
 import { promises as fs } from 'fs';
-import * as fse from 'fs-extra';
 import glob from 'glob';
 import { join } from 'path';
 import sinon from 'sinon';
@@ -174,25 +173,24 @@ export async function waitForAppMapServices(touchFile: string): Promise<AppMapSe
   const workspaceFolder = vscode.workspace.workspaceFolders[0];
   const wsPath = workspaceFolder.uri.fsPath;
   console.log('[waitForAppMapServices] wsPath: ', wsPath);
-  const pidPath = join(wsPath, 'tmp', 'appmap', 'index.pid');
-  console.log('[waitForAppMapServices] pidPath: ', pidPath);
-  // Make sure the indexer is all the way up before we ask it to do anything.
-  try {
-    await waitFor('Indexer starting', () => fse.existsSync(pidPath), 10000);
-  } catch (e) {
-    const wsFiles = glob.sync(`${workspaceFolder.uri.fsPath}/**`);
-    console.log(`wsFiles: ${JSON.stringify(wsFiles, null, 2)}`);
-    console.log(e);
-    throw e;
-  }
+  // NB: we intentionally do NOT gate on tmp/appmap/index.pid. That pidfile is written once
+  // when the indexer starts, but initializeWorkspace() (git clean) deletes it between suites
+  // and a batched, already-running indexer never rewrites it — so it is an unreliable
+  // readiness signal (the source of flaky "Indexer starting" timeouts). Instead, wait for the
+  // services to be wired up, then drive them and wait for them to actually emit.
+  await waitFor('classMap service to be available', () => !!appMapService.classMap);
+  await waitFor(
+    'findings service to be available',
+    () => !!appMapService.analysisManager.findingsIndex
+  );
 
+  // Repeatedly restore the AppMap so the indexer/scanner reprocess it, resolving once both the
+  // classMap and findings services have emitted — the real "processed" signal.
   let repeater: NodeJS.Timeout | undefined = setInterval(
     async () => await restoreFile(touchFile),
     500
   );
 
-  assert(appMapService.classMap, `Expected classMap service to be available`);
-  assert(appMapService.analysisManager.findingsIndex, `Expected findings service to be available`);
   const services = [appMapService.classMap, appMapService.analysisManager.findingsIndex];
 
   return await new Promise<AppMapService>((resolve, reject) => {
@@ -213,6 +211,9 @@ export async function waitForAppMapServices(touchFile: string): Promise<AppMapSe
     const failed = () => {
       if (!repeater) return;
 
+      const wsFiles = glob.sync(`${wsPath}/tmp/appmap/**`);
+      console.log(`[waitForAppMapServices] timed out; ${wsPath}/tmp/appmap contents:`);
+      console.log(JSON.stringify(wsFiles, null, 2));
       reject(`classMap and findings services are not available`);
     };
 
