@@ -120,37 +120,46 @@ async function integrationTest() {
 
   // A test file selects its workspace with a `// @project <name>` header comment (default:
   // project-a; `tmpdir` gets a fresh throwaway directory). Files that share a workspace run
-  // together in a single Electron instance instead of one boot per file.
+  // together in a single Electron instance instead of one boot per file. A file can opt out
+  // of that sharing with `// @isolate` when it corrupts state other suites depend on (e.g.
+  // the nodeProcesses tests deliberately crash/abort the shared background processes).
   const resolveWorkspace = async (
     testFile: string
-  ): Promise<{ workspaceDir: string; isTmpDir: boolean }> => {
+  ): Promise<{ workspaceDir: string; isTmpDir: boolean; isolate: boolean }> => {
     const headerLines = (await promisify(readFile)(testFile, 'utf8')).split('\n');
+    const isolate = headerLines.some((line) => /@isolate\b/.test(line));
     const projectNameMatch = headerLines
       .map((line) => line.trim().match(/@project (.*)/))
       .find(Boolean);
     // Resolve the default to the same absolute path an explicit `@project project-a` produces,
     // so default files and project-a files land in one group.
     if (!projectNameMatch)
-      return { workspaceDir: resolve(__dirname, 'fixtures/workspaces/project-a'), isTmpDir: false };
+      return {
+        workspaceDir: resolve(__dirname, 'fixtures/workspaces/project-a'),
+        isTmpDir: false,
+        isolate,
+      };
 
     if (projectNameMatch[1] === 'tmpdir') {
       const dir = join(tmpdir(), `appmap-vscode-test-${Math.random().toString(36).slice(2)}`);
       await mkdir(dir, { recursive: true });
-      return { workspaceDir: dir, isTmpDir: true };
+      return { workspaceDir: dir, isTmpDir: true, isolate };
     }
 
     const dir = resolve(__dirname, 'fixtures/workspaces', projectNameMatch[1]);
     assert(await promisify(exists)(dir), `Project ${dir} does not exist`);
-    return { workspaceDir: dir, isTmpDir: false };
+    return { workspaceDir: dir, isTmpDir: false, isolate };
   };
 
   const groups = new Map<string, { workspaceDir: string; isTmpDir: boolean; files: string[] }>();
   for (const testFile of testFiles) {
-    const { workspaceDir, isTmpDir } = await resolveWorkspace(testFile);
-    // tmpdir workspaces are unique per file, so each naturally forms its own group.
-    const group = groups.get(workspaceDir);
+    const { workspaceDir, isTmpDir, isolate } = await resolveWorkspace(testFile);
+    // Isolated files (and tmpdir workspaces, which are unique per file) each get their own
+    // group so they run in a dedicated Electron instance.
+    const key = isolate ? `isolate:${testFile}` : workspaceDir;
+    const group = groups.get(key);
     if (group) group.files.push(testFile);
-    else groups.set(workspaceDir, { workspaceDir, isTmpDir, files: [testFile] });
+    else groups.set(key, { workspaceDir, isTmpDir, files: [testFile] });
   }
 
   let succeeded = true;
