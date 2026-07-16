@@ -48,6 +48,30 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/restore-build
+      # Cache the large binaries the integration tests need so they aren't re-downloaded on
+      # every run. Rolling keys (unique per run + a prefix restore-key) always restore the most
+      # recent cache and save a refreshed one, so upstream version bumps are picked up.
+      - name: Cache VS Code test binary
+        uses: actions/cache@v5
+        with:
+          path: .vscode-test
+          key: ${{ runner.os }}-vscode-test-${{ github.run_id }}
+          restore-keys: ${{ runner.os }}-vscode-test-
+      - name: Cache AppMap CLI tools
+        uses: actions/cache@v5
+        with:
+          path: |
+            ~/.appmap
+            ~/.cache/appmap
+          key: ${{ runner.os }}-appmap-tools-${{ github.run_id }}
+          restore-keys: ${{ runner.os }}-appmap-tools-
+      # Download the binaries in dedicated steps (restored from cache when unchanged) so their
+      # latency stays out of the timing-sensitive tests and a download failure is obvious here
+      # rather than surfacing as a mysterious test timeout.
+      - name: Download VS Code test binary
+        run: yarn test:precache
+      - name: Download AppMap CLI tools
+        run: yarn download-tools
       - run: |
           export XDG_RUNTIME_DIR=/run/user/$(id -u)
           export DBUS_SESSION_BUS_ADDRESS=unix:path=$XDG_RUNTIME_DIR/bus
