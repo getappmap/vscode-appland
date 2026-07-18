@@ -1,3 +1,10 @@
+## [0.142.1](https://github.com/getappmap/vscode-appland/compare/v0.142.0...v0.142.1) (2026-07-18)
+
+
+### Bug Fixes
+
+* **telemetry:** propagate IDE telemetry opt-out to child processes ([c67e27e](https://github.com/getappmap/vscode-appland/commit/c67e27ef88fa92856a2f21b37f798b25c953b06d))
+
 # [0.142.0](https://github.com/getappmap/vscode-appland/compare/v0.141.1...v0.142.0) (2026-06-29)
 
 
