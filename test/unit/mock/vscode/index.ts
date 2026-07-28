@@ -1,4 +1,13 @@
 import mockery from 'mockery';
+import nodeFetch, { Response, Headers, Request } from 'node-fetch';
+
+// Override global fetch in the test environment to use node-fetch,
+// ensuring that nock is able to intercept and mock the HTTP requests.
+const globalObj = globalThis as unknown as Record<string, unknown>;
+globalObj.fetch = nodeFetch;
+globalObj.Response = Response;
+globalObj.Headers = Headers;
+globalObj.Request = Request;
 
 import CancellationTokenSource from './CancellationTokenSource';
 import LanguageModelChatMessage from './LanguageModelChatMessage';

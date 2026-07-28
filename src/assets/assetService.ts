@@ -1,6 +1,5 @@
 import { join } from 'node:path';
 
-import { AbortError } from 'node-fetch';
 import * as vscode from 'vscode';
 
 import ExtensionSettings from '../configuration/extensionSettings';
@@ -161,7 +160,7 @@ export default class AssetService {
               await asset();
             } catch (e) {
               sync.emit('error', e);
-              if (e instanceof AbortError) return reject(e);
+              if (e instanceof Error && e.name === 'AbortError') return reject(e);
             }
         });
     });

@@ -3,7 +3,6 @@ import { open, rename } from 'node:fs/promises';
 import { basename } from 'node:path';
 import { setTimeout } from 'node:timers/promises';
 
-import fetch, { AbortError } from 'node-fetch'; // we could use native but nock doesn't support it
 import vscode, { Uri } from 'vscode';
 
 import * as log from './log';
@@ -19,7 +18,7 @@ async function downloadHttp(
   const response = await fetch(url.toString(), { signal });
 
   if (!(response.ok && response.body))
-    throw new Error(`Failed to download file: ${response.status}`);
+    throw new Error(`Failed to download file: got status ${response.status}`);
 
   const contentLength = response.headers.get('content-length');
   const totalSize = contentLength && parseInt(contentLength, 10);
@@ -29,7 +28,7 @@ async function downloadHttp(
 
   try {
     for await (const chunk of response.body) {
-      await file.write(Buffer.from(chunk));
+      await file.write(chunk);
       downloadedSize += chunk.length;
       progress(totalSize ? (chunk.length / totalSize) * 100 : `${downloadedSize} total bytes`);
     }
@@ -82,7 +81,7 @@ export default async function downloadHttpRetry(
       log.info(`Downloaded ${uri} to ${destinationPath}`);
       return;
     } catch (error) {
-      if (error instanceof AbortError) throw error;
+      if (error instanceof Error && error.name === 'AbortError') throw error;
       if (i === downloadHttpRetry.maxTries - 1) {
         vscode.window.showErrorMessage(`Error downloading ${uri}: ${String(error)}`);
         throw error;
