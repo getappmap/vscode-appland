@@ -5,7 +5,7 @@ import {
   ChildProcess,
   exec as processExec,
   execFile as processExecFile,
-  ExecFileOptions,
+  ExecFileOptionsWithStringEncoding,
   ExecOptions as ProcessExecOptions,
 } from 'child_process';
 import * as vscode from 'vscode';
@@ -103,13 +103,13 @@ interface ExecOptions {
 
 function removeExecOptions<T extends ExecOptions>(
   options?: T | null
-): Exclude<T, ExecOptions> | undefined | null {
-  if (!options) return options;
+): Omit<T, keyof ExecOptions> | undefined {
+  if (!options) return undefined;
   const result = { ...options };
   delete result.output;
   delete result.userCanTerminate;
   delete result.progressMessage;
-  return result as Exclude<T, ExecOptions>;
+  return result;
 }
 
 async function handleExecChildProcess(
@@ -184,9 +184,9 @@ async function handleExecChildProcess(
 export async function execFile(
   file: string,
   args?: ReadonlyArray<string> | null,
-  options?: (ExecOptions & ExecFileOptions) | undefined | null
+  options?: (ExecOptions & ExecFileOptionsWithStringEncoding) | undefined | null
 ): Promise<{ exitCode: number; stdout: string; stderr: string }> {
-  const childProcess = processExecFile(file, args, removeExecOptions(options));
+  const childProcess = processExecFile(file, args, removeExecOptions(options) ?? {});
   return await handleExecChildProcess(childProcess, options, (output) => {
     output.append(`Executing: ${file} ${args?.join(' ')}\n`);
 
