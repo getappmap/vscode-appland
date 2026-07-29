@@ -12,7 +12,6 @@
  *      }
  *    }
  */
-// eslint-disable-next-line @typescript-eslint/ban-types
 export default class ValueCache<T extends object, U> extends WeakMap<T, U> {
   /**
    * Returns the specified element from the map, calling fn to compute it first if missing.
