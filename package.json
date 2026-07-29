@@ -10,7 +10,7 @@
   },
   "qna": "https://appmap.io/docs/faq.html",
   "engines": {
-    "vscode": "^1.61.0"
+    "vscode": "^1.90.0"
   },
   "agents": {
     "ruby": ">=0.60.0"
@@ -722,14 +722,14 @@
     "@types/js-yaml": "^4.0.5",
     "@types/mocha": "^8.2.0",
     "@types/mockery": "^1.4.30",
-    "@types/node": "^18",
+    "@types/node": "^20",
     "@types/proper-lockfile": "^4.1.2",
     "@types/ps-node": "^0.1.1",
     "@types/semver": "^7.3.9",
     "@types/sinon": "^10.0.2",
     "@types/sinon-chai": "^3.2.9",
     "@types/tmp": "^0.2.3",
-    "@types/vscode": "^1.61.0",
+    "@types/vscode": "~1.90.0",
     "@typescript-eslint/eslint-plugin": "^5.52.0",
     "@typescript-eslint/parser": "^5.52.0",
     "@vscode/test-electron": "^2.3.8",
@@ -773,8 +773,8 @@
     "tmp": "^0.2.1",
     "ts-node": "^10.9.1",
     "tslib": "^2.1.0",
-    "tsup": "^6.6.3",
-    "typescript": "^4.9.5",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3",
     "url": "^0.11.4",
     "util": "^0.12.5",
     "vscode-uri": "^3.0.7",
