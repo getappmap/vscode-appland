@@ -29,7 +29,6 @@ class MethodCallCache {
 
 export default function proxy<T>(obj: T): T {
   const cache = new MethodCallCache();
-  // eslint-disable-next-line @typescript-eslint/ban-types
   const objProxy = new Proxy(obj as unknown as object, {
     get(target, key) {
       if (typeof target[key] === 'function') {

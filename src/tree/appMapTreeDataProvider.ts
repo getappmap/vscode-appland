@@ -195,7 +195,7 @@ export class AppMapTreeDataProvider implements vscode.TreeDataProvider<AppMapTre
   }
 
   protected getAppMapsForRecordingMethod(folderProperties: FolderProperties): AppMapLoader[] {
-    if (!this.appmaps) [];
+    if (!this.appmaps) return [];
 
     const sortFunction =
       AppMapTreeDataProvider.SortMethod[folderProperties.recorderType || 'unknown recorder type'] ||
