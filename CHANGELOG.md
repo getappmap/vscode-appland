@@ -1,3 +1,10 @@
+## [0.142.2](https://github.com/getappmap/vscode-appland/compare/v0.142.1...v0.142.2) (2026-08-05)
+
+
+### Bug Fixes
+
+* **assets:** migrate asset downloader to native fetch ([3eced10](https://github.com/getappmap/vscode-appland/commit/3eced103df10130ae7bd391969decd6f6d65f6f3))
+
 ## [0.142.1](https://github.com/getappmap/vscode-appland/compare/v0.142.0...v0.142.1) (2026-07-18)
 
 
