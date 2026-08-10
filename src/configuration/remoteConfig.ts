@@ -3,10 +3,13 @@ import * as fs from 'fs/promises';
 import tryRequest from '../lib/tryRequest';
 import { clearCustomerId, getCustomerId, setCustomerId } from './customerId';
 
+// Record of what the organization configuration applied. Retained when the URL goes away —
+// nothing is re-applied without a URL, but this is the only thing a later rollback can work
+// from. Dropped only by an explicit rollback.
 const CACHE_KEY = 'remoteConfig';
-// Permanent record that an organization configuration has been applied at least once.
-// Unlike CACHE_KEY, this is never cleared; it drives UI affordances such as hiding
-// the sign-in screen's "apply your organization's configuration" prompt.
+// Record that an organization configuration has been applied at least once. It drives UI
+// affordances such as hiding the sign-in screen's "apply your organization's configuration"
+// prompt, and survives the URL being removed; only an explicit rollback clears it.
 const APPLIED_MARKER_KEY = 'orgConfigAppliedAt';
 const TIMEOUT_MS = 3000;
 const EXCLUDED_KEY = 'appMap.configurationUrl';
@@ -104,27 +107,43 @@ async function applyConfigKeys(
   }
 }
 
-// Undo a single key previously applied from an organization configuration. Clearing the
-// customer ID reseeds, so on a bundled build the installation's own ID comes back.
+// Undo a single key previously applied from an organization configuration.
+//
+// A key the user has edited since it was applied is left alone — at that point the value is
+// theirs, not ours to revert. The customer ID is exempt: it is reverted unconditionally,
+// because entitlement has no other recovery path (the setting is inert and globalState is not
+// user-editable). Clearing it reseeds, so on a bundled build the installation's own ID returns.
 async function revertConfigKey(
   context: vscode.ExtensionContext,
   fullKey: string,
+  appliedValue: unknown,
   channel?: vscode.OutputChannel
 ): Promise<void> {
-  if (channel) {
-    channel.appendLine(`Reverting ${fullKey}`);
-  }
-
   if (fullKey === CUSTOMER_ID_KEY) {
+    if (channel) channel.appendLine(`Reverting ${fullKey}`);
     await clearCustomerId(context);
     return;
   }
 
   const subKey = fullKey.slice('appMap.'.length);
+  const appMapConfig = vscode.workspace.getConfiguration('appMap');
+  const current = appMapConfig.get(subKey);
+
+  if (JSON.stringify(current) !== JSON.stringify(appliedValue)) {
+    if (channel) {
+      channel.appendLine(
+        `Keeping ${fullKey}: changed since it was applied (${JSON.stringify(current)})`
+      );
+    }
+    return;
+  }
+
+  if (channel) {
+    channel.appendLine(`Reverting ${fullKey}`);
+  }
+
   try {
-    await vscode.workspace
-      .getConfiguration('appMap')
-      .update(subKey, undefined, vscode.ConfigurationTarget.Global);
+    await appMapConfig.update(subKey, undefined, vscode.ConfigurationTarget.Global);
   } catch (e) {
     if (channel) {
       channel.appendLine(`Failed to update configuration key ${subKey}: ${e}`);
@@ -137,12 +156,21 @@ async function rollbackRemoteConfig(
   channel?: vscode.OutputChannel
 ): Promise<void> {
   const cached = context.globalState.get<ConfigCache>(CACHE_KEY);
-  if (cached) {
-    for (const fullKey of Object.keys(cached.config)) {
-      await revertConfigKey(context, fullKey, channel);
-    }
-    await context.globalState.update(CACHE_KEY, undefined);
+
+  for (const [fullKey, appliedValue] of Object.entries(cached?.config ?? {})) {
+    // Handled below, unconditionally, so that it works even with no cache to walk.
+    if (fullKey === CUSTOMER_ID_KEY) continue;
+    await revertConfigKey(context, fullKey, appliedValue, channel);
   }
+
+  if (getCustomerId(context) !== undefined) {
+    await revertConfigKey(context, CUSTOMER_ID_KEY, undefined, channel);
+  }
+
+  await context.globalState.update(CACHE_KEY, undefined);
+  // Cleared along with everything else: this is an explicit undo, so the sign-in view's
+  // "apply your organization's configuration" prompt should be offered again.
+  await context.globalState.update(APPLIED_MARKER_KEY, undefined);
 }
 
 async function doApply(
@@ -162,7 +190,10 @@ async function doApply(
           )}`
         );
       }
-      await context.globalState.update(CACHE_KEY, undefined);
+      // The cache is deliberately kept. Nothing is re-applied without a URL — this branch
+      // applies nothing — but it stays as the record of what was applied, which is the only
+      // thing the clear command has to revert from. Dropping it here used to make clearing a
+      // no-op for anyone who removed the URL first.
     }
     return;
   }
@@ -201,8 +232,8 @@ async function doApply(
 
   // Revert keys present in old cache but absent from new fetch
   if (cached) {
-    for (const oldKey of Object.keys(cached.config)) {
-      if (!(oldKey in fetched)) await revertConfigKey(context, oldKey, channel);
+    for (const [oldKey, oldValue] of Object.entries(cached.config)) {
+      if (!(oldKey in fetched)) await revertConfigKey(context, oldKey, oldValue, channel);
     }
   }
 

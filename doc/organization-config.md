@@ -88,10 +88,12 @@ options:
   setting.
 - **Local File** — opens a file browser to select a local JSON configuration file and applies it
   immediately as a one-shot operation. See [One-shot local file application](#one-shot-local-file-application).
-- **Clear** — reverts every setting the organization configuration applied, discards the cached
-  configuration, and removes the URL setting. If the URL came from `APPMAP_CONFIG_URL`, a warning
-  explains that AppMap cannot unset the variable and the configuration will be applied again on the
-  next activation.
+- **Clear** — reverts the settings the organization configuration applied, discards the cached
+  configuration, and removes the URL setting. Settings you have edited since they were applied are
+  left as you set them; the customer ID is always cleared. This works whether or not a URL is still
+  set, so it is also the way to undo a configuration applied by a URL you have already removed. If
+  the URL came from `APPMAP_CONFIG_URL`, a warning explains that AppMap cannot unset the variable
+  and the configuration will be applied again on the next activation.
 - **Status** — reports whether this installation is entitled by a
   [customer ID](#customer-id) and where that came from, along with the active configuration URL and
   its source. This is usually the fastest way to answer "which configuration is this editor
@@ -127,8 +129,12 @@ previously applied settings are **not** automatically reverted. This allows the 
 as a one-time configuration bootstrap: set the URL, let settings apply, then remove the URL to
 stop automatic updates while keeping the configuration in place.
 
-To revert specific settings after removing the URL, clear them manually in the VS Code settings UI
-or `settings.json`.
+AppMap keeps its record of which keys were applied after the URL is removed, so the **Clear**
+option remains able to revert them later. Nothing is re-fetched or re-applied without a URL — the
+record exists only so that the configuration can still be undone. To revert an individual setting
+instead, change it in the VS Code settings UI or `settings.json`; **Clear** will then leave your
+value alone, since it only reverts keys that still hold the value the organization configuration
+gave them.
 
 ### One-shot local file application
 
@@ -224,8 +230,12 @@ To remove it, either:
 
 - remove `appMap.customerId` from the JSON your configuration URL serves, while the URL is still
   set — it is reverted on the next successful fetch, like any other key; or
-- run **AppMap: Set organization configuration URL** and choose **Clear**, which reverts every
-  setting the organization configuration applied, the customer ID included.
+- run **AppMap: Set organization configuration URL** and choose **Clear**, which reverts the
+  settings the organization configuration applied and always clears the customer ID, whether or not
+  a configuration URL is still set.
+
+**Clear** is the only way to remove a customer ID locally: the setting is inert, and the value is
+held in the extension's own storage rather than in `settings.json`.
 
 On a bundled build, clearing reverts to the customer ID built into the VSIX rather than to nothing —
 that value is part of the installation. To run a bundled build unentitled, install a standard build
