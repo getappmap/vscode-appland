@@ -97,6 +97,20 @@ describe('remoteConfig', () => {
       await RemoteConfig.apply(context, channel);
       expect(context.globalState.get('remoteConfig')).to.be.undefined;
     });
+
+    // The keys stay applied, so the record of what was applied has to stay too — it is the
+    // only thing the Clear command has to work from.
+    it('retains the cached config for later rollback', async () => {
+      const cached = {
+        url: 'https://example.com/old.json',
+        config: { 'appMap.navie.rpcPort': 3000 },
+      };
+      await context.globalState.update('remoteConfig', cached);
+
+      await RemoteConfig.apply(context, channel);
+
+      expect(context.globalState.get('remoteConfig')).to.deep.equal(cached);
+    });
   });
 
   describe('apply() — successful fetch via HTTP', () => {
@@ -717,6 +731,78 @@ describe('remoteConfig', () => {
 
       it('clears the customer ID', async () => {
         await applyConfig({ 'appMap.customerId': 'acme-corp' });
+
+        await setConfigurationUrl(context, channel);
+
+        expect(getCustomerId(context)).to.be.undefined;
+      });
+
+      it('clears the applied marker so the sign-in prompt returns', async () => {
+        await applyConfig({ 'appMap.navie.rpcPort': 3000 });
+        expect(RemoteConfig.isApplied(context)).to.be.true;
+
+        await setConfigurationUrl(context, channel);
+
+        expect(RemoteConfig.isApplied(context)).to.be.false;
+      });
+
+      // A key the user has since edited is theirs, not ours to revert.
+      it('leaves a key whose value changed after it was applied', async () => {
+        await applyConfig({ 'appMap.navie.rpcPort': 3000, 'appMap.useAnimation': true });
+        await vscode.workspace.getConfiguration('appMap').update('navie.rpcPort', 9999);
+
+        await setConfigurationUrl(context, channel);
+
+        expect(vscode.workspace.getConfiguration('appMap').get('navie.rpcPort')).to.equal(9999);
+        expect(vscode.workspace.getConfiguration('appMap').get('useAnimation')).to.be.undefined;
+      });
+
+      // Removing the URL leaves the settings applied (single-shot mode), so the record of what
+      // was applied has to survive for Clear to have anything to revert.
+      describe('after the URL has been removed', () => {
+        async function removeUrl() {
+          await vscode.workspace
+            .getConfiguration('appMap')
+            .update('configurationUrl', undefined, vscode.ConfigurationTarget.Global);
+          // The configuration-change listener re-runs apply() when the URL setting changes.
+          await RemoteConfig.apply(context, channel);
+        }
+
+        it('still reverts the applied keys', async () => {
+          await applyConfig({ 'appMap.navie.rpcPort': 3000 });
+          await removeUrl();
+          expect(vscode.workspace.getConfiguration('appMap').get('navie.rpcPort')).to.equal(3000);
+
+          await setConfigurationUrl(context, channel);
+
+          expect(vscode.workspace.getConfiguration('appMap').get('navie.rpcPort')).to.be.undefined;
+        });
+
+        it('still clears the customer ID', async () => {
+          await applyConfig({ 'appMap.customerId': 'acme-corp' });
+          await removeUrl();
+          expect(getCustomerId(context)).to.equal('acme-corp');
+
+          await setConfigurationUrl(context, channel);
+
+          expect(getCustomerId(context)).to.be.undefined;
+        });
+
+        it('still clears the applied marker', async () => {
+          await applyConfig({ 'appMap.navie.rpcPort': 3000 });
+          await removeUrl();
+
+          await setConfigurationUrl(context, channel);
+
+          expect(RemoteConfig.isApplied(context)).to.be.false;
+        });
+      });
+
+      // Entitlement has no other recovery path: the setting is inert and globalState is not
+      // user-editable, so Clear must de-entitle even with no cached configuration to walk.
+      it('clears the customer ID even when no cached configuration remains', async () => {
+        await setCustomerId(context, 'acme-corp', 'orgConfig');
+        expect(context.globalState.get('remoteConfig')).to.be.undefined;
 
         await setConfigurationUrl(context, channel);
 
