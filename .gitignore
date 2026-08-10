@@ -7,9 +7,6 @@ node_modules
 appland.appmap-*.*.*
 .obsolete
 
-extern/.yarn
-extern/yarn.lock
-
 # Bundled resources
 resources/*.jar
 

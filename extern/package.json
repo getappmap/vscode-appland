@@ -1,6 +1,0 @@
-{
-  "devDependencies": {
-    "@appland/appmap": "^3",
-    "@appland/scanner": "^1"
-  }
-}
