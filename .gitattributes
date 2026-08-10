@@ -1,3 +1,2 @@
 /.yarn/releases/** binary
 /.yarn/plugins/** binary
-/extern/yarn.js binary
