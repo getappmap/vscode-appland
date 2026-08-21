@@ -15,6 +15,7 @@ import AssetService from '../assets/assetService';
 import { AssetIdentifier } from '../assets';
 import { setSecretEnvVars } from './navieConfigurationService';
 import ChatCompletion from './chatCompletion';
+import fireAndForget from '../lib/fireAndForget';
 
 export type RpcConnect = (port: number) => Client;
 
@@ -78,7 +79,9 @@ export default class RpcProcessService implements Disposable {
           NodeProcessService.outputChannel.appendLine(
             'Authentication changed. Restarting the RPC server'
           );
-          this.processWatcher.restart();
+          // Through restart() rather than the watcher directly, so that signing out stops the
+          // server rather than relaunching it unauthenticated.
+          fireAndForget(this.restart());
         }, 0);
       })
     );
@@ -110,10 +113,15 @@ export default class RpcProcessService implements Disposable {
   }
 
   public port(): number | undefined {
-    return this.rpcPort;
+    // Only while the process is actually running. The port of a server that has stopped —
+    // deliberately, or by crashing — points at a dead socket, and a caller that dials it hangs
+    // instead of failing, which is far harder to diagnose than having no port at all.
+    return this.available ? this.rpcPort : undefined;
   }
 
-  public restart(): Promise<void> {
+  public async restart(): Promise<void> {
+    if (!(await this.mayRun())) return;
+
     return this.processWatcher.restart();
   }
 
@@ -231,11 +239,29 @@ export default class RpcProcessService implements Disposable {
   }
 
   public async restartServer(): Promise<void> {
-    return this.processWatcher.restart();
+    return this.restart();
   }
 
-  protected waitForStartup(): Promise<void> {
-    if (this.processWatcher.running) return Promise.resolve();
+  /**
+   * Whether the RPC server may run, stopping it if it may not.
+   *
+   * Navie's backend only runs for an activated extension — signed in, or entitled by a
+   * customer ID. Every path that would start the process goes through here, so a user who has
+   * activated neither is never left with a server listening on their machine.
+   */
+  private async mayRun(): Promise<boolean> {
+    const { enabled, reason } = await this.processWatcher.canStart();
+    if (enabled) return true;
+
+    NodeProcessService.outputChannel.appendLine(`Not starting the RPC server: ${reason}`);
+    if (this.processWatcher.running) await this.processWatcher.stop(reason);
+
+    return false;
+  }
+
+  protected async waitForStartup(): Promise<void> {
+    if (this.processWatcher.running) return;
+    if (!(await this.mayRun())) return;
 
     return new Promise((resolve, reject) => {
       // Wait for the first port change event
