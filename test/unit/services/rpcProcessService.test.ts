@@ -15,6 +15,7 @@ import { waitFor } from '../../waitFor';
 import vscode from '../mock/vscode';
 import { Configuration } from '../mock/vscode/workspace';
 import { getSecretEnv } from '../../../src/services/navieConfigurationService';
+import { setCustomerId } from '../../../src/configuration/customerId';
 
 chai.use(chaiAsPromised);
 
@@ -197,6 +198,74 @@ describe('RpcProcessService', () => {
       rpcService.scheduleRestart();
 
       await waitFor(`Expecting debounced restart`, () => restartSpy.calledOnce);
+    });
+  });
+
+  // Navie's backend should only run for an activated extension. Anything else leaves a server
+  // listening for a user who has not signed in and is not entitled.
+  describe('when the extension is neither signed in nor entitled', () => {
+    beforeEach(() => {
+      stubRpcConfiguration();
+      delete process.env.APPMAP_TEST_API_KEY;
+    });
+
+    it('does not start the RPC server', async () => {
+      await rpcServiceState.waitForStartup();
+
+      expect(rpcService.available).to.be.false;
+      expect(rpcService.port()).to.be.undefined;
+    });
+
+    it('does not start it on restart either', async () => {
+      await rpcService.restart();
+
+      expect(rpcService.available).to.be.false;
+    });
+
+    it('starts once a customer ID entitles the installation', async () => {
+      await rpcServiceState.waitForStartup();
+      expect(rpcService.available).to.be.false;
+
+      await setCustomerId(extensionContext, 'acme-corp', 'orgConfig');
+      await rpcService.restart();
+
+      await waitFor('RPC server to become available', () => rpcService.available);
+    });
+
+    it('starts once the user signs in', async () => {
+      await rpcServiceState.waitForStartup();
+      expect(rpcService.available).to.be.false;
+
+      process.env.APPMAP_TEST_API_KEY = 'test-key';
+      await rpcService.restart();
+
+      await waitFor('RPC server to become available', () => rpcService.available);
+    });
+  });
+
+  describe('when authentication is lost while running', () => {
+    beforeEach(async () => {
+      stubRpcConfiguration();
+      await rpcServiceState.waitForStartup();
+      await waitFor('RPC server to become available', () => rpcService.available);
+    });
+
+    it('stops the RPC server', async () => {
+      delete process.env.APPMAP_TEST_API_KEY;
+
+      await rpcService.restart();
+
+      expect(rpcService.available).to.be.false;
+    });
+
+    // A stale port sends callers to a dead socket, where they hang instead of failing.
+    it('reports no port once the server has stopped', async () => {
+      expect(rpcService.port()).to.be.greaterThan(0);
+      delete process.env.APPMAP_TEST_API_KEY;
+
+      await rpcService.restart();
+
+      expect(rpcService.port()).to.be.undefined;
     });
   });
 

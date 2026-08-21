@@ -12,7 +12,7 @@ import { waitFor } from '../waitFor';
 
 describe('Sidebar sign-in', () => {
   let sandbox: sinon.SinonSandbox;
-  let stubbedExecuteCommand: sinon.SinonStub<[], void>;
+  let stubbedExecuteCommand: sinon.SinonStub;
   let getApiKeyStub: sinon.SinonStub<
     [createIfNone: boolean, ssoTarget?: string],
     Promise<string | undefined>

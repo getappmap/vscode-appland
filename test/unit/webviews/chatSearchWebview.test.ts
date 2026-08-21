@@ -3,10 +3,13 @@ import '../mock/vscode';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
+import vscode from '../mock/vscode';
+
+import * as isActivatedModule from '../../../src/authentication/isActivated';
 import CommandRegistry from '../../../src/commands/commandRegistry';
 import ExtensionState from '../../../src/configuration/extensionState';
 import RpcProcessService from '../../../src/services/rpcProcessService';
-import ChatSearchWebview from '../../../src/webviews/chatSearchWebview';
+import ChatSearchWebview, { ExplainResponseStatus } from '../../../src/webviews/chatSearchWebview';
 
 import MockAppMapCollection from '../../mocks/mockAppMapCollection';
 import MockExtensionContext from '../../mocks/mockExtensionContext';
@@ -56,6 +59,46 @@ describe('ChatSearchWebview', () => {
 
   afterEach(() => {
     sandbox.restore();
+  });
+
+  // The RPC server only runs for an activated extension, so "no port" is the normal state for
+  // a signed-out user, not a failure. Reporting it as one sends them to an output log that
+  // explains nothing.
+  describe('when the RPC server is not running', () => {
+    beforeEach(() => rpcService.port.returns(undefined));
+
+    it('offers to sign in when the extension is not activated', async () => {
+      sandbox.stub(isActivatedModule, 'default').resolves(false);
+      const showInformationMessage = sandbox
+        .stub(vscode.window, 'showInformationMessage')
+        .resolves(undefined);
+
+      const result = await chatSearchWebview.explain();
+
+      expect(WebviewPanels).to.be.empty;
+      expect(result.status).to.equal(ExplainResponseStatus.NoAppMapRpcPort);
+      expect(String(showInformationMessage.firstCall.args[0])).to.match(/sign in/i);
+    });
+
+    it('runs the sign-in command when the user accepts', async () => {
+      sandbox.stub(isActivatedModule, 'default').resolves(false);
+      sandbox.stub(vscode.window, 'showInformationMessage').resolves('Sign In' as never);
+      const executeCommand = sandbox.stub(vscode.commands, 'executeCommand');
+
+      await chatSearchWebview.explain();
+
+      expect(executeCommand.calledWith('appmap.login')).to.be.true;
+    });
+
+    it('still reports a genuine startup failure when the extension is activated', async () => {
+      sandbox.stub(isActivatedModule, 'default').resolves(true);
+      const showErrorMessage = sandbox.stub(vscode.window, 'showErrorMessage').resolves(undefined);
+
+      const result = await chatSearchWebview.explain();
+
+      expect(result.status).to.equal(ExplainResponseStatus.NoAppMapRpcPort);
+      expect(String(showErrorMessage.firstCall.args[0])).to.include('unable to start');
+    });
   });
 
   it('should process change-model-config for non-secret env variables', async () => {

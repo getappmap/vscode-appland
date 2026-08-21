@@ -6,6 +6,7 @@ import appmapMessageHandler from './appmapMessageHandler';
 import FilterStore, { SavedFilter } from './filterStore';
 import WebviewList from './WebviewList';
 import { getApiKey } from '../authentication';
+import isActivated from '../authentication/isActivated';
 import ExtensionSettings from '../configuration/extensionSettings';
 import { CodeSelection } from '../commands/quickSearch';
 import ExtensionState from '../configuration/extensionState';
@@ -132,6 +133,22 @@ export default class ChatSearchWebview {
   }: ExplainOpts = {}): Promise<ExplainResponse> {
     const appmapRpcPort = this.dataService.appmapRpcPort;
     if (!appmapRpcPort) {
+      // Navie's backend only runs for an activated extension, so for a signed-out user there
+      // is no port because there is nothing wrong — pointing them at an output log that says
+      // nothing about signing in would be a dead end.
+      if (!(await isActivated(this.context))) {
+        const optionSignIn = 'Sign In';
+        const res = await vscode.window.showInformationMessage(
+          'Navie is available once you activate AppMap. Sign in to get started.',
+          optionSignIn,
+          'Cancel'
+        );
+        if (res === optionSignIn) {
+          await vscode.commands.executeCommand('appmap.login');
+        }
+        return { status: ExplainResponseStatus.NoAppMapRpcPort };
+      }
+
       const optionViewLog = 'View output log';
       const res = await vscode.window.showErrorMessage(
         'The AppMap RPC server was unable to start. Please check the output log for more information.',

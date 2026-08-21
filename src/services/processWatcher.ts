@@ -1,7 +1,8 @@
 import * as vscode from 'vscode';
 import { ChildProcess, OutputStream, spawn, SpawnOptions } from './nodeDependencyProcess';
 import { getApiKey } from '../authentication';
-import { getCustomerId, isEntitled } from '../configuration/customerId';
+import isActivated from '../authentication/isActivated';
+import { getCustomerId } from '../configuration/customerId';
 import assert from 'assert';
 import { fileExists, sanitizeEnvironment } from '../util';
 import { join } from 'path';
@@ -169,9 +170,8 @@ export class ProcessWatcher implements vscode.Disposable {
       };
 
     // Entitlement stands in for a session here as it does everywhere else: an entitled
-    // installation is authenticated, so its indexer and scanner have to run. Checked first so
-    // that an entitled user never reaches getApiKey — this is polled once a second.
-    if (!isEntitled(this.context) && !(await accessToken()))
+    // installation is activated, so its indexer and scanner have to run.
+    if (!(await isActivated(this.context)))
       return { enabled: false, reason: 'User is not logged in to AppMap' };
 
     return { enabled: true };
