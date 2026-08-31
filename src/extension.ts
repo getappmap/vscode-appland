@@ -13,6 +13,11 @@ import outOfDateTests from './commands/outOfDateTests';
 import PickCopilotModelCommand from './commands/pickCopilotModel';
 import QuickReviewCommand from './commands/quickReview';
 import ExtensionState from './configuration/extensionState';
+import {
+  onDidChangeEntitlement,
+  registerCustomerIdOverrideWarning,
+  seedCustomerId,
+} from './configuration/customerId';
 import AppMapEditorProvider from './editor/appmapEditorProvider';
 import appmapHoverProvider from './hover/appmapHoverProvider';
 import ProcessServiceImpl from './processServiceImpl';
@@ -98,6 +103,15 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
   // so any telemetry events go to the right place
   await RemoteConfig.apply(context, orgConfigChannel);
 
+  // Must follow RemoteConfig.apply, which may deliver a customer ID, and precede every
+  // consumer of entitlement: SignInManager and AnalysisManager below. Telemetry reads it
+  // lazily per event, so its position relative to Telemetry.register does not matter.
+  await seedCustomerId(context).catch((e) =>
+    orgConfigChannel.appendLine(`Failed to resolve the customer ID: ${e}`)
+  );
+
+  context.subscriptions.push(registerCustomerIdOverrideWarning());
+
   Telemetry.register(context);
 
   migrateOpenAIApiKey(context).catch((e) => {
@@ -137,7 +151,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       appmapServerAuthenticationProvider.removeSession();
     });
 
-    await SignInManager.register(extensionState);
+    await SignInManager.register(extensionState, context);
     const signInWebview = new SignInViewProvider(context, appmapServerAuthenticationProvider);
     context.subscriptions.push(
       vscode.window.registerWebviewViewProvider(SignInViewProvider.viewType, signInWebview)
@@ -307,6 +321,12 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
         // child processes when the user toggles it.
         vscode.env.onDidChangeTelemetryEnabled(() =>
           restartServicesForEnvironmentChange('IDE telemetry setting changed')
+        ),
+        // APPMAP_CUSTOMER_ID is part of the subprocess environment. Current CLI releases
+        // ignore it, so this changes nothing today; omitting it would make entitlement a
+        // "works only after a reload" feature once the CLI honors the variable.
+        onDidChangeEntitlement(() =>
+          restartServicesForEnvironmentChange('AppMap customer ID changed')
         ),
         vscode.commands.registerCommand('appmap.rpc.restart', async () => {
           await rpcService.restartServer();

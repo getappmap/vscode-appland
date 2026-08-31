@@ -20,9 +20,16 @@ values from a `site-config.json` file. It injects configuration defaults and rep
         "url": "https://localhost:8088",
         "token": "abcd1234"
     },
-    "appMap.autoUpdateTools": false
+    "appMap.autoUpdateTools": false,
+    "appMap.customerId": "acme-corp"
 }
 ```
+
+Keys that the extension's `package.json` does not declare — `appMap.customerId` among them — are
+synthesized as new configuration properties, so they exist as registered settings only inside the
+repackaged package. `appMap.customerId` identifies the organization the installation belongs to and
+puts the extension into its signed-in state without requiring users to authenticate; see
+[Organization Configuration](../doc/organization-config.md#customer-id).
 
 ## Usage
 

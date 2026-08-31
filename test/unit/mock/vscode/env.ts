@@ -15,3 +15,6 @@ export async function asExternalUri(uri: Uri) {
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const uriScheme = 'vscode-test';
+
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export const appName = 'Visual Studio Code';

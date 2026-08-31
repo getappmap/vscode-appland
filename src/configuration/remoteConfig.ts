@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs/promises';
 import tryRequest from '../lib/tryRequest';
+import { clearCustomerId, getCustomerId, setCustomerId } from './customerId';
 
 const CACHE_KEY = 'remoteConfig';
 // Permanent record that an organization configuration has been applied at least once.
@@ -9,6 +10,7 @@ const CACHE_KEY = 'remoteConfig';
 const APPLIED_MARKER_KEY = 'orgConfigAppliedAt';
 const TIMEOUT_MS = 3000;
 const EXCLUDED_KEY = 'appMap.configurationUrl';
+const CUSTOMER_ID_KEY = 'appMap.customerId';
 
 export type Config = Record<`appMap.${string}`, unknown>;
 
@@ -51,9 +53,38 @@ function sanitizeConfig(raw: unknown): Config {
   return sanitized;
 }
 
-async function applyConfigKeys(config: Config, channel?: vscode.OutputChannel): Promise<void> {
+// Diverted to globalState rather than written through getConfiguration().update(), which
+// would throw in a public build where the key is not a registered setting.
+async function applyCustomerId(
+  context: vscode.ExtensionContext,
+  value: unknown,
+  channel?: vscode.OutputChannel
+): Promise<void> {
+  const current = getCustomerId(context);
+  const applied =
+    typeof value === 'string'
+      ? await setCustomerId(context, value, 'orgConfig')
+      : await clearCustomerId(context);
+
+  if (applied !== current && channel) {
+    channel.appendLine(
+      `Setting ${CUSTOMER_ID_KEY}: ${JSON.stringify(current)} → ${JSON.stringify(applied)}`
+    );
+  }
+}
+
+async function applyConfigKeys(
+  context: vscode.ExtensionContext,
+  config: Config,
+  channel?: vscode.OutputChannel
+): Promise<void> {
   const appMapConfig = vscode.workspace.getConfiguration('appMap');
   for (const [fullKey, value] of Object.entries(config)) {
+    if (fullKey === CUSTOMER_ID_KEY) {
+      await applyCustomerId(context, value, channel);
+      continue;
+    }
+
     const subKey = fullKey.slice('appMap.'.length);
     const current = appMapConfig.get(subKey);
     if (JSON.stringify(current) !== JSON.stringify(value)) {
@@ -73,25 +104,42 @@ async function applyConfigKeys(config: Config, channel?: vscode.OutputChannel): 
   }
 }
 
+// Undo a single key previously applied from an organization configuration. Clearing the
+// customer ID reseeds, so on a bundled build the installation's own ID comes back.
+async function revertConfigKey(
+  context: vscode.ExtensionContext,
+  fullKey: string,
+  channel?: vscode.OutputChannel
+): Promise<void> {
+  if (channel) {
+    channel.appendLine(`Reverting ${fullKey}`);
+  }
+
+  if (fullKey === CUSTOMER_ID_KEY) {
+    await clearCustomerId(context);
+    return;
+  }
+
+  const subKey = fullKey.slice('appMap.'.length);
+  try {
+    await vscode.workspace
+      .getConfiguration('appMap')
+      .update(subKey, undefined, vscode.ConfigurationTarget.Global);
+  } catch (e) {
+    if (channel) {
+      channel.appendLine(`Failed to update configuration key ${subKey}: ${e}`);
+    }
+  }
+}
+
 async function rollbackRemoteConfig(
   context: vscode.ExtensionContext,
   channel?: vscode.OutputChannel
 ): Promise<void> {
   const cached = context.globalState.get<ConfigCache>(CACHE_KEY);
   if (cached) {
-    const appMapConfig = vscode.workspace.getConfiguration('appMap');
     for (const fullKey of Object.keys(cached.config)) {
-      const subKey = fullKey.slice('appMap.'.length);
-      if (channel) {
-        channel.appendLine(`Reverting ${fullKey}`);
-      }
-      try {
-        await appMapConfig.update(subKey, undefined, vscode.ConfigurationTarget.Global);
-      } catch (e) {
-        if (channel) {
-          channel.appendLine(`Failed to update configuration key ${subKey}: ${e}`);
-        }
-      }
+      await revertConfigKey(context, fullKey, channel);
     }
     await context.globalState.update(CACHE_KEY, undefined);
   }
@@ -149,21 +197,12 @@ async function doApply(
   }
 
   // Apply keys from fetched config
-  await applyConfigKeys(fetched, channel);
+  await applyConfigKeys(context, fetched, channel);
 
   // Revert keys present in old cache but absent from new fetch
   if (cached) {
-    const appMapConfig = vscode.workspace.getConfiguration('appMap');
     for (const oldKey of Object.keys(cached.config)) {
-      if (!(oldKey in fetched)) {
-        const subKey = oldKey.slice('appMap.'.length);
-        channel.appendLine(`Reverting ${oldKey}`);
-        try {
-          await appMapConfig.update(subKey, undefined, vscode.ConfigurationTarget.Global);
-        } catch (e) {
-          channel.appendLine(`Failed to update configuration key ${subKey}: ${e}`);
-        }
-      }
+      if (!(oldKey in fetched)) await revertConfigKey(context, oldKey, channel);
     }
   }
 
@@ -189,12 +228,14 @@ export default class RemoteConfig {
     return readAndParseLocalConfig(fsPath);
   }
 
-  static async applyConfigKeys(config: Config, channel?: vscode.OutputChannel): Promise<void> {
-    return applyConfigKeys(config, channel);
-  }
-
-  static applyLocalConfig(config: Config, channel?: vscode.OutputChannel): Promise<void> {
-    applyChain = applyChain.then(() => applyConfigKeys(config, channel)).catch(() => undefined);
+  static applyLocalConfig(
+    context: vscode.ExtensionContext,
+    config: Config,
+    channel?: vscode.OutputChannel
+  ): Promise<void> {
+    applyChain = applyChain
+      .then(() => applyConfigKeys(context, config, channel))
+      .catch(() => undefined);
     return applyChain;
   }
 

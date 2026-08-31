@@ -39,3 +39,13 @@ CLI:
 - `SPLUNK_URL`: The URL of your Splunk HEC endpoint.
 - `SPLUNK_TOKEN`: Your Splunk HEC token.
 - `SPLUNK_CA_CERT`: Your CA certificate.
+
+## Customer ID
+
+If a customer ID has been configured for your installation — see
+[Organization Configuration](organization-config.md) — it is transmitted with every telemetry event
+as the property `common.customerid`, on both backends. This lets a managed deployment attribute
+usage to the organization it was licensed to.
+
+The customer ID is only sent if telemetry is enabled and a backend is reachable. It is not an
+enforcement mechanism, and attribution derived from it is best-effort.

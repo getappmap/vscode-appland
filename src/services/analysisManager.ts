@@ -5,6 +5,7 @@ import FindingsIndex from './findingsIndex';
 import openFinding from '../commands/openFinding';
 import { ResolvedFinding } from './resolvedFinding';
 import Environment from '../configuration/environment';
+import { isEntitled, onDidChangeEntitlement } from '../configuration/customerId';
 import { debuglog } from 'util';
 import Watcher from './watcher';
 
@@ -26,6 +27,7 @@ export default class AnalysisManager {
   private static readonly contextKeyUserAuthenticated = 'appmap.userAuthenticated';
 
   private static _isAnalysisEnabled?: boolean;
+  private static context?: vscode.ExtensionContext;
 
   public static get isAnalysisEnabled(): boolean {
     return Boolean(this._isAnalysisEnabled);
@@ -40,6 +42,8 @@ export default class AnalysisManager {
   }
 
   public static async register(context: vscode.ExtensionContext): Promise<void> {
+    this.context = context;
+
     void this.updateAnalysisState().catch((e) => {
       console.error('Error updating analysis state on register():', e);
     });
@@ -50,7 +54,8 @@ export default class AnalysisManager {
 
         // The API key won't be available immediately. Wait a tick.
         setTimeout(this.updateAnalysisState.bind(this), 0);
-      })
+      }),
+      onDidChangeEntitlement(() => setTimeout(this.updateAnalysisState.bind(this), 0))
     );
   }
 
@@ -82,6 +87,11 @@ export default class AnalysisManager {
 
   public static async isUserAuthenticated(): Promise<boolean> {
     if (Environment.isSystemTest) return true;
+
+    // Entitlement enables analysis just as a session does. The context is stashed at
+    // register() rather than passed in, because this is also called from the install-guide
+    // webview; before register() it reads as unentitled, which is the pre-existing behavior.
+    if (this.context && isEntitled(this.context)) return true;
 
     return !!(await getApiKey(false));
   }

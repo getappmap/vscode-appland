@@ -7,6 +7,7 @@ import TelemetryResolver from './telemetryResolver';
 import TelemetryDataProvider from './telemetryDataProvider';
 import Event from './event';
 import SplunkTelemetryReporter from './splunkTelemetryReporter';
+import { getCustomerId } from '../configuration/customerId';
 import os from 'os';
 
 const EXTENSION_ID = `${publisher}.${name}`;
@@ -50,11 +51,17 @@ export class Telemetry {
   private static reporter: Reporter = NOOP_TELEMETRY;
   private static debugChannel?: vscode.OutputChannel;
   private static isSplunk = false;
+  // Narrowly a value accessor, not a property provider: this module owns the telemetry
+  // schema — the property names, the isSplunk gating, and what doc/telemetry.md discloses —
+  // while feature modules only supply values.
+  private static customerId: () => string | undefined = () => undefined;
 
   static register(context: vscode.ExtensionContext): void {
     if (process.env.APPMAP_TELEMETRY_DEBUG) {
       this.debugChannel = vscode.window.createOutputChannel('AppMap: Telemetry');
     }
+
+    this.customerId = () => getCustomerId(context);
 
     this.initializeReporter();
 
@@ -174,21 +181,54 @@ export class Telemetry {
       metrics = await telemetry.resolve(...(event.metrics as unknown as DataResolverArray<number>));
     }
 
+    this.send(event.name, properties, metrics);
+  }
+
+  /**
+   * Properties stamped onto every event, whatever the entry point.
+   *
+   * Resolved per event rather than at registration: activation ordering then cannot matter,
+   * and a customer ID that arrives later — from seeding or an organization-config update —
+   * is picked up without reinitializing the reporter.
+   */
+  private static commonProperties(): Record<string, string> {
+    const properties: Record<string, string> = {};
+
     if (!this.isSplunk) {
-      properties = {
-        ...properties,
-        // Add common properties when using Application Insights
-        // (others are added automatically by the AI SDK).
-        'common.ide': vscode.env.appName,
-        'common.ideversion': vscode.version,
-      };
+      // The Splunk reporter merges its own copy of these into every event. The Application
+      // Insights SDK supplies the rest of the common.* set but not these two, so add them
+      // here rather than hoisting the Splunk shim, which would override the SDK's own
+      // values (losing, for instance, its normalization of common.platformversion).
+      properties['common.ide'] = vscode.env.appName;
+      properties['common.ideversion'] = vscode.version;
     }
+
+    const customerId = this.customerId();
+    if (customerId) properties['common.customerid'] = customerId;
+
+    return properties;
+  }
+
+  /**
+   * The single point at which anything reaches the reporter. Keeping it that way is what
+   * makes the common-property stamp structural rather than a matter of discipline: a new
+   * entry point cannot omit it by accident. The debug channel is written here too, so
+   * APPMAP_TELEMETRY_DEBUG output is exactly what is transmitted.
+   */
+  private static send(
+    name: string,
+    properties?: Record<string, string>,
+    metrics?: Record<string, number>,
+    isError = false
+  ): void {
+    // Common properties first: an event that names one deliberately overrides it.
+    const allProperties = { ...this.commonProperties(), ...properties };
 
     this.debugChannel?.appendLine(
       JSON.stringify(
         {
-          event: `${EXTENSION_ID}/${event.name}`,
-          properties,
+          event: `${EXTENSION_ID}/${name}`,
+          properties: allProperties,
           metrics,
         },
         null,
@@ -196,22 +236,28 @@ export class Telemetry {
       )
     );
 
-    this.reporter.sendTelemetryEvent(event.name, properties, metrics);
+    if (isError) this.reporter.sendTelemetryErrorEvent(name, allProperties, metrics);
+    else this.reporter.sendTelemetryEvent(name, allProperties, metrics);
   }
 
   static reportAction(action: string, data?: Record<string, string>): void {
-    this.reporter.sendTelemetryEvent(action, data);
+    this.send(action, data);
   }
 
   static reportWebviewError(error: Record<string, string>): void {
-    this.reporter.sendTelemetryErrorEvent('webview_error', {
-      'appmap.webview.error.message': error.message,
-      'appmap.webview.error.stack': error.stack,
-    });
+    this.send(
+      'webview_error',
+      {
+        'appmap.webview.error.message': error.message,
+        'appmap.webview.error.stack': error.stack,
+      },
+      undefined,
+      true
+    );
   }
 
   static reportOpenUri(uri: vscode.Uri): void {
-    this.reporter.sendTelemetryEvent('open_uri', { uri: uri.toString() });
+    this.send('open_uri', { uri: uri.toString() });
   }
 
   /**

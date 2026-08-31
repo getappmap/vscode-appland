@@ -10,9 +10,15 @@ import * as os from 'os';
 
 import RemoteConfig, { getConfigUrl } from '../../src/configuration/remoteConfig';
 import setConfigurationUrl from '../../src/commands/setConfigurationUrl';
+import {
+  getCustomerId,
+  getCustomerIdState,
+  seedCustomerId,
+  setCustomerId,
+} from '../../src/configuration/customerId';
 import MockExtensionContext from '../mocks/mockExtensionContext';
 import { getOutputChannelLines } from './mock/vscode/window';
-import { resetConfigurations } from './mock/vscode/workspace';
+import { Configuration, resetConfigurations } from './mock/vscode/workspace';
 
 describe('remoteConfig', () => {
   let context: MockExtensionContext;
@@ -323,6 +329,124 @@ describe('remoteConfig', () => {
     });
   });
 
+  // appMap.customerId arrives through the ordinary Config channel, but must not be written
+  // through getConfiguration().update() — the key is unregistered in public builds.
+  describe('apply() — customer ID', () => {
+    const url = 'https://example.com/config.json';
+
+    function bundleDefault(value: string | undefined) {
+      (vscode.workspace.getConfiguration('appMap') as Configuration).setDefault(
+        'customerId',
+        value
+      );
+    }
+
+    beforeEach(() => {
+      vscode.workspace.getConfiguration('appMap').update('configurationUrl', url);
+    });
+
+    it('diverts the key to globalState rather than to settings', async () => {
+      nock('https://example.com').get('/config.json').reply(200, {
+        'appMap.customerId': 'acme-corp',
+      });
+
+      await RemoteConfig.apply(context, channel);
+
+      expect(getCustomerIdState(context)).to.deep.equal({
+        value: 'acme-corp',
+        source: 'orgConfig',
+      });
+      expect(vscode.workspace.getConfiguration('appMap').get('customerId')).to.be.undefined;
+    });
+
+    it('logs the change', async () => {
+      nock('https://example.com')
+        .get('/config.json')
+        .reply(200, { 'appMap.customerId': 'acme-corp' });
+
+      await RemoteConfig.apply(context, channel);
+
+      expect(lines.some((l) => l.includes('appMap.customerId') && l.includes('acme-corp'))).to.be
+        .true;
+    });
+
+    it('does not log a change when the value is unchanged', async () => {
+      nock('https://example.com')
+        .get('/config.json')
+        .reply(200, { 'appMap.customerId': 'acme-corp' });
+      await RemoteConfig.apply(context, channel);
+
+      lines.length = 0;
+      nock('https://example.com')
+        .get('/config.json')
+        .reply(200, { 'appMap.customerId': 'acme-corp' });
+      await RemoteConfig.apply(context, channel);
+
+      expect(lines.some((l) => l.includes('appMap.customerId'))).to.be.false;
+    });
+
+    it('treats a blank value as no entitlement', async () => {
+      nock('https://example.com').get('/config.json').reply(200, { 'appMap.customerId': '   ' });
+
+      await RemoteConfig.apply(context, channel);
+
+      expect(getCustomerId(context)).to.be.undefined;
+    });
+
+    // Otherwise removing the key from the remote JSON silently leaves the org entitled.
+    it('clears the customer ID when the key disappears from the fetched config', async () => {
+      nock('https://example.com')
+        .get('/config.json')
+        .reply(200, { 'appMap.customerId': 'acme-corp' });
+      await RemoteConfig.apply(context, channel);
+
+      nock('https://example.com').get('/config.json').reply(200, {});
+      await RemoteConfig.apply(context, channel);
+
+      expect(getCustomerId(context)).to.be.undefined;
+    });
+
+    it('reseeds to the bundled default when the key disappears on a bundled build', async () => {
+      bundleDefault('bundled-corp');
+      nock('https://example.com')
+        .get('/config.json')
+        .reply(200, { 'appMap.customerId': 'acme-corp' });
+      await RemoteConfig.apply(context, channel);
+
+      nock('https://example.com').get('/config.json').reply(200, {});
+      await RemoteConfig.apply(context, channel);
+
+      expect(getCustomerIdState(context)).to.deep.equal({
+        value: 'bundled-corp',
+        source: 'bundled',
+      });
+    });
+
+    // Deliberate: matches the existing fallback behavior and the offline-resilience goal.
+    it('re-establishes entitlement from the cached config when the URL is unreachable', async () => {
+      await context.globalState.update('remoteConfig', {
+        url,
+        config: { 'appMap.customerId': 'acme-corp' },
+      });
+      nock('https://example.com').get('/config.json').reply(500);
+
+      await RemoteConfig.apply(context, channel);
+
+      expect(getCustomerId(context)).to.equal('acme-corp');
+    });
+
+    it('is cleared by rollbackRemoteConfig', async () => {
+      nock('https://example.com')
+        .get('/config.json')
+        .reply(200, { 'appMap.customerId': 'acme-corp' });
+      await RemoteConfig.apply(context, channel);
+
+      await RemoteConfig.rollbackRemoteConfig(context, channel);
+
+      expect(getCustomerId(context)).to.be.undefined;
+    });
+  });
+
   describe('readAndParseLocalConfig()', () => {
     it('returns a sanitized Config when the file is valid JSON and a valid object', async () => {
       const tempFile = path.join(os.tmpdir(), 'valid-config.json');
@@ -501,6 +625,21 @@ describe('remoteConfig', () => {
           .to.be.true;
       });
 
+      it('diverts a customer ID in the file to globalState', async () => {
+        showOpenDialogStub.resolves([
+          { fsPath: '/path/to/config.json' },
+        ] as unknown as vscode.Uri[]);
+        readConfigStub.resolves({ 'appMap.customerId': 'acme-corp' });
+
+        await setConfigurationUrl(context, channel);
+
+        expect(getCustomerIdState(context)).to.deep.equal({
+          value: 'acme-corp',
+          source: 'orgConfig',
+        });
+        expect(vscode.workspace.getConfiguration('appMap').get('customerId')).to.be.undefined;
+      });
+
       it('rolls back active configuration URL and cached keys before applying', async () => {
         // First set up an active configuration URL and cache
         vscode.workspace
@@ -543,6 +682,159 @@ describe('remoteConfig', () => {
             'Successfully applied local organization configuration. These settings will persist until changed manually.'
           )
         ).to.be.true;
+      });
+    });
+
+    describe('Clear option', () => {
+      let showInformationMessageStub: Sinon.SinonStub;
+      let showWarningMessageStub: Sinon.SinonStub;
+
+      beforeEach(() => {
+        Sinon.stub(vscode.window, 'showQuickPick').resolves({
+          label: 'Clear',
+          key: 'clear',
+        } as unknown as vscode.QuickPickItem);
+        showInformationMessageStub = Sinon.stub(vscode.window, 'showInformationMessage');
+        showWarningMessageStub = Sinon.stub(vscode.window, 'showWarningMessage');
+      });
+
+      async function applyConfig(config: Record<string, unknown>) {
+        const url = 'https://example.com/config.json';
+        vscode.workspace.getConfiguration('appMap').update('configurationUrl', url);
+        nock('https://example.com').get('/config.json').reply(200, config);
+        await RemoteConfig.apply(context, channel);
+      }
+
+      it('reverts applied keys, drops the cache and clears the URL', async () => {
+        await applyConfig({ 'appMap.navie.rpcPort': 3000 });
+
+        await setConfigurationUrl(context, channel);
+
+        expect(vscode.workspace.getConfiguration('appMap').get('navie.rpcPort')).to.be.undefined;
+        expect(context.globalState.get('remoteConfig')).to.be.undefined;
+        expect(vscode.workspace.getConfiguration('appMap').get('configurationUrl')).to.be.undefined;
+      });
+
+      it('clears the customer ID', async () => {
+        await applyConfig({ 'appMap.customerId': 'acme-corp' });
+
+        await setConfigurationUrl(context, channel);
+
+        expect(getCustomerId(context)).to.be.undefined;
+      });
+
+      it('reports the reseeded customer ID on a bundled build', async () => {
+        (vscode.workspace.getConfiguration('appMap') as Configuration).setDefault(
+          'customerId',
+          'bundled-corp'
+        );
+        await applyConfig({ 'appMap.customerId': 'acme-corp' });
+
+        await setConfigurationUrl(context, channel);
+
+        expect(getCustomerIdState(context)).to.deep.equal({
+          value: 'bundled-corp',
+          source: 'bundled',
+        });
+        expect(
+          showInformationMessageStub
+            .getCalls()
+            .some((c) => String(c.args[0]).includes('bundled-corp'))
+        ).to.be.true;
+      });
+
+      // The extension cannot unset an environment variable for the next session.
+      it('warns when the URL comes from APPMAP_CONFIG_URL', async () => {
+        process.env.APPMAP_CONFIG_URL = 'https://env.example.com/config.json';
+        nock('https://env.example.com').get('/config.json').reply(200, {});
+        await RemoteConfig.apply(context, channel);
+
+        await setConfigurationUrl(context, channel);
+
+        expect(
+          showWarningMessageStub
+            .getCalls()
+            .some((c) => String(c.args[0]).includes('APPMAP_CONFIG_URL'))
+        ).to.be.true;
+      });
+
+      // Two toasts at once for one action reads as a malfunction.
+      it('reports the outcome in a single notification', async () => {
+        process.env.APPMAP_CONFIG_URL = 'https://env.example.com/config.json';
+        nock('https://env.example.com')
+          .get('/config.json')
+          .reply(200, { 'appMap.customerId': 'acme-corp' });
+        await RemoteConfig.apply(context, channel);
+
+        await setConfigurationUrl(context, channel);
+
+        expect(showWarningMessageStub.callCount).to.equal(1);
+        expect(showInformationMessageStub.called).to.be.false;
+        expect(String(showWarningMessageStub.firstCall.args[0])).to.include('cleared');
+      });
+
+      it('does not warn when the URL comes from the setting', async () => {
+        await applyConfig({});
+
+        await setConfigurationUrl(context, channel);
+
+        expect(showWarningMessageStub.called).to.be.false;
+      });
+    });
+
+    describe('Status option', () => {
+      beforeEach(() => {
+        Sinon.stub(vscode.window, 'showQuickPick').resolves({
+          label: 'Status',
+          key: 'status',
+        } as unknown as vscode.QuickPickItem);
+      });
+
+      function reportedStatus(): string {
+        return lines.join('\n');
+      }
+
+      it('reports that the installation is not entitled', async () => {
+        await setConfigurationUrl(context, channel);
+        expect(reportedStatus()).to.include('not entitled');
+      });
+
+      it('reports entitlement via organization config, with the ID', async () => {
+        await setCustomerId(context, 'acme-corp', 'orgConfig');
+
+        await setConfigurationUrl(context, channel);
+
+        expect(reportedStatus()).to.include('organization config');
+        expect(reportedStatus()).to.include('acme-corp');
+      });
+
+      it('reports entitlement via the bundled installation', async () => {
+        (vscode.workspace.getConfiguration('appMap') as Configuration).setDefault(
+          'customerId',
+          'bundled-corp'
+        );
+        await seedCustomerId(context);
+
+        await setConfigurationUrl(context, channel);
+
+        expect(reportedStatus()).to.include('bundled installation');
+        expect(reportedStatus()).to.include('bundled-corp');
+      });
+
+      it('reports the configuration URL and its source', async () => {
+        vscode.workspace
+          .getConfiguration('appMap')
+          .update('configurationUrl', 'https://example.com/config.json');
+
+        await setConfigurationUrl(context, channel);
+
+        expect(reportedStatus()).to.include('https://example.com/config.json');
+        expect(reportedStatus()).to.include('setting');
+      });
+
+      it('reports when no configuration URL is set', async () => {
+        await setConfigurationUrl(context, channel);
+        expect(reportedStatus()).to.match(/no organization configuration url/i);
       });
     });
   });
