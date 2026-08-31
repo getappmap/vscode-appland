@@ -3,50 +3,126 @@
 
 # AppMap for Visual Studio Code
 
-### Runtime‑aware AI starts here
+> ### Enterprise users
+>
+> If your company installs AppMap for you, some settings are already set by an administrator. Before
+> you install AppMap or change a setting, ask your AppMap administrator, or read your company's own
+> setup documentation, for example in Confluence.
 
-#### **Live code behavior, surfaced to your AI tools in Visual Studio Code**
+### Runtime evidence for AI-assisted development
 
-AppMap Navie for Visual Studio Code brings the power of real-time execution data and AI-driven
-insights right to your code editor. No more guessing what your code does under the hood. Navie
-watches your application run and uses that live context to provide **smarter suggestions**, **faster
-debugging**, and **runtime-aware code reviews**.
+#### **See how every change behaves before it merges, in Visual Studio Code**
+
+AI tools generate code changes faster than anyone can read them. Reviewing an AI-generated change
+today means reading a diff and guessing how it will behave. The diff shows what the code says. It
+cannot show what the code does when it runs.
+
+AppMap closes that gap. It records your application while it runs and turns the recording into two
+things: pictures of behavior for you, and behavior data for your AI, over MCP. You understand the
+code you are shipping, and your agent works from what the code did, instead of a guess.
+
+![How AppMap works with your coding agent](https://github.com/getappmap/vscode-appland/blob/master/images/appmap-mcp-flow.png?raw=true)
 
 ## Key Benefits
 
-### Smarter AI assistance
+### Understand AI-generated code before you ship it
 
-Navie combines static analysis with live AppMap traces, so you can ask things like _"What just
-happened?"_ and get answers based on the actual runtime flow, HTTP calls, SQL queries, exceptions,
-I/O, and more.
+An AI assistant can change hundreds of lines in one pull request. Reading all of it, and holding it
+in your head, is the hardest part of working with AI. AppMap shows you the behavior of the change
+as diagrams: which functions ran, which SQL queries were made, which HTTP requests were handled,
+and where exceptions came from. You check what the change does, and you make sure it does what you
+expect.
 
-### Faster debugging & fewer defects
+### Pictures of behavior for you
 
-Pinpoint performance bottlenecks and logic errors through automatically generated sequence diagrams,
-flame graphs, dependency maps, and trace views.
+A new SQL query, a changed call path, or a slow spot is hard to find in a diff and easy to see in a
+picture. Sequence diagrams, dependency maps, flame graphs, and trace views show you what your code
+did when it ran.
 
-### Context‑aware code reviews
+![Dependency map of a running application: services, code, and SQL, and how they connect](https://github.com/getappmap/vscode-appland/blob/master/images/dependency-map.webp?raw=true)
 
-From security checks to maintainability recommendations, Navie’s `@review` mode analyzes your
-current branch changes against your base branch with runtime insights.
+### Behavior data for your AI
 
-### Zero fine‑tuning required
+Your coding agent reads the same recordings over MCP. When it debugs, reviews, or explains your
+code, it works from recorded behavior. AppMap works with Claude Code, Cursor, GitHub Copilot,
+Windsurf, and any MCP-capable coding agent. Navie chat is still available inside the editor.
 
-Works out-of-the-box with enterprise‑ready LLMs—simply plug in your API key or let Navie default to
-GitHub Copilot or AppMap’s built‑in endpoint.
+### The extension keeps your runtime data fresh
 
-![implement-redis](https://github.com/getappmap/vscode-appland/assets/511733/46243179-893e-474c-925a-91b385c3468d)
+Runtime data is only useful when it is current, and nobody wants to maintain it by hand. That is
+the extension's job. It installs the AppMap command-line tools and keeps them updated. It watches
+your project and indexes every new recording, so the MCP server always has fresh data to serve.
+The data stays on your machine, as files in your project.
+
+You can work this way and never open an AppMap panel. Record by running your tests, then ask
+questions from your chat. Many people use AppMap entirely through their coding agent, and the
+extension keeps the data fresh underneath.
+
+### Review code changes in a new way
+
+Ask your coding agent to review a change using AppMap recordings, not just the diff. The agent
+reads what the code says and what the code did, and it can answer questions the diff alone cannot:
+
+- Is the changed code covered by runtime traces?
+- Does the change cover every scenario of the bug or feature, in the right place?
+- Does it touch things outside the area it was meant to change?
+- Does it change the application's security controls?
+- Does it add a known performance problem, such as an N+1 query?
+
+Here is a real example, anonymized. A code change added a timeout to each of two AI backend calls.
+Every test passed, because each call was correct on its own. The recorded trace showed that the
+fallback call got a second, fresh clock, so the worst-case user wait doubled. No unit test could
+fail on this. The defect lived in the relationship between two calls, and the trace was the only
+artifact that looked there.
+
+![A real finding, re-created and anonymized: a nightly trace comparison flagged one changed baseline after a change that passed every test](https://github.com/getappmap/vscode-appland/blob/master/images/drift-watch-finding.png?raw=true)
+
+*A real finding, re-created and anonymized. Every test passed. The trace comparison caught the
+doubled timeout.*
+
+If a change has no runtime coverage, the review says so, and the fix is direct: add a test that
+runs the changed code. The more of your app you record, the more the review can check. The review
+runs wherever your agent runs, on your machine, and teams can centralize the same review later.
+
+### Nothing leaves your machine
+
+Recording and the MCP server both run in your development environment. AppMap data is saved as
+files in your project.
 
 ## What AppMap Does
 
-- Captures real‑time snapshots of code execution, data flow, and behavior with zero effort and no
-  code changes.
+- Records code execution, data flow, and behavior while your app runs. You do not change any code.
 
-- Feeds runtime context to AI assistants like Navie, GitHub Copilot, Anthropic Claude, Google
-  Gemini, OpenAI, and your own local LLMs.
+- Serves that data to coding agents over MCP.
 
-- Delivers deep code explanations, diagrams, implementation plans, tests, and patch-ready code
-  snippets, all grounded in what your application just did.
+- Draws diagrams you can read: sequence diagram, dependency map, flame graph, and trace view.
+
+- Checks recordings against heuristic rules for known problems, such as N+1 queries.
+
+## Using AppMap with your coding agent
+
+The AppMap MCP server gives your agent 13 read-only query tools. They include `get_call_tree`,
+`find_calls`, `find_queries`, and `find_requests`.
+
+To set it up in Claude Code, run `claude mcp add appmap -- appmap query mcp`. For another agent, add
+`"appmap": { "command": "appmap", "args": ["query", "mcp"] }` to its MCP servers configuration.
+
+You do not have to open the AppMap panels to get this. Installing the extension installs the AppMap
+command-line tools, keeps them updated, and keeps your recordings indexed while you work. Your
+agent can query the data even if you never leave the chat.
+
+AppMap also publishes [skills for coding agents](https://github.com/getappmap/skills), including a
+skill that sets up AppMap on a repository from scratch.
+
+For more detail, see the
+[AppMap MCP server reference](https://appmap.io/docs/reference/appmap-mcp.html).
+
+## Navie Chat
+
+Navie still works inside the editor. It answers questions using the same AppMap data, without
+leaving your editor. The `@explain`, `@plan`, `@generate`, `@test`, `@diagram`, `@search`,
+`@review`, and `@help` commands work as before. See the
+[Navie command reference](https://appmap.io/docs/using-navie-ai/navie-commands.html).
 
 ## Get started
 
@@ -54,79 +130,51 @@ GitHub Copilot or AppMap’s built‑in endpoint.
    [the AppMap extension](https://marketplace.visualstudio.com/items?itemName=appland.appmap)** from
    within the code editor or from the marketplace.
 
-2. **Sign in with an email address, or with GitHub or GitLab** and Navie will be available in
-   `@explain` mode. This enables Navie to respond to general coding and development questions and
-   answer questions about using AppMap data.
+2. **Sign in with an email address, or with GitHub or GitLab.**
 
-3. **Ask Navie** for guidance recording AppMap data specific to interactions or code scenarios
-   you're interested in analyzing.
+3. **Record your app** by
+   [making AppMap data for your project](https://appmap.io/docs/get-started-with-appmap/making-appmap-data.html),
+   either by running your test cases or by recording a short interaction with your app.
 
-## Chat Modes
+4. **Connect your coding agent.** In Claude Code, run `claude mcp add appmap -- appmap query mcp`.
+   For another agent, add `"appmap": { "command": "appmap", "args": ["query", "mcp"] }` to its MCP
+   servers configuration. See the
+   [setup reference](https://appmap.io/docs/reference/appmap-mcp.html).
 
-Navie provides different modes of interaction for an efficient workflow and optimized results from
-AI-assisted coding.
+## Using AppMap Data
 
-![Chat Modes](https://github.com/getappmap/vscode-appland/blob/master/images/command-palette-menu.jpg?raw=true)
+AppMap diagrams include:
 
-- **`@explain` (default)**: Navie makes context-aware suggestions, provides specific solutions, and
-  reasons about the larger context of the specific code being worked on.
+- **Sequence Diagram** to follow the runtime flow of calls made by your application.
+- **Dependency Map** to see which libraries and frameworks were used at runtime.
+- **Flame Graph** to spot performance issues and bottlenecks.
+- **Trace View** to perform detailed function call and data flow tracing.
 
-- **`@plan`**: Navie focuses the AI response on building a detailed implementation plan for the
-  relevant query. This will focus Navie on only understanding the problem and the application to
-  generate a step-by-step plan.
+![Sequence diagram of a recorded HTTP request, including its SQL queries](https://github.com/getappmap/vscode-appland/blob/master/images/sequence.jpg?raw=true)
 
-- **`@generate`**: Activate code generation mode by beginning any question with the prefix
-  "@generate". In this mode Navie's response are optimized to include code snippets you can use
-  directly in the files are working on.
+![Function calls with parameters and return values](https://github.com/getappmap/vscode-appland/blob/master/images/call-tree.webp?raw=true)
 
-- **`@test`**: Navie's responses are optimized for test case creation, such as unit testing or
-  integration testing. This prefix will understand how your tests are currently written and provide
-  updated tests based on features or code that is provided.
+![SQL queries with bindings and source](https://github.com/getappmap/vscode-appland/blob/master/images/queries.jpg?raw=true)
 
-- **`@diagram`**: Navie will create and render a Mermaid compatible diagram within the Navie chat
-  window. You can open this diagram in the [Mermaid Live Editor](https://mermaid.live), copy the
-  Mermaid Definitions to your clipboard, save to disk, or expand a full window view.
+## Requirements
 
-- **`@search`**: By leveraging smart search capabilities, this command will locate specific code
-  elements, relevant modules, or examples.
+AppMap records Node.js, Java and Kotlin, Ruby, and Python, with .NET, React, Swift, and Go in
+alpha. It works particularly well with web application frameworks such as Nest.js, Next.js,
+Spring, Ruby on Rails, Django, and Flask.
 
-- **`@review`**: This command will review the code changes on your current branch and provide
-  actionable insights on various aspects of code, ensuring alignment with best practices in areas
-  such as code quality, security, and maintainability.
+Looking for support for your language or stack? New languages appear first on
+[our GitHub](https://github.com/getappmap).
 
-- **`@help`**: Activate help mode by beginning any question with the prefix "@help". This mode
-  offers assistance with using AppMap, including guidance for generating and leveraging AppMap data
-  effectively.
-
-## Pinned Context
-
-Pin specific data files to your conversation with Navie to include data sources you know are
-relevant to the issue. This includes pinning the text of the issue itself, and Navie responses.
-
-![Pinned Context](https://github.com/getappmap/vscode-appland/blob/master/images/pinned-context.jpg?raw=true)
-
-## Making AppMap Data
-
-You can improve the quality and accuracy of Navie AI by
-[making AppMap Data for your project](https://appmap.io/docs/get-started-with-appmap/making-appmap-data.html).
-
-#### Documentation
-
-Navie is an open-source extension built with enterprise needs in mind, delivering a flexible LLM
-backend that allows organizations to fine-tune their AI solutions at scale. With advanced features
-like customizable token limits, robust automation tools, and seamless integration with existing
-workflows.
-
-For detailed information [visit our documentation](https://appmap.io/docs/appmap-docs.html).
+Refer to the [documentation](https://appmap.io/docs/appmap-docs.html) for the latest information on
+supported languages, frameworks, and versions.
 
 ## Licensing and Security
 
 [Open source MIT license](https://github.com/getappmap/vscode-appland/blob/master/LICENSE) |
 [Terms and conditions](https://appmap.io/community/terms-and-conditions.html)
 
-To learn more about security of AppMap, or the use of data with AI when using Navie, see the AppMap
-[security disclosure](https://appmap.io/security) for more detailed information and discussion.
+To learn more about the security of AppMap, and how your data is used, see the AppMap
+[security disclosure](https://appmap.io/security).
 
-There is [no fee](https://appmap.io/pricing) for personal use of AppMap for graphing and limited
-Navie use. Pricing for premium features and integrations are listed on
-[AppMap’s Pricing Page](https://appmap.io/pricing).
+There is [no fee](https://appmap.io/pricing) for personal use of AppMap. Pricing for premium
+features and integrations is listed on [AppMap's Pricing Page](https://appmap.io/pricing).
