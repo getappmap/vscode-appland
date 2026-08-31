@@ -36,6 +36,15 @@ export const EVENTS = {
 };
 
 export class Configuration extends Map<string, unknown> {
+  // Defaults declared by a package.json `contributes.configuration` property. Values
+  // written through update() are the equivalent of `globalValue`.
+  private readonly defaults = new Map<string, unknown>();
+
+  setDefault(key: string, value: unknown): void {
+    if (value === undefined) this.defaults.delete(key);
+    else this.defaults.set(key, value);
+  }
+
   get(key: string, defaultValue?: unknown): unknown {
     let value = super.get(key);
 
@@ -53,7 +62,7 @@ export class Configuration extends Map<string, unknown> {
       value = current;
     }
 
-    value = value ?? defaultValue;
+    value = value ?? this.defaults.get(key) ?? defaultValue;
     // Simulate VS Code's proxy-backed configuration objects, which do not support
     // property deletion (attempting to do so throws a TypeError at runtime).
     if (value !== null && typeof value === 'object' && !Array.isArray(value)) {
@@ -62,8 +71,13 @@ export class Configuration extends Map<string, unknown> {
     return value;
   }
 
-  inspect(key: string): { workspaceValue?: unknown } | undefined {
-    return {};
+  inspect(key: string): {
+    key: string;
+    defaultValue?: unknown;
+    globalValue?: unknown;
+    workspaceValue?: unknown;
+  } {
+    return { key, defaultValue: this.defaults.get(key), globalValue: super.get(key) };
   }
 
   update(key: string, value: unknown, target?: unknown): Promise<void> {

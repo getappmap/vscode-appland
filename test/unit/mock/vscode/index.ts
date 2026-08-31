@@ -84,6 +84,7 @@ const MockVSCode = {
   commands,
   StatusBarAlignment,
   env,
+  version: '1.100.0',
   // Minimal stand-in for vscode.TreeItem: enough for TreeDataProvider unit tests to
   // read back the label/collapsible state and the fields providers commonly set.
   TreeItem: class {

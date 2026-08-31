@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { ChildProcess, OutputStream, spawn, SpawnOptions } from './nodeDependencyProcess';
 import { getApiKey } from '../authentication';
+import { getCustomerId, isEntitled } from '../configuration/customerId';
 import assert from 'assert';
 import { fileExists, sanitizeEnvironment } from '../util';
 import { join } from 'path';
@@ -50,9 +51,16 @@ async function accessToken(): Promise<string | undefined> {
 export async function loadEnvironment(
   context: vscode.ExtensionContext
 ): Promise<NodeJS.ProcessEnv> {
+  const apiKey = await accessToken();
+  const customerId = getCustomerId(context);
+
   const env: Record<string, string | undefined> = {
     APPMAP_API_URL: ExtensionSettings.apiUrl,
-    APPMAP_API_KEY: await accessToken(),
+    // Omitted rather than faked when there is no session: a customer ID is an entitlement,
+    // not a credential, and the CLI must not mistake one for the other. Both are passed when
+    // both exist — the API key wins for authentication, the customer ID is attribution-only.
+    ...(apiKey ? { APPMAP_API_KEY: apiKey } : undefined),
+    ...(customerId ? { APPMAP_CUSTOMER_ID: customerId } : undefined),
     ...(await getSecretEnv(context)),
     ...ExtensionSettings.appMapCommandLineEnvironment,
   };
@@ -160,7 +168,10 @@ export class ProcessWatcher implements vscode.Disposable {
         reason: `Project directory '${this.configFolder}' is not configured (does not have appmap.yml)`,
       };
 
-    if (!(await accessToken()))
+    // Entitlement stands in for a session here as it does everywhere else: an entitled
+    // installation is authenticated, so its indexer and scanner have to run. Checked first so
+    // that an entitled user never reaches getApiKey — this is polled once a second.
+    if (!isEntitled(this.context) && !(await accessToken()))
       return { enabled: false, reason: 'User is not logged in to AppMap' };
 
     return { enabled: true };

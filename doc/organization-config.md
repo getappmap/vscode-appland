@@ -52,6 +52,7 @@ Only keys in the `appMap.*` namespace are applied. Any other keys in the file ar
 | `appMap.manifest.appmapUrl` | URL of the AppMap CLI release manifest. Override this to point at an internal mirror. |
 | `appMap.manifest.scannerUrl` | URL of the Scanner release manifest. Override this to point at an internal mirror. |
 | `appMap.autoUpdateTools` | Whether to check for and download tool updates on startup. Set to `false` when distributing a VSIX with pre-bundled binaries (via `bundleConfig`) to prevent the extension from replacing them. For version pinning without bundled binaries, use a versioned manifest URL (e.g. `appmap-v3.197.1.json`) instead of the `-latest` pointer. |
+| `appMap.customerId` | Identifies the organization this installation belongs to, and puts the extension into its signed-in state without requiring users to authenticate against getappmap.com. See [Customer ID](#customer-id). |
 
 For binary mirroring — hosting the AppMap and Scanner binaries on internal infrastructure and
 pointing the manifest URLs at them — see [Asset Management](assets.md) and the
@@ -79,7 +80,7 @@ Set `appMap.configurationUrl` in your VS Code settings deployment (e.g. via a ma
 ### 3. User command (manual)
 
 Ask users to run the **AppMap: Set organization configuration URL** command
-(`Ctrl+Shift+P` / `Cmd+Shift+P`, then type `AppMap organization`). A quick-pick menu offers two
+(`Ctrl+Shift+P` / `Cmd+Shift+P`, then type `AppMap organization`). A quick-pick menu offers four
 options:
 
 - **Set URL** — prompts for a URL. If `APPMAP_CONFIG_URL` is set in the environment, the prompt is
@@ -87,6 +88,14 @@ options:
   setting.
 - **Local File** — opens a file browser to select a local JSON configuration file and applies it
   immediately as a one-shot operation. See [One-shot local file application](#one-shot-local-file-application).
+- **Clear** — reverts every setting the organization configuration applied, discards the cached
+  configuration, and removes the URL setting. If the URL came from `APPMAP_CONFIG_URL`, a warning
+  explains that AppMap cannot unset the variable and the configuration will be applied again on the
+  next activation.
+- **Status** — reports whether this installation is entitled by a
+  [customer ID](#customer-id) and where that came from, along with the active configuration URL and
+  its source. This is usually the fastest way to answer "which configuration is this editor
+  actually using?".
 
 ## Behavior details
 
@@ -141,6 +150,86 @@ configuration on the next extension activation as long as the environment variab
 If the configuration URL remains set but a key is removed from the remote JSON file, that key is
 reverted to its default value on the next successful fetch. This allows the organization to
 un-apply a setting centrally.
+
+## Customer ID
+
+Normally every user must sign in to getappmap.com through GitHub, GitLab, or email before the
+extension leaves its "sign in" state. Where licensing is already settled by an agreement with
+AppMap, that step adds nothing: it fails outright under network restrictions, and it puts an
+authentication flow through security review that grants no more than the contract already does.
+
+Setting `appMap.customerId` removes it. The extension behaves as though the user were signed in:
+the sign-in view and the "Activate AppMap" walkthrough step disappear, and runtime analysis is
+enabled. The value is also passed to the AppMap CLI subprocesses as `APPMAP_CUSTOMER_ID`, and sent
+with telemetry events as `common.customerid` so that usage can be attributed to your organization
+(see [Telemetry Configuration](telemetry.md)).
+
+```json
+{
+  "appMap.customerId": "acme-corp"
+}
+```
+
+Use whatever identifier your AppMap agreement specifies. Any non-empty string is accepted; blank
+and whitespace-only values are treated as absent.
+
+### What it is not
+
+- **Not a secret.** It is not a license key or a token, it grants no access to anything, and it
+  does not need to be protected. It is stored in the extension's local storage in plain text, and
+  on a bundled build it is visible in the VS Code settings UI.
+- **Not an enforcement mechanism.** The extension is open source, so the check is a business
+  process, not a security boundary. It records which organization an installation belongs to; it
+  does not prevent anything.
+- **Not a substitute for authentication where authentication is wanted.** Signing in still works
+  and still takes precedence: if a user has a real session, its API key is what authenticates
+  requests, and the customer ID is used only for attribution. The AppMap sign-in entry stays
+  available in the Accounts menu.
+
+Because attribution rides on telemetry, it only reaches you if telemetry is enabled and a backend
+is reachable. Treat it as best-effort reporting rather than seat counting.
+
+### Setting it
+
+The customer ID can be delivered through any of the organization-configuration channels:
+
+1. **Configuration URL** — include `appMap.customerId` in the JSON your configuration URL serves.
+   This is the usual choice, and the only one that can be changed centrally afterwards. As with
+   any other key, the last successful fetch is cached, so entitlement survives a temporarily
+   unreachable configuration server — which matters most in exactly the restricted networks this
+   feature exists for.
+2. **Local file** — include it in a JSON file applied through the **Local File** quick-pick option.
+   Applied once, and retained afterwards.
+3. **Bundled VSIX** — include it in the `site-config.json` you repackage the extension with. See
+   [bundleConfig](../build/bundleConfig.md). The extension then carries its own customer ID with no
+   configuration server involved, which suits fully air-gapped deployments.
+
+A configuration URL or local file takes precedence over a bundled value, so a repackaged VSIX can
+be re-pointed centrally without rebuilding it. If the bundled value changes in a later VSIX, the
+new one takes effect unless a configuration URL has set one.
+
+Setting `appMap.customerId` by hand in `settings.json` has **no effect** — only a value delivered
+through one of the channels above is honored. On a bundled build, where the setting is visible in
+the settings UI, AppMap warns once per session if it finds a hand-written override and offers to
+remove it.
+
+### Retention and removal
+
+Like every other organization-configuration key, the customer ID follows
+[single-shot mode](#single-shot-mode): removing the configuration URL does **not** revert it. This
+is deliberate, so that a URL can be used as a one-time bootstrap, but it does mean that an
+installation stays entitled after the URL is gone.
+
+To remove it, either:
+
+- remove `appMap.customerId` from the JSON your configuration URL serves, while the URL is still
+  set — it is reverted on the next successful fetch, like any other key; or
+- run **AppMap: Set organization configuration URL** and choose **Clear**, which reverts every
+  setting the organization configuration applied, the customer ID included.
+
+On a bundled build, clearing reverts to the customer ID built into the VSIX rather than to nothing —
+that value is part of the installation. To run a bundled build unentitled, install a standard build
+from the Marketplace.
 
 ## Troubleshooting
 

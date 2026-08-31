@@ -14,6 +14,7 @@ import type vscode from 'vscode';
 import * as processWatcher from '../../../src/services/processWatcher';
 import { setSecretEnvVars } from '../../../src/services/navieConfigurationService';
 import * as authentication from '../../../src/authentication';
+import { clearCustomerId, setCustomerId } from '../../../src/configuration/customerId';
 
 // To be tested
 import {
@@ -24,9 +25,12 @@ import {
 
 const testModule = join(__dirname, 'support', 'simpleProcess.mjs');
 
-function makeWatcher(opts: Partial<ProcessWatcherOptions> = {}) {
+function makeWatcher(
+  opts: Partial<ProcessWatcherOptions> = {},
+  context: vscode.ExtensionContext = new MockExtensionContext()
+) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return new ProcessWatcher(new MockExtensionContext(), {
+  return new ProcessWatcher(context, {
     id: 'test process' as unknown as ProcessId,
     modulePath: testModule,
     binPath: 'unused',
@@ -108,15 +112,66 @@ describe('ProcessWatcher', () => {
     });
   });
 
+  // The indexer and scanner are started and stopped by polling canStart() once a second, so
+  // an entitled installation that is not signed in must report enabled here or those services
+  // never run at all.
+  describe('canStart', () => {
+    const configuredDir = join(__dirname, '..', '..', 'fixtures', 'workspaces', 'project-base');
+
+    let context: MockExtensionContext;
+
+    beforeEach(() => {
+      context = new MockExtensionContext();
+    });
+
+    afterEach(() => clearCustomerId(context));
+
+    function watcher() {
+      return makeWatcher({ cwd: configuredDir }, context);
+    }
+
+    it('is enabled with a session', async () => {
+      expect(await watcher().canStart()).to.deep.equal({ enabled: true });
+    });
+
+    it('is disabled without a session and without a customer ID', async () => {
+      (authentication.getApiKey as Sinon.SinonStub).resolves(undefined);
+
+      expect(await watcher().canStart()).to.deep.equal({
+        enabled: false,
+        reason: 'User is not logged in to AppMap',
+      });
+    });
+
+    it('is enabled when entitled without a session', async () => {
+      (authentication.getApiKey as Sinon.SinonStub).resolves(undefined);
+      await setCustomerId(context, 'acme-corp', 'orgConfig');
+
+      expect(await watcher().canStart()).to.deep.equal({ enabled: true });
+    });
+
+    it('is still disabled when the directory is not configured, entitled or not', async () => {
+      await setCustomerId(context, 'acme-corp', 'orgConfig');
+
+      const { enabled, reason } = await makeWatcher({ cwd: __dirname }, context).canStart();
+
+      expect(enabled).to.be.false;
+      expect(reason).to.include('is not configured');
+    });
+  });
+
   describe('loadEnvironment', () => {
     let context: vscode.ExtensionContext;
     beforeEach(() => {
       context = new MockExtensionContext();
     });
 
+    afterEach(() => clearCustomerId(context));
+
     describe('without OpenAI API key', () => {
       it('propagates the APPMAP_API_KEY', async () => {
         const env = await processWatcher.loadEnvironment(context);
+        expect(env).to.have.property('APPMAP_API_KEY', 'the-appmap-key');
         expect(env).to.not.have.property('OPENAI_API_KEY');
       });
     });
@@ -127,6 +182,41 @@ describe('ProcessWatcher', () => {
       it('propagates the OPENAI_API_KEY', async () => {
         const env = await processWatcher.loadEnvironment(context);
         expect(env).to.have.property('OPENAI_API_KEY', 'the-openai-key');
+      });
+    });
+
+    describe('without a session', () => {
+      beforeEach(() => (authentication.getApiKey as Sinon.SinonStub).resolves(undefined));
+
+      it('omits the APPMAP_API_KEY rather than passing an empty one', async () => {
+        const env = await processWatcher.loadEnvironment(context);
+        expect(env).to.not.have.property('APPMAP_API_KEY');
+      });
+
+      it('passes the customer ID in place of it when entitled', async () => {
+        await setCustomerId(context, 'acme-corp', 'orgConfig');
+
+        const env = await processWatcher.loadEnvironment(context);
+
+        expect(env).to.have.property('APPMAP_CUSTOMER_ID', 'acme-corp');
+        expect(env).to.not.have.property('APPMAP_API_KEY');
+      });
+    });
+
+    describe('with a session', () => {
+      it('omits the customer ID when there is none', async () => {
+        const env = await processWatcher.loadEnvironment(context);
+        expect(env).to.not.have.property('APPMAP_CUSTOMER_ID');
+      });
+
+      // The API key wins for authentication; the customer ID is attribution-only.
+      it('passes both when a customer ID is also set', async () => {
+        await setCustomerId(context, 'acme-corp', 'orgConfig');
+
+        const env = await processWatcher.loadEnvironment(context);
+
+        expect(env).to.have.property('APPMAP_API_KEY', 'the-appmap-key');
+        expect(env).to.have.property('APPMAP_CUSTOMER_ID', 'acme-corp');
       });
     });
   });
