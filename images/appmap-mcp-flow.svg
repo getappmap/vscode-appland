@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 284" width="920" height="284" role="img" aria-label="AppMap records your running application and saves the data as files on your machine. Your coding agent reads that data over MCP.">
+  <rect width="920" height="284" fill="#ffffff"/>
+  <g font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+    <text x="40" y="44" font-size="19" font-weight="700" fill="#12141a">Everything runs on your machine</text>
+    <text x="40" y="68" font-size="14" fill="#5a6070">AppMap data is saved as files in your project. Nothing is sent to an AppMap service.</text>
+
+    <rect x="40" y="92" width="236" height="168" rx="10" fill="#f6f7f9" stroke="#d7dae1" stroke-width="1.5"/>
+    <text x="60" y="122" font-size="12" font-weight="700" fill="#8a90a0" letter-spacing="0.8">STEP 1</text>
+    <text x="60" y="150" font-size="16" font-weight="600" fill="#12141a">Your app runs</text>
+    <text x="60" y="176" font-size="13.5" fill="#454b59">You run your tests, or you</text>
+    <text x="60" y="196" font-size="13.5" fill="#454b59">record an interaction.</text>
+    <text x="60" y="224" font-size="13.5" fill="#454b59">AppMap records it. You do</text>
+    <text x="60" y="244" font-size="13.5" fill="#454b59">not change any code.</text>
+
+    <path d="M288 176 L328 176" stroke="#b0b6c2" stroke-width="2" fill="none"/>
+    <path d="M328 176 l-9 -5.5 v11 z" fill="#b0b6c2"/>
+
+    <rect x="342" y="92" width="236" height="168" rx="10" fill="#f6f7f9" stroke="#d7dae1" stroke-width="1.5"/>
+    <text x="362" y="122" font-size="12" font-weight="700" fill="#8a90a0" letter-spacing="0.8">STEP 2</text>
+    <text x="362" y="150" font-size="16" font-weight="600" fill="#12141a">The data is saved</text>
+    <text x="362" y="176" font-size="13.5" fill="#454b59">Calls, SQL queries, HTTP</text>
+    <text x="362" y="196" font-size="13.5" fill="#454b59">requests, and exceptions.</text>
+    <text x="362" y="224" font-size="13.5" fill="#454b59">You can read it as</text>
+    <text x="362" y="244" font-size="13.5" fill="#454b59">diagrams in your IDE.</text>
+
+    <path d="M590 176 L630 176" stroke="#b0b6c2" stroke-width="2" fill="none"/>
+    <path d="M630 176 l-9 -5.5 v11 z" fill="#b0b6c2"/>
+    <text x="610" y="163" text-anchor="middle" font-size="12" font-weight="700" fill="#8a90a0" letter-spacing="0.8">MCP</text>
+
+    <rect x="644" y="92" width="236" height="168" rx="10" fill="#f6f7f9" stroke="#d7dae1" stroke-width="1.5"/>
+    <text x="664" y="122" font-size="12" font-weight="700" fill="#8a90a0" letter-spacing="0.8">STEP 3</text>
+    <text x="664" y="150" font-size="16" font-weight="600" fill="#12141a">Your agent reads it</text>
+    <text x="664" y="176" font-size="13.5" fill="#454b59">Claude Code, Cursor,</text>
+    <text x="664" y="196" font-size="13.5" fill="#454b59">GitHub Copilot, Windsurf,</text>
+    <text x="664" y="216" font-size="13.5" fill="#454b59">and any MCP-capable agent.</text>
+    <text x="664" y="244" font-size="13.5" fill="#454b59">It sees code and behavior.</text>
+  </g>
+</svg>

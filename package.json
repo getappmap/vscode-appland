@@ -2,7 +2,7 @@
   "publisher": "appland",
   "name": "appmap",
   "displayName": "AppMap",
-  "description": "AI-driven chat with a deep understanding of your code. Build effective solutions using an intuitive chat interface and powerful code visualizations.",
+  "description": "See how AI-generated code changes behave before they merge. AppMap records your app, shows you pictures of the behavior, and serves the data to your coding agent over MCP.",
   "version": "0.142.2",
   "repository": {
     "type": "git",
@@ -27,7 +27,8 @@
     "Visualization",
     "Machine Learning",
     "Programming Languages",
-    "Debuggers"
+    "Debuggers",
+    "Testing"
   ],
   "keywords": [
     "ai",
@@ -35,11 +36,14 @@
     "architecture",
     "autocomplete",
     "claude",
+    "claude code",
     "code analysis",
     "code completion",
     "code explanation",
     "code recommendation",
     "coding assistant",
+    "cursor",
+    "debugging",
     "dependency",
     "diagram",
     "diff",
@@ -49,9 +53,11 @@
     "java",
     "javascript",
     "llm",
+    "mcp",
     "map",
     "mistral",
     "mixtral",
+    "model context protocol",
     "monitoring",
     "node",
     "node.js",
@@ -61,6 +67,7 @@
     "python",
     "refactor",
     "ruby",
+    "runtime evidence",
     "security",
     "snippets",
     "software design",
@@ -69,7 +76,8 @@
     "tracing",
     "typescript",
     "uml",
-    "visualization"
+    "visualization",
+    "windsurf"
   ],
   "contributes": {
     "authentication": [
