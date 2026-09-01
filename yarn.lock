@@ -2128,6 +2128,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/tar@npm:^6.1.13":
+  version: 6.1.13
+  resolution: "@types/tar@npm:6.1.13"
+  dependencies:
+    "@types/node": "*"
+    minipass: ^4.0.0
+  checksum: bb3910936a6b37f093e38b73a52b0544fd73079685f5ea72e5c049fddc3770e58d80cf6d714425853f0746290221852c1a7ca89ffdb9614f3b2a858a3bf5436a
+  languageName: node
+  linkType: hard
+
 "@types/tmp@npm:^0.2.3":
   version: 0.2.3
   resolution: "@types/tmp@npm:0.2.3"
@@ -2847,6 +2857,7 @@ __metadata:
     "@types/semver": ^7.3.9
     "@types/sinon": ^10.0.2
     "@types/sinon-chai": ^3.2.9
+    "@types/tar": ^6.1.13
     "@types/tmp": ^0.2.3
     "@types/vscode": ~1.90.0
     "@typescript-eslint/eslint-plugin": ^8.65.0
@@ -2897,6 +2908,7 @@ __metadata:
     stream-browserify: ^3.0.0
     stream-http: ^3.2.0
     tape: ^5.1.1
+    tar: ^6.2.1
     temp: ^0.9.4
     tmp: ^0.2.1
     ts-node: ^10.9.1
@@ -8714,6 +8726,13 @@ __metadata:
   dependencies:
     yallist: ^4.0.0
   checksum: 74b623c1f996caafa66772301b66a1b634b20270f0d1a731ef86195d5a1a5f9984a773a1e88a6cecfd264d6c471c4c0fc8574cd96488f01c8f74c0b600021e55
+  languageName: node
+  linkType: hard
+
+"minipass@npm:^4.0.0":
+  version: 4.2.8
+  resolution: "minipass@npm:4.2.8"
+  checksum: 7f4914d5295a9a30807cae5227a37a926e6d910c03f315930fde52332cf0575dfbc20295318f91f0baf0e6bb11a6f668e30cde8027dea7a11b9d159867a3c830
   languageName: node
   linkType: hard
 

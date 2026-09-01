@@ -51,3 +51,27 @@ that pinning to an older manifest version *that happens to already be in
 the cache* won't refresh the active binary on Windows. A content/size/mtime
 comparison (or persisting the active version in a sidecar file) would close
 the gap.
+
+## 5. Skills are release-tarball driven, not manifest driven
+
+`skillService.ts` resolves its version from the GitHub releases API
+(`GitHubReleaseResolver`) and downloads the auto-generated source tarball,
+rather than using a published manifest with digests like the CLI tools do.
+That means skill downloads are **not digest-verified** — we trust TLS and
+GitHub. If `getappmap/skills` starts publishing a release manifest with an
+explicit skills archive asset and digest, switch to `ManifestManager.fetch`
+plus `verifyDigest` for parity with `appmap`/`scanner`.
+
+Note also that item 1 above proposes deleting `GitHubReleaseResolver`; the
+skill service now depends on it, so it has to stay.
+
+## 6. Additional agent skill roots
+
+Skills are linked from the versioned cache `~/.appmap/skills/<version>/`
+into `~/.claude/skills/`. Other agents read from other roots
+(`~/.copilot/skills`, project-local `.claude/skills`, ...). Supporting those
+is mostly a matter of running the same link loop over an additional target
+directory — the cache layout doesn't need to change. Project-local installs
+should be an explicit user-invoked command (and committed rather than
+gitignored), not something the extension writes into a working tree on its
+own.

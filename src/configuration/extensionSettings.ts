@@ -10,6 +10,8 @@ const DEFAULT_APPMAP_MANIFEST_URL =
   'https://raw.githubusercontent.com/getappmap/appmap-js/release-manifests/appmap-latest.json';
 const DEFAULT_SCANNER_MANIFEST_URL =
   'https://raw.githubusercontent.com/getappmap/appmap-js/release-manifests/scanner-latest.json';
+// Must stay in sync with the `appMap.skills.repository` schema in package.json.
+const DEFAULT_SKILLS_REPOSITORY = 'getappmap/skills';
 
 export default class ExtensionSettings {
   public static get appMapServerURL(): vscode.Uri {
@@ -156,6 +158,17 @@ export default class ExtensionSettings {
     return (
       vscode.workspace.getConfiguration('appMap').get<string>('manifest.scannerUrl') ||
       DEFAULT_SCANNER_MANIFEST_URL
+    );
+  }
+
+  public static get autoUpdateSkills(): boolean {
+    return vscode.workspace.getConfiguration('appMap').get<boolean>('autoUpdateSkills') ?? true;
+  }
+
+  public static get skillsRepository(): string {
+    return (
+      vscode.workspace.getConfiguration('appMap').get<string>('skills.repository') ||
+      DEFAULT_SKILLS_REPOSITORY
     );
   }
 }
