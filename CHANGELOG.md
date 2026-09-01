@@ -1,3 +1,16 @@
+# [0.143.0](https://github.com/getappmap/vscode-appland/compare/v0.142.2...v0.143.0) (2026-09-01)
+
+
+### Bug Fixes
+
+* **config:** make Clear work after the configuration URL is removed ([d1bf7f4](https://github.com/getappmap/vscode-appland/commit/d1bf7f46fb554803072213d5e1e7a64491e70d69))
+* **rpc:** do not run the RPC server until the extension is activated ([d56c4d5](https://github.com/getappmap/vscode-appland/commit/d56c4d5435082bcba04a8d3086c1515ae67055d6))
+
+
+### Features
+
+* **enterprise:** customer ID for managed entitlement ([3b28cd3](https://github.com/getappmap/vscode-appland/commit/3b28cd3a50d79139c6bf080ff6f62a36c9c4ccb9))
+
 ## [0.142.2](https://github.com/getappmap/vscode-appland/compare/v0.142.1...v0.142.2) (2026-08-05)
 
 

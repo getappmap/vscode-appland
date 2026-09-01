@@ -3,7 +3,7 @@
   "name": "appmap",
   "displayName": "AppMap",
   "description": "See how AI-generated code changes behave before they merge. AppMap records your app, shows you pictures of the behavior, and serves the data to your coding agent over MCP.",
-  "version": "0.142.2",
+  "version": "0.143.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/getappmap/vscode-appland"
