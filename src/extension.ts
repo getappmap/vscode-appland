@@ -133,10 +133,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     uriHandler.registerHandlers(openAppMapUriHandler);
     context.subscriptions.push(vscode.window.registerUriHandler(uriHandler));
 
-    const appmapServerAuthenticationProvider = AppMapServerAuthenticationProvider.enroll(
-      context,
-      uriHandler
-    );
+    const appmapServerAuthenticationProvider = AppMapServerAuthenticationProvider.enroll(context);
     context.subscriptions.push(
       appmapServerAuthenticationProvider.onDidChangeSessions((e) => {
         if (e.added?.length) vscode.window.showInformationMessage('AppMap activated');

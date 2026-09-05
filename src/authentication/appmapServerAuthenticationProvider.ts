@@ -1,9 +1,6 @@
 import * as vscode from 'vscode';
 import { default as ExtensionSettings } from '../configuration/extensionSettings';
-import UriHandler from '../uri/uriHandler';
 import AppMapServerAuthenticationHandler from '../uri/appmapServerAuthenticationHandler';
-import { randomUUID } from 'crypto';
-import VscodeProtocolRedirect from './authenticationStrategy/vscodeProtocolRedirect';
 import LocalWebserver from './authenticationStrategy/localWebServer';
 import { DEBUG_EXCEPTION, Telemetry } from '../telemetry';
 import ErrorCode from '../telemetry/definitions/errorCodes';
@@ -16,12 +13,6 @@ const debug = debuglog('appmap-vscode:AppMapServerAuthenticationProvider');
 
 const APPMAP_SERVER_SESSION_KEY = 'appmap.server.session';
 
-enum AuthFailure {
-  NotAuthorized = 'NotAuthorized',
-  UserCanceled = 'UserCanceled',
-  SignInAttempt = 'SignInAttempt',
-}
-
 export default class AppMapServerAuthenticationProvider implements vscode.AuthenticationProvider {
   // vscode.AuthenticationProvider is not Disposable, therefore listeners on this event
   // will not and apparently do not need to be disposed.
@@ -31,13 +22,14 @@ export default class AppMapServerAuthenticationProvider implements vscode.Authen
 
   private session?: vscode.AuthenticationSession;
   private pendingLicenseKey?: string;
-  public customCancellationToken = new vscode.CancellationTokenSource();
+  private activeCancellationTokenSource?: vscode.CancellationTokenSource;
 
-  static enroll(
-    context: vscode.ExtensionContext,
-    uriHandler: UriHandler
-  ): AppMapServerAuthenticationProvider {
-    const provider = new AppMapServerAuthenticationProvider(context, uriHandler);
+  public cancel(): void {
+    this.activeCancellationTokenSource?.cancel();
+  }
+
+  static enroll(context: vscode.ExtensionContext): AppMapServerAuthenticationProvider {
+    const provider = new AppMapServerAuthenticationProvider(context);
     const registration = vscode.authentication.registerAuthenticationProvider(
       AUTHN_PROVIDER_NAME,
       'AppMap',
@@ -89,7 +81,7 @@ export default class AppMapServerAuthenticationProvider implements vscode.Authen
     return vscode.Uri.parse(url.toString());
   }
 
-  constructor(public context: vscode.ExtensionContext, public uriHandler: UriHandler) {}
+  constructor(public context: vscode.ExtensionContext) {}
 
   async getSessions(): Promise<vscode.AuthenticationSession[]> {
     if (!this.session)
@@ -163,43 +155,46 @@ export default class AppMapServerAuthenticationProvider implements vscode.Authen
   }
 
   async performSignIn(scopes: string[]): Promise<vscode.AuthenticationSession | undefined> {
-    const nonce = randomUUID();
-    const authnHandler = new AppMapServerAuthenticationHandler(nonce);
-    const authnStrategies = [
-      new VscodeProtocolRedirect(this.uriHandler, authnHandler),
-      new LocalWebserver(authnHandler),
-    ];
+    const localWebserver = new LocalWebserver();
+    const authnHandler = new AppMapServerAuthenticationHandler();
+    const disposables: vscode.Disposable[] = [localWebserver, authnHandler];
 
-    const ssoTarget: string | undefined = scopes
-      .find((s) => s.startsWith('ssoTarget:'))
-      ?.split(':')[1];
+    try {
+      const ssoTarget: string | undefined = scopes
+        .find((s) => s.startsWith('ssoTarget:'))
+        ?.split(':')[1];
 
-    for (const [index, authnStrategy] of authnStrategies.entries()) {
-      authnStrategy.prepareSignIn();
-      const redirectUri = await authnStrategy.redirectUrl([['nonce', nonce]]);
-      const authnUrl = AppMapServerAuthenticationProvider.authURL(
-        authnStrategy.getAuthnPath(ssoTarget),
-        {
-          redirect_url: redirectUri.toString(),
-        }
-      );
+      await localWebserver.prepareSignIn((p) => authnHandler.handle(p));
+      const localUrl = localWebserver.localUrl;
+      if (!localUrl) {
+        throw new Error('Local server URL is not available');
+      }
+
+      const externalUri = await vscode.env.asExternalUri(vscode.Uri.parse(localUrl));
+
+      const queryParams: Record<string, string> = {
+        redirect_url: externalUri.toString(),
+      };
+      if (ssoTarget) {
+        queryParams.ssoTarget = ssoTarget;
+      }
+
+      const authnUrl = AppMapServerAuthenticationProvider.authURL('authn_provider', queryParams);
       vscode.env.openExternal(authnUrl);
-      const session = await vscode.window.withProgress<vscode.AuthenticationSession | AuthFailure>(
+      const session = await vscode.window.withProgress<vscode.AuthenticationSession | undefined>(
         {
           cancellable: true,
           location: vscode.ProgressLocation.Notification,
           title: `Signing into AppMap...`,
         },
         async (_progress, token) => {
-          return new Promise((resolve) => {
-            this.customCancellationToken = new vscode.CancellationTokenSource();
+          return new Promise((resolve, reject) => {
+            const cancellationTokenSource = new vscode.CancellationTokenSource();
+            this.activeCancellationTokenSource = cancellationTokenSource;
 
-            const dispose = (disposables: vscode.Disposable[]) =>
-              disposables.forEach((d) => d.dispose());
-
-            const disposables = [
+            disposables.push(
+              cancellationTokenSource,
               authnHandler.onCreateSession((session) => {
-                dispose(disposables);
                 resolve(session);
               }),
               authnHandler.onError((exception) => {
@@ -209,39 +204,27 @@ export default class AppMapServerAuthenticationProvider implements vscode.Authen
                 });
                 console.warn('Failed to authenticate');
                 console.warn(exception);
-                dispose(disposables);
-                resolve(AuthFailure.NotAuthorized);
+                reject(exception);
               }),
-            ];
-
-            token.onCancellationRequested(() => {
-              dispose(disposables);
-              resolve(AuthFailure.UserCanceled);
-            });
-
-            this.customCancellationToken.token.onCancellationRequested(() => {
-              dispose(disposables);
-              resolve(AuthFailure.SignInAttempt);
-            });
+              token.onCancellationRequested(() => {
+                resolve(undefined);
+              }),
+              cancellationTokenSource.token.onCancellationRequested(() => {
+                resolve(undefined);
+              })
+            );
           });
         }
       );
 
-      if (!Object.values(AuthFailure).includes(session as AuthFailure))
-        return session as vscode.AuthenticationSession;
-
-      if (index === authnStrategies.length - 1 || session === AuthFailure.SignInAttempt)
-        return undefined;
-
-      const tryNewStrategy = await vscode.window.showWarningMessage(
-        'Having trouble logging in? Would you like to try a different method?',
-        'Yes',
-        'No'
-      );
-
-      if (tryNewStrategy !== 'Yes') {
-        return undefined;
-      }
+      return session;
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      vscode.window.showErrorMessage(`AppMap sign-in failed: ${message}`);
+      return undefined;
+    } finally {
+      disposables.forEach((d) => d.dispose());
+      this.activeCancellationTokenSource = undefined;
     }
   }
 }
