@@ -1,3 +1,4 @@
 require:
   - ts-node/register
   - mocha-suppress-logs
+  - test/support/staticAssets.js

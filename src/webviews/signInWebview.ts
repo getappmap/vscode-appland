@@ -64,7 +64,7 @@ export default class SignInViewProvider implements vscode.WebviewViewProvider {
 
         case 'sign-in': {
           const ssoTarget = message.data;
-          this.authProvider.customCancellationToken.cancel();
+          this.authProvider.cancel();
           // AHT: If there is a sign-in attempt in progress it does not get cancelled before the next sign-in attempt
           // unless I delay the next attempt using setTimeout. Perhaps there is a race condition in VS Code.
           setTimeout(() => SignInManager.signIn(ssoTarget), 500);
@@ -73,7 +73,7 @@ export default class SignInViewProvider implements vscode.WebviewViewProvider {
 
         case 'activate': {
           const apiKey = message.data;
-          this.authProvider.customCancellationToken.cancel();
+          this.authProvider.cancel();
           // If the license key is coming from the webview we have already validated it
           await this.authProvider.enterLicenseKeyCommand(apiKey, true);
           break;
