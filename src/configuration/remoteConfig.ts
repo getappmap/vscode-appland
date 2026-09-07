@@ -7,10 +7,6 @@ import { clearCustomerId, getCustomerId, setCustomerId } from './customerId';
 // nothing is re-applied without a URL, but this is the only thing a later rollback can work
 // from. Dropped only by an explicit rollback.
 const CACHE_KEY = 'remoteConfig';
-// Record that an organization configuration has been applied at least once. It drives UI
-// affordances such as hiding the sign-in screen's "apply your organization's configuration"
-// prompt, and survives the URL being removed; only an explicit rollback clears it.
-const APPLIED_MARKER_KEY = 'orgConfigAppliedAt';
 const TIMEOUT_MS = 3000;
 const EXCLUDED_KEY = 'appMap.configurationUrl';
 const CUSTOMER_ID_KEY = 'appMap.customerId';
@@ -34,8 +30,27 @@ export function getConfigUrl(): { url: string; source: 'setting' | 'env var' } |
   return undefined;
 }
 
-// Serialise concurrent apply() calls so startup fetch and config-change watcher never interleave.
-let applyChain: Promise<void> = Promise.resolve();
+let applyChain: Promise<unknown> = Promise.resolve();
+
+// Runs work once everything already queued has settled, so the startup fetch, the
+// configuration-change watcher and a local-file apply never interleave. The queue exists only
+// for that ordering: its resolved value is never read, and failures are absorbed here so one
+// caller's error cannot poison the next caller's turn. Rejections still reach the caller
+// through the promise returned.
+function enqueue<T>(work: () => Promise<T>): Promise<T> {
+  const result = applyChain.then(work);
+  applyChain = result.catch(() => undefined);
+  return result;
+}
+
+// The apply queued or in flight, so a second one for the same URL can join it instead of
+// fetching again: writing the configurationUrl setting notifies the configuration-change
+// watcher before update() resolves, so the watcher's apply is already pending by the time the
+// command that wrote the setting asks for one of its own. Cleared once it settles — a finished
+// apply says nothing about whether the remote configuration has changed since, so a later
+// apply always fetches. Worst case the watcher's notification arrives late, nothing is
+// coalesced, and the URL is fetched twice for one user action.
+let pendingApply: { url?: string; result: Promise<boolean> } | undefined;
 
 async function readAndParseLocalConfig(fsPath: string): Promise<Config> {
   const content = await fs.readFile(fsPath, 'utf8');
@@ -168,16 +183,16 @@ async function rollbackRemoteConfig(
   }
 
   await context.globalState.update(CACHE_KEY, undefined);
-  // Cleared along with everything else: this is an explicit undo, so the sign-in view's
-  // "apply your organization's configuration" prompt should be offered again.
-  await context.globalState.update(APPLIED_MARKER_KEY, undefined);
 }
 
+// Resolves to whether an organization configuration is now applied. The configuration URL is
+// passed in rather than read here, so that an apply fetches the URL it was enqueued for and
+// not whatever the setting says by the time it reaches the front of the queue.
 async function doApply(
   context: vscode.ExtensionContext,
-  channel: vscode.OutputChannel
-): Promise<void> {
-  const configUrl = getConfigUrl();
+  channel: vscode.OutputChannel,
+  configUrl: ReturnType<typeof getConfigUrl>
+): Promise<boolean> {
   const cached = context.globalState.get<ConfigCache>(CACHE_KEY);
 
   if (!configUrl) {
@@ -195,7 +210,7 @@ async function doApply(
       // thing the clear command has to revert from. Dropping it here used to make clearing a
       // no-op for anyone who removed the URL first.
     }
-    return;
+    return false;
   }
 
   const { url, source } = configUrl;
@@ -223,7 +238,7 @@ async function doApply(
       channel.appendLine('Using cached configuration.');
       fetched = cached.config;
     } else {
-      return;
+      return false;
     }
   }
 
@@ -238,17 +253,29 @@ async function doApply(
   }
 
   await context.globalState.update(CACHE_KEY, { url, config: fetched });
-  await context.globalState.update(APPLIED_MARKER_KEY, Date.now());
+  return true;
 }
 
 export default class RemoteConfig {
-  static apply(context: vscode.ExtensionContext, channel: vscode.OutputChannel): Promise<void> {
-    applyChain = applyChain
-      .then(() => doApply(context, channel))
-      .catch((error) => {
-        channel.appendLine(`Failed to apply organization configuration: ${error}`);
-      });
-    return applyChain;
+  static apply(context: vscode.ExtensionContext, channel: vscode.OutputChannel): Promise<boolean> {
+    const configUrl = getConfigUrl();
+    if (pendingApply && pendingApply.url === configUrl?.url) return pendingApply.result;
+
+    const result = enqueue(() => doApply(context, channel, configUrl)).catch((error) => {
+      channel.appendLine(`Failed to apply organization configuration: ${error}`);
+      return false;
+    });
+
+    const pending = { url: configUrl?.url, result };
+    pendingApply = pending;
+    // Attached before the caller's own continuation, so an awaited apply has already stopped
+    // being coalescable by the time the await resumes. Identity-checked because a later apply
+    // for a different URL supersedes this entry rather than queueing behind it.
+    void result.finally(() => {
+      if (pendingApply === pending) pendingApply = undefined;
+    });
+
+    return result;
   }
 
   // Structured as static class methods rather than exported free functions to bypass
@@ -264,10 +291,7 @@ export default class RemoteConfig {
     config: Config,
     channel?: vscode.OutputChannel
   ): Promise<void> {
-    applyChain = applyChain
-      .then(() => applyConfigKeys(context, config, channel))
-      .catch(() => undefined);
-    return applyChain;
+    return enqueue(() => applyConfigKeys(context, config, channel)).catch(() => undefined);
   }
 
   static async rollbackRemoteConfig(
@@ -275,15 +299,5 @@ export default class RemoteConfig {
     channel?: vscode.OutputChannel
   ): Promise<void> {
     return rollbackRemoteConfig(context, channel);
-  }
-
-  static async markApplied(context: vscode.ExtensionContext): Promise<void> {
-    await context.globalState.update(APPLIED_MARKER_KEY, Date.now());
-  }
-
-  static isApplied(context: vscode.ExtensionContext): boolean {
-    return (
-      getConfigUrl() !== undefined || context.globalState.get(APPLIED_MARKER_KEY) !== undefined
-    );
   }
 }

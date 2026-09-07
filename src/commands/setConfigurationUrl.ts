@@ -2,10 +2,21 @@ import * as vscode from 'vscode';
 import RemoteConfig, { getConfigUrl, type Config } from '../configuration/remoteConfig';
 import { getCustomerId, getCustomerIdState } from '../configuration/customerId';
 
+// What the command did. The sign-in view needs it to decide whether to confirm an apply the
+// user just performed, and the state left behind cannot answer that: the Local File option
+// applies a one-shot configuration and sets no URL at all, so an apply that plainly succeeded
+// is indistinguishable from never having run.
+export type SetConfigurationUrlOutcome =
+  | 'applied'
+  | 'cleared'
+  | 'reported'
+  | 'cancelled'
+  | 'failed';
+
 export default async function setConfigurationUrl(
   context: vscode.ExtensionContext,
   channel: vscode.OutputChannel
-): Promise<void> {
+): Promise<SetConfigurationUrlOutcome> {
   const options = [
     {
       label: 'Set URL',
@@ -33,7 +44,7 @@ export default async function setConfigurationUrl(
     placeHolder: 'Select how you want to configure organization settings',
   });
 
-  if (!picked) return;
+  if (!picked) return 'cancelled';
 
   if (picked.key === 'url') {
     const value = await vscode.window.showInputBox({
@@ -41,11 +52,18 @@ export default async function setConfigurationUrl(
       value: getConfigUrl()?.url || '',
     });
 
-    if (value === undefined) return;
+    if (value === undefined) return 'cancelled';
 
     await vscode.workspace
       .getConfiguration('appMap')
       .update('configurationUrl', value || undefined, vscode.ConfigurationTarget.Global);
+
+    if (!value) return 'cleared';
+
+    // Waits for the configuration to actually land, so a mistyped or unreachable URL is
+    // reported as a failure rather than confirmed as applied. The configuration-change watcher
+    // has already started an apply for this URL, and this one coalesces onto it.
+    return (await RemoteConfig.apply(context, channel)) ? 'applied' : 'failed';
   } else if (picked.key === 'file') {
     const fileUris = await vscode.window.showOpenDialog({
       canSelectMany: false,
@@ -55,7 +73,7 @@ export default async function setConfigurationUrl(
       openLabel: 'Apply Config',
     });
 
-    if (!fileUris || fileUris.length === 0) return;
+    if (!fileUris || fileUris.length === 0) return 'cancelled';
 
     const uri = fileUris[0];
     let sanitized: Config;
@@ -64,7 +82,7 @@ export default async function setConfigurationUrl(
     } catch (e: unknown) {
       const message = e instanceof Error ? e.message : String(e);
       vscode.window.showErrorMessage(`Failed to parse configuration file: ${message}`);
-      return;
+      return 'failed';
     }
 
     const configUrl = getConfigUrl();
@@ -85,16 +103,20 @@ export default async function setConfigurationUrl(
     }
 
     await RemoteConfig.applyLocalConfig(context, sanitized, channel);
-    await RemoteConfig.markApplied(context);
     channel.appendLine(`Successfully applied configuration from local file: ${uri.fsPath}`);
     vscode.window.showInformationMessage(
       'Successfully applied local organization configuration. These settings will persist until changed manually.'
     );
+    return 'applied';
   } else if (picked.key === 'clear') {
     await clearOrganizationConfiguration(context, channel);
+    return 'cleared';
   } else if (picked.key === 'status') {
     channel.appendLine(describeStatus(context));
+    return 'reported';
   }
+
+  return 'cancelled';
 }
 
 async function clearOrganizationConfiguration(
