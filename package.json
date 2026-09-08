@@ -2,7 +2,7 @@
   "publisher": "appland",
   "name": "appmap",
   "displayName": "AppMap",
-  "description": "See how AI-generated code changes behave before they merge. AppMap records your app, shows you pictures of the behavior, and serves the data to your coding agent over MCP.",
+  "description": "Runtime evidence for AI-assisted development. AppMap records your app, keeps the traces on your machine, and serves them to your coding agent over MCP, so you and your AI can review code behavior with every code change.",
   "version": "0.143.0",
   "repository": {
     "type": "git",
