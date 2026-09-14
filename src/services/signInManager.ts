@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-import * as semver from 'semver';
 import { AUTHN_PROVIDER_NAME, getApiKey } from '../authentication';
 import { isEntitled, onDidChangeEntitlement } from '../configuration/customerId';
 import ExtensionState from '../configuration/extensionState';
@@ -9,8 +8,6 @@ import ErrorCode from '../telemetry/definitions/errorCodes';
 export default class SignInManager {
   private static contextKeyShowSignInWebview = 'appMap.showSignIn';
   private static signedIn: boolean;
-  private static firstInstalledVersion: semver.SemVer | null;
-  private static versionCutOff = '0.66.2';
   private static context: vscode.ExtensionContext | undefined;
 
   public static async register(
@@ -18,7 +15,6 @@ export default class SignInManager {
     context: vscode.ExtensionContext
   ): Promise<void> {
     this.context = context;
-    this.firstInstalledVersion = semver.coerce(extensionState.firstVersionInstalled);
     void this.updateSignInState().catch((e) => {
       console.error('Error updating sign-in state on register():', e);
       Telemetry.sendEvent(DEBUG_EXCEPTION, {
@@ -70,10 +66,7 @@ export default class SignInManager {
   }
 
   public static shouldShowSignIn(): boolean {
-    if (!this.firstInstalledVersion) return false;
-
-    const meetsVersionRequirement = semver.gt(this.firstInstalledVersion, this.versionCutOff);
-    return !!(meetsVersionRequirement && !this.signedIn);
+    return !this.signedIn;
   }
 
   public static async updateSignInState(): Promise<void> {
