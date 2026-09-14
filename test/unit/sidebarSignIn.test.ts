@@ -19,8 +19,6 @@ describe('Sidebar sign-in', () => {
   >;
   const context = new MockExtensionContext();
   const extensionState = new ExtensionState(context);
-  const existingUserVersion = '0.66.2';
-  const newUserVersion = '0.66.3';
   const fakeApiKey = 'fake api key';
   const noApiKey = undefined;
 
@@ -39,22 +37,8 @@ describe('Sidebar sign-in', () => {
     await clearCustomerId(context);
   });
 
-  it('is not shown for an existing user who is logged in and then logs out', async () => {
+  it('is not shown when authenticated, but is shown after logging out', async () => {
     getApiKeyStub.returns(Promise.resolve(fakeApiKey));
-    sandbox.stub(extensionState, 'firstVersionInstalled').value(existingUserVersion);
-
-    await SignInManager.register(extensionState, context);
-    await expectShowSignIn(false);
-
-    // user logs out
-    getApiKeyStub.returns(Promise.resolve(noApiKey));
-    await SignInManager.updateSignInState();
-    await expectShowSignIn(false);
-  });
-
-  it('is not shown for a new user who is authenticated, but is shown when they log out', async () => {
-    getApiKeyStub.returns(Promise.resolve(fakeApiKey));
-    sandbox.stub(extensionState, 'firstVersionInstalled').value(newUserVersion);
 
     await SignInManager.register(extensionState, context);
     await expectShowSignIn(false);
@@ -65,22 +49,8 @@ describe('Sidebar sign-in', () => {
     await expectShowSignIn(true);
   });
 
-  it('is not shown for an existing user who is not authenticated and then logs in', async () => {
+  it('is shown when not authenticated, but is not shown once they log in', async () => {
     getApiKeyStub.returns(Promise.resolve(noApiKey));
-    sandbox.stub(extensionState, 'firstVersionInstalled').value(existingUserVersion);
-
-    await SignInManager.register(extensionState, context);
-    await expectShowSignIn(false);
-
-    // user logs in
-    getApiKeyStub.returns(Promise.resolve(fakeApiKey));
-    await SignInManager.updateSignInState();
-    await expectShowSignIn(false);
-  });
-
-  it('is shown for a new user who is not authenticated, but is not shown once they log in', async () => {
-    getApiKeyStub.returns(Promise.resolve(noApiKey));
-    sandbox.stub(extensionState, 'firstVersionInstalled').value(newUserVersion);
 
     await SignInManager.register(extensionState, context);
     await expectShowSignIn(true);
@@ -91,9 +61,8 @@ describe('Sidebar sign-in', () => {
     await expectShowSignIn(false);
   });
 
-  it('is not shown for a new user with no API key when a customer ID entitles the installation', async () => {
+  it('is not shown with no API key when a customer ID entitles the installation', async () => {
     getApiKeyStub.returns(Promise.resolve(noApiKey));
-    sandbox.stub(extensionState, 'firstVersionInstalled').value(newUserVersion);
     await setCustomerId(context, 'acme-corp', 'orgConfig');
 
     await SignInManager.register(extensionState, context);
@@ -103,7 +72,6 @@ describe('Sidebar sign-in', () => {
 
   it('does not consult the API key at all when entitled', async () => {
     getApiKeyStub.returns(Promise.resolve(noApiKey));
-    sandbox.stub(extensionState, 'firstVersionInstalled').value(newUserVersion);
     await setCustomerId(context, 'acme-corp', 'orgConfig');
 
     await SignInManager.register(extensionState, context);
@@ -114,7 +82,6 @@ describe('Sidebar sign-in', () => {
 
   it('is shown again once entitlement is cleared', async () => {
     getApiKeyStub.returns(Promise.resolve(noApiKey));
-    sandbox.stub(extensionState, 'firstVersionInstalled').value(newUserVersion);
     await setCustomerId(context, 'acme-corp', 'orgConfig');
 
     await SignInManager.register(extensionState, context);
@@ -130,7 +97,6 @@ describe('Sidebar sign-in', () => {
   // has to be announced or the sign-in view stays up until the window reloads.
   it('hides itself when a customer ID arrives mid-session', async () => {
     getApiKeyStub.returns(Promise.resolve(noApiKey));
-    sandbox.stub(extensionState, 'firstVersionInstalled').value(newUserVersion);
 
     await SignInManager.register(extensionState, context);
     await expectShowSignIn(true);
@@ -142,7 +108,6 @@ describe('Sidebar sign-in', () => {
 
   it('reappears when entitlement is withdrawn mid-session', async () => {
     getApiKeyStub.returns(Promise.resolve(noApiKey));
-    sandbox.stub(extensionState, 'firstVersionInstalled').value(newUserVersion);
     await setCustomerId(context, 'acme-corp', 'orgConfig');
 
     await SignInManager.register(extensionState, context);
