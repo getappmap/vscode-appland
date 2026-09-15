@@ -61,9 +61,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appland/components@npm:^4.49.0":
-  version: 4.49.0
-  resolution: "@appland/components@npm:4.49.0"
+"@appland/components@npm:^4.49.1":
+  version: 4.49.1
+  resolution: "@appland/components@npm:4.49.1"
   dependencies:
     "@appland/client": ^1.12.0
     "@appland/diagrams": ^1.7.0
@@ -74,9 +74,9 @@ __metadata:
     buffer: ^6.0.3
     d3: ^7.8.4
     d3-flame-graph: ^4.1.3
-    diff: ^5.1.0
+    diff: ^5.2.2
     dom-to-svg: ^0.12.2
-    dompurify: ^3.0.6
+    dompurify: ^3.4.14
     events: ^3.3.0
     highlight.js: ^11.9.0
     jayson: ^4.1.0
@@ -84,13 +84,13 @@ __metadata:
     lucide-vue: ^0.511.0
     marked: ^10.0.0
     marked-highlight: ^2.0.7
-    mermaid: ^10.9.1
+    mermaid: ^10.9.8
     pako: ^2.1.0
     sax: ^1.4.1
     sql-formatter: ^4.0.2
     vue: ^2.7.16
     vuex: ^3.6.0
-  checksum: 9d9e9b4adc7d436b7688e62e5b3c8867d93d562e1c91f4197747673f133ef5707867fd316251dd3700d130b37c640b2db8d8fc5feea5576b468833d5667dd844
+  checksum: 26a786d151679ee9263982e6a0f9dfe54ac78077f904abc14bad1ce272cf6e3e101ad8c768d6fd62c6ccf3d3e72ff1c2ff472ad92e0ff4a75372049fb52eefdb
   languageName: node
   linkType: hard
 
@@ -2135,6 +2135,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/trusted-types@npm:^2.0.7":
+  version: 2.0.7
+  resolution: "@types/trusted-types@npm:2.0.7"
+  checksum: 8e4202766a65877efcf5d5a41b7dd458480b36195e580a3b1085ad21e948bc417d55d6f8af1fd2a7ad008015d4117d5fdfe432731157da3c68678487174e4ba3
+  languageName: node
+  linkType: hard
+
 "@types/tunnel@npm:^0.0.3":
   version: 0.0.3
   resolution: "@types/tunnel@npm:0.0.3"
@@ -2824,7 +2831,7 @@ __metadata:
   resolution: "appmap@workspace:."
   dependencies:
     "@appland/client": ^1.23.0
-    "@appland/components": ^4.49.0
+    "@appland/components": ^4.49.1
     "@appland/diagrams": ^1.8.0
     "@appland/models": ^2.10.2
     "@appland/rpc": ^1.22.0
@@ -4541,7 +4548,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"d3@npm:^7.4.0, d3@npm:^7.8.2, d3@npm:^7.8.4":
+"d3@npm:^7.4.0, d3@npm:^7.8.4, d3@npm:^7.9.0":
   version: 7.9.0
   resolution: "d3@npm:7.9.0"
   dependencies:
@@ -4579,13 +4586,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dagre-d3-es@npm:7.0.10":
-  version: 7.0.10
-  resolution: "dagre-d3-es@npm:7.0.10"
+"dagre-d3-es@npm:7.0.13":
+  version: 7.0.13
+  resolution: "dagre-d3-es@npm:7.0.13"
   dependencies:
-    d3: ^7.8.2
+    d3: ^7.9.0
     lodash-es: ^4.17.21
-  checksum: 25194e80dfad48db0dc2e0a273a7c9fcbfdc4cf993b219eaa1e0e0ce0cbb8c63be42fa2aa0c5f9bf9b324c34b8b2e300bb2a1606d5ae35c2de00f9c4ac317d8e
+  checksum: 4a6e5aeb8d4a643c19241b58b8507a7e8aadae8c470ecb9b0133b3af0d6244356cb2cda643fe2f4ef5f872800eb873d7287977b4c5965962396b1757afb0b5de
   languageName: node
   linkType: hard
 
@@ -4932,10 +4939,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"diff@npm:^5.0.0, diff@npm:^5.1.0":
-  version: 5.1.0
-  resolution: "diff@npm:5.1.0"
-  checksum: c7bf0df7c9bfbe1cf8a678fd1b2137c4fb11be117a67bc18a0e03ae75105e8533dbfb1cda6b46beb3586ef5aed22143ef9d70713977d5fb1f9114e21455fba90
+"diff@npm:^5.0.0, diff@npm:^5.1.0, diff@npm:^5.2.2":
+  version: 5.2.2
+  resolution: "diff@npm:5.2.2"
+  checksum: a1af5d6322ca6312279369665b5a9e6d54cd2aed42729a30523e174ccd14661a752bf10d75deec8763964cab3df3787fe816f88e9de7ee8fe774852007269d88
   languageName: node
   linkType: hard
 
@@ -5002,10 +5009,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dompurify@npm:^3.0.5 <3.1.7, dompurify@npm:^3.0.6":
-  version: 3.1.6
-  resolution: "dompurify@npm:3.1.6"
-  checksum: cc4fc4ccd9261fbceb2a1627a985c70af231274a26ddd3f643fd0616a0a44099bd9e4480940ce3655612063be4a1fe9f5e9309967526f8c0a99f931602323866
+"dompurify@npm:^3.2.4, dompurify@npm:^3.4.14":
+  version: 3.4.14
+  resolution: "dompurify@npm:3.4.14"
+  dependencies:
+    "@types/trusted-types": ^2.0.7
+  dependenciesMeta:
+    "@types/trusted-types":
+      optional: true
+  checksum: b33560cfe33df810449ab31d216d37d5d33aaa21843650bc9fc8e0a52b2f9c3e92d3574b3272b6ed701ac7f74e19ee0983689469a36fab68472528f568decb1d
   languageName: node
   linkType: hard
 
@@ -8224,9 +8236,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mermaid@npm:^10.9.1":
-  version: 10.9.3
-  resolution: "mermaid@npm:10.9.3"
+"mermaid@npm:^10.9.8":
+  version: 10.9.8
+  resolution: "mermaid@npm:10.9.8"
   dependencies:
     "@braintree/sanitize-url": ^6.0.1
     "@types/d3-scale": ^4.0.3
@@ -8235,9 +8247,9 @@ __metadata:
     cytoscape-cose-bilkent: ^4.1.0
     d3: ^7.4.0
     d3-sankey: ^0.12.3
-    dagre-d3-es: 7.0.10
+    dagre-d3-es: 7.0.13
     dayjs: ^1.11.7
-    dompurify: ^3.0.5 <3.1.7
+    dompurify: ^3.2.4
     elkjs: ^0.9.0
     katex: ^0.16.9
     khroma: ^2.0.0
@@ -8246,9 +8258,9 @@ __metadata:
     non-layered-tidy-tree-layout: ^2.0.2
     stylis: ^4.1.3
     ts-dedent: ^2.2.0
-    uuid: ^9.0.0
+    uuid: ^9.0.0 || ^10 || ^11.1.0 || ^12 || ^13 || ^14.0.0
     web-worker: ^1.2.0
-  checksum: 65468f6c7628d8c5ad640b3657e70d3408464d4b49e83c159ddc478ae733cb8f4ca545e16939cc8604e5f8902fb1d8bc1be0e00fa98a8bdf221d222e58d3342a
+  checksum: 47e327b44823b75def60bd9b7c98f8361355b765652fc71cf9b6f679ce3ae50a5aac4e340586a1ee007486c09ffd68e28089880a69c36e8dcd56c4e8bffe2d0c
   languageName: node
   linkType: hard
 
@@ -12305,12 +12317,12 @@ typescript@^3.9.3:
   languageName: node
   linkType: hard
 
-"uuid@npm:^9.0.0":
-  version: 9.0.1
-  resolution: "uuid@npm:9.0.1"
+"uuid@npm:^9.0.0 || ^10 || ^11.1.0 || ^12 || ^13 || ^14.0.0":
+  version: 14.0.2
+  resolution: "uuid@npm:14.0.2"
   bin:
-    uuid: dist/bin/uuid
-  checksum: 39931f6da74e307f51c0fb463dc2462807531dc80760a9bff1e35af4316131b4fc3203d16da60ae33f07fdca5b56f3f1dd662da0c99fea9aaeab2004780cc5f4
+    uuid: dist-node/bin/uuid
+  checksum: e6f906b70714a39b687eadd443493eb4fd8b7998fa289a3754af215e84418bbfeadfbc3d72da833556a9c2d6fd902d9d769e9bb6c874cf4d583f7ccd03b2456e
   languageName: node
   linkType: hard
 

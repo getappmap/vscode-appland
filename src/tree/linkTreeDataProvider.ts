@@ -1,3 +1,7 @@
+// reference the types for static assets so ts-node can understand them
+// eslint-disable-next-line @typescript-eslint/triple-slash-reference
+/// <reference path="../../types/custom.d.ts" />
+
 import * as vscode from 'vscode';
 import * as path from 'path';
 import svgLink from '../../web/static/media/tree/link.svg';

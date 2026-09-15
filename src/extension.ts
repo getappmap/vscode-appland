@@ -89,9 +89,13 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
   context.subscriptions.push(orgConfigChannel);
 
   context.subscriptions.push(
-    vscode.commands.registerCommand('appmap.setConfigurationUrl', () =>
-      setConfigurationUrl(context, orgConfigChannel).then(() => orgConfigChannel.show(true))
-    ),
+    // The outcome is returned to the caller: the sign-in view needs to know whether a
+    // configuration was applied just now, which nothing it can read back tells it.
+    vscode.commands.registerCommand('appmap.setConfigurationUrl', async () => {
+      const outcome = await setConfigurationUrl(context, orgConfigChannel);
+      orgConfigChannel.show(true);
+      return outcome;
+    }),
     vscode.workspace.onDidChangeConfiguration((e) => {
       if (e.affectsConfiguration('appMap.configurationUrl')) {
         void RemoteConfig.apply(context, orgConfigChannel);
@@ -133,10 +137,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     uriHandler.registerHandlers(openAppMapUriHandler);
     context.subscriptions.push(vscode.window.registerUriHandler(uriHandler));
 
-    const appmapServerAuthenticationProvider = AppMapServerAuthenticationProvider.enroll(
-      context,
-      uriHandler
-    );
+    const appmapServerAuthenticationProvider = AppMapServerAuthenticationProvider.enroll(context);
     context.subscriptions.push(
       appmapServerAuthenticationProvider.onDidChangeSessions((e) => {
         if (e.added?.length) vscode.window.showInformationMessage('AppMap activated');
