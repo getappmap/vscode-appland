@@ -126,7 +126,7 @@ export default class AssetService {
     const appmapDir = join(homedir(), '.appmap');
     const dirs = [join(appmapDir, 'bin'), join(appmapDir, 'lib')];
     await Promise.all(dirs.map((dir) => mkdir(dir, { recursive: true })));
-    return runUpdates([...this.downloaders.values()], throwOnError);
+    return runUpdates(appmapDir, [...this.downloaders.values()], throwOnError);
   }
 
   public static async updateOne(assetId: AssetIdentifier): Promise<void> {

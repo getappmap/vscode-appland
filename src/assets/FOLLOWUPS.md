@@ -65,13 +65,10 @@ plus `verifyDigest` for parity with `appmap`/`scanner`.
 Note also that item 1 above proposes deleting `GitHubReleaseResolver`; the
 skill service now depends on it, so it has to stay.
 
-## 6. Additional agent skill roots
+## 6. `runUpdates` skips work when another process holds the lock
 
-Skills are linked from the versioned cache `~/.appmap/skills/<version>/`
-into `~/.claude/skills/`. Other agents read from other roots
-(`~/.copilot/skills`, project-local `.claude/skills`, ...). Supporting those
-is mostly a matter of running the same link loop over an additional target
-directory — the cache layout doesn't need to change. Project-local installs
-should be an explicit user-invoked command (and committed rather than
-gitignored), not something the extension writes into a working tree on its
-own.
+`runUpdates` assumes that whoever holds the lock is doing the same update, so
+a caller that finds the lock taken just waits and then returns. That is why
+tools and skills lock on different paths (`~/.appmap` and `~/.appmap/skills`).
+Any new kind of update must get its own lock path too, or it will silently do
+nothing whenever it happens to run alongside another update.

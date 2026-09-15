@@ -263,13 +263,15 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
     PickCopilotModelCommand.register(context);
 
     AssetService.register(context);
+    const dependenciesInstalled = ExtensionSettings.appMapCommandLineToolsPath
+      ? // do not try to download if we're using local tools anyway
+        Promise.resolve()
+      : AssetService.ensureAssets();
+
+    // Agent skills are not needed by anything else in the extension, so they
+    // install in the background and never hold up Navie.
     SkillService.register(context);
-    const dependenciesInstalled = Promise.all([
-      ExtensionSettings.appMapCommandLineToolsPath
-        ? Promise.resolve()
-        : AssetService.ensureAssets(),
-      SkillService.ensureInstalled(),
-    ]).then(() => undefined);
+    void SkillService.ensureInstalled();
     const chatSearchWebview: Promise<ChatSearchWebview> = (async () => {
       try {
         await dependenciesInstalled;

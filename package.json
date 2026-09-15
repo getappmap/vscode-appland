@@ -389,10 +389,31 @@
           "default": true,
           "description": "Enable automatic updates and downloads of AppMap tools."
         },
-        "appMap.autoUpdateSkills": {
-          "type": "boolean",
-          "default": true,
-          "description": "Enable automatic installation and updates of AppMap agent skills in `~/.claude/skills`."
+        "appMap.skills.install": {
+          "type": "string",
+          "enum": [
+            "prompt",
+            "enabled",
+            "disabled"
+          ],
+          "enumDescriptions": [
+            "Ask on each startup whether to install the AppMap agent skills.",
+            "Install the AppMap agent skills and keep them up to date.",
+            "Never install the AppMap agent skills."
+          ],
+          "default": "prompt",
+          "description": "Install the AppMap agent skills for Claude Code and GitHub Copilot into the directories listed in `appMap.skills.directories`."
+        },
+        "appMap.skills.directories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "~/.claude/skills",
+            "~/.agents/skills"
+          ],
+          "description": "Agent skills directories to install the AppMap skills into. `~/.claude/skills` is read by Claude Code and Copilot in VS Code; `~/.agents/skills` is read by every GitHub Copilot surface."
         },
         "appMap.skills.repository": {
           "type": "string",

@@ -15,11 +15,8 @@ import { BundledFileDownloadUrlResolver } from './resolvers';
 export const GlobalAppMapDir = () => join(homedir(), '.appmap');
 export const AppMapBinDir = () => join(GlobalAppMapDir(), 'bin');
 export const AppMapJavaAgentDir = () => join(GlobalAppMapDir(), 'lib', 'java');
-// Versioned cache of downloaded skill releases: ~/.appmap/skills/<version>/<skill>
+// Unpacked copy of the AppMap skills release: ~/.appmap/skills/<skill>
 export const AppMapSkillsDir = () => join(GlobalAppMapDir(), 'skills');
-// Where agents look for globally-available skills. Individual skills are
-// linked here from AppMapSkillsDir so we never take ownership of the directory.
-export const ClaudeSkillsDir = () => join(homedir(), '.claude', 'skills');
 
 // return platform-appriopriate cache directory
 export function cacheDir(): string {
