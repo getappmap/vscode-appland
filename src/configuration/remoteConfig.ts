@@ -294,10 +294,16 @@ export default class RemoteConfig {
     return enqueue(() => applyConfigKeys(context, config, channel)).catch(() => undefined);
   }
 
-  static async rollbackRemoteConfig(
+  // Queued alongside the applies: a rollback that runs while one is in flight would revert
+  // from the cache, drop it, and then watch the apply write both back — the clear undone,
+  // with no record left that it happened.
+  static rollbackRemoteConfig(
     context: vscode.ExtensionContext,
     channel?: vscode.OutputChannel
   ): Promise<void> {
-    return rollbackRemoteConfig(context, channel);
+    // Any apply a later caller might otherwise join is no longer current: the URL alone
+    // says nothing about whether that apply's keys survived this rollback.
+    pendingApply = undefined;
+    return enqueue(() => rollbackRemoteConfig(context, channel));
   }
 }
