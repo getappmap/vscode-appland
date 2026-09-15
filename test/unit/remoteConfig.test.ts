@@ -268,6 +268,42 @@ describe('remoteConfig', () => {
       expect(nock.isDone()).to.be.true;
     });
 
+    // Unserialized, the rollback would revert from the cache and drop it before the apply
+    // wrote both back, leaving the configuration applied and nothing recording that it was
+    // ever cleared.
+    it('reverts the keys of an apply that was still in flight', async () => {
+      nock('https://example.com').get('/config.json').reply(200, { 'appMap.navie.rpcPort': 3000 });
+      vscode.workspace.getConfiguration('appMap').update('configurationUrl', url);
+
+      const applying = RemoteConfig.apply(context, channel);
+      const rollingBack = RemoteConfig.rollbackRemoteConfig(context, channel);
+
+      expect(await applying).to.be.true;
+      await rollingBack;
+
+      expect(vscode.workspace.getConfiguration('appMap').get('navie.rpcPort')).to.be.undefined;
+      expect(context.globalState.get('remoteConfig')).to.be.undefined;
+    });
+
+    // Coalescing is keyed on the URL alone, which says nothing about queue position: a
+    // caller that joined the earlier apply would be told the configuration is applied when
+    // the rollback between them has since removed it.
+    it('does not let a later apply join one a rollback has since undone', async () => {
+      const requests = countingReply();
+      vscode.workspace.getConfiguration('appMap').update('configurationUrl', url);
+
+      const first = RemoteConfig.apply(context, channel);
+      const rollingBack = RemoteConfig.rollbackRemoteConfig(context, channel);
+      const second = RemoteConfig.apply(context, channel);
+
+      expect(await first).to.be.true;
+      await rollingBack;
+      expect(await second).to.be.true;
+
+      expect(requests()).to.equal(2);
+      expect(vscode.workspace.getConfiguration('appMap').get('navie.rpcPort')).to.equal(3000);
+    });
+
     // Deliberately not time-windowed: an apply that has already settled says nothing about
     // whether the remote configuration has changed since, so a later one has to fetch.
     it('fetches again for an apply that starts after the previous one settled', async () => {
