@@ -43,16 +43,20 @@ export default class CommandRegistry {
     return disposable;
   }
 
-  // Waits for a command to become registered.
-  public static async commandReady(command: string): Promise<void> {
-    const commands = await vscode.commands.getCommands(true);
-    if (commands.includes(command)) {
-      return;
-    }
-
+  // Waits for a command to become registered. Subscribes to registrations
+  // before taking the snapshot of existing commands, so a command registered
+  // while the snapshot is in flight is not missed.
+  public static commandReady(command: string): Promise<void> {
     return new Promise((resolve) => {
       const disposable = this.onCommandRegistered((registeredCommand) => {
         if (registeredCommand === command) {
+          disposable.dispose();
+          resolve();
+        }
+      });
+
+      void vscode.commands.getCommands(true).then((commands) => {
+        if (commands.includes(command)) {
           disposable.dispose();
           resolve();
         }
