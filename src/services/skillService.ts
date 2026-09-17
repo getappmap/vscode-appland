@@ -17,10 +17,9 @@ const DISABLE = 'Disable';
 //
 // The latest release of the skills repository is unpacked into a cache at
 // ~/.appmap/skills, and each skill is then linked into every configured agent
-// skills directory (~/.claude/skills and ~/.agents/skills by default). Because
-// this writes into directories owned by other tools, nothing happens until the
-// user has agreed via the `appMap.skills.install` setting. Until they decide,
-// they are asked on every activation.
+// skills directory (~/.claude/skills and ~/.agents/skills by default). This is
+// on by default and controlled by the `appMap.skills.install` setting; when it
+// is set to `prompt`, the user is asked on every activation until they choose.
 export default class SkillService {
   static register(context: vscode.ExtensionContext): void {
     context.subscriptions.push(

@@ -64,7 +64,6 @@ describe('SkillService', () => {
     agentsSkills = join(homeDir, '.agents', 'skills');
     cache = join(homeDir, '.appmap', 'skills');
     downloadHttpRetry.maxTries = 1;
-    await setSetting('skills.install', 'enabled');
   });
 
   afterEach(async () => {
@@ -77,7 +76,7 @@ describe('SkillService', () => {
     downloadHttpRetry.maxTries = 3;
   });
 
-  describe('when installation is enabled', () => {
+  describe('when installation is enabled (the default)', () => {
     it('unpacks the release into the cache and links each skill into every directory', async () => {
       await mockRelease('1.0.0', ['appmap-record', 'appmap-review']);
 
@@ -280,7 +279,7 @@ describe('SkillService', () => {
     });
   });
 
-  describe('when the user has not decided yet', () => {
+  describe('when set to prompt', () => {
     let prompt: Sinon.SinonStub;
 
     beforeEach(async () => {

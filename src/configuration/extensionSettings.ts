@@ -169,7 +169,7 @@ export default class ExtensionSettings {
   public static get skillsInstall(): SkillsInstallSetting {
     return (
       vscode.workspace.getConfiguration('appMap').get<SkillsInstallSetting>('skills.install') ??
-      'prompt'
+      'enabled'
     );
   }
 

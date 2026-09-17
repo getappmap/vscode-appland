@@ -401,7 +401,7 @@
             "Install the AppMap agent skills and keep them up to date.",
             "Never install the AppMap agent skills."
           ],
-          "default": "prompt",
+          "default": "enabled",
           "description": "Install the AppMap agent skills for Claude Code and GitHub Copilot into the directories listed in `appMap.skills.directories`."
         },
         "appMap.skills.directories": {
