@@ -268,6 +268,83 @@ describe('SkillService', () => {
     });
   });
 
+  describe('workspace MCP configuration', () => {
+    let prompt: Sinon.SinonStub;
+    let state: Map<string, unknown>;
+    const folder = () => join(homeDir, 'project');
+    const mcpJson = () => join(folder(), '.vscode', 'mcp.json');
+
+    beforeEach(async () => {
+      await mkdir(folder(), { recursive: true });
+      Sinon.stub(vscode.workspace, 'workspaceFolders').value([
+        { uri: { fsPath: folder() }, name: 'project' },
+      ]);
+      prompt = Sinon.stub(vscode.window, 'showInformationMessage');
+      state = new Map();
+      SkillService.register({
+        subscriptions: [],
+        workspaceState: {
+          get: (key: string) => state.get(key),
+          update: async (key: string, value: unknown) => void state.set(key, value),
+        },
+      } as unknown as vscode.ExtensionContext);
+      await mockRelease('1.0.0', ['appmap-record']);
+    });
+
+    it('adds the server when the user agrees', async () => {
+      prompt.resolves('Add');
+
+      await SkillService.ensureInstalled(true);
+
+      expect(prompt.calledOnce).to.be.true;
+      expect(prompt.firstCall.args[0]).to.include('project');
+      const config = JSON.parse(await readFile(mcpJson(), 'utf8'));
+      expect(config.servers.appmap).to.deep.equal({
+        type: 'stdio',
+        command: 'appmap',
+        args: ['query', 'mcp'],
+      });
+    });
+
+    it('asks again next time when the user dismisses', async () => {
+      prompt.resolves('Not now');
+
+      await SkillService.ensureInstalled(true);
+      await SkillService.ensureInstalled(true);
+
+      expect(prompt.calledTwice).to.be.true;
+      expect(mcpJson()).to.not.be.a.path();
+    });
+
+    it('stops asking for a workspace when the user declines for good', async () => {
+      prompt.resolves("Don't ask again");
+
+      await SkillService.ensureInstalled(true);
+      await SkillService.ensureInstalled(true);
+
+      expect(prompt.calledOnce).to.be.true;
+      expect(mcpJson()).to.not.be.a.path();
+    });
+
+    it('does not ask when the workspace already lists an appmap server', async () => {
+      await mkdir(join(folder(), '.vscode'));
+      await writeFile(mcpJson(), '{ "servers": { "appmap": { "command": "/my/appmap" } } }');
+
+      await SkillService.ensureInstalled(true);
+
+      expect(prompt.called).to.be.false;
+    });
+
+    it('does not ask when installation is disabled', async () => {
+      await setSetting('skills.install', 'disabled');
+
+      await SkillService.ensureInstalled(true);
+
+      expect(prompt.called).to.be.false;
+      expect(join(folder(), '.vscode')).to.not.be.a.path();
+    });
+  });
+
   describe('when installation is disabled', () => {
     it('does nothing', async () => {
       await setSetting('skills.install', 'disabled');
