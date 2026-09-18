@@ -85,7 +85,7 @@ export class Configuration extends Map<string, unknown> {
       this.delete(key);
     } else {
       let filteredValue = value;
-      if (typeof value === 'object') {
+      if (typeof value === 'object' && !Array.isArray(value)) {
         // Undefined/null values are deleted
         filteredValue = Object.entries(value).reduce((acc, [k, v]) => {
           if (v !== undefined && v !== null) acc[k] = v;

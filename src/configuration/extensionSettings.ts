@@ -1,5 +1,7 @@
 import { DefaultApiURL } from '@appland/client';
 import * as vscode from 'vscode';
+import { homedir } from 'node:os';
+import { join } from 'node:path';
 import { version, publisher, name } from '../../package.json';
 
 const EXTENSION_ID = `${publisher}.${name}`;
@@ -10,6 +12,9 @@ const DEFAULT_APPMAP_MANIFEST_URL =
   'https://raw.githubusercontent.com/getappmap/appmap-js/release-manifests/appmap-latest.json';
 const DEFAULT_SCANNER_MANIFEST_URL =
   'https://raw.githubusercontent.com/getappmap/appmap-js/release-manifests/scanner-latest.json';
+// Must stay in sync with the `appMap.skills.*` schema in package.json.
+const DEFAULT_SKILLS_REPOSITORY = 'getappmap/skills';
+const DEFAULT_SKILLS_DIRECTORIES = ['~/.claude/skills', '~/.agents/skills'];
 
 export default class ExtensionSettings {
   public static get appMapServerURL(): vscode.Uri {
@@ -157,6 +162,25 @@ export default class ExtensionSettings {
       vscode.workspace.getConfiguration('appMap').get<string>('manifest.scannerUrl') ||
       DEFAULT_SCANNER_MANIFEST_URL
     );
+  }
+
+  public static get skillsInstall(): boolean {
+    return vscode.workspace.getConfiguration('appMap').get<boolean>('skills.install') ?? true;
+  }
+
+  public static get skillsRepository(): string {
+    return (
+      vscode.workspace.getConfiguration('appMap').get<string>('skills.repository') ||
+      DEFAULT_SKILLS_REPOSITORY
+    );
+  }
+
+  // Agent skills directories to link the AppMap skills into, with `~` expanded.
+  public static get skillsDirectories(): string[] {
+    const dirs =
+      vscode.workspace.getConfiguration('appMap').get<string[]>('skills.directories') ??
+      DEFAULT_SKILLS_DIRECTORIES;
+    return dirs.map((dir) => (dir.startsWith('~/') ? join(homedir(), dir.slice(2)) : dir));
   }
 }
 

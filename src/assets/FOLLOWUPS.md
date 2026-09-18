@@ -51,3 +51,24 @@ that pinning to an older manifest version *that happens to already be in
 the cache* won't refresh the active binary on Windows. A content/size/mtime
 comparison (or persisting the active version in a sidecar file) would close
 the gap.
+
+## 5. Skills are release-tarball driven, not manifest driven
+
+`skillService.ts` resolves its version from the GitHub releases API
+(`GitHubReleaseResolver`) and downloads the auto-generated source tarball,
+rather than using a published manifest with digests like the CLI tools do.
+That means skill downloads are **not digest-verified** — we trust TLS and
+GitHub. If `getappmap/skills` starts publishing a release manifest with an
+explicit skills archive asset and digest, switch to `ManifestManager.fetch`
+plus `verifyDigest` for parity with `appmap`/`scanner`.
+
+Note also that item 1 above proposes deleting `GitHubReleaseResolver`; the
+skill service now depends on it, so it has to stay.
+
+## 6. `runUpdates` skips work when another process holds the lock
+
+`runUpdates` assumes that whoever holds the lock is doing the same update, so
+a caller that finds the lock taken just waits and then returns. That is why
+tools and skills lock on different paths (`~/.appmap` and `~/.appmap/skills`).
+Any new kind of update must get its own lock path too, or it will silently do
+nothing whenever it happens to run alongside another update.

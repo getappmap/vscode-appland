@@ -397,6 +397,30 @@
           "default": true,
           "description": "Enable automatic updates and downloads of AppMap tools."
         },
+        "appMap.skills.install": {
+          "type": "boolean",
+          "default": true,
+          "scope": "machine",
+          "description": "Install the AppMap agent skills for Claude Code and GitHub Copilot into the directories listed in `appMap.skills.directories`, and keep them up to date."
+        },
+        "appMap.skills.directories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "~/.claude/skills",
+            "~/.agents/skills"
+          ],
+          "scope": "machine",
+          "description": "Agent skills directories to install the AppMap skills into. `~/.claude/skills` is read by Claude Code and Copilot in VS Code; `~/.agents/skills` is read by every GitHub Copilot surface."
+        },
+        "appMap.skills.repository": {
+          "type": "string",
+          "default": "getappmap/skills",
+          "scope": "machine",
+          "description": "GitHub repository whose latest release provides the AppMap agent skills. Override to use a fork."
+        },
         "appMap.telemetry": {
           "type": "object",
           "description": "Telemetry configuration. NOTE: Requires a restart to take effect."
@@ -736,6 +760,7 @@
     "@types/semver": "^7.3.9",
     "@types/sinon": "^10.0.2",
     "@types/sinon-chai": "^3.2.9",
+    "@types/tar": "^6.1.13",
     "@types/tmp": "^0.2.3",
     "@types/vscode": "~1.90.0",
     "@typescript-eslint/eslint-plugin": "^8.65.0",
@@ -801,10 +826,12 @@
     "highlight.js": "^11.9.0",
     "jquery": "^3.5.1",
     "js-yaml": "^4.1.0",
+    "jsonc-parser": "^3.2.0",
     "node-fetch": "^2.7.0",
     "popper.js": "^1.16.1",
     "proper-lockfile": "^4.1.2",
     "semver": "^7.3.5",
+    "tar": "^6.2.1",
     "vscode-extension-telemetry": "^0.1.7",
     "vue": "^2.7.14",
     "vue-template-compiler": "^2.7.14",

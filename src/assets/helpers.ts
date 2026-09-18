@@ -1,6 +1,6 @@
 import { chmod, copyFile, mkdir, open, readdir, symlink, unlink } from 'node:fs/promises';
 import { homedir } from 'node:os';
-import { dirname, join } from 'node:path';
+import { dirname, join, sep } from 'node:path';
 import { Uri } from 'vscode';
 import semverClean from 'semver/functions/clean';
 import semverCompareBuild from 'semver/functions/compare-build';
@@ -15,6 +15,15 @@ import { BundledFileDownloadUrlResolver } from './resolvers';
 export const GlobalAppMapDir = () => join(homedir(), '.appmap');
 export const AppMapBinDir = () => join(GlobalAppMapDir(), 'bin');
 export const AppMapJavaAgentDir = () => join(GlobalAppMapDir(), 'lib', 'java');
+// Unpacked copy of the AppMap skills release: ~/.appmap/skills/<skill>
+export const AppMapSkillsDir = () => join(GlobalAppMapDir(), 'skills');
+
+// A path for the user to read, with the home directory abbreviated the way
+// they'd write it themselves.
+export function displayPath(path: string): string {
+  const home = homedir();
+  return path === home || path.startsWith(home + sep) ? `~${path.slice(home.length)}` : path;
+}
 
 // return platform-appriopriate cache directory
 export function cacheDir(): string {

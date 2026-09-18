@@ -18,6 +18,7 @@ import { binaryName, AssetIdentifier, versionFromPath } from './types';
 import { homedir } from 'os';
 import { mkdir } from 'fs/promises';
 import LockfileSynchronizer from '../lib/lockfileSynchronizer';
+import runUpdates from './runUpdates';
 
 import * as log from './log';
 
@@ -100,7 +101,7 @@ export default class AssetService {
     }
   }
 
-  // ensure all assets are present and have their symlinks in place
+  // ensure all tool assets are present and have their symlinks in place
   // if all are present, returns immediately but updates in the background
   // if any are missing, waits for the update to complete
   public static async ensureAssets(): Promise<void> {
@@ -118,52 +119,14 @@ export default class AssetService {
 
   public static async updateAll(throwOnError = false): Promise<void> {
     if (!ExtensionSettings.autoUpdateTools) {
-      log.info('Automatic tool updates are disabled, skipping update.');
+      log.info('Automatic tool updates are disabled, skipping tool update.');
       return;
     }
 
     const appmapDir = join(homedir(), '.appmap');
     const dirs = [join(appmapDir, 'bin'), join(appmapDir, 'lib')];
     await Promise.all(dirs.map((dir) => mkdir(dir, { recursive: true })));
-
-    let holdingLock = false;
-    let hasErrors = false;
-    const sync = new LockfileSynchronizer(appmapDir);
-    return new Promise<void>((resolve, reject) => {
-      sync
-        .on('wait', () => {
-          log.info(`Waiting for assets to be updated by another process...`);
-        })
-        .on('error', (e) => {
-          if (throwOnError) {
-            reject(e);
-          }
-
-          hasErrors = true;
-          log.error(e.stack);
-        })
-        .on('success', () => {
-          if (!holdingLock) {
-            log.info('Another process has completed the asset update.');
-          } else if (hasErrors) {
-            log.error('Asset update completed with errors.');
-          } else {
-            log.info('Asset update completed successfully.');
-          }
-
-          resolve();
-        })
-        .execute(async () => {
-          holdingLock = true;
-          for (const asset of this.downloaders.values())
-            try {
-              await asset();
-            } catch (e) {
-              sync.emit('error', e);
-              if (e instanceof Error && e.name === 'AbortError') return reject(e);
-            }
-        });
-    });
+    return runUpdates(appmapDir, [...this.downloaders.values()], throwOnError);
   }
 
   public static async updateOne(assetId: AssetIdentifier): Promise<void> {

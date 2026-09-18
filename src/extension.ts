@@ -71,6 +71,7 @@ import navieConfigurationService, {
 import RpcProcessService from './services/rpcProcessService';
 import CommandRegistry from './commands/commandRegistry';
 import AssetService from './assets/assetService';
+import SkillService from './services/skillService';
 import clearNavieAiSettings from './commands/clearNavieAiSettings';
 import ExtensionSettings from './configuration/extensionSettings';
 import OpenNavieHistoryCommand from './commands/openNavieHistory';
@@ -280,6 +281,11 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       ? // do not try to download if we're using local tools anyway
         Promise.resolve()
       : AssetService.ensureAssets();
+
+    // Agent skills are not needed by anything else in the extension, so they
+    // install in the background and never hold up Navie.
+    SkillService.register(context);
+    void SkillService.ensureInstalled();
     const chatSearchWebview: Promise<ChatSearchWebview> = (async () => {
       try {
         await dependenciesInstalled;
