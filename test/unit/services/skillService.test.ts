@@ -148,6 +148,18 @@ describe('SkillService', () => {
       expect(agentsSkills).to.not.be.a.path();
     });
 
+    it('carries on to the other directories when one of them cannot be used', async () => {
+      // A plain file where the skills directory should be: mkdir throws.
+      await mkdir(join(homeDir, '.claude'), { recursive: true });
+      await writeFile(claudeSkills, 'not a directory');
+      await mockRelease('1.0.0', ['appmap-record']);
+
+      await SkillService.ensureInstalled();
+
+      expect(join(agentsSkills, 'appmap-record')).to.be.a.path();
+      expect(claudeSkills).to.be.a.file().with.content('not a directory');
+    });
+
     it('ignores directories in the release that have no SKILL.md', async () => {
       await mockRelease('1.0.0', ['appmap-record']);
 

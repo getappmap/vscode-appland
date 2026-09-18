@@ -209,7 +209,20 @@ export default class SkillService {
       Uri.parse(`https://github.com/${repository}/archive/refs/tags/v${version}.tar.gz`)
     );
 
-    for (const dir of ExtensionSettings.skillsDirectories) await syncSkillLinks(cache, dir);
+    // Every directory is attempted even if an earlier one fails: one that is
+    // unwritable, or that has a plain file where we expect a directory, would
+    // otherwise keep the skills out of all the others for good. The first
+    // failure is still reported once they have all had their turn.
+    const failures: unknown[] = [];
+    for (const dir of ExtensionSettings.skillsDirectories) {
+      try {
+        await syncSkillLinks(cache, dir);
+      } catch (e) {
+        failures.push(e);
+        log.error(`Failed to install the AppMap skills into ${dir}: ${e}`);
+      }
+    }
+    if (failures.length > 0) throw failures[0];
   }
 }
 
