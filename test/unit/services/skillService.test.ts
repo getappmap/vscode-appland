@@ -320,6 +320,34 @@ describe('SkillService', () => {
       expect(join(installed, 'SKILL.md')).to.be.a.file().with.content('appmap-record 1.1.0');
       expect(join(installed, '.appmap-skill')).to.be.a.file().with.content('1.1.0');
     });
+
+    // Half a skill with no marker file would read as one the user wrote, and
+    // we never touch those -- so the agent would keep reading the truncated
+    // copy for good.
+    it('leaves nothing behind when the copy fails, and repairs it next time', async () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const fsPromises = require('node:fs/promises');
+      // Fails *part-way*: the destination exists and holds half a skill.
+      const copy: Sinon.SinonStub = Sinon.stub(fsPromises, 'cp').callsFake(async (_, dest) => {
+        await mkdir(dest as string, { recursive: true });
+        await writeFile(join(dest as string, 'SKILL.md'), 'half a skill');
+        throw new Error('ENOSPC');
+      });
+      await mockRelease('1.0.0', ['appmap-record']);
+
+      await SkillService.ensureInstalled();
+
+      const installed = join(claudeSkills, 'appmap-record');
+      expect(installed).to.not.be.a.path();
+      expect(`${installed}.staging`).to.not.be.a.path();
+
+      copy.restore();
+      await mockRelease('1.0.0', ['appmap-record']);
+      await SkillService.ensureInstalled(true);
+
+      expect(join(installed, 'SKILL.md')).to.be.a.file().with.content('appmap-record 1.0.0');
+      expect(join(installed, '.appmap-skill')).to.be.a.file().with.content('1.0.0');
+    });
   });
 
   describe('workspace MCP configuration', () => {

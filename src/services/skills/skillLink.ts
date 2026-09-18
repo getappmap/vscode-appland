@@ -5,6 +5,7 @@ import {
   readdir,
   readFile,
   readlink,
+  rename,
   rm,
   symlink,
   writeFile,
@@ -84,8 +85,21 @@ export default class SkillLink {
       log.info(`Could not symlink ${this.path}, copying instead: ${e}`);
     }
 
-    await cp(source, this.path, { recursive: true });
-    await writeFile(join(this.path, MARKER_FILE), (await this.cache.version()) ?? '');
+    // Assemble the copy beside its destination and swap it in whole. A copy
+    // that fails part-way would otherwise leave a directory holding some of a
+    // skill and no marker file, which `inspect` reads as a skill the user
+    // wrote by hand -- so we would never touch it again, and the agent would
+    // go on reading the truncated copy. Leaving nothing behind is recoverable:
+    // the entry reads as absent and the next update installs it.
+    const staging = `${this.path}.staging`;
+    await rm(staging, { recursive: true, force: true });
+    try {
+      await cp(source, staging, { recursive: true });
+      await writeFile(join(staging, MARKER_FILE), (await this.cache.version()) ?? '');
+      await rename(staging, this.path);
+    } finally {
+      await rm(staging, { recursive: true, force: true });
+    }
   }
 
   async remove(): Promise<void> {
