@@ -384,6 +384,22 @@ describe('SkillService', () => {
       expect(cache).to.not.be.a.path();
     });
 
+    it('tells the user when it cannot add the server they asked for', async () => {
+      const error: Sinon.SinonStub = Sinon.stub(vscode.window, 'showErrorMessage');
+      // Unparseable, so we offer to add the server and then fail to do it.
+      await mkdir(join(folder(), '.vscode'));
+      await writeFile(mcpJson(), '{ "servers": \n');
+      prompt.resolves('Add');
+
+      await SkillService.ensureInstalled();
+
+      expect(error.calledOnce).to.be.true;
+      expect(error.firstCall.args[0])
+        .to.include('project')
+        .and.match(/could not be parsed/);
+      expect(mcpJson()).to.be.a.file().with.content('{ "servers": \n');
+    });
+
     // A notification with buttons on it stays up until the user deals with it,
     // so the skills one must not be in front of this in a queue.
     it('asks while the skills notification is still waiting to be answered', async () => {

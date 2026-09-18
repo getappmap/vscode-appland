@@ -161,6 +161,14 @@ export default class SkillService {
       try {
         await this.offerMcpServer(folder);
       } catch (e) {
+        // The user asked for this and nothing appeared to happen: without a
+        // message they have no reason to think it failed, and we'd ask again
+        // on the next activation and fail the same way.
+        vscode.window.showErrorMessage(
+          `Could not add the AppMap MCP server to ${folder.name}: ${
+            e instanceof Error ? e.message : e
+          }`
+        );
         if (throwOnError) throw e;
         log.error(`Failed to add the AppMap MCP server to ${folder.uri.fsPath}: ${e}`);
       }
