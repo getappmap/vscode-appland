@@ -11,6 +11,7 @@ import * as vscode from 'vscode';
 import lockfile from 'proper-lockfile';
 
 import { GithubReleaseCache } from '../../../src/assets';
+import Environment from '../../../src/configuration/environment';
 import SkillService from '../../../src/services/skillService';
 import downloadHttpRetry from '../../../src/assets/downloadHttpRetry';
 
@@ -348,6 +349,19 @@ describe('SkillService', () => {
   describe('when installation is disabled', () => {
     it('does nothing', async () => {
       await setSetting('skills.install', 'disabled');
+
+      await SkillService.ensureInstalled(true);
+
+      expect(claudeSkills).to.not.be.a.path();
+      expect(cache).to.not.be.a.path();
+    });
+  });
+
+  describe('when running an integration test', () => {
+    // The extension test host runs against the real home directory, so
+    // installing would reach into whoever's ~/.claude is running the suite.
+    it('does nothing even though installation is enabled', async () => {
+      Sinon.stub(Environment, 'isIntegrationTest').value(true);
 
       await SkillService.ensureInstalled(true);
 

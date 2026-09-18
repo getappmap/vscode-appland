@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import { Uri } from 'vscode';
 
 import * as log from '../assets/log';
+import Environment from '../configuration/environment';
 import ExtensionSettings from '../configuration/extensionSettings';
 import { GithubReleaseCache, GitHubReleaseResolver } from '../assets/resolvers';
 import { AppMapSkillsDir } from '../assets/helpers';
@@ -49,6 +50,15 @@ export default class SkillService {
   // Resolves once the skills are installed, or immediately if the user has
   // not enabled installation. Errors are logged unless `throwOnError` is set.
   static async ensureInstalled(throwOnError = false): Promise<void> {
+    // The skills directories belong to Claude Code and Copilot, not to us, and
+    // they live in the real home directory of whoever runs the suite — the
+    // isolated --user-data-dir doesn't cover them. The unit tests exercise this
+    // code against a temporary home instead.
+    if (Environment.isIntegrationTest) {
+      log.info('Skipping AppMap skills installation in an integration test.');
+      return;
+    }
+
     switch (ExtensionSettings.skillsInstall) {
       case 'disabled':
         log.info('AppMap skills installation is disabled, skipping.');
