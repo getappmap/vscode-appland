@@ -2,11 +2,28 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { applyEdits, modify, parse, ParseError } from 'jsonc-parser';
 
-// The entry we want present under "servers" in .vscode/mcp.json.
-export const APPMAP_MCP_SERVER = {
-  type: 'stdio',
-  command: 'appmap',
-  args: ['query', 'mcp'],
+// The entries we want present under "servers" in .vscode/mcp.json. VS Code
+// expands ${userHome} itself, so the file stays portable between machines.
+const APPMAP_COMMAND = '${userHome}/.appmap/bin/appmap';
+
+export const APPMAP_MCP_SERVERS: Record<string, unknown> = {
+  appmap: {
+    type: 'stdio',
+    command: APPMAP_COMMAND,
+    args: ['query', 'mcp'],
+  },
+  'appmap-gold-traces': {
+    type: 'stdio',
+    command: APPMAP_COMMAND,
+    args: [
+      'query',
+      'mcp',
+      '--appmap-dir',
+      'gold_traces/baseline/appmaps',
+      '--query-db',
+      'tmp/gold_traces_query.db',
+    ],
+  },
 };
 
 // .vscode/mcp.json is where VS Code reads a workspace's MCP servers from. It
@@ -34,32 +51,42 @@ function parseMcpJson(text: string): Record<string, unknown> {
   return config as Record<string, unknown>;
 }
 
-// Whether the workspace already lists an "appmap" server, however configured.
-export async function hasAppMapMcpServer(folder: string): Promise<boolean> {
-  const text = await readMcpJson(folder);
-  if (!text.trim()) return false;
-
-  let config: Record<string, unknown>;
-  try {
-    config = parseMcpJson(text);
-  } catch {
-    return false;
-  }
+function listedServers(config: Record<string, unknown>): string[] {
   const { servers } = config;
-  return !!servers && typeof servers === 'object' && 'appmap' in servers;
+  return servers && typeof servers === 'object' ? Object.keys(servers) : [];
 }
 
-// Add the AppMap server to the workspace's mcp.json, creating the file if
-// needed. Throws rather than touching a file it cannot parse.
-export async function addAppMapMcpServer(folder: string): Promise<void> {
+// Names of the AppMap servers the workspace does not list yet. An existing
+// entry counts however it is configured. A file that cannot be parsed is
+// reported as missing everything: the attempt to add will then fail visibly,
+// which beats silently skipping a workspace the user expects to work.
+export async function missingAppMapMcpServers(folder: string): Promise<string[]> {
+  const text = await readMcpJson(folder);
+  let listed: string[] = [];
+  if (text.trim()) {
+    try {
+      listed = listedServers(parseMcpJson(text));
+    } catch {
+      listed = [];
+    }
+  }
+  return Object.keys(APPMAP_MCP_SERVERS).filter((name) => !listed.includes(name));
+}
+
+// Add the named AppMap servers to the workspace's mcp.json, creating the file
+// if needed. Throws rather than touching a file it cannot parse.
+export async function addAppMapMcpServers(folder: string, names: string[]): Promise<void> {
   const path = mcpJsonPath(folder);
   let text = await readMcpJson(folder);
   if (!text.trim()) text = '{}\n';
   parseMcpJson(text);
 
-  const edits = modify(text, ['servers', 'appmap'], APPMAP_MCP_SERVER, {
-    formattingOptions: { insertSpaces: true, tabSize: 2 },
-  });
+  for (const name of names) {
+    const edits = modify(text, ['servers', name], APPMAP_MCP_SERVERS[name], {
+      formattingOptions: { insertSpaces: true, tabSize: 2 },
+    });
+    text = applyEdits(text, edits);
+  }
   await mkdir(dirname(path), { recursive: true });
-  await writeFile(path, applyEdits(text, edits));
+  await writeFile(path, text);
 }

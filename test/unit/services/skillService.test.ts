@@ -367,7 +367,7 @@ describe('SkillService', () => {
       await mockRelease('1.0.0', ['appmap-record']);
     });
 
-    it('adds the server when the user agrees', async () => {
+    it('adds both servers when the user agrees', async () => {
       prompt.resolves('Add');
 
       await SkillService.ensureInstalled(true);
@@ -377,9 +377,23 @@ describe('SkillService', () => {
       const config = JSON.parse(await readFile(mcpJson(), 'utf8'));
       expect(config.servers.appmap).to.deep.equal({
         type: 'stdio',
-        command: 'appmap',
+        command: '${userHome}/.appmap/bin/appmap',
         args: ['query', 'mcp'],
       });
+      expect(config.servers['appmap-gold-traces'].args).to.include('--appmap-dir');
+    });
+
+    it('adds only the missing server and leaves an existing entry as it is', async () => {
+      prompt.resolves('Add');
+      await mkdir(join(folder(), '.vscode'));
+      await writeFile(mcpJson(), '{ "servers": { "appmap": { "command": "/my/appmap" } } }');
+
+      await SkillService.ensureInstalled(true);
+
+      expect(prompt.firstCall.args[0]).to.include('(appmap-gold-traces)');
+      const config = JSON.parse(await readFile(mcpJson(), 'utf8'));
+      expect(config.servers.appmap).to.deep.equal({ command: '/my/appmap' });
+      expect(config.servers['appmap-gold-traces']).to.exist;
     });
 
     it('asks again next time when the user dismisses', async () => {
@@ -402,9 +416,12 @@ describe('SkillService', () => {
       expect(mcpJson()).to.not.be.a.path();
     });
 
-    it('does not ask when the workspace already lists an appmap server', async () => {
+    it('does not ask when the workspace already lists both servers', async () => {
       await mkdir(join(folder(), '.vscode'));
-      await writeFile(mcpJson(), '{ "servers": { "appmap": { "command": "/my/appmap" } } }');
+      await writeFile(
+        mcpJson(),
+        '{ "servers": { "appmap": { "command": "/my/appmap" }, "appmap-gold-traces": {} } }'
+      );
 
       await SkillService.ensureInstalled(true);
 

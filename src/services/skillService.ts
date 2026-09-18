@@ -9,7 +9,7 @@ import { AppMapSkillsDir, displayPath } from '../assets/helpers';
 import runUpdates from '../assets/runUpdates';
 import SkillsCache from './skills/skillsCache';
 import { installedSkills, removeSkillLinks, syncSkillLinks } from './skills/skillLink';
-import { addAppMapMcpServer, hasAppMapMcpServer } from './skills/mcpConfig';
+import { addAppMapMcpServers, missingAppMapMcpServers } from './skills/mcpConfig';
 
 // The harmless choice comes first in every one of these: a notification that
 // appears unbidden will be dismissed by reflex, and that shouldn't uninstall
@@ -22,7 +22,7 @@ const REMOVE = 'Remove';
 const ADD = 'Add';
 const NOT_NOW = 'Not now';
 const DONT_ASK_AGAIN = "Don't ask again";
-// Workspace-state key listing folders where the user declined the MCP entry.
+// Workspace-state key listing folders where the user declined the MCP entries.
 const MCP_DECLINED_KEY = 'appMap.skills.mcpDeclined';
 // Global-state flag: the user has been told the skills exist.
 const INSTALL_NOTIFIED_KEY = 'appMap.skills.installNotified';
@@ -38,7 +38,7 @@ const INSTALL_NOTIFIED_KEY = 'appMap.skills.installNotified';
 // way out; after that we update them silently.
 //
 // Separately, and whether or not any skills were installed, each open
-// workspace is offered the AppMap MCP server in its .vscode/mcp.json: that
+// workspace is offered the AppMap MCP servers in its .vscode/mcp.json: that
 // file is useful to Copilot in VS Code on its own. It is checked into the
 // user's repository, so it is never written without asking.
 export default class SkillService {
@@ -152,44 +152,48 @@ export default class SkillService {
     );
   }
 
-  // Offer the AppMap MCP server to each open workspace that doesn't have it.
+  // Offer the AppMap MCP servers to each open workspace that lacks any of them.
+  // Entries already present, however configured, are never changed.
   // This runs outside the skills lock on purpose: the lock is per home directory, but
   // the workspaces differ per window, so a window that skipped the shared
   // update must still do this part.
   private static async configureWorkspaces(throwOnError: boolean): Promise<void> {
     for (const folder of vscode.workspace.workspaceFolders ?? []) {
       try {
-        await this.offerMcpServer(folder);
+        await this.offerMcpServers(folder);
       } catch (e) {
         // The user asked for this and nothing appeared to happen: without a
         // message they have no reason to think it failed, and we'd ask again
         // on the next activation and fail the same way.
         vscode.window.showErrorMessage(
-          `Could not add the AppMap MCP server to ${folder.name}: ${
+          `Could not add the AppMap MCP servers to ${folder.name}: ${
             e instanceof Error ? e.message : e
           }`
         );
         if (throwOnError) throw e;
-        log.error(`Failed to add the AppMap MCP server to ${folder.uri.fsPath}: ${e}`);
+        log.error(`Failed to add the AppMap MCP servers to ${folder.uri.fsPath}: ${e}`);
       }
     }
   }
 
-  private static async offerMcpServer(folder: vscode.WorkspaceFolder): Promise<void> {
+  private static async offerMcpServers(folder: vscode.WorkspaceFolder): Promise<void> {
     const path = folder.uri.fsPath;
-    if (await hasAppMapMcpServer(path)) return;
+    const missing = await missingAppMapMcpServers(path);
+    if (missing.length === 0) return;
     if (this.mcpDeclined().includes(path)) return;
 
     const choice = await vscode.window.showInformationMessage(
-      `Add the AppMap MCP server to .vscode/mcp.json in ${folder.name}? This lets Copilot and other MCP clients query your AppMap data.`,
+      `Add the AppMap MCP servers (${missing.join(', ')}) to .vscode/mcp.json in ${
+        folder.name
+      }? This lets Copilot and other MCP clients query your AppMap data.`,
       ADD,
       NOT_NOW,
       DONT_ASK_AGAIN
     );
 
     if (choice === ADD) {
-      await addAppMapMcpServer(path);
-      log.info(`Added the AppMap MCP server to ${path}`);
+      await addAppMapMcpServers(path, missing);
+      log.info(`Added the AppMap MCP servers ${missing.join(', ')} to ${path}`);
     } else if (choice === DONT_ASK_AGAIN) {
       await this.workspaceState?.update(MCP_DECLINED_KEY, [...this.mcpDeclined(), path]);
     }

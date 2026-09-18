@@ -6,12 +6,14 @@ import { default as chai, expect } from 'chai';
 import { default as chaiFs } from 'chai-fs';
 
 import {
-  APPMAP_MCP_SERVER,
-  addAppMapMcpServer,
-  hasAppMapMcpServer,
+  APPMAP_MCP_SERVERS,
+  addAppMapMcpServers,
+  missingAppMapMcpServers,
 } from '../../../../src/services/skills/mcpConfig';
 
 chai.use(chaiFs);
+
+const ALL = ['appmap', 'appmap-gold-traces'];
 
 describe('mcpConfig', () => {
   let folder: string;
@@ -26,35 +28,46 @@ describe('mcpConfig', () => {
     await rm(folder, { recursive: true, force: true });
   });
 
-  describe('hasAppMapMcpServer', () => {
-    it('is false when there is no file', async () => {
-      expect(await hasAppMapMcpServer(folder)).to.be.false;
+  describe('missingAppMapMcpServers', () => {
+    it('reports both when there is no file', async () => {
+      expect(await missingAppMapMcpServers(folder)).to.deep.equal(ALL);
     });
 
-    it('is false when the file lists other servers only', async () => {
+    it('reports both when the file lists other servers only', async () => {
       await mkdir(join(folder, '.vscode'));
       await writeFile(mcpJson, '{ "servers": { "other": {} } }');
-      expect(await hasAppMapMcpServer(folder)).to.be.false;
+      expect(await missingAppMapMcpServers(folder)).to.deep.equal(ALL);
     });
 
-    it('is true when an appmap server is listed, however configured', async () => {
+    it('reports only the one that is absent, however the other is configured', async () => {
       await mkdir(join(folder, '.vscode'));
       await writeFile(mcpJson, '{ "servers": { "appmap": { "command": "/my/appmap" } } }');
-      expect(await hasAppMapMcpServer(folder)).to.be.true;
+      expect(await missingAppMapMcpServers(folder)).to.deep.equal(['appmap-gold-traces']);
+    });
+
+    it('reports both for a file it cannot parse, so the failure surfaces on add', async () => {
+      await mkdir(join(folder, '.vscode'));
+      await writeFile(mcpJson, '{ "servers": \n');
+      expect(await missingAppMapMcpServers(folder)).to.deep.equal(ALL);
     });
   });
 
-  describe('addAppMapMcpServer', () => {
+  describe('addAppMapMcpServers', () => {
     it('creates .vscode/mcp.json when there is none', async () => {
-      await addAppMapMcpServer(folder);
+      await addAppMapMcpServers(folder, ALL);
 
       expect(mcpJson).to.be.a.file();
       expect(JSON.parse(await readFile(mcpJson, 'utf8'))).to.deep.equal({
-        servers: { appmap: APPMAP_MCP_SERVER },
+        servers: APPMAP_MCP_SERVERS,
       });
     });
 
-    it('adds the server alongside existing ones, keeping comments and formatting', async () => {
+    it('uses ${userHome} so the file is portable', async () => {
+      await addAppMapMcpServers(folder, ['appmap']);
+      expect(await readFile(mcpJson, 'utf8')).to.include('"${userHome}/.appmap/bin/appmap"');
+    });
+
+    it('adds the servers alongside existing ones, keeping comments and formatting', async () => {
       await mkdir(join(folder, '.vscode'));
       await writeFile(
         mcpJson,
@@ -68,7 +81,7 @@ describe('mcpConfig', () => {
 `
       );
 
-      await addAppMapMcpServer(folder);
+      await addAppMapMcpServers(folder, ALL);
 
       const updated = await readFile(mcpJson, 'utf8');
       expect(updated).to.include('// my servers');
@@ -76,20 +89,21 @@ describe('mcpConfig', () => {
       expect(updated).to.include('"other": {');
       expect(updated).to.include('"command": "other"');
       expect(updated).to.include('"appmap": {');
-      expect(updated).to.include('"command": "appmap"');
-      expect(updated).to.include('"query"');
+      expect(updated).to.include('"appmap-gold-traces": {');
+      expect(updated).to.include('"--query-db"');
     });
 
-    it('adds a servers section to a file that has none', async () => {
+    it('adds only the named servers', async () => {
       await mkdir(join(folder, '.vscode'));
-      await writeFile(mcpJson, '{ "inputs": [] }\n');
+      await writeFile(mcpJson, '{ "servers": { "appmap": { "command": "/my/appmap" } } }\n');
 
-      await addAppMapMcpServer(folder);
+      await addAppMapMcpServers(folder, ['appmap-gold-traces']);
 
-      expect(JSON.parse(await readFile(mcpJson, 'utf8'))).to.deep.equal({
-        inputs: [],
-        servers: { appmap: APPMAP_MCP_SERVER },
-      });
+      const config = JSON.parse(await readFile(mcpJson, 'utf8'));
+      expect(config.servers.appmap).to.deep.equal({ command: '/my/appmap' });
+      expect(config.servers['appmap-gold-traces']).to.deep.equal(
+        APPMAP_MCP_SERVERS['appmap-gold-traces']
+      );
     });
 
     it('refuses to touch a file it cannot parse', async () => {
@@ -98,7 +112,7 @@ describe('mcpConfig', () => {
 
       let err: Error | undefined;
       try {
-        await addAppMapMcpServer(folder);
+        await addAppMapMcpServers(folder, ALL);
       } catch (e) {
         err = e as Error;
       }
