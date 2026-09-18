@@ -392,6 +392,7 @@
         "appMap.skills.install": {
           "type": "boolean",
           "default": true,
+          "scope": "machine",
           "description": "Install the AppMap agent skills for Claude Code and GitHub Copilot into the directories listed in `appMap.skills.directories`, and keep them up to date."
         },
         "appMap.skills.directories": {
@@ -403,11 +404,13 @@
             "~/.claude/skills",
             "~/.agents/skills"
           ],
+          "scope": "machine",
           "description": "Agent skills directories to install the AppMap skills into. `~/.claude/skills` is read by Claude Code and Copilot in VS Code; `~/.agents/skills` is read by every GitHub Copilot surface."
         },
         "appMap.skills.repository": {
           "type": "string",
           "default": "getappmap/skills",
+          "scope": "machine",
           "description": "GitHub repository whose latest release provides the AppMap agent skills. Override to use a fork."
         },
         "appMap.telemetry": {
