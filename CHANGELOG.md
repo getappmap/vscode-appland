@@ -1,3 +1,28 @@
+# [0.144.0](https://github.com/getappmap/vscode-appland/compare/v0.143.0...v0.144.0) (2026-09-18)
+
+
+### Bug Fixes
+
+* **mcp:** say so when the server cannot be added ([4c1d73d](https://github.com/getappmap/vscode-appland/commit/4c1d73df446d6c0dcf2fa5f343486f9c454febba))
+* **skills:** don't install agent skills during integration tests ([6ade5c2](https://github.com/getappmap/vscode-appland/commit/6ade5c2071b499dd69884a9e0ac76008ea6ef6c6))
+* **skills:** don't let one bad directory shut out the others ([7132a15](https://github.com/getappmap/vscode-appland/commit/7132a15d8455b24e8101cfb6a7a2e8d538027f4b))
+* **skills:** make the copy fallback all-or-nothing ([d038256](https://github.com/getappmap/vscode-appland/commit/d038256238d34456aaa2a4f4abf19955f85cdf9f))
+* **skills:** repair links left by the old versioned cache layout ([6daaac9](https://github.com/getappmap/vscode-appland/commit/6daaac9044330164ad803b6f2bf3e3e12ff79d83))
+* **test:** don't miss a command registered while commandReady checks ([8a31ee5](https://github.com/getappmap/vscode-appland/commit/8a31ee59355220a9108f268e8a17e6068d25cdb3))
+
+
+### Features
+
+* **mcp:** add the MCP servers without asking, and say so ([3d5a39c](https://github.com/getappmap/vscode-appland/commit/3d5a39cf3e860b62faf2fc17fa896b664b1381cf))
+* **mcp:** offer both AppMap MCP servers, using ${userHome} ([0242077](https://github.com/getappmap/vscode-appland/commit/0242077e602fdbb9d526700ec71f2f712ab56f1c))
+* **mcp:** offer the MCP server independently of the agent skills ([97e9655](https://github.com/getappmap/vscode-appland/commit/97e9655753f23b5654d005c530616187ff8cf296))
+* **skills:** install agent skills by default ([4f4a8ae](https://github.com/getappmap/vscode-appland/commit/4f4a8ae2700d0f603fc8a240ba3037f87abeeb44))
+* **skills:** leave a note explaining where the skills came from ([3b795f4](https://github.com/getappmap/vscode-appland/commit/3b795f4fb74e21d7325e3b336c5c14020338cf1b))
+* **skills:** make the skills settings machine-scoped ([418d2bf](https://github.com/getappmap/vscode-appland/commit/418d2bf783b4dbb81802c10375745b41358ade2c))
+* **skills:** offer the AppMap MCP server to each workspace ([5d42fe6](https://github.com/getappmap/vscode-appland/commit/5d42fe68c99043e4b252ebfd1ede9719b6b4f565))
+* **skills:** stable cache, opt-in install, and separate cache/link concerns ([204de83](https://github.com/getappmap/vscode-appland/commit/204de83637019a23c0e98e7442e6422281cdff9a))
+* **skills:** tell the user once that the skills were installed ([29f0e62](https://github.com/getappmap/vscode-appland/commit/29f0e625b8ae1ffdc64fd8c32ee9f7255979fcc9))
+
 # [0.143.0](https://github.com/getappmap/vscode-appland/compare/v0.142.2...v0.143.0) (2026-09-01)
 
 
