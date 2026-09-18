@@ -337,7 +337,7 @@ describe('SkillService', () => {
     });
 
     it('does not ask when installation is disabled', async () => {
-      await setSetting('skills.install', 'disabled');
+      await setSetting('skills.install', false);
 
       await SkillService.ensureInstalled(true);
 
@@ -348,7 +348,7 @@ describe('SkillService', () => {
 
   describe('when installation is disabled', () => {
     it('does nothing', async () => {
-      await setSetting('skills.install', 'disabled');
+      await setSetting('skills.install', false);
 
       await SkillService.ensureInstalled(true);
 
@@ -370,46 +370,4 @@ describe('SkillService', () => {
     });
   });
 
-  describe('when set to prompt', () => {
-    let prompt: Sinon.SinonStub;
-
-    beforeEach(async () => {
-      await setSetting('skills.install', 'prompt');
-      prompt = Sinon.stub(vscode.window, 'showInformationMessage');
-    });
-
-    it('installs and records the choice when the user accepts', async () => {
-      prompt.resolves('Install');
-      await mockRelease('1.0.0', ['appmap-record']);
-
-      await SkillService.ensureInstalled(true);
-
-      expect(prompt.calledOnce).to.be.true;
-      expect(prompt.firstCall.args[0]).to.include(claudeSkills).and.include(agentsSkills);
-      expect(vscode.workspace.getConfiguration('appMap').get('skills.install')).to.equal('enabled');
-      expect(join(claudeSkills, 'appmap-record')).to.be.a.path();
-    });
-
-    it('records the choice and does nothing when the user disables', async () => {
-      prompt.resolves('Disable');
-
-      await SkillService.ensureInstalled(true);
-
-      expect(vscode.workspace.getConfiguration('appMap').get('skills.install')).to.equal(
-        'disabled'
-      );
-      expect(cache).to.not.be.a.path();
-    });
-
-    it('does nothing and asks again next time when the user dismisses', async () => {
-      prompt.resolves(undefined);
-
-      await SkillService.ensureInstalled(true);
-      await SkillService.ensureInstalled(true);
-
-      expect(prompt.calledTwice).to.be.true;
-      expect(vscode.workspace.getConfiguration('appMap').get('skills.install')).to.equal('prompt');
-      expect(cache).to.not.be.a.path();
-    });
-  });
 });

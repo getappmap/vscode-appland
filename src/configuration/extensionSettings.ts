@@ -16,8 +16,6 @@ const DEFAULT_SCANNER_MANIFEST_URL =
 const DEFAULT_SKILLS_REPOSITORY = 'getappmap/skills';
 const DEFAULT_SKILLS_DIRECTORIES = ['~/.claude/skills', '~/.agents/skills'];
 
-export type SkillsInstallSetting = 'prompt' | 'enabled' | 'disabled';
-
 export default class ExtensionSettings {
   public static get appMapServerURL(): vscode.Uri {
     const configUrl = vscode.workspace.getConfiguration('appMap').get('applandUrl') as string;
@@ -166,11 +164,8 @@ export default class ExtensionSettings {
     );
   }
 
-  public static get skillsInstall(): SkillsInstallSetting {
-    return (
-      vscode.workspace.getConfiguration('appMap').get<SkillsInstallSetting>('skills.install') ??
-      'enabled'
-    );
+  public static get skillsInstall(): boolean {
+    return vscode.workspace.getConfiguration('appMap').get<boolean>('skills.install') ?? true;
   }
 
   public static get skillsRepository(): string {

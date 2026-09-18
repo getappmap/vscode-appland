@@ -11,11 +11,8 @@ import SkillsCache from './skills/skillsCache';
 import { syncSkillLinks } from './skills/skillLink';
 import { addAppMapMcpServer, hasAppMapMcpServer } from './skills/mcpConfig';
 
-const INSTALL = 'Install';
-const NOT_NOW = 'Not now';
-const DISABLE = 'Disable';
-
 const ADD = 'Add';
+const NOT_NOW = 'Not now';
 const DONT_ASK_AGAIN = "Don't ask again";
 // Workspace-state key listing folders where the user declined the MCP entry.
 const MCP_DECLINED_KEY = 'appMap.skills.mcpDeclined';
@@ -25,9 +22,7 @@ const MCP_DECLINED_KEY = 'appMap.skills.mcpDeclined';
 // The latest release of the skills repository is unpacked into a cache at
 // ~/.appmap/skills, and each skill is then linked into every configured agent
 // skills directory (~/.claude/skills and ~/.agents/skills by default). This
-// is on by default and controlled by the `appMap.skills.install` setting; when
-// it is set to `prompt`, the user is asked on every activation until they
-// choose.
+// is on by default and controlled by the `appMap.skills.install` setting.
 //
 // Once the skills are installed, each open workspace is offered the AppMap
 // MCP server in its .vscode/mcp.json. That file is checked into the user's
@@ -59,13 +54,9 @@ export default class SkillService {
       return;
     }
 
-    switch (ExtensionSettings.skillsInstall) {
-      case 'disabled':
-        log.info('AppMap skills installation is disabled, skipping.');
-        return;
-      case 'prompt':
-        if (!(await this.askForConsent())) return;
-        break;
+    if (!ExtensionSettings.skillsInstall) {
+      log.info('AppMap skills installation is disabled, skipping.');
+      return;
     }
 
     await runUpdates(AppMapSkillsDir(), [() => this.installLatest()], throwOnError);
@@ -109,30 +100,6 @@ export default class SkillService {
 
   private static mcpDeclined(): string[] {
     return this.workspaceState?.get<string[]>(MCP_DECLINED_KEY) ?? [];
-  }
-
-  // Ask whether we may write into the agent skills directories. "Install" and
-  // "Disable" are both recorded in the user's settings, so the question is
-  // asked again only until they have made a lasting choice.
-  private static async askForConsent(): Promise<boolean> {
-    const dirs = ExtensionSettings.skillsDirectories.join(' and ');
-    const choice = await vscode.window.showInformationMessage(
-      `AppMap can install its agent skills for Claude Code and GitHub Copilot into ${dirs}, and keep them up to date. Install them?`,
-      INSTALL,
-      NOT_NOW,
-      DISABLE
-    );
-
-    if (choice === INSTALL || choice === DISABLE) {
-      await vscode.workspace
-        .getConfiguration('appMap')
-        .update(
-          'skills.install',
-          choice === INSTALL ? 'enabled' : 'disabled',
-          vscode.ConfigurationTarget.Global
-        );
-    }
-    return choice === INSTALL;
   }
 
   private static async installLatest(): Promise<void> {

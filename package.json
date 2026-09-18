@@ -390,19 +390,9 @@
           "description": "Enable automatic updates and downloads of AppMap tools."
         },
         "appMap.skills.install": {
-          "type": "string",
-          "enum": [
-            "prompt",
-            "enabled",
-            "disabled"
-          ],
-          "enumDescriptions": [
-            "Ask on each startup whether to install the AppMap agent skills.",
-            "Install the AppMap agent skills and keep them up to date.",
-            "Never install the AppMap agent skills."
-          ],
-          "default": "enabled",
-          "description": "Install the AppMap agent skills for Claude Code and GitHub Copilot into the directories listed in `appMap.skills.directories`."
+          "type": "boolean",
+          "default": true,
+          "description": "Install the AppMap agent skills for Claude Code and GitHub Copilot into the directories listed in `appMap.skills.directories`, and keep them up to date."
         },
         "appMap.skills.directories": {
           "type": "array",
