@@ -37,9 +37,10 @@ const INSTALL_NOTIFIED_KEY = 'appMap.skills.installNotified';
 // The first time skills land on disk, the user is told once, and offered a
 // way out; after that we update them silently.
 //
-// Once the skills are installed, each open workspace is offered the AppMap
-// MCP server in its .vscode/mcp.json. That file is checked into the user's
-// repository, so it is never written without asking.
+// Separately, and whether or not any skills were installed, each open
+// workspace is offered the AppMap MCP server in its .vscode/mcp.json: that
+// file is useful to Copilot in VS Code on its own. It is checked into the
+// user's repository, so it is never written without asking.
 export default class SkillService {
   private static workspaceState: vscode.Memento | undefined;
   private static globalState: vscode.Memento | undefined;
@@ -69,6 +70,20 @@ export default class SkillService {
       return;
     }
 
+    // Independent of the skills: .vscode/mcp.json is read by Copilot in VS
+    // Code and by any other MCP client, whether or not this machine has an
+    // agent that reads skills at all. They run concurrently because each can
+    // end in a notification, and a notification with buttons on it sits there
+    // until the user deals with it -- awaiting one in turn would mean the MCP
+    // offer never appears for a user who ignores the skills notification.
+    const results = await Promise.allSettled([
+      this.installSkills(throwOnError),
+      this.configureWorkspaces(throwOnError),
+    ]);
+    for (const result of results) if (result.status === 'rejected') throw result.reason;
+  }
+
+  private static async installSkills(throwOnError: boolean): Promise<void> {
     if (!ExtensionSettings.skillsInstall) {
       log.info('AppMap skills installation is disabled, skipping.');
       return;
@@ -77,7 +92,6 @@ export default class SkillService {
     const cache = new SkillsCache(AppMapSkillsDir());
     await runUpdates(AppMapSkillsDir(), [() => this.installLatest(cache)], throwOnError);
     await this.announceInstall(cache);
-    await this.configureWorkspaces(throwOnError);
   }
 
   // Tell the user, once, that we put files in their agent's configuration
@@ -139,7 +153,7 @@ export default class SkillService {
   }
 
   // Offer the AppMap MCP server to each open workspace that doesn't have it.
-  // This runs outside the lock on purpose: the lock is per home directory, but
+  // This runs outside the skills lock on purpose: the lock is per home directory, but
   // the workspaces differ per window, so a window that skipped the shared
   // update must still do this part.
   private static async configureWorkspaces(throwOnError: boolean): Promise<void> {

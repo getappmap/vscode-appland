@@ -2,6 +2,7 @@ import '../mock/vscode';
 import Sinon from 'sinon';
 import nock from 'nock';
 import os, { tmpdir } from 'os';
+import { existsSync } from 'node:fs';
 import { lstat, mkdir, mkdtemp, readFile, readlink, rm, writeFile } from 'node:fs/promises';
 import { default as chai, expect } from 'chai';
 import { default as chaiFs } from 'chai-fs';
@@ -14,6 +15,7 @@ import { GithubReleaseCache } from '../../../src/assets';
 import Environment from '../../../src/configuration/environment';
 import SkillService from '../../../src/services/skillService';
 import downloadHttpRetry from '../../../src/assets/downloadHttpRetry';
+import { waitFor } from '../../waitFor';
 
 chai.use(chaiFs);
 
@@ -356,13 +358,34 @@ describe('SkillService', () => {
       expect(prompt.called).to.be.false;
     });
 
-    it('does not ask when installation is disabled', async () => {
+    // The MCP server stands on its own: .vscode/mcp.json is read by Copilot in
+    // VS Code, which needs no agent skills, and by any other MCP client.
+    it('asks even when skills installation is disabled', async () => {
       await setSetting('skills.install', false);
+      prompt.resolves('Add');
 
       await SkillService.ensureInstalled(true);
 
-      expect(prompt.called).to.be.false;
-      expect(join(folder(), '.vscode')).to.not.be.a.path();
+      expect(prompt.calledOnce).to.be.true;
+      expect(mcpJson()).to.be.a.file();
+      expect(cache).to.not.be.a.path();
+    });
+
+    // A notification with buttons on it stays up until the user deals with it,
+    // so the skills one must not be in front of this in a queue.
+    it('asks while the skills notification is still waiting to be answered', async () => {
+      globalState.delete('appMap.skills.installNotified');
+      const unanswered = new Promise<string | undefined>(() => undefined);
+      prompt.callsFake((message: string) =>
+        message.includes('installed its agent skills') ? unanswered : Promise.resolve('Add')
+      );
+
+      void SkillService.ensureInstalled();
+      await waitFor('the skills notification to appear', () =>
+        prompt.getCalls().some((c) => String(c.args[0]).includes('installed its agent skills'))
+      );
+      // It is now sitting there unanswered, and the MCP offer still arrives.
+      await waitFor('the MCP server to be offered', () => existsSync(mcpJson()));
     });
   });
 
