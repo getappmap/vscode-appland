@@ -7,6 +7,7 @@ import {
   readlink,
   rename,
   rm,
+  stat,
   symlink,
   writeFile,
 } from 'node:fs/promises';
@@ -33,7 +34,7 @@ const NOTE_FILE = '.appmap-skills';
 export type SkillLinkState =
   | { kind: 'absent' } // nothing at the path
   | { kind: 'foreign' } // something we didn't put there; never touched
-  | { kind: 'link' } // symlink into the cache; always current
+  | { kind: 'link'; dangling: boolean } // symlink into the cache; current unless its target is gone
   | { kind: 'copy'; version: string }; // copied from the cache and stamped with a version
 
 // One entry in an agent's skills directory (for example
@@ -57,7 +58,11 @@ export default class SkillLink {
 
     if (stats.isSymbolicLink()) {
       const target = resolve(dirname(this.path), await readlink(this.path));
-      return this.cache.contains(target) ? { kind: 'link' } : { kind: 'foreign' };
+      if (!this.cache.contains(target)) return { kind: 'foreign' };
+      // A link into the cache whose target is gone is still ours, but it no
+      // longer serves the skill: the cache layout changed, or the skill was
+      // dropped from the release.
+      return { kind: 'link', dangling: !(await exists(target)) };
     }
 
     if (stats.isDirectory()) {
@@ -122,7 +127,8 @@ export async function syncSkillLinks(cache: SkillsCache, dir: string): Promise<v
       log.info(`Skipping skill ${name}: ${link.path} was not installed by AppMap`);
       continue;
     }
-    if (state.kind === 'link' || (state.kind === 'copy' && state.version === version)) continue;
+    if (state.kind === 'link' && !state.dangling) continue;
+    if (state.kind === 'copy' && state.version === version) continue;
 
     log.info(`Installing skill ${name} to ${link.path}`);
     await link.install();
@@ -202,4 +208,13 @@ async function writeNote(dir: string, cacheDir: string, skills: string[]): Promi
       '',
     ].join('\n')
   );
+}
+
+async function exists(path: string): Promise<boolean> {
+  try {
+    await stat(path);
+    return true;
+  } catch {
+    return false;
+  }
 }

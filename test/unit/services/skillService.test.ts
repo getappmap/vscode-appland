@@ -3,7 +3,16 @@ import Sinon from 'sinon';
 import nock from 'nock';
 import os, { tmpdir } from 'os';
 import { existsSync } from 'node:fs';
-import { lstat, mkdir, mkdtemp, readFile, readlink, rm, writeFile } from 'node:fs/promises';
+import {
+  lstat,
+  mkdir,
+  mkdtemp,
+  readFile,
+  readlink,
+  rm,
+  symlink,
+  writeFile,
+} from 'node:fs/promises';
 import { default as chai, expect } from 'chai';
 import { default as chaiFs } from 'chai-fs';
 import { join } from 'node:path';
@@ -194,6 +203,28 @@ describe('SkillService', () => {
         .to.be.a.file()
         .with.content('appmap-record 1.1.0');
       expect(join(homeDir, '.appmap')).to.be.a.directory().with.subDirs(['skills']);
+    });
+
+    it('repairs links left pointing into the old versioned cache layout', async () => {
+      // An earlier build unpacked releases into ~/.appmap/skills/<version>/ and
+      // linked into that. Those links are ours, but their targets vanish when
+      // the cache is flattened.
+      const oldDir = join(cache, '1.0.0', 'appmap-record');
+      await mkdir(oldDir, { recursive: true });
+      await writeFile(join(oldDir, 'SKILL.md'), 'old layout');
+      await mkdir(claudeSkills, { recursive: true });
+      await symlink(oldDir, join(claudeSkills, 'appmap-record'), 'dir');
+      await mockRelease('1.0.0', ['appmap-record']);
+
+      await SkillService.ensureInstalled(true);
+
+      expect(await readlink(join(claudeSkills, 'appmap-record'))).to.equal(
+        join(cache, 'appmap-record')
+      );
+      expect(join(claudeSkills, 'appmap-record', 'SKILL.md'))
+        .to.be.a.file()
+        .with.content('appmap-record 1.0.0');
+      expect(join(cache, '1.0.0')).to.not.be.a.path();
     });
 
     it('removes managed skills that are no longer in the release', async () => {
