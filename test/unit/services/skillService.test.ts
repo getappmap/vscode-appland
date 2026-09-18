@@ -51,13 +51,39 @@ function setSetting(key: string, value: unknown) {
   return vscode.workspace.getConfiguration('appMap').update(key, value);
 }
 
+function memento(state: Map<string, unknown>): vscode.Memento {
+  return {
+    get: (key: string) => state.get(key),
+    update: async (key: string, value: unknown) => void state.set(key, value),
+  } as unknown as vscode.Memento;
+}
+
+// Registers the service with in-memory state, and hands both mementos back so
+// a test can seed or inspect them.
+function registerService(): {
+  globalState: Map<string, unknown>;
+  workspaceState: Map<string, unknown>;
+} {
+  const globalState = new Map<string, unknown>();
+  const workspaceState = new Map<string, unknown>();
+  SkillService.register({
+    subscriptions: [],
+    globalState: memento(globalState),
+    workspaceState: memento(workspaceState),
+  } as unknown as vscode.ExtensionContext);
+  return { globalState, workspaceState };
+}
+
 describe('SkillService', () => {
   let homeDir: string;
   let claudeSkills: string;
   let agentsSkills: string;
   let cache: string;
+  let globalState: Map<string, unknown>;
 
   beforeEach(async () => {
+    // The service keeps its state statically, so re-register for every test.
+    ({ globalState } = registerService());
     homeDir = await mkdtemp(join(tmpdir(), 'vscode-appland-skills-test-'));
     Sinon.stub(os, 'homedir').returns(homeDir);
     Sinon.stub(process, 'platform').value('linux');
@@ -271,7 +297,6 @@ describe('SkillService', () => {
 
   describe('workspace MCP configuration', () => {
     let prompt: Sinon.SinonStub;
-    let state: Map<string, unknown>;
     const folder = () => join(homeDir, 'project');
     const mcpJson = () => join(folder(), '.vscode', 'mcp.json');
 
@@ -281,14 +306,9 @@ describe('SkillService', () => {
         { uri: { fsPath: folder() }, name: 'project' },
       ]);
       prompt = Sinon.stub(vscode.window, 'showInformationMessage');
-      state = new Map();
-      SkillService.register({
-        subscriptions: [],
-        workspaceState: {
-          get: (key: string) => state.get(key),
-          update: async (key: string, value: unknown) => void state.set(key, value),
-        },
-      } as unknown as vscode.ExtensionContext);
+      // The install notification has already been shown, so the only
+      // notification these tests can see is the MCP one.
+      globalState.set('appMap.skills.installNotified', true);
       await mockRelease('1.0.0', ['appmap-record']);
     });
 
@@ -357,6 +377,95 @@ describe('SkillService', () => {
     });
   });
 
+  describe('the first-install notification', () => {
+    let notify: Sinon.SinonStub;
+    let confirm: Sinon.SinonStub;
+    const record = () => join(claudeSkills, 'appmap-record');
+
+    beforeEach(() => {
+      notify = Sinon.stub(vscode.window, 'showInformationMessage');
+      confirm = Sinon.stub(vscode.window, 'showWarningMessage');
+    });
+
+    it('tells the user what was installed and where', async () => {
+      notify.resolves('OK');
+      await mockRelease('1.0.0', ['appmap-record']);
+
+      await SkillService.ensureInstalled(true);
+
+      expect(notify.calledOnce).to.be.true;
+      // The home directory is abbreviated rather than spelled out.
+      expect(notify.firstCall.args[0])
+        .to.include('~/.claude/skills')
+        .and.include('~/.agents/skills');
+      // The first button does nothing at all.
+      expect(notify.firstCall.args[1]).to.equal('OK');
+      expect(record()).to.be.a.path();
+    });
+
+    it('does not tell the user again', async () => {
+      await mockRelease('1.0.0', ['appmap-record']);
+      await SkillService.ensureInstalled(true);
+
+      await mockRelease('1.1.0', ['appmap-record']);
+      await SkillService.ensureInstalled(true);
+
+      expect(notify.calledOnce).to.be.true;
+    });
+
+    it('stays quiet when nothing was installed', async () => {
+      // The release can't be resolved, so no skills land on disk.
+      nock('https://api.github.com').get(`/repos/${REPO}/releases`).reply(403);
+
+      await SkillService.ensureInstalled();
+
+      expect(notify.called).to.be.false;
+      // ...and the user is still told about the next, successful install.
+      expect(globalState.get('appMap.skills.installNotified')).to.be.undefined;
+    });
+
+    describe('when the user asks to uninstall', () => {
+      beforeEach(async () => {
+        notify.resolves('Uninstall');
+        await mockRelease('1.0.0', ['appmap-record']);
+      });
+
+      it('confirms, then removes the skills and turns installation off', async () => {
+        confirm.resolves('Remove');
+        await mkdir(join(claudeSkills, 'my-skill'), { recursive: true });
+
+        await SkillService.ensureInstalled(true);
+
+        expect(confirm.calledOnce).to.be.true;
+        expect(record()).to.not.be.a.path();
+        expect(join(agentsSkills, 'appmap-record')).to.not.be.a.path();
+        expect(vscode.workspace.getConfiguration('appMap').get('skills.install')).to.equal(false);
+        // Skills the user put there are none of our business.
+        expect(join(claudeSkills, 'my-skill')).to.be.a.path();
+      });
+
+      it('spells out what is lost, and keeps the skills if the user backs out', async () => {
+        confirm.resolves('Keep them');
+
+        await SkillService.ensureInstalled(true);
+
+        expect(confirm.firstCall.args[0]).to.match(/no longer know how to record AppMaps/);
+        // The safe choice comes first, for anyone clicking by reflex.
+        expect(confirm.firstCall.args[1]).to.equal('Keep them');
+        expect(record()).to.be.a.path();
+        expect(vscode.workspace.getConfiguration('appMap').get('skills.install')).to.be.undefined;
+      });
+
+      it('keeps the skills when the confirmation is dismissed', async () => {
+        confirm.resolves(undefined);
+
+        await SkillService.ensureInstalled(true);
+
+        expect(record()).to.be.a.path();
+      });
+    });
+  });
+
   describe('when running an integration test', () => {
     // The extension test host runs against the real home directory, so
     // installing would reach into whoever's ~/.claude is running the suite.
@@ -369,5 +478,4 @@ describe('SkillService', () => {
       expect(cache).to.not.be.a.path();
     });
   });
-
 });

@@ -103,13 +103,43 @@ export async function syncSkillLinks(cache: SkillsCache, dir: string): Promise<v
     await link.install();
   }
 
-  for (const name of await readdir(dir)) {
-    if (skills.includes(name)) continue;
-    const link = new SkillLink(join(dir, name), cache);
-    const { kind } = await link.inspect();
-    if (kind !== 'link' && kind !== 'copy') continue;
+  const removed = await removeSkillLinks(cache, dir, skills);
+  if (removed.length)
+    log.info(
+      `Removed skills no longer present in the AppMap release from ${dir}: ${removed.join(', ')}`
+    );
+}
 
-    log.info(`Removing skill ${name}: no longer present in the AppMap skills release`);
-    await link.remove();
+// Names of the entries in `dir` that we installed.
+export async function installedSkills(cache: SkillsCache, dir: string): Promise<string[]> {
+  dir = resolve(dir);
+  let names: string[];
+  try {
+    names = await readdir(dir);
+  } catch {
+    return [];
   }
+
+  const installed: string[] = [];
+  for (const name of names) {
+    const { kind } = await new SkillLink(join(dir, name), cache).inspect();
+    if (kind === 'link' || kind === 'copy') installed.push(name);
+  }
+  return installed;
+}
+
+// Remove the skills we installed into `dir`, except those named in `keep`, and
+// return the names removed. Entries we didn't create are left alone.
+export async function removeSkillLinks(
+  cache: SkillsCache,
+  dir: string,
+  keep: string[] = []
+): Promise<string[]> {
+  const removed: string[] = [];
+  for (const name of await installedSkills(cache, dir)) {
+    if (keep.includes(name)) continue;
+    await new SkillLink(join(resolve(dir), name), cache).remove();
+    removed.push(name);
+  }
+  return removed;
 }

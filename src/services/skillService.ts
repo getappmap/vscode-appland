@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { Uri } from 'vscode';
+import { homedir } from 'node:os';
 
 import * as log from '../assets/log';
 import Environment from '../configuration/environment';
@@ -8,14 +9,24 @@ import { GithubReleaseCache, GitHubReleaseResolver } from '../assets/resolvers';
 import { AppMapSkillsDir } from '../assets/helpers';
 import runUpdates from '../assets/runUpdates';
 import SkillsCache from './skills/skillsCache';
-import { syncSkillLinks } from './skills/skillLink';
+import { installedSkills, removeSkillLinks, syncSkillLinks } from './skills/skillLink';
 import { addAppMapMcpServer, hasAppMapMcpServer } from './skills/mcpConfig';
+
+// The harmless choice comes first in every one of these: a notification that
+// appears unbidden will be dismissed by reflex, and that shouldn't uninstall
+// anything or write to a repository.
+const OK = 'OK';
+const UNINSTALL = 'Uninstall';
+const KEEP = 'Keep them';
+const REMOVE = 'Remove';
 
 const ADD = 'Add';
 const NOT_NOW = 'Not now';
 const DONT_ASK_AGAIN = "Don't ask again";
 // Workspace-state key listing folders where the user declined the MCP entry.
 const MCP_DECLINED_KEY = 'appMap.skills.mcpDeclined';
+// Global-state flag: the user has been told the skills exist.
+const INSTALL_NOTIFIED_KEY = 'appMap.skills.installNotified';
 
 // Keeps the AppMap agent skills installed for Claude Code and GitHub Copilot.
 //
@@ -24,14 +35,19 @@ const MCP_DECLINED_KEY = 'appMap.skills.mcpDeclined';
 // skills directory (~/.claude/skills and ~/.agents/skills by default). This
 // is on by default and controlled by the `appMap.skills.install` setting.
 //
+// The first time skills land on disk, the user is told once, and offered a
+// way out; after that we update them silently.
+//
 // Once the skills are installed, each open workspace is offered the AppMap
 // MCP server in its .vscode/mcp.json. That file is checked into the user's
 // repository, so it is never written without asking.
 export default class SkillService {
   private static workspaceState: vscode.Memento | undefined;
+  private static globalState: vscode.Memento | undefined;
 
   static register(context: vscode.ExtensionContext): void {
     this.workspaceState = context.workspaceState;
+    this.globalState = context.globalState;
     context.subscriptions.push(
       vscode.workspace.onDidChangeConfiguration((e) => {
         if (e.affectsConfiguration('appMap.skills')) {
@@ -59,8 +75,68 @@ export default class SkillService {
       return;
     }
 
-    await runUpdates(AppMapSkillsDir(), [() => this.installLatest()], throwOnError);
+    const cache = new SkillsCache(AppMapSkillsDir());
+    await runUpdates(AppMapSkillsDir(), [() => this.installLatest(cache)], throwOnError);
+    await this.announceInstall(cache);
     await this.configureWorkspaces(throwOnError);
+  }
+
+  // Tell the user, once, that we put files in their agent's configuration
+  // directory. The alternative -- asking first -- means everyone pays for a
+  // dialog before they have any idea what the skills are for, and the skills
+  // are what make AppMap useful to a coding agent at all.
+  private static async announceInstall(cache: SkillsCache): Promise<void> {
+    const state = this.globalState;
+    if (!state) return log.info('No global state, skipping the AppMap skills notification.');
+    if (state.get<boolean>(INSTALL_NOTIFIED_KEY)) return;
+
+    // Determined from what is actually on disk: the update may have failed, or
+    // been done by another window, or found everything already in place.
+    const installed: string[] = [];
+    for (const dir of ExtensionSettings.skillsDirectories)
+      if ((await installedSkills(cache, dir)).length > 0) installed.push(dir);
+    if (installed.length === 0) return;
+
+    // Recorded before the notification is shown, not after: it sits there
+    // until it's dismissed, and a second window must not raise its own copy.
+    await state.update(INSTALL_NOTIFIED_KEY, true);
+
+    const choice = await vscode.window.showInformationMessage(
+      `AppMap installed its agent skills in ${displayPaths(installed)}. ` +
+        'They teach Claude Code and GitHub Copilot to record AppMaps of your code and ' +
+        'answer questions about how it actually runs.',
+      OK,
+      UNINSTALL
+    );
+    if (choice === UNINSTALL) await this.confirmUninstall(cache);
+  }
+
+  // Confirmed separately, and spelled out, because the skills are how the
+  // agent knows what to do with AppMap: someone who removes them on reflex
+  // loses most of the value of the extension without being told.
+  private static async confirmUninstall(cache: SkillsCache): Promise<void> {
+    const choice = await vscode.window.showWarningMessage(
+      'Remove the AppMap agent skills? Claude Code and GitHub Copilot will no longer ' +
+        "know how to record AppMaps or explore your application's behavior, and AppMap's " +
+        'AI features will be much less effective.',
+      KEEP,
+      REMOVE
+    );
+    if (choice !== REMOVE) return;
+
+    // The cache under ~/.appmap stays: it's our own directory, and it makes
+    // turning the setting back on instant.
+    for (const dir of ExtensionSettings.skillsDirectories) {
+      const removed = await removeSkillLinks(cache, dir);
+      if (removed.length) log.info(`Removed AppMap skills from ${dir}: ${removed.join(', ')}`);
+    }
+    await vscode.workspace
+      .getConfiguration('appMap')
+      .update('skills.install', false, vscode.ConfigurationTarget.Global);
+
+    vscode.window.showInformationMessage(
+      'Removed the AppMap agent skills. Set `appMap.skills.install` to reinstall them.'
+    );
   }
 
   // Offer the AppMap MCP server to each open workspace that doesn't have it.
@@ -102,12 +178,11 @@ export default class SkillService {
     return this.workspaceState?.get<string[]>(MCP_DECLINED_KEY) ?? [];
   }
 
-  private static async installLatest(): Promise<void> {
+  private static async installLatest(cache: SkillsCache): Promise<void> {
     const repository = ExtensionSettings.skillsRepository;
     const version = await new GitHubReleaseResolver(repository).getLatestVersion();
     if (!version) throw new Error('Error resolving the latest AppMap skills version');
 
-    const cache = new SkillsCache(AppMapSkillsDir());
     await cache.update(
       version,
       Uri.parse(`https://github.com/${repository}/archive/refs/tags/v${version}.tar.gz`)
@@ -115,4 +190,14 @@ export default class SkillService {
 
     for (const dir of ExtensionSettings.skillsDirectories) await syncSkillLinks(cache, dir);
   }
+}
+
+// A list of paths for the user to read: `~/.claude/skills and ~/.agents/skills`.
+function displayPaths(paths: string[]): string {
+  const home = homedir();
+  const display = paths.map((path) =>
+    path.startsWith(home) ? `~${path.slice(home.length)}` : path
+  );
+  if (display.length < 2) return display.join('');
+  return `${display.slice(0, -1).join(', ')} and ${display[display.length - 1]}`;
 }
