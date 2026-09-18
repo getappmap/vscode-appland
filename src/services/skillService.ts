@@ -1,12 +1,11 @@
 import * as vscode from 'vscode';
 import { Uri } from 'vscode';
-import { homedir } from 'node:os';
 
 import * as log from '../assets/log';
 import Environment from '../configuration/environment';
 import ExtensionSettings from '../configuration/extensionSettings';
 import { GithubReleaseCache, GitHubReleaseResolver } from '../assets/resolvers';
-import { AppMapSkillsDir } from '../assets/helpers';
+import { AppMapSkillsDir, displayPath } from '../assets/helpers';
 import runUpdates from '../assets/runUpdates';
 import SkillsCache from './skills/skillsCache';
 import { installedSkills, removeSkillLinks, syncSkillLinks } from './skills/skillLink';
@@ -194,10 +193,7 @@ export default class SkillService {
 
 // A list of paths for the user to read: `~/.claude/skills and ~/.agents/skills`.
 function displayPaths(paths: string[]): string {
-  const home = homedir();
-  const display = paths.map((path) =>
-    path.startsWith(home) ? `~${path.slice(home.length)}` : path
-  );
+  const display = paths.map(displayPath);
   if (display.length < 2) return display.join('');
   return `${display.slice(0, -1).join(', ')} and ${display[display.length - 1]}`;
 }

@@ -11,12 +11,23 @@ import {
 } from 'node:fs/promises';
 import { basename, dirname, join, resolve } from 'node:path';
 
+import { displayPath } from '../../assets/helpers';
 import * as log from '../../assets/log';
 import SkillsCache from './skillsCache';
 
 // Written into a skill directory that we had to copy rather than symlink, so
 // we can still tell it apart from a skill the user wrote by hand.
 const MARKER_FILE = '.appmap-skill';
+
+// Left in each skills directory we install into, so that someone who comes
+// across these entries in an agent's configuration directory can find out
+// where they came from without having to guess.
+//
+// A dotfile with no extension, rather than a README: the directory is not
+// ours, only some of its entries are, and an agent looking for skills should
+// have no reason to read it. It is rewritten on every sync and deleted once
+// we have nothing installed there.
+const NOTE_FILE = '.appmap-skills';
 
 export type SkillLinkState =
   | { kind: 'absent' } // nothing at the path
@@ -135,11 +146,46 @@ export async function removeSkillLinks(
   dir: string,
   keep: string[] = []
 ): Promise<string[]> {
+  dir = resolve(dir);
   const removed: string[] = [];
+  const remaining: string[] = [];
   for (const name of await installedSkills(cache, dir)) {
-    if (keep.includes(name)) continue;
-    await new SkillLink(join(resolve(dir), name), cache).remove();
+    if (keep.includes(name)) {
+      remaining.push(name);
+      continue;
+    }
+    await new SkillLink(join(dir, name), cache).remove();
     removed.push(name);
   }
+
+  await writeNote(dir, cache.dir, remaining);
   return removed;
+}
+
+// Record which entries of `dir` are ours, or take the note away once none of
+// them are. Written last, so it describes the directory as it now stands.
+async function writeNote(dir: string, cacheDir: string, skills: string[]): Promise<void> {
+  const path = join(dir, NOTE_FILE);
+  if (skills.length === 0) return await rm(path, { force: true });
+
+  await writeFile(
+    path,
+    [
+      'These entries in this directory are installed and kept up to date by the',
+      'AppMap extension for VS Code:',
+      '',
+      ...skills.map((skill) => `    ${skill}`),
+      '',
+      `They come from ${displayPath(cacheDir)}, an unpacked copy of the latest`,
+      'AppMap skills release. Nothing else in this directory is touched by AppMap.',
+      '',
+      'To remove them and stop them from being installed again, set',
+      '"appMap.skills.install": false in your VS Code settings. Deleting them by',
+      'hand works too, but they will come back the next time the extension',
+      'updates its skills.',
+      '',
+      'This file is written by AppMap and rewritten on every update.',
+      '',
+    ].join('\n')
+  );
 }

@@ -138,7 +138,7 @@ describe('SkillService', () => {
 
       await SkillService.ensureInstalled(true);
 
-      expect(claudeSkills).to.be.a.directory().with.contents(['appmap-record']);
+      expect(claudeSkills).to.be.a.directory().with.contents(['appmap-record', '.appmap-skills']);
     });
 
     it('does not download again when the cached version is current', async () => {
@@ -374,6 +374,58 @@ describe('SkillService', () => {
 
       expect(claudeSkills).to.not.be.a.path();
       expect(cache).to.not.be.a.path();
+    });
+  });
+
+  describe('the note left in the skills directory', () => {
+    const note = () => join(claudeSkills, '.appmap-skills');
+
+    it('names the skills it installed and how to be rid of them', async () => {
+      await mockRelease('1.0.0', ['appmap-record', 'appmap-review']);
+
+      await SkillService.ensureInstalled(true);
+
+      const contents = await readFile(note(), 'utf8');
+      expect(contents).to.include('appmap-record').and.include('appmap-review');
+      expect(contents).to.include('~/.appmap/skills');
+      expect(contents).to.include('"appMap.skills.install": false');
+    });
+
+    it('follows the release as skills come and go', async () => {
+      await mockRelease('1.0.0', ['appmap-record', 'appmap-retired']);
+      await SkillService.ensureInstalled(true);
+
+      await mockRelease('1.1.0', ['appmap-record']);
+      await SkillService.ensureInstalled(true);
+
+      expect(await readFile(note(), 'utf8')).to.include('appmap-record');
+      expect(await readFile(note(), 'utf8')).to.not.include('appmap-retired');
+    });
+
+    it('goes away once no skills of ours are left', async () => {
+      await mockRelease('1.0.0', ['appmap-record']);
+      await SkillService.ensureInstalled(true);
+      expect(note()).to.be.a.file();
+
+      const notify: Sinon.SinonStub = Sinon.stub(vscode.window, 'showInformationMessage');
+      const confirm: Sinon.SinonStub = Sinon.stub(vscode.window, 'showWarningMessage');
+      notify.resolves('Uninstall');
+      confirm.resolves('Remove');
+      globalState.delete('appMap.skills.installNotified');
+      await SkillService.ensureInstalled(true);
+
+      expect(note()).to.not.be.a.path();
+      expect(claudeSkills).to.be.a.directory().and.empty;
+    });
+
+    it('is not mistaken for a skill and swept away on the next update', async () => {
+      await mockRelease('1.0.0', ['appmap-record']);
+      await SkillService.ensureInstalled(true);
+
+      await mockRelease('1.1.0', ['appmap-record']);
+      await SkillService.ensureInstalled(true);
+
+      expect(note()).to.be.a.file();
     });
   });
 
