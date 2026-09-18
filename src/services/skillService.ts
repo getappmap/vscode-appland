@@ -9,7 +9,7 @@ import { AppMapSkillsDir, displayPath } from '../assets/helpers';
 import runUpdates from '../assets/runUpdates';
 import SkillsCache from './skills/skillsCache';
 import { installedSkills, removeSkillLinks, syncSkillLinks } from './skills/skillLink';
-import { addAppMapMcpServers, missingAppMapMcpServers } from './skills/mcpConfig';
+import { addAppMapMcpServers, mcpJsonPath, missingAppMapMcpServers } from './skills/mcpConfig';
 
 // The harmless choice comes first in every one of these: a notification that
 // appears unbidden will be dismissed by reflex, and that shouldn't uninstall
@@ -19,11 +19,7 @@ const UNINSTALL = 'Uninstall';
 const KEEP = 'Keep them';
 const REMOVE = 'Remove';
 
-const ADD = 'Add';
-const NOT_NOW = 'Not now';
-const DONT_ASK_AGAIN = "Don't ask again";
-// Workspace-state key listing folders where the user declined the MCP entries.
-const MCP_DECLINED_KEY = 'appMap.skills.mcpDeclined';
+const OPEN_MCP_JSON = 'Open mcp.json';
 // Global-state flag: the user has been told the skills exist.
 const INSTALL_NOTIFIED_KEY = 'appMap.skills.installNotified';
 
@@ -37,16 +33,14 @@ const INSTALL_NOTIFIED_KEY = 'appMap.skills.installNotified';
 // The first time skills land on disk, the user is told once, and offered a
 // way out; after that we update them silently.
 //
-// Separately, and whether or not any skills were installed, each open
-// workspace is offered the AppMap MCP servers in its .vscode/mcp.json: that
-// file is useful to Copilot in VS Code on its own. It is checked into the
-// user's repository, so it is never written without asking.
+// Separately, and whether or not any skills were installed, the AppMap MCP
+// servers are added to .vscode/mcp.json in each open workspace: that file is
+// useful to Copilot in VS Code on its own. Entries already there are never
+// changed, and every change we make is announced with a way to open the file.
 export default class SkillService {
-  private static workspaceState: vscode.Memento | undefined;
   private static globalState: vscode.Memento | undefined;
 
   static register(context: vscode.ExtensionContext): void {
-    this.workspaceState = context.workspaceState;
     this.globalState = context.globalState;
     context.subscriptions.push(
       vscode.workspace.onDidChangeConfiguration((e) => {
@@ -152,7 +146,7 @@ export default class SkillService {
     );
   }
 
-  // Offer the AppMap MCP servers to each open workspace that lacks any of them.
+  // Add the AppMap MCP servers to each open workspace that lacks any of them.
   // Entries already present, however configured, are never changed.
   // This runs outside the skills lock on purpose: the lock is per home directory, but
   // the workspaces differ per window, so a window that skipped the shared
@@ -160,11 +154,10 @@ export default class SkillService {
   private static async configureWorkspaces(throwOnError: boolean): Promise<void> {
     for (const folder of vscode.workspace.workspaceFolders ?? []) {
       try {
-        await this.offerMcpServers(folder);
+        await this.addMcpServers(folder);
       } catch (e) {
-        // The user asked for this and nothing appeared to happen: without a
-        // message they have no reason to think it failed, and we'd ask again
-        // on the next activation and fail the same way.
+        // A file we could not write will fail the same way on every
+        // activation; the user has to know to fix it.
         vscode.window.showErrorMessage(
           `Could not add the AppMap MCP servers to ${folder.name}: ${
             e instanceof Error ? e.message : e
@@ -176,31 +169,22 @@ export default class SkillService {
     }
   }
 
-  private static async offerMcpServers(folder: vscode.WorkspaceFolder): Promise<void> {
+  private static async addMcpServers(folder: vscode.WorkspaceFolder): Promise<void> {
     const path = folder.uri.fsPath;
     const missing = await missingAppMapMcpServers(path);
     if (missing.length === 0) return;
-    if (this.mcpDeclined().includes(path)) return;
+
+    await addAppMapMcpServers(path, missing);
+    log.info(`Added the AppMap MCP servers ${missing.join(', ')} to ${path}`);
 
     const choice = await vscode.window.showInformationMessage(
-      `Add the AppMap MCP servers (${missing.join(', ')}) to .vscode/mcp.json in ${
-        folder.name
-      }? This lets Copilot and other MCP clients query your AppMap data.`,
-      ADD,
-      NOT_NOW,
-      DONT_ASK_AGAIN
+      `AppMap added the MCP servers ${missing.join(', ')} to .vscode/mcp.json in ${folder.name}, ` +
+        'so Copilot and other MCP clients can query your AppMap data.',
+      OPEN_MCP_JSON
     );
-
-    if (choice === ADD) {
-      await addAppMapMcpServers(path, missing);
-      log.info(`Added the AppMap MCP servers ${missing.join(', ')} to ${path}`);
-    } else if (choice === DONT_ASK_AGAIN) {
-      await this.workspaceState?.update(MCP_DECLINED_KEY, [...this.mcpDeclined(), path]);
+    if (choice === OPEN_MCP_JSON) {
+      await vscode.window.showTextDocument(vscode.Uri.file(mcpJsonPath(path)));
     }
-  }
-
-  private static mcpDeclined(): string[] {
-    return this.workspaceState?.get<string[]>(MCP_DECLINED_KEY) ?? [];
   }
 
   private static async installLatest(cache: SkillsCache): Promise<void> {

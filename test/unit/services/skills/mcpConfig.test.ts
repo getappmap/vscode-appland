@@ -45,10 +45,10 @@ describe('mcpConfig', () => {
       expect(await missingAppMapMcpServers(folder)).to.deep.equal(['appmap-gold-traces']);
     });
 
-    it('reports both for a file it cannot parse, so the failure surfaces on add', async () => {
+    it('reports nothing for a file it cannot parse, so it is left alone', async () => {
       await mkdir(join(folder, '.vscode'));
       await writeFile(mcpJson, '{ "servers": \n');
-      expect(await missingAppMapMcpServers(folder)).to.deep.equal(ALL);
+      expect(await missingAppMapMcpServers(folder)).to.deep.equal([]);
     });
   });
 

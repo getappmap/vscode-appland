@@ -79,6 +79,7 @@ export default {
   showErrorMessage: doNothing,
   showWarningMessage: doNothing,
   showInformationMessage: doNothing,
+  showTextDocument: doNothing,
   withProgress,
   workspaceFolders: [],
   createOutputChannel: () => {

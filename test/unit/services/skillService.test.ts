@@ -351,29 +351,29 @@ describe('SkillService', () => {
   });
 
   describe('workspace MCP configuration', () => {
-    let prompt: Sinon.SinonStub;
+    let notify: Sinon.SinonStub;
+    let open: Sinon.SinonStub;
     const folder = () => join(homeDir, 'project');
     const mcpJson = () => join(folder(), '.vscode', 'mcp.json');
+    const mcpMessage = () =>
+      notify.getCalls().find((c) => String(c.args[0]).includes('MCP servers'));
 
     beforeEach(async () => {
       await mkdir(folder(), { recursive: true });
       Sinon.stub(vscode.workspace, 'workspaceFolders').value([
         { uri: { fsPath: folder() }, name: 'project' },
       ]);
-      prompt = Sinon.stub(vscode.window, 'showInformationMessage');
+      notify = Sinon.stub(vscode.window, 'showInformationMessage').resolves(undefined);
+      open = Sinon.stub(vscode.window, 'showTextDocument');
       // The install notification has already been shown, so the only
       // notification these tests can see is the MCP one.
       globalState.set('appMap.skills.installNotified', true);
       await mockRelease('1.0.0', ['appmap-record']);
     });
 
-    it('adds both servers when the user agrees', async () => {
-      prompt.resolves('Add');
-
+    it('adds both servers without asking, and says so', async () => {
       await SkillService.ensureInstalled(true);
 
-      expect(prompt.calledOnce).to.be.true;
-      expect(prompt.firstCall.args[0]).to.include('project');
       const config = JSON.parse(await readFile(mcpJson(), 'utf8'));
       expect(config.servers.appmap).to.deep.equal({
         type: 'stdio',
@@ -381,42 +381,35 @@ describe('SkillService', () => {
         args: ['query', 'mcp'],
       });
       expect(config.servers['appmap-gold-traces'].args).to.include('--appmap-dir');
+
+      const message = mcpMessage();
+      expect(message, 'a notification about the MCP servers').to.exist;
+      expect(message?.args[0]).to.include('appmap, appmap-gold-traces').and.include('project');
+      expect(message?.args.slice(1)).to.deep.equal(['Open mcp.json']);
+    });
+
+    it('opens mcp.json when the button is clicked', async () => {
+      notify.resolves('Open mcp.json');
+
+      await SkillService.ensureInstalled(true);
+
+      expect(open.calledOnce).to.be.true;
+      expect(open.firstCall.args[0].fsPath).to.equal(mcpJson());
     });
 
     it('adds only the missing server and leaves an existing entry as it is', async () => {
-      prompt.resolves('Add');
       await mkdir(join(folder(), '.vscode'));
       await writeFile(mcpJson(), '{ "servers": { "appmap": { "command": "/my/appmap" } } }');
 
       await SkillService.ensureInstalled(true);
 
-      expect(prompt.firstCall.args[0]).to.include('(appmap-gold-traces)');
       const config = JSON.parse(await readFile(mcpJson(), 'utf8'));
       expect(config.servers.appmap).to.deep.equal({ command: '/my/appmap' });
       expect(config.servers['appmap-gold-traces']).to.exist;
+      expect(mcpMessage()?.args[0]).to.include('servers appmap-gold-traces to');
     });
 
-    it('asks again next time when the user dismisses', async () => {
-      prompt.resolves('Not now');
-
-      await SkillService.ensureInstalled(true);
-      await SkillService.ensureInstalled(true);
-
-      expect(prompt.calledTwice).to.be.true;
-      expect(mcpJson()).to.not.be.a.path();
-    });
-
-    it('stops asking for a workspace when the user declines for good', async () => {
-      prompt.resolves("Don't ask again");
-
-      await SkillService.ensureInstalled(true);
-      await SkillService.ensureInstalled(true);
-
-      expect(prompt.calledOnce).to.be.true;
-      expect(mcpJson()).to.not.be.a.path();
-    });
-
-    it('does not ask when the workspace already lists both servers', async () => {
+    it('says nothing when both servers are already present', async () => {
       await mkdir(join(folder(), '.vscode'));
       await writeFile(
         mcpJson(),
@@ -425,53 +418,59 @@ describe('SkillService', () => {
 
       await SkillService.ensureInstalled(true);
 
-      expect(prompt.called).to.be.false;
+      expect(mcpMessage()).to.not.exist;
     });
 
-    // The MCP server stands on its own: .vscode/mcp.json is read by Copilot in
-    // VS Code, which needs no agent skills, and by any other MCP client.
-    it('asks even when skills installation is disabled', async () => {
-      await setSetting('skills.install', false);
-      prompt.resolves('Add');
+    it('leaves a file it cannot parse alone, without complaint', async () => {
+      const error: Sinon.SinonStub = Sinon.stub(vscode.window, 'showErrorMessage');
+      await mkdir(join(folder(), '.vscode'));
+      await writeFile(mcpJson(), '{ "servers": \n');
 
       await SkillService.ensureInstalled(true);
 
-      expect(prompt.calledOnce).to.be.true;
+      expect(mcpJson()).to.be.a.file().with.content('{ "servers": \n');
+      expect(mcpMessage()).to.not.exist;
+      expect(error.called).to.be.false;
+    });
+
+    // The MCP servers stand on their own: .vscode/mcp.json is read by Copilot
+    // in VS Code, which needs no agent skills, and by any other MCP client.
+    it('adds them even when skills installation is disabled', async () => {
+      await setSetting('skills.install', false);
+
+      await SkillService.ensureInstalled(true);
+
       expect(mcpJson()).to.be.a.file();
       expect(cache).to.not.be.a.path();
     });
 
-    it('tells the user when it cannot add the server they asked for', async () => {
+    it('tells the user when the file cannot be written', async () => {
       const error: Sinon.SinonStub = Sinon.stub(vscode.window, 'showErrorMessage');
-      // Unparseable, so we offer to add the server and then fail to do it.
-      await mkdir(join(folder(), '.vscode'));
-      await writeFile(mcpJson(), '{ "servers": \n');
-      prompt.resolves('Add');
+      // A plain file where the .vscode directory should be.
+      await writeFile(join(folder(), '.vscode'), 'not a directory');
 
       await SkillService.ensureInstalled();
 
       expect(error.calledOnce).to.be.true;
-      expect(error.firstCall.args[0])
-        .to.include('project')
-        .and.match(/could not be parsed/);
-      expect(mcpJson()).to.be.a.file().with.content('{ "servers": \n');
+      expect(error.firstCall.args[0]).to.include('project');
+      expect(mcpMessage()).to.not.exist;
     });
 
     // A notification with buttons on it stays up until the user deals with it,
     // so the skills one must not be in front of this in a queue.
-    it('asks while the skills notification is still waiting to be answered', async () => {
+    it('adds them while the skills notification is still waiting to be answered', async () => {
       globalState.delete('appMap.skills.installNotified');
       const unanswered = new Promise<string | undefined>(() => undefined);
-      prompt.callsFake((message: string) =>
-        message.includes('installed its agent skills') ? unanswered : Promise.resolve('Add')
+      notify.callsFake((message: string) =>
+        message.includes('installed its agent skills') ? unanswered : Promise.resolve(undefined)
       );
 
       void SkillService.ensureInstalled();
       await waitFor('the skills notification to appear', () =>
-        prompt.getCalls().some((c) => String(c.args[0]).includes('installed its agent skills'))
+        notify.getCalls().some((c) => String(c.args[0]).includes('installed its agent skills'))
       );
-      // It is now sitting there unanswered, and the MCP offer still arrives.
-      await waitFor('the MCP server to be offered', () => existsSync(mcpJson()));
+      // It is now sitting there unanswered, and the MCP servers still get added.
+      await waitFor('the MCP servers to be added', () => existsSync(mcpJson()));
     });
   });
 

@@ -2,6 +2,8 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { applyEdits, modify, parse, ParseError } from 'jsonc-parser';
 
+import * as log from '../../assets/log';
+
 // The entries we want present under "servers" in .vscode/mcp.json. VS Code
 // expands ${userHome} itself, so the file stays portable between machines.
 const APPMAP_COMMAND = '${userHome}/.appmap/bin/appmap';
@@ -31,7 +33,7 @@ export const APPMAP_MCP_SERVERS: Record<string, unknown> = {
 // only ever edit it in place, keeping other servers, comments and formatting,
 // and only after the user has agreed (see SkillService).
 
-function mcpJsonPath(folder: string): string {
+export function mcpJsonPath(folder: string): string {
   return join(folder, '.vscode', 'mcp.json');
 }
 
@@ -57,9 +59,8 @@ function listedServers(config: Record<string, unknown>): string[] {
 }
 
 // Names of the AppMap servers the workspace does not list yet. An existing
-// entry counts however it is configured. A file that cannot be parsed is
-// reported as missing everything: the attempt to add will then fail visibly,
-// which beats silently skipping a workspace the user expects to work.
+// entry counts however it is configured. A file that cannot be parsed reports
+// nothing missing: we cannot tell what it holds, and we will not rewrite it.
 export async function missingAppMapMcpServers(folder: string): Promise<string[]> {
   const text = await readMcpJson(folder);
   let listed: string[] = [];
@@ -67,7 +68,8 @@ export async function missingAppMapMcpServers(folder: string): Promise<string[]>
     try {
       listed = listedServers(parseMcpJson(text));
     } catch {
-      listed = [];
+      log.warning(`Leaving ${mcpJsonPath(folder)} alone: it could not be parsed`);
+      return [];
     }
   }
   return Object.keys(APPMAP_MCP_SERVERS).filter((name) => !listed.includes(name));
