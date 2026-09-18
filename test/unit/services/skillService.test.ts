@@ -135,6 +135,19 @@ describe('SkillService', () => {
       expect(claudeSkills).to.not.be.a.path();
     });
 
+    // An empty directory list is how someone who wants to place the skills
+    // themselves keeps the cache current without us touching any agent.
+    it('keeps the cache up to date and links nowhere when no directories are configured', async () => {
+      await setSetting('skills.directories', []);
+      await mockRelease('1.0.0', ['appmap-record']);
+
+      await SkillService.ensureInstalled(true);
+
+      expect(join(cache, 'appmap-record', 'SKILL.md')).to.be.a.file();
+      expect(claudeSkills).to.not.be.a.path();
+      expect(agentsSkills).to.not.be.a.path();
+    });
+
     it('ignores directories in the release that have no SKILL.md', async () => {
       await mockRelease('1.0.0', ['appmap-record']);
 
