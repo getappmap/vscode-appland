@@ -6,6 +6,9 @@ type AssetVersionMocks = {
   appmap?: string;
   scanner?: string;
   javaAgent?: string;
+  // Substrings matched against the whole URL; matching endpoints reply 403.
+  // Matching on the full URL (not just the origin) lets a test block e.g. only
+  // the Maven jar while leaving maven-metadata.xml reachable.
   denylist?: string[];
   // Override the digest advertised by the mock manifests, e.g. to exercise the
   // digest-verification failure path.
@@ -13,8 +16,8 @@ type AssetVersionMocks = {
   scannerDigest?: string;
 };
 function mockApi(url: URL | string, response: () => nock.Body, denylist: string[]) {
-  const { origin, pathname } = typeof url === 'string' ? new URL(url) : url;
-  const isDenylisted = denylist.some((deny) => origin.includes(deny));
+  const { origin, pathname, href } = typeof url === 'string' ? new URL(url) : url;
+  const isDenylisted = denylist.some((deny) => href.includes(deny));
   const scope = nock(origin).get(pathname);
   return isDenylisted ? scope.reply(403) : scope.reply(200, response());
 }
@@ -27,6 +30,11 @@ const APPMAP_BODY = '<insert appmap cli here>';
 const APPMAP_DIGEST = 'sha256:83e6257769b2afdd319b1ab87ab962cc25a40190c59f0b3c693758eab12edc13';
 const SCANNER_BODY = '<insert scanner here>';
 const SCANNER_DIGEST = 'sha256:77618356db5ce696f63b4b64d30da9ec22118628d68d3cad69a2ae70c2217791';
+
+// The two Java agent sources serve distinct bodies so tests can tell which one
+// a download actually came from.
+export const JAVA_AGENT_MAVEN_BODY = '<insert jar here>';
+export const JAVA_AGENT_GITHUB_BODY = '<insert github jar here>';
 
 export default function mockAssetApis(opts: AssetVersionMocks = {}) {
   const options = {
@@ -44,7 +52,7 @@ export default function mockAssetApis(opts: AssetVersionMocks = {}) {
   );
   mockApi(
     `https://repo1.maven.org/maven2/com/appland/appmap-agent/${options.javaAgent}/appmap-agent-${options.javaAgent}.jar`,
-    () => '<insert jar here>',
+    () => JAVA_AGENT_MAVEN_BODY,
     options.denylist
   );
   mockApi(
@@ -54,7 +62,7 @@ export default function mockAssetApis(opts: AssetVersionMocks = {}) {
   );
   mockApi(
     `https://github.com/getappmap/appmap-java/releases/download/v${options.javaAgent}/appmap-${options.javaAgent}.jar`,
-    () => '<insert jar here>',
+    () => JAVA_AGENT_GITHUB_BODY,
     options.denylist
   );
 

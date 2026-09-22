@@ -24,7 +24,7 @@ describe('downloadHttpRetry', () => {
 
     const target = join(tempDir, 'file.test');
 
-    await expect(downloadHttpRetry(source, target, download)).to.be.fulfilled;
+    await expect(downloadHttpRetry(source, target, { download })).to.be.fulfilled;
     expect(target).to.be.a.path();
     expect(download.callCount).to.equal(2);
   });
@@ -37,7 +37,7 @@ describe('downloadHttpRetry', () => {
 
     const target = join(tempDir, 'file.test');
 
-    await expect(downloadHttpRetry(source, target, download)).to.be.rejected;
+    await expect(downloadHttpRetry(source, target, { download })).to.be.rejected;
     expect(target).to.not.be.a.path();
     expect(download.callCount).to.equal(3);
   });
@@ -51,7 +51,7 @@ describe('downloadHttpRetry', () => {
       const download = Sinon.stub().rejects(new HttpError(status));
       const target = join(tempDir, 'file.test');
 
-      await expect(downloadHttpRetry(source, target, download)).to.be.rejectedWith(
+      await expect(downloadHttpRetry(source, target, { download })).to.be.rejectedWith(
         `got status ${status}`
       );
       expect(download.callCount).to.equal(1);
@@ -66,7 +66,7 @@ describe('downloadHttpRetry', () => {
       const download = Sinon.stub().rejects(new HttpError(status));
       const target = join(tempDir, 'file.test');
 
-      await expect(downloadHttpRetry(source, target, download)).to.be.rejected;
+      await expect(downloadHttpRetry(source, target, { download })).to.be.rejected;
       expect(download.callCount).to.equal(3);
     });
   });
@@ -75,7 +75,7 @@ describe('downloadHttpRetry', () => {
     const download = Sinon.stub().rejects(new Error('ECONNRESET'));
     const target = join(tempDir, 'file.test');
 
-    await expect(downloadHttpRetry(source, target, download)).to.be.rejected;
+    await expect(downloadHttpRetry(source, target, { download })).to.be.rejected;
     expect(download.callCount).to.equal(3);
   });
 

@@ -67,7 +67,10 @@ describe('AssetService', () => {
       });
 
       await mkdir(join(homeDir, 'resources'), { recursive: true });
-      await writeFile(join(homeDir, 'resources', 'appmap-java.jar'), '<insert bundled jar here>');
+      await writeFile(
+        join(homeDir, 'resources', `appmap-${expectedVersion}.jar`),
+        '<insert bundled jar here>'
+      );
       await AssetService.updateAll(false);
 
       const appmapDir = join(homeDir, '.appmap');

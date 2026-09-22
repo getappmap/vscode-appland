@@ -1,5 +1,5 @@
 import assert from 'node:assert';
-import { open, rename } from 'node:fs/promises';
+import { open, rename, unlink } from 'node:fs/promises';
 import { basename } from 'node:path';
 import { setTimeout } from 'node:timers/promises';
 
@@ -61,10 +61,20 @@ async function downloadHttp(
   }
 }
 
+export interface DownloadOptions {
+  // Injection point for tests.
+  download?: typeof downloadHttp;
+  // Report failures to the log only. Set by callers that have another source
+  // to fall back to, so a refusal from one of them doesn't put an error in
+  // front of the user for a download that then succeeds elsewhere. Such a
+  // caller is responsible for reporting once every source has failed.
+  quiet?: boolean;
+}
+
 export default async function downloadHttpRetry(
   uri: Uri,
   destinationPath: string,
-  download = downloadHttp
+  { download = downloadHttp, quiet = false }: DownloadOptions = {}
 ) {
   log.info(`Downloading ${uri} to ${destinationPath}...`);
   const partPath = destinationPath + '.part';
@@ -109,11 +119,14 @@ export default async function downloadHttpRetry(
       const fatal = error instanceof HttpError && !error.retryable;
       if (fatal || i === downloadHttpRetry.maxTries - 1) {
         if (fatal) log.info(`${uri} returned a status that won't change on retry; giving up now`);
-        vscode.window.showErrorMessage(`Error downloading ${uri}: ${String(error)}`);
+        // Don't leave the partial file behind; a caller falling through to
+        // another source would otherwise litter one per source it tried.
+        await unlink(partPath).catch(() => undefined);
+        if (!quiet) vscode.window.showErrorMessage(`Error downloading ${uri}: ${String(error)}`);
         throw error;
       } else {
         log.warning(`Error downloading ${uri}: ${String(error)}`);
-        vscode.window.showWarningMessage(`Error downloading ${uri}: ${String(error)}`);
+        if (!quiet) vscode.window.showWarningMessage(`Error downloading ${uri}: ${String(error)}`);
       }
     }
   }
