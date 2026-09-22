@@ -10,7 +10,7 @@ import { URI } from 'vscode-uri';
 
 import '../mock/vscode';
 
-import downloadHttpRetry from '../../../src/assets/downloadHttpRetry';
+import downloadHttpRetry, { HttpError } from '../../../src/assets/downloadHttpRetry';
 
 describe('downloadHttpRetry', () => {
   it('should retry downloads', async () => {
@@ -39,6 +39,43 @@ describe('downloadHttpRetry', () => {
 
     await expect(downloadHttpRetry(source, target, download)).to.be.rejected;
     expect(target).to.not.be.a.path();
+    expect(download.callCount).to.equal(3);
+  });
+
+  // Retrying just delays the caller's fallback by the length of the backoff;
+  // the answer won't be different the second time. 4xx is a refusal, and 204
+  // or 304 is a success we couldn't read a body from -- repeating the request
+  // can't make one appear.
+  [204, 304, 400, 401, 403, 404, 407, 410].forEach((status) => {
+    it(`does not retry after ${status}`, async () => {
+      const download = Sinon.stub().rejects(new HttpError(status));
+      const target = join(tempDir, 'file.test');
+
+      await expect(downloadHttpRetry(source, target, download)).to.be.rejectedWith(
+        `got status ${status}`
+      );
+      expect(download.callCount).to.equal(1);
+      expect(target).to.not.be.a.path();
+    });
+  });
+
+  // 408 and 429 both explicitly mean "try again", and 5xx is the server
+  // failing rather than refusing.
+  [408, 429, 500, 502, 503].forEach((status) => {
+    it(`retries after ${status}`, async () => {
+      const download = Sinon.stub().rejects(new HttpError(status));
+      const target = join(tempDir, 'file.test');
+
+      await expect(downloadHttpRetry(source, target, download)).to.be.rejected;
+      expect(download.callCount).to.equal(3);
+    });
+  });
+
+  it('still retries errors that carry no status, such as a dropped connection', async () => {
+    const download = Sinon.stub().rejects(new Error('ECONNRESET'));
+    const target = join(tempDir, 'file.test');
+
+    await expect(downloadHttpRetry(source, target, download)).to.be.rejected;
     expect(download.callCount).to.equal(3);
   });
 

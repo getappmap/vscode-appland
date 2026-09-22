@@ -7,6 +7,27 @@ import vscode, { Uri } from 'vscode';
 
 import * as log from './log';
 
+export class HttpError extends Error {
+  constructor(readonly status: number, message?: string) {
+    super(message ?? `Failed to download file: got status ${status}`);
+    this.name = 'HttpError';
+  }
+
+  // Only three kinds of status are worth repeating: 408 and 429 explicitly
+  // mean "try again", and 5xx is the server failing rather than refusing.
+  // Everything else answers the same way next time -- a 4xx is a refusal (a
+  // proxy blocking the host, a missing artifact, bad credentials), and a
+  // success we couldn't read a body from won't grow one -- so we fail fast
+  // and let the caller move on instead of sitting through the backoff.
+  //
+  // 429 uses the normal schedule rather than honoring Retry-After: neither
+  // Maven Central nor GitHub is likely to rate-limit an occasional agent
+  // download, so parsing the header isn't worth the code.
+  get retryable(): boolean {
+    return this.status === 408 || this.status === 429 || this.status >= 500;
+  }
+}
+
 async function downloadHttp(
   url: Uri,
   destinationPath: string,
@@ -17,8 +38,11 @@ async function downloadHttp(
 
   const response = await fetch(url.toString(), { signal });
 
-  if (!(response.ok && response.body))
-    throw new Error(`Failed to download file: got status ${response.status}`);
+  if (!response.ok) throw new HttpError(response.status);
+  // A success we can't read is still a failure, but calling it "status 200"
+  // in an error message helps nobody.
+  if (!response.body)
+    throw new HttpError(response.status, `Download failed: ${url} returned no content`);
 
   const contentLength = response.headers.get('content-length');
   const totalSize = contentLength && parseInt(contentLength, 10);
@@ -82,7 +106,9 @@ export default async function downloadHttpRetry(
       return;
     } catch (error) {
       if (error instanceof Error && error.name === 'AbortError') throw error;
-      if (i === downloadHttpRetry.maxTries - 1) {
+      const fatal = error instanceof HttpError && !error.retryable;
+      if (fatal || i === downloadHttpRetry.maxTries - 1) {
+        if (fatal) log.info(`${uri} returned a status that won't change on retry; giving up now`);
         vscode.window.showErrorMessage(`Error downloading ${uri}: ${String(error)}`);
         throw error;
       } else {
