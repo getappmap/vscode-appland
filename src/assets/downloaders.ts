@@ -1,4 +1,4 @@
-import { join } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 import { lstat, readlink, unlink } from 'node:fs/promises';
 import { Uri } from 'vscode';
 
@@ -26,7 +26,12 @@ async function symlinkPointsTo(path: string, target: string): Promise<boolean> {
   try {
     const stats = await lstat(path);
     if (stats.isSymbolicLink()) {
-      return (await readlink(path)) === target;
+      // Resolve against the link's own directory: a link may be relative,
+      // either because another tool wrote it (the IntelliJ plugin relativizes
+      // the appmap.jar it creates) or because a user linked it by hand.
+      // Comparing the raw readlink result would call those stale and rewrite
+      // them on every run.
+      return resolve(dirname(path), await readlink(path)) === resolve(target);
     }
     return true;
   } catch {

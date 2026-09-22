@@ -1,4 +1,4 @@
-import { chmod, copyFile, mkdir, open, readdir, symlink, unlink } from 'node:fs/promises';
+import { chmod, copyFile, mkdir, open, readdir, stat, symlink, unlink } from 'node:fs/promises';
 import { homedir } from 'node:os';
 import { dirname, join, sep } from 'node:path';
 import { Uri } from 'vscode';
@@ -98,6 +98,34 @@ export async function updateSymlink(assetPath: string, symlinkPath: string): Pro
   }
 }
 
+// Java agent jars under either naming scheme. appmap-<version>.jar is what
+// upstream publishes on GitHub releases and what we write;
+// appmap-agent-<version>.jar is Maven Central's repackaging under the
+// artifactId, which is what the IntelliJ plugin ends up writing into
+// ~/.appmap/lib/java. We read that directory, so we have to recognize both.
+//
+// Requiring a version in the name is what keeps other jars out. That same
+// directory also holds runtime-<version>.jar, which the Java agent extracts
+// there itself at run time (it holds com.appland.appmap.runtime.HookFunctions,
+// a couple of KB); linking appmap.jar at one of those hands the JVM something
+// it can't load as a -javaagent. It also excludes the appmap.jar symlink
+// itself, which was otherwise listed as a candidate with an unparseable
+// version.
+const JAVA_AGENT_JAR = /^appmap(?:-agent)?-\d.*\.jar$/;
+
+// The IntelliJ plugin's lock file convention: present and less than 5 minutes
+// old means a download is in flight, older than that means it was abandoned.
+const DOWNLOAD_LOCK_TIMEOUT_MS = 5 * 60 * 1000;
+
+async function lockIsFresh(lockPath: string): Promise<boolean> {
+  try {
+    const { mtimeMs } = await stat(lockPath);
+    return Date.now() - mtimeMs < DOWNLOAD_LOCK_TIMEOUT_MS;
+  } catch {
+    return false;
+  }
+}
+
 export async function listAssets(assetId: AssetIdentifier): Promise<string[]> {
   const DIRS = [
     cacheDir(),
@@ -110,10 +138,18 @@ export async function listAssets(assetId: AssetIdentifier): Promise<string[]> {
   for (const dir of DIRS) {
     try {
       const ents = await readdir(dir);
+      const names = new Set(ents);
       for (const ent of ents) {
         if (ent.endsWith('.part')) continue; // skip partial downloads
+        // We read ~/.appmap/lib/java, which the IntelliJ plugin owns, and it
+        // downloads straight to the final path rather than staging a
+        // temporary file the way we do -- so a jar there may be half-written.
+        // It marks one in flight with a sibling .downloading lock, which it
+        // considers stale after 5 minutes.
+        if (names.has(`${ent}.downloading`) && (await lockIsFresh(join(dir, `${ent}.downloading`))))
+          continue;
         if (
-          (assetId === AssetIdentifier.JavaAgent && ent.endsWith('.jar')) ||
+          (assetId === AssetIdentifier.JavaAgent && JAVA_AGENT_JAR.test(ent)) ||
           (assetId === AssetIdentifier.AppMapCli &&
             ent.startsWith('appmap') &&
             ent.includes(getPlatformIdentifier())) ||

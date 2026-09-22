@@ -2,10 +2,10 @@ import '../mock/vscode';
 import mockAssetApis from './mockAssetApis';
 import Sinon from 'sinon';
 import os, { tmpdir } from 'os';
-import { mkdir, mkdtemp, rm, writeFile } from 'fs/promises';
+import { mkdir, mkdtemp, rm, utimes, writeFile } from 'fs/promises';
 import { default as chai, expect } from 'chai';
 import { default as chaiFs } from 'chai-fs';
-import { dirname, join } from 'node:path';
+import { basename, dirname, join } from 'node:path';
 import AssetService from '../../../src/assets/assetService';
 import { listAssets } from '../../../src/assets';
 import { AssetIdentifier } from '../../../src/assets/types';
@@ -167,14 +167,66 @@ describe('AssetService', () => {
       expect(scannerAssets[0]).to.match(/scanner-win-x64-0.9.0.exe$/);
     });
 
-    it('includes appmap-java.jar from resources', async () => {
+    it('includes the bundled Java agent from resources', async () => {
       const bundledDir = join(homeDir, 'resources');
       await mkdir(bundledDir, { recursive: true });
-      await writeFile(join(bundledDir, 'appmap-java.jar'), '');
+      await writeFile(join(bundledDir, 'appmap-1.30.2.jar'), '');
 
       const assets = await listAssets(AssetIdentifier.JavaAgent);
       expect(assets).to.be.an('array').that.has.lengthOf(1);
-      expect(assets[0]).to.match(/appmap-java.jar$/);
+      expect(assets[0]).to.match(/appmap-1\.30\.2\.jar$/);
+    });
+
+    // Both naming schemes are in the wild: appmap-<version>.jar is upstream's
+    // release asset name and what we write, appmap-agent-<version>.jar is
+    // Maven Central's repackaging and what the IntelliJ plugin writes.
+    // runtime-<version>.jar is a different artifact the agent extracts into
+    // that directory at run time, and linking appmap.jar at it would hand the
+    // JVM something it can't use as a -javaagent.
+    it('accepts either Java agent naming scheme and nothing else', async () => {
+      const javaDir = join(homeDir, '.appmap', 'lib', 'java');
+      await mkdir(javaDir, { recursive: true });
+      for (const name of [
+        'appmap-agent-1.30.2.jar',
+        'appmap-1.30.1.jar',
+        'runtime-1.31.0.jar',
+        'appmap.jar',
+        'runtime.jar',
+        'notes.txt',
+      ])
+        await writeFile(join(javaDir, name), '');
+
+      const assets = await listAssets(AssetIdentifier.JavaAgent);
+      expect(assets.map((p) => basename(p))).to.have.members([
+        'appmap-agent-1.30.2.jar',
+        'appmap-1.30.1.jar',
+      ]);
+    });
+
+    // The plugin writes straight to the final path, so a jar in its directory
+    // can be half-written; it flags one in flight with a .downloading sibling.
+    it('skips a jar the IntelliJ plugin is still downloading', async () => {
+      const javaDir = join(homeDir, '.appmap', 'lib', 'java');
+      await mkdir(javaDir, { recursive: true });
+      await writeFile(join(javaDir, 'appmap-agent-1.30.2.jar'), '');
+      await writeFile(join(javaDir, 'appmap-agent-1.30.2.jar.downloading'), '');
+      await writeFile(join(javaDir, 'appmap-agent-1.30.1.jar'), '');
+
+      const assets = await listAssets(AssetIdentifier.JavaAgent);
+      expect(assets.map((p) => basename(p))).to.deep.equal(['appmap-agent-1.30.1.jar']);
+    });
+
+    it('considers an abandoned .downloading lock stale', async () => {
+      const javaDir = join(homeDir, '.appmap', 'lib', 'java');
+      await mkdir(javaDir, { recursive: true });
+      await writeFile(join(javaDir, 'appmap-agent-1.30.2.jar'), '');
+      const lock = join(javaDir, 'appmap-agent-1.30.2.jar.downloading');
+      await writeFile(lock, '');
+      const stale = new Date(Date.now() - 10 * 60 * 1000);
+      await utimes(lock, stale, stale);
+
+      const assets = await listAssets(AssetIdentifier.JavaAgent);
+      expect(assets.map((p) => basename(p))).to.deep.equal(['appmap-agent-1.30.2.jar']);
     });
 
     it('handles invalid version strings', async () => {
@@ -283,7 +335,7 @@ describe('AssetService', () => {
       await mkdir(bundledDir, { recursive: true });
       await writeFile(join(bundledDir, 'appmap-linux-x64-0.9.0'), '');
       await writeFile(join(bundledDir, 'scanner-linux-x64-0.9.0'), '');
-      await writeFile(join(bundledDir, 'appmap-java.jar'), '');
+      await writeFile(join(bundledDir, 'appmap-agent-1.30.2.jar'), '');
 
       const allPresent = await AssetService.ensureLinks();
       expect(allPresent).to.be.true;
@@ -301,7 +353,7 @@ describe('AssetService', () => {
       await mkdir(bundledDir, { recursive: true });
       await writeFile(join(bundledDir, 'appmap-linux-x64-2.0.0-TEST'), 'NEW_BUNDLED_BINARY');
       await writeFile(join(bundledDir, 'scanner-linux-x64-2.0.0-TEST'), 'SCANNER_BINARY');
-      await writeFile(join(bundledDir, 'appmap-java.jar'), 'JAVA_AGENT');
+      await writeFile(join(bundledDir, 'appmap-agent-1.30.2.jar'), 'JAVA_AGENT');
 
       const appmapBinPath = join(homeDir, '.appmap', 'bin', 'appmap');
       await mkdir(dirname(appmapBinPath), { recursive: true });
