@@ -8,8 +8,10 @@ import { default as chai, expect } from 'chai';
 import { default as chaiFs } from 'chai-fs';
 
 import Sinon from 'sinon';
+import { Uri } from 'vscode';
 
 import { BundledFileDownloadUrlResolver, cacheDir, JavaAgentDownloader } from '../../../src/assets';
+import ResourceVersions from '../../../resources/versions.json';
 import downloadHttpRetry from '../../../src/assets/downloadHttpRetry';
 import mockAssetApis, { JAVA_AGENT_GITHUB_BODY, JAVA_AGENT_MAVEN_BODY } from './mockAssetApis';
 
@@ -55,6 +57,35 @@ describe('JavaAgentDownloader', () => {
       .with.content(JAVA_AGENT_GITHUB_BODY);
   });
 
+  // Maven Central repackages the agent under its artifactId, so this is the
+  // name the IntelliJ plugin writes into the directory we read. Recognizing
+  // it is what stops us downloading a jar that's already on disk.
+  it('reuses a jar the IntelliJ plugin downloaded under the Maven name', async () => {
+    await mkdir(javaDir, { recursive: true });
+    await writeFile(join(javaDir, 'appmap-agent-0.0.0-TEST.jar'), 'FROM_INTELLIJ');
+
+    await JavaAgentDownloader();
+
+    expect(join(javaDir, 'appmap.jar')).to.be.a.file().with.content('FROM_INTELLIJ');
+    expect(cache).not.to.be.a.path();
+  });
+
+  // The plugin downloads straight to the final path instead of staging a
+  // temporary file, marking the download in flight with a .downloading lock.
+  // Linking appmap.jar at a half-written jar would hand the JVM a broken
+  // -javaagent.
+  it('ignores a jar the IntelliJ plugin is still downloading', async () => {
+    await mkdir(javaDir, { recursive: true });
+    await writeFile(join(javaDir, 'appmap-agent-0.0.0-TEST.jar'), 'HALF_WRITTEN');
+    await writeFile(join(javaDir, 'appmap-agent-0.0.0-TEST.jar.downloading'), '');
+
+    await JavaAgentDownloader();
+
+    // we fetched our own copy rather than linking the partial file
+    expect(join(javaDir, 'appmap.jar')).to.be.a.file().with.content(JAVA_AGENT_MAVEN_BODY);
+    expect(join(cache, 'appmap-0.0.0-TEST.jar')).to.be.a.file();
+  });
+
   it('throws naming every source once they have all failed', async () => {
     mockAssetApis.restore();
     mockAssetApis({ denylist: ['appmap-agent-', 'appmap-java/releases/download'] });
@@ -91,12 +122,14 @@ describe('JavaAgentDownloader', () => {
 
   let homeDir: string;
   let cache: string;
+  let javaDir: string;
 
   beforeEach(async () => {
     homeDir = await mkdtemp(join(tmpdir(), 'vscode-appland-appmap-download-test-'));
     Sinon.stub(os, 'homedir').returns(homeDir);
     BundledFileDownloadUrlResolver.extensionDirectory = homeDir;
     cache = cacheDir();
+    javaDir = join(homeDir, '.appmap', 'lib', 'java');
     downloadHttpRetry.maxTries = 1; // don't retry, we're testing fallbacks
     mockAssetApis();
   });
@@ -105,4 +138,24 @@ describe('JavaAgentDownloader', () => {
     mockAssetApis.restore();
     downloadHttpRetry.maxTries = 3;
   });
+});
+
+describe('BundledFileDownloadUrlResolver', () => {
+  // build/updateResources.js writes resources/appmap-<version>.jar, so a
+  // resolver keyed on 'appmap-java.jar' must not also look for that filename.
+  it('resolves a bundled file whose name differs from its versions.json key', async () => {
+    Sinon.stub(BundledFileDownloadUrlResolver, 'extensionDirectory').value('/ext');
+    const version = ResourceVersions['appmap-java.jar'];
+    const resolver = new BundledFileDownloadUrlResolver(
+      'appmap-java.jar',
+      (v) => `appmap-${v}.jar`
+    );
+
+    expect(await resolver.getDownloadUrl(version)).to.equal(
+      Uri.file(join('/ext', 'resources', `appmap-${version}.jar`)).toString()
+    );
+    expect(await resolver.getDownloadUrl('99.99.99')).to.be.undefined;
+  });
+
+  afterEach(() => Sinon.restore());
 });

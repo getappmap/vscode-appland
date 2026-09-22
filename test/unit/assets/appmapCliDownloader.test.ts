@@ -2,10 +2,10 @@ import '../mock/vscode';
 import mockAssetApis from './mockAssetApis';
 import Sinon from 'sinon';
 import os, { tmpdir } from 'os';
-import { mkdir, mkdtemp, rm, stat, symlink, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, readlink, rm, stat, symlink, writeFile } from 'node:fs/promises';
 import { default as chai, expect } from 'chai';
 import { default as chaiFs } from 'chai-fs';
-import { join } from 'path';
+import { join, relative } from 'path';
 import { AppMapCliDownloader, BundledFileDownloadUrlResolver, cacheDir } from '../../../src/assets';
 
 chai.use(chaiFs);
@@ -90,6 +90,25 @@ describe('AppMapCliDownloader', () => {
 
     // The target should not be replaced
     expect(join(homeDir, '.appmap', 'bin', 'appmap.exe')).to.be.a.file().with.content('BUNDLED');
+  });
+
+  // A link may be relative because another tool wrote it or a user made it by
+  // hand; comparing the raw readlink result would call it stale every run.
+  it('leaves a relative symlink alone when it already points at the right binary', async () => {
+    await mkdir(cache, { recursive: true });
+    const binDir = join(homeDir, '.appmap', 'bin');
+    await mkdir(binDir, { recursive: true });
+    await writeFile(join(cache, 'appmap-win-x64-0.0.0-TEST.exe'), 'CACHED');
+    const link = join(binDir, 'appmap.exe');
+    await symlink(relative(binDir, join(cache, 'appmap-win-x64-0.0.0-TEST.exe')), link);
+
+    await AppMapCliDownloader();
+
+    // still the relative link we wrote, not rewritten as an absolute one
+    expect(await readlink(link)).to.equal(
+      relative(binDir, join(cache, 'appmap-win-x64-0.0.0-TEST.exe'))
+    );
+    expect(link).to.be.a.file().with.content('CACHED');
   });
 
   it('relinks to the manifest version when the symlink points at a different cached binary', async () => {
