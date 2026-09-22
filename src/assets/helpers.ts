@@ -61,14 +61,14 @@ export async function targetMissing(binaryPath: string) {
   }
 }
 
-export async function download(url: Uri, destinationPath: string): Promise<void> {
+export async function download(url: Uri, destinationPath: string, quiet = false): Promise<void> {
   await mkdir(dirname(destinationPath), { recursive: true });
   switch (url.scheme) {
     case 'file':
       return copyFile(url.fsPath, destinationPath);
     case 'http':
     case 'https':
-      return downloadHttpRetry(url, destinationPath);
+      return downloadHttpRetry(url, destinationPath, { quiet });
     default:
       return Promise.reject(`Unhandled scheme ${url.scheme}`);
   }

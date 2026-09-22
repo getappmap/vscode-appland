@@ -109,11 +109,18 @@ export class MavenDownloadUrlResolver implements DownloadUrlResolver {
 }
 
 export class BundledFileDownloadUrlResolver implements DownloadUrlResolver {
-  constructor(private readonly resourceName: string) {}
+  constructor(
+    // Key into resources/versions.json.
+    private readonly resourceName: string,
+    // The file on disk is not necessarily named after that key:
+    // build/updateResources.js writes the Java agent as appmap-<version>.jar.
+    private readonly fileName: string | ((version: string) => string) = resourceName
+  ) {}
 
   async getDownloadUrl(version: string): Promise<string | undefined> {
     if (version === (ResourceVersions as Record<string, string>)[this.resourceName]) {
-      const uri = Uri.file(join(BundledFileDownloadUrlResolver.resourcePath, this.resourceName));
+      const fileName = typeof this.fileName === 'function' ? this.fileName(version) : this.fileName;
+      const uri = Uri.file(join(BundledFileDownloadUrlResolver.resourcePath, fileName));
       return uri.toString();
     }
   }
