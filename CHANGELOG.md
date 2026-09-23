@@ -1,3 +1,12 @@
+## [0.144.1](https://github.com/getappmap/vscode-appland/compare/v0.144.0...v0.144.1) (2026-09-23)
+
+
+### Bug Fixes
+
+* **assets:** don't mistake other jars for the Java agent ([b54923b](https://github.com/getappmap/vscode-appland/commit/b54923b98d37559d40797d86239d0680e884b545))
+* **assets:** don't retry downloads the server refused ([ef701e3](https://github.com/getappmap/vscode-appland/commit/ef701e34e1053534deb6d52d00e1c51f3627da7e))
+* **assets:** fall through to the next Java agent download source ([3cc9d25](https://github.com/getappmap/vscode-appland/commit/3cc9d2582da044fe17b100c01a0923de9d746652))
+
 # [0.144.0](https://github.com/getappmap/vscode-appland/compare/v0.143.0...v0.144.0) (2026-09-18)
 
 
