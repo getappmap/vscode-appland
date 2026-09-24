@@ -89,6 +89,14 @@ export class ProcessWatcher implements vscode.Disposable {
   // Tracks a start() call in flight, so a concurrent start() can await the same
   // spawn instead of racing it and spawning a second process.
   private startPromise?: Promise<void>;
+  private startGeneration = 0;
+
+  // Bumped by every stop. A start that was assembling its environment when a stop landed
+  // belongs to the generation before it, and must not go on to spawn: stop() had nothing to
+  // kill at the time, so the process would outlive the watcher that asked for it. Counting
+  // rather than waiting keeps stop() -- and so dispose(), and so extension shutdown -- from
+  // blocking on whatever a start is waiting for, such as secret storage.
+  private generation = 0;
 
   // A timeout period in which the crash count is to be reset if the timer is fulfilled.
   protected crashTimeout?: NodeJS.Timeout;
@@ -138,8 +146,16 @@ export class ProcessWatcher implements vscode.Disposable {
     // Available in subclasses.
   }
 
-  protected async retry(): Promise<void> {
-    if (!this.shouldRun) return;
+  // `failed` is the process that died, which is not necessarily the one the watcher owns --
+  // neither on the way in, nor by the time the backoff below is over.
+  protected async retry(failed: ChildProcess): Promise<void> {
+    // A process the watcher has moved on from can still report a failure: stop() drops the
+    // exit listener but not the error one. The crash counter belongs to whatever is running
+    // now, and spending it here would cost the replacement a retry, suppress the report of
+    // its first crash, and eventually abort the watcher over a process that is running
+    // perfectly well.
+    if (!this.shouldRun || this.process !== failed) return;
+
     if (this.crashTimeout) {
       clearTimeout(this.crashTimeout);
       this.crashTimeout = undefined;
@@ -147,19 +163,26 @@ export class ProcessWatcher implements vscode.Disposable {
 
     this.crashCount++;
     if (this.crashCount > this.options.retryTimes) {
-      this.process?.log.append('too many crashes - aborting', OutputStream.Stderr);
-      this._onAbort.fire(new Error(`${this.process?.spawnargs.join(' ')} crashed too many times.`));
-      this.process = undefined;
+      failed.log.append('too many crashes - aborting', OutputStream.Stderr);
+      this._onAbort.fire(new Error(`${failed.spawnargs.join(' ')} crashed too many times.`));
+      if (this.process === failed) this.process = undefined;
       this.hasAborted = true;
       return;
     }
 
     const backoffTime = this.options.retryBackoff(this.crashCount);
-    this.process?.log.append(
+    failed.log.append(
       `backing off for ${(backoffTime / 1000).toFixed(0)} seconds before restarting`,
       OutputStream.Stderr
     );
     await new Promise((resolve) => setTimeout(resolve, backoffTime));
+
+    // A stop, or a stop and a start, may have happened while we were backing off. Either
+    // way the watcher has moved on from the process this retry was for, and replacing it
+    // now would drop the watcher's reference to a live process and spawn a second one
+    // beside it.
+    if (this.process !== failed) return;
+
     this.crashTimeout = setTimeout(() => (this.crashCount = 0), this.options.retryThreshold);
     this.process = undefined;
     if (this.shouldRun) this.start();
@@ -203,32 +226,44 @@ export class ProcessWatcher implements vscode.Disposable {
     }
 
     // A start may already be in flight, awaiting loadEnvironment() below. Share its promise
-    // rather than racing it, or the process may be started twice.
-    if (this.startPromise) return this.startPromise;
+    // rather than racing it, or the process may be started twice -- but only if no stop has
+    // landed since, because a start from before one has been abandoned and will spawn
+    // nothing. This call wants a running process, so it has to do the work itself.
+    if (this.startPromise && this.startGeneration === this.generation) return this.startPromise;
 
-    this.startPromise = this.doStart().finally(() => (this.startPromise = undefined));
-    return this.startPromise;
+    this.startGeneration = this.generation;
+    const starting = this.doStart().finally(() => {
+      if (this.startPromise === starting) this.startPromise = undefined;
+    });
+    this.startPromise = starting;
+    return starting;
   }
 
   private async doStart(): Promise<void> {
+    const generation = this.generation;
     const options = { ...this.options };
     options.env = { ...options.env, ...(await loadEnvironment(this.context)) };
 
+    // Stopped while we were assembling the environment. Spawning now would leave a process
+    // nobody is watching: the stop that was meant to prevent it has already been and gone.
+    if (this.generation !== generation) return;
+
     this.shouldRun = true;
-    this.process = spawn(options);
+    const started = spawn(options);
+    this.process = started;
 
     const sanitizedOptions = { ...options };
     if (sanitizedOptions.env) sanitizedOptions.env = sanitizeEnvironment(sanitizedOptions.env);
-    this.process.log.append(
-      `spawned ${this.process.spawnargs.join(' ')} with options ${JSON.stringify(sanitizedOptions)}`
+    started.log.append(
+      `spawned ${started.spawnargs.join(' ')} with options ${JSON.stringify(sanitizedOptions)}`
     );
 
-    this.process.once('error', (err) => {
+    started.once('error', (err) => {
       this.reportFailure(err);
-      this.retry();
+      this.retry(started);
     });
 
-    this.process.once('exit', (code, signal) => {
+    started.once('exit', (code, signal) => {
       // stop() removes this listener, so an exit that arrives here was never asked for --
       // unless a stop raced the exit and cleared shouldRun first, which is the one case
       // where there is nothing to report and nothing to restart. How the process died says
@@ -238,8 +273,8 @@ export class ProcessWatcher implements vscode.Disposable {
       if (!this.shouldRun) return;
 
       const how = signal ? `signal ${signal}` : `code ${code ?? 0}`;
-      this.reportFailure(new Error(`${this.process?.spawnargs.join(' ')} exited with ${how}`));
-      this.retry();
+      this.reportFailure(new Error(`${started.spawnargs.join(' ')} exited with ${how}`));
+      this.retry(started);
     });
   }
 
@@ -256,6 +291,7 @@ export class ProcessWatcher implements vscode.Disposable {
   async stop(reason?: string): Promise<void> {
     this.crashCount = 0;
     this.shouldRun = false;
+    this.generation++;
 
     if (this.crashTimeout) clearTimeout(this.crashTimeout);
     const proc = this.process;

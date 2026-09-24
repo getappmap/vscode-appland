@@ -23,7 +23,7 @@ import {
   ProcessWatcher,
   ProcessWatcherOptions,
 } from '../../../src/services/processWatcher';
-import { waitFor } from '../../waitFor';
+import { wait, waitFor } from '../../waitFor';
 
 const testModule = join(__dirname, 'support', 'simpleProcess.mjs');
 
@@ -114,6 +114,50 @@ describe('ProcessWatcher', () => {
 
       await watcher.stop();
     }).timeout(10000);
+
+    // The window is real: loadEnvironment() reads the API key out of secret storage, and
+    // stop() looks at this.process, which a start in flight has not set yet. It therefore
+    // finds nothing to kill, and the spawn that follows outlives the stop that was meant to
+    // prevent it.
+    it('spawns nothing if stopped while assembling the environment', async () => {
+      const spawnSpy = Sinon.spy(nodeDependencyProcess, 'spawn');
+      const watcher = makeWatcher();
+
+      const starting = watcher.start();
+      await watcher.stop();
+      await starting;
+
+      expect(watcher.running).to.be.false;
+      expect(spawnSpy.callCount).to.equal(0);
+    }).timeout(10000);
+
+    it('leaves nothing running if disposed while assembling the environment', async () => {
+      const spawnSpy = Sinon.spy(nodeDependencyProcess, 'spawn');
+      const watcher = makeWatcher();
+
+      const starting = watcher.start();
+      watcher.dispose();
+      await starting;
+
+      for (const spawned of spawnSpy.returnValues) {
+        expect(await promisify(ps.lookup)({ pid: spawned.pid })).to.be.empty;
+      }
+    }).timeout(10000);
+
+    // Starting again after a stop is a different matter: the stop is complete, so the start
+    // has to do its work rather than inherit the abandoned one.
+    it('starts again after a stop', async () => {
+      const watcher = makeWatcher();
+
+      const starting = watcher.start();
+      await watcher.stop();
+      await starting;
+      await watcher.start();
+
+      expect(watcher.running).to.be.true;
+
+      await watcher.stop();
+    }).timeout(10000);
   });
 
   // What the watcher reports, and what it restarts, both follow from whether we asked for the
@@ -193,6 +237,78 @@ describe('ProcessWatcher', () => {
       await waitFor('the watcher to give up', () => aborts.length > 0);
 
       expect(errors[0].message).to.include('exited with code 0');
+    }).timeout(10000);
+  });
+
+  // A crash schedules a retry that comes back a backoff later. By then the watcher may have
+  // been stopped and started again, and the process it was retrying is no longer the one the
+  // watcher owns.
+  describe('a retry that comes back after a restart', () => {
+    // Long enough that the restart below is comfortably finished before the retry resumes;
+    // otherwise the retry sees the stop rather than the replacement, and proves nothing.
+    const backoff = 300;
+
+    // stop() removes the exit listener but not the error one, so a process the watcher has
+    // let go of can still report a failure late. The crash counter it would land on belongs
+    // to whatever is running now: spending it costs the replacement a retry, suppresses the
+    // report of its first crash, and -- once it tips over retryTimes -- aborts the watcher
+    // over a process that is running perfectly well.
+    it('ignores a failure from a process it has already replaced', async () => {
+      const watcher = makeWatcher({ retryTimes: 1, retryBackoff: () => 1 });
+      const aborts: Error[] = [];
+      watcher.onAbort((e) => aborts.push(e));
+
+      await watcher.start();
+      const first = watcher.process;
+      assert(first);
+      first.kill('SIGKILL');
+
+      await waitFor(
+        'the process to be restarted',
+        () => watcher.process !== undefined && watcher.process.pid !== first.pid
+      );
+      const replacement = watcher.process;
+      const spent = watcher.crashCount;
+
+      first.emit('error', new Error('a late word from the process we replaced'));
+
+      expect(watcher.crashCount).to.equal(spent);
+      expect(aborts).to.be.empty;
+      expect(watcher.process?.pid).to.equal(replacement?.pid);
+
+      await watcher.stop();
+    }).timeout(10000);
+
+    it('does not spawn alongside the replacement', async () => {
+      const spawnSpy = Sinon.spy(nodeDependencyProcess, 'spawn');
+      const watcher = makeWatcher({ retryBackoff: () => backoff });
+      const failures: Error[] = [];
+      watcher.onError((e) => failures.push(e));
+
+      await watcher.start();
+      const crashed = watcher.process;
+      assert(crashed);
+      crashed.kill('SIGKILL');
+
+      // Wait for the exit to be noticed, or the restart below removes the exit listener
+      // before it fires and no retry is ever scheduled -- nothing to race with.
+      await waitFor('the crash to be noticed', () => failures.length > 0);
+
+      await watcher.restart();
+      const replacement = watcher.process;
+      assert(replacement);
+
+      // The assertion is that the stale retry does nothing, so there is nothing to wait on
+      // but the backoff itself.
+      await wait(backoff * 4);
+
+      expect(watcher.process?.pid).to.equal(replacement.pid);
+      for (const spawned of spawnSpy.returnValues) {
+        if (spawned.pid === replacement.pid) continue;
+        expect(await promisify(ps.lookup)({ pid: spawned.pid }), `pid ${spawned.pid}`).to.be.empty;
+      }
+
+      await watcher.stop();
     }).timeout(10000);
   });
 
