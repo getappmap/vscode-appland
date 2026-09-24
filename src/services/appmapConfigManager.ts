@@ -12,6 +12,7 @@ import { WorkspaceService, WorkspaceServiceInstance } from './workspaceService';
 import Watcher from './watcher';
 import { findFiles } from '../lib/findFiles';
 import { NodeProcessService } from './nodeProcessService';
+import { filterConfigFiles, isInExcludedDirectory } from './configFileFilter';
 
 export type AppmapConfig = {
   appmapDir: string;
@@ -67,10 +68,24 @@ export class AppmapignoreManager {
   }
 }
 
+// Glob patterns the editor itself hides from search and the explorer.
+function editorExcludePatterns(): vscode.GlobPattern[] {
+  const patterns: string[] = [];
+  for (const section of ['files.exclude', 'search.exclude']) {
+    const [scope, key] = section.split('.');
+    const value = vscode.workspace.getConfiguration(scope).get<Record<string, unknown>>(key);
+    if (!value) continue;
+    for (const [pattern, enabled] of Object.entries(value))
+      if (enabled === true) patterns.push(pattern);
+  }
+  return patterns;
+}
+
 class ConfigFileProviderImpl implements ConfigFileProvider {
   private _files?: vscode.Uri[] = undefined;
 
   public constructor(
+    private folder: vscode.WorkspaceFolder,
     private pattern: vscode.RelativePattern,
     private exclusions: vscode.GlobPattern[] = []
   ) {}
@@ -78,7 +93,14 @@ class ConfigFileProviderImpl implements ConfigFileProvider {
   public async files(): Promise<vscode.Uri[]> {
     if (this._files) return this._files;
 
-    this._files = this._files = await findFiles(this.pattern, this.exclusions);
+    const found = await findFiles(this.pattern, this.exclusions);
+    const kept = new Set(
+      await filterConfigFiles(
+        this.folder.uri.fsPath,
+        found.map((uri) => uri.fsPath)
+      )
+    );
+    this._files = found.filter((uri) => kept.has(uri.fsPath));
     return this._files;
   }
 
@@ -103,25 +125,41 @@ export class AppmapConfigManagerInstance implements WorkspaceServiceInstance {
   private _onConfigChanged = new vscode.EventEmitter<void>();
   private _configMtimes: Map<string, number> = new Map();
   private _pollInterval?: NodeJS.Timeout;
+  // Config scans and change handling run one at a time, in the order they were requested.
+  // Otherwise a burst of watcher events (for example the initial scan reporting every
+  // existing file) can run several updates at once and fire several change events.
+  private _queue: Promise<void> = Promise.resolve();
 
   public readonly onConfigChanged = this._onConfigChanged.event;
 
   constructor(private configWatcher: Watcher, public folder: vscode.WorkspaceFolder) {
     const appmapignoreManager = new AppmapignoreManager(folder);
-    const exclusions = appmapignoreManager.getExclusions();
+    const exclusions = [...appmapignoreManager.getExclusions(), ...editorExcludePatterns()];
 
     const configPattern = new vscode.RelativePattern(folder, this.CONFIG_PATTERN);
-    this._configFileProvider = new ConfigFileProviderImpl(configPattern, exclusions);
+    this._configFileProvider = new ConfigFileProviderImpl(folder, configPattern, exclusions);
 
     this._events = (['onChange', 'onCreate', 'onDelete'] as const).map((event) =>
-      this.configWatcher[event]((uri) => this.handleConfigChange(uri))
+      this.configWatcher[event]((uri) => void this.enqueue(() => this.handleConfigChange(uri)))
     );
-    this._pollInterval = setInterval(() => this.poll(), 2_500);
+    this._pollInterval = setInterval(() => void this.enqueue(() => this.poll()), 2_500);
   }
 
   public async initialize(): Promise<AppmapConfigManagerInstance> {
-    await this.update();
+    await this.enqueue(() => this.update());
     return this;
+  }
+
+  // Runs the task after every task queued before it. The returned promise carries the
+  // task's own outcome; the queue itself never stalls on a failure.
+  private enqueue(task: () => Promise<void>): Promise<void> {
+    const run = this._queue.then(task, task);
+    this._queue = run.catch((e) => {
+      NodeProcessService.outputChannel.appendLine(
+        `Failed to update AppMap configuration for ${this.folder.uri.fsPath}: ${String(e)}`
+      );
+    });
+    return run;
   }
 
   private async poll(): Promise<void> {
@@ -149,10 +187,8 @@ export class AppmapConfigManagerInstance implements WorkspaceServiceInstance {
 
     // Consider the case where an AppMap configuration file was moved via recursive directory rename.
     if (changes.some(([type]) => type === 'delete')) {
-      const configFiles = await vscode.workspace.findFiles(
-        this.CONFIG_PATTERN,
-        vscode.workspace.getConfiguration('search').get('exclude')
-      );
+      this._configFileProvider.reset();
+      const configFiles = await this._configFileProvider.files();
       NodeProcessService.outputChannel.appendLine(configFiles.map((uri) => uri.fsPath).join('\n'));
       configFiles.forEach((uri) => {
         if (!this._configMtimes.has(uri.fsPath)) {
@@ -319,11 +355,22 @@ export class AppmapConfigManagerInstance implements WorkspaceServiceInstance {
     const folder = vscode.workspace.getWorkspaceFolder(uri);
     if (folder !== this.folder) return;
 
+    // Files under node_modules and the like never drive services, so a change to one is not
+    // a configuration change. The git-ignore check happens below, once the cheap tests pass.
+    if (isInExcludedDirectory(this.folder.uri.fsPath, uri.fsPath)) return;
+
     try {
       const stats = await stat(uri.fsPath);
       const mtime = stats.mtime.getTime();
       if (this._configMtimes.has(uri.fsPath) && mtime <= (this._configMtimes.get(uri.fsPath) || 0))
         return;
+
+      const kept = await filterConfigFiles(this.folder.uri.fsPath, [uri.fsPath]);
+      if (kept.length === 0) {
+        // Ignored by git. Forget it, so the poller does not keep watching it either.
+        this._configMtimes.delete(uri.fsPath);
+        return;
+      }
 
       this._configMtimes.set(uri.fsPath, mtime);
     } catch (e) {

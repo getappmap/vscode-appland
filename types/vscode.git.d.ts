@@ -189,6 +189,8 @@ export interface Repository {
   getCommit(ref: string): Promise<Commit>;
 
   add(paths: string[]): Promise<void>;
+  // Absolute paths inside the repository; returns the ones git ignores, as given.
+  checkIgnore(paths: string[]): Promise<Set<string>>;
   revert(paths: string[]): Promise<void>;
   clean(paths: string[]): Promise<void>;
 
