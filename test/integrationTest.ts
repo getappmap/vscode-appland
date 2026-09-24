@@ -107,12 +107,19 @@ async function integrationTest() {
         TEST_FILES: JSON.stringify(files),
         APPMAP_WRITE_PIDFILE: 'true',
         APPMAP_INTEGRATION_TEST: 'true',
+        // Redundant with --disable-telemetry below, which the extension turns into this same
+        // variable. Set explicitly so the CLI processes the tests spawn stay quiet even if
+        // the launch arg is dropped or a suite configures telemetry itself.
+        APPMAP_TELEMETRY_DISABLED: 'true',
       },
       launchArgs: [
         '--user-data-dir',
         userDataDir,
         '--disable-gpu',
         '--password-store=basic',
+        // Turns off VS Code's own telemetry as well as ours: tests exercise real extension
+        // code, and what they report is indistinguishable from field data once it lands.
+        '--disable-telemetry',
         workspaceDir,
       ],
     });
