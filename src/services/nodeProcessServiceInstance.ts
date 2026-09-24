@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import ErrorCode from '../telemetry/definitions/errorCodes';
 import { ProcessWatcher } from './processWatcher';
 import { reportProcessError } from './reportProcessError';
 import { WorkspaceServiceInstance } from './workspaceService';
@@ -12,7 +13,10 @@ export default class NodeProcessServiceInstance implements WorkspaceServiceInsta
     public readonly processes: Readonly<ProcessWatcher[]>
   ) {
     this.processes.forEach((p) => {
-      this.disposables.push(p.onError((e) => reportProcessError(p, e)));
+      this.disposables.push(
+        p.onError((e) => reportProcessError(p, e)),
+        p.onAbort((e) => reportProcessError(p, e, { errorCode: ErrorCode.ProcessAbort }))
+      );
     });
   }
 

@@ -4,6 +4,13 @@ import { setTimeout } from 'timers/promises';
 
 console.log('starting test process...');
 
+// Exit straight away, for tests that need the watcher to see a process that won't stay up.
+if (process.argv[2] === 'exit') {
+  const status = Number(process.argv[3] ?? 0);
+  console.log(`exiting with ${status}`);
+  process.exit(status);
+}
+
 async function exit(signal) {
   console.log(`got ${signal}, exiting`);
   await setTimeout(20);

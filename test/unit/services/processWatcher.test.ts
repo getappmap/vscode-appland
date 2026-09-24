@@ -23,6 +23,7 @@ import {
   ProcessWatcher,
   ProcessWatcherOptions,
 } from '../../../src/services/processWatcher';
+import { waitFor } from '../../waitFor';
 
 const testModule = join(__dirname, 'support', 'simpleProcess.mjs');
 
@@ -112,6 +113,86 @@ describe('ProcessWatcher', () => {
       assert(watcher.process);
 
       await watcher.stop();
+    }).timeout(10000);
+  });
+
+  // What the watcher reports, and what it restarts, both follow from whether we asked for the
+  // exit -- never from how the process happened to die.
+  describe('on an exit nobody asked for', () => {
+    // Retries are what the test is waiting on, so don't sit through the real backoff.
+    const retries = { retryTimes: 2, retryBackoff: () => 1 };
+
+    function collect(watcher: ProcessWatcher) {
+      const errors: Error[] = [];
+      const aborts: Error[] = [];
+      watcher.onError((e) => errors.push(e));
+      watcher.onAbort((e) => aborts.push(e));
+      return { errors, aborts };
+    }
+
+    // Waits for the restart before stopping: a stop that lands while the watcher is backing
+    // off is a race of its own, and it would leave this test's process behind.
+    async function killAndRestart(watcher: ProcessWatcher, signal: NodeJS.Signals) {
+      await watcher.start();
+      const killed = watcher.process;
+      assert(killed);
+
+      killed.kill(signal);
+      await waitFor(
+        'the process to be restarted',
+        () => watcher.process !== undefined && watcher.process.pid !== killed.pid
+      );
+
+      return killed;
+    }
+
+    it('reports a signal the same as an exit status', async () => {
+      const watcher = makeWatcher(retries);
+      const { errors } = collect(watcher);
+
+      await killAndRestart(watcher, 'SIGKILL');
+
+      expect(errors).to.have.lengthOf(1);
+      expect(errors[0].message).to.include('exited with signal SIGKILL');
+
+      await watcher.stop();
+    }).timeout(10000);
+
+    // SIGTERM reads as a polite request to go away, but it says nothing about who made it.
+    // Only a stop() we issued ourselves means the process should stay down.
+    it('restarts after a SIGTERM it did not ask for', async () => {
+      const watcher = makeWatcher(retries);
+
+      const killed = await killAndRestart(watcher, 'SIGTERM');
+      expect(watcher.process?.pid).to.not.equal(killed.pid);
+
+      await watcher.stop();
+    }).timeout(10000);
+
+    // Four identical exceptions per incident is what this looked like in the field.
+    it('reports the first failure of a run of crashes, then the abort', async () => {
+      const watcher = makeWatcher({ ...retries, args: ['exit', '1'] });
+      const { errors, aborts } = collect(watcher);
+
+      await watcher.start();
+      await waitFor('the watcher to give up', () => aborts.length > 0);
+
+      expect(errors).to.have.lengthOf(1);
+      expect(errors[0].message).to.include('exited with code 1');
+      expect(aborts[0].message).to.include('crashed too many times');
+    }).timeout(10000);
+
+    // A watch-mode daemon that returns 0 has stopped watching, which is no less a failure
+    // than crashing: indexing silently stops either way.
+    it('reports a clean exit too', async () => {
+      const watcher = makeWatcher({ ...retries, args: ['exit', '0'] });
+      const { errors, aborts } = collect(watcher);
+
+      // Settling on the abort rather than the first error leaves nothing running behind.
+      await watcher.start();
+      await waitFor('the watcher to give up', () => aborts.length > 0);
+
+      expect(errors[0].message).to.include('exited with code 0');
     }).timeout(10000);
   });
 

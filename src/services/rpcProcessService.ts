@@ -14,6 +14,7 @@ import { AssetIdentifier } from '../assets';
 import { setSecretEnvVars } from './navieConfigurationService';
 import ChatCompletion from './chatCompletion';
 import fireAndForget from '../lib/fireAndForget';
+import ErrorCode from '../telemetry/definitions/errorCodes';
 import { reportProcessError } from './reportProcessError';
 
 export type RpcConnect = (port: number) => Client;
@@ -61,11 +62,8 @@ export default class RpcProcessService implements Disposable {
       ...this.configServices.map((instance) =>
         instance.onConfigChanged(async () => await this.pushConfiguration())
       ),
-      this.processWatcher.onError(async (e) => {
-        reportProcessError(this.processWatcher, e, {
-          version: await AssetService.getMostRecentVersion(AssetIdentifier.AppMapCli),
-        });
-      }),
+      this.processWatcher.onError(this.reportWatcherFailure(ErrorCode.ProcessFailure)),
+      this.processWatcher.onAbort(this.reportWatcherFailure(ErrorCode.ProcessAbort)),
       vscode.authentication.onDidChangeSessions((e) => {
         if (e.provider.id !== AUTHN_PROVIDER_NAME) return;
 
@@ -80,6 +78,19 @@ export default class RpcProcessService implements Disposable {
         }, 0);
       })
     );
+  }
+
+  // Looking up the CLI version reaches the filesystem, and the watcher has let go of the
+  // process by the time that resolves, so the log is captured before yielding to it.
+  private reportWatcherFailure(errorCode: ErrorCode): (error: Error) => Promise<void> {
+    return async (error: Error) => {
+      const log = this.processWatcher.process?.log.toString();
+      reportProcessError(this.processWatcher, error, {
+        errorCode,
+        log,
+        version: await AssetService.getMostRecentVersion(AssetIdentifier.AppMapCli),
+      });
+    };
   }
 
   get onBeforeRestart(): vscode.Event<void> {

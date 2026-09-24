@@ -100,7 +100,8 @@ export class ProcessWatcher implements vscode.Disposable {
     return dir;
   }
 
-  // Process errors are reported via this event emitter
+  // Process errors are reported via this event emitter. It fires once per run of crashes,
+  // not once per failed attempt; see reportFailure.
   public get onError(): vscode.Event<Error> {
     return this._onError.event;
   }
@@ -223,23 +224,33 @@ export class ProcessWatcher implements vscode.Disposable {
     );
 
     this.process.once('error', (err) => {
-      this._onError.fire(err);
+      this.reportFailure(err);
       this.retry();
     });
 
     this.process.once('exit', (code, signal) => {
-      if (code && code !== 0) {
-        const msg = `${this.process?.spawnargs.join(' ')} exited with code ${code}`;
-        this._onError.fire(new Error(msg));
-      } else if (signal) {
-        // Make sure we're not killing our own process before firing off an error
-        if (!this.shouldRun) return;
+      // stop() removes this listener, so an exit that arrives here was never asked for --
+      // unless a stop raced the exit and cleared shouldRun first, which is the one case
+      // where there is nothing to report and nothing to restart. How the process died says
+      // nothing about whether we wanted it to: a supervisor tearing down the tree can
+      // SIGKILL, and something killing this child alone can SIGTERM. Our own intent is what
+      // shouldRun records, so that is what decides, for every kind of exit alike.
+      if (!this.shouldRun) return;
 
-        const msg = `${this.process?.spawnargs.join(' ')} exited with signal ${signal}`;
-        this._onError.fire(new Error(msg));
-      }
+      const how = signal ? `signal ${signal}` : `code ${code ?? 0}`;
+      this.reportFailure(new Error(`${this.process?.spawnargs.join(' ')} exited with ${how}`));
       this.retry();
     });
+  }
+
+  // The failures that follow the first one are the same fault repeating on a backoff, so
+  // only the first since the crash counter was last clear is worth an event -- otherwise a
+  // process that never starts reports retryTimes + 1 identical exceptions per incident, and
+  // the abort below says the rest. The counter is what the watcher itself uses to decide
+  // what counts as one run of crashes, so reporting follows it rather than keeping its own
+  // notion of an incident.
+  private reportFailure(error: Error): void {
+    if (this.crashCount === 0) this._onError.fire(error);
   }
 
   async stop(reason?: string): Promise<void> {
