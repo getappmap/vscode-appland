@@ -26,6 +26,7 @@ export const waitForUp = (
   pidExclusions: (number | undefined)[] = []
 ): Promise<void> => waitForProcessState(processIds, true, pidExclusions, 'start');
 
+// Note: this default is hand-kept in sync with AllProcessIds rather than referencing it directly.
 /* eslint-disable-next-line @typescript-eslint/naming-convention */
 export const waitForDown = (
   processIds: ReadonlyArray<ProcessId> = [ProcessId.Index, ProcessId.Analysis],

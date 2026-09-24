@@ -9,13 +9,12 @@ import { ConfigurationRpc, NavieRpc } from '@appland/rpc';
 import { join } from 'path';
 import { AUTHN_PROVIDER_NAME } from '../authentication';
 import assert from 'assert';
-import { DEBUG_EXCEPTION, Telemetry } from '../telemetry';
-import ErrorCode from '../telemetry/definitions/errorCodes';
 import AssetService from '../assets/assetService';
 import { AssetIdentifier } from '../assets';
 import { setSecretEnvVars } from './navieConfigurationService';
 import ChatCompletion from './chatCompletion';
 import fireAndForget from '../lib/fireAndForget';
+import { reportProcessError } from './reportProcessError';
 
 export type RpcConnect = (port: number) => Client;
 
@@ -41,7 +40,7 @@ export default class RpcProcessService implements Disposable {
 
   private readonly processWatcher: RpcProcessWatcher;
   private rpcPort: number | undefined;
-  private diposables: Disposable[] = [];
+  private disposables: Disposable[] = [];
   private debounce?: NodeJS.Timeout;
   private restarting = false;
   private restartTimeout?: NodeJS.Timeout;
@@ -56,19 +55,15 @@ export default class RpcProcessService implements Disposable {
       APPMAP_NAVIE_MODEL_SELECTOR: '1',
       APPMAP_NAVIE_THREAD_LOG: '1',
     });
-    this.diposables.push(
+    this.disposables.push(
       vscode.workspace.onDidChangeWorkspaceFolders(() => this.pushConfiguration()),
       this.processWatcher.onRpcPortChange((port) => this.onProcessStart(port)),
       ...this.configServices.map((instance) =>
         instance.onConfigChanged(async () => await this.pushConfiguration())
       ),
       this.processWatcher.onError(async (e) => {
-        const log = this.processWatcher.process?.log.toString();
-        Telemetry.sendEvent(DEBUG_EXCEPTION, {
-          exception: e,
-          errorCode: ErrorCode.ProcessFailure,
+        reportProcessError(this.processWatcher, e, {
           version: await AssetService.getMostRecentVersion(AssetIdentifier.AppMapCli),
-          log,
         });
       }),
       vscode.authentication.onDidChangeSessions((e) => {
@@ -311,7 +306,7 @@ export default class RpcProcessService implements Disposable {
     if (this.restartTimeout) clearTimeout(this.restartTimeout);
     this.processWatcher.dispose();
     this._onRpcPortChange.dispose();
-    this.diposables.forEach((d) => d.dispose());
+    this.disposables.forEach((d) => d.dispose());
   }
 
   async updateEnv(change: UpdateEnvOptions): Promise<void> {

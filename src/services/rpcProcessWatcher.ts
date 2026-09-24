@@ -4,13 +4,14 @@ import { NodeProcessService } from './nodeProcessService';
 import { ProcessId, ProcessWatcher, ProcessWatcherOptions } from './processWatcher';
 import AssetService from '../assets/assetService';
 import { AssetIdentifier } from '../assets';
+import LineBuffer from './lineBuffer';
 
 export default class RpcProcessWatcher extends ProcessWatcher {
   private readonly _onRpcPortChange: vscode.EventEmitter<number> =
     new vscode.EventEmitter<number>();
   public readonly onRpcPortChange = this._onRpcPortChange.event;
   public rpcPort?: number;
-  protected stdoutBuffer = '';
+  private readonly lineBuffer = new LineBuffer();
 
   constructor(context: vscode.ExtensionContext, modulePath?: string, env?: NodeJS.ProcessEnv) {
     const args = makeArgs();
@@ -48,24 +49,13 @@ export default class RpcProcessWatcher extends ProcessWatcher {
   protected onStdout(data: string): void {
     super.onStdout(data);
 
-    this.stdoutBuffer += data;
-    let lineEnd: number;
     // Process each line individually to ensure we accurately detect the RPC port
     // every time the server announces it.
-    while ((lineEnd = this.stdoutBuffer.indexOf('\n')) !== -1) {
-      const line = this.stdoutBuffer.slice(0, lineEnd).trim();
-      this.stdoutBuffer = this.stdoutBuffer.slice(lineEnd + 1);
-
+    for (const line of this.lineBuffer.push(data)) {
       const match = line.match(/^Running JSON-RPC server on port: (\d+)$/);
       if (match) {
         this.consumeRpcPort(match[1]);
       }
-    }
-
-    // Defensive truncation to prevent memory leaks in case the process outputs
-    // an extremely long continuous string without any newline characters.
-    if (this.stdoutBuffer.length > 1024) {
-      this.stdoutBuffer = this.stdoutBuffer.slice(-1024);
     }
   }
 
