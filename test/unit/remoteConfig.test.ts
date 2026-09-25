@@ -186,6 +186,137 @@ describe('remoteConfig', () => {
     });
   });
 
+  describe('apply() — reported outcome', () => {
+    const url = 'https://example.com/config.json';
+
+    it('reports a successful apply', async () => {
+      vscode.workspace.getConfiguration('appMap').update('configurationUrl', url);
+      nock('https://example.com').get('/config.json').reply(200, { 'appMap.navie.rpcPort': 3000 });
+
+      expect(await RemoteConfig.apply(context, channel)).to.be.true;
+    });
+
+    it('reports a fetch that failed with nothing cached to fall back on', async () => {
+      vscode.workspace.getConfiguration('appMap').update('configurationUrl', url);
+      nock('https://example.com').get('/config.json').reply(500);
+
+      expect(await RemoteConfig.apply(context, channel)).to.be.false;
+    });
+
+    it('reports a fetch that fell back to the cached configuration', async () => {
+      vscode.workspace.getConfiguration('appMap').update('configurationUrl', url);
+      await context.globalState.update('remoteConfig', {
+        url,
+        config: { 'appMap.navie.rpcPort': 4000 },
+      });
+      nock('https://example.com').get('/config.json').reply(500);
+
+      expect(await RemoteConfig.apply(context, channel)).to.be.true;
+    });
+
+    it('reports that nothing was applied when no URL is set', async () => {
+      expect(await RemoteConfig.apply(context, channel)).to.be.false;
+    });
+  });
+
+  // Writing the configurationUrl setting triggers the configuration-change watcher's apply as
+  // well as the caller's own, and fetching the same URL twice for one user action is waste.
+  describe('apply() — coalescing', () => {
+    const url = 'https://example.com/config.json';
+
+    function countingReply(): () => number {
+      let requests = 0;
+      nock('https://example.com')
+        .get('/config.json')
+        .times(2)
+        .reply(200, () => {
+          requests += 1;
+          return { 'appMap.navie.rpcPort': 3000 };
+        });
+      return () => requests;
+    }
+
+    it('makes one request when an identical apply is still in flight', async () => {
+      const requests = countingReply();
+      vscode.workspace.getConfiguration('appMap').update('configurationUrl', url);
+
+      const first = RemoteConfig.apply(context, channel);
+      const second = RemoteConfig.apply(context, channel);
+
+      expect(await first).to.be.true;
+      expect(await second).to.be.true;
+      expect(requests()).to.equal(1);
+    });
+
+    // Each apply fetches the URL it was enqueued for, not whatever the setting says by the
+    // time it reaches the front of the queue.
+    it('fetches separately for a URL that changed while an apply was in flight', async () => {
+      nock('https://example.com').get('/config.json').reply(200, { 'appMap.useAnimation': true });
+      nock('https://other.example.com')
+        .get('/config.json')
+        .reply(200, { 'appMap.navie.rpcPort': 3000 });
+
+      vscode.workspace.getConfiguration('appMap').update('configurationUrl', url);
+      const first = RemoteConfig.apply(context, channel);
+      vscode.workspace
+        .getConfiguration('appMap')
+        .update('configurationUrl', 'https://other.example.com/config.json');
+      const second = RemoteConfig.apply(context, channel);
+
+      expect(await first).to.be.true;
+      expect(await second).to.be.true;
+      expect(nock.isDone()).to.be.true;
+    });
+
+    // Unserialized, the rollback would revert from the cache and drop it before the apply
+    // wrote both back, leaving the configuration applied and nothing recording that it was
+    // ever cleared.
+    it('reverts the keys of an apply that was still in flight', async () => {
+      nock('https://example.com').get('/config.json').reply(200, { 'appMap.navie.rpcPort': 3000 });
+      vscode.workspace.getConfiguration('appMap').update('configurationUrl', url);
+
+      const applying = RemoteConfig.apply(context, channel);
+      const rollingBack = RemoteConfig.rollbackRemoteConfig(context, channel);
+
+      expect(await applying).to.be.true;
+      await rollingBack;
+
+      expect(vscode.workspace.getConfiguration('appMap').get('navie.rpcPort')).to.be.undefined;
+      expect(context.globalState.get('remoteConfig')).to.be.undefined;
+    });
+
+    // Coalescing is keyed on the URL alone, which says nothing about queue position: a
+    // caller that joined the earlier apply would be told the configuration is applied when
+    // the rollback between them has since removed it.
+    it('does not let a later apply join one a rollback has since undone', async () => {
+      const requests = countingReply();
+      vscode.workspace.getConfiguration('appMap').update('configurationUrl', url);
+
+      const first = RemoteConfig.apply(context, channel);
+      const rollingBack = RemoteConfig.rollbackRemoteConfig(context, channel);
+      const second = RemoteConfig.apply(context, channel);
+
+      expect(await first).to.be.true;
+      await rollingBack;
+      expect(await second).to.be.true;
+
+      expect(requests()).to.equal(2);
+      expect(vscode.workspace.getConfiguration('appMap').get('navie.rpcPort')).to.equal(3000);
+    });
+
+    // Deliberately not time-windowed: an apply that has already settled says nothing about
+    // whether the remote configuration has changed since, so a later one has to fetch.
+    it('fetches again for an apply that starts after the previous one settled', async () => {
+      const requests = countingReply();
+      vscode.workspace.getConfiguration('appMap').update('configurationUrl', url);
+
+      await RemoteConfig.apply(context, channel);
+      await RemoteConfig.apply(context, channel);
+
+      expect(requests()).to.equal(2);
+    });
+  });
+
   describe('apply() — fetch failure with cached config', () => {
     beforeEach(async () => {
       const url = 'https://example.com/config.json';
@@ -502,6 +633,47 @@ describe('remoteConfig', () => {
     });
   });
 
+  // Nothing persisted here answers "is the user's organization configuration in force?" — a
+  // URL can be stale, rotated or unreachable, and the keys from a past apply may have been
+  // superseded. The sign-in view therefore offers its "apply your organization's
+  // configuration" link unconditionally rather than reading any of this back.
+  describe('single-shot mode', () => {
+    // No URL to re-fetch, so the keys stay applied and nothing re-applies them.
+    it('leaves the keys applied when the URL is removed', async () => {
+      const url = 'https://example.com/config.json';
+      vscode.workspace.getConfiguration('appMap').update('configurationUrl', url);
+      nock('https://example.com').get('/config.json').reply(200, { 'appMap.navie.rpcPort': 3000 });
+      await RemoteConfig.apply(context, channel);
+
+      await vscode.workspace
+        .getConfiguration('appMap')
+        .update('configurationUrl', undefined, vscode.ConfigurationTarget.Global);
+      await RemoteConfig.apply(context, channel);
+
+      expect(vscode.workspace.getConfiguration('appMap').get('navie.rpcPort')).to.equal(3000);
+      expect(getConfigUrl()).to.be.undefined;
+    });
+
+    it('sets no URL when a local file is applied', async () => {
+      Sinon.stub(vscode.window, 'showQuickPick').resolves({
+        label: 'Local File',
+        key: 'file',
+      } as unknown as vscode.QuickPickItem);
+      Sinon.stub(vscode.window, 'showOpenDialog').resolves([
+        { fsPath: '/path/to/config.json' },
+      ] as unknown as vscode.Uri[]);
+      Sinon.stub(vscode.window, 'showInformationMessage');
+      Sinon.stub(RemoteConfig, 'readAndParseLocalConfig').resolves({
+        'appMap.navie.rpcPort': 3000,
+      });
+
+      await setConfigurationUrl(context, channel);
+
+      expect(vscode.workspace.getConfiguration('appMap').get('navie.rpcPort')).to.equal(3000);
+      expect(getConfigUrl()).to.be.undefined;
+    });
+  });
+
   describe('setConfigurationUrl command', () => {
     describe('Set URL option', () => {
       beforeEach(() => {
@@ -561,6 +733,50 @@ describe('remoteConfig', () => {
           'https://example.com/config.json'
         );
       });
+
+      // The sign-in view confirms an apply on the strength of this, so it has to wait for the
+      // configuration to land rather than for the URL to be written.
+      it('reports that a configuration was applied', async () => {
+        nock('https://new.example.com')
+          .get('/config.json')
+          .reply(200, { 'appMap.navie.rpcPort': 3000 });
+        Sinon.stub(vscode.window, 'showInputBox').resolves('https://new.example.com/config.json');
+
+        expect(await setConfigurationUrl(context, channel)).to.equal('applied');
+        expect(vscode.workspace.getConfiguration('appMap').get('navie.rpcPort')).to.equal(3000);
+      });
+
+      // A mistyped URL is the common case here, and confirming it as applied sends the user
+      // off believing they are configured.
+      it('reports a URL it could not fetch as a failure', async () => {
+        nock('https://new.example.com').get('/typo.json').reply(404);
+        Sinon.stub(vscode.window, 'showInputBox').resolves('https://new.example.com/typo.json');
+
+        expect(await setConfigurationUrl(context, channel)).to.equal('failed');
+      });
+
+      // The URL is still written: it is what the user asked for, the failure is reported to
+      // them, and a transient outage should not silently discard their configuration.
+      it('keeps a URL it could not fetch', async () => {
+        nock('https://new.example.com').get('/typo.json').reply(404);
+        Sinon.stub(vscode.window, 'showInputBox').resolves('https://new.example.com/typo.json');
+
+        await setConfigurationUrl(context, channel);
+
+        expect(vscode.workspace.getConfiguration('appMap').get('configurationUrl')).to.equal(
+          'https://new.example.com/typo.json'
+        );
+      });
+
+      it('reports a cancelled input box', async () => {
+        Sinon.stub(vscode.window, 'showInputBox').resolves(undefined);
+        expect(await setConfigurationUrl(context, channel)).to.equal('cancelled');
+      });
+
+      it('reports an empty submission as a clear', async () => {
+        Sinon.stub(vscode.window, 'showInputBox').resolves('');
+        expect(await setConfigurationUrl(context, channel)).to.equal('cleared');
+      });
     });
 
     describe('Local File option', () => {
@@ -583,14 +799,34 @@ describe('remoteConfig', () => {
 
       it('does nothing when quick pick is cancelled', async () => {
         showQuickPickStub.resolves(undefined);
-        await setConfigurationUrl(context, channel);
+        expect(await setConfigurationUrl(context, channel)).to.equal('cancelled');
         expect(showOpenDialogStub.called).to.be.false;
       });
 
       it('does nothing when open dialog is cancelled', async () => {
         showOpenDialogStub.resolves(undefined);
-        await setConfigurationUrl(context, channel);
+        expect(await setConfigurationUrl(context, channel)).to.equal('cancelled');
         expect(readConfigStub.called).to.be.false;
+      });
+
+      // Sets no URL, so this outcome is the only thing that distinguishes a successful
+      // one-shot apply from the command never having run.
+      it('reports that a configuration was applied', async () => {
+        showOpenDialogStub.resolves([
+          { fsPath: '/path/to/config.json' },
+        ] as unknown as vscode.Uri[]);
+        readConfigStub.resolves({ 'appMap.navie.rpcPort': 3000 });
+
+        expect(await setConfigurationUrl(context, channel)).to.equal('applied');
+      });
+
+      it('reports a file it could not parse as a failure', async () => {
+        showOpenDialogStub.resolves([
+          { fsPath: '/path/to/invalid.json' },
+        ] as unknown as vscode.Uri[]);
+        readConfigStub.rejects(new Error('Configuration is not a valid JSON object'));
+
+        expect(await setConfigurationUrl(context, channel)).to.equal('failed');
       });
 
       it('shows error when file is invalid JSON', async () => {
@@ -737,13 +973,12 @@ describe('remoteConfig', () => {
         expect(getCustomerId(context)).to.be.undefined;
       });
 
-      it('clears the applied marker so the sign-in prompt returns', async () => {
+      it('reports that it cleared the configuration', async () => {
         await applyConfig({ 'appMap.navie.rpcPort': 3000 });
-        expect(RemoteConfig.isApplied(context)).to.be.true;
 
-        await setConfigurationUrl(context, channel);
+        expect(await setConfigurationUrl(context, channel)).to.equal('cleared');
 
-        expect(RemoteConfig.isApplied(context)).to.be.false;
+        expect(getConfigUrl()).to.be.undefined;
       });
 
       // A key the user has since edited is theirs, not ours to revert.
@@ -786,15 +1021,6 @@ describe('remoteConfig', () => {
           await setConfigurationUrl(context, channel);
 
           expect(getCustomerId(context)).to.be.undefined;
-        });
-
-        it('still clears the applied marker', async () => {
-          await applyConfig({ 'appMap.navie.rpcPort': 3000 });
-          await removeUrl();
-
-          await setConfigurationUrl(context, channel);
-
-          expect(RemoteConfig.isApplied(context)).to.be.false;
         });
       });
 
@@ -921,6 +1147,11 @@ describe('remoteConfig', () => {
       it('reports when no configuration URL is set', async () => {
         await setConfigurationUrl(context, channel);
         expect(reportedStatus()).to.match(/no organization configuration url/i);
+      });
+
+      // Nothing was applied, so the sign-in view must not confirm anything.
+      it('reports that it only reported', async () => {
+        expect(await setConfigurationUrl(context, channel)).to.equal('reported');
       });
     });
   });

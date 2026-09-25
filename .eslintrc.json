@@ -36,6 +36,13 @@
       "rules": {
         "@typescript-eslint/no-unused-expressions": "off"
       }
+    },
+    {
+      "files": ["**/*.js"],
+      "env": { "node": true },
+      "rules": {
+        "@typescript-eslint/no-require-imports": "off"
+      }
     }
   ]
 }

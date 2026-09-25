@@ -442,6 +442,10 @@
     },
     "viewsWelcome": [
       {
+        "view": "appmap.views.starting",
+        "contents": "AppMap is starting..."
+      },
+      {
         "view": "appmap.views.navie",
         "contents": "AppMap is initializing...",
         "when": "!appmap.initialized"
@@ -485,17 +489,23 @@
     "views": {
       "appmap": [
         {
+          "id": "appmap.views.starting",
+          "name": "AppMap",
+          "visibility": "visible",
+          "when": "!appmap.signInState"
+        },
+        {
           "id": "appmap.views.signIn",
           "name": "Sign In",
           "visibility": "visible",
           "type": "webview",
-          "when": "appMap.showSignIn"
+          "when": "appmap.signInState == 'required'"
         },
         {
           "id": "appmap.views.navie",
           "name": "Navie",
           "visibility": "visible",
-          "when": "!appMap.showSignIn"
+          "when": "appmap.signInState == 'satisfied'"
         },
         {
           "id": "appmap.views.appmaps",
@@ -503,25 +513,25 @@
           "contextualTitle": "AppMap",
           "visibility": "visible",
           "icon": "images/logo.svg",
-          "when": "!appMap.showSignIn"
+          "when": "appmap.signInState == 'satisfied'"
         },
         {
           "id": "appmap.views.findings",
           "name": "Runtime Analysis",
           "visibility": "collapsed",
-          "when": "!appMap.showSignIn && appmap.scannerEnabled"
+          "when": "appmap.signInState == 'satisfied' && appmap.scannerEnabled"
         },
         {
           "id": "appmap.views.codeObjects",
           "name": "Code Objects",
           "visibility": "collapsed",
-          "when": "!appMap.showSignIn"
+          "when": "appmap.signInState == 'satisfied'"
         },
         {
           "id": "appmap.views.documentation",
           "name": "Documentation",
           "visibility": "collapsed",
-          "when": "!appMap.showSignIn"
+          "when": "appmap.signInState == 'satisfied'"
         }
       ]
     },
@@ -539,9 +549,9 @@
               "image": "images/walkthrough/access-the-activation-form-walkthrough.png",
               "altText": "AppMap logo hovering above AI sparkles"
             },
-            "when": "appMap.showSignIn",
+            "when": "appmap.signInState == 'required'",
             "completionEvents": [
-              "onContext:!appMap.showSignIn"
+              "onContext:appmap.signInState == 'satisfied'"
             ]
           },
           {
@@ -552,7 +562,7 @@
               "image": "images/walkthrough/modify-llm-in-chat.png",
               "altText": "AppMap logo hovering above AI sparkles"
             },
-            "when": "!appMap.showSignIn"
+            "when": "appmap.signInState == 'satisfied'"
           },
           {
             "id": "explain-and-diagram",
@@ -562,7 +572,7 @@
             },
             "title": "Get code explanations and diagrams",
             "description": "Open Navie to chat interactively about your code. Ask for explanations and diagrams. Navie automatically finds and interprets the most relevant code, documentation, and runtime data traces.\n[Ask Navie AI](command:appmap.explain)\n**Tip**: Use __AppMap: Ask Navie AI__ from the command palette to quickly open Navie.",
-            "when": "!appMap.showSignIn"
+            "when": "appmap.signInState == 'satisfied'"
           },
           {
             "id": "troubleshoot-and-solve",
@@ -572,7 +582,7 @@
             },
             "title": "Solve complex coding issues",
             "description": "Use Navie commands like @plan, @generate, and @test to solve problems quickly. Use the Apply button on any code suggestion apply the code change to the file. \n[Ask Navie AI](command:appmap.explain)\n**Tip**: Use __AppMap: Ask Navie AI__ from the command palette to quickly open Navie.",
-            "when": "!appMap.showSignIn"
+            "when": "appmap.signInState == 'satisfied'"
           },
           {
             "id": "ask-about-selection",
@@ -582,7 +592,7 @@
               "image": "images/walkthrough/light-bulb.svg",
               "altText": "light bulb menu showing Ask Navie option"
             },
-            "when": "!appMap.showSignIn"
+            "when": "appmap.signInState == 'satisfied'"
           },
           {
             "id": "create-data",
@@ -592,7 +602,7 @@
               "image": "images/walkthrough/record-appmaps.png",
               "altText": "an illustration of AppMap sidebar and an open execution diagram"
             },
-            "when": "!appMap.showSignIn"
+            "when": "appmap.signInState == 'satisfied'"
           }
         ]
       }
@@ -813,7 +823,7 @@
   },
   "dependencies": {
     "@appland/client": "^1.23.0",
-    "@appland/components": "^4.49.0",
+    "@appland/components": "^4.49.1",
     "@appland/diagrams": "^1.8.0",
     "@appland/models": "^2.10.2",
     "@appland/rpc": "^1.22.0",

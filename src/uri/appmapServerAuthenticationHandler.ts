@@ -1,8 +1,6 @@
 import * as vscode from 'vscode';
-import { RequestHandler } from './uriHandler';
 
-export default class AppMapServerAuthenticationHandler implements RequestHandler {
-  public readonly path = '/authn-appmap-server';
+export default class AppMapServerAuthenticationHandler {
   private readonly _onCreateSession = new vscode.EventEmitter<vscode.AuthenticationSession>();
   private readonly _onError = new vscode.EventEmitter<Error>();
 
@@ -14,18 +12,18 @@ export default class AppMapServerAuthenticationHandler implements RequestHandler
     return this._onError.event;
   }
 
-  constructor(private readonly nonce: string) {}
-
-  async handle(queryParams: URLSearchParams): Promise<void> {
-    const nonce = queryParams.get('nonce');
-    if (nonce !== this.nonce) {
-      this._onError.fire(new Error('nonce mismatch'));
+  handle(queryParams: URLSearchParams): void {
+    const errorParam = queryParams.get('error');
+    if (errorParam) {
+      const errorDescription = queryParams.get('error_description');
+      const errorMessage = errorDescription ? `${errorParam}: ${errorDescription}` : errorParam;
+      this._onError.fire(new Error(errorMessage));
       return;
     }
 
-    const licenseKeyParam = queryParams.get('api_key');
+    const licenseKeyParam = queryParams.get('code') || queryParams.get('api_key');
     if (!licenseKeyParam) {
-      this._onError.fire(new Error('missing parameter "api_key"'));
+      this._onError.fire(new Error('missing authentication key'));
       return;
     }
 
