@@ -206,7 +206,9 @@ export class Telemetry {
    * is picked up without reinitializing the reporter.
    */
   private static commonProperties(): Record<string, string> {
-    const properties: Record<string, string> = {};
+    // Neither backend supplies the architecture, and common.os does not imply it: which
+    // binary we hand the operating system, and how strictly it judges one, both turn on it.
+    const properties: Record<string, string> = { 'common.arch': os.arch() };
 
     if (!this.isSplunk) {
       // The Splunk reporter merges its own copy of these into every event. The Application

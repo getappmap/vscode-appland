@@ -1,6 +1,7 @@
 import '../mock/vscode';
 
 import { expect } from 'chai';
+import os from 'os';
 import Sinon from 'sinon';
 import * as vscode from 'vscode';
 import TelemetryReporter from 'vscode-extension-telemetry';
@@ -169,6 +170,12 @@ describe('Telemetry', () => {
 
     // Behavior that must hold whichever backend is configured.
     function itStampsTheCustomerId() {
+      it('stamps common.arch, which neither backend supplies', async () => {
+        for (const properties of await propertiesFromEveryEntryPoint()) {
+          expect(properties).to.have.property('common.arch', os.arch());
+        }
+      });
+
       it('omits common.customerid when no customer ID is set', async () => {
         for (const properties of await propertiesFromEveryEntryPoint()) {
           expect(properties).to.not.have.property('common.customerid');
