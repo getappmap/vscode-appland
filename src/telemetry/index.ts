@@ -8,6 +8,7 @@ import TelemetryDataProvider from './telemetryDataProvider';
 import Event from './event';
 import SplunkTelemetryReporter from './splunkTelemetryReporter';
 import { getCustomerId } from '../configuration/customerId';
+import Environment from '../configuration/environment';
 import os from 'os';
 
 const EXTENSION_ID = `${publisher}.${name}`;
@@ -80,6 +81,19 @@ export class Telemetry {
 
   private static initializeReporter(): void {
     void this.dispose();
+
+    // The test harnesses drive real extension code in a real VS Code instance, so everything
+    // they do reports as if it came from a user — including the process crashes some suites
+    // simulate deliberately. Nothing a test does describes the field, so none of it is worth
+    // transmitting. The harness also passes --disable-telemetry, which stops VS Code's own
+    // reporting and propagates the opt-out to the CLI; this covers the case where it doesn't,
+    // and keeps the Splunk backend (which ignores the IDE opt-out by design) quiet too.
+    if (Environment.isTest) {
+      this.isSplunk = false;
+      this.reporter = NOOP_TELEMETRY;
+      this.debugChannel?.appendLine('Telemetry is disabled under test.');
+      return;
+    }
 
     const telemetryConfig = ExtensionSettings.telemetryConfiguration;
     const commonProperties: Record<string, string> = {
@@ -192,7 +206,9 @@ export class Telemetry {
    * is picked up without reinitializing the reporter.
    */
   private static commonProperties(): Record<string, string> {
-    const properties: Record<string, string> = {};
+    // Neither backend supplies the architecture, and common.os does not imply it: which
+    // binary we hand the operating system, and how strictly it judges one, both turn on it.
+    const properties: Record<string, string> = { 'common.arch': os.arch() };
 
     if (!this.isSplunk) {
       // The Splunk reporter merges its own copy of these into every event. The Application

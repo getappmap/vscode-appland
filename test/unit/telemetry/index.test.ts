@@ -1,6 +1,7 @@
 import '../mock/vscode';
 
 import { expect } from 'chai';
+import os from 'os';
 import Sinon from 'sinon';
 import * as vscode from 'vscode';
 import TelemetryReporter from 'vscode-extension-telemetry';
@@ -68,6 +69,43 @@ describe('Telemetry', () => {
     expect(Telemetry.getReporter()).to.be.instanceOf(TelemetryReporter);
   });
 
+  // Whatever a test does — including the process crashes some integration suites simulate on
+  // purpose — is indistinguishable from field data once it reaches the backend, so no reporter
+  // is constructed at all under test.
+  describe('under the test harness', () => {
+    beforeEach(() => (process.env.APPMAP_INTEGRATION_TEST = 'true'));
+    afterEach(() => delete process.env.APPMAP_INTEGRATION_TEST);
+
+    it('does not initialize the AppInsights reporter', () => {
+      Sinon.stub(ExtensionSettings, 'telemetryConfiguration').get(() => ({}));
+
+      Telemetry.register(context);
+      expect(Telemetry.getReporter()).to.not.be.instanceOf(TelemetryReporter);
+    });
+
+    // Splunk is kept on through the IDE's own telemetry opt-out, on the grounds that the
+    // organization decides its policy. That reasoning doesn't extend to our test runs.
+    it('does not initialize the Splunk reporter either', () => {
+      Sinon.stub(ExtensionSettings, 'telemetryConfiguration').get(() => SPLUNK_CONFIG);
+
+      Telemetry.register(context);
+      expect(Telemetry.getReporter()).to.not.be.instanceOf(SplunkTelemetryReporter);
+    });
+
+    // The gate belongs in initializeReporter rather than register, so that a configuration
+    // change mid-run can't reinstate a reporter.
+    it('stays disabled when telemetry settings change', () => {
+      const fireConfigChange = stubConfigChange();
+      const configStub = Sinon.stub(ExtensionSettings, 'telemetryConfiguration').get(() => ({}));
+
+      Telemetry.register(context);
+      configStub.get(() => SPLUNK_CONFIG);
+      fireConfigChange('appMap.telemetry');
+
+      expect(Telemetry.getReporter()).to.not.be.instanceOf(SplunkTelemetryReporter);
+    });
+  });
+
   it('reconfigures dynamically when telemetry settings change', () => {
     const fireConfigChange = stubConfigChange();
     const configStub = Sinon.stub(ExtensionSettings, 'telemetryConfiguration').get(() => ({}));
@@ -132,6 +170,12 @@ describe('Telemetry', () => {
 
     // Behavior that must hold whichever backend is configured.
     function itStampsTheCustomerId() {
+      it('stamps common.arch, which neither backend supplies', async () => {
+        for (const properties of await propertiesFromEveryEntryPoint()) {
+          expect(properties).to.have.property('common.arch', os.arch());
+        }
+      });
+
       it('omits common.customerid when no customer ID is set', async () => {
         for (const properties of await propertiesFromEveryEntryPoint()) {
           expect(properties).to.not.have.property('common.customerid');

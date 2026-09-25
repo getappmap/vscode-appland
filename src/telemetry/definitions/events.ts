@@ -13,6 +13,7 @@ export const DEBUG_EXCEPTION = new Event({
     Properties.DEBUG_ERROR_CODE,
     Properties.DEBUG_LOG,
     Properties.DEBUG_VERSION,
+    Properties.DEBUG_DIAGNOSIS,
   ],
 });
 

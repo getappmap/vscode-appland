@@ -15,6 +15,9 @@ enum ErrorCode {
   ConfigUpdateError,
   AssetAcquisitionFailure,
   UpdateSignInStateFailure,
+  // A process failed often enough that the watcher gave up restarting it. Distinct from
+  // ProcessFailure, which is one failure the watcher expects to recover from.
+  ProcessAbort,
 }
 
 export default ErrorCode;

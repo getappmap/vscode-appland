@@ -9,13 +9,17 @@ import { ConfigurationRpc, NavieRpc } from '@appland/rpc';
 import { join } from 'path';
 import { AUTHN_PROVIDER_NAME } from '../authentication';
 import assert from 'assert';
-import { DEBUG_EXCEPTION, Telemetry } from '../telemetry';
-import ErrorCode from '../telemetry/definitions/errorCodes';
 import AssetService from '../assets/assetService';
 import { AssetIdentifier } from '../assets';
 import { setSecretEnvVars } from './navieConfigurationService';
 import ChatCompletion from './chatCompletion';
 import fireAndForget from '../lib/fireAndForget';
+import ErrorCode from '../telemetry/definitions/errorCodes';
+import {
+  captureProcessDetails,
+  diagnoseWatcherExecutable,
+  reportProcessError,
+} from './reportProcessError';
 
 export type RpcConnect = (port: number) => Client;
 
@@ -41,7 +45,7 @@ export default class RpcProcessService implements Disposable {
 
   private readonly processWatcher: RpcProcessWatcher;
   private rpcPort: number | undefined;
-  private diposables: Disposable[] = [];
+  private disposables: Disposable[] = [];
   private debounce?: NodeJS.Timeout;
   private restarting = false;
   private restartTimeout?: NodeJS.Timeout;
@@ -56,21 +60,14 @@ export default class RpcProcessService implements Disposable {
       APPMAP_NAVIE_MODEL_SELECTOR: '1',
       APPMAP_NAVIE_THREAD_LOG: '1',
     });
-    this.diposables.push(
+    this.disposables.push(
       vscode.workspace.onDidChangeWorkspaceFolders(() => this.pushConfiguration()),
       this.processWatcher.onRpcPortChange((port) => this.onProcessStart(port)),
       ...this.configServices.map((instance) =>
         instance.onConfigChanged(async () => await this.pushConfiguration())
       ),
-      this.processWatcher.onError(async (e) => {
-        const log = this.processWatcher.process?.log.toString();
-        Telemetry.sendEvent(DEBUG_EXCEPTION, {
-          exception: e,
-          errorCode: ErrorCode.ProcessFailure,
-          version: await AssetService.getMostRecentVersion(AssetIdentifier.AppMapCli),
-          log,
-        });
-      }),
+      this.processWatcher.onError((e) => this.reportWatcherFailure(e, ErrorCode.ProcessFailure)),
+      this.processWatcher.onAbort((e) => this.reportWatcherFailure(e, ErrorCode.ProcessAbort)),
       vscode.authentication.onDidChangeSessions((e) => {
         if (e.provider.id !== AUTHN_PROVIDER_NAME) return;
 
@@ -85,6 +82,24 @@ export default class RpcProcessService implements Disposable {
         }, 0);
       })
     );
+  }
+
+  private reportWatcherFailure(error: Error, errorCode: ErrorCode): void {
+    // Before yielding to anything below: the watcher has let go of the process by the time
+    // a filesystem lookup resolves.
+    const details = captureProcessDetails(this.processWatcher);
+
+    fireAndForget(async () => {
+      const version = await AssetService.getMostRecentVersion(AssetIdentifier.AppMapCli);
+      // Only once the watcher has given up. Asking of every crash would put two subprocesses
+      // between each retry and the restart it is waiting for.
+      const diagnosis =
+        errorCode === ErrorCode.ProcessAbort
+          ? await diagnoseWatcherExecutable(this.processWatcher.options)
+          : undefined;
+
+      reportProcessError(this.processWatcher, error, { ...details, errorCode, version, diagnosis });
+    });
   }
 
   get onBeforeRestart(): vscode.Event<void> {
@@ -311,7 +326,7 @@ export default class RpcProcessService implements Disposable {
     if (this.restartTimeout) clearTimeout(this.restartTimeout);
     this.processWatcher.dispose();
     this._onRpcPortChange.dispose();
-    this.diposables.forEach((d) => d.dispose());
+    this.disposables.forEach((d) => d.dispose());
   }
 
   async updateEnv(change: UpdateEnvOptions): Promise<void> {
