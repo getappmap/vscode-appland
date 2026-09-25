@@ -32,6 +32,13 @@ export const DEBUG_LOG = new TelemetryDataProvider({
   },
 });
 
+export const DEBUG_DIAGNOSIS = new TelemetryDataProvider({
+  id: 'appmap.debug.diagnosis',
+  value({ diagnosis }: { diagnosis?: string }) {
+    return diagnosis;
+  },
+});
+
 export const DEBUG_VERSION = new TelemetryDataProvider({
   id: 'appmap.debug.version',
   value({ version }: { version?: string }) {

@@ -1,7 +1,12 @@
 import * as vscode from 'vscode';
+import fireAndForget from '../lib/fireAndForget';
 import ErrorCode from '../telemetry/definitions/errorCodes';
 import { ProcessWatcher } from './processWatcher';
-import { reportProcessError } from './reportProcessError';
+import {
+  captureProcessDetails,
+  diagnoseWatcherExecutable,
+  reportProcessError,
+} from './reportProcessError';
 import { WorkspaceServiceInstance } from './workspaceService';
 
 export default class NodeProcessServiceInstance implements WorkspaceServiceInstance {
@@ -15,7 +20,14 @@ export default class NodeProcessServiceInstance implements WorkspaceServiceInsta
     this.processes.forEach((p) => {
       this.disposables.push(
         p.onError((e) => reportProcessError(p, e)),
-        p.onAbort((e) => reportProcessError(p, e, { errorCode: ErrorCode.ProcessAbort }))
+        p.onAbort((e) => {
+          const details = captureProcessDetails(p);
+          fireAndForget(
+            diagnoseWatcherExecutable(p.options).then((diagnosis) =>
+              reportProcessError(p, e, { ...details, errorCode: ErrorCode.ProcessAbort, diagnosis })
+            )
+          );
+        })
       );
     });
   }
