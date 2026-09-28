@@ -1,3 +1,17 @@
+# [0.145.0](https://github.com/getappmap/vscode-appland/compare/v0.144.1...v0.145.0) (2026-09-28)
+
+
+### Bug Fixes
+
+* **process-watcher:** Close two races around starting and stopping ([3eb1a3b](https://github.com/getappmap/vscode-appland/commit/3eb1a3b196a1bf0e5687b2c602152e175f3fa6b5))
+* **process-watcher:** Report one event per run of crashes, not one per retry ([1b75825](https://github.com/getappmap/vscode-appland/commit/1b75825b0a781881bfcfa3036aecaba7c714cda7))
+* **telemetry:** Don't send telemetry from the test harnesses ([79de219](https://github.com/getappmap/vscode-appland/commit/79de219830a1eb4bb83a6530599eeea8ffc841b2))
+
+
+### Features
+
+* **telemetry:** Diagnose the executable when a watcher gives up ([ea15ea4](https://github.com/getappmap/vscode-appland/commit/ea15ea47bbc15e4dd24fde58ecc9afb890d4f0ba))
+
 ## [0.144.1](https://github.com/getappmap/vscode-appland/compare/v0.144.0...v0.144.1) (2026-09-23)
 
 
