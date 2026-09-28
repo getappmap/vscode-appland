@@ -1,3 +1,18 @@
+# [0.146.0](https://github.com/getappmap/vscode-appland/compare/v0.145.0...v0.146.0) (2026-09-28)
+
+
+### Bug Fixes
+
+* **config:** serialize the organization configuration rollback ([7b783d7](https://github.com/getappmap/vscode-appland/commit/7b783d7c4b099c01eb85a537c46539d4678dd36e))
+* don't show the authenticated sidebar before sign-in state is known ([6c8bdd6](https://github.com/getappmap/vscode-appland/commit/6c8bdd629adb421522cfd6b66b28a8ef172c3383))
+* **config:** always offer to apply the organization configuration ([1978c1a](https://github.com/getappmap/vscode-appland/commit/1978c1a1515b311652978a53aaa72d0419ebc6e2))
+
+
+### Features
+
+* Render server-side error messages in the sign-in form ([5347ce4](https://github.com/getappmap/vscode-appland/commit/5347ce4218ac36a793490925d38be018d4911388))
+* require sign-in for all users ([f458c23](https://github.com/getappmap/vscode-appland/commit/f458c234c1068078ac7847cc18163c80d183d504))
+
 # [0.145.0](https://github.com/getappmap/vscode-appland/compare/v0.144.1...v0.145.0) (2026-09-28)
 
 
