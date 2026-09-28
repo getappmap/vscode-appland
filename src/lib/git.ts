@@ -1,9 +1,10 @@
 import assert from 'node:assert';
 import { isNativeError } from 'node:util/types';
 import * as vscode from 'vscode';
-import { API as GitAPI, GitExtension } from '../../types/vscode.git';
+import type { API as GitAPI, GitExtension } from '../../types/vscode.git';
 
-function getExtension(): GitAPI | undefined {
+// The built-in Git extension's API, when the extension is active and enabled.
+export function getGitApi(): GitAPI | undefined {
   const extension = vscode.extensions.getExtension<GitExtension>('vscode.git');
   if (!extension?.isActive) return;
   if (!extension.exports.enabled) return;
@@ -38,7 +39,7 @@ function parseGitUri(uri: string): vscode.Uri {
 }
 
 function findAndSanitizeRepository(projectUri: vscode.Uri): SanitizedUri | undefined {
-  const repo = getExtension()?.getRepository(projectUri);
+  const repo = getGitApi()?.getRepository(projectUri);
   if (!repo) return;
   const remotes = repo.state.remotes;
   if (remotes.length === 0) return;
