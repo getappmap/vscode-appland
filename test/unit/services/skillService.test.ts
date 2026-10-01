@@ -110,6 +110,7 @@ describe('SkillService', () => {
     GithubReleaseCache.clear();
     await setSetting('skills.install', undefined);
     await setSetting('skills.directories', undefined);
+    await setSetting('mcp.autoConfigure', undefined);
     await rm(homeDir, { recursive: true });
     downloadHttpRetry.maxTries = 3;
   });
@@ -415,8 +416,46 @@ describe('SkillService', () => {
 
       const message = mcpMessage();
       expect(message, 'a notification about the MCP servers').to.exist;
-      expect(message?.args[0]).to.include('appmap, appmap-gold-traces').and.include('project');
-      expect(message?.args.slice(1)).to.deep.equal(['Open mcp.json']);
+      expect(message?.args[0])
+        .to.include('appmap, appmap-gold-traces to .vscode/mcp.json, so')
+        .and.not.include('project');
+      expect(message?.args[0], 'how to turn it off').to.include(
+        'Run "AppMap: Toggle Automatic MCP Configuration"'
+      );
+      expect(message?.args.slice(1)).to.deep.equal(['Open mcp.json', 'Turn off']);
+    });
+
+    it('turns automatic configuration off for the repository from the button', async () => {
+      notify.onFirstCall().resolves('Turn off');
+
+      await SkillService.ensureInstalled(true);
+
+      expect(vscode.workspace.getConfiguration('appMap').get('mcp.autoConfigure')).to.be.false;
+      expect(notify.calledTwice).to.be.true;
+      expect(notify.lastCall.args[0]).to.include('is off.').and.not.include('project');
+      expect(notify.lastCall.args.slice(1)).to.deep.equal(['Turn on']);
+    });
+
+    it('turns automatic configuration back on from the button', async () => {
+      const register = Sinon.stub(vscode.commands, 'registerCommand');
+      register.returns({ dispose: () => undefined });
+      registerService();
+      const toggle = register
+        .getCalls()
+        .find((call) => call.args[0] === 'appmap.mcp.toggleAutoConfigure')
+        ?.args[1] as () => Promise<void>;
+      await SkillService.ensureInstalled(true);
+      notify.resetHistory();
+      notify.onFirstCall().resolves('Turn on');
+
+      await toggle();
+
+      expect(vscode.workspace.getConfiguration('appMap').get('mcp.autoConfigure')).to.be.true;
+      expect(notify.calledTwice).to.be.true;
+      expect(notify.firstCall.args[0]).to.include('is off.');
+      expect(notify.lastCall.args[0])
+        .to.include('is on.')
+        .and.include('already in .vscode/mcp.json');
     });
 
     it('opens mcp.json when the button is clicked', async () => {
@@ -475,6 +514,199 @@ describe('SkillService', () => {
       expect(cache).to.not.be.a.path();
     });
 
+    it('does not create or modify mcp.json when automatic configuration is disabled', async () => {
+      await setSetting('mcp.autoConfigure', false);
+      await mkdir(join(folder(), '.vscode'));
+      await writeFile(mcpJson(), '{ "servers": {} }\n');
+
+      await SkillService.ensureInstalled(true);
+
+      expect(mcpJson()).to.be.a.file().with.content('{ "servers": {} }\n');
+      expect(mcpMessage()).to.not.exist;
+    });
+
+    it('adds missing servers when automatic configuration is enabled again', async () => {
+      await setSetting('mcp.autoConfigure', false);
+      await SkillService.ensureInstalled(true);
+      expect(mcpJson()).to.not.be.a.path();
+
+      await setSetting('mcp.autoConfigure', true);
+      await SkillService.ensureInstalled(true);
+
+      expect(mcpJson()).to.be.a.file();
+      expect(mcpMessage()).to.exist;
+    });
+
+    // Re-registers the service with a captured configuration listener, and
+    // returns a function that fires it as VS Code would after the
+    // `appMap.mcp.autoConfigure` setting changed.
+    function settingChanged(): () => void {
+      const listen = Sinon.stub(vscode.workspace, 'onDidChangeConfiguration');
+      listen.returns({ dispose: () => undefined });
+      registerService();
+      const onChange = listen.lastCall.args[0];
+      return () =>
+        onChange({
+          affectsConfiguration: (key: string) => key === 'appMap.mcp.autoConfigure',
+        } as vscode.ConfigurationChangeEvent);
+    }
+
+    it('configures the repository when the setting is enabled in VS Code settings', async () => {
+      const changed = settingChanged();
+      await setSetting('mcp.autoConfigure', false);
+      await SkillService.ensureInstalled(true);
+      expect(mcpJson()).to.not.be.a.path();
+
+      await setSetting('mcp.autoConfigure', true);
+      changed();
+      // The file is written before the notification is shown, so wait for
+      // the notification rather than the file.
+      await waitFor('the MCP servers to be added', () => mcpMessage() !== undefined);
+
+      expect(mcpJson()).to.be.a.file();
+    });
+
+    it('says the servers are already present when the setting is enabled', async () => {
+      const changed = settingChanged();
+      await setSetting('mcp.autoConfigure', false);
+      await SkillService.ensureInstalled(true);
+      await mkdir(join(folder(), '.vscode'));
+      await writeFile(
+        mcpJson(),
+        '{ "servers": { "appmap": { "command": "/my/appmap" }, "appmap-gold-traces": {} } }'
+      );
+
+      await setSetting('mcp.autoConfigure', true);
+      changed();
+      await waitFor('the notification', () => notify.called);
+
+      expect(notify.lastCall.args[0])
+        .to.include('is on.')
+        .and.include('already in .vscode/mcp.json')
+        .and.include('Run "AppMap: Toggle Automatic MCP Configuration"')
+        .and.not.include('project');
+      expect(notify.lastCall.args.slice(1)).to.deep.equal(['Open mcp.json', 'Turn off']);
+    });
+
+    it('says what will happen when the setting is disabled', async () => {
+      const changed = settingChanged();
+      await SkillService.ensureInstalled(true);
+      expect(mcpJson()).to.be.a.file();
+      notify.resetHistory();
+
+      await setSetting('mcp.autoConfigure', false);
+      changed();
+      await waitFor('the notification', () => notify.called);
+
+      expect(notify.lastCall.args[0])
+        .to.include('is off.')
+        .and.include('were not removed')
+        .and.include('Run "AppMap: Toggle Automatic MCP Configuration"')
+        .and.not.include('project');
+      expect(notify.lastCall.args.slice(1)).to.deep.equal(['Turn on']);
+    });
+
+    it('says nothing when a change elsewhere leaves the repository as it was', async () => {
+      const changed = settingChanged();
+      await SkillService.ensureInstalled(true);
+      notify.resetHistory();
+
+      changed();
+      await new Promise((resolve) => setImmediate(resolve));
+
+      expect(notify.called).to.be.false;
+    });
+
+    it('toggles the setting for the selected repository with a toast', async () => {
+      const register = Sinon.stub(vscode.commands, 'registerCommand');
+      register.returns({ dispose: () => undefined });
+      registerService();
+      const toggle = register
+        .getCalls()
+        .find((call) => call.args[0] === 'appmap.mcp.toggleAutoConfigure')
+        ?.args[1] as () => Promise<void>;
+      const config = vscode.workspace.getConfiguration('appMap');
+      const update = Sinon.spy(config, 'update');
+      const getConfiguration = Sinon.stub(vscode.workspace, 'getConfiguration').returns(config);
+      const other = { uri: vscode.Uri.file(join(homeDir, 'other')), name: 'other', index: 1 };
+      Sinon.stub(vscode.workspace, 'workspaceFolders').value([
+        { uri: vscode.Uri.file(folder()), name: 'project', index: 0 },
+        other,
+      ]);
+      const pick = Sinon.stub(vscode.window, 'showQuickPick').callsFake(
+        async (choices) => choices[1]
+      );
+
+      await toggle();
+
+      expect(pick.calledOnce).to.be.true;
+      expect(getConfiguration.calledWith('appMap', other.uri)).to.be.true;
+      expect(
+        update.calledWith('mcp.autoConfigure', false, vscode.ConfigurationTarget.WorkspaceFolder)
+      ).to.be.true;
+      expect(notify.calledOnce).to.be.true;
+      expect(notify.lastCall.args[0]).to.include('off for the "other" workspace folder.');
+
+      await toggle();
+
+      expect(
+        update.calledWith('mcp.autoConfigure', true, vscode.ConfigurationTarget.WorkspaceFolder)
+      ).to.be.true;
+      // Turning it on adds the missing servers, and that is the announcement.
+      expect(notify.calledTwice).to.be.true;
+      expect(notify.lastCall.args[0])
+        .to.include('added the MCP servers')
+        .and.include('.vscode/mcp.json in the "other" workspace folder, so');
+      expect(join(homeDir, 'other', '.vscode', 'mcp.json')).to.be.a.file();
+    });
+
+    it('does not announce a toggle twice when the setting change event follows', async () => {
+      const listen = Sinon.stub(vscode.workspace, 'onDidChangeConfiguration');
+      listen.returns({ dispose: () => undefined });
+      const register = Sinon.stub(vscode.commands, 'registerCommand');
+      register.returns({ dispose: () => undefined });
+      registerService();
+      const onChange = listen.lastCall.args[0];
+      const toggle = register
+        .getCalls()
+        .find((call) => call.args[0] === 'appmap.mcp.toggleAutoConfigure')
+        ?.args[1] as () => Promise<void>;
+      await SkillService.ensureInstalled(true);
+      notify.resetHistory();
+
+      await toggle();
+      onChange({
+        affectsConfiguration: (key: string) => key === 'appMap.mcp.autoConfigure',
+      } as vscode.ConfigurationChangeEvent);
+      await new Promise((resolve) => setImmediate(resolve));
+
+      expect(notify.calledOnce).to.be.true;
+      expect(notify.lastCall.args[0]).to.include('is off.');
+    });
+
+    it('does not change the setting when no repository is selected', async () => {
+      const register = Sinon.stub(vscode.commands, 'registerCommand');
+      register.returns({ dispose: () => undefined });
+      registerService();
+      const toggle = register
+        .getCalls()
+        .find((call) => call.args[0] === 'appmap.mcp.toggleAutoConfigure')
+        ?.args[1] as () => Promise<void>;
+      const config = vscode.workspace.getConfiguration('appMap');
+      const update = Sinon.spy(config, 'update');
+      Sinon.stub(vscode.workspace, 'getConfiguration').returns(config);
+      Sinon.stub(vscode.workspace, 'workspaceFolders').value([
+        { uri: vscode.Uri.file(folder()), name: 'project', index: 0 },
+        { uri: vscode.Uri.file(join(homeDir, 'other')), name: 'other', index: 1 },
+      ]);
+      Sinon.stub(vscode.window, 'showQuickPick').resolves(undefined);
+
+      await toggle();
+
+      expect(update.called).to.be.false;
+      expect(notify.called).to.be.false;
+    });
+
     it('tells the user when the file cannot be written', async () => {
       const error: Sinon.SinonStub = Sinon.stub(vscode.window, 'showErrorMessage');
       // A plain file where the .vscode directory should be.
@@ -483,7 +715,9 @@ describe('SkillService', () => {
       await SkillService.ensureInstalled();
 
       expect(error.calledOnce).to.be.true;
-      expect(error.firstCall.args[0]).to.include('project');
+      expect(error.firstCall.args[0])
+        .to.include('to .vscode/mcp.json:')
+        .and.not.include('workspace folder');
       expect(mcpMessage()).to.not.exist;
     });
 

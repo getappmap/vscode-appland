@@ -20,6 +20,15 @@ const KEEP = 'Keep them';
 const REMOVE = 'Remove';
 
 const OPEN_MCP_JSON = 'Open mcp.json';
+const TURN_OFF = 'Turn off';
+const TURN_ON = 'Turn on';
+// The command that turns automatic MCP configuration on or off per repository.
+// Its title must match package.json.
+const MCP_TOGGLE_COMMAND = 'appmap.mcp.toggleAutoConfigure';
+const MCP_TOGGLE_TITLE = 'AppMap: Toggle Automatic MCP Configuration';
+// Every MCP notification ends with this, so the user always knows how to
+// change the behavior later, once the notification is gone.
+const MCP_MANAGE_HINT = `Run "${MCP_TOGGLE_TITLE}" to disable automatic MCP configuration.`;
 // Global-state flag: the user has been told the skills exist.
 const INSTALL_NOTIFIED_KEY = 'appMap.skills.installNotified';
 
@@ -37,19 +46,130 @@ const INSTALL_NOTIFIED_KEY = 'appMap.skills.installNotified';
 // servers are added to .vscode/mcp.json in each open workspace: that file is
 // useful to Copilot in VS Code on its own. Entries already there are never
 // changed, and every change we make is announced with a way to open the file.
+// This is controlled per repository by `appMap.mcp.autoConfigure`; turning it
+// on or off is announced too, so the user knows what will happen next time.
 export default class SkillService {
   private static globalState: vscode.Memento | undefined;
+  // The last value of `appMap.mcp.autoConfigure` seen for each workspace
+  // folder, keyed by path. A configuration change event only says that the
+  // setting changed somewhere; comparing against this tells which folders it
+  // actually changed for, so that only those are announced.
+  private static autoConfigure = new Map<string, boolean>();
 
   static register(context: vscode.ExtensionContext): void {
     this.globalState = context.globalState;
+    this.autoConfigure = new Map();
     context.subscriptions.push(
       vscode.workspace.onDidChangeConfiguration((e) => {
         if (e.affectsConfiguration('appMap.skills')) {
           GithubReleaseCache.clear();
           void this.ensureInstalled();
         }
-      })
+        if (e.affectsConfiguration('appMap.mcp.autoConfigure')) void this.announceAutoConfigure();
+      }),
+      vscode.commands.registerCommand(MCP_TOGGLE_COMMAND, () => this.toggleMcp())
     );
+  }
+
+  // Turn automatic MCP configuration on or off for a repository: the one
+  // given, or else the one the user picks when more than one is open.
+  private static async toggleMcp(folder?: vscode.WorkspaceFolder): Promise<void> {
+    const folders = vscode.workspace.workspaceFolders ?? [];
+    if (!folder && folders.length === 0) {
+      vscode.window.showInformationMessage('Open a repository to change AppMap MCP configuration.');
+      return;
+    }
+
+    if (!folder) folder = folders[0];
+    if (!folder || folders.length > 1) {
+      const choices = folders.map((workspaceFolder) => ({
+        label: workspaceFolder.name,
+        description: workspaceFolder.uri.fsPath,
+        folder: workspaceFolder,
+      }));
+      const choice = await vscode.window.showQuickPick(choices, {
+        placeHolder: 'Select the repository for AppMap MCP configuration',
+      });
+      if (!choice) return;
+      folder = choice.folder;
+    }
+
+    const enabled = !this.autoConfigureEnabled(folder);
+    await vscode.workspace
+      .getConfiguration('appMap', folder.uri)
+      .update('mcp.autoConfigure', enabled, vscode.ConfigurationTarget.WorkspaceFolder);
+    // Announced here rather than left to the configuration change event: the
+    // event may not fire (if the value was already what we wrote), and when it
+    // does, the folder is already recorded, so it is not announced twice.
+    await this.announceAutoConfigure([folder]);
+  }
+
+  private static autoConfigureEnabled(folder: vscode.WorkspaceFolder): boolean {
+    return (
+      vscode.workspace.getConfiguration('appMap', folder.uri).get<boolean>('mcp.autoConfigure') ??
+      true
+    );
+  }
+
+  // Reads the setting for a folder, records it, and says whether it differs
+  // from the last recorded value.
+  private static recordAutoConfigure(folder: vscode.WorkspaceFolder): {
+    enabled: boolean;
+    changed: boolean;
+  } {
+    const enabled = this.autoConfigureEnabled(folder);
+    const changed = this.autoConfigure.get(folder.uri.fsPath) !== enabled;
+    this.autoConfigure.set(folder.uri.fsPath, enabled);
+    return { enabled, changed };
+  }
+
+  // Tell the user what the setting now means for each folder it changed for.
+  // Turning it on adds any missing servers right away, and that is its own
+  // announcement; otherwise the user is told the file is already complete.
+  private static async announceAutoConfigure(
+    folders: readonly vscode.WorkspaceFolder[] = vscode.workspace.workspaceFolders ?? []
+  ): Promise<void> {
+    for (const folder of folders) {
+      const { enabled, changed } = this.recordAutoConfigure(folder);
+      if (!changed) continue;
+
+      if (!enabled) {
+        await this.notifyMcp(
+          `Automatic AppMap MCP configuration is off${folderLabel(folder, 'for')}. ` +
+            'AppMap will not change .vscode/mcp.json; existing entries were not removed. ' +
+            MCP_MANAGE_HINT,
+          folder,
+          TURN_ON
+        );
+        continue;
+      }
+
+      const result = await this.configureWorkspace(folder, false);
+      if (result === 'present')
+        await this.notifyMcp(
+          `Automatic AppMap MCP configuration is on${folderLabel(folder, 'for')}. ` +
+            'The AppMap MCP servers are already in .vscode/mcp.json. ' +
+            MCP_MANAGE_HINT,
+          folder,
+          OPEN_MCP_JSON,
+          TURN_OFF
+        );
+    }
+  }
+
+  // An MCP notification. The buttons act rather than explain: open the file,
+  // or flip the setting for this repository, which is announced in turn.
+  private static async notifyMcp(
+    message: string,
+    folder: vscode.WorkspaceFolder,
+    ...actions: string[]
+  ): Promise<void> {
+    const choice = await vscode.window.showInformationMessage(message, ...actions);
+    if (choice === OPEN_MCP_JSON) {
+      await vscode.window.showTextDocument(vscode.Uri.file(mcpJsonPath(folder.uri.fsPath)));
+    } else if (choice === TURN_OFF || choice === TURN_ON) {
+      await this.toggleMcp(folder);
+    }
   }
 
   // Resolves once the skills are installed, or immediately if the user has
@@ -146,45 +266,61 @@ export default class SkillService {
     );
   }
 
-  // Add the AppMap MCP servers to each open workspace that lacks any of them.
+  // Add the AppMap MCP servers to each open workspace that lacks any of them,
+  // skipping workspaces where automatic configuration is turned off.
   // Entries already present, however configured, are never changed.
   // This runs outside the skills lock on purpose: the lock is per home directory, but
   // the workspaces differ per window, so a window that skipped the shared
   // update must still do this part.
   private static async configureWorkspaces(throwOnError: boolean): Promise<void> {
     for (const folder of vscode.workspace.workspaceFolders ?? []) {
-      try {
-        await this.addMcpServers(folder);
-      } catch (e) {
-        // A file we could not write will fail the same way on every
-        // activation; the user has to know to fix it.
-        vscode.window.showErrorMessage(
-          `Could not add the AppMap MCP servers to ${folder.name}: ${
-            e instanceof Error ? e.message : e
-          }`
-        );
-        if (throwOnError) throw e;
-        log.error(`Failed to add the AppMap MCP servers to ${folder.uri.fsPath}: ${e}`);
-      }
+      if (!this.recordAutoConfigure(folder).enabled) continue;
+      await this.configureWorkspace(folder, throwOnError);
     }
   }
 
-  private static async addMcpServers(folder: vscode.WorkspaceFolder): Promise<void> {
+  // Adds the missing servers to one workspace, telling the user about any
+  // failure. Reports whether anything was added, or everything was already there.
+  private static async configureWorkspace(
+    folder: vscode.WorkspaceFolder,
+    throwOnError: boolean
+  ): Promise<'added' | 'present' | 'failed'> {
+    try {
+      return await this.addMcpServers(folder);
+    } catch (e) {
+      // A file we could not write will fail the same way on every
+      // activation; the user has to know to fix it.
+      vscode.window.showErrorMessage(
+        `Could not add the AppMap MCP servers to .vscode/mcp.json${folderLabel(folder, 'in')}: ${
+          e instanceof Error ? e.message : e
+        }`
+      );
+      if (throwOnError) throw e;
+      log.error(`Failed to add the AppMap MCP servers to ${folder.uri.fsPath}: ${e}`);
+      return 'failed';
+    }
+  }
+
+  private static async addMcpServers(folder: vscode.WorkspaceFolder): Promise<'added' | 'present'> {
     const path = folder.uri.fsPath;
     const missing = await missingAppMapMcpServers(path);
-    if (missing.length === 0) return;
+    if (missing.length === 0) return 'present';
 
     await addAppMapMcpServers(path, missing);
     log.info(`Added the AppMap MCP servers ${missing.join(', ')} to ${path}`);
 
-    const choice = await vscode.window.showInformationMessage(
-      `AppMap added the MCP servers ${missing.join(', ')} to .vscode/mcp.json in ${folder.name}, ` +
-        'so Copilot and other MCP clients can query your AppMap data.',
-      OPEN_MCP_JSON
+    await this.notifyMcp(
+      `AppMap added the MCP servers ${missing.join(', ')} to .vscode/mcp.json${folderLabel(
+        folder,
+        'in'
+      )}, ` +
+        'so Copilot and other MCP clients can query your AppMap data. ' +
+        MCP_MANAGE_HINT,
+      folder,
+      OPEN_MCP_JSON,
+      TURN_OFF
     );
-    if (choice === OPEN_MCP_JSON) {
-      await vscode.window.showTextDocument(vscode.Uri.file(mcpJsonPath(path)));
-    }
+    return 'added';
   }
 
   private static async installLatest(cache: SkillsCache): Promise<void> {
@@ -212,6 +348,15 @@ export default class SkillService {
     }
     if (failures.length > 0) throw failures[0];
   }
+}
+
+// Names the workspace folder in a notification only when there is more than
+// one, since otherwise the user already knows which project is open. When it
+// is named, it is called a folder: a bare name after "in" reads like a product
+// or a place, not a directory.
+function folderLabel(folder: vscode.WorkspaceFolder, preposition: 'in' | 'for'): string {
+  if ((vscode.workspace.workspaceFolders?.length ?? 0) <= 1) return '';
+  return ` ${preposition} the "${folder.name}" workspace folder`;
 }
 
 // A list of paths for the user to read: `~/.claude/skills and ~/.agents/skills`.
