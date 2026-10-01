@@ -1,0 +1,147 @@
+# Gold-traces manifest — gold_traces/manifest.yaml (managed by the appmap-gold-traces skill).
+#
+# One file describes the whole gold set for this project (or package): HOW to
+# record (commands) and WHAT to record (entries). Paths are NOT configured —
+# they are derived from the layout: the record/appmap commands run from this
+# file's parent directory, and recordings are read from where the nearest-ancestor
+# appmap.yml puts them (its directory + its appmap_dir). So place gold_traces
+# inside the directory you want commands to run from, within an AppMap project.
+#
+# Standard YAML (read with js-yaml): comments anywhere, flow lists, anchors all
+# work. Quote a value that starts with a special character or contains ": ".
+
+schema_version: 2
+
+commands:
+  # Name the test framework and the engine builds the record command itself. It
+  # knows how each framework names one test and how it names several, so the
+  # whole gold set is recorded in as few runs as the framework allows.
+  #
+  #   framework   pytest | unittest | rspec | minitest | rails-test |
+  #               jest | vitest | mocha | maven | gradle
+  #   runner      optional; replaces the launcher (the part before the test
+  #               selectors). Unset, the engine detects it: a Python .venv/venv
+  #               (both tools by path), uv/poetry/pipenv lock files, a Maven or
+  #               Gradle wrapper. Set it for a profile, a workspace flag, a
+  #               wrapper the engine does not know, ...
+  #   args        optional; flags appended after the test selectors.
+  #   batch_size  optional; most tests per run. Leave unset: the engine already
+  #               splits runs that would exceed this machine's command-line
+  #               limit. Set it only to keep runs small on purpose.
+  #
+  # Defaults and what test_name means for each framework: run
+  #   node "<skill>/assets/manage.mjs" --help
+  # and preview the exact commands for this manifest with
+  #   node "<skill>/assets/manage.mjs" plan --dir gold_traces
+  #
+  # Examples (pick one, delete the rest):
+  #
+  #   framework: pytest
+  #   args: -q
+  #
+  #   framework: rspec
+  #
+  #   framework: jest
+  #   runner: npx appmap-node yarn jest
+  #
+  #   framework: maven
+  #   runner: ./mvnw -Pintegration com.appland:appmap-maven-plugin:prepare-agent test
+  framework: mocha
+
+  # For a runner the engine does not know, give a full shell template instead of
+  # `framework`. It is run once per test with {test_file} and {test_name}
+  # substituted, and it cannot choose where the recording lands — the recorder
+  # decides that, under appmap_dir. `framework` and `record` are exclusive.
+  #
+  #   record: "bundle exec cucumber {test_file} --name {test_name}"
+
+  # Extra environment variables for the record command (optional).
+  record_env:
+    APPMAP_DISPLAY_PARAMS: "true"
+
+  # The AppMap CLI the engine runs. Leave this UNSET to
+  # auto-discover the binary — the IDE extensions' ~/.appmap/bin/appmap if present,
+  # otherwise `appmap` on PATH (the usual CI setup). Set it only in unusual cases to
+  # override, e.g. a path to a specific, custom build of the CLI.
+  # appmap_cli: appmap
+
+# Optional. Values `appmap sanitize` keeps verbatim in blessed baselines (exact
+# whole-value match). Small public vocabularies only — enum state/role names, never
+# anything that could identify a person or authenticate a request. Example:
+# allow_values:
+#   - active
+#   - pending
+
+# The curated recordings that form the behavior baseline. Each entry:
+#   feature      functional area name (used to group entries)
+#   test_file    the test file, relative to this file's parent dir (where the
+#                record command runs)
+#   test_name    the test to run, in the form the framework expects — see
+#                `manage.mjs --help` for what each framework wants here
+#   appmap_path  recording path relative to the project's appmap_dir — get it
+#                from the engine's `discover` command; don't guess it
+#   summary      short human context for what the trace demonstrates
+#
+# What a trace covers is read from the recording itself, so there is nothing
+# else to declare. Curation: one deterministic, lean recording per release-
+# critical subsystem, added only when `discover` shows it runs something no
+# committed trace runs. Reuse an existing test before writing one.
+entries:
+  - feature: agent skills and MCP
+    test_file: test/unit/services/skillService.test.ts
+    test_name: adds both servers without asking, and says so
+    appmap_path: mocha/SkillService/workspace_MCP_configuration/adds_both_servers_without_asking,_and_says_so.appmap.json
+    summary: >-
+      Extension activation installs the agent skills (GitHub release lookup,
+      download, cache, links into each skills directory) and adds the AppMap
+      MCP servers to the workspace's .vscode/mcp.json, announcing both.
+
+  - feature: tool assets
+    test_file: test/unit/assets/assetService.test.ts
+    test_name: should update all assets
+    appmap_path: mocha/AssetService/updateAll/should_update_all_assets.appmap.json
+    summary: >-
+      The full asset update: manifest fetch, then the AppMap CLI, scanner and
+      Java agent downloaders resolving versions and download URLs, downloading
+      with retry, and linking the results under ~/.appmap.
+
+  - feature: tool assets
+    test_file: test/unit/assets/appmapCliDownloader.test.ts
+    test_name: throws and removes the downloaded binary when its digest does not match
+    appmap_path: mocha/AppMapCliDownloader/throws_and_removes_the_downloaded_binary_when_its_digest_does_not_match.appmap.json
+    summary: >-
+      The integrity check on a downloaded CLI binary: a digest mismatch removes
+      the file and fails the update. The refused branch of a security gate.
+
+  - feature: background processes
+    test_file: test/unit/services/processWatcher.test.ts
+    test_name: reports the first failure of a run of crashes, then the abort
+    appmap_path: mocha/ProcessWatcher/on_an_exit_nobody_asked_for/reports_the_first_failure_of_a_run_of_crashes,_then_the_abort.appmap.json
+    summary: >-
+      A watched process that keeps crashing: environment assembly, spawn,
+      retries, one failure report for the run of crashes, then the abort.
+
+  - feature: organization configuration
+    test_file: test/unit/remoteConfig.test.ts
+    test_name: applies each appMap.* key to VS Code global settings
+    appmap_path: mocha/remoteConfig/apply()_—_successful_fetch_via_HTTP/applies_each_appMap.-_key_to_VS_Code_global_settings.appmap.json
+    summary: >-
+      Fetching the organization configuration from its URL, sanitizing it, and
+      applying the appMap.* keys to the global settings.
+
+  - feature: organization configuration
+    test_file: test/unit/remoteConfig.test.ts
+    test_name: falls back to the cached config and applies it
+    appmap_path: mocha/remoteConfig/apply()_—_fetch_failure_with_cached_config/falls_back_to_the_cached_config_and_applies_it.appmap.json
+    summary: >-
+      The fetch fails and the previously cached configuration is applied
+      instead. Same functions as the happy path; differs inside them, so kept
+      despite the coverage overlap.
+
+  - feature: sign-in
+    test_file: test/unit/sidebarSignIn.test.ts
+    test_name: is shown when not authenticated, but is not shown once they log in
+    appmap_path: mocha/Sidebar_sign-in/is_shown_when_not_authenticated,_but_is_not_shown_once_they_log_in.appmap.json
+    summary: >-
+      The sign-in state machine: the sidebar sign-in view appears for an
+      unauthenticated user, checks entitlement, and hides once they log in.

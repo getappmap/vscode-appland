@@ -32,3 +32,6 @@ resources/*.jar
 tmp/appmap
 .navie/**/diff.txt
 
+
+# AppMap gold-traces engine working directory (derived, regenerable)
+.appmap/

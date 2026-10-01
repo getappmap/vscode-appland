@@ -1,2 +1,4 @@
 /.yarn/releases/** binary
 /.yarn/plugins/** binary
+
+gold_traces/baseline/appmaps/**/*.appmap.json binary

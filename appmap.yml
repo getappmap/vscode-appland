@@ -1,8 +1,7 @@
 name: vscode-appland
 language: javascript
 appmap_dir: tmp/appmap
+# Only the extension's own code: test helpers and mocks would otherwise show
+# up in every recording and in the gold traces.
 packages:
-  - path: .
-    exclude:
-      - node_modules
-      - .yarn
+  - path: src
