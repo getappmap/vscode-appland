@@ -1,0 +1,21 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      // A development build: readable output with source maps, so breakpoints
+      // in src/ bind. `yarn compile` is the minified production build.
+      "label": "build extension",
+      "type": "shell",
+      "command": "yarn compile:dev",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "silent",
+        "panel": "shared"
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    }
+  ]
+}

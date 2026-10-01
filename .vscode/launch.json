@@ -9,6 +9,10 @@
       "name": "Run extension",
       "type": "extensionHost",
       "request": "launch",
+      // Rebuilds out/extension.js first: without this, F5 runs whatever build
+      // is lying around, and breakpoints in src/ never bind.
+      "preLaunchTask": "build extension",
+      "outFiles": ["${workspaceFolder}/out/**/*.js"],
       "args": [
         "--extensionDevelopmentPath=${workspaceFolder}"
       ],
