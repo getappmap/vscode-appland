@@ -288,6 +288,10 @@
       {
         "command": "appmap.setConfigurationUrl",
         "title": "AppMap: Set organization configuration URL"
+      },
+      {
+        "command": "appmap.mcp.toggleAutoConfigure",
+        "title": "AppMap: Toggle Automatic MCP Configuration"
       }
     ],
     "configuration": {
@@ -420,6 +424,12 @@
           "default": "getappmap/skills",
           "scope": "machine",
           "description": "GitHub repository whose latest release provides the AppMap agent skills. Override to use a fork."
+        },
+        "appMap.mcp.autoConfigure": {
+          "type": "boolean",
+          "default": true,
+          "scope": "resource",
+          "description": "Automatically add missing AppMap MCP servers to this repository's .vscode/mcp.json. Disabling this does not remove existing entries."
         },
         "appMap.telemetry": {
           "type": "object",

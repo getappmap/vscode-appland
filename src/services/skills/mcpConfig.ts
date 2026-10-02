@@ -31,7 +31,7 @@ export const APPMAP_MCP_SERVERS: Record<string, unknown> = {
 // .vscode/mcp.json is where VS Code reads a workspace's MCP servers from. It
 // is checked into the user's repository and shared with other tools, so we
 // only ever edit it in place, keeping other servers, comments and formatting,
-// and only after the user has agreed (see SkillService).
+// while automatic configuration is enabled for the workspace (see SkillService).
 
 export function mcpJsonPath(folder: string): string {
   return join(folder, '.vscode', 'mcp.json');
