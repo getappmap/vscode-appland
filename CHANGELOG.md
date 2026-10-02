@@ -1,3 +1,10 @@
+# [0.147.0](https://github.com/getappmap/vscode-appland/compare/v0.146.0...v0.147.0) (2026-10-02)
+
+
+### Features
+
+* **mcp:** per-repository setting and command for automatic MCP configuration ([b9d5563](https://github.com/getappmap/vscode-appland/commit/b9d55634ba1801d952739ba9e163a9caf6575221))
+
 # [0.146.0](https://github.com/getappmap/vscode-appland/compare/v0.145.0...v0.146.0) (2026-09-28)
 
 
