@@ -7,7 +7,7 @@ import { NodeProcessService } from '../../../src/services/nodeProcessService';
 import * as WorkspaceServicesModule from '../../../src/services/workspaceServices';
 import MockExtensionContext from '../../mocks/mockExtensionContext';
 import NodeProcessServiceInstance from '../../../src/services/nodeProcessServiceInstance';
-import type * as vscode from 'vscode';
+import * as vscode from 'vscode';
 
 describe('NodeProcessService', () => {
   let sinon: Sinon.SinonSandbox;
@@ -149,5 +149,43 @@ describe('NodeProcessService config changes', () => {
     await change();
     // First rebuild, the one queued rebuild, and the final explicit one.
     expect(createServices.callCount).to.equal(3);
+  });
+});
+
+describe('NodeProcessService rebuild for a folder removed meanwhile', () => {
+  let sinon: Sinon.SinonSandbox;
+
+  afterEach(() => sinon.restore());
+
+  it('leaves no instance enrolled for the folder, and no job running', async () => {
+    sinon = Sinon.createSandbox();
+    sinon.stub(NodeProcessService.outputChannel, 'appendLine');
+    let removeFolder: (folder: vscode.WorkspaceFolder) => void = () => undefined;
+    sinon.stub(vscode.workspace, 'onDidChangeWorkspaceFolders').callsFake((listener) => {
+      removeFolder = (folder) => listener({ added: [], removed: [folder] });
+      return { dispose: sinon.stub() };
+    });
+    const folder = { uri: vscode.Uri.file('/w'), name: 'w', index: 0 };
+
+    const registry = new WorkspaceServicesModule.WorkspaceServices();
+    sinon.stub(WorkspaceServicesModule, 'workspaceServices').returns(registry);
+    const service = new NodeProcessService(new MockExtensionContext());
+    await registry.enroll(service);
+    const original = new NodeProcessServiceInstance(folder, []);
+    registry.enrollServiceInstance(folder, original, service);
+    sinon
+      .stub(service as unknown as { createServices: () => Promise<unknown[]> }, 'createServices')
+      .callsFake(() => new Promise((resolve) => setImmediate(() => resolve([]))));
+
+    const rebuild = (
+      service as unknown as { handleConfigChange: (f: vscode.WorkspaceFolder) => Promise<void> }
+    ).handleConfigChange(folder);
+    removeFolder(folder);
+    await rebuild;
+
+    expect(registry.getServiceInstancesFromClass(NodeProcessService)).to.be.empty;
+    // The rebuild's stop() of the original, still in flight when the removal disposed it, must
+    // not have put its job back.
+    expect(original.jobInterval).to.be.undefined;
   });
 });
