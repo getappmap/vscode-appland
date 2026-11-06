@@ -12,6 +12,7 @@ import { WorkspaceServiceInstance } from './workspaceService';
 export default class NodeProcessServiceInstance implements WorkspaceServiceInstance {
   disposables: vscode.Disposable[] = [];
   jobInterval?: NodeJS.Timeout;
+  private disposed = false;
 
   constructor(
     public folder: vscode.WorkspaceFolder,
@@ -87,7 +88,9 @@ export default class NodeProcessServiceInstance implements WorkspaceServiceInsta
   }
 
   protected startJob(): void {
-    if (this.jobInterval) return;
+    // A stop() or start() still in flight when the instance is disposed would otherwise put
+    // the job back, and it would go on trying to start disposed watchers every second.
+    if (this.disposed || this.jobInterval) return;
 
     this.jobInterval = setInterval(this.startAndStopProcesses.bind(this), 1000);
   }
@@ -99,6 +102,7 @@ export default class NodeProcessServiceInstance implements WorkspaceServiceInsta
   }
 
   dispose(): void {
+    this.disposed = true;
     this.stopJob();
     this.processes.forEach((p) => p.dispose());
     this.disposables.forEach((d) => d.dispose());

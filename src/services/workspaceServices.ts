@@ -13,6 +13,11 @@ export class WorkspaceServices implements vscode.Disposable {
   workspaceServiceInstances: Map<vscode.WorkspaceFolder, WorkspaceServiceInstance[]> = new Map();
   instanceServices: Map<WorkspaceServiceInstance, WorkspaceService<WorkspaceServiceInstance>> =
     new Map();
+  // Folders removed from the workspace. Work started for one before it went (a create() or a
+  // rebuild still in flight) must not enroll an instance for it afterwards. Keyed by object,
+  // not URI: VS Code gives a folder that is added back a new WorkspaceFolder object, which
+  // must not be mistaken for the old one in either direction.
+  private removedFolders = new WeakSet<vscode.WorkspaceFolder>();
 
   constructor() {
     const folderAdded = (folder: vscode.WorkspaceFolder) => {
@@ -26,14 +31,17 @@ export class WorkspaceServices implements vscode.Disposable {
     };
 
     const folderRemoved = (folder: vscode.WorkspaceFolder) => {
+      this.removedFolders.add(folder);
       const serviceInstances = this.workspaceServiceInstances.get(folder);
       if (!serviceInstances) return;
+      this.workspaceServiceInstances.delete(folder);
 
       serviceInstances.forEach((service) => {
         const parent = this.instanceServices.get(service);
         const name = parent ? workspaceServiceId(parent) : service.constructor.name;
         console.log(`Removing workspace service instance ${name} for ${folder.uri.toString()}`);
 
+        this.instanceServices.delete(service);
         service.dispose();
       });
     };
@@ -153,6 +161,11 @@ export class WorkspaceServices implements vscode.Disposable {
     instance: WorkspaceServiceInstance,
     service: WorkspaceService<WorkspaceServiceInstance>
   ) {
+    if (this.removedFolders.has(folder)) {
+      instance.dispose();
+      return;
+    }
+
     let instances = this.workspaceServiceInstances.get(folder);
     if (!instances) {
       instances = [];
