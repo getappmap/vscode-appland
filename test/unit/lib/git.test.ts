@@ -38,35 +38,35 @@ describe('findRepository()', () => {
       expect(findRepository(vscode.Uri.parse('file:///test/project'))).to.equal(expected);
     });
   }
-});
 
-const remotes: Partial<vscodeGit.Remote>[] = [];
-let gitPresent = true;
+  const remotes: Partial<vscodeGit.Remote>[] = [];
+  let gitPresent = true;
 
-function getRepository(): vscodeGit.Repository | null {
-  if (!gitPresent) return null;
+  function getRepository(): vscodeGit.Repository | null {
+    if (!gitPresent) return null;
 
-  const state: Partial<vscodeGit.RepositoryState> = { remotes: remotes as vscodeGit.Remote[] };
-  const result: Partial<vscodeGit.Repository> = {
-    state: state as vscodeGit.RepositoryState,
-  };
-  return result as vscodeGit.Repository;
-}
+    const state: Partial<vscodeGit.RepositoryState> = { remotes: remotes as vscodeGit.Remote[] };
+    const result: Partial<vscodeGit.Repository> = {
+      state: state as vscodeGit.RepositoryState,
+    };
+    return result as vscodeGit.Repository;
+  }
 
-beforeEach(() => {
-  mockExtension<vscodeGit.GitExtension>('vscode.git', {
-    enabled: true,
-    getAPI() {
-      const api: Partial<vscodeGit.API> = {
-        getRepository,
-      };
-      return api as vscodeGit.API;
-    },
+  beforeEach(() => {
+    mockExtension<vscodeGit.GitExtension>('vscode.git', {
+      enabled: true,
+      getAPI() {
+        const api: Partial<vscodeGit.API> = {
+          getRepository,
+        };
+        return api as vscodeGit.API;
+      },
+    });
   });
-});
 
-afterEach(() => {
-  gitPresent = true;
-  resetExtensionMocks();
-  remotes.splice(0, 42);
+  afterEach(() => {
+    gitPresent = true;
+    resetExtensionMocks();
+    remotes.splice(0, 42);
+  });
 });
