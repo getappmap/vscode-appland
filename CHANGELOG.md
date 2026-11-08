@@ -1,3 +1,12 @@
+## [0.147.1](https://github.com/getappmap/vscode-appland/compare/v0.147.0...v0.147.1) (2026-11-08)
+
+
+### Bug Fixes
+
+* don't leak indexer and scanner processes on appmap.yml changes ([ce8d26b](https://github.com/getappmap/vscode-appland/commit/ce8d26b1a1790fe55941cbc975ea3671a8caa9d8))
+* don't leave AppMap processes behind for a removed folder ([51380b0](https://github.com/getappmap/vscode-appland/commit/51380b0a532a957b83d5a45365e43212a082afab))
+* skip appmap.yml in node_modules and git-ignored directories ([e54627f](https://github.com/getappmap/vscode-appland/commit/e54627f63d73c52ba604d24c6585f7998f6d70d2))
+
 # [0.147.0](https://github.com/getappmap/vscode-appland/compare/v0.146.0...v0.147.0) (2026-10-02)
 
 
