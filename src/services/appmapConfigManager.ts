@@ -12,6 +12,7 @@ import { WorkspaceService, WorkspaceServiceInstance } from './workspaceService';
 import Watcher from './watcher';
 import { findFiles } from '../lib/findFiles';
 import { NodeProcessService } from './nodeProcessService';
+import { filterConfigFiles } from './configFileFilter';
 
 export type AppmapConfig = {
   appmapDir: string;
@@ -67,10 +68,27 @@ export class AppmapignoreManager {
   }
 }
 
+// Glob patterns the editor itself hides from search and the explorer, in this folder (a
+// multi-root workspace can set them per folder).
+function editorExcludePatterns(folder: vscode.WorkspaceFolder): vscode.GlobPattern[] {
+  const patterns: string[] = [];
+  for (const section of ['files.exclude', 'search.exclude']) {
+    const [scope, key] = section.split('.');
+    const value = vscode.workspace
+      .getConfiguration(scope, folder.uri)
+      .get<Record<string, unknown>>(key);
+    if (!value) continue;
+    for (const [pattern, enabled] of Object.entries(value))
+      if (enabled === true) patterns.push(pattern);
+  }
+  return patterns;
+}
+
 class ConfigFileProviderImpl implements ConfigFileProvider {
   private _files?: vscode.Uri[] = undefined;
 
   public constructor(
+    private folder: vscode.WorkspaceFolder,
     private pattern: vscode.RelativePattern,
     private exclusions: vscode.GlobPattern[] = []
   ) {}
@@ -78,7 +96,25 @@ class ConfigFileProviderImpl implements ConfigFileProvider {
   public async files(): Promise<vscode.Uri[]> {
     if (this._files) return this._files;
 
-    this._files = this._files = await findFiles(this.pattern, this.exclusions);
+    const found = await findFiles(this.pattern, this.exclusions);
+    let kept: Set<string>;
+    try {
+      kept = new Set(
+        await filterConfigFiles(
+          this.folder.uri.fsPath,
+          found.map((uri) => uri.fsPath)
+        )
+      );
+    } catch (e) {
+      // Filtering is a refinement. Should it fail on some setup nobody foresaw, use every
+      // file found, as before there was a filter, rather than none.
+      NodeProcessService.outputChannel.appendLine(
+        `Failed to filter AppMap configuration files in ${this.folder.uri.fsPath}, ` +
+          `using all of them: ${String(e)}`
+      );
+      kept = new Set(found.map((uri) => uri.fsPath));
+    }
+    this._files = found.filter((uri) => kept.has(uri.fsPath));
     return this._files;
   }
 
@@ -108,10 +144,10 @@ export class AppmapConfigManagerInstance implements WorkspaceServiceInstance {
 
   constructor(private configWatcher: Watcher, public folder: vscode.WorkspaceFolder) {
     const appmapignoreManager = new AppmapignoreManager(folder);
-    const exclusions = appmapignoreManager.getExclusions();
+    const exclusions = [...appmapignoreManager.getExclusions(), ...editorExcludePatterns(folder)];
 
     const configPattern = new vscode.RelativePattern(folder, this.CONFIG_PATTERN);
-    this._configFileProvider = new ConfigFileProviderImpl(configPattern, exclusions);
+    this._configFileProvider = new ConfigFileProviderImpl(folder, configPattern, exclusions);
 
     this._events = (['onChange', 'onCreate', 'onDelete'] as const).map((event) =>
       this.configWatcher[event]((uri) => this.handleConfigChange(uri))
@@ -149,10 +185,8 @@ export class AppmapConfigManagerInstance implements WorkspaceServiceInstance {
 
     // Consider the case where an AppMap configuration file was moved via recursive directory rename.
     if (changes.some(([type]) => type === 'delete')) {
-      const configFiles = await vscode.workspace.findFiles(
-        this.CONFIG_PATTERN,
-        vscode.workspace.getConfiguration('search').get('exclude')
-      );
+      this._configFileProvider.reset();
+      const configFiles = await this._configFileProvider.files();
       NodeProcessService.outputChannel.appendLine(configFiles.map((uri) => uri.fsPath).join('\n'));
       configFiles.forEach((uri) => {
         if (!this._configMtimes.has(uri.fsPath)) {
