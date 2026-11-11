@@ -77,6 +77,45 @@ describe('ChatCompletion', () => {
     expect(ChatCompletion.preferredModel).to.equal(mockModel2);
   });
 
+  describe('with models missing family or maxInputTokens', () => {
+    const full = { ...mockModel, id: 'full', family: 'gpt-4o', maxInputTokens: 128000 };
+    // ties with full on tokens, so the family comparison runs on it
+    const noFamily = {
+      ...mockModel,
+      id: 'no-family',
+      family: undefined,
+      maxInputTokens: 128000,
+    } as unknown as LanguageModelChat;
+    // a family that would sort first, so only the token fallback puts it last
+    const noTokens = {
+      ...mockModel,
+      id: 'no-tokens',
+      family: 'zzz',
+      maxInputTokens: undefined,
+    } as unknown as LanguageModelChat;
+
+    const permutations = <T>(xs: T[]): T[][] =>
+      xs.length <= 1
+        ? [xs]
+        : xs.flatMap((x, i) =>
+            permutations([...xs.slice(0, i), ...xs.slice(i + 1)]).map((rest) => [x, ...rest])
+          );
+
+    for (const order of permutations([full, noFamily, noTokens])) {
+      it(`sorts them last given ${order.map((m) => m.id).join(', ')}`, async () => {
+        resetModelMocks();
+        order.forEach(addMockChatModel);
+
+        await ChatCompletion.refreshModels();
+        expect(ChatCompletion.models.map((m) => m.id)).to.deep.equal([
+          'full',
+          'no-family',
+          'no-tokens',
+        ]);
+      });
+    }
+  });
+
   it('should return undefined if no models are available', async () => {
     resetModelMocks();
     await ChatCompletion.refreshModels();
