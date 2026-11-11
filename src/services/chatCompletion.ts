@@ -98,8 +98,12 @@ export default class ChatCompletion implements Disposable {
 
   static async refreshModels(): Promise<boolean> {
     const previousBest = this.preferredModel?.id;
+    // Providers other than Copilot don't always fill in family or maxInputTokens,
+    // whatever the typings say.
     this._models = (await vscode.lm.selectChatModels()).sort(
-      (a, b) => b.maxInputTokens - a.maxInputTokens + b.family.localeCompare(a.family)
+      (a, b) =>
+        (b.maxInputTokens ?? 0) - (a.maxInputTokens ?? 0) ||
+        (b.family ?? '').localeCompare(a.family ?? '')
     );
     return this.preferredModel?.id !== previousBest;
   }
