@@ -274,7 +274,14 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
 
     const processService = new NodeProcessService(context);
 
-    await ChatCompletion.initialize(context);
+    // A broken language model provider must not stop the rest of the extension from activating.
+    await ChatCompletion.initialize(context).catch((e) => {
+      console.error('Failed to initialize the Copilot backend for Navie', e);
+      Telemetry.sendEvent(DEBUG_EXCEPTION, {
+        exception: e as Error,
+        errorCode: ErrorCode.InitializationFailure,
+      });
+    });
     PickCopilotModelCommand.register(context);
 
     AssetService.register(context);
