@@ -128,6 +128,27 @@ class ConfigFileProviderImpl implements ConfigFileProvider {
   }
 }
 
+function reportAppmapDirFailure(dir: string, configFolder: string, error: unknown): void {
+  const { code, path } = (error ?? {}) as NodeJS.ErrnoException;
+  NodeProcessService.outputChannel.appendLine(`Failed to create ${dir}: ${String(error)}`);
+  // Just the code, and no stack: the error's message has the user's paths in it, and the
+  // stack the extension's install path, which can be in their home directory.
+  const exception = new Error(`Failed to create appmap_dir: ${code ?? 'unknown error'}`);
+  exception.stack = undefined;
+  Telemetry.sendEvent(DEBUG_EXCEPTION, { exception });
+
+  // mkdir fails on the first folder it can't create, so it's that folder's parent which
+  // can't be written to; often it belongs to root, for example made by a container.
+  const reason =
+    (code === 'EACCES' || code === 'EPERM') && path
+      ? `you don't have permission to write to ${dirname(path)}. Fix its permissions or ownership`
+      : `${error instanceof Error ? error.message : String(error)}. Fix this`;
+  void vscode.window.showWarningMessage(
+    `AppMap can't create ${dir} to store AppMaps: ${reason}, or set appmap_dir in ` +
+      `${join(configFolder, 'appmap.yml')} to another folder.`
+  );
+}
+
 export class AppmapConfigManagerInstance implements WorkspaceServiceInstance {
   private readonly CONFIG_PATTERN = '**/appmap.yml';
 
@@ -138,6 +159,8 @@ export class AppmapConfigManagerInstance implements WorkspaceServiceInstance {
   private _usingDefault = false;
   private _onConfigChanged = new vscode.EventEmitter<void>();
   private _configMtimes: Map<string, number> = new Map();
+  // appmap_dir folders whose creation failed and has not succeeded since.
+  private _failedAppmapDirs = new Set<string>();
   private _pollTimeout?: NodeJS.Timeout;
   private _disposed = false;
   // Config scans and change handling run one at a time, in the order they were requested.
@@ -362,14 +385,15 @@ export class AppmapConfigManagerInstance implements WorkspaceServiceInstance {
   private async makeAppmapDirs(): Promise<void> {
     await Promise.all(
       this._configs.map(async (appmapConfig) => {
+        const dir = join(appmapConfig.configFolder, appmapConfig.appmapDir);
         try {
-          await mkdir(join(appmapConfig.configFolder, appmapConfig.appmapDir), {
-            recursive: true,
-          });
+          await mkdir(dir, { recursive: true });
+          this._failedAppmapDirs.delete(dir);
         } catch (e) {
-          Telemetry.sendEvent(DEBUG_EXCEPTION, {
-            exception: new Error('Failed to create appmap_dir: ' + String(e)),
-          });
+          // Every update tries again, but a failure is only reported the first time.
+          if (this._failedAppmapDirs.has(dir)) return;
+          this._failedAppmapDirs.add(dir);
+          reportAppmapDirFailure(dir, appmapConfig.configFolder, e);
         }
       })
     );
