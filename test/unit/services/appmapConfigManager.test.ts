@@ -2,7 +2,17 @@ import '../mock/vscode';
 
 import { expect } from 'chai';
 import { execFileSync } from 'child_process';
-import { appendFile, mkdtemp, mkdir, realpath, rm, symlink, utimes, writeFile } from 'fs/promises';
+import {
+  appendFile,
+  chmod,
+  mkdtemp,
+  mkdir,
+  realpath,
+  rm,
+  symlink,
+  utimes,
+  writeFile,
+} from 'fs/promises';
 import { tmpdir } from 'os';
 import { join } from 'path';
 import Sinon from 'sinon';
@@ -13,6 +23,8 @@ import * as ConfigFileFilter from '../../../src/services/configFileFilter';
 import { FileChangeEmitter } from '../../../src/services/fileChangeEmitter';
 import { NodeProcessService } from '../../../src/services/nodeProcessService';
 import type Watcher from '../../../src/services/watcher';
+import { Telemetry } from '../../../src/telemetry';
+import * as Properties from '../../../src/telemetry/definitions/properties';
 
 // A watcher whose events the test fires by hand.
 class FakeWatcher extends FileChangeEmitter {
@@ -172,6 +184,75 @@ describe('AppmapConfigManagerInstance', () => {
     await utimes(used, recorded, recorded);
     await instance['enqueue'](() => instance['resync']());
     expect(changes).to.equal(1);
+  });
+
+  describe('when appmap_dir cannot be created', () => {
+    let warning: Sinon.SinonStub;
+    let telemetry: Sinon.SinonStub;
+
+    beforeEach(() => {
+      warning = sinon.stub(vscode.window, 'showWarningMessage');
+      telemetry = sinon.stub(Telemetry, 'sendEvent');
+    });
+
+    // Rewrite the config, as editing it does, and wait for the update.
+    const touch = async () => {
+      const used = join(project, 'appmap.yml');
+      await rewrite(used, 'name: root\nappmap_dir: tmp/appmap');
+      watcher.change(used);
+      await settled();
+    };
+
+    // A file where the folder should be stops even root from creating it.
+    it('reports the failure once, not on every update', async () => {
+      await rm(join(project, 'tmp'), { recursive: true, force: true });
+      await writeFile(join(project, 'tmp'), '');
+
+      await touch();
+      await touch();
+
+      expect(warning.callCount).to.equal(1);
+      expect(warning.firstCall.args[0]).to.contain(join(project, 'tmp', 'appmap'));
+      expect(warning.firstCall.args[0]).to.contain(join(project, 'appmap.yml'));
+      expect(telemetry.callCount).to.equal(1);
+      expect(await Properties.DEBUG_EXCEPTION.getValue(telemetry.firstCall.args[1])).to.equal(
+        'Error: Failed to create appmap_dir: ENOTDIR'
+      );
+    });
+
+    it('reports it again if it recurs after the folder was created', async () => {
+      await rm(join(project, 'tmp'), { recursive: true, force: true });
+      await writeFile(join(project, 'tmp'), '');
+      await touch();
+
+      await rm(join(project, 'tmp'));
+      await touch();
+      await rm(join(project, 'tmp'), { recursive: true });
+      await writeFile(join(project, 'tmp'), '');
+      await touch();
+
+      expect(warning.callCount).to.equal(2);
+    });
+
+    it('names the folder it may not write to', async function () {
+      // Windows doesn't honour the mode, and root can write anywhere.
+      if (process.platform === 'win32' || process.getuid?.() === 0) this.skip();
+
+      const tmp = join(project, 'tmp');
+      await rm(tmp, { recursive: true, force: true });
+      await mkdir(tmp, { mode: 0o555 });
+      try {
+        await touch();
+      } finally {
+        await chmod(tmp, 0o755);
+      }
+
+      expect(warning.callCount).to.equal(1);
+      expect(warning.firstCall.args[0]).to.contain(`you don't have permission to write to ${tmp}.`);
+      expect(await Properties.DEBUG_EXCEPTION.getValue(telemetry.firstCall.args[1])).to.equal(
+        'Error: Failed to create appmap_dir: EACCES'
+      );
+    });
   });
 
   it('drops work still queued when it is disposed', async () => {
