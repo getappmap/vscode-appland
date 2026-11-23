@@ -1,6 +1,19 @@
-import { chmod, copyFile, mkdir, open, readdir, stat, symlink, unlink } from 'node:fs/promises';
+import { randomBytes } from 'node:crypto';
+import {
+  chmod,
+  copyFile,
+  lstat,
+  mkdir,
+  open,
+  readdir,
+  readlink,
+  rename,
+  rm,
+  stat,
+  symlink,
+} from 'node:fs/promises';
 import { homedir } from 'node:os';
-import { dirname, join, sep } from 'node:path';
+import { dirname, join, resolve, sep } from 'node:path';
 import { Uri } from 'vscode';
 import semverClean from 'semver/functions/clean';
 import semverCompareBuild from 'semver/functions/compare-build';
@@ -82,19 +95,41 @@ export async function markExecutable(path: string): Promise<void> {
   }
 }
 
-export async function updateSymlink(assetPath: string, symlinkPath: string): Promise<void> {
+// Whether `path` already provides `assetPath`: a symlink resolving to it, or, where
+// symlinks aren't available and we copy instead, a file of the same size. Different
+// builds are practically never the same size, and comparing contents would mean reading
+// a binary of a hundred megabytes on every start.
+async function linkIsCurrent(path: string, assetPath: string): Promise<boolean> {
   try {
-    await unlink(symlinkPath);
+    const entry = await lstat(path);
+    if (entry.isSymbolicLink())
+      return resolve(dirname(path), await readlink(path)) === resolve(assetPath);
+    return entry.isFile() && entry.size === (await stat(assetPath)).size;
   } catch {
-    // if the symlink that we're trying to remove does not exist, don't do anything
+    return false;
   }
+}
+
+// Points `symlinkPath` at `assetPath`, or copies it there where symlinks aren't available.
+// Other windows run the tools from `symlinkPath`, so it's never removed, not even for a
+// moment: a spawn that lands in the gap fails with ENOENT. Instead the replacement is made
+// beside it and renamed over it, which swaps it in one step.
+export async function updateSymlink(assetPath: string, symlinkPath: string): Promise<void> {
+  if (await linkIsCurrent(symlinkPath, assetPath)) return;
 
   // make sure the target directory exists
   await mkdir(dirname(symlinkPath), { recursive: true });
+  const temporaryPath = `${symlinkPath}.${randomBytes(4).toString('hex')}.tmp`;
   try {
-    await symlink(assetPath, symlinkPath, 'file');
+    try {
+      await symlink(assetPath, temporaryPath, 'file');
+    } catch {
+      await copyFile(assetPath, temporaryPath);
+    }
+    await rename(temporaryPath, symlinkPath);
   } catch (e) {
-    await copyFile(assetPath, symlinkPath);
+    await rm(temporaryPath, { force: true });
+    throw e;
   }
 }
 

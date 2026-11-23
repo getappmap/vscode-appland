@@ -13,6 +13,7 @@ import {
   markExecutable,
   updateSymlink,
   listAssets,
+  targetMissing,
 } from '.';
 import { binaryName, AssetIdentifier, versionFromPath } from './types';
 import { homedir } from 'os';
@@ -65,7 +66,9 @@ export default class AssetService {
       const assetPath = AssetService.getAssetPath(assetId);
       const assets = await listAssets(assetId);
       if (assets.length === 0) {
-        allPresent = false;
+        // Nothing we could link to, but a tool may have been put in place by hand, as for
+        // an offline install. It's no less there for not having come from the cache.
+        if (await targetMissing(assetPath)) allPresent = false;
         continue;
       }
 
@@ -74,8 +77,10 @@ export default class AssetService {
       try {
         await updateSymlink(target, assetPath);
       } catch (e) {
+        // Windows won't replace a copy another window is running, which leaves that copy in
+        // place: an older version, but still there.
         log.error(`Failed to restore symlink or copy for ${assetPath}: ${e}`);
-        allPresent = false;
+        if (await targetMissing(assetPath)) allPresent = false;
       }
     }
     return allPresent;
@@ -114,7 +119,15 @@ export default class AssetService {
 
     const update = this.updateAll();
     if (allPresent) return;
-    else return update;
+    await update;
+
+    // updateAll() logs a download that failed rather than failing itself, so whether the
+    // CLI is there now is the only way to tell. Without it the services have nothing to
+    // run; the other tools aren't worth holding them up over.
+    if (await targetMissing(this.getAssetPath(AssetIdentifier.AppMapCli)))
+      throw new Error(
+        'The AppMap CLI could not be downloaded. See the AppMap: Assets output for details.'
+      );
   }
 
   public static async updateAll(throwOnError = false): Promise<void> {
