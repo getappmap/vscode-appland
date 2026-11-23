@@ -119,7 +119,15 @@ export default class AssetService {
 
     const update = this.updateAll();
     if (allPresent) return;
-    else return update;
+    await update;
+
+    // updateAll() logs a download that failed rather than failing itself, so whether the
+    // CLI is there now is the only way to tell. Without it the services have nothing to
+    // run; the other tools aren't worth holding them up over.
+    if (await targetMissing(this.getAssetPath(AssetIdentifier.AppMapCli)))
+      throw new Error(
+        'The AppMap CLI could not be downloaded. See the AppMap: Assets output for details.'
+      );
   }
 
   public static async updateAll(throwOnError = false): Promise<void> {

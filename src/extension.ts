@@ -78,6 +78,24 @@ import OpenNavieHistoryCommand from './commands/openNavieHistory';
 import RemoteConfig from './configuration/remoteConfig';
 import setConfigurationUrl from './commands/setConfigurationUrl';
 
+// The JetBrains plugin links the same anchor from its download failure notification, and
+// the docs page notes that both plugins depend on it, so it shouldn't move without a redirect.
+const OFFLINE_INSTALL_DOCS =
+  'https://appmap.io/docs/reference/appmap-airgapped-install.html#download-the-appmap-application-binaries';
+
+// Most often the download is blocked (a proxy, or no network at all), so point at the way to
+// install the tools without one.
+function showToolsInstallError(error: unknown): void {
+  const message = error instanceof Error ? error.message : String(error);
+  const offlineInstall = 'Offline Install Instructions';
+  void vscode.window
+    .showErrorMessage(`Error installing AppMap tools: ${message}`, offlineInstall)
+    .then((choice) => {
+      if (choice === offlineInstall)
+        void vscode.env.openExternal(vscode.Uri.parse(OFFLINE_INSTALL_DOCS));
+    });
+}
+
 export async function activate(context: vscode.ExtensionContext): Promise<AppMapService> {
   CommandRegistry.setContext(context).addWaitAlias({
     command: 'appmap.explain',
@@ -291,9 +309,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       try {
         await dependenciesInstalled;
       } catch (e) {
-        if (e instanceof Error)
-          vscode.window.showErrorMessage(`Error installing AppMap tools: ${e.message}`);
-        else vscode.window.showErrorMessage(`Error installing AppMap tools: ${e}`);
+        showToolsInstallError(e);
         throw e; // no sense continuing if we can't install the tools
       }
 

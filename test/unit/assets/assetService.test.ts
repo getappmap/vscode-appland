@@ -317,6 +317,19 @@ describe('AssetService', () => {
   }
 
   describe('ensureAssets', () => {
+    it('fails if the CLI could not be downloaded', async () => {
+      mockAssetApis({ denylist: ['appmap-latest.json'] });
+
+      await expect(AssetService.ensureAssets()).to.be.rejectedWith(/AppMap CLI could not be/);
+    });
+
+    it('does not hold up the services over the other tools', async () => {
+      mockAssetApis({ denylist: ['scanner-latest.json'] });
+
+      await AssetService.ensureAssets();
+      expect(join(homeDir, '.appmap', 'bin', 'appmap')).to.be.a.file();
+    });
+
     describe('with automatic updates disabled', () => {
       beforeEach(() => Sinon.stub(ExtensionSettings, 'autoUpdateTools').get(() => false));
 
