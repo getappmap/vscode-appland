@@ -71,6 +71,7 @@ import navieConfigurationService, {
 import RpcProcessService from './services/rpcProcessService';
 import CommandRegistry from './commands/commandRegistry';
 import AssetService from './assets/assetService';
+import * as assetsLog from './assets/log';
 import SkillService from './services/skillService';
 import clearNavieAiSettings from './commands/clearNavieAiSettings';
 import ExtensionSettings from './configuration/extensionSettings';
@@ -309,6 +310,11 @@ export async function activate(context: vscode.ExtensionContext): Promise<AppMap
       try {
         await dependenciesInstalled;
       } catch (e) {
+        Telemetry.sendEvent(DEBUG_EXCEPTION, {
+          exception: e as Error,
+          errorCode: ErrorCode.AssetAcquisitionFailure,
+          log: assetsLog.recentLines(),
+        });
         showToolsInstallError(e);
         throw e; // no sense continuing if we can't install the tools
       }
