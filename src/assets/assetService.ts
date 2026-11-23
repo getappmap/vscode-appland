@@ -13,6 +13,7 @@ import {
   markExecutable,
   updateSymlink,
   listAssets,
+  targetMissing,
 } from '.';
 import { binaryName, AssetIdentifier, versionFromPath } from './types';
 import { homedir } from 'os';
@@ -65,7 +66,9 @@ export default class AssetService {
       const assetPath = AssetService.getAssetPath(assetId);
       const assets = await listAssets(assetId);
       if (assets.length === 0) {
-        allPresent = false;
+        // Nothing we could link to, but a tool may have been put in place by hand, as for
+        // an offline install. It's no less there for not having come from the cache.
+        if (await targetMissing(assetPath)) allPresent = false;
         continue;
       }
 
@@ -74,8 +77,10 @@ export default class AssetService {
       try {
         await updateSymlink(target, assetPath);
       } catch (e) {
+        // Windows won't replace a copy another window is running, which leaves that copy in
+        // place: an older version, but still there.
         log.error(`Failed to restore symlink or copy for ${assetPath}: ${e}`);
-        allPresent = false;
+        if (await targetMissing(assetPath)) allPresent = false;
       }
     }
     return allPresent;

@@ -2,11 +2,13 @@ import '../mock/vscode';
 import mockAssetApis from './mockAssetApis';
 import Sinon from 'sinon';
 import os, { tmpdir } from 'os';
-import { mkdir, mkdtemp, rm, utimes, writeFile } from 'fs/promises';
+import fsPromises, { mkdir, mkdtemp, rm, utimes, writeFile } from 'node:fs/promises';
 import { default as chai, expect } from 'chai';
 import { default as chaiFs } from 'chai-fs';
+import chaiAsPromised from 'chai-as-promised';
 import { basename, dirname, join } from 'node:path';
 import AssetService from '../../../src/assets/assetService';
+import ExtensionSettings from '../../../src/configuration/extensionSettings';
 import { listAssets } from '../../../src/assets';
 import { AssetIdentifier } from '../../../src/assets/types';
 import ResourceVersions from '../../../resources/versions.json';
@@ -14,6 +16,7 @@ import downloadHttpRetry from '../../../src/assets/downloadHttpRetry';
 import { BundledFileDownloadUrlResolver, cacheDir } from '../../../src/assets';
 
 chai.use(chaiFs);
+chai.use(chaiAsPromised);
 
 describe('AssetService', () => {
   let homeDir: string;
@@ -305,6 +308,32 @@ describe('AssetService', () => {
     });
   });
 
+  async function installByHand(appmapDir: string): Promise<void> {
+    await mkdir(join(appmapDir, 'bin'), { recursive: true });
+    await mkdir(join(appmapDir, 'lib', 'java'), { recursive: true });
+    await writeFile(join(appmapDir, 'bin', 'appmap'), 'HAND_PLACED');
+    await writeFile(join(appmapDir, 'bin', 'scanner'), 'HAND_PLACED');
+    await writeFile(join(appmapDir, 'lib', 'java', 'appmap.jar'), 'HAND_PLACED');
+  }
+
+  describe('ensureAssets', () => {
+    describe('with automatic updates disabled', () => {
+      beforeEach(() => Sinon.stub(ExtensionSettings, 'autoUpdateTools').get(() => false));
+
+      it('accepts tools installed by hand', async () => {
+        await installByHand(join(homeDir, '.appmap'));
+
+        await AssetService.ensureAssets();
+      });
+
+      it('fails if a tool is missing', async () => {
+        await expect(AssetService.ensureAssets()).to.be.rejectedWith(
+          /some AppMap tools are missing/
+        );
+      });
+    });
+  });
+
   describe('ensureLinks', () => {
     it('returns true if all links are present', async () => {
       mockAssetApis();
@@ -346,6 +375,28 @@ describe('AssetService', () => {
       expect(join(appmapDir, 'bin', 'appmap')).to.be.a.file();
       expect(join(appmapDir, 'lib')).to.be.a.directory().with.subDirs(['java']);
       expect(join(appmapDir, 'lib', 'java')).to.be.a.directory().with.files(['appmap.jar']);
+    });
+
+    // An offline install puts the tools in place by hand, with nothing in the cache.
+    it('counts tools installed by hand as present', async () => {
+      const appmapDir = join(homeDir, '.appmap');
+      await installByHand(appmapDir);
+
+      const allPresent = await AssetService.ensureLinks();
+      expect(allPresent).to.be.true;
+      expect(join(appmapDir, 'bin', 'appmap')).to.be.a.file().with.content('HAND_PLACED');
+    });
+
+    it('counts a tool as present when it is in place but cannot be replaced', async () => {
+      const appmapDir = join(homeDir, '.appmap');
+      await installByHand(appmapDir);
+      await mkdir(cache, { recursive: true });
+      await writeFile(join(cache, 'appmap-linux-x64-2.0.0'), 'NEWER');
+      Sinon.stub(fsPromises, 'rename').rejects(new Error('EBUSY: resource busy or locked'));
+
+      const allPresent = await AssetService.ensureLinks();
+      expect(allPresent).to.be.true;
+      expect(join(appmapDir, 'bin', 'appmap')).to.be.a.file().with.content('HAND_PLACED');
     });
 
     it('replaces an older copied binary with a newer bundled version', async () => {
