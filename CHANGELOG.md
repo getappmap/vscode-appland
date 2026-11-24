@@ -1,3 +1,11 @@
+## [0.147.2](https://github.com/getappmap/vscode-appland/compare/v0.147.1...v0.147.2) (2026-11-24)
+
+
+### Bug Fixes
+
+* don't fail activation on chat models without a family ([2ee9740](https://github.com/getappmap/vscode-appland/commit/2ee9740f58ad9b0c0ac182c2ec406735201cf1a8)), closes [#1133](https://github.com/getappmap/vscode-appland/issues/1133)
+* tell the user when appmap_dir can't be created ([7f670dc](https://github.com/getappmap/vscode-appland/commit/7f670dc03d75300a00cc13ed6c7e6c063c2e5112)), closes [#1134](https://github.com/getappmap/vscode-appland/issues/1134)
+
 ## [0.147.1](https://github.com/getappmap/vscode-appland/compare/v0.147.0...v0.147.1) (2026-11-08)
 
 
